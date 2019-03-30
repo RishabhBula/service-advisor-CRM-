@@ -25,6 +25,7 @@
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
     "node-sass": "^4.11.0",
+    "primeicons": "^1.0.0",
     "primereact": "^3.1.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.5",
@@ -43,6 +44,7 @@
     "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
+    "fullcalendar": "4.0.0-alpha.2",
     "react-scripts": "^2.1.8"
   },
   "scripts": {

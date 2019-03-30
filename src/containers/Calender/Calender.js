@@ -6,180 +6,194 @@ import {
   NavLink,
   Row,
   TabContent,
-  TabPane
+  TabPane,
+  Popover,
+  PopoverBody,
+  PopoverHeader,
+  Card,
+  CardBody
 } from "reactstrap";
-
+import {FullCalendar} from "primereact/fullcalendar";
+import "primereact/resources/themes/nova-light/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 class Calender extends Component {
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
     this.state = {
-      activeTab: new Array(4).fill("1"),
-      tabDetails: [
+      resources: [
+        { id: 1, title: "Event Title 1" },
+        { id: 2, title: "Event Title 2" },
+        { id: 4, title: "Event Title 4" }
+      ],
+      events: [
         {
-          name: "Quotes",
-          details: [
-            {
-              abc: "name1"
-            },
-            {
-              abc: "name"
-            }
-          ]
+          id: 1,
+          title: "All Day Event",
+          start: "2017-02-01",
+          description: "1 description"
         },
         {
-          name: "In Progress",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
+          id: 2,
+          title: "Long Event",
+          start: "2017-02-07",
+          end: "2017-02-10",
+          description: "2 description"
         },
         {
-          name: "Dropped Off",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
+          id: 3,
+          title: "Repeating Event",
+          start: "2017-02-09T16:00:00",
+          description: "3 description"
         },
         {
-          name: "Invoices",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
+          id: 4,
+          title: "Event in bold",
+          start: "2017-02-16T16:00:00",
+          description: "4 description"
+        },
+        {
+          id: 5,
+          title: "Conference",
+          start: "2017-02-11",
+          end: "2017-02-13",
+          description: "5 description"
+        },
+        {
+          id: 6,
+          title: "Meeting",
+          start: "2017-02-12T10:30:00",
+          end: "2017-02-12T12:30:00",
+          description: "6 description"
+        },
+        {
+          id: 7,
+          title: "Lunch",
+          start: "2017-02-12T12:00:00",
+          description: "7 description"
+        },
+        {
+          id: 8,
+          title: "Meeting",
+          start: "2017-02-12T14:30:00",
+          description: "8 description"
+        },
+        {
+          id: 9,
+          title: "Happy Hour",
+          start: "2017-02-12T17:30:00",
+          description: "9 description"
+        },
+        {
+          id: 10,
+          title: "Dinner",
+          start: "2017-03-30T20:00:00",
+          description: "10 description"
+        },
+        {
+          id: 11,
+          title: "Birthday Party",
+          start: "2017-03-30T07:00:00",
+          description: "11 description"
+        },
+        {
+          id: 12,
+          title: "Click for Google",
+          url: "http://google.com/",
+          start: "2017-02-28",
+          description: "12 description"
         }
-      ]
+      ],
+      options: {
+        defaultDate: "2017-02-01",
+        header: {
+          left:
+            "today prev,next month,agendaWeek,agendaDay,popover myCustomButton",
+          center: "title",
+          right: ""
+        },
+        editable: true,
+        dateClick: e => {
+          //console.log(e);
+        },
+        eventClick: this.handleEventClick.bind(this),
+        // eventClick: info => {
+        //   console.log(info);
+        //   console.log(info.event.extendedProps.description);
+        //   console.log(info.event.title);
+
+        //   info.el.style.borderColor = "red";
+        // },
+        eventRender: this.handleRenderEventClick.bind(this)
+        // eventRender: function(event, element) {
+        //   console.log(element);
+        //   return (
+        //     <Popover
+        //       placement="bottom"
+        //       isOpen={this.state.popoverOpen}
+        //       target="Popover1"
+        //       toggle={this.toggle}
+        //     >
+        //       <PopoverHeader>{event.title}</PopoverHeader>
+        //       <PopoverBody>{event.description}</PopoverBody>
+        //     </Popover>
+        //   );
+        // }
+      },
+      calenderData: {}
     };
   }
 
-  lorem(detailsData) {    
-    return Object.keys(detailsData).map(function(key, index) {       
-      return <li key={index}>{detailsData[key].abc}</li>;
-    });
+  handleEventClick(element) {
+    console.log(element);
+     console.log(element.event.extendedProps.description);
+    return(
+      <Popover
+        placement="bottom"
+        isOpen={true}
+        target="Popover1"
+        toggle={this.toggle}
+      >
+        <PopoverHeader>
+          {element.event.extendedProps.description}
+        </PopoverHeader>
+        <PopoverBody>{element.event.extendedProps.description}</PopoverBody>
+      </Popover>
+    );
   }
 
-  toggle(tabPane, tab) {
-    const newArray = this.state.activeTab.slice();
-    newArray[tabPane] = tab;
-    this.setState({
-      activeTab: newArray
-    });
+  handleRenderEventClick(element) {  
+    console.log("element");
+    console.log(element);
+    console.log(element.event.extendedProps.description);
   }
 
-  tabPane() {
-    const { tabDetails } = this.state;
-    return tabDetails.map((item, index) => {
-      return (
-        <TabPane tabId={(index + 1).toString()}>
-          {index + 1} {this.lorem(item.details)}
-        </TabPane>
-      );
-    });    
+  showPopup() {
+    alert("testing");
   }
 
   render() {
-    const { tabDetails } = this.state;
-
     return (
       <div className="animated fadeIn">
-        <Row>
-          <Col xs="12" md="12" className="">
-            <div className="margin-top-10 page-title">
-              <h4 className="">WorkFlow</h4>
-              <div className="workflow-mode">
-                <div className="mode-inner">
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-list" />
-                  </div>
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-grid" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Col>
-          {/* <Col xs="4" md="4" className="mb-4">
-            
-          </Col> */}
-        </Row>
-        <Row>
-          <Col xs="12" md="12" className="mb-4">
-            <Nav tabs>
-              {tabDetails.map((item, index) => {
-                return (
-                  <NavItem>
-                    <NavLink
-                      active={
-                        this.state.activeTab[0] === parseInt(index) + 1
-                      }
-                      onClick={() => {
-                        this.toggle(0, (parseInt(index) + 1).toString());
-                      }}
-                    >
-                      {item.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })}
-              {/* <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "1"}
-                  onClick={() => {
-                    this.toggle(0, "1");
-                  }}
-                >
-                  Quotes
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "2"}
-                  onClick={() => {
-                    this.toggle(0, "2");
-                  }}
-                >
-                  In Progress
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "3"}
-                  onClick={() => {
-                    this.toggle(0, "3");
-                  }}
-                >
-                  Dropped Off
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "4"}
-                  onClick={() => {
-                    this.toggle(0, "4");
-                  }}
-                >
-                  Invoices
-                </NavLink>
-              </NavItem> */}
-            </Nav>
-            <TabContent activeTab={this.state.activeTab[0]}>
-              {this.tabPane()}
-            </TabContent>
-          </Col>
-        </Row>
+        <Card>
+          <CardBody>
+            <Row className="mb-4">
+              <Col className="title-left-section">
+                <h4 class="card-title">Calendar</h4>
+              </Col>
+              <Col className="text-right title-right-section">
+                <button class="btn btn-primary btn-sm">New Appointment</button>
+                <i class="icon-settings ml-2 font-2xl" />
+              </Col>
+            </Row>
+
+            <FullCalendar
+              ref={el => (this.fc = el)}
+              events={this.state.events}
+              options={this.state.options}
+            />
+          </CardBody>
+        </Card>
       </div>
     );
   }

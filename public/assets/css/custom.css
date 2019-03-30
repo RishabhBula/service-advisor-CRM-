@@ -30,8 +30,10 @@
     margin: 0 2px;
 }
 .mode-flow button{
-	width: 40px;
-    height: 40px;
+	width: 25px;
+    height: 25px;
+    padding: 0px;
+    font-size: 12px;
 }
 /* end of workflow css */
 
@@ -204,3 +206,19 @@
     margin-bottom: 4px;
 }
 /* end of auth page */
+
+/* page css */
+.title-left-section .card-title {
+    margin: 0px;
+    font-size: 24px;
+}
+.title-left-section.col{
+    display: flex;
+    align-items: center;
+}
+.title-right-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+/* end of page css */

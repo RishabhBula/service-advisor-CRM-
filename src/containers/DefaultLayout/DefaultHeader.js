@@ -139,7 +139,7 @@ class DefaultHeader extends Component {
           </AppAsideToggler>
           <AppHeaderDropdown direction="down" className="header-add-new ">
             <DropdownToggle className="nav-link">
-              <span class="fa fa-plus fa-2x pb-2 pt-2" />
+              <span className="fa fa-plus fa-2x pb-2 pt-2" />
             </DropdownToggle>
             <DropdownMenu
               right

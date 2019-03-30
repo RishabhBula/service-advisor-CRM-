@@ -8,6 +8,8 @@ import {
   Row,
   TabContent,
   TabPane,
+  Card,
+  CardBody
 } from "reactstrap";
 
 class WorkFlow extends Component {
@@ -96,6 +98,53 @@ class WorkFlow extends Component {
 
     return (
       <div className="animated fadeIn">
+        <Card>
+          <CardBody>
+            <Row className="mb-4">
+              <Col className="title-left-section">
+                <h4 class="card-title">WorkFlow</h4>
+                <div className="workflow-mode">
+                  <div className="mode-inner">
+                    <div className="mode-flow">
+                      <button class="nav-icon icon-list btn btn-outline-dark" />
+                    </div>
+                    <div className="mode-flow">
+                      <button class="nav-icon icon-grid btn btn-outline-dark " />
+                    </div>
+                  </div>
+                </div>
+              </Col>
+              <Col className="title-right-section">
+                <button class="btn btn-primary btn-sm">
+                  New Appointment
+                </button>
+                <i class="icon-settings ml-2 font-2xl" />
+              </Col>
+            </Row>
+            <Nav tabs>
+              {tabDetails.map((item, index) => {
+                return (
+                  <NavItem>
+                    <NavLink
+                      active={
+                        parseInt(this.state.activeTab[0]) ===
+                        parseInt(index) + 1
+                      }
+                      onClick={() => {
+                        this.toggle(0, (parseInt(index) + 1).toString());
+                      }}
+                    >
+                      {item.name}
+                    </NavLink>
+                  </NavItem>
+                );
+              })}
+            </Nav>
+            <TabContent activeTab={this.state.activeTab[0]}>
+              {this.tabPane()}
+            </TabContent>
+          </CardBody>
+        </Card>
         <Row>
           <Col xs="12" md="12" className="">
             <div className="margin-top-10 page-title">
@@ -111,34 +160,6 @@ class WorkFlow extends Component {
                 </div>
               </div>
             </div>
-          </Col>
-          {/* <Col xs="4" md="4" className="mb-4">
-            
-          </Col> */}
-        </Row>
-        <Row>
-          <Col xs="12" md="12" className="mb-4">
-            <Nav tabs>
-              {tabDetails.map((item, index) => {
-                return (
-                  <NavItem>
-                    <NavLink
-                      active={
-                        this.state.activeTab[0] === parseInt(index) + 1
-                      }
-                      onClick={() => {
-                        this.toggle(0, (parseInt(index) + 1).toString());
-                      }}
-                    >
-                      {item.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })}
-            </Nav>
-            <TabContent activeTab={this.state.activeTab[0]}>
-              {this.tabPane()}
-            </TabContent>
           </Col>
         </Row>
       </div>
