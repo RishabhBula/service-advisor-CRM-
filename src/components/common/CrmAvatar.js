@@ -1,19 +1,15 @@
 import React, { Component } from "react";
 
-export class LargeModals extends Component {
+export class CrmAvatar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      
-    };
+    this.state = {};
   }
 
   render() {
-    return (
-      <>
-        
-      </>
-    );
+    return <>
+      
+    </>;
   }
 }
 export default CrmAvatar;
