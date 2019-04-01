@@ -116,9 +116,8 @@ class WorkFlow extends Component {
               </Col>
               <Col className="title-right-section">
                 <button class="btn btn-primary btn-sm">
-                  New Appointment
+                  <i className="fa fa-plus mr-1"/> New Quote
                 </button>
-                <i class="icon-settings ml-2 font-2xl" />
               </Col>
             </Row>
             <Nav tabs>

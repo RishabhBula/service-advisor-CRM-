@@ -154,21 +154,34 @@ class DefaultHeader extends Component {
               </DropdownItem>
               <DropdownItem>
                 <span className="header-add-icon">
-                  <i className="fa fa-envelope-o" />
+                  <i className="far fa-file-alt" />
+                  <i className="fal fa-file-invoice" />
                 </span>
-                <span>Messages</span>
+                <span>Quote</span>
               </DropdownItem>
               <DropdownItem>
                 <span className="header-add-icon">
                   <i className="fa fa-tasks" />
                 </span>
-                <span>Tasks</span>
+                <span>Appointment</span>
               </DropdownItem>
               <DropdownItem>
                 <span className="header-add-icon">
-                  <i className="fa fa-comments" />
+                  <i className="fas fa-sitemap" />
                 </span>
-                <span>Comments</span>
+                <span>Inventory</span>
+              </DropdownItem>
+              <DropdownItem>
+                <span className="header-add-icon">
+                  <i className="fa fa-automobile" />
+                </span>
+                <span>Fleet</span>
+              </DropdownItem>
+              <DropdownItem>
+                <span className="header-add-icon">
+                  <i className="fa fa-envelope-o" />
+                </span>
+                <span>Message</span>
               </DropdownItem>
             </DropdownMenu>
           </AppHeaderDropdown>

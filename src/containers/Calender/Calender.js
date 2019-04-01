@@ -17,6 +17,8 @@ import {FullCalendar} from "primereact/fullcalendar";
 import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
+import CrmCircleIcon from "../../components/common/CrmCircleIcon";
+
 class Calender extends Component {
   constructor(props) {
     super(props);
@@ -182,8 +184,20 @@ class Calender extends Component {
                 <h4 class="card-title">Calendar</h4>
               </Col>
               <Col className="text-right title-right-section">
-                <button class="btn btn-primary btn-sm">New Appointment</button>
-                <i class="icon-settings ml-2 font-2xl" />
+                <button class="btn btn-primary btn-sm">
+                  {" "}
+                  <i className="fa fa-plus mr-1" />
+                  New Appointment
+                </button>
+                <CrmCircleIcon
+                  circleIconPass={"icon-settings"}
+                  cssPass={{
+                    width: "28px",
+                    height: "28px",
+                    marginLeft: "4px",
+                    fontSize: "18px"
+                  }}
+                />
               </Col>
             </Row>
 

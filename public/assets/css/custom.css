@@ -63,16 +63,16 @@
     align-items: center;
 }
 .header-add-icon {
-	display: block;
+	display: inline-block;
     width: 20px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     color: #c8ced3;
     text-align: center;
     font-size: 24px;
     margin: 5px auto;
 }
 .header-add-icon i {
-	margin-left: 0px !important	;
+	margin-right: 0px !important	;
 }
 .header-add-text {
 	white-space: normal;
@@ -220,5 +220,38 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+.circle-icon-option  {
+    border: 1px solid #73818f;
+    border-radius: 50%;
+    padding: 0;
+    color: #5c6873;
+    cursor: pointer;
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    margin-left: 4px;
+}
+.circle-icon-option i:hover {
+    color: #20a8d8!important;
+    padding: 4px;
+}
+.common-crm-dropdown li{
+    list-style: none;
+}
+.common-crm-dropdown  a {
+    padding: 0px;
+}
+.common-crm-dropdown i {
+    display: block;
+    font-size: 18px!important;
+    color: #5c6873;
+}
+.common-crm-dropdown i:hover {
+    color: #20a8d8;
 }
 /* end of page css */

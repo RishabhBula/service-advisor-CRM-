@@ -6,8 +6,11 @@ import {
   NavLink,
   Row,
   TabContent,
-  TabPane
+  TabPane,
+  Card,
+  CardBody
 } from "reactstrap";
+import CrmDropDownMenu from "../../components/common/CrmDropDownMenu";
 
 class Inventory extends Component {
   constructor(props) {
@@ -18,7 +21,7 @@ class Inventory extends Component {
       activeTab: new Array(4).fill("1"),
       tabDetails: [
         {
-          name: "Quotes",
+          name: "Parts",
           details: [
             {
               abc: "name1"
@@ -29,7 +32,7 @@ class Inventory extends Component {
           ]
         },
         {
-          name: "In Progress",
+          name: "Tires",
           details: [
             {
               abc: "name"
@@ -40,7 +43,7 @@ class Inventory extends Component {
           ]
         },
         {
-          name: "Dropped Off",
+          name: "Labor",
           details: [
             {
               abc: "name"
@@ -51,7 +54,7 @@ class Inventory extends Component {
           ]
         },
         {
-          name: "Invoices",
+          name: "Vendors",
           details: [
             {
               abc: "name"
@@ -65,8 +68,8 @@ class Inventory extends Component {
     };
   }
 
-  lorem(detailsData) {    
-    return Object.keys(detailsData).map(function(key, index) {       
+  lorem(detailsData) {
+    return Object.keys(detailsData).map(function(key, index) {
       return <li key={index}>{detailsData[key].abc}</li>;
     });
   }
@@ -83,47 +86,54 @@ class Inventory extends Component {
     const { tabDetails } = this.state;
     return tabDetails.map((item, index) => {
       return (
-        <TabPane tabId={(index + 1).toString()}>
+        <TabPane tabId={(index + 1).toString()} key={index}>
           {index + 1} {this.lorem(item.details)}
         </TabPane>
       );
-    });    
+    });
+  }
+
+  performInventoryAction = (options) => {
+    console.log(options);    
   }
 
   render() {
     const { tabDetails } = this.state;
-
+    let dropdownOptions = [
+      { value: "import", label: "Import" },
+      { value: "export", label: "export" }
+    ];
     return (
       <div className="animated fadeIn">
-        <Row>
-          <Col xs="12" md="12" className="">
-            <div className="margin-top-10 page-title">
-              <h4 className="">WorkFlow</h4>
-              <div className="workflow-mode">
-                <div className="mode-inner">
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-list" />
-                  </div>
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-grid" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Col>
-          {/* <Col xs="4" md="4" className="mb-4">
-            
-          </Col> */}
-        </Row>
-        <Row>
-          <Col xs="12" md="12" className="mb-4">
+        <Card>
+          <CardBody>
+            <Row className="mb-4">
+              <Col className="title-left-section">
+                <h4 className="card-title">Inventory</h4>
+              </Col>
+              <Col className="title-right-section">
+                <button className="btn btn-primary btn-sm">
+                  <i className="fa fa-plus mr-1" />
+                  Add Part
+                </button>
+                <CrmDropDownMenu
+                  classNamePass={"common-crm-dropdown"}
+                  imageDisplay={false}
+                  iconPass={"icon-options icons"}
+                  options={dropdownOptions}
+                  returnCrmDropAction={this.performInventoryAction}
+                  cssPass={""}
+                />
+              </Col>
+            </Row>
             <Nav tabs>
               {tabDetails.map((item, index) => {
                 return (
-                  <NavItem>
+                  <NavItem key={index}>
                     <NavLink
                       active={
-                        this.state.activeTab[0] === parseInt(index) + 1
+                        parseInt(this.state.activeTab[0]) ===
+                        parseInt(index) + 1
                       }
                       onClick={() => {
                         this.toggle(0, (parseInt(index) + 1).toString());
@@ -134,50 +144,27 @@ class Inventory extends Component {
                   </NavItem>
                 );
               })}
-              {/* <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "1"}
-                  onClick={() => {
-                    this.toggle(0, "1");
-                  }}
-                >
-                  Quotes
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "2"}
-                  onClick={() => {
-                    this.toggle(0, "2");
-                  }}
-                >
-                  In Progress
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "3"}
-                  onClick={() => {
-                    this.toggle(0, "3");
-                  }}
-                >
-                  Dropped Off
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "4"}
-                  onClick={() => {
-                    this.toggle(0, "4");
-                  }}
-                >
-                  Invoices
-                </NavLink>
-              </NavItem> */}
             </Nav>
             <TabContent activeTab={this.state.activeTab[0]}>
               {this.tabPane()}
             </TabContent>
+          </CardBody>
+        </Card>
+        <Row>
+          <Col xs="12" md="12" className="">
+            <div className="margin-top-10 page-title">
+              <h4 className="">Inventory</h4>
+              {/* <div className="workflow-mode">
+                <div className="mode-inner">
+                  <div className="mode-flow">
+                    <button className="nav-icon icon-list" />
+                  </div>
+                  <div className="mode-flow">
+                    <button className="nav-icon icon-grid" />
+                  </div>
+                </div>
+              </div> */}
+            </div>
           </Col>
         </Row>
       </div>
