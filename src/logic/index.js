@@ -1,3 +1,4 @@
+import { loginLogic as LoginLogic, logOutLogic as LogOutLogic } from "./Login";
 
 import { createLogic } from "redux-logic";
 import { push } from "react-router-redux";
@@ -10,5 +11,7 @@ export const redirectToLogic = createLogic({
   }
 });
 export default [
+  LoginLogic,
+  LogOutLogic,
   redirectToLogic
 ];

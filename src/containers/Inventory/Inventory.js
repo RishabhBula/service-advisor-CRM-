@@ -150,23 +150,6 @@ class Inventory extends Component {
             </TabContent>
           </CardBody>
         </Card>
-        <Row>
-          <Col xs="12" md="12" className="">
-            <div className="margin-top-10 page-title">
-              <h4 className="">Inventory</h4>
-              {/* <div className="workflow-mode">
-                <div className="mode-inner">
-                  <div className="mode-flow">
-                    <button className="nav-icon icon-list" />
-                  </div>
-                  <div className="mode-flow">
-                    <button className="nav-icon icon-grid" />
-                  </div>
-                </div>
-              </div> */}
-            </div>
-          </Col>
-        </Row>
       </div>
     );
   }
