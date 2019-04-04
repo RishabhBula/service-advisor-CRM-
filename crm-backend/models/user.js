@@ -47,6 +47,10 @@ const userSchema = new Schema({
     type: String,
     default: null
   },
+  salt: {
+    type: String,
+    default: null
+  },
   companyName: {
     type: String,
     default: null
