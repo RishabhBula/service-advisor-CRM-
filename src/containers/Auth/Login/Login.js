@@ -10,14 +10,9 @@ class Login extends Component {
           <Row className="justify-content-center">
             <Col md="6">
               <Col className="text-center">
-              <Link to="/dashboard">
-                <h4 className="logo-title">CRM 360</h4>
-              </Link>
-                {/* <img
-                  src="https://www.pngkey.com/png/detail/139-1395618_crm-icon-png-clipart-customer-relationship-management-crm.png"
-                  alt="log"
-                  className="logo-img"
-                /> */}
+                <Link to="/dashboard">
+                  <h4 className="logo-title">CRM 360</h4>
+                </Link>                
               </Col>
               <CardGroup>
                 <Card className="p-4">
