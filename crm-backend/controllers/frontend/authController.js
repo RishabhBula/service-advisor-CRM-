@@ -13,6 +13,7 @@ const { Email, AvailiableTemplates } = require("../../common/Email");
 
 const signUp = async (req, res) => {
     try {
+        const confirmationNumber = new Date().valueOf();
         const errors = validationResult(req);        
         if (!errors.isEmpty())
         {
@@ -41,6 +42,7 @@ const signUp = async (req, res) => {
             $data.permission = roleType.permissionObject;
             $data.firstTimeUser = true;
             $data.loggedInIp = commonSmtp.getIpAddress(req);
+            $data.userSideActivationValue = confirmationNumber;
             let result =  await userModel($data).save();
             var token = jwt.sign(
               {
@@ -55,7 +57,6 @@ const signUp = async (req, res) => {
                 expiresIn: 86400
               }
             );
-            console.log(res);
             
             const emailVar = new Email(res);
             await emailVar.setTemplate(
@@ -64,7 +65,8 @@ const signUp = async (req, res) => {
                 firstName: result.firstName,
                 lastName: result.lastName,
                 email: result.email,
-                userId: result._id
+                userId: result._id,
+                userSideActivationValue: confirmationNumber
               }
             );
             await emailVar.sendEmail(result.email);
@@ -86,6 +88,68 @@ const signUp = async (req, res) => {
     }
 }
 
-module.exports = {
-    signUp
+const confirmationSignUp = async (req, res) => {
+    try {
+        let data = req.body;
+        var userData = await userModel.findOne(
+                                        {$and: [
+                                            { _id: data.userId},
+                                            {userSideActivation: false},
+                                            {userSideActivationValue: data.activeValue}
+                                            ]
+                                        }
+                                    );
+        if(userData) {
+            let roleUpdate = await userModel.updateOne(
+              {
+                _id: userData._id
+              },
+              {
+                $set: {
+                  userSideActivation: true,
+                  userSideActivationValue: ""
+                }
+              }
+            );
+            if(roleUpdate) {
+                 const emailVar = new Email(res);
+                await emailVar.setTemplate(
+                   AvailiableTemplates.SIGNUP,
+                   {
+                     firstName: userData.firstName,
+                     lastName: userData.lastName,
+                   }
+                );
+                await emailVar.sendEmail(userData.email);
+                res.status(200).json({
+                  message: userData,
+                  success: true
+                });
+            }
+            else {
+                res.status(401).json({
+                  message: "Some thing Went Wrong",
+                  success: false
+                });
+            }
+            
+        }
+        else {
+            res.status(401).json({
+              message: userData,
+              success: false
+            });
+        }
+    }
+    catch(error) {
+        res.status(500).json({
+            message: error.message ? error.message : 'Unexpected error occure.',
+            success: false
+        });
+    }
 }
+
+module.exports = {
+  signUp,
+  confirmationSignUp
+};

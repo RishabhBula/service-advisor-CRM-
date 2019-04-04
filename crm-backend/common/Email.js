@@ -87,7 +87,6 @@ class Email {
       "utf8"
     );
     replaceObject.webURL = webURL;
-    console.log(replaceObject);
     
     for (const key in replaceObject) {
       if (replaceObject.hasOwnProperty(key)) {
