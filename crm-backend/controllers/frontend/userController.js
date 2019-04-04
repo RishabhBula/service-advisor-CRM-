@@ -1,16 +1,35 @@
 const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
+const rateStandardModel = require("../../models/rateStandard");
+const customerModel = require("../../models/customer");
+const fleetModel = require("../../models/fleet");
 
 
 const listGet = async (req,res) => {
     try {        
         let inserList = {
-          email: "rahulk.chapter247@gmail.com",
-          password: "123456",
-          roleType: "5ca3473d70537232f13ff1f9"
+          firstName: "General",
+          fleet: "5ca5e3b88b27f17bc0dfaab5",
+          permission: [
+            {
+              shouldReceiveDiscount: {
+                status: false,
+                percentageDiscount: 0
+              },
+              shouldLaborRateOverride: {
+                status: false,
+                laborRate: "5ca5e2f1a7d08f79f78c8e41"
+              },
+              shouldPricingMatrixOverride: {
+                status: false,
+                pricingMatrix: null
+              }
+            }
+          ],
+          parentId: "5ca5d6f69c6c9f6cb63d919a"
         };
         // let data = await new user.()
-        let result = await userModel(inserList).save();
+        let result = await customerModel(inserList).save();
         // let roleUpdate = await roleModel.updateOne(
         //   {
         //     userType: "user"
