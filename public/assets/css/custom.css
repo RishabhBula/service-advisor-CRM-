@@ -207,6 +207,63 @@
 }
 /* end of auth page */
 
+/* Welcome modal */
+.box-contain{
+    width: 23%;
+    margin-bottom: 20px;
+    box-shadow: inset 0px 0px 0px 1px #E4EAEC;
+    border-radius: 4px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.box-space{
+    justify-content: space-between !important
+}
+.box-contain .welcome-service-text{
+    font-weight: 400;
+    color: #76838F;
+}
+.box-contain img {
+    width: 40px;
+    padding-bottom: 5px;
+}
+.welcome-image-text{
+    font-weight: 400;
+    color: #76838F;
+}
+.welcome-image-align{
+    align-items: center;
+    display: flex;
+}
+.welcome-image-select-background{
+    height: 165px;
+    font-weight: 300;
+    border-width: 1px;
+    border-style: dashed;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    border: 2px dotted #b9bcbf;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.welcome-image-select-background:hover{
+    background: #f3f7f9;
+}
+.welcome-image-icon{
+    display: block;
+    font-size: 48px;
+    font-size: 3rem;
+    opacity: .5;
+    margin-bottom: 10px;
+}
+/* end of welcome modal */
+
 /* page css */
 .title-left-section .card-title {
     margin: 0px;

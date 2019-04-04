@@ -9,7 +9,7 @@ import {
   TabPane
 } from "reactstrap";
 // import classnames from "classnames";
-
+import { BigModals } from '../../components/common/CrmWelcomeModel'
 class Reports extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +17,7 @@ class Reports extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       activeTab: new Array(4).fill("1"),
+      modalOpen: false,
       tabDetails: [
         {
           name: "Quotes",
@@ -66,8 +67,16 @@ class Reports extends Component {
     };
   }
 
+  componentDidMount = () => {
+    this.toggleLarge()
+  }
+  toggleLarge = () => {
+    this.setState({
+      modalOpen: !this.state.modalOpen
+    });
+  };
   lorem(detailsData) {
-    return Object.keys(detailsData).map(function(key, index) {
+    return Object.keys(detailsData).map(function (key, index) {
       return <li key={index}>{detailsData[key].abc}</li>;
     });
   }
@@ -92,7 +101,7 @@ class Reports extends Component {
   }
 
   render() {
-    const { tabDetails } = this.state;
+    const { tabDetails, modalOpen } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -179,6 +188,13 @@ class Reports extends Component {
             </TabContent>
           </Col>
         </Row>
+        {
+          modalOpen ?
+            <BigModals
+              modalOpen={modalOpen}
+              toggleLarge={this.toggleLarge}
+            /> : ""
+        }
       </div>
     );
   }
