@@ -35,6 +35,10 @@ const userSchema = new Schema({
     type: Boolean,
     default: false
   },
+  userSideActivationValue: {
+    type: String,
+    default: null
+  },
   status: {
     type: Boolean,
     default: true
