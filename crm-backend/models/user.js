@@ -79,6 +79,10 @@ const userSchema = new Schema({
     type: String,
     default: null
   },
+  verifyToken:{
+    type: String,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now
