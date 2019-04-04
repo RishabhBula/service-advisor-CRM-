@@ -21,7 +21,7 @@ const validationMessage = {
 };
 
 const otherMessage = {
-  newRegister: "You have Succesfully Registered."
+  newRegister: "You have Succesfully Registered.",
 };
 module.exports = {
   validationMessage,

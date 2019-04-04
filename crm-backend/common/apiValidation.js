@@ -1,5 +1,5 @@
 const { body } = require("express-validator/check");
-const { validationMessage } = require("./validationMessage");
+const { validationMessage, otherMessage } = require("./validationMessage");
 
 const signupValidation = [
   body("firstName")
@@ -24,6 +24,19 @@ const signupValidation = [
     .withMessage(validationMessage.minimumPasswordValidation)
 ];
 
+const signupConfirmation = [
+  body("userId")
+    .not()
+    .isEmpty()
+    .withMessage("Please enter User Id.")
+    .trim(),
+  body("activeValue")
+    .not()
+    .isEmpty()
+    .withMessage("Please enter active value.")
+];
+
 module.exports = {
-    signupValidation
-}
+  signupValidation,
+  signupConfirmation
+};

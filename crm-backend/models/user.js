@@ -47,6 +47,34 @@ const userSchema = new Schema({
     type: String,
     default: null
   },
+  companyName: {
+    type: String,
+    default: null
+  },
+  website: {
+    type: String,
+    default: null
+  },
+  peopleWork: {
+    type: String,
+    default: null
+  },
+  serviceOffer: {
+    type: String,
+    default: null
+  },
+  vehicleService: {
+    type: String,
+    default: null
+  },
+  shopLogo: {
+    type: String,
+    default: null
+  },
+  parentId: {
+    type: String,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

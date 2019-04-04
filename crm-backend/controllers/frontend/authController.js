@@ -90,15 +90,23 @@ const signUp = async (req, res) => {
 
 const confirmationSignUp = async (req, res) => {
     try {
+        const errors = validationResult(req);        
+        if (!errors.isEmpty())
+        {
+            return res.status(422).json({
+                message: commonValidation.formatValidationErr(errors.mapped(), true),
+                success: false
+            });
+        }
         let data = req.body;
         var userData = await userModel.findOne(
-                                        {$and: [
-                                            { _id: data.userId},
-                                            {userSideActivation: false},
-                                            {userSideActivationValue: data.activeValue}
-                                            ]
-                                        }
-                                    );
+            {$and: [
+                { _id: data.userId},
+                {userSideActivation: false},
+                {userSideActivationValue: data.activeValue}
+                ]
+            }
+        );
         if(userData) {
             let roleUpdate = await userModel.updateOne(
               {
@@ -136,7 +144,7 @@ const confirmationSignUp = async (req, res) => {
         }
         else {
             res.status(401).json({
-              message: userData,
+              message: "User already exist.",
               success: false
             });
         }
