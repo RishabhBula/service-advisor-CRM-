@@ -1,31 +1,34 @@
-import React, { Component } from "react";
-import { Router } from "react-router-dom";
-import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import { createLogicMiddleware } from "redux-logic";
 import { createBrowserHistory } from "history";
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import { Router } from "react-router-dom";
 import { routerMiddleware } from "react-router-redux";
-// import { renderRoutes } from 'react-router-config';
-import AppRoutes from "./routes/";
+import { createStore, applyMiddleware } from "redux";
+import logger from "redux-logger";
+import { createLogicMiddleware } from "redux-logic";
+import { mode, EnviornmentTypes } from "./config/AppConfig";
+import Loader from "./containers/Loader/Loader";
 import arrLogic from "./logic";
 import AppReducer from "./reducers";
+import AppRoutes from "./routes/";
 
 const logicMiddleware = createLogicMiddleware(arrLogic);
 const history = createBrowserHistory();
 const middlewares = [logicMiddleware, routerMiddleware(history)];
+if (mode === EnviornmentTypes.DEV) {
+  middlewares.push(logger);
+}
+
 export const store = createStore(AppReducer, applyMiddleware(...middlewares));
 
-
-
-class App extends Component {  
+class App extends Component {
   render() {
-    const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
     return (
       <Provider store={store}>
-          <Router history={history}>   
-            <React.Suspense fallback={loading()}>
-              <AppRoutes />
-            </React.Suspense>       
+        <Router history={history}>
+          <React.Suspense fallback={<Loader />}>
+            <AppRoutes />
+          </React.Suspense>
         </Router>
       </Provider>
     );
