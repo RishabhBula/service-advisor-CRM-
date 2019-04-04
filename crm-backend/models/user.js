@@ -18,6 +18,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  verifyToken:{
+    type: String,
+    default: null
+  },
   roleType: {
     type: Schema.Types.ObjectId,
     ref: "role",
