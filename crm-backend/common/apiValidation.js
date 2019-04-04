@@ -35,8 +35,17 @@ const signupConfirmation = [
     .isEmpty()
     .withMessage("Please enter active value.")
 ];
-
+const loginValidation = [
+  body("email")
+    .isEmail()
+    .withMessage("Email must be a valid.")
+    .trim(),
+  body("password", "Password must be at least 6 character long.")
+    .trim()
+    .isLength({ min: 6 })
+];
 module.exports = {
   signupValidation,
-  signupConfirmation
+  signupConfirmation,
+  loginValidation
 };
