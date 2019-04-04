@@ -32,6 +32,9 @@ class CommonPage extends Component {
     console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
+  handleButtonClick = (name,company) =>{
+    console.log("$$$$$$$$$$$$This is button click",name,company);
+  }
 
   render() {
     const colourOptions = [

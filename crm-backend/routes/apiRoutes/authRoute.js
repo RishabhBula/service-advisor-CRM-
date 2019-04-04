@@ -10,5 +10,8 @@ router.post(
   authController.confirmationSignUp
 );
 router.post("/login",validation.loginValidation, authController.loginApp);
+router.post("/forgot-password",authController.userForgotPassword);
+router.post("/verify-link",authController.userVerifyLink)
+router.post("/reset-password",authController.userResetpassword)
 
 module.exports = router;
