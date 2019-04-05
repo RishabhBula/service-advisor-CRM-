@@ -151,6 +151,14 @@ const loginApp = async (req, res) => {
         success: false,
       };
     }
+    if (!result.status) {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        code: 400,
+        message: "you are not authorized to access CRM",
+        success: false,
+      };
+    }
     if (!result.userSideActivation) {
       // eslint-disable-next-line no-throw-literal
       throw {
