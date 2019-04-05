@@ -294,7 +294,7 @@ const userResetpassword = async (req, res) => {
     },
       {
         $set: {
-          password: encryptedUserpassword.password,
+          password: encryptedUserpassword,
           salt: body.salt,
           verifyToken: "",
         }
