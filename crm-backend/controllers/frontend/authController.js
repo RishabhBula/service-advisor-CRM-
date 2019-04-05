@@ -40,19 +40,19 @@ const signUp = async (req, res) => {
       $data.loggedInIp = commonSmtp.getIpAddress(req);
       $data.userSideActivationValue = confirmationNumber;
       let result = await userModel($data).save();
-      var token = jwt.sign(
-        {
-          id: result._id,
-          randomKey: salt,
-          email: $data.email,
-          firstName: $data.firstName,
-          lastName: $data.lastName
-        },
-        commonCrypto.secret,
-        {
-          expiresIn: 86400
-        }
-      );
+      // var token = jwt.sign(
+      //   {
+      //     id: result._id,
+      //     randomKey: salt,
+      //     email: $data.email,
+      //     firstName: $data.firstName,
+      //     lastName: $data.lastName
+      //   },
+      //   commonCrypto.secret,
+      //   {
+      //     expiresIn: 86400
+      //   }
+      // );
 
       const emailVar = new Email(res);
       await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
@@ -65,9 +65,7 @@ const signUp = async (req, res) => {
       await emailVar.sendEmail(result.email);
 
       return res.status(200).json({
-        message: otherMessage.newRegister,
-        result: result,
-        token: token,
+        message: otherMessage.confirmMessage,
         success: true
       });
     }

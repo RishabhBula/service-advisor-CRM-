@@ -8,16 +8,19 @@ const { mode } = require("./config/app");
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
+console.log("mode");
+console.log(mode);
+console.log("mode");
 
-if (mode == "developement") {
-const cors = require("cors");
-var corsOption = {
-  origin: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  exposedHeaders: ["x-auth-token", "authorization"],
-};
-app.use(cors(corsOption));
+if (mode == "development") {
+  const cors = require("cors");
+  var corsOption = {
+    origin: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    exposedHeaders: ["x-auth-token", "authorization"]
+  };
+  app.use(cors(corsOption));
 }
 
 let url ="mongodb://localhost:27017/crm360";

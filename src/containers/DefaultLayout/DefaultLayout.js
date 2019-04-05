@@ -26,7 +26,7 @@ const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 class DefaultLayout extends Component {
   componentDidMount() {
     if (!localStorage.getItem("token")) {
-      this.props.history.push("/login");
+      //this.props.history.push("/login");
     }
   }
   signOut(e) {
