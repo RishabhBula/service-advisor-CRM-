@@ -1,4 +1,7 @@
+import { push } from "react-router-redux";
+import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
+import { ApiHelper } from "../helpers/ApiHelper";
 import {
   loginActions,
   loginStarted,
@@ -6,9 +9,6 @@ import {
   loginSuccess,
   logOutSuccess,
 } from "./../actions";
-import { ApiHelper } from "../helpers/ApiHelper";
-import { push } from "react-router-redux";
-import { toast } from "react-toastify";
 
 export const loginLogic = createLogic({
   type: loginActions.LOGIN_REQUEST,
@@ -16,13 +16,13 @@ export const loginLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(
       loginStarted({
-        isLoggingIn: true
+        isLoggingIn: true,
       })
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/",
-      "user/login",
+      "/user",
+      "/login",
       "POST",
       false,
       undefined,
@@ -33,11 +33,11 @@ export const loginLogic = createLogic({
         loginFailed({
           isLoggingIn: false,
           isLoggedIn: false,
-          token: ""
+          token: "",
         })
       );
       done();
-      toast.success(result.messages[0]);   
+      toast.success(result.messages[0]);
       return;
     } else {
       var localStorage_array = { token: result.data.token, isLoggingIn: true };
@@ -49,13 +49,13 @@ export const loginLogic = createLogic({
         loginSuccess({
           isLoggingIn: false,
           isLoggedIn: true,
-          token: result.data.token
+          token: result.data.token,
         })
       );
-      toast.success("You have logged in successfully");     
+      toast.success("You have logged in successfully");
       done();
     }
-  }
+  },
 });
 
 export const logOutLogic = createLogic({
@@ -65,7 +65,7 @@ export const logOutLogic = createLogic({
       logOutSuccess({
         isLoggingIn: false,
         isLoggedIn: false,
-        token: ""
+        token: "",
       })
     );
     localStorage.removeItem("localStorageVal");
@@ -73,5 +73,5 @@ export const logOutLogic = createLogic({
     localStorage.removeItem("cartProduct");
     dispatch(push("/login"));
     done();
-  }
+  },
 });

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
 const propTypes = {
   children: PropTypes.node,
@@ -9,14 +9,17 @@ const defaultProps = {};
 
 class DefaultFooter extends Component {
   render() {
-
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
 
     return (
       <React.Fragment>
-        <span><a href="#">Admin</a> &copy; 2019 chapter247.</span>
-        <span className="ml-auto">Powered by <a href="#">CRM</a></span>
+        <span>
+          <a href="#">Admin</a> &copy; 2019 chapter247.
+        </span>
+        <span className="ml-auto">
+          Powered by <a href="#">CRM</a>
+        </span>
       </React.Fragment>
     );
   }

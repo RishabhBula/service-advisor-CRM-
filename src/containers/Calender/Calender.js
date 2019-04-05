@@ -1,23 +1,18 @@
 import React, { Component } from "react";
 import {
   Col,
-  Nav,
-  NavItem,
-  NavLink,
   Row,
-  TabContent,
-  TabPane,
   Popover,
   PopoverBody,
   PopoverHeader,
   Card,
-  CardBody
+  CardBody,
 } from "reactstrap";
-import {FullCalendar} from "primereact/fullcalendar";
-import "primereact/resources/themes/nova-light/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
+import { FullCalendar } from "primereact/fullcalendar";
 import CrmCircleIcon from "../../components/common/CrmCircleIcon";
+import "primeicons/primeicons.css";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/nova-light/theme.css";
 
 class Calender extends Component {
   constructor(props) {
@@ -26,85 +21,85 @@ class Calender extends Component {
       resources: [
         { id: 1, title: "Event Title 1" },
         { id: 2, title: "Event Title 2" },
-        { id: 4, title: "Event Title 4" }
+        { id: 4, title: "Event Title 4" },
       ],
       events: [
         {
           id: 1,
           title: "All Day Event",
           start: "2017-02-01",
-          description: "1 description"
+          description: "1 description",
         },
         {
           id: 2,
           title: "Long Event",
           start: "2017-02-07",
           end: "2017-02-10",
-          description: "2 description"
+          description: "2 description",
         },
         {
           id: 3,
           title: "Repeating Event",
           start: "2017-02-09T16:00:00",
-          description: "3 description"
+          description: "3 description",
         },
         {
           id: 4,
           title: "Event in bold",
           start: "2017-02-16T16:00:00",
-          description: "4 description"
+          description: "4 description",
         },
         {
           id: 5,
           title: "Conference",
           start: "2017-02-11",
           end: "2017-02-13",
-          description: "5 description"
+          description: "5 description",
         },
         {
           id: 6,
           title: "Meeting",
           start: "2017-02-12T10:30:00",
           end: "2017-02-12T12:30:00",
-          description: "6 description"
+          description: "6 description",
         },
         {
           id: 7,
           title: "Lunch",
           start: "2017-02-12T12:00:00",
-          description: "7 description"
+          description: "7 description",
         },
         {
           id: 8,
           title: "Meeting",
           start: "2017-02-12T14:30:00",
-          description: "8 description"
+          description: "8 description",
         },
         {
           id: 9,
           title: "Happy Hour",
           start: "2017-02-12T17:30:00",
-          description: "9 description"
+          description: "9 description",
         },
         {
           id: 10,
           title: "Dinner",
           start: "2017-03-30T20:00:00",
-          description: "10 description"
+          description: "10 description",
         },
         {
           id: 11,
           title: "Birthday Party",
           start: "2017-03-30T07:00:00",
-          description: "11 description"
+          description: "11 description",
         },
         {
           id: 12,
           title: "Click for Google",
           url: "http://google.com/",
           start: "2017-02-28",
-          description: "12 description"
-        }
+          description: "12 description",
+        },
       ],
       options: {
         defaultDate: "2017-02-01",
@@ -112,7 +107,7 @@ class Calender extends Component {
           left:
             "today prev,next month,agendaWeek,agendaDay,popover myCustomButton",
           center: "title",
-          right: ""
+          right: "",
         },
         editable: true,
         dateClick: e => {
@@ -126,7 +121,7 @@ class Calender extends Component {
 
         //   info.el.style.borderColor = "red";
         // },
-        eventRender: this.handleRenderEventClick.bind(this)
+        eventRender: this.handleRenderEventClick.bind(this),
         // eventRender: function(event, element) {
         //   console.log(element);
         //   return (
@@ -142,29 +137,27 @@ class Calender extends Component {
         //   );
         // }
       },
-      calenderData: {}
+      calenderData: {},
     };
   }
 
   handleEventClick(element) {
     console.log(element);
-     console.log(element.event.extendedProps.description);
-    return(
+    console.log(element.event.extendedProps.description);
+    return (
       <Popover
         placement="bottom"
         isOpen={true}
         target="Popover1"
         toggle={this.toggle}
       >
-        <PopoverHeader>
-          {element.event.extendedProps.description}
-        </PopoverHeader>
+        <PopoverHeader>{element.event.extendedProps.description}</PopoverHeader>
         <PopoverBody>{element.event.extendedProps.description}</PopoverBody>
       </Popover>
     );
   }
 
-  handleRenderEventClick(element) {  
+  handleRenderEventClick(element) {
     console.log("element");
     console.log(element);
     console.log(element.event.extendedProps.description);
@@ -195,7 +188,7 @@ class Calender extends Component {
                     width: "28px",
                     height: "28px",
                     marginLeft: "4px",
-                    fontSize: "18px"
+                    fontSize: "18px",
                   }}
                 />
               </Col>
