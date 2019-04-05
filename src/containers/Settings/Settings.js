@@ -1,181 +1,54 @@
-import React, { Component } from "react";
-import {
-  Col,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane
-} from "reactstrap";
+import React, { Component, Suspense } from "react";
+import { Route, Switch } from "react-router-dom";
+import { Row, Col } from "reactstrap";
+import { Dashboard } from "../../views";
+import Loader from "../Loader/Loader";
+import Sidebar from "./Sidebar";
 
+const SettingsNav = [
+  {
+    heading: true,
+    icon: "fa fa-cog",
+    name: "Settings",
+  },
+  {
+    icon: "fa fa-users",
+    name: "Users",
+    link: "/settings/users",
+  },
+];
+const SettingRoutes = [
+  { path: "/users", name: "Settings", component: Dashboard },
+];
 class Settings extends Component {
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      activeTab: new Array(4).fill("1"),
-      tabDetails: [
-        {
-          name: "Quotes",
-          details: [
-            {
-              abc: "name1"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        },
-        {
-          name: "In Progress",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        },
-        {
-          name: "Dropped Off",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        },
-        {
-          name: "Invoices",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        }
-      ]
-    };
-  }
-
-  lorem(detailsData) {
-    return Object.keys(detailsData).map(function(key, index) {
-      return <li key={index}>{detailsData[key].abc}</li>;
-    });
-  }
-
-  toggle(tabPane, tab) {
-    const newArray = this.state.activeTab.slice();
-    newArray[tabPane] = tab;
-    this.setState({
-      activeTab: newArray
-    });
-  }
-
-  tabPane() {
-    const { tabDetails } = this.state;
-    return tabDetails.map((item, index) => {
-      return (
-        <TabPane tabId={(index + 1).toString()}>
-          {index + 1} {this.lorem(item.details)}
-        </TabPane>
-      );
-    });
+    this.state = {};
   }
 
   render() {
-    const { tabDetails } = this.state;
-
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" md="12" className="">
-            <div className="margin-top-10 page-title">
-              <h4 className="">WorkFlow</h4>
-              <div className="workflow-mode">
-                <div className="mode-inner">
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-list" />
-                  </div>
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-grid" />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <Col sm={"2"}>
+            <Sidebar navItems={SettingsNav} />
           </Col>
-          {/* <Col xs="4" md="4" className="mb-4">
-            
-          </Col> */}
-        </Row>
-        <Row>
-          <Col xs="12" md="12" className="mb-4">
-            <Nav tabs>
-              {tabDetails.map((item, index) => {
-                return (
-                  <NavItem>
-                    <NavLink
-                      active={this.state.activeTab[0] === parseInt(index) + 1}
-                      onClick={() => {
-                        this.toggle(0, (parseInt(index) + 1).toString());
-                      }}
-                    >
-                      {item.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })}
-              {/* <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "1"}
-                  onClick={() => {
-                    this.toggle(0, "1");
-                  }}
-                >
-                  Quotes
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "2"}
-                  onClick={() => {
-                    this.toggle(0, "2");
-                  }}
-                >
-                  In Progress
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "3"}
-                  onClick={() => {
-                    this.toggle(0, "3");
-                  }}
-                >
-                  Dropped Off
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "4"}
-                  onClick={() => {
-                    this.toggle(0, "4");
-                  }}
-                >
-                  Invoices
-                </NavLink>
-              </NavItem> */}
-            </Nav>
-            <TabContent activeTab={this.state.activeTab[0]}>
-              {this.tabPane()}
-            </TabContent>
+          <Col sm={"10"}>
+            <Suspense fallback={<Loader />}>
+              <Switch>
+                {SettingRoutes.map((route, idx) => {
+                  return route.component ? (
+                    <Route
+                      key={idx}
+                      path={route.path}
+                      exact={route.exact}
+                      name={route.name}
+                      render={props => <route.component {...props} />}
+                    />
+                  ) : null;
+                })}
+              </Switch>
+            </Suspense>
           </Col>
         </Row>
       </div>

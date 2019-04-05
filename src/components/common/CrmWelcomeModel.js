@@ -11,25 +11,23 @@ import {
   Label,
   Input
 } from "reactstrap";
-import Dropzone from 'react-dropzone'
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+import Dropzone from "react-dropzone";
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 export class BigModals extends Component {
   constructor(props) {
     super(props);
     this.state = {
       large: false,
-      companyLogo: ''
+      companyLogo: ""
     };
     this.cropper = React.createRef();
   }
-  
 
   _crop(event) {
-    var width = event.detail.width;
-    var height = event.detail.height;
-    console.log(event.target.currentSrc);
-    
+    // var width = event.detail.width;
+    // var height = event.detail.height;
+    // console.log(event.target.currentSrc);
     // if (width < AppConfig.width_img || height < AppConfig.height_img) {
     //     this.refs.cropper.setData({
     //         width: Math.max(AppConfig.width_img, Math.min(AppConfig.width_img, width)),
@@ -37,14 +35,14 @@ export class BigModals extends Component {
     //     });
     // }
     // image in dataUrl
-}
+  }
   // image in dataUrl
   toggleLarge = () => {
     this.setState({
       large: !this.state.large
     });
   };
-  onSelectFile = (e) => {
+  onSelectFile = e => {
     var reader = new FileReader();
     const scope = this;
     reader.addEventListener("load", () =>
@@ -52,14 +50,14 @@ export class BigModals extends Component {
         companyLogo: reader.result
       })
     );
-    reader.onloadend = function (as) {
+    reader.onloadend = function(as) {
       var image = new Image();
-      image.onload = function () {
+      image.onload = function() {
         scope.setState({
-          companyLogo: reader.result,
-        })
-      }
-    }
+          companyLogo: reader.result
+        });
+      };
+    };
     reader.readAsDataURL(e[0]);
   };
   render() {
@@ -74,19 +72,25 @@ export class BigModals extends Component {
         >
           <ModalHeader toggle={toggleLarge}>Modal title</ModalHeader>
           <ModalBody>
-            <h2 className="text-center pb-4">Hi Rishabh, You're almost Done!</h2>
+            <h2 className="text-center pb-4">
+              Hi Rishabh, You're almost Done!
+            </h2>
             <div className="pb-3">
               <h4 className="text-center pb-2">1. Tell us about your shop.</h4>
               <Row className="justify-content-center">
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="font-text">Company Name</Label>
+                    <Label htmlFor="name" className="font-text">
+                      Company Name
+                    </Label>
                     <Input type="text" id="name" required />
                   </FormGroup>
                 </Col>
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="font-text">Website (optional)</Label>
+                    <Label htmlFor="name" className="font-text">
+                      Website (optional)
+                    </Label>
                     <Input type="text" id="name" required />
                   </FormGroup>
                 </Col>
@@ -96,33 +100,35 @@ export class BigModals extends Component {
                   <Dropzone onDrop={this.onSelectFile}>
                     {({ getRootProps, getInputProps, isDragActive }) => {
                       return (
-                        <div
-                          className="welcome-image-select-background"
-                        >
-                          <div className="text-center"{...getRootProps()}>
-                            <input {...getInputProps()} accept="image/png, image/jpeg" />
-                            {
-                              companyLogo == '' ?
-                                <>
-                                  <i className="far fa-file-image welcome-image-icon" />
-                                  <div className="text-center welcome-image-text">
-                                    Shop Logo
+                        <div className="welcome-image-select-background">
+                          <div className="text-center" {...getRootProps()}>
+                            <input
+                              {...getInputProps()}
+                              accept="image/png, image/jpeg"
+                            />
+                            {!companyLogo ? (
+                              <>
+                                <i className="far fa-file-image welcome-image-icon" />
+                                <div className="text-center welcome-image-text">
+                                  Shop Logo
                                   <br />
-                                    Drag image here or click to add
-                                  </div>
-                                </> :
-                                <Cropper
-                                  ref={this.cropper}
-                                  src={companyLogo}
-                                  style={{ height: 165, width: 165 }}
-                                  // Cropper.js options
-                                  aspectRatio={16 / 9}
-                                  guides={false}
-                                  crop={this._crop.bind(this)} />
-                            }
+                                  Drag image here or click to add
+                                </div>
+                              </>
+                            ) : (
+                              <Cropper
+                                ref={this.cropper}
+                                src={companyLogo}
+                                style={{ height: 165, width: 165 }}
+                                // Cropper.js options
+                                aspectRatio={16 / 9}
+                                guides={false}
+                                crop={this._crop.bind(this)}
+                              />
+                            )}
                           </div>
                         </div>
-                      )
+                      );
                     }}
                   </Dropzone>
                   {/* <Dropzone onDrop={acceptedFiles => this.handleImage(acceptedFiles)}>
@@ -153,13 +159,18 @@ export class BigModals extends Component {
                 </Col>
                 <Col md="6" className="welcome-image-align">
                   <div className="welcome-image-text">
-                    <span >Your logo will appear on quotes, invoices, work orders and work request forms.</span>
+                    <span>
+                      Your logo will appear on quotes, invoices, work orders and
+                      work request forms.
+                    </span>
                   </div>
                 </Col>
               </Row>
             </div>
             <div className="pb-3">
-              <h4 className="text-center pb-2">2. How many people work in your shop?</h4>
+              <h4 className="text-center pb-2">
+                2. How many people work in your shop?
+              </h4>
               <div className="justify-content-center">
                 <div className="d-flex box-space">
                   <div className="box-contain">
@@ -178,22 +189,30 @@ export class BigModals extends Component {
               </div>
             </div>
             <div className="pb-3">
-              <h4 className="text-center pb-2">3. What kinds of services do you offer?</h4>
+              <h4 className="text-center pb-2">
+                3. What kinds of services do you offer?
+              </h4>
               <div className="justify-content-center">
                 <div className="d-flex box-space">
                   <div className="box-contain">
                     <div className="justify-content-center">
                       <img src="/assets/img/repairing-car.svg" alt="" />
-                      <div className="welcome-service-text">Repair & Maintenance</div>
+                      <div className="welcome-service-text">
+                        Repair & Maintenance
+                      </div>
                     </div>
                   </div>
                   <div className="box-contain">
                     <img src="/assets/img/carPaintingLogo.svg" alt="" />
-                    <div className="welcome-service-text">Detail, Wrap & Film</div>
+                    <div className="welcome-service-text">
+                      Detail, Wrap & Film
+                    </div>
                   </div>
                   <div className="box-contain">
                     <img src="/assets/img/carChachisLogo.svg" alt="" />
-                    <div className="welcome-service-text">Restoration & Custom Builds</div>
+                    <div className="welcome-service-text">
+                      Restoration & Custom Builds
+                    </div>
                   </div>
                   <div className="box-contain">
                     <img src="/assets/img/list-dots.svg" alt="" />
@@ -203,7 +222,9 @@ export class BigModals extends Component {
               </div>
             </div>
             <div className="pb-3">
-              <h4 className="text-center pb-2">4. What types of vehicles do you service?</h4>
+              <h4 className="text-center pb-2">
+                4. What types of vehicles do you service?
+              </h4>
               <div className="justify-content-center">
                 <div className="d-flex box-space">
                   <div className="box-contain">
@@ -215,7 +236,9 @@ export class BigModals extends Component {
                   <div className="box-contain">
                     <div>
                       <img src="/assets/img/trukLogo.svg" alt="" />
-                      <div className="welcome-service-text">Semi & Heavy Duty</div>
+                      <div className="welcome-service-text">
+                        Semi & Heavy Duty
+                      </div>
                     </div>
                   </div>
                   <div className="box-contain">
@@ -247,7 +270,7 @@ export class BigModals extends Component {
                     <div className="welcome-service-text">Bicycless</div>
                   </div>
                   <div className="box-contain">
-                    <img src="/assets/img/list-dots.svg" />
+                    <img src="/assets/img/list-dots.svg" alt="" />
                     <div className="welcome-service-text">Others</div>
                   </div>
                 </div>
@@ -267,5 +290,3 @@ export class BigModals extends Component {
     );
   }
 }
-
-

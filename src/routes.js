@@ -23,7 +23,7 @@ const routes = [
     component: TimeClocks,
   },
   { path: "/reports", exact: true, name: "Reports", component: Reports },
-  { path: "/company", exact: true, name: "Settings", component: Settings },
+  { path: "/settings", exact: false, name: "Settings", component: Settings },
   { path: "/common", exact: true, name: "Common", component: CommonPage },
 ];
 

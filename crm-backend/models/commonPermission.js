@@ -2,43 +2,43 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const DiscountType = new Schema({
   status: {
-    type: Boolean
+    type: Boolean,
   },
   percentageDiscount: {
-    type: Number
-  }
+    type: Number,
+  },
 });
 const LaboutRateType = new Schema({
   status: {
-    type: Boolean
+    type: Boolean,
   },
   laborRate: {
     type: Schema.Types.ObjectId,
     ref: "RateStandard",
-    default: null
-  }
+    default: null,
+  },
 });
 const PriceMatrixOptions = new Schema({
   status: {
-    type: Boolean
+    type: Boolean,
   },
   pricingMatrix: {
-    type: Schema.Types.ObjectId
-  }
+    type: Schema.Types.ObjectId,
+  },
 });
 const PermissionObject = new Schema({
   isCorporateFleetTaxExempt: {
-    type: Boolean
+    type: Boolean,
   },
   shouldReceiveDiscount: {
-    type: DiscountType
+    type: DiscountType,
   },
   shouldLaborRateOverride: {
-    type: LaboutRateType
+    type: LaboutRateType,
   },
   shouldPricingMatrixOverride: {
-    type: PriceMatrixOptions
-  }
+    type: PriceMatrixOptions,
+  },
 });
 
 module.exports = { PermissionObject };

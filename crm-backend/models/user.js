@@ -4,97 +4,93 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   firstName: {
     type: String,
-    default: null
+    default: null,
   },
   lastName: {
     type: String,
-    default: null
+    default: null,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
-  verifyToken:{
+  verifyToken: {
     type: String,
-    default: null
+    default: null,
   },
   roleType: {
     type: Schema.Types.ObjectId,
     ref: "role",
-    required: true
+    required: true,
   },
   permission: {
     type: String,
-    default: null
+    default: null,
   },
   firstTimeUser: {
     type: Boolean,
-    default: false
+    default: false,
   },
   userSideActivation: {
     type: Boolean,
-    default: false
+    default: false,
   },
   userSideActivationValue: {
     type: String,
-    default: null
+    default: null,
   },
   status: {
     type: Boolean,
-    default: true
+    default: true,
   },
   loggedInIp: {
     type: String,
-    default: null
+    default: null,
   },
   salt: {
     type: String,
-    default: null
+    default: null,
   },
   companyName: {
     type: String,
-    default: null
+    default: null,
   },
   website: {
     type: String,
-    default: null
+    default: null,
   },
   peopleWork: {
     type: String,
-    default: null
+    default: null,
   },
   serviceOffer: {
     type: String,
-    default: null
+    default: null,
   },
   vehicleService: {
     type: String,
-    default: null
+    default: null,
   },
   shopLogo: {
     type: String,
-    default: null
+    default: null,
   },
   parentId: {
     type: String,
-    default: null
-  },
-  verifyToken:{
-    type: String,
-    default: null
+    default: null,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("user", userSchema);

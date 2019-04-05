@@ -8,7 +8,7 @@ class Login extends Component {
     return <LoginPage onLogin={onLogin} />;
   }
 }
-const mapStateToProps = state => {};
+const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => {
   return {
     onLogin: data => {

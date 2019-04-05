@@ -1,3 +1,5 @@
+import Validator from "js-object-validation";
+
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -14,6 +16,8 @@ import {
   InputGroupText,
   Row,
 } from "reactstrap";
+import { logger } from "../../helpers/Logger";
+import { LoginValidations, LoginValidationsMessaages } from "../../validations";
 
 class LoginPage extends Component {
   constructor(props) {
@@ -38,26 +42,40 @@ class LoginPage extends Component {
   };
   login = e => {
     e.preventDefault();
-    console.log("====================================");
-    console.log(this.state);
-    console.log("====================================");
-    const { email, password } = this.state;
-    this.props.onLogin({
-      email,
-      password,
+    this.setState({
+      errors: {},
     });
+    try {
+      const { isValid, errors } = Validator(
+        this.state,
+        LoginValidations,
+        LoginValidationsMessaages
+      );
+      if (!isValid) {
+        this.setState({
+          errors,
+          isLoading: false,
+        });
+        return;
+      }
+      const { email, password } = this.state;
+      this.props.onLogin({
+        email,
+        password,
+      });
+    } catch (error) {
+      logger(error);
+    }
   };
   render() {
-    const { email, password } = this.state;
+    const { email, password, errors } = this.state;
     return (
       <div className="app flex-row align-items-center auth-page">
         <Container>
           <Row className="justify-content-center">
             <Col md="6">
               <Col className="text-center">
-                <Link to="/dashboard">
-                  <h4 className="logo-title">CRM 360</h4>
-                </Link>
+                <h4 className="logo-title">CRM 360</h4>
               </Col>
               <CardGroup>
                 <Card className="p-4">
@@ -80,6 +98,9 @@ class LoginPage extends Component {
                           onChange={this.handleChange}
                         />
                       </InputGroup>
+                      {errors.email ? (
+                        <p className={"text-danger"}>{errors.email}</p>
+                      ) : null}
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
@@ -95,6 +116,9 @@ class LoginPage extends Component {
                           onChange={this.handleChange}
                         />
                       </InputGroup>
+                      {errors.password ? (
+                        <p className={"text-danger"}>{errors.password}</p>
+                      ) : null}
                       <Row>
                         <Col xs="6">
                           <Button color="primary" className="px-4" block>
