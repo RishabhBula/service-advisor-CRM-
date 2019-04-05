@@ -39,21 +39,20 @@ const signUp = async (req, res) => {
       $data.firstTimeUser = true;
       $data.loggedInIp = commonSmtp.getIpAddress(req);
       $data.userSideActivationValue = confirmationNumber;
-      let result = await new userModel($data).save();
-
-      var token = jwt.sign(
-        {
-          id: result._id,
-          randomKey: salt,
-          email: $data.email,
-          firstName: $data.firstName,
-          lastName: $data.lastName,
-        },
-        commonCrypto.secret,
-        {
-          expiresIn: 86400,
-        }
-      );
+      let result = await userModel($data).save();
+      // var token = jwt.sign(
+      //   {
+      //     id: result._id,
+      //     randomKey: salt,
+      //     email: $data.email,
+      //     firstName: $data.firstName,
+      //     lastName: $data.lastName
+      //   },
+      //   commonCrypto.secret,
+      //   {
+      //     expiresIn: 86400
+      //   }
+      // );
 
       const emailVar = new Email(res);
       await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
@@ -66,10 +65,8 @@ const signUp = async (req, res) => {
       await emailVar.sendEmail(result.email);
 
       return res.status(200).json({
-        message: otherMessage.newRegister,
-        result: result,
-        token: token,
-        success: true,
+        message: otherMessage.confirmMessage,
+        success: true
       });
     }
   } catch (error) {
@@ -155,6 +152,14 @@ const loginApp = async (req, res) => {
       };
     }
     if (!result.status) {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        code: 400,
+        message: "you are not authorized to access CRM",
+        success: false,
+      };
+    }
+    if (!result.userSideActivation) {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,

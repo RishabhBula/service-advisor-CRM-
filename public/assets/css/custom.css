@@ -221,6 +221,12 @@
     justify-content: center;
     align-items: center;
 }
+.box-contain.active {
+    box-shadow: inset 0px 0px 0px 1px #54afc9;    
+}
+.box-contain.active .welcome-service-text {
+    color: #54afc9;
+}
 .box-space{
     justify-content: space-between !important
 }
@@ -239,6 +245,10 @@
 .welcome-image-align{
     align-items: center;
     display: flex;
+}
+.welcome-image-select-background>div{
+        box-shadow: none;
+    outline: none;
 }
 .welcome-image-select-background{
     height: 165px;
@@ -261,6 +271,24 @@
     font-size: 3rem;
     opacity: .5;
     margin-bottom: 10px;
+}
+.welcome-image-parnet {
+        height: 234px;
+    position: relative;
+}
+/* .welcome-image-parnet .welcome-image-upload img{
+    
+} */
+/* .cropper-controls{
+        bottom: -75px;
+} */
+.welcome-image-upload {
+    margin-bottom: 0 !important;        
+}
+.welcome-slider-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 /* end of welcome modal */
 

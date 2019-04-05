@@ -7,7 +7,8 @@ const { mode } = require("./config/app");
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
-if (mode === "development") {
+
+if (mode == "development") {
   const cors = require("cors");
   var corsOption = {
     origin: true,
