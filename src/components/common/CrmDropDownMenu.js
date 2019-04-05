@@ -1,12 +1,11 @@
 import React, { Component } from "react";
+import Avatar from "react-avatar";
 import {
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Badge,
-  Dropdown
+  Dropdown,
 } from "reactstrap";
-import Avatar from "react-avatar";
 import CrmCircleIcon from "../../components/common/CrmCircleIcon";
 
 class CrmDropDownMenu extends Component {
@@ -15,13 +14,13 @@ class CrmDropDownMenu extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
     };
   }
 
   toggle() {
     this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
+      dropdownOpen: !prevState.dropdownOpen,
     }));
   }
 
@@ -29,15 +28,15 @@ class CrmDropDownMenu extends Component {
     this.props.returnCrmDropAction(keyData);
   }
 
-  optionsArray(){
+  optionsArray() {
     const { options } = this.props;
-    return options.map((item,index) => {
+    return options.map((item, index) => {
       return (
         <DropdownItem onClick={() => this.performAction(item)} key={index}>
           {item.value}
         </DropdownItem>
       );
-    })
+    });
   }
 
   render() {
@@ -46,12 +45,10 @@ class CrmDropDownMenu extends Component {
       imagePass,
       iconPass,
       classNamePass,
-      options,
-      fontSizePass,
-      cssPass
-    } = this.props;console.log(imagePass);
-    
-    
+      cssPass,
+    } = this.props;
+    console.log(imagePass);
+
     return (
       <div className={classNamePass}>
         <Dropdown
@@ -68,10 +65,7 @@ class CrmDropDownMenu extends Component {
                 round={true}
               />
             ) : (
-              <CrmCircleIcon
-                  circleIconPass={iconPass}
-                  cssPass={cssPass}
-                />
+              <CrmCircleIcon circleIconPass={iconPass} cssPass={cssPass} />
             )}
           </DropdownToggle>
           <DropdownMenu right>

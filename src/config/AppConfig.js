@@ -1,22 +1,19 @@
-const mode = "stage"; //stage,dev,live
-export const isProd = mode === "live";
+export const EnviornmentTypes = {
+  DEV: "development",
+  PROD: "production",
+};
+export const mode = process.env.NODE_ENV || EnviornmentTypes.DEV; //stage,dev,live
+export const isProd = mode === EnviornmentTypes.PROD;
 let data;
 
 switch (mode) {
-  case "live":
-    data = {
-    };
+  case EnviornmentTypes.PROD:
+    data = {};
     break;
-  case "stage":
+  case EnviornmentTypes.DEV:
     data = {
-    };
-    break;
-  case "dev":
-    data = {
-      API_ENDPOINT: "https://192.168.2.117:8001/",
+      API_ENDPOINT: "http://192.168.2.117:8001/",
       API_VERSION: "api",
-      frontUrl: "",
-      backUrlApi: "https://192.168.2.117:8000/api",
     };
     break;
   default:

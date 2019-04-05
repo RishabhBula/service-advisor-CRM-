@@ -1,15 +1,11 @@
 import React, { Component } from "react";
+import { InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
 import { AutoComplete } from "primereact/autocomplete";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText
-} from "reactstrap";
 class SearchBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      brandSuggestions: null
+      brandSuggestions: null,
     };
     this.brands = [
       "Audi",
@@ -23,7 +19,7 @@ class SearchBar extends Component {
       "Jaguar",
       "Mercedes",
       "Renault",
-      "Volvo"
+      "Volvo",
     ];
   }
 
@@ -52,7 +48,7 @@ class SearchBar extends Component {
             style={{
               fontSize: "16px",
               textAlign: "center",
-              margin: "10px 10px 0 0"
+              margin: "10px 10px 0 0",
             }}
           >
             {"No Data Found"}
@@ -70,14 +66,14 @@ class SearchBar extends Component {
             style={{
               width: "32px",
               display: "inline-block",
-              margin: "5px 0 2px 5px"
+              margin: "5px 0 2px 5px",
             }}
           />
           <div
             style={{
               fontSize: "16px",
               float: "right",
-              margin: "10px 10px 0 0"
+              margin: "10px 10px 0 0",
             }}
           >
             {brand}

@@ -8,7 +8,7 @@ import {
   TabContent,
   TabPane,
   Card,
-  CardBody
+  CardBody,
 } from "reactstrap";
 import CrmDropDownMenu from "../../components/common/CrmDropDownMenu";
 
@@ -24,47 +24,47 @@ class Inventory extends Component {
           name: "Parts",
           details: [
             {
-              abc: "name1"
+              abc: "name1",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Tires",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Labor",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Vendors",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
-        }
-      ]
+              abc: "name",
+            },
+          ],
+        },
+      ],
     };
   }
 
@@ -78,7 +78,7 @@ class Inventory extends Component {
     const newArray = this.state.activeTab.slice();
     newArray[tabPane] = tab;
     this.setState({
-      activeTab: newArray
+      activeTab: newArray,
     });
   }
 
@@ -93,15 +93,15 @@ class Inventory extends Component {
     });
   }
 
-  performInventoryAction = (options) => {
-    console.log(options);    
-  }
+  performInventoryAction = options => {
+    console.log(options);
+  };
 
   render() {
     const { tabDetails } = this.state;
     let dropdownOptions = [
       { value: "import", label: "Import" },
-      { value: "export", label: "export" }
+      { value: "export", label: "export" },
     ];
     return (
       <div className="animated fadeIn">

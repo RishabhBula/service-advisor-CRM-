@@ -202,6 +202,13 @@ const loginApp = async (req, res) => {
 /* -----------------User Forgot Password-------------- */
 const userForgotPassword = async (req, res) => {
   const { body } = req;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: commonValidation.formatValidationErr(errors.mapped(), true),
+      success: false
+    });
+  }
   try {
     const userData = await userModel.findOne({ email: body.email })
     if (!userData) {
@@ -244,6 +251,13 @@ const userForgotPassword = async (req, res) => {
 /* -----------------User Verify Link-------------- */
 const userVerifyLink = async (req, res) => {
   const { body } = req;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: commonValidation.formatValidationErr(errors.mapped(), true),
+      success: false
+    });
+  }
   try {
     const decryptedUserId = commonCrypto.decrypt(body.verification);
     const decryptedUserEmail = commonCrypto.decrypt(body.user);
@@ -265,7 +279,7 @@ const userVerifyLink = async (req, res) => {
       success: true
     });
   } catch (error) {
-    console.log("this is forgot password error", error);
+    console.log("this is verify link error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false
@@ -276,6 +290,13 @@ const userVerifyLink = async (req, res) => {
 /* -----------------User Reset password-------------- */
 const userResetpassword = async (req, res) => {
   const { body } = req;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: commonValidation.formatValidationErr(errors.mapped(), true),
+      success: false
+    });
+  }
   try {
     const userData = await userModel.findOne({ email: body.email })
     if (!userData) {
@@ -288,15 +309,21 @@ const userResetpassword = async (req, res) => {
     var salt = commonCrypto.generateSalt(6);
     body.salt = salt;;
     const encryptedUserpassword = commonCrypto.hashPassword(body.password, salt);
+    if (!userData.verifyToken) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Your session has been expired.",
+        success: false
+      });
+    }
     const result = await userModel.update({
-      email: body.email,
-      verifyToken: body.token
+      email: body.email
     },
       {
         $set: {
           password: encryptedUserpassword,
           salt: body.salt,
-          verifyToken: "",
+          verifyToken: null,
         }
       }
     )
@@ -305,9 +332,15 @@ const userResetpassword = async (req, res) => {
         message: "Password updated successfully!",
         success: true
       });
+    } else {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Your session has been expired.",
+        success: false
+      });
     }
   } catch (error) {
-    console.log("this is forgot password error", error);
+    console.log("this is Reset password error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false

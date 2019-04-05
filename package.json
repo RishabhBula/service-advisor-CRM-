@@ -45,6 +45,7 @@
     "reactstrap": "^7.1.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
+    "redux-logger": "^3.0.6",
     "redux-logic": "^2.1.1",
     "simple-line-icons": "^2.4.1"
   },
