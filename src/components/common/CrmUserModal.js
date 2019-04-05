@@ -36,7 +36,7 @@ export class CrmUserModal extends Component {
                toggle={handleUserModal}
                className="customer-modal"
             >
-               <ModalHeader toggle={toggleLarge}>Create New User</ModalHeader>
+               <ModalHeader toggle={userModalOpen}>Create New User</ModalHeader>
                <ModalBody>
                   <div className="">
                      <Row className="justify-content-center">
@@ -105,10 +105,10 @@ export class CrmUserModal extends Component {
                   </div>
                </ModalBody>
                <ModalFooter>
-                  <Button color="primary" onClick={toggleLarge}>
+                  <Button color="primary" onClick={userModalOpen}>
                      Do Something
             </Button>{" "}
-                  <Button color="secondary" onClick={toggleLarge}>
+                  <Button color="secondary" onClick={userModalOpen}>
                      Cancel
             </Button>
                </ModalFooter>
