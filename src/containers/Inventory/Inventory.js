@@ -12,7 +12,6 @@ import {
 } from "reactstrap";
 import CrmDropDownMenu from "../../components/common/CrmDropDownMenu";
 import { CrmUserModal } from '../../components/common/CrmUserModal'
-import { from } from "rxjs";
 class Inventory extends Component {
   constructor(props) {
     super(props);

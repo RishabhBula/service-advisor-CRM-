@@ -151,7 +151,7 @@ const loginApp = async (req, res) => {
         success: false,
       };
     }
-    if (!result.status) {
+    if (!result.userSideActivation) {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
