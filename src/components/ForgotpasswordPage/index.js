@@ -61,9 +61,7 @@ class ForgotpasswordPage extends Component {
           <Row className="justify-content-center">
             <Col md="6">
               <Col className="text-center">
-                <Link to="/dashboard">
-                  <h4 className="logo-title">CRM 360</h4>
-                </Link>
+                <h4 className="logo-title">CRM 360</h4>
               </Col>
               <CardGroup>
                 <Card className="p-4">
