@@ -101,14 +101,14 @@ export class BigModals extends Component {
         companyLogo: reader.result
       })
     );
-    reader.onloadend = function (as) {
+    reader.onloadend = function(as) {
       var image = new Image();
-      image.onload = function () {
+      image.onload = function() {
         scope.setState({
-          companyLogo: reader.result,
-        })
-      }
-    }
+          companyLogo: reader.result
+        });
+      };
+    };
     reader.readAsDataURL(e[0]);
   };
 
@@ -375,7 +375,7 @@ export class BigModals extends Component {
                     <div className="welcome-service-text">Bicycless</div>
                   </div>
                   <div className="box-contain">
-                    <img src="/assets/img/list-dots.svg" />
+                    <img src="/assets/img/list-dots.svg" alt="" />
                     <div className="welcome-service-text">Others</div>
                   </div>
                 </div>
@@ -395,5 +395,3 @@ export class BigModals extends Component {
     );
   }
 }
-
-

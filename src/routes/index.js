@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Route, Switch, withRouter } from "react-router-dom";
+import { hideLoader, showLoader, redirectTo } from "../actions";
 import "../App.scss";
-
+import FullPageLoader from "../containers/Loader/FullPageLoader";
 // Containers
 const DefaultLayout = React.lazy(() => import("../containers/DefaultLayout"));
 
@@ -22,57 +24,83 @@ const Routes = [
     exact: true,
     path: "/login",
     name: "Login Page",
-    component: Login,
+    component: Login
   },
   {
     exact: true,
     path: "/register",
     name: "Register Page",
-    component: Register,
+    component: Register
   },
   {
     exact: true,
     path: "/forgot-password",
     name: "Forgot Password",
-    component: ForGotPassword,
+    component: ForGotPassword
   },
   {
     exact: true,
     path: "/reset-password",
     name: "Reset Password",
-    component: ResetPassword,
+    component: ResetPassword
   },
   {
     exact: true,
     path: "/404",
     name: "Page Not Found",
-    component: Page404,
+    component: Page404
   },
   {
     exact: false,
     path: "/",
     name: "Home",
-    component: DefaultLayout,
-  },
+    component: DefaultLayout
+  }
 ];
 
 class AppRoutes extends Component {
   render() {
+    const { appState } = this.props;
+    const { showLoader } = appState;
     return (
-      <Switch>
-        {Routes.map((route, index) => {
-          return (
-            <Route
-              key={index}
-              exact={route.exact}
-              path={route.path}
-              name={route.name}
-              render={props => <route.component {...props} />}
-            />
-          );
-        })}
-      </Switch>
+      <>
+        {showLoader ? <FullPageLoader /> : null}
+        <Switch>
+          {Routes.map((route, index) => {
+            return (
+              <Route
+                key={index}
+                exact={route.exact}
+                path={route.path}
+                name={route.name}
+                render={props => <route.component {...props} {...this.props} />}
+              />
+            );
+          })}
+        </Switch>
+      </>
     );
   }
 }
-export default withRouter(AppRoutes);
+const mapStateToProps = state => ({
+  appState: state.mainReducer
+});
+const mapDispatchToProps = dispatch => {
+  return {
+    showLoader: () => {
+      dispatch(showLoader());
+    },
+    hideLoader: () => {
+      dispatch(hideLoader());
+    },
+    redirectTo: path => {
+      dispatch(redirectTo({ path }));
+    }
+  };
+};
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AppRoutes)
+);

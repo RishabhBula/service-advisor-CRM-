@@ -7,7 +7,7 @@ const commonSmtp = require("../../common/index");
 const commonCrypto = require("../../common/crypto");
 const {
   validationMessage,
-  otherMessage
+  otherMessage,
 } = require("../../common/validationMessage");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const moment = require("moment");
@@ -19,14 +19,14 @@ const signUp = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false
+        success: false,
       });
     }
     let userFind = await userModel.find({ email: req.body.email });
     if (userFind.length >= 1) {
       return res.status(401).json({
         message: validationMessage.emailAlreadyExist,
-        success: false
+        success: false,
       });
     } else {
       var roleType = await roleModel.findOne({ userType: "admin" });
@@ -60,7 +60,7 @@ const signUp = async (req, res) => {
         lastName: result.lastName,
         email: result.email,
         userId: result._id,
-        userSideActivationValue: confirmationNumber
+        userSideActivationValue: confirmationNumber,
       });
       await emailVar.sendEmail(result.email);
 
@@ -72,7 +72,7 @@ const signUp = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
@@ -83,7 +83,7 @@ const confirmationSignUp = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false
+        success: false,
       });
     }
     let data = req.body;
@@ -91,48 +91,48 @@ const confirmationSignUp = async (req, res) => {
       $and: [
         { _id: data.userId },
         { userSideActivation: false },
-        { userSideActivationValue: data.activeValue }
-      ]
+        { userSideActivationValue: data.activeValue },
+      ],
     });
     if (userData) {
       let roleUpdate = await userModel.updateOne(
         {
-          _id: userData._id
+          _id: userData._id,
         },
         {
           $set: {
             userSideActivation: true,
-            userSideActivationValue: ""
-          }
+            userSideActivationValue: "",
+          },
         }
       );
       if (roleUpdate) {
         const emailVar = new Email(res);
         await emailVar.setTemplate(AvailiableTemplates.SIGNUP, {
           firstName: userData.firstName,
-          lastName: userData.lastName
+          lastName: userData.lastName,
         });
         await emailVar.sendEmail(userData.email);
         res.status(200).json({
           message: userData,
-          success: true
+          success: true,
         });
       } else {
         res.status(401).json({
           message: "Some thing Went Wrong",
-          success: false
+          success: false,
         });
       }
     } else {
       res.status(401).json({
         message: "User already exist.",
-        success: false
+        success: false,
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
@@ -141,59 +141,67 @@ const loginApp = async (req, res) => {
   try {
     const { email, password } = req.body;
     const result = await userModel.findOne({
-      $and: [{ email: email }]
+      $and: [{ email: email }],
     });
     if (result === null) {
+      // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
         message: "Email Address not found!",
-        success: false
+        success: false,
       };
     }
     if (!result.status) {
+      // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
         message: "you are not authorized to access CRM",
-        success: false
+        success: false,
       };
     }
     if (!commonCrypto.verifyPassword(result.password, password, result.salt)) {
+      // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
         message: "Password did not match!",
-        success: false
+        success: false,
       };
     }
-    let ipUpdate = await userModel.updateOne(
+    await userModel.updateOne(
       {
-        _id: result._id
+        _id: result._id,
       },
       {
         $set: {
-          loggedInIp: commonSmtp.getIpAddress(req)
-        }
-      })
-    var token = jwt.sign({
-      id: result._id,
-      randomKey: commonCrypto.generateSalt(8),
-      email: result.email,
-      firstName: result.firstName,
-      lastName: result.lastName
-    }, commonCrypto.secret, {
-        expiresIn: 86400
-      });
+          loggedInIp: commonSmtp.getIpAddress(req),
+        },
+      }
+    );
+    var token = jwt.sign(
+      {
+        id: result._id,
+        randomKey: commonCrypto.generateSalt(8),
+        email: result.email,
+        firstName: result.firstName,
+        lastName: result.lastName,
+      },
+      commonCrypto.secret,
+      {
+        expiresIn: 86400,
+      }
+    );
     return res.status(200).json({
       responseCode: 200,
       data: result,
       tokenExpire: moment() + 86400,
       token: token,
       message: "Successfully Login",
-      success: true
-    })
+      success: true,
+    });
   } catch (error) {
-    res.status(500).json({
+    res.status(error.code || 500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
@@ -204,48 +212,54 @@ const userForgotPassword = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false
+      success: false,
     });
   }
   try {
-    const userData = await userModel.findOne({ email: body.email })
+    const userData = await userModel.findOne({ email: body.email });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
         message: "Email not registered.",
-        success: false
+        success: false,
       });
     }
     const encryptedUserId = commonCrypto.encrypt(userData.id);
     const encrypteUserEmail = commonCrypto.encrypt(userData.email);
-    const encrypteVerifyToken = commonCrypto.encrypt(userData.email + userData.id);
+    const encrypteVerifyToken = commonCrypto.encrypt(
+      userData.email + userData.id
+    );
     const emailVar = new Email(res);
     await emailVar.setTemplate(AvailiableTemplates.FORGET_PASSWORD, {
-      resetPageUrl: 'http://192.168.2.126:3000',
-      fullName: userData.firstName + ' ' + userData.lastName,
+      resetPageUrl: "http://192.168.2.126:3000",
+      fullName: userData.firstName + " " + userData.lastName,
       email: encrypteUserEmail,
       userId: encryptedUserId,
       verifyToken: encrypteVerifyToken,
     });
-    const updateVerifyToken = await userModel.update({
-      email: userData.email
-    }, {
-        verifyToken: encrypteVerifyToken
-      })
+    await userModel.update(
+      {
+        email: userData.email,
+      },
+      {
+        verifyToken: encrypteVerifyToken,
+      }
+    );
     await emailVar.sendEmail(body.email);
     return res.status(200).json({
       responsecode: 200,
-      message: "Reset password link have been send successfully to your registered email address.",
-      success: true
+      message:
+        "Reset password link have been send successfully to your registered email address.",
+      success: true,
     });
   } catch (error) {
     console.log("this is forgot password error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
-}
+};
 /* -----------------User Verify Link-------------- */
 const userVerifyLink = async (req, res) => {
   const { body } = req;
@@ -253,7 +267,7 @@ const userVerifyLink = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false
+      success: false,
     });
   }
   try {
@@ -263,27 +277,27 @@ const userVerifyLink = async (req, res) => {
       email: decryptedUserEmail,
       _id: decryptedUserId,
       verifyToken: body.token,
-    })
+    });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
         message: "Your session has been expired.",
-        success: false
+        success: false,
       });
     }
     return res.status(200).json({
       message: "Link verified successfully!",
       data: userData,
-      success: true
+      success: true,
     });
   } catch (error) {
     console.log("this is verify link error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
-}
+};
 
 /* -----------------User Reset password-------------- */
 const userResetpassword = async (req, res) => {
@@ -292,64 +306,68 @@ const userResetpassword = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false
+      success: false,
     });
   }
   try {
-    const userData = await userModel.findOne({ email: body.email })
+    const userData = await userModel.findOne({ email: body.email });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
         message: "Email not registered.",
-        success: false
+        success: false,
       });
     }
     var salt = commonCrypto.generateSalt(6);
-    body.salt = salt;;
-    const encryptedUserpassword = commonCrypto.hashPassword(body.password, salt);
+    body.salt = salt;
+    const encryptedUserpassword = commonCrypto.hashPassword(
+      body.password,
+      salt
+    );
     if (!userData.verifyToken) {
       return res.status(400).json({
         responsecode: 400,
         message: "Your session has been expired.",
-        success: false
+        success: false,
       });
     }
-    const result = await userModel.findByIdAndUpdate({
-      _id: userData.id
-    },
+    const result = await userModel.findByIdAndUpdate(
+      {
+        _id: userData.id,
+      },
       {
         $set: {
           password: encryptedUserpassword,
           salt: body.salt,
           verifyToken: null,
-        }
+        },
       }
-    )
+    );
     if (result) {
       return res.status(200).json({
         message: "Password updated successfully!",
-        success: true
+        success: true,
       });
     } else {
       return res.status(400).json({
         responsecode: 400,
         message: "Your session has been expired.",
-        success: false
+        success: false,
       });
     }
   } catch (error) {
     console.log("this is Reset password error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
-}
+};
 module.exports = {
   signUp,
   confirmationSignUp,
   loginApp,
   userForgotPassword,
   userVerifyLink,
-  userResetpassword
+  userResetpassword,
 };

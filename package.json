@@ -1,9 +1,8 @@
 {
-  "name": "CRM",
+  "name": "crm360",
   "version": "1.0.0",
   "description": "CRM Admin template",
   "author": "chapter247",
-  "homepage": "",
   "copyright": "C",
   "license": "",
   "private": true,
@@ -26,6 +25,7 @@
     "enzyme-adapter-react-16": "^1.11.2",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
+    "js-object-validation": "1.0.11",
     "node-sass": "^4.11.0",
     "primeicons": "^1.0.0",
     "primereact": "^3.1.0",
@@ -48,13 +48,13 @@
     "reactstrap": "^7.1.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
-    "redux-logger": "^3.0.6",
     "redux-logic": "^2.1.1",
     "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
     "fullcalendar": "4.0.0-alpha.2",
-    "react-scripts": "^2.1.8"
+    "react-scripts": "^2.1.8",
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,9 +63,6 @@
     "test:cov": "react-scripts test --coverage",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
     "eject": "react-scripts eject"
-  },
-  "bugs": {
-    "url": ""
   },
   "eslintConfig": {
     "extends": "react-app"

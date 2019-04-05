@@ -6,65 +6,73 @@ import {
   NavLink,
   Row,
   TabContent,
-  TabPane
+  TabPane,
 } from "reactstrap";
-
+import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 class TimeClocks extends Component {
   constructor(props) {
     super(props);
 
     this.toggle = this.toggle.bind(this);
     this.state = {
+      customerModalOpen: false,
       activeTab: new Array(4).fill("1"),
       tabDetails: [
         {
           name: "Quotes",
           details: [
             {
-              abc: "name1"
+              abc: "name1",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "In Progress",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Dropped Off",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Invoices",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
-        }
-      ]
+              abc: "name",
+            },
+          ],
+        },
+      ],
     };
   }
-
+  componentDidMount = () => {
+    this.toggleLarge();
+  };
+  toggleLarge = () => {
+    this.setState({
+      customerModalOpen: !this.state.customerModalOpen,
+    });
+  };
   lorem(detailsData) {
     return Object.keys(detailsData).map(function(key, index) {
       return <li key={index}>{detailsData[key].abc}</li>;
@@ -75,7 +83,7 @@ class TimeClocks extends Component {
     const newArray = this.state.activeTab.slice();
     newArray[tabPane] = tab;
     this.setState({
-      activeTab: newArray
+      activeTab: newArray,
     });
   }
 
@@ -91,7 +99,7 @@ class TimeClocks extends Component {
   }
 
   render() {
-    const { tabDetails } = this.state;
+    const { tabDetails, customerModalOpen } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -178,6 +186,14 @@ class TimeClocks extends Component {
             </TabContent>
           </Col>
         </Row>
+        {customerModalOpen ? (
+          <CrmCustomerModal
+            customerModalOpen={customerModalOpen}
+            toggleLarge={this.toggleLarge}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }

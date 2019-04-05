@@ -1,27 +1,17 @@
-import { push } from "react-router-redux";
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
-import {
-  loginActions,
-  loginStarted,
-  loginFailed,
-  loginSuccess,
-  logOutSuccess,
-} from "./../actions";
+import { logger } from "../helpers/Logger";
+import { loginActions, redirectTo, showLoader, hideLoader } from "./../actions";
 
-export const loginLogic = createLogic({
+const loginLogic = createLogic({
   type: loginActions.LOGIN_REQUEST,
   cancelType: loginActions.LOGIN_FAILED,
   async process({ action }, dispatch, done) {
-    dispatch(
-      loginStarted({
-        isLoggingIn: true,
-      })
-    );
+    dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/user",
+      "/auth",
       "/login",
       "POST",
       false,
@@ -29,49 +19,28 @@ export const loginLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      dispatch(
-        loginFailed({
-          isLoggingIn: false,
-          isLoggedIn: false,
-          token: "",
-        })
-      );
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
       done();
-      toast.success(result.messages[0]);
       return;
     } else {
-      var localStorage_array = { token: result.data.token, isLoggingIn: true };
-      localStorage.setItem(
-        "localStorageVal",
-        JSON.stringify(localStorage_array)
-      );
-      dispatch(
-        loginSuccess({
-          isLoggingIn: false,
-          isLoggedIn: true,
-          token: result.data.token,
-        })
-      );
+      logger(result);
+      localStorage.setItem("token", result.data.token);
       toast.success("You have logged in successfully");
+      dispatch(hideLoader());
+      dispatch(redirectTo({ path: "/dashboard" }));
       done();
     }
   },
 });
 
-export const logOutLogic = createLogic({
+const logOutLogic = createLogic({
   type: loginActions.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(
-      logOutSuccess({
-        isLoggingIn: false,
-        isLoggedIn: false,
-        token: "",
-      })
-    );
-    localStorage.removeItem("localStorageVal");
-    localStorage.removeItem("giftCartProduct");
-    localStorage.removeItem("cartProduct");
-    dispatch(push("/login"));
+    localStorage.removeItem("token");
+    dispatch(redirectTo({ path: "/login" }));
     done();
   },
 });
+
+export const LoginLogics = [loginLogic, logOutLogic];
