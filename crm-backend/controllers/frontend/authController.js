@@ -316,8 +316,8 @@ const userResetpassword = async (req, res) => {
         success: false
       });
     }
-    const result = await userModel.update({
-      email: body.email
+    const result = await userModel.findByIdAndUpdate({
+      _id: userData.id
     },
       {
         $set: {
