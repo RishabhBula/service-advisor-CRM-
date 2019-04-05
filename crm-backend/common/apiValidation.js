@@ -44,8 +44,45 @@ const loginValidation = [
     .trim()
     .isLength({ min: 6 })
 ];
+const forgotPasswordValidation = [
+  body("email")
+    .isEmail()
+    .withMessage("Email must be a valid.")
+    .trim()
+];
+const verifyLinkValidation = [
+  body("user")
+    .not()
+    .isEmpty()
+    .withMessage("User field is required.")
+    .trim(),
+  body("verification")
+    .not()
+    .isEmpty()
+    .withMessage("verification field is required.")
+    .trim(),
+  body("token")
+    .not()
+    .isEmpty()
+    .withMessage("token field is required.")
+    .trim()
+];
+const resetPasswordValidation = [
+  body("email")
+    .isEmail()
+    .withMessage("Email must be a valid.")
+    .trim(),
+  body("password")
+    .not()
+    .isEmpty()
+    .withMessage("password field is required.")
+    .trim()
+];
 module.exports = {
   signupValidation,
   signupConfirmation,
-  loginValidation
+  loginValidation,
+  forgotPasswordValidation,
+  verifyLinkValidation,
+  resetPasswordValidation
 };

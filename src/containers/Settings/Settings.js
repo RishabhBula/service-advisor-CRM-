@@ -1,9 +1,10 @@
 import React, { Component, Suspense } from "react";
 import { Route, Switch } from "react-router-dom";
 import { Row, Col } from "reactstrap";
-import { Dashboard } from "../../views";
 import Loader from "../Loader/Loader";
-import Sidebar from "./Sidebar";
+
+const Sidebar = React.lazy(() => import("./Sidebar"));
+const Users = React.lazy(() => import("./Users"));
 
 const SettingsNav = [
   {
@@ -18,7 +19,7 @@ const SettingsNav = [
   },
 ];
 const SettingRoutes = [
-  { path: "/users", name: "Settings", component: Dashboard },
+  { path: "/settings/users", name: "Settings", component: Users },
 ];
 class Settings extends Component {
   constructor(props) {
@@ -31,7 +32,9 @@ class Settings extends Component {
       <div className="animated fadeIn">
         <Row>
           <Col sm={"2"}>
-            <Sidebar navItems={SettingsNav} />
+            <Suspense fallback={<Loader />}>
+              <Sidebar navItems={SettingsNav} />
+            </Suspense>
           </Col>
           <Col sm={"10"}>
             <Suspense fallback={<Loader />}>
