@@ -22,6 +22,7 @@ const validationMessage = {
 
 const otherMessage = {
   newRegister: "You have Succesfully Registered.",
+  confirmMessage: "A confirmation link has been sent to your email id"
 };
 module.exports = {
   validationMessage,

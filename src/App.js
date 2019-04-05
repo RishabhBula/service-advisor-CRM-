@@ -3,15 +3,16 @@ import React, { Component } from "react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { routerMiddleware } from "react-router-redux";
+import { ToastContainer } from "react-toastify";
 import { createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import { createLogicMiddleware } from "redux-logic";
 import { mode, EnviornmentTypes } from "./config/AppConfig";
-import Loader from "./containers/Loader/Loader";
+import FullPageLoader from "./containers/Loader/FullPageLoader";
 import arrLogic from "./logic";
 import AppReducer from "./reducers";
 import AppRoutes from "./routes/";
-
+import "react-toastify/dist/ReactToastify.css";
 const logicMiddleware = createLogicMiddleware(arrLogic);
 const history = createBrowserHistory();
 const middlewares = [logicMiddleware, routerMiddleware(history)];
@@ -26,10 +27,11 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <React.Suspense fallback={<Loader />}>
+          <React.Suspense fallback={<FullPageLoader />}>
             <AppRoutes />
           </React.Suspense>
         </Router>
+        <ToastContainer />
       </Provider>
     );
   }

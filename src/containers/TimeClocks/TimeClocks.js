@@ -6,10 +6,9 @@ import {
   NavLink,
   Row,
   TabContent,
-  TabPane
+  TabPane,
 } from "reactstrap";
-import { CrmCustomerModal } from '../../components/common/CrmCustomerModal'
-import { from } from "rxjs";
+import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 class TimeClocks extends Component {
   constructor(props) {
     super(props);
@@ -23,59 +22,59 @@ class TimeClocks extends Component {
           name: "Quotes",
           details: [
             {
-              abc: "name1"
+              abc: "name1",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "In Progress",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Dropped Off",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
+              abc: "name",
+            },
+          ],
         },
         {
           name: "Invoices",
           details: [
             {
-              abc: "name"
+              abc: "name",
             },
             {
-              abc: "name"
-            }
-          ]
-        }
-      ]
+              abc: "name",
+            },
+          ],
+        },
+      ],
     };
   }
   componentDidMount = () => {
-    this.toggleLarge()
-  }
+    this.toggleLarge();
+  };
   toggleLarge = () => {
     this.setState({
-      customerModalOpen: !this.state.customerModalOpen
+      customerModalOpen: !this.state.customerModalOpen,
     });
   };
   lorem(detailsData) {
-    return Object.keys(detailsData).map(function (key, index) {
+    return Object.keys(detailsData).map(function(key, index) {
       return <li key={index}>{detailsData[key].abc}</li>;
     });
   }
@@ -84,7 +83,7 @@ class TimeClocks extends Component {
     const newArray = this.state.activeTab.slice();
     newArray[tabPane] = tab;
     this.setState({
-      activeTab: newArray
+      activeTab: newArray,
     });
   }
 
@@ -187,13 +186,14 @@ class TimeClocks extends Component {
             </TabContent>
           </Col>
         </Row>
-        {
-          customerModalOpen ?
-            <CrmCustomerModal
-              customerModalOpen={customerModalOpen}
-              toggleLarge={this.toggleLarge}
-            /> : ""
-        }
+        {customerModalOpen ? (
+          <CrmCustomerModal
+            customerModalOpen={customerModalOpen}
+            toggleLarge={this.toggleLarge}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }
