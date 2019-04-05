@@ -264,6 +264,43 @@
 }
 /* end of welcome modal */
 
+/* Customer modal */
+.customer-modal .modal-body [class*='col-']{
+    padding: 0 7.5px;
+}
+.customer-modal .modal-body{
+    padding: 1rem 25px;
+}
+.customer-modal .modal-body label{
+    margin-bottom: 2px;
+}
+.customer-add-phone{
+    position: relative;
+    top: -13px;
+    color: #469af4;
+    border-bottom: dashed 1px #469af4;
+}
+.customer-add-phone:hover{
+    border-bottom: none;
+    color: #469af4;
+    text-decoration: none;
+}
+.customer-modal-text-style{
+    font-weight: 400;
+    color: #76838F;
+}
+.customer-anchor-text{
+    color: #469af4;
+    border-bottom: dashed 1px #469af4
+}
+.customer-anchor-text:hover{
+    border: none;
+}
+.customer-click-btn{
+    cursor: pointer;
+}
+/* end of customer modal */
+
 /* page css */
 .title-left-section .card-title {
     margin: 0px;

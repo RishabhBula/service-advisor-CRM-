@@ -21,7 +21,7 @@ export const loginLogic = createLogic({
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/user",
+      "/auth",
       "/login",
       "POST",
       false,

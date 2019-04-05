@@ -9,7 +9,7 @@ const { mode } = require("./config/app");
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
 
-if (mode == "developement") {
+// if (mode == "developement") {
 const cors = require("cors");
 var corsOption = {
   origin: true,
@@ -18,7 +18,7 @@ var corsOption = {
   exposedHeaders: ["x-auth-token", "authorization"],
 };
 app.use(cors(corsOption));
-}
+// }
 
 let url ="mongodb://localhost:27017/crm360";
 MongoClient.connect(url, function(err, db) {

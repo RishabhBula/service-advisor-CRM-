@@ -80,13 +80,13 @@ export class BigModals extends Component {
               <Row className="justify-content-center">
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="font-text">Company Name</Label>
+                    <Label htmlFor="name" className="welcome-image-text">Company Name</Label>
                     <Input type="text" id="name" required />
                   </FormGroup>
                 </Col>
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="font-text">Website (optional)</Label>
+                    <Label htmlFor="name" className="welcome-image-text">Website (optional)</Label>
                     <Input type="text" id="name" required />
                   </FormGroup>
                 </Col>
