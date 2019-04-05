@@ -16,6 +16,9 @@ const ForGotPassword = React.lazy(() =>
 const ResetPassword = React.lazy(() =>
   import("../containers/Auth/ResetPassword")
 );
+const VerifyAccount = React.lazy(() =>
+  import("../containers/Auth/VerifyAccount")
+);
 
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
@@ -49,6 +52,12 @@ const Routes = [
     path: "/404",
     name: "Page Not Found",
     component: Page404
+  },
+  {
+    exact: false,
+    path: "/register/confirm/:userId/:activationCode",
+    name: "Verify Account",
+    component: VerifyAccount
   },
   {
     exact: false,

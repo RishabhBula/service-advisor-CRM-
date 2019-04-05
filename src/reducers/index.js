@@ -3,6 +3,8 @@ import { combineReducers } from "redux";
 
 import { handleActions } from "redux-actions";
 
+import { usersReducer } from "./Users";
+
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -19,6 +21,7 @@ export const mainReducer = handleActions(
 
 const AppReducer = combineReducers({
   mainReducer,
+  usersReducer,
   routing: routerReducer,
 });
 
