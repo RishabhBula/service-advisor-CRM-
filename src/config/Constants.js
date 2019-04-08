@@ -133,7 +133,7 @@ export const CustomerDefaultPermissions = {
       status: false
     },
     shouldReceiveDiscount: {
-        status: false,
+        status: true,
         percentageDiscount: 0
     },
     shouldLaborRateOverride: {

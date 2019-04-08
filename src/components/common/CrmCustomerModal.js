@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Validator from "js-object-validation";
 import {
   Button,
   Modal,
@@ -18,6 +19,10 @@ import {
   CustomerDefaultPermissions,
   CustomerPermissionsText
 } from "../../config/Constants";
+import {
+  AppConfig
+} from "../../config/AppConfig";
+import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
 
 export class CrmCustomerModal extends Component {
   constructor(props) {
@@ -27,18 +32,29 @@ export class CrmCustomerModal extends Component {
       selectedOption: null,
       expandForm: false,
       fleetModalOpen: false,
-      customerDefaultPermissions: CustomerDefaultPermissions
+      customerDefaultPermissions: CustomerDefaultPermissions,
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: {},
+      type: "admin",
+      errors: {},
+      phoneLength: AppConfig.phoneLength
     };
   }
-  handleClick = e => {
+  handleClick (singleState, e) {
+    const { customerDefaultPermissions } = this.state;
+    customerDefaultPermissions[singleState].status = e.target.checked;
     this.setState({
-      switchValue: !this.state.switchValue
+     ...customerDefaultPermissions
     });
   };
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
   };
+
   handleExpandForm = () => {
     this.setState({
       expandForm: !this.state.expandForm
@@ -48,6 +64,7 @@ export class CrmCustomerModal extends Component {
   addNewUser = () => {
     this.props.addCustomer();
   }
+  
   render() {
     const { customerModalOpen, handleCustomerModal } = this.props;
     const {
@@ -323,105 +340,41 @@ export class CrmCustomerModal extends Component {
                         <Col md="2">
                           <AppSwitch
                             className={"mx-1"}
-                            checked={customerDefaultPermissions[permission.key]}
-                            onClick={this.handleClick}
+                            checked={customerDefaultPermissions[permission.key].status}
+                            onClick={this.handleClick.bind(this,permission.key)}
                             variant={"3d"}
                             color={"primary"}
                             size={"sm"}
                           />
                         </Col>
-                        <Col md="10">
+                        {/* {
+                          customerDefaultPermissions[permission.key] === ""
+                        } */}
+                        {/* <Col md="10">
                           <p className="customer-modal-text-style">
                             {permission.text}
                           </p>
+                        </Col> */}
+                        <Col md="12">
+                          <FormGroup>
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style"
+                            >
+                              Percent Discount
+                            </Label>
+                            <Input
+                              type="text"
+                              id="name"
+                              placeholder="NY"
+                              required
+                            />
+                          </FormGroup>
                         </Col>
                       </Row>
                     );
                   })
                 }
-                  <Row className="justify-content-center pb-2">
-                    <Col md="2">
-                      <AppSwitch
-                        className={"mx-1"}
-                        value={customerDefaultPermissions.isCorporateFleetTaxExempt}
-                        onClick={this.handleClick}
-                        variant={"3d"}
-                        color={"primary"}
-                        checked
-                        size={""}
-                      />
-                    </Col>
-                    <Col md="10">
-                      <p className="customer-modal-text-style">
-                        Is this customer tax exempt?
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row className="justify-content-center pb-2">
-                    <Col md="2">
-                      <AppSwitch
-                        className={"mx-1"}
-                        value={switchValue}
-                        onClick={this.handleClick}
-                        variant={"3d"}
-                        color={"primary"}
-                        checked
-                        size={""}
-                      />
-                    </Col>
-                    <Col md="10">
-                      <p className="customer-modal-text-style">
-                        Does this customer receive a discount?
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row className="justify-content-center pb-2">
-                    <Col md="2">
-                      <AppSwitch
-                        className={"mx-1"}
-                        value={switchValue}
-                        onClick={this.handleClick}
-                        variant={"3d"}
-                        color={"primary"}
-                        checked
-                        size={""}
-                      />
-                    </Col>
-                    <Col md="10">
-                      <p className="customer-modal-text-style">
-                        Does this customer have a labor rate override?
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row className="justify-content-center pb-2">
-                    <Col md="2">
-                      <AppSwitch
-                        className={"mx-1"}
-                        value={switchValue}
-                        onClick={this.handleClick}
-                        variant={"3d"}
-                        color={"primary"}
-                        checked
-                        size={""}
-                      />
-                    </Col>
-                    <Col md="10">
-                      <p className="customer-modal-text-style">
-                        Does this customer have a pricing matrix override?
-                      </p>
-                    </Col>
-                    {expandForm ? (
-                      <span
-                        onClick={this.handleExpandForm}
-                        className="customer-anchor-text customer-click-btn"
-                      >
-                        {" "}
-                        Show Less{" "}
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                  </Row>
                 </div>
               </>
             ) : (
