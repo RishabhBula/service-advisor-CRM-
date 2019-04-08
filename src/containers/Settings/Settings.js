@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+// import { Route, Switch } from "react-router-dom";
 import { Row, Col } from "reactstrap";
 import Loader from "../Loader/Loader";
 
