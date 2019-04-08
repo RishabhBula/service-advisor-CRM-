@@ -9,6 +9,7 @@ const Reports = React.lazy(() => import("./containers/Reports"));
 const Settings = React.lazy(() => import("./containers/Settings"));
 const Users = React.lazy(() => import("./containers/Users"));
 const Vehicles = React.lazy(() => import("./containers/Vehicles"));
+const Fleet = React.lazy(() => import("./containers/Fleet"))
 const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 
@@ -29,6 +30,7 @@ const routes = [
   { path: "/settings", name: "Settings", component: Settings },
   { path: "/users", name: "Users", component: Users },
   { path: "/vehicles", name: "Vehicles", component: Vehicles },
+  { path: "/fleets", name: "Fleets", component: Fleet },
   { path: "/customers", name: "Customers", component: Customers },
   { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];
