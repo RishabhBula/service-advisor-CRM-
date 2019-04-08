@@ -20,5 +20,5 @@ switch (mode) {
     data = {};
     break;
 }
-
+data.DEFAULT_DATE_FORMAT = "LLL";
 export const AppConfig = data;
