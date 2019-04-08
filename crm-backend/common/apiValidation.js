@@ -93,11 +93,6 @@ const createUserValidation = [
     .trim()
     .isEmail()
     .withMessage(validationMessage.emailInvalid),
-  body("parentId")
-    .not()
-    .isEmpty()
-    .withMessage("ParentId is required.")
-    .trim(),
   body("roleType")
     .not()
     .isEmpty()
