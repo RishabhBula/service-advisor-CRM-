@@ -64,6 +64,7 @@ export const UserPermissions = [
   },
 ];
 
+
 export const TechincianDefaultPermissions = {
   isAllowedDashboard: false,
   isAllowedWorkflow: true,
@@ -117,3 +118,30 @@ export const AdminDefaultPermissions = {
   isNotifyCustomerMakesPayment: true,
   isNotifyChangeAppointmentStatus: true,
 };
+
+
+
+export const CustomerPermissionsText = [
+  { key: "isCorporateFleetTaxExempt", text: "Is this customer tax exempt?" },
+  { key: "shouldReceiveDiscount", text: "Does this customer receive a discount?" },
+  { key: "shouldLaborRateOverride", text: "Does this customer have a labor rate override?" },
+  { key: "shouldPricingMatrixOverride", text: "Does this customer have a pricing matrix override?" }
+];
+
+export const CustomerDefaultPermissions = {
+    isCorporateFleetTaxExempt: {
+      status: false
+    },
+    shouldReceiveDiscount: {
+        status: false,
+        percentageDiscount: 0
+    },
+    shouldLaborRateOverride: {
+        status: false,
+        laborRate: "objectId"
+    },
+    shouldPricingMatrixOverride: {
+        status: false,
+        pricingMatrix: "objectId"
+    }
+}

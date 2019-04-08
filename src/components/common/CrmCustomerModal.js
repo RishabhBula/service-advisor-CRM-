@@ -14,16 +14,20 @@ import {
 import { AppSwitch } from "@coreui/react";
 import Select from "react-select";
 import { CrmFleetModal } from "../common/CrmFleetModal";
+import {
+  CustomerDefaultPermissions,
+  CustomerPermissionsText
+} from "../../config/Constants";
 
 export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      large: false,
       switchValue: true,
       selectedOption: null,
       expandForm: false,
-      fleetModalOpen: false
+      fleetModalOpen: false,
+      customerDefaultPermissions: CustomerDefaultPermissions
     };
   }
   handleClick = e => {
@@ -40,15 +44,19 @@ export class CrmCustomerModal extends Component {
       expandForm: !this.state.expandForm
     });
   };
+
+  addNewUser = () => {
+    this.props.addCustomer();
+  }
   render() {
     const { customerModalOpen, handleCustomerModal } = this.props;
     const {
       switchValue,
       selectedOption,
       expandForm,
-      fleetModalOpen
+      fleetModalOpen,
+      customerDefaultPermissions
     } = this.state;
-    console.log(switchValue);
     return (
       <>
         <Modal
@@ -308,11 +316,34 @@ export class CrmCustomerModal extends Component {
                   </Row>
                 </div>
                 <div className="">
+                {
+                CustomerPermissionsText.map((permission, index) => {
+                    return (
+                      <Row className="justify-content-center pb-2" key={index}>
+                        <Col md="2">
+                          <AppSwitch
+                            className={"mx-1"}
+                            checked={customerDefaultPermissions[permission.key]}
+                            onClick={this.handleClick}
+                            variant={"3d"}
+                            color={"primary"}
+                            size={"sm"}
+                          />
+                        </Col>
+                        <Col md="10">
+                          <p className="customer-modal-text-style">
+                            {permission.text}
+                          </p>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                }
                   <Row className="justify-content-center pb-2">
                     <Col md="2">
                       <AppSwitch
                         className={"mx-1"}
-                        value={switchValue}
+                        value={customerDefaultPermissions.isCorporateFleetTaxExempt}
                         onClick={this.handleClick}
                         variant={"3d"}
                         color={"primary"}
@@ -399,7 +430,7 @@ export class CrmCustomerModal extends Component {
             {fleetModalOpen ? <CrmFleetModal /> : ""}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={handleCustomerModal}>
+            <Button color="primary" onClick={this.addNewUser}> 
               Do Something
             </Button>{" "}
             <Button color="secondary" onClick={handleCustomerModal}>
