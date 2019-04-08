@@ -17,4 +17,7 @@ router.post("/reset-password", validation.resetPasswordValidation, authControlle
 router.post("/company-setup", authController.userCompanySetup)
 router.post("/createUser",token.authorisedUser,  validation.createUserValidation, authController.createUser);
 router.post("/verfiyUser", validation.userVerify, authController.verfiyUser);
+router.post("/verfiyUserLink", validation.userVerifyLink, authController.verfiyUserLink);
+router.post("/image-upload",token.authorisedUser,authController.imageUpload);
+router.post("/image-delete",token.authorisedUser,authController.imageDelete);
 module.exports = router;

@@ -76,7 +76,7 @@ const userSchema = new Schema({
     default: null,
   },
   shopLogo: {
-    type: String,
+    type: Object,
     default: null,
   },
   parentId: {
