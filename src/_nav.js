@@ -41,7 +41,7 @@ export default {
       icon: "icon-puzzle",
     },
     {
-      name: "Users",
+      name: "Staff Members",
       url: "/users",
       icon: "fa fa-users",
     },

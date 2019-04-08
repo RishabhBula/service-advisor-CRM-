@@ -52,7 +52,7 @@ class Users extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Users
+                  <i className={"fa fa-users"} /> Staff Members
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
@@ -65,7 +65,7 @@ class Users extends Component {
                   &nbsp; Add New
                 </Button>
                 <UncontrolledTooltip target={"add-user"}>
-                  Add New User
+                  Add New Staff Member
                 </UncontrolledTooltip>
               </Col>
             </Row>

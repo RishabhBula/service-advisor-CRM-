@@ -12,9 +12,9 @@ switch (mode) {
     break;
   case EnviornmentTypes.DEV:
     data = {
-      API_ENDPOINT: "http://192.168.2.117:8001/",
+      API_ENDPOINT: "http://localhost:8001/",
       API_VERSION: "api",
-      phoneLength: 3
+      phoneLength: 3,
     };
     break;
   default:

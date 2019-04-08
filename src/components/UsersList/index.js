@@ -15,8 +15,10 @@ class UserList extends Component {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
-              <th>Date registered</th>
               <th>Role</th>
+              <th>Date registered</th>
+              <th>Last Login At</th>
+              <th>Last Login IP</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -30,10 +32,12 @@ class UserList extends Component {
                       <td>{user.firstName || "-"}</td>
                       <td>{user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
+                      <td>{user.email || "-"}</td>
+                      <td>{user.email || "-"}</td>
+                      <td>{user.role || "-"}</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
-                      <td>{user.role || "-"}</td>
                       <td>
                         <Badge color="success">Active</Badge>
                       </td>
@@ -46,21 +50,21 @@ class UserList extends Component {
                 })
               ) : (
                 <tr>
-                  <td className={"text-center"} colSpan={8}>
-                    No User Found
+                  <td className={"text-center"} colSpan={10}>
+                    No staff member found
                   </td>
                 </tr>
               )
             ) : (
               <tr>
-                <td className={"text-center"} colSpan={8}>
+                <td className={"text-center"} colSpan={10}>
                   <Loader />
                 </td>
               </tr>
             )}
           </tbody>
         </Table>
-        {totalUsers ? (
+        {totalUsers && !isLoading ? (
           <PaginationHelper
             totalRecords={totalUsers}
             onPageChanged={this.props.onPageChange}

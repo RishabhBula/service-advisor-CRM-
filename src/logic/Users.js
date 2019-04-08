@@ -22,7 +22,7 @@ const getUsersLogic = createLogic({
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/user",
-      "/getAllUser",
+      "/",
       "GET",
       true,
       action.payload
@@ -31,16 +31,7 @@ const getUsersLogic = createLogic({
       dispatch(
         getUsersListSuccess({
           isLoading: false,
-          users: [
-            {
-              firstName: "Sonu",
-              lastName: "B",
-              email: "sonu.chapter247@gmail.com",
-              createdAt: new Date().toString(),
-              isActive: true,
-              role: "Admin",
-            },
-          ],
+          users: [],
         })
       );
       done();
@@ -51,6 +42,7 @@ const getUsersLogic = createLogic({
         getUsersListSuccess({
           isLoading: false,
           users: result.data.data,
+          totalUsers: result.data.totalUsers,
         })
       );
       done();

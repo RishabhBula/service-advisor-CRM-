@@ -129,7 +129,7 @@ export class CrmUserModal extends Component {
             toggle={handleUserModal}
             className="customer-modal"
           >
-            <ModalHeader toggle={handleUserModal}>Create New User</ModalHeader>
+            <ModalHeader toggle={handleUserModal}>Add New Member</ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">
                 <Col md="6">
