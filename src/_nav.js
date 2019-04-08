@@ -43,7 +43,7 @@ export default {
     {
       name: "Users",
       url: "/users",
-      icon: "fa fa-users",
+      icon: "fa fa-users"
     },
     {
       name: "Settings",
@@ -58,6 +58,11 @@ export default {
         {
           name: "Vehicles",
           url: "/settings/vehicles",
+          icon: "icon-puzzle"
+        },
+        {
+          name: "Users",
+          url: "/settings/users",
           icon: "icon-puzzle"
         }
       ]

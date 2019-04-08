@@ -4,13 +4,35 @@ import { Row, Col } from "reactstrap";
 import Loader from "../Loader/Loader";
 
 const Sidebar = React.lazy(() => import("./Sidebar"));
-const Customers = React.lazy(() => import("./Customers"));
-const Vehicles = React.lazy(() => import("./Vehicles"));
+// const Users = React.lazy(() => import("./Users"));
+// const Customers = React.lazy(() => import("./Customers"));
 
-export const SettingRoutes = [
-  { path: "/settings/customers", name: "Customers", component: Customers },
-  { path: "/settings/vehicles", name: "Vehicles", component: Vehicles },
+const SettingsNav = [
+  {
+    heading: true,
+    icon: "fa fa-cog",
+    name: "Settings",
+  },
+  {
+    icon: "fa fa-users",
+    name: "Users",
+    link: "/settings/users",
+  },
+  {
+    heading: true,
+    icon: "fa fa-users",
+    name: "List",
+  },
+  {
+    icon: "fa fa-users",
+    name: "Customers",
+    link: "/settings/customers",
+  },
 ];
+// export const SettingRoutes = [
+//   { path: "/settings/users", name: "Users", component: Users },
+//   { path: "/settings/customers", name: "Customers", component: Customers },
+// ];
 class Settings extends Component {
   constructor(props) {
     super(props);
@@ -21,9 +43,14 @@ class Settings extends Component {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col sm={"12"}>
+          <Col sm={"2"}>
             <Suspense fallback={<Loader />}>
-              <Switch>
+              <Sidebar navItems={SettingsNav} />
+            </Suspense>
+          </Col>
+          <Col sm={"10"}>
+            <Suspense fallback={<Loader />}>
+              {/* <Switch>
                 {SettingRoutes.map((route, idx) => {
                   return route.component ? (
                     <Route
@@ -35,7 +62,7 @@ class Settings extends Component {
                     />
                   ) : null;
                 })}
-              </Switch>
+              </Switch> */}
             </Suspense>
           </Col>
         </Row>

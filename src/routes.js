@@ -8,7 +8,7 @@ const TimeClocks = React.lazy(() => import("./containers/TimeClocks"));
 const Reports = React.lazy(() => import("./containers/Reports"));
 const Settings = React.lazy(() => import("./containers/Settings"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
-const Users = React.lazy(() => import("./containers/Users"));
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: "/", exact: true, name: "Home" },
@@ -23,7 +23,6 @@ const routes = [
     component: TimeClocks,
   },
   { path: "/reports", exact: true, name: "Reports", component: Reports },
-  { path: "/users", name: "Users", component: Users },
   { path: "/settings", name: "Settings", component: Settings },
   { path: "/common", exact: true, name: "Common", component: CommonPage },
 ];
