@@ -23,6 +23,9 @@ class Users extends Component {
   componentDidMount() {
     this.props.getUsers(1);
   }
+  onPageChange = page => {
+    this.props.getUsers(page);
+  };
   componentDidUpdate({ userReducer }) {
     if (
       this.props.userReducer.userData.isSuccess !==
@@ -68,7 +71,10 @@ class Users extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <UsersList userData={userReducer} />
+            <UsersList
+              userData={userReducer}
+              onPageChange={this.onPageChange}
+            />
           </CardBody>
         </Card>
         <CrmUserModal

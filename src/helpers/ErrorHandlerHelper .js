@@ -9,7 +9,7 @@ export class ErrorHandlerHelper {
     timestamp: Date.now(),
     error: "Unknown error",
     messages: [],
-    data: undefined
+    data: undefined,
   };
   constructor(err) {
     this.rawError = err;
@@ -22,10 +22,12 @@ export class ErrorHandlerHelper {
     this.error.messages = [];
     if (
       this.rawError.responseObject &&
-      typeof this.rawError.responseObject === "object"
+      typeof this.rawError.responseObject === "object" &&
+      this.rawError.responseObject.message
     ) {
       this.error.messages.push(this.rawError.responseObject.message);
-    } else {
+    }
+    if (!this.error.messages.length) {
       this.error.error = "Unknown";
       this.error.messages = ["An unexpected error occured."];
     }

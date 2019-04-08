@@ -14,11 +14,12 @@ switch (mode) {
     data = {
       API_ENDPOINT: "http://192.168.2.117:8001/",
       API_VERSION: "api",
+      phoneLength: 3
     };
     break;
   default:
     data = {};
     break;
 }
-
+data.DEFAULT_DATE_FORMAT = "LLL";
 export const AppConfig = data;
