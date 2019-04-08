@@ -35,5 +35,36 @@ const signUpLogic = createLogic({
     }
   },
 });
+const verifyAccountLogic = createLogic({
+  type: signUpActions.VERIFY_ACCOUNT,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/confirmation",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(
+        redirectTo({
+          path: "/404",
+        })
+      );
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(redirectTo({ path: "/login" }));
+      done();
+    }
+  },
+});
 
-export const SignUpLogic = [signUpLogic];
+export const SignUpLogic = [signUpLogic, verifyAccountLogic];

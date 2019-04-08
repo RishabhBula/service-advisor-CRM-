@@ -11,7 +11,7 @@ import {
   CardBody,
 } from "reactstrap";
 import CrmDropDownMenu from "../../components/common/CrmDropDownMenu";
-
+import { CrmUserModal } from '../../components/common/CrmUserModal'
 class Inventory extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +19,7 @@ class Inventory extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       activeTab: new Array(4).fill("1"),
+      userModalOpen: false,
       tabDetails: [
         {
           name: "Parts",
@@ -69,7 +70,7 @@ class Inventory extends Component {
   }
 
   lorem(detailsData) {
-    return Object.keys(detailsData).map(function(key, index) {
+    return Object.keys(detailsData).map(function (key, index) {
       return <li key={index}>{detailsData[key].abc}</li>;
     });
   }
@@ -96,9 +97,16 @@ class Inventory extends Component {
   performInventoryAction = options => {
     console.log(options);
   };
-
+  componentDidMount = () => {
+    this.handleUserModal()
+  }
+  handleUserModal = () => {
+    this.setState({
+      userModalOpen: !this.state.userModalOpen
+    })
+  }
   render() {
-    const { tabDetails } = this.state;
+    const { tabDetails, userModalOpen } = this.state;
     let dropdownOptions = [
       { value: "import", label: "Import" },
       { value: "export", label: "export" },
@@ -150,6 +158,13 @@ class Inventory extends Component {
             </TabContent>
           </CardBody>
         </Card>
+        {
+          userModalOpen ?
+            <CrmUserModal
+              userModalOpen={userModalOpen}
+              handleUserModal={this.handleUserModal}
+            /> : ""
+        }
       </div>
     );
   }

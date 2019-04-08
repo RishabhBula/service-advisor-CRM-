@@ -74,7 +74,7 @@ export class BigModals extends Component {
     };
     this.cropper = React.createRef();
   }
-  
+
   onCropChange = crop => {
     this.setState({ crop })
   }
@@ -101,9 +101,9 @@ export class BigModals extends Component {
         companyLogo: reader.result
       })
     );
-    reader.onloadend = function(as) {
+    reader.onloadend = function (as) {
       var image = new Image();
-      image.onload = function() {
+      image.onload = function () {
         scope.setState({
           companyLogo: reader.result
         });
@@ -112,7 +112,7 @@ export class BigModals extends Component {
     reader.readAsDataURL(e[0]);
   };
 
-  peopleWorkAction =(event) => {       
+  peopleWorkAction = (event) => {
     let peopleWork = this.state.peopleWork;
     peopleWork.selected = event;
     this.setState({
@@ -122,11 +122,11 @@ export class BigModals extends Component {
 
   serviceOfferAction = (event) => {
     let servicesOffer = this.state.servicesOffer;
-    if(servicesOffer.selectedServices.length) {
+    if (servicesOffer.selectedServices.length) {
       let checkExistence = servicesOffer.selectedServices.some(
-        item => item.key == event.key
+        item => item.key === event.key
       );
-      if(!checkExistence) {
+      if (!checkExistence) {
         servicesOffer.selectedServices.push(event);
       }
     }
@@ -143,16 +143,7 @@ export class BigModals extends Component {
   render() {
     const { modalOpen, toggleLarge } = this.props;
     const { companyLogo, peopleWork, servicesOffer } = this.state;
-    console.log(servicesOffer.selectedServices); 
-      const externalCloseBtn = (
-        <button
-          className="close"
-          style={{ position: "absolute", top: "15px", right: "15px" }}
-          onClick={this.toggle}
-        >
-          &times;dsfsd
-        </button>
-      );
+    console.log(servicesOffer.selectedServices);
     return (
       <>
         <Modal
@@ -189,7 +180,7 @@ export class BigModals extends Component {
               </Row>
               <Row className="justify-content-center pb-2">
                 <Col md="6">
-                  {companyLogo == "" ? (
+                  {companyLogo === "" ? (
                     <Dropzone onDrop={this.onSelectFile}>
                       {({ getRootProps, getInputProps, isDragActive }) => {
                         return (
