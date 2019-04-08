@@ -1,5 +1,6 @@
 module.exports = {
     user: require("./user"),
     auth: require("./authRoute"),
-    role: require("./rolesRoutes")
+    role: require("./rolesRoutes"),
+    vehicle: require("./vehicleRoutes")
 } 

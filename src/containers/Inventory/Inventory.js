@@ -11,7 +11,7 @@ import {
   CardBody,
 } from "reactstrap";
 import CrmDropDownMenu from "../../components/common/CrmDropDownMenu";
-import { CrmFleetModal } from '../../components/common/CrmFleetModal'
+import { CrmVehicleModal } from '../../components/common/CrmVehicleModal'
 class Inventory extends Component {
   constructor(props) {
     super(props);
@@ -160,9 +160,9 @@ class Inventory extends Component {
         </Card>
         {
           userModalOpen ?
-            <CrmFleetModal
-              fleetModalOpen={userModalOpen}
-              toggleLarge={this.handleUserModal}
+            <CrmVehicleModal
+            vehicleModalOpen={userModalOpen}
+            handleVehicleModal={this.handleUserModal}
             /> : ""
         }
       </div>
