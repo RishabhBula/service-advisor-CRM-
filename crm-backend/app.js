@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const MongoClient = require("mongoose");
 const { mode } = require("./config/app");
+const path = require("path");
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
@@ -18,7 +19,7 @@ if (mode == "development") {
   };
   app.use(cors(corsOption));
 }
-
+app.use(express.static(path.join(__dirname, "public")));
 let url = "mongodb://localhost:27017/crm360";
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;

@@ -51,19 +51,35 @@ export class BigModals extends Component {
         ]
       },
       vehicleServicesOffer: {
-        selectedServices: [],
+        selectedVehicleServices: [],
         allVehicleServices: [
           {
             key: "Cars",
-            icon: "/assets/img/repairing-car.svg"
+            icon: "/assets/img/carLogo.svg"
           },
           {
-            key: "Detail, Wrap & Film",
-            icon: "/assets/img/carPaintingLogo.svg"
+            key: "Semi & Heavy Duty",
+            icon: "/assets/img/trukLogo.svg"
           },
           {
-            key: "Restoration & Custom Builds",
-            icon: "/assets/img/carChachisLogo.svg"
+            key: "RV's",
+            icon: "/assets/img/vanLogo.svg"
+          },
+          {
+            key: "Trailers",
+            icon: "/assets/img/trailerLogo.svg"
+          },
+          {
+            key: "Motorcycles",
+            icon: "/assets/img/motorcycleLogo.svg"
+          },
+          {
+            key: "Boats",
+            icon: "/assets/img/boatLogo.svg"
+          },
+          {
+            key: "Bicycles",
+            icon: "/assets/img/cycleLogo.svg"
           },
           {
             key: "Others",
@@ -128,6 +144,11 @@ export class BigModals extends Component {
       );
       if (!checkExistence) {
         servicesOffer.selectedServices.push(event);
+      } else {
+        let servicesArray = servicesOffer.selectedServices.findIndex(
+          item => item.key === event.key
+        )
+        servicesOffer.selectedServices.splice(servicesArray, 1);
       }
     }
     else {
@@ -139,10 +160,35 @@ export class BigModals extends Component {
       servicesOffer: servicesOffer
     });
   }
+  vehicleServicesAction = (event) => {
+    let vehicleServicesOffer = this.state.vehicleServicesOffer;
+    if (vehicleServicesOffer.selectedVehicleServices.length) {
+      let checkVehicleExistence = vehicleServicesOffer.selectedVehicleServices.some(
+        item => item.key === event.key
+      );
+      if (!checkVehicleExistence) {
+        vehicleServicesOffer.selectedVehicleServices.push(event);
+      } else {
+        let vehicleExistance = vehicleServicesOffer.selectedVehicleServices.findIndex(
+          item => item.key === event.key
+        )
+        vehicleServicesOffer.selectedVehicleServices.splice(vehicleExistance, 1);
+        console.log("vehicleExistance", vehicleExistance);
+      }
+    }
+    else {
+      console.log(event);
+      vehicleServicesOffer.selectedVehicleServices.push(event);
+    }
+
+    this.setState({
+      vehicleServicesOffer: vehicleServicesOffer
+    });
+  }
 
   render() {
     const { modalOpen, toggleLarge } = this.props;
-    const { companyLogo, peopleWork, servicesOffer } = this.state;
+    const { companyLogo, peopleWork, servicesOffer, vehicleServicesOffer } = this.state;
     console.log(servicesOffer.selectedServices);
     return (
       <>
@@ -321,54 +367,27 @@ export class BigModals extends Component {
               </h4>
               <div className="justify-content-center">
                 <div className="d-flex box-space">
-                  <div className="box-contain">
-                    <div className="justify-content-center">
-                      <img src="/assets/img/carLogo.svg" alt="" />
-                      <div className="welcome-service-text">Cars</div>
-                    </div>
-                  </div>
-                  <div className="box-contain">
-                    <div>
-                      <img src="/assets/img/trukLogo.svg" alt="" />
-                      <div className="welcome-service-text">
-                        Semi & Heavy Duty
+                  {vehicleServicesOffer.allVehicleServices.map((item, index) => {
+                    return (
+                      <div
+                        className={
+                          vehicleServicesOffer.selectedVehicleServices.some(
+                            itemSome => itemSome.key === item.key
+                          )
+                            ? "box-contain active"
+                            : "box-contain"
+                        }
+                        onClick={() => this.vehicleServicesAction(item)}
+                      >
+                        <div className="justify-content-center">
+                          <img src={item.icon} alt="" />
+                          <div className="welcome-service-text">
+                            {item.key}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="box-contain">
-                    <div>
-                      <img src="/assets/img/vanLogo.svg" alt="" />
-                      <div className="welcome-service-text">RVs</div>
-                    </div>
-                  </div>
-                  <div className="box-contain">
-                    <div>
-                      <img src="/assets/img/trailerLogo.svg" alt="" />
-                      <div className="welcome-service-text">Trailers</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="d-flex box-space">
-                  <div className="box-contain">
-                    <div className="justify-content-center">
-                      <img src="/assets/img/motorcycleLogo.svg" alt="" />
-                      <div className="welcome-service-text">
-                        Motorcycles
-                      </div>
-                    </div>
-                  </div>
-                  <div className="box-contain">
-                    <img src="/assets/img/boatLogo.svg" alt="" />
-                    <div className="welcome-service-text">Boats</div>
-                  </div>
-                  <div className="box-contain">
-                    <img src="/assets/img/cycleLogo.svg" alt="" />
-                    <div className="welcome-service-text">Bicycless</div>
-                  </div>
-                  <div className="box-contain">
-                    <img src="/assets/img/list-dots.svg" alt="" />
-                    <div className="welcome-service-text">Others</div>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

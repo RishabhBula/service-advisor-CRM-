@@ -318,7 +318,8 @@ const userResetpassword = async (req, res) => {
     });
   }
   try {
-    const userData = await userModel.findOne({ email: body.email });
+    const decryptedUserEmail = commonCrypto.decrypt(body.user)
+    const userData = await userModel.findOne({ email: decryptedUserEmail });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
@@ -371,6 +372,53 @@ const userResetpassword = async (req, res) => {
     });
   }
 };
+/* ------------User Company Setup--------------- */
+const userCompanySetup = async (req, res) => {
+  const { body } = req;
+  try {
+    const userData = await userModel.findById(body.userId)
+    if (!userData) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "User not registered",
+        success: false,
+      });
+    }
+    const comapnyData = {
+      companyName: body.companyName,
+      website: body.website,
+      peopleWork: body.peopleWork,
+      serviceOffer: body.serviceOffer,
+      vehicleService: body.vehicleService,
+    }
+    const companySetup = await userModel.findByIdAndUpdate({
+      _id: userData.id
+    }, {
+        $set: comapnyData
+      });
+    if (!companySetup) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Error uploding user company details.",
+        success: false,
+      });
+    } else {
+      return res.status(200).json({
+        responsecode: 200,
+        message: "User company details uploaded successfully!",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.log("this is Company setup error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+}
+/* ------------User Company Setup--------------- */
+
 module.exports = {
   signUp,
   confirmationSignUp,
@@ -378,4 +426,5 @@ module.exports = {
   userForgotPassword,
   userVerifyLink,
   userResetpassword,
+  userCompanySetup
 };

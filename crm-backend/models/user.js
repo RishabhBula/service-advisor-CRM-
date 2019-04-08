@@ -68,11 +68,11 @@ const userSchema = new Schema({
     default: null,
   },
   serviceOffer: {
-    type: String,
+    type: [String],
     default: null,
   },
   vehicleService: {
-    type: String,
+    type: [String],
     default: null,
   },
   shopLogo: {
