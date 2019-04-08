@@ -426,7 +426,7 @@ const userCompanySetup = async (req, res) => {
 /* ---------------User Image Upload---------------- */
 const imageUpload = async (req, res) => {
   try {
-    const { body } = req;
+    const { body, currentUser } = req;
     if (!body.imageData) {
       return res.status(401).json({
         responseCode: 401,
@@ -438,8 +438,8 @@ const imageUpload = async (req, res) => {
       const base64Image = body.imageData.replace(/^data:image\/\w+;base64,/, "");
       var buf = new Buffer(base64Image, 'base64');
 
-      var originalImagePath = __basedir + '/images/' + body.userId;
-      var thumbnailImagePath = __basedir + '/images-thumbnail/' + body.userId + 'image-thumb';
+      var originalImagePath = __basedir + '/images/' + currentUser.id;
+      var thumbnailImagePath = __basedir + '/images-thumbnail/' + currentUser.id + 'image-thumb';
       const thumbnailImage = resizeImage(originalImagePath, thumbnailImagePath, 600);
       console.log("**********This is thumbnailImage", thumbnailImage);
 
@@ -450,26 +450,32 @@ const imageUpload = async (req, res) => {
         console.log("The file was saved!");
       });
       const imageUploadData = {
-        originalImage: body.userId,
-        thumbnailImage: body.userId + 'image-thumb',
+        originalImage: currentUser.id,
+        thumbnailImage: currentUser.id + 'image-thumb',
       }
-      const companyLogo = await userModel.findByIdAndUpdate({ _id: body.userId }, {
+      const companyLogo = await userModel.findByIdAndUpdate({ _id: currentUser.id }, {
         shopLogo: imageUploadData
       })
       if (companyLogo) {
         return res.status(200).json({
           responseCode: 200,
-          message: "File uploaded successfully!",
-          iamgeData: originalImagePath,
+          message: "Image uploaded successfully!",
+          imageData: currentUser.id,
           success: true,
         });
-      }else{
+      } else {
         return res.status(400).json({
           responseCode: 400,
           message: "Error uploading company logo.",
           success: false,
         });
       }
+    } else {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Enter valid image.",
+        success: false
+      })
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
@@ -482,12 +488,82 @@ const imageUpload = async (req, res) => {
   }
 };
 /* ---------------User Image Upload End---------------- */
-/* user create by admin */
+
+/* ----------------User Image Delete-------------------- */
+const imageDelete = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    if (!body.imageData) {
+      return res.status(401).json({
+        responseCode: 401,
+        message: "Not provided any file to upload!",
+        success: false,
+      });
+    }
+    if (body.imageData != undefined || body.imageData != '') {
+      const base64Image = body.imageData.replace(/^data:image\/\w+;base64,/, "");
+      var buf = new Buffer(base64Image, 'base64');
+
+      var originalImagePath = __basedir + '/images/' + currentUser.id;
+      var thumbnailImagePath = __basedir + '/images-thumbnail/' + currentUser.id + 'image-thumb';
+      fs.unlinkSync(originalImagePath, buf, function (err) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log("The file was deleted!");
+      });
+      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log("The file was deleted!");
+      });
+      const imageUploadData = {
+        originalImage: null,
+        thumbnailImage: null,
+      }
+      const companyLogo = await userModel.findByIdAndUpdate({ _id: currentUser.id }, {
+        shopLogo: imageUploadData
+      })
+      if (companyLogo) {
+        return res.status(200).json({
+          responseCode: 200,
+          message: "Image deleted successfully!",
+          success: true,
+        });
+      } else {
+        return res.status(400).json({
+          responseCode: 400,
+          message: "Error uploading company logo.",
+          success: false,
+        });
+      }
+    } else {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Enter valid image.",
+        success: false
+      })
+    }
+  } catch (error) {
+    console.log("**************This is image upload error", error);
+    return res.status(400).json({
+      responseCode: 400,
+      message: "Error while saving file!",
+      error: error,
+      success: false,
+    });
+  }
+};
+/* ----------------User Image Delete End-------------------- */
+
+
+/*----------------User create by admin------------------ */
 const createUser = async (req, res) => {
   console.log("req.currentUser");
   console.log(req.currentUser);
   console.log("req.currentUser");
-  
+
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -622,5 +698,6 @@ module.exports = {
   userCompanySetup,
   createUser,
   verfiyUser,
-  imageUpload
+  imageUpload,
+  imageDelete
 };
