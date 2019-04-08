@@ -1,5 +1,12 @@
-const customerModel = require("../../models/customer");
-
+const customerModel = require("../../models/user");
+const userModel = require("../../models/user");
+const {
+  validationMessage,
+  otherMessage,
+} = require("../../common/validationMessage");
+const commonSmtp = require("../../common/index");
+const commonCrypto = require("../../common/crypto");
+const { Email, AvailiableTemplates } = require("../../common/Email");
 const listGet = async (req, res) => {
   try {
     let inserList = {
@@ -77,6 +84,9 @@ const listGet = async (req, res) => {
   }
 };
 
+
+
+
 module.exports = {
-  listGet,
+  listGet
 };

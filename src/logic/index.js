@@ -4,6 +4,7 @@ import { createLogic } from "redux-logic";
 import { LoginLogics } from "./Login";
 
 import { SignUpLogic } from "./SignUp";
+import { UsersLogic } from "./Users";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -13,4 +14,4 @@ export const redirectToLogic = createLogic({
   },
 });
 
-export default [...LoginLogics, ...SignUpLogic, redirectToLogic];
+export default [...LoginLogics, ...SignUpLogic, ...UsersLogic, redirectToLogic];

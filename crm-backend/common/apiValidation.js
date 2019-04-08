@@ -78,11 +78,61 @@ const resetPasswordValidation = [
     .withMessage("password field is required.")
     .trim()
 ];
+
+const createUserValidation = [
+  body("firstName")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.firstName)
+    .trim(),
+  body("lastName")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.lastName),
+  body("email", validationMessage.emailValidation)
+    .trim()
+    .isEmail()
+    .withMessage(validationMessage.emailInvalid),
+  body("parentId")
+    .not()
+    .isEmpty()
+    .withMessage("ParentId is required.")
+    .trim(),
+  body("roleType")
+    .not()
+    .isEmpty()
+    .withMessage("Role type is required.")
+    .trim()
+];
+
+const userVerify = [
+  body("userId")
+    .not()
+    .isEmpty()
+    .withMessage("UserId is required. ")
+    .trim(),
+  body("activeValue")
+    .not()
+    .isEmpty()
+    .withMessage("Active value is required. "),
+  body("password")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.passwordValidation)
+    .trim()
+    .isLength({ min: 6 })
+    .withMessage(validationMessage.minimumPasswordValidation)
+];
+
+
+
 module.exports = {
   signupValidation,
   signupConfirmation,
   loginValidation,
   forgotPasswordValidation,
   verifyLinkValidation,
-  resetPasswordValidation
+  resetPasswordValidation,
+  createUserValidation,
+  userVerify
 };

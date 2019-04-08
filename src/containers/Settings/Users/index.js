@@ -9,6 +9,10 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { CrmUserModal } from "../../../components/common/CrmUserModal";
+import UsersList from "../../../components/UsersList";
+import { connect } from "react-redux";
+import { getUsersList, addNewUser } from "../../../actions";
+import { logger } from "../../../helpers/Logger";
 
 class Users extends Component {
   constructor(props) {
@@ -17,6 +21,9 @@ class Users extends Component {
       openCreate: false
     };
   }
+  componentDidMount() {
+    this.props.getUsers(1);
+  }
   toggleCreateModal = e => {
     e.preventDefault();
     this.setState({
@@ -24,10 +31,11 @@ class Users extends Component {
     });
   };
   createUser = data => {
-    console.log(data);
+    logger(data);
   };
   render() {
     const { openCreate } = this.state;
+    const { userReducer, addUser } = this.props;
     return (
       <>
         <Card>
@@ -53,16 +61,33 @@ class Users extends Component {
               </Col>
             </Row>
           </CardHeader>
-          <CardBody>Test</CardBody>
+          <CardBody>
+            <UsersList userData={userReducer} />
+          </CardBody>
         </Card>
         <CrmUserModal
           userModalOpen={openCreate}
           handleUserModal={this.toggleCreateModal}
-          onCreate={this.createUser}
+          addUser={addUser}
         />
       </>
     );
   }
 }
+const mapStateToProps = state => ({
+  userReducer: state.usersReducer
+});
 
-export default Users;
+const mapDispatchToProps = dispatch => ({
+  getUsers: page => {
+    dispatch(getUsersList({ page }));
+  },
+  addUser: data => {
+    dispatch(addNewUser(data));
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Users);

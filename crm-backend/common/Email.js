@@ -6,21 +6,22 @@ var path = require("path");
 // const sgMail = require('@sendgrid/mail');
 const { webURL, mode } = require("./../config/app");
 const AvailiableTemplates = {
-    SIGNUP_CONFIRMATION: 'signupConfirm',
-    SIGNUP: 'signup',
-    SIGNUP_BY_ADMIN : 'userProfileEmail',
-    UPDATE_BY_ADMIN : "updateUserProfile",
-    FORGET_PASSWORD: 'forgotPassword',
-    ORDER_COMPLETE: 'orderComplete',
-    WEBINAR_ORDER_COMPLETE: 'webinarOrder',
-    ADMIN_ORDER_EMAIL: 'adminEmail',
-    ADMIN_WEBINAR_ORDER_EMAIL : 'adminWebinarOrder',
-    WEBINAR_NOTIFICATION : 'webinarNotification',
-    REFUND_ORDER : 'refundOrderUserEmail',
-    REFUND_ORDER_ADMIN : 'refundOrderAdminEmail',
-    NEWSLETTER_EMAIL : 'newsletterEmail',
-    UNSUBSCRIBE_EMAIL : 'unSubscribeEmail',
-}
+  SIGNUP_CONFIRMATION: "signupConfirm",
+  USER_ADDED_CONFIRMATION: "userConfirm",
+  SIGNUP: "signup",
+  SIGNUP_BY_ADMIN: "userProfileEmail",
+  UPDATE_BY_ADMIN: "updateUserProfile",
+  FORGET_PASSWORD: "forgotPassword",
+  ORDER_COMPLETE: "orderComplete",
+  WEBINAR_ORDER_COMPLETE: "webinarOrder",
+  ADMIN_ORDER_EMAIL: "adminEmail",
+  ADMIN_WEBINAR_ORDER_EMAIL: "adminWebinarOrder",
+  WEBINAR_NOTIFICATION: "webinarNotification",
+  REFUND_ORDER: "refundOrderUserEmail",
+  REFUND_ORDER_ADMIN: "refundOrderAdminEmail",
+  NEWSLETTER_EMAIL: "newsletterEmail",
+  UNSUBSCRIBE_EMAIL: "unSubscribeEmail"
+};
 class Email {
   constructor(res) {
     this.response = res;
@@ -39,9 +40,12 @@ class Email {
       case AvailiableTemplates.SIGNUP:
         this.subject = "[CRM-360 Degree] Registration";
         break;
+      case AvailiableTemplates.SIGNUP_CONFIRMATION:
+        this.subject = "[CRM-360 Degree] Please confirm your email address";
+        break;
 
-      case AvailiableTemplates.SIGNUP_BY_ADMIN:
-        this.subject = "[CRM-360 Degree] Created Customer Profile";
+      case AvailiableTemplates.USER_ADDED_CONFIRMATION:
+        this.subject = "[CRM-360 Degree] You've Been Invited to Join CRM 360 ";
         break;
 
       case AvailiableTemplates.UPDATE_BY_ADMIN:
