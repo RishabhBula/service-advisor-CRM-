@@ -2,7 +2,12 @@ import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
-import { showLoader, hideLoader, usersActions } from "./../actions";
+import {
+  showLoader,
+  hideLoader,
+  usersActions,
+  addUserSuccess,
+} from "./../actions";
 
 const getUsersLogic = createLogic({
   type: usersActions.GET_USER_LIST,
@@ -14,8 +19,7 @@ const getUsersLogic = createLogic({
       "/list",
       "GET",
       true,
-      action.payload,
-      undefined
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -34,8 +38,26 @@ const addUsersLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
-    // dispatch(hideLoader());
-    done();
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/createUser",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(addUserSuccess());
+      dispatch(hideLoader());
+      done();
+    }
   },
 });
 

@@ -4,13 +4,24 @@ import { usersActions } from "../actions";
 const initialState = {
   users: [],
   isLoading: true,
+  userData: {
+    isSuccess: false,
+    data: {},
+  },
 };
 
 export const usersReducer = handleActions(
   {
-    [usersActions.GET_USER_LIST_SUCCESS]: (state, action) => ({
+    [usersActions.GET_USER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...action.payload,
+      ...payload,
+    }),
+    [usersActions.ADD_USER_SUCCESS]: (state, action) => ({
+      ...state,
+      userData: {
+        isSuccess: true,
+        data: {},
+      },
     }),
   },
   initialState

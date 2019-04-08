@@ -18,13 +18,12 @@ export class SuccessHandlerHelper {
 
   setSucccess = () => {
     const messages = [];
-
     for (let i in this.rawData) {
-      if (typeof this.rawData[i] === "string") {
+      if (typeof this.rawData[i] === "string" && i === "message") {
         messages.push(this.rawData[i]);
       }
     }
     this.data.data = this.rawData;
     this.data.messages = messages;
-  }
+  };
 }

@@ -16,7 +16,7 @@ export const SingupValidations = {
   },
   password: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.MINLENGTH]: 6,
+    [ValidationTypes.PASSWORD]: true,
     [ValidationTypes.MAXLENGTH]: 20,
   },
   confirmPassword: {
@@ -43,8 +43,8 @@ export const SingupValidationsMessaages = {
   },
   password: {
     [ValidationTypes.REQUIRED]: "Please enter password.",
-    [ValidationTypes.MINLENGTH]:
-      "Password should be atleast 6 characters long.",
+    [ValidationTypes.PASSWORD]:
+      "Please choose a strong password. Must have one lowercase, one upercase, one number, one special and should have at least 8 characters.",
     [ValidationTypes.MAXLENGTH]: "Password cannot have more that 20 characters",
   },
   confirmPassword: {

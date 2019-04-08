@@ -19,6 +19,9 @@ const ResetPassword = React.lazy(() =>
 const VerifyAccount = React.lazy(() =>
   import("../containers/Auth/VerifyAccount")
 );
+const GeneratePassword = React.lazy(() =>
+  import("../containers/Auth/GeneratePassword")
+);
 
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
@@ -58,6 +61,12 @@ const Routes = [
     path: "/register/confirm/:userId/:activationCode",
     name: "Verify Account",
     component: VerifyAccount
+  },
+  {
+    exact: false,
+    path: "/register/create-password/:userId/:activationCode",
+    name: "Create Password",
+    component: GeneratePassword
   },
   {
     exact: false,

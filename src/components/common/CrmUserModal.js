@@ -33,11 +33,25 @@ export class CrmUserModal extends Component {
       lastName: "",
       email: "",
       phone: "",
-      type: "admin",
+      roleType: "5ca3473d70537232f13ff1f9",
       rate: "",
       permissions: AdminDefaultPermissions,
       errors: {}
     };
+  }
+  componentDidUpdate({ userModalOpen }) {
+    if (this.props.userModalOpen !== userModalOpen) {
+      this.setState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        roleType: "5ca3473d70537232f13ff1f9",
+        rate: "",
+        permissions: AdminDefaultPermissions,
+        errors: {}
+      });
+    }
   }
   handleClick = e => {
     this.setState({
@@ -56,12 +70,12 @@ export class CrmUserModal extends Component {
     });
     if (name === "type") {
       switch (value) {
-        case "admin":
+        case "5ca3473d70537232f13ff1f9":
           this.setState({
             permissions: AdminDefaultPermissions
           });
           break;
-        case "techincian":
+        case "5ca3473d70537232f13ff1fa":
           this.setState({
             permissions: TechincianDefaultPermissions
           });
@@ -77,8 +91,8 @@ export class CrmUserModal extends Component {
   addUser = e => {
     e.preventDefault();
     try {
-      const { firstName, lastName, email, phone, type, rate } = this.state;
-      const payload = { firstName, lastName, email, phone, type, rate };
+      const { firstName, lastName, email, phone, roleType, rate } = this.state;
+      const payload = { firstName, lastName, email, phone, roleType, rate };
       const { isValid, errors } = Validator(
         payload,
         CreateUserValidations,
@@ -88,6 +102,7 @@ export class CrmUserModal extends Component {
         this.setState({
           errors
         });
+        return;
       }
       this.props.addUser(payload);
     } catch (error) {
@@ -103,7 +118,7 @@ export class CrmUserModal extends Component {
       email,
       phone,
       rate,
-      type,
+      roleType,
       errors
     } = this.state;
     return (
@@ -203,15 +218,17 @@ export class CrmUserModal extends Component {
                       className="customer-modal-text-style"
                       id="type"
                       onChange={this.handleInputChange}
-                      value={type}
+                      value={roleType}
                       name="type"
                     >
-                      <option value="admin">Admin</option>
-                      <option value="techincian">Technician</option>
+                      <option value="5ca3473d70537232f13ff1f9">Admin</option>
+                      <option value="5ca3473d70537232f13ff1fa">
+                        Technician
+                      </option>
                     </Input>
                   </FormGroup>
-                  {errors.type ? (
-                    <p className={"text-danger"}>{errors.type}</p>
+                  {errors.roleType ? (
+                    <p className={"text-danger"}>{errors.roleType}</p>
                   ) : null}
                 </Col>
               </Row>
@@ -234,7 +251,7 @@ export class CrmUserModal extends Component {
                   ) : null}
                 </Col>
               </Row>
-              {type
+              {roleType
                 ? UserPermissions.map((permission, index) => {
                     return (
                       <Row className="justify-content-center pb-2" key={index}>

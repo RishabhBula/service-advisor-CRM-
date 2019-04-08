@@ -8,8 +8,8 @@ export const LoginValidations = {
   },
   password: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.MINLENGTH]: 6,
     [ValidationTypes.MAXLENGTH]: 20,
+    [ValidationTypes.PASSWORD]: true,
   },
 };
 
@@ -21,9 +21,9 @@ export const LoginValidationsMessaages = {
   },
   password: {
     [ValidationTypes.REQUIRED]: "Please enter password.",
-    [ValidationTypes.MINLENGTH]:
-      "Password should be atleast 6 characters long.",
     [ValidationTypes.MAXLENGTH]: "Password cannot have more that 20 characters",
+    [ValidationTypes.PASSWORD]:
+      "Please choose a strong password. Must have one lowercase, one upercase, one number, one special and should have at least 8 characters.",
   },
 };
 
@@ -46,8 +46,8 @@ export const ForgetPasswordValidationsMessaages = {
 export const ResetPasswordValidations = {
   password: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.MINLENGTH]: 6,
     [ValidationTypes.MAXLENGTH]: 20,
+    [ValidationTypes.PASSWORD]: true,
   },
   confirmPassword: {
     [ValidationTypes.REQUIRED]: true,
@@ -58,8 +58,8 @@ export const ResetPasswordValidations = {
 export const ResetPasswordValidationsMessaages = {
   password: {
     [ValidationTypes.REQUIRED]: "Please enter password.",
-    [ValidationTypes.MINLENGTH]:
-      "Password should be atleast 6 characters long.",
+    [ValidationTypes.PASSWORD]:
+      "Please choose a strong password. Must have one lowercase, one upercase, one number, one special and should have at least 8 characters.",
     [ValidationTypes.MAXLENGTH]: "Password cannot have more that 20 characters",
   },
   confirmPassword: {
