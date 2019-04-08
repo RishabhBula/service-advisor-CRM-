@@ -93,11 +93,6 @@ const createUserValidation = [
     .trim()
     .isEmail()
     .withMessage(validationMessage.emailInvalid),
-  body("parentId")
-    .not()
-    .isEmpty()
-    .withMessage("ParentId is required.")
-    .trim(),
   body("roleType")
     .not()
     .isEmpty()
@@ -125,6 +120,19 @@ const userVerify = [
 ];
 
 
+const userVerifyLink = [
+  body("userId")
+    .not()
+    .isEmpty()
+    .withMessage("UserId is required. ")
+    .trim(),
+  body("activeValue")
+    .not()
+    .isEmpty()
+    .withMessage("Active value is required. ")
+];
+
+
 
 module.exports = {
   signupValidation,
@@ -134,5 +142,6 @@ module.exports = {
   verifyLinkValidation,
   resetPasswordValidation,
   createUserValidation,
-  userVerify
+  userVerify,
+  userVerifyLink
 };

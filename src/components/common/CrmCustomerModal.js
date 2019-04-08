@@ -41,7 +41,7 @@ export class CrmCustomerModal extends Component {
     });
   };
   render() {
-    const { customerModalOpen, toggleLarge } = this.props;
+    const { customerModalOpen, handleCustomerModal } = this.props;
     const {
       switchValue,
       selectedOption,
@@ -53,10 +53,10 @@ export class CrmCustomerModal extends Component {
       <>
         <Modal
           isOpen={customerModalOpen}
-          toggle={toggleLarge}
+          toggle={handleCustomerModal}
           className="customer-modal"
         >
-          <ModalHeader toggle={toggleLarge}>Create New Customer</ModalHeader>
+          <ModalHeader toggle={handleCustomerModal}>Create New Customer</ModalHeader>
           <ModalBody>
             <div className="">
               <Row className="justify-content-center">
@@ -399,10 +399,10 @@ export class CrmCustomerModal extends Component {
             {fleetModalOpen ? <CrmFleetModal /> : ""}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={toggleLarge}>
+            <Button color="primary" onClick={handleCustomerModal}>
               Do Something
             </Button>{" "}
-            <Button color="secondary" onClick={toggleLarge}>
+            <Button color="secondary" onClick={handleCustomerModal}>
               Cancel
             </Button>
           </ModalFooter>

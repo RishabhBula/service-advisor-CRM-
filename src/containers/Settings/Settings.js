@@ -5,21 +5,33 @@ import Loader from "../Loader/Loader";
 
 const Sidebar = React.lazy(() => import("./Sidebar"));
 const Users = React.lazy(() => import("./Users"));
+const Customers = React.lazy(() => import("./Customers"));
 
 const SettingsNav = [
   {
     heading: true,
     icon: "fa fa-cog",
-    name: "Settings",
+    name: "Settings"
   },
   {
     icon: "fa fa-users",
     name: "Users",
-    link: "/settings/users",
+    link: "/settings/users"
   },
+  {
+    heading: true,
+    icon: "fa fa-users",
+    name: "List"
+  },
+  {
+    icon: "fa fa-users",
+    name: "Customers",
+    link: "/settings/customers"
+  }
 ];
 const SettingRoutes = [
   { path: "/settings/users", name: "Settings", component: Users },
+  { path: "/settings/customers", name: "Settings", component: Customers }
 ];
 class Settings extends Component {
   constructor(props) {
