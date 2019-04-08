@@ -13,5 +13,6 @@ router.post("/login",validation.loginValidation, authController.loginApp);
 router.post("/forgot-password",validation.forgotPasswordValidation,authController.userForgotPassword);
 router.post("/verify-link",validation.verifyLinkValidation,authController.userVerifyLink)
 router.post("/reset-password",validation.resetPasswordValidation,authController.userResetpassword)
-
+router.post("/createUser", validation.createUserValidation, authController.createUser);
+router.post("/verfiyUser", validation.userVerify, authController.verfiyUser);
 module.exports = router;
