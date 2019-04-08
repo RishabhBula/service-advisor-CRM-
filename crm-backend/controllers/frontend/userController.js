@@ -31,7 +31,7 @@ const listGet = async (req, res) => {
       parentId: "5ca5d6f69c6c9f6cb63d919a",
     };
     // let data = await new user.()
-    let result = await customerModel(inserList).save();
+    //let result = await customerModel(inserList).save();
     // let roleUpdate = await roleModel.updateOne(
     //   {
     //     userType: "user"
