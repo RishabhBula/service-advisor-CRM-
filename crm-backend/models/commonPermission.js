@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const DiscountType = new Schema({
   status: {
+    type: Boolean
+  }
+});
+
+const DiscountType = new Schema({
+  status: {
     type: Boolean,
   },
   percentageDiscount: {
@@ -28,7 +34,7 @@ const PriceMatrixOptions = new Schema({
 });
 const PermissionObject = new Schema({
   isCorporateFleetTaxExempt: {
-    type: Boolean,
+    type: CorporateType,
   },
   shouldReceiveDiscount: {
     type: DiscountType,

@@ -28,7 +28,7 @@ const listGet = async (req, res) => {
           },
         },
       ],
-      parentId: "5ca5d6f69c6c9f6cb63d919a",
+      parentId: currentUser.id,
     };
     // let data = await new user.()
     let result = await customerModel(inserList).save();
@@ -85,20 +85,68 @@ const listGet = async (req, res) => {
 
 /* ----------------Grt All User List------------ */
 const getAllUserList = async (req, res) => {
-  const { query } = req
+  const { currentUser, query } = req
+  console.log("************Qurry", query);
   try {
-    if (!query.parentId) {
-      return res.status(400).json({
-        responsecode: 400,
-        message: "Parrent id not provided",
-        success: false
-      })
+    // page number is required
+    // if (!query.page || parseInt(query.page) <= 0) {
+    //   return res.status(404).json({
+    //     responseCode: 404,
+    //     message: "Page not provided or incorrect",
+    //     success: false,
+    //   });
+    // }
+
+    // // limit is required
+    // if (!query.limit || parseInt(query.limit) <= 0) {
+    //   return res.status(404).json({
+    //     responseCode: 404,
+    //     message: "Limit not provided or incorrect",
+    //     success: false,
+    //   });
+    // }
+
+    let limit = parseInt(query.limit); // data limit
+    let page = parseInt(query.page); // page number
+    /* let offset = limit * (page - 1); */ // skip value
+
+    let searchValue = query.search
+    let condition = {};
+    if (searchValue) {
+      condition = {
+        $or: [{
+          firstName: {
+            $regex: new RegExp(searchValue, "i")
+          }
+        }, {
+          lastName: {
+            $regex: new RegExp(searchValue, "i")
+          }
+        },
+        {
+          email: {
+            $regex: new RegExp(searchValue, "i")
+          }
+        }],
+      }
     }
-    const getAllUser = await userModel.find({ parentId: query.parentId })
+    const getAllUser = await userModel.find({
+      ...condition,
+      parentId: "5ca5d6f69c6c9f6cb63d919a",
+    }).populate({
+      path: 'roleType',
+      match: { userType: query.userType }
+    }).skip(page).limit(limit)
+    const getAllUserCount = await userModel.countDocuments({
+      ...condition,
+      parentId: "5ca5d6f69c6c9f6cb63d919a",
+    })
+    let totalPages = Math.ceil(parseInt(getAllUserCount) / limit); // total number of pages for table
     if (getAllUser) {
       return res.status(200).json({
         responsecode: 200,
         data: getAllUser,
+        totalPages: totalPages,
         success: true
       })
     } else {
