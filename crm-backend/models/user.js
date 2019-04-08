@@ -16,7 +16,7 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    default: null,
   },
   verifyToken: {
     type: String,
@@ -68,11 +68,11 @@ const userSchema = new Schema({
     default: null,
   },
   serviceOffer: {
-    type: String,
+    type: [String],
     default: null,
   },
   vehicleService: {
-    type: String,
+    type: [String],
     default: null,
   },
   shopLogo: {

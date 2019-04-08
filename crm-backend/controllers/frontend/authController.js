@@ -164,7 +164,7 @@ const loginApp = async (req, res) => {
       throw {
         code: 400,
         message: "you are not authorized to access CRM",
-        success: false,
+        success: false
       };
     }
     if (!commonCrypto.verifyPassword(result.password, password, result.salt)) {
@@ -318,7 +318,8 @@ const userResetpassword = async (req, res) => {
     });
   }
   try {
-    const userData = await userModel.findOne({ email: body.email });
+    const decryptedUserEmail = commonCrypto.decrypt(body.user)
+    const userData = await userModel.findOne({ email: decryptedUserEmail });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
@@ -371,6 +372,178 @@ const userResetpassword = async (req, res) => {
     });
   }
 };
+/* ------------User Company Setup--------------- */
+const userCompanySetup = async (req, res) => {
+  const { body } = req;
+  try {
+    const userData = await userModel.findById(body.userId)
+    if (!userData) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "User not registered",
+        success: false,
+      });
+    }
+    const comapnyData = {
+      companyName: body.companyName,
+      website: body.website,
+      peopleWork: body.peopleWork,
+      serviceOffer: body.serviceOffer,
+      vehicleService: body.vehicleService,
+    }
+    const companySetup = await userModel.findByIdAndUpdate({
+      _id: userData.id
+    }, {
+        $set: comapnyData
+      });
+    if (!companySetup) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Error uploding user company details.",
+        success: false,
+      });
+    } else {
+      return res.status(200).json({
+        responsecode: 200,
+        message: "User company details uploaded successfully!",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.log("this is Company setup error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+}
+/* ------------User Company Setup--------------- */
+
+/* user create by admin */
+const createUser = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: commonValidation.formatValidationErr(errors.mapped(), true),
+        success: false,
+      });
+    }
+    const confirmationNumber = new Date().valueOf();
+    let $data = req.body;
+    let inserList = {
+      firstName: $data.firstName,
+      lastName: $data.lastName,
+      email: $data.email,
+      parentId: $data.parentId
+    };
+    let userFind = await userModel.find({ email: $data.email });
+    if (userFind.length >= 1) {
+      return res.status(401).json({
+        message: validationMessage.emailAlreadyExist,
+        success: false
+      });
+    } else {
+      var salt = commonCrypto.generateSalt(6);
+      $data.salt = salt;
+      $data.password = commonCrypto.hashPassword($data.password, salt);
+      $data.roleType = $data.roleType;
+      $data.permission = $data.permission;
+      $data.firstTimeUser = true;
+      $data.loggedInIp = commonSmtp.getIpAddress(req);
+      $data.userSideActivationValue = confirmationNumber;
+
+      let result = await userModel($data).save();
+      const emailVar = new Email(res);
+      await emailVar.setTemplate(AvailiableTemplates.USER_ADDED_CONFIRMATION, {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        userId: result._id,
+        userSideActivationValue: confirmationNumber
+      });
+      await emailVar.sendEmail(result.email);
+      if (result) {
+        return res.status(200).json({
+          message: otherMessage.insertUserMessage,
+          success: true
+        });
+      } else {
+        return res.status(400).json({
+          result: result,
+          message: "Error in inserting user.",
+          success: false
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
+
+const verfiyUser = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: commonValidation.formatValidationErr(errors.mapped(), true),
+        success: false
+      });
+    }
+    let $data = req.body;
+    var userData = await userModel.findOne({
+      $and: [
+        { _id: $data.userId },
+        { userSideActivation: false },
+        { userSideActivationValue: $data.activeValue }
+      ]
+    });
+    if (userData) {
+      let salt = commonCrypto.generateSalt(6);
+      let password = commonCrypto.hashPassword($data.password, salt);
+      let loggedInIp = commonSmtp.getIpAddress(req);
+      let roleUpdate = await userModel.updateOne(
+        {
+          _id: userData._id
+        },
+        {
+          $set: {
+            userSideActivation: true,
+            userSideActivationValue: "",
+            password: password,
+            loggedInIp: loggedInIp
+          }
+        }
+      );
+      if (roleUpdate) {
+        res.status(200).json({
+          message: otherMessage.userPasswordCreation,
+          success: true
+        });
+      } else {
+        res.status(401).json({
+          message: "Some thing Went Wrong",
+          success: false
+        });
+      }
+    } else {
+      res.status(401).json({
+        message: otherMessage.linkExpiration,
+        success: false
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
 module.exports = {
   signUp,
   confirmationSignUp,
@@ -378,4 +551,7 @@ module.exports = {
   userForgotPassword,
   userVerifyLink,
   userResetpassword,
+  userCompanySetup,
+  createUser,
+  verfiyUser
 };
