@@ -89,32 +89,57 @@ const getAllUserList = async (req, res) => {
   console.log("************Qurry", query);
   try {
     // page number is required
-    if (!query.page || parseInt(query.page) <= 0) {
-      return res.status(404).json({
-        responseCode: 404,
-        message: "Page not provided or incorrect",
-        success: false,
-      });
-    }
+    // if (!query.page || parseInt(query.page) <= 0) {
+    //   return res.status(404).json({
+    //     responseCode: 404,
+    //     message: "Page not provided or incorrect",
+    //     success: false,
+    //   });
+    // }
 
-    // limit is required
-    if (!query.limit || parseInt(query.limit) <= 0) {
-      return res.status(404).json({
-        responseCode: 404,
-        message: "Limit not provided or incorrect",
-        success: false,
-      });
-    }
+    // // limit is required
+    // if (!query.limit || parseInt(query.limit) <= 0) {
+    //   return res.status(404).json({
+    //     responseCode: 404,
+    //     message: "Limit not provided or incorrect",
+    //     success: false,
+    //   });
+    // }
 
     let limit = parseInt(query.limit); // data limit
     let page = parseInt(query.page); // page number
     /* let offset = limit * (page - 1); */ // skip value
 
+    let searchValue = query.search
+    let condition = {};
+    if (searchValue) {
+      condition = {
+        $or: [{
+          firstName: {
+            $regex: new RegExp(searchValue, "i")
+          }
+        }, {
+          lastName: {
+            $regex: new RegExp(searchValue, "i")
+          }
+        },
+        {
+          email: {
+            $regex: new RegExp(searchValue, "i")
+          }
+        }],
+      }
+    }
     const getAllUser = await userModel.find({
-      parentId: currentUser.id
+      ...condition,
+      parentId: "5ca5d6f69c6c9f6cb63d919a",
+    }).populate({
+      path: 'roleType',
+      match: { userType: query.userType }
     }).skip(page).limit(limit)
     const getAllUserCount = await userModel.countDocuments({
-      parentId: currentUser.id
+      ...condition,
+      parentId: "5ca5d6f69c6c9f6cb63d919a",
     })
     let totalPages = Math.ceil(parseInt(getAllUserCount) / limit); // total number of pages for table
     if (getAllUser) {
