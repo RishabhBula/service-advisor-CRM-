@@ -16,4 +16,5 @@ router.post("/reset-password", validation.resetPasswordValidation, authControlle
 router.post("/company-setup", authController.userCompanySetup)
 router.post("/createUser", validation.createUserValidation, authController.createUser);
 router.post("/verfiyUser", validation.userVerify, authController.verfiyUser);
+router.post("/image-upload", authController.imageUpload);
 module.exports = router;

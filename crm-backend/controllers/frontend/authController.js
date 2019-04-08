@@ -11,6 +11,10 @@ const {
 } = require("../../common/validationMessage");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const moment = require("moment");
+const fs = require("fs");
+const path = require("path");
+const __basedir = path.join(__dirname, "../../public");
+const { resizeImage } = require('../../common/imageThumbnail')
 
 const signUp = async (req, res) => {
   try {
@@ -417,8 +421,67 @@ const userCompanySetup = async (req, res) => {
     });
   }
 }
-/* ------------User Company Setup--------------- */
+/* ------------User Company Setup End--------------- */
 
+/* ---------------User Image Upload---------------- */
+const imageUpload = async (req, res) => {
+  try {
+    const { body } = req;
+    if (!body.imageData) {
+      return res.status(401).json({
+        responseCode: 401,
+        message: "Not provided any file to upload!",
+        success: false,
+      });
+    }
+    if (body.imageData != undefined || body.imageData != '') {
+      const base64Image = body.imageData.replace(/^data:image\/\w+;base64,/, "");
+      var buf = new Buffer(base64Image, 'base64');
+
+      var originalImagePath = __basedir + '/images/' + body.userId;
+      var thumbnailImagePath = __basedir + '/images-thumbnail/' + body.userId + 'image-thumb';
+      const thumbnailImage = resizeImage(originalImagePath, thumbnailImagePath, 600);
+      console.log("**********This is thumbnailImage", thumbnailImage);
+
+      fs.writeFile(originalImagePath, buf, function (err) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log("The file was saved!");
+      });
+      const imageUploadData = {
+        originalImage: body.userId,
+        thumbnailImage: body.userId + 'image-thumb',
+      }
+      const companyLogo = await userModel.findByIdAndUpdate({ _id: body.userId }, {
+        shopLogo: imageUploadData
+      })
+      if (companyLogo) {
+        return res.status(200).json({
+          responseCode: 200,
+          message: "File uploaded successfully!",
+          iamgeData: originalImagePath,
+          success: true,
+        });
+      }else{
+        return res.status(400).json({
+          responseCode: 400,
+          message: "Error uploading company logo.",
+          success: false,
+        });
+      }
+    }
+  } catch (error) {
+    console.log("**************This is image upload error", error);
+    return res.status(400).json({
+      responseCode: 400,
+      message: "Error while saving file!",
+      error: error,
+      success: false,
+    });
+  }
+};
+/* ---------------User Image Upload End---------------- */
 /* user create by admin */
 const createUser = async (req, res) => {
   try {
@@ -553,5 +616,6 @@ module.exports = {
   userResetpassword,
   userCompanySetup,
   createUser,
-  verfiyUser
+  verfiyUser,
+  imageUpload
 };

@@ -190,6 +190,8 @@ export class BigModals extends Component {
     const { modalOpen, toggleLarge } = this.props;
     const { companyLogo, peopleWork, servicesOffer, vehicleServicesOffer } = this.state;
     console.log(servicesOffer.selectedServices);
+    console.log("companyLogo",companyLogo);
+    
     return (
       <>
         <Modal
