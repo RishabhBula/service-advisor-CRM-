@@ -1,4 +1,3 @@
-const customerModel = require("../../models/user");
 const userModel = require("../../models/user");
 const {
   validationMessage,
@@ -7,6 +6,7 @@ const {
 const commonSmtp = require("../../common/index");
 const commonCrypto = require("../../common/crypto");
 const { Email, AvailiableTemplates } = require("../../common/Email");
+
 const listGet = async (req, res) => {
   try {
     let inserList = {
@@ -79,14 +79,45 @@ const listGet = async (req, res) => {
     // });
   } catch (error) {
     console.log(error);
-
     return res.status(400).send({ msg: error });
   }
 };
 
-
-
-
+/* ----------------Grt All User List------------ */
+const getAllUserList = async (req, res) => {
+  const { query } = req
+  try {
+    if (!query.parentId) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Parrent id not provided",
+        success: false
+      })
+    }
+    const getAllUser = await userModel.find({ parentId: query.parentId })
+    if (getAllUser) {
+      return res.status(200).json({
+        responsecode: 200,
+        data: getAllUser,
+        success: true
+      })
+    } else {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "User not found",
+        success: false
+      })
+    }
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+}
+/* ----------------Grt All User List End------------ */
 module.exports = {
-  listGet
+  listGet,
+  getAllUserList
 };
