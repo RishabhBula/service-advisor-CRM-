@@ -8,11 +8,12 @@ import {
   Button,
   UncontrolledTooltip
 } from "reactstrap";
-import { CrmCustomerModal } from "../../../components/common/CrmCustomerModal";
-import UsersList from "../../../components/UsersList";
+import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
+import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getCustomerList, addNewCustomer } from "../../../actions";
-import { logger } from "../../../helpers/Logger";
+import { getCustomerList, addNewCustomer } from "../../actions";
+// import { getUsersList, addNewUser } from "../../actions";
+import { logger } from "../../helpers/Logger";
 
 class Vehicles extends Component {
   constructor(props) {
