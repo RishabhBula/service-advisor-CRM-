@@ -35,7 +35,7 @@ class Users extends Component {
   };
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addUser } = this.props;
+    const { userReducer } = this.props;
     return (
       <>
         <Card>
