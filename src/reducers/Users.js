@@ -4,6 +4,7 @@ import { usersActions } from "../actions";
 const initialState = {
   users: [],
   isLoading: true,
+  totalUsers: 100,
   userData: {
     isSuccess: false,
     data: {},

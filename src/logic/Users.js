@@ -13,7 +13,12 @@ import {
 const getUsersLogic = createLogic({
   type: usersActions.GET_USER_LIST,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    dispatch(
+      getUsersListSuccess({
+        isLoading: true,
+        users: [],
+      })
+    );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/user",
@@ -23,7 +28,6 @@ const getUsersLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      dispatch(hideLoader());
       dispatch(
         getUsersListSuccess({
           isLoading: false,

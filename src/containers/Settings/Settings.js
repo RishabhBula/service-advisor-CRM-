@@ -11,27 +11,27 @@ const SettingsNav = [
   {
     heading: true,
     icon: "fa fa-cog",
-    name: "Settings"
+    name: "Settings",
   },
   {
     icon: "fa fa-users",
     name: "Users",
-    link: "/settings/users"
+    link: "/settings/users",
   },
   {
     heading: true,
     icon: "fa fa-users",
-    name: "List"
+    name: "List",
   },
   {
     icon: "fa fa-users",
     name: "Customers",
-    link: "/settings/customers"
-  }
+    link: "/settings/customers",
+  },
 ];
-const SettingRoutes = [
-  { path: "/settings/users", name: "Settings", component: Users },
-  { path: "/settings/customers", name: "Settings", component: Customers }
+export const SettingRoutes = [
+  { path: "/settings/users", name: "Users", component: Users },
+  { path: "/settings/customers", name: "Customers", component: Customers },
 ];
 class Settings extends Component {
   constructor(props) {
