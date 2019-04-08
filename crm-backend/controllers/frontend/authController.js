@@ -421,6 +421,10 @@ const userCompanySetup = async (req, res) => {
 
 /* user create by admin */
 const createUser = async (req, res) => {
+  console.log("req.currentUser");
+  console.log(req.currentUser);
+  console.log("req.currentUser");
+  
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -435,7 +439,7 @@ const createUser = async (req, res) => {
       firstName: $data.firstName,
       lastName: $data.lastName,
       email: $data.email,
-      parentId: $data.parentId
+      parentId: req.currentUser.id
     };
     let userFind = await userModel.find({ email: $data.email });
     if (userFind.length >= 1) {
@@ -484,7 +488,7 @@ const createUser = async (req, res) => {
   }
 };
 
-
+/* verify user */
 const verfiyUser = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -543,6 +547,7 @@ const verfiyUser = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   signUp,
