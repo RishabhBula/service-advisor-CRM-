@@ -1,5 +1,3 @@
-import { logger } from "./Logger";
-
 /**
  * ErrorHandlerHelper Class - For managing errors
  */
@@ -20,7 +18,6 @@ export class SuccessHandlerHelper {
 
   setSucccess = () => {
     const messages = [];
-    logger(this.rawData);
     for (let i in this.rawData) {
       if (typeof this.rawData[i] === "string" && i === "message") {
         messages.push(this.rawData[i]);
