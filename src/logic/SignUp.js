@@ -66,5 +66,70 @@ const verifyAccountLogic = createLogic({
     }
   },
 });
+const verifyGeneratePasswordLogic = createLogic({
+  type: signUpActions.VERIFY_GENERATE_PASSWORD,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/verfiyUserLink",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      dispatch(
+        redirectTo({
+          path: "/404",
+        })
+      );
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      done();
+    }
+  },
+});
 
-export const SignUpLogic = [signUpLogic, verifyAccountLogic];
+const generatePasswordLogic = createLogic({
+  type: signUpActions.GENERATE_PASSWORD,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/verfiyUser",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(
+        redirectTo({
+          path: "/404",
+        })
+      );
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(redirectTo({ path: "/login" }));
+      done();
+    }
+  },
+});
+
+export const SignUpLogic = [
+  signUpLogic,
+  verifyAccountLogic,
+  generatePasswordLogic,
+  verifyGeneratePasswordLogic,
+];

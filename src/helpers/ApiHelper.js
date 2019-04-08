@@ -1,7 +1,7 @@
+import * as qs from "querystring";
 import { AppConfig } from "../config/AppConfig";
 import { ErrorHandlerHelper } from "./ErrorHandlerHelper ";
 import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
-
 /**
  * ApiHelper Class - For making Api Requests
  */
@@ -42,52 +42,14 @@ export class ApiHelper {
     options.headers = new Headers();
     options.headers.append("Content-Type", "application/json");
     if (authenticated) {
-      const storageSession = JSON.parse(
-        localStorage.getItem("localStorageVal")
-      );
-      options.headers.append(
-        "Authorization",
-        storageSession ? storageSession.token : undefined
-      );
+      options.headers.append("Authorization", localStorage.getItem("token"));
     }
 
     // html query for "GET", json body for others.
-    if (method === "GET") {
-      let isFirst = true;
-      if (queryOptions && typeof queryOptions === "object") {
-        for (const i in queryOptions) {
-          if (queryOptions[i]) {
-            const e = queryOptions[i];
-            if (isFirst) {
-              isFirst = false;
-              url += "?";
-            } else {
-              url += "&";
-            }
-            url += i + "=" + e;
-          }
-        }
-      }
+    if (queryOptions && typeof queryOptions === "object") {
+      url += `?${qs.stringify(queryOptions)}`;
     }
-    if (method === "DELETE") {
-      let isFirst = true;
-      if (queryOptions && typeof queryOptions === "object") {
-        for (const i in queryOptions) {
-          if (queryOptions.hasOwnProperty(i)) {
-            const e = queryOptions[i];
-            if (isFirst) {
-              isFirst = false;
-              url += "?";
-            } else {
-              url += "&";
-            }
-            url += i + "=" + e;
-          }
-        }
-      }
-    } else {
-      options.body = JSON.stringify(body);
-    }
+    options.body = JSON.stringify(body);
     try {
       let response = await fetch(url, options);
       let responseObject;
@@ -100,7 +62,7 @@ export class ApiHelper {
       if (response.ok === false || response.status !== 200) {
         let errorObject = {
           code: response.status,
-          responseObject
+          responseObject,
         };
 
         throw errorObject;

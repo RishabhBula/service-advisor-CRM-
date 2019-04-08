@@ -12,7 +12,6 @@ import { CrmUserModal } from "../../../components/common/CrmUserModal";
 import UsersList from "../../../components/UsersList";
 import { connect } from "react-redux";
 import { getUsersList, addNewUser } from "../../../actions";
-import { logger } from "../../../helpers/Logger";
 
 class Users extends Component {
   constructor(props) {
@@ -24,14 +23,24 @@ class Users extends Component {
   componentDidMount() {
     this.props.getUsers(1);
   }
+  onPageChange = page => {
+    this.props.getUsers(page);
+  };
+  componentDidUpdate({ userReducer }) {
+    if (
+      this.props.userReducer.userData.isSuccess !==
+      userReducer.userData.isSuccess
+    ) {
+      this.setState({
+        openCreate: false
+      });
+    }
+  }
   toggleCreateModal = e => {
     e.preventDefault();
     this.setState({
       openCreate: !this.state.openCreate
     });
-  };
-  createUser = data => {
-    logger(data);
   };
   render() {
     const { openCreate } = this.state;
@@ -62,7 +71,10 @@ class Users extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <UsersList userData={userReducer} />
+            <UsersList
+              userData={userReducer}
+              onPageChange={this.onPageChange}
+            />
           </CardBody>
         </Card>
         <CrmUserModal
