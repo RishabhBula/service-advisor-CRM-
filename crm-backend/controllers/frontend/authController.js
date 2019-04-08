@@ -378,9 +378,9 @@ const userResetpassword = async (req, res) => {
 };
 /* ------------User Company Setup--------------- */
 const userCompanySetup = async (req, res) => {
-  const { body } = req;
+  const { body, currentUser } = req;
   try {
-    const userData = await userModel.findById(body.userId)
+    const userData = await userModel.findById(currentUser.id)
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
@@ -687,6 +687,43 @@ const verfiyUser = async (req, res) => {
   }
 };
 
+/* verify user Link*/
+const verfiyUserLink = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: commonValidation.formatValidationErr(errors.mapped(), true),
+        success: false
+      });
+    }
+    let $data = req.body;
+    var userData = await userModel.findOne({
+      $and: [
+        { _id: $data.userId },
+        { userSideActivation: false },
+        { userSideActivationValue: $data.activeValue }
+      ]
+    });
+    if (userData) {
+      res.status(200).json({
+        message:"Link verified successfully!",
+        success: true
+      }); 
+    } else {
+      res.status(401).json({
+        message: otherMessage.linkExpiration,
+        success: false
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
 
 module.exports = {
   signUp,
@@ -698,6 +735,7 @@ module.exports = {
   userCompanySetup,
   createUser,
   verfiyUser,
+  verfiyUserLink,
   imageUpload,
   imageDelete
 };
