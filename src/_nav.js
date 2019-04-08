@@ -41,6 +41,11 @@ export default {
       icon: "icon-puzzle",
     },
     {
+      name: "Users",
+      url: "/users",
+      icon: "fa fa-users",
+    },
+    {
       name: "Settings",
       url: "/settings",
       icon: "fa fa-cog",

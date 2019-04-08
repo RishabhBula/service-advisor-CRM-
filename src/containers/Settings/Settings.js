@@ -4,7 +4,6 @@ import { Row, Col } from "reactstrap";
 import Loader from "../Loader/Loader";
 
 const Sidebar = React.lazy(() => import("./Sidebar"));
-const Users = React.lazy(() => import("./Users"));
 const Customers = React.lazy(() => import("./Customers"));
 
 const SettingsNav = [
@@ -30,7 +29,6 @@ const SettingsNav = [
   },
 ];
 export const SettingRoutes = [
-  { path: "/settings/users", name: "Users", component: Users },
   { path: "/settings/customers", name: "Customers", component: Customers },
 ];
 class Settings extends Component {

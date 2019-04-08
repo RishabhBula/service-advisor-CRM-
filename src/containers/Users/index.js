@@ -8,10 +8,10 @@ import {
   Button,
   UncontrolledTooltip
 } from "reactstrap";
-import { CrmUserModal } from "../../../components/common/CrmUserModal";
-import UsersList from "../../../components/UsersList";
+import { CrmUserModal } from "../../components/common/CrmUserModal";
+import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getUsersList, addNewUser } from "../../../actions";
+import { getUsersList, addNewUser } from "../../actions";
 
 class Users extends Component {
   constructor(props) {
