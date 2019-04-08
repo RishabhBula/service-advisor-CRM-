@@ -66,6 +66,34 @@ const verifyAccountLogic = createLogic({
     }
   },
 });
+const verifyGeneratePasswordLogic = createLogic({
+  type: signUpActions.VERIFY_GENERATE_PASSWORD,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/verfiyUserLink",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      dispatch(
+        redirectTo({
+          path: "/404",
+        })
+      );
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      done();
+    }
+  },
+});
 
 const generatePasswordLogic = createLogic({
   type: signUpActions.GENERATE_PASSWORD,
@@ -103,4 +131,5 @@ export const SignUpLogic = [
   signUpLogic,
   verifyAccountLogic,
   generatePasswordLogic,
+  verifyGeneratePasswordLogic,
 ];

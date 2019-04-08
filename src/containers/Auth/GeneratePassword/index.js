@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { generatePassword } from "../../../actions";
+import { generatePassword, verifyGeneratePasswordLink } from "../../../actions";
 import GeneratePasswordPage from "../../../components/GeneratePasswordPage";
-import { logger } from "../../../helpers/Logger";
 
 class GeneratePassword extends Component {
   componentDidMount() {
@@ -11,6 +10,7 @@ class GeneratePassword extends Component {
     if (!activationCode || !userId) {
       this.props.redirectTo("/404");
     }
+    this.props.verifyCode({ activeValue: activationCode, userId });
   }
   generatePassword = password => {
     const { activationCode, userId } = this.props.match.params;
@@ -29,7 +29,7 @@ const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
   verifyCode: data => {
-    logger(data);
+    dispatch(verifyGeneratePasswordLink(data));
   },
   generatePassword: data => {
     dispatch(generatePassword(data));
