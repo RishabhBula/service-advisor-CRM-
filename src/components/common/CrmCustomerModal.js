@@ -336,41 +336,55 @@ export class CrmCustomerModal extends Component {
                 {
                 CustomerPermissionsText.map((permission, index) => {
                     return (
-                      <Row className="justify-content-center pb-2" key={index}>
+                      <Row
+                        className="justify-content-center pb-2"
+                        key={index}
+                      >
                         <Col md="2">
                           <AppSwitch
                             className={"mx-1"}
-                            checked={customerDefaultPermissions[permission.key].status}
-                            onClick={this.handleClick.bind(this,permission.key)}
+                            checked={
+                              customerDefaultPermissions[
+                                permission.key
+                              ].status
+                            }
+                            onClick={this.handleClick.bind(
+                              this,
+                              permission.key
+                            )}
                             variant={"3d"}
                             color={"primary"}
                             size={"sm"}
                           />
                         </Col>
-                        {/* {
-                          customerDefaultPermissions[permission.key] === ""
-                        } */}
-                        {/* <Col md="10">
+                        <Col md="10">
                           <p className="customer-modal-text-style">
                             {permission.text}
                           </p>
-                        </Col> */}
-                        <Col md="12">
-                          <FormGroup>
-                            <Label
-                              htmlFor="name"
-                              className="customer-modal-text-style"
-                            >
-                              Percent Discount
-                            </Label>
-                            <Input
-                              type="text"
-                              id="name"
-                              placeholder="NY"
-                              required
-                            />
-                          </FormGroup>
                         </Col>
+                        {permission.text ===
+                          "shouldReceiveDiscount" &&
+                        customerDefaultPermissions[
+                          permission.key
+                        ].status ? (
+                          <Col md="12">
+                            <FormGroup>
+                              <Label
+                                htmlFor="name"
+                                className="customer-modal-text-style"
+                              >
+                                Percent Discount
+                              </Label>
+                              <Input
+                                type="text"
+                                id="name"
+                                placeholder="NY"
+                                required
+                              />
+                            </FormGroup>
+                          </Col>
+                        ) : null}
+                        {/* */}
                       </Row>
                     );
                   })

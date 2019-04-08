@@ -9,29 +9,29 @@ const { Email, AvailiableTemplates } = require("../../common/Email");
 
 const listGet = async (req, res) => {
   try {
-    let inserList = {
-      firstName: "General",
-      fleet: "5ca5e3b88b27f17bc0dfaab5",
-      permission: [
-        {
-          shouldReceiveDiscount: {
-            status: false,
-            percentageDiscount: 0,
-          },
-          shouldLaborRateOverride: {
-            status: false,
-            laborRate: "5ca5e2f1a7d08f79f78c8e41",
-          },
-          shouldPricingMatrixOverride: {
-            status: false,
-            pricingMatrix: null,
-          },
-        },
-      ],
-      parentId: currentUser.id,
-    };
+    // let inserList = {
+    //   firstName: "General",
+    //   fleet: "5ca5e3b88b27f17bc0dfaab5",
+    //   permission: [
+    //     {
+    //       shouldReceiveDiscount: {
+    //         status: false,
+    //         percentageDiscount: 0,
+    //       },
+    //       shouldLaborRateOverride: {
+    //         status: false,
+    //         laborRate: "5ca5e2f1a7d08f79f78c8e41",
+    //       },
+    //       shouldPricingMatrixOverride: {
+    //         status: false,
+    //         pricingMatrix: null,
+    //       },
+    //     },
+    //   ],
+    //   parentId: currentUser.id,
+    // };
     // let data = await new user.()
-    let result = await customerModel(inserList).save();
+    //let result = await customerModel(inserList).save();
     // let roleUpdate = await roleModel.updateOne(
     //   {
     //     userType: "user"
@@ -71,7 +71,7 @@ const listGet = async (req, res) => {
     // );
 
     return res.status(200).json({
-      result: result,
+      result: "result",
     });
 
     // return res.status(200).json({

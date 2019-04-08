@@ -4,8 +4,8 @@ import { Row, Col } from "reactstrap";
 import Loader from "../Loader/Loader";
 
 const Sidebar = React.lazy(() => import("./Sidebar"));
-const Users = React.lazy(() => import("./Users"));
-const Customers = React.lazy(() => import("./Customers"));
+// const Users = React.lazy(() => import("./Users"));
+// const Customers = React.lazy(() => import("./Customers"));
 
 const SettingsNav = [
   {
@@ -29,10 +29,10 @@ const SettingsNav = [
     link: "/settings/customers",
   },
 ];
-export const SettingRoutes = [
-  { path: "/settings/users", name: "Users", component: Users },
-  { path: "/settings/customers", name: "Customers", component: Customers },
-];
+// export const SettingRoutes = [
+//   { path: "/settings/users", name: "Users", component: Users },
+//   { path: "/settings/customers", name: "Customers", component: Customers },
+// ];
 class Settings extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +50,7 @@ class Settings extends Component {
           </Col>
           <Col sm={"10"}>
             <Suspense fallback={<Loader />}>
-              <Switch>
+              {/* <Switch>
                 {SettingRoutes.map((route, idx) => {
                   return route.component ? (
                     <Route
@@ -62,7 +62,7 @@ class Settings extends Component {
                     />
                   ) : null;
                 })}
-              </Switch>
+              </Switch> */}
             </Suspense>
           </Col>
         </Row>
