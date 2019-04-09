@@ -4,12 +4,18 @@ export const CreateFleetValidations = {
   companyName: {
     [ValidationTypes.REQUIRED]: true,
     [ValidationTypes.ALPHA]: true,
+  },
+  email: {
+    [ValidationTypes.EMAIL]: true
   }
 };
 
 export const CreateFleetValidMessaages = {
   companyName: {
     [ValidationTypes.REQUIRED]: "Please enter company Name.",
+  },
+  email: {
+    [ValidationTypes.EMAIL]: "Enter valid email address."
   }
 };
 

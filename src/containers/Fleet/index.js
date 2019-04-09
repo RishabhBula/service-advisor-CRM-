@@ -11,7 +11,7 @@ import {
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import FleetList from "../../components/Fleet/FleetList";
 import { connect } from "react-redux";
-import { getCustomerList, addNewCustomer } from "../../actions";
+import { fleetListRequest, fleetAddRequest } from "../../actions";
 import { logger } from "../../helpers/Logger";
 
 class Fleet extends Component {
@@ -30,12 +30,15 @@ class Fleet extends Component {
       openCreate: !this.state.openCreate
     });
   };
+  handleAddFleet = (fleetData) => {
+
+  }
   createUser = data => {
     logger(data);
   };
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addCustomer } = this.props;
+    const { userReducer } = this.props;
     return (
       <>
         <Card>
@@ -68,7 +71,7 @@ class Fleet extends Component {
         <CrmFleetModal
           fleetModalOpen={openCreate}
           handleFleetModal={this.toggleCreateModal}
-          addCustomer={addCustomer}
+          handleAddFleet={this.handleAddFleet}
         />
       </>
     );
@@ -79,11 +82,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUsers: page => {
-    dispatch(getCustomerList({ page }));
+  getFleet: page => {
+    dispatch(fleetListRequest({ page }));
   },
-  addCustomer: data => {
-    dispatch(addNewCustomer(data));
+  addFleet: data => {
+    dispatch(fleetAddRequest(data));
   }
 });
 

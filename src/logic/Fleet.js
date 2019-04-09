@@ -2,10 +2,10 @@ import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
-import { showLoader, hideLoader, fleetActions } from "./../actions";
+import { showLoader, hideLoader, fleetListActions } from "./../actions";
 
-const getFleetLogic = createLogic({
-  type: fleetActions.GET_FLEET_LIST,
+const getFleetListLogic = createLogic({
+  type: fleetListActions.FLEET_LIST_REQUEST,
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
     let api = new ApiHelper();
@@ -40,4 +40,4 @@ const addFleetLogic = createLogic({
   }
 });
 
-export const FleetLogic = [getFleetLogic, addFleetLogic];
+export const FleetLogic = [getFleetListLogic, addFleetLogic];
