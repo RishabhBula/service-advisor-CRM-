@@ -9,13 +9,16 @@ import {
   Col,
   Label,
   InputGroup,
-  Input
+  Input,
+  Button
 } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import { formateDate } from "../../helpers/Date";
 import PaginationHelper from "../../helpers/Pagination";
 import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
+import { AppConfig } from "../../config/AppConfig";
+import { ConfirmBox } from "../../helpers/SweetAlert";
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +34,7 @@ class UserList extends Component {
     const lSearch = location.search;
     const { page, search, sort, status } = qs.parse(lSearch);
     this.setState({
-      page: page || 1,
+      page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
       search: search || ""
@@ -69,6 +72,15 @@ class UserList extends Component {
       sort: ""
     });
     this.props.onSearch({});
+  };
+  onDelete = async userId => {
+    const { value } = await ConfirmBox({
+      text: "Do you want to delete this user?"
+    });
+    if (!value) {
+      return;
+    }
+    this.props.onDelete(userId);
   };
   render() {
     const { userData } = this.props;
@@ -205,8 +217,17 @@ class UserList extends Component {
                         <Badge color="success">Active</Badge>
                       </td>
                       <td>
-                        <i className={"fa fa-edit"} /> &nbsp;
-                        <i className={"fa fa-trash"} />
+                        <Button color={"primary"} size={"sm"}>
+                          <i className={"fa fa-edit"} />
+                        </Button>{" "}
+                        &nbsp;
+                        <Button
+                          color={"danger"}
+                          size={"sm"}
+                          onClick={() => this.onDelete(user._id)}
+                        >
+                          <i className={"fa fa-trash"} />
+                        </Button>
                       </td>
                     </tr>
                   );
@@ -235,6 +256,7 @@ class UserList extends Component {
               this.props.onPageChange(page);
             }}
             currentPage={page}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
       </>

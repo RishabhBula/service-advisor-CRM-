@@ -11,7 +11,7 @@ import {
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getUsersList, addNewUser } from "../../actions";
+import { getUsersList, addNewUser, deleteUser } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
 class Users extends Component {
@@ -59,8 +59,13 @@ class Users extends Component {
   onSearch = data => {
     const { location } = this.props;
     const { pathname } = location;
-
     this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
+  };
+  deleteUser = userId => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.deleteUser({ ...query, userId });
   };
   render() {
     const { openCreate } = this.state;
@@ -95,6 +100,7 @@ class Users extends Component {
               userData={userReducer}
               onPageChange={this.onPageChange}
               onSearch={this.onSearch}
+              onDelete={this.deleteUser}
             />
           </CardBody>
         </Card>
@@ -117,6 +123,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addUser: data => {
     dispatch(addNewUser(data));
+  },
+  deleteUser: data => {
+    dispatch(deleteUser(data));
   }
 });
 

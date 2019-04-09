@@ -37,7 +37,46 @@ const getAllUserList = async (req, res) => {
     }
     let condition = {
       parentId: currentUser.id,
-      $or: [
+    };
+    if (status) {
+      condition.status = status;
+    }
+    if (searchValue) {
+      condition["$and"] = [
+        {
+          $or: [
+            {
+              firstName: {
+                $regex: new RegExp(searchValue, "i"),
+              },
+            },
+            {
+              lastName: {
+                $regex: new RegExp(searchValue, "i"),
+              },
+            },
+            {
+              email: {
+                $regex: new RegExp(searchValue, "i"),
+              },
+            },
+          ],
+        },
+        {
+          $or: [
+            {
+              isDeleted: {
+                $exists: false,
+              },
+            },
+            {
+              isDeleted: false,
+            },
+          ],
+        },
+      ];
+    } else {
+      condition["$or"] = [
         {
           isDeleted: {
             $exists: false,
@@ -45,28 +84,6 @@ const getAllUserList = async (req, res) => {
         },
         {
           isDeleted: false,
-        },
-      ],
-    };
-    if (status) {
-      condition.status = status;
-    }
-    if (searchValue) {
-      condition["$or"] = [
-        {
-          firstName: {
-            $regex: new RegExp(searchValue, "i"),
-          },
-        },
-        {
-          lastName: {
-            $regex: new RegExp(searchValue, "i"),
-          },
-        },
-        {
-          email: {
-            $regex: new RegExp(searchValue, "i"),
-          },
         },
       ];
     }
@@ -98,14 +115,15 @@ const getAllUserList = async (req, res) => {
 /* ----------------Grt All User List End------------ */
 
 /* Delete User */
-const deleteUser = async ({ param }, res) => {
+const deleteUser = async ({ params }, res) => {
   try {
-    const { userId } = param;
-    await userModel.findByIdAndUpdate(userId, {
+    const { userId } = params;
+    const data = await userModel.findByIdAndUpdate(userId, {
       isDeleted: true,
     });
     return res.status(200).json({
       message: "User deleted successfully!",
+      data,
     });
   } catch (error) {
     console.log("this is get all user error", error);

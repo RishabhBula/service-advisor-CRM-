@@ -47,7 +47,7 @@ export default {
       children: [
         {
           name: "Staff Members",
-          url: "/users",
+          url: "/settings/users",
           icon: "fa fa-users",
         },
         {

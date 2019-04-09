@@ -52,7 +52,8 @@
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
     "redux-logic": "^2.1.1",
-    "simple-line-icons": "^2.4.1"
+    "simple-line-icons": "^2.4.1",
+    "sweetalert2": "^8.8.1"
   },
   "devDependencies": {
     "fullcalendar": "4.0.0-alpha.2",

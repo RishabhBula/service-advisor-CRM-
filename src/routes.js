@@ -9,7 +9,7 @@ const Reports = React.lazy(() => import("./containers/Reports"));
 const Settings = React.lazy(() => import("./containers/Settings"));
 const Users = React.lazy(() => import("./containers/Users"));
 const Vehicles = React.lazy(() => import("./containers/Vehicles"));
-const Fleet = React.lazy(() => import("./containers/Fleet"))
+const Fleet = React.lazy(() => import("./containers/Fleet"));
 const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 
@@ -24,15 +24,15 @@ const routes = [
     path: "/timesheets",
     exact: true,
     name: "Time Clocks",
-    component: TimeClocks
+    component: TimeClocks,
   },
   { path: "/reports", exact: true, name: "Reports", component: Reports },
-  { path: "/settings", name: "Settings", component: Settings },
-  { path: "/users", name: "Users", component: Users },
+  { path: "/settings", exact: true, name: "Settings", component: Settings },
+  { path: "/settings/users", name: "Users", component: Users },
   { path: "/vehicles", name: "Vehicles", component: Vehicles },
   { path: "/fleets", name: "Fleets", component: Fleet },
   { path: "/customers", name: "Customers", component: Customers },
-  { path: "/common", exact: true, name: "Common", component: CommonPage }
+  { path: "/common", exact: true, name: "Common", component: CommonPage },
 ];
 
 export default routes;
