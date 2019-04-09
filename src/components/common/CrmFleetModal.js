@@ -12,7 +12,9 @@ import {
   Input
 } from "reactstrap";
 import { AppSwitch } from "@coreui/react";
-import Validator from "js-object-validation";
+import {
+  AppConfig
+} from "../../config/AppConfig";
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -20,7 +22,7 @@ export class CrmFleetModal extends Component {
     this.state = {
       switchValue: true,
       companyName: "",
-      phoneDetail: "",
+      phoneDetail: {},
       email: "",
       notes: "",
       address1: "",
@@ -28,7 +30,9 @@ export class CrmFleetModal extends Component {
       city: "",
       state: "",
       zipCode: "",
-      permission: ""
+      permission: "",
+      errors: {},
+      phoneLength: AppConfig.phoneLength
     };
   }
   handleClick = e => {
@@ -50,9 +54,6 @@ export class CrmFleetModal extends Component {
         [name]: value,
       });
     }
-    if (name === 'phoneDetail') {
-      
-    }
   }
   render() {
     const { fleetModalOpen,
@@ -68,7 +69,6 @@ export class CrmFleetModal extends Component {
       city,
       state,
       zipCode } = this.state;
-    console.log(switchValue);
     return (
       <>
         <Modal
