@@ -6,6 +6,11 @@ const pricematrixSchema = new Schema({
       type: String,
       default: null
    },
+   parentId: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true
+   },
    userId: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -18,7 +23,7 @@ const pricematrixSchema = new Schema({
    updatedAt: {
       type: Date,
       default: Date.now,
-   },
+   }
 });
 
 module.exports = mongoose.model("priceMatrix", pricematrixSchema);

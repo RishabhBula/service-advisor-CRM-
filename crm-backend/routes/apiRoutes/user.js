@@ -6,6 +6,7 @@ const token = require("../../common/token");
 router.get("/list", userController.listGet);
 
 /* ----------Get All user------------ */
-router.get("/getAllUser",token.authorisedUser,userController.getAllUserList);
+router.get("/getAllUser", token.authorisedUser, userController.getAllUserList);
+router.get("/getProfile", token.authorisedUser, userController.getProfile);
 
 module.exports = router;
