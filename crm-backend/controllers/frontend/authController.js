@@ -15,6 +15,7 @@ const fs = require("fs");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
 const { resizeImage } = require("../../common/imageThumbnail");
+const mongoose = require("mongoose");
 
 const signUp = async (req, res) => {
   try {
@@ -594,6 +595,7 @@ const createUser = async (req, res) => {
     $data.userSideActivationValue = confirmationNumber;
     let inserList = {
       ...$data,
+      roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
     };
     let result = await userModel(inserList).save();

@@ -41,14 +41,31 @@ export default {
       icon: "icon-puzzle",
     },
     {
-      name: "Staff Members",
-      url: "/users",
-      icon: "fa fa-users",
-    },
-    {
       name: "Settings",
       url: "/settings",
       icon: "fa fa-cog",
+      children: [
+        {
+          name: "Staff Members",
+          url: "/users",
+          icon: "fa fa-users",
+        },
+        {
+          name: "Customers",
+          url: "/customers",
+          icon: "icon-puzzle",
+        },
+        {
+          name: "Vehicles",
+          url: "/vehicles",
+          icon: "icon-puzzle",
+        },
+        {
+          name: "Fleets",
+          url: "/fleets",
+          icon: "icon-puzzle",
+        },
+      ],
     },
   ],
 };

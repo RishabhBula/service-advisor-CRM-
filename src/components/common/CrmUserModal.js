@@ -235,7 +235,7 @@ export class CrmUserModal extends Component {
                       id="type"
                       onChange={this.handleInputChange}
                       value={roleType}
-                      name="type"
+                      name="roleType"
                     >
                       <option value="5ca3473d70537232f13ff1f9">Admin</option>
                       <option value="5ca3473d70537232f13ff1fa">

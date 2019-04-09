@@ -95,7 +95,7 @@ const createUserValidation = [
     .isEmail()
     .withMessage(validationMessage.emailInvalid)
     .custom(async value => {
-      const userFind = await userModel.find({ email: value });
+      const userFind = await userModel.find({ email: value, isDeleted: false });
       if (userFind.length) {
         throw new Error(validationMessage.emailAlreadyExist);
       }

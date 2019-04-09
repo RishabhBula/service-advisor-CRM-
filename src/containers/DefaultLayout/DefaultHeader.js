@@ -1,20 +1,17 @@
 import PropTypes from "prop-types";
 
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import {
-  Badge,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   Nav,
-  NavItem,
 } from "reactstrap";
 // import sygnet from '../../assets/img/brand/sygnet.svg'
-import SearchBar from "../../components/common/SearchBar";
+// import SearchBar from "../../components/common/SearchBar";
 
 import {
-  AppAsideToggler,
   AppHeaderDropdown,
   AppSidebarToggler,
 } from "@coreui/react";
@@ -44,11 +41,11 @@ class DefaultHeader extends Component {
           }}
         /> */}
         <AppSidebarToggler className="d-md-down-none" display="lg" />
-        <Nav className="d-md-down-none search-input-wrap" navbar>
+        {/* <Nav className="d-md-down-none search-input-wrap" navbar>
           <NavItem className="px-3">
             <SearchBar />
           </NavItem>
-        </Nav>
+        </Nav> */}
         <Nav className="ml-auto" navbar>
           {/* <NavItem className="d-md-down-none">
             <NavLink to="#" className="nav-link"><i className="icon-list"></i></NavLink>
@@ -64,53 +61,22 @@ class DefaultHeader extends Component {
                 alt="admin@bootstrapmaster.com"
               />
             </DropdownToggle>
-            <DropdownMenu right style={{ right: "auto" }}>
-              <DropdownItem header tag="div" className="text-center">
-                <strong>Account</strong>
-              </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-bell-o" /> Updates
-                <Badge color="info">42</Badge>
-              </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-envelope-o" /> Messages
-                <Badge color="success">42</Badge>
-              </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-tasks" /> Tasks
-                <Badge color="danger">42</Badge>
-              </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-comments" /> Comments
-                <Badge color="warning">42</Badge>
-              </DropdownItem>
-              <DropdownItem header tag="div" className="text-center">
+            <DropdownMenu right style={{ right: "auto" }}>             
+              {/* <DropdownItem header tag="div" className="text-center">
                 <strong>Settings</strong>
-              </DropdownItem>
+              </DropdownItem> */}
               <DropdownItem>
                 <i className="fa fa-user" /> Profile
               </DropdownItem>
               <DropdownItem>
                 <i className="fa fa-wrench" /> Settings
               </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-usd" /> Payments
-                <Badge color="secondary">42</Badge>
-              </DropdownItem>
-              <DropdownItem>
-                <i className="fa fa-file" /> Projects
-                <Badge color="primary">42</Badge>
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>
-                <i className="fa fa-shield" /> Lock Account
-              </DropdownItem>
               <DropdownItem onClick={e => this.props.onLogout(e)}>
                 <i className="fa fa-lock" /> Logout
               </DropdownItem>
             </DropdownMenu>
           </AppHeaderDropdown>
-          <AppAsideToggler className="d-md-down-none">
+          {/* <AppAsideToggler className="d-md-down-none">
             <NavItem className="d-md-down-none">
               <NavLink to="#" className="nav-link">
                 <i className="icon-bell" />
@@ -119,7 +85,7 @@ class DefaultHeader extends Component {
                 </Badge>
               </NavLink>
             </NavItem>
-          </AppAsideToggler>
+          </AppAsideToggler> */}
           <AppHeaderDropdown direction="down" className="header-add-new ">
             <DropdownToggle className="nav-link">
               <span className="fa fa-plus fa-2x pb-2 pt-2" />

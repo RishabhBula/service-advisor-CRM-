@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const DiscountType = new Schema({
+const CorporateType = new Schema({
   status: {
     type: Boolean,
   },

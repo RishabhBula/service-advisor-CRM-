@@ -7,8 +7,12 @@ const Inventory = React.lazy(() => import("./containers/Inventory"));
 const TimeClocks = React.lazy(() => import("./containers/TimeClocks"));
 const Reports = React.lazy(() => import("./containers/Reports"));
 const Settings = React.lazy(() => import("./containers/Settings"));
-const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 const Users = React.lazy(() => import("./containers/Users"));
+const Vehicles = React.lazy(() => import("./containers/Vehicles"));
+const Fleet = React.lazy(() => import("./containers/Fleet"))
+const Customers = React.lazy(() => import("./containers/Customers"));
+const CommonPage = React.lazy(() => import("./containers/CommonPage"));
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: "/", exact: true, name: "Home" },
@@ -20,12 +24,15 @@ const routes = [
     path: "/timesheets",
     exact: true,
     name: "Time Clocks",
-    component: TimeClocks,
+    component: TimeClocks
   },
   { path: "/reports", exact: true, name: "Reports", component: Reports },
-  { path: "/users", name: "Users", component: Users },
   { path: "/settings", name: "Settings", component: Settings },
-  { path: "/common", exact: true, name: "Common", component: CommonPage },
+  { path: "/users", name: "Users", component: Users },
+  { path: "/vehicles", name: "Vehicles", component: Vehicles },
+  { path: "/fleets", name: "Fleets", component: Fleet },
+  { path: "/customers", name: "Customers", component: Customers },
+  { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];
 
 export default routes;

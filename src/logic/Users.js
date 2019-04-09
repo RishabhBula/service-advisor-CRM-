@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
+import { AppConfig } from "../config/AppConfig";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
 import {
@@ -20,13 +21,10 @@ const getUsersLogic = createLogic({
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer(
-      "/user",
-      "/",
-      "GET",
-      true,
-      action.payload
-    );
+    let result = await api.FetchFromServer("/user", "/", "GET", true, {
+      ...action.payload,
+      limit: AppConfig.ITEMS_PER_PAGE,
+    });
     if (result.isError) {
       dispatch(
         getUsersListSuccess({

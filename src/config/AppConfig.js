@@ -22,4 +22,5 @@ switch (mode) {
     break;
 }
 data.DEFAULT_DATE_FORMAT = "LLL";
+data.ITEMS_PER_PAGE = 5;
 export const AppConfig = data;

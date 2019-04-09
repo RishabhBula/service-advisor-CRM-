@@ -26,13 +26,13 @@ const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 class DefaultLayout extends Component {
   componentDidMount() {
     if (!localStorage.getItem("token")) {
-      this.props.history.push("/login");
+      this.props.redirectTo("/login");
     }
   }
   signOut(e) {
     e.preventDefault();
     localStorage.removeItem("token");
-    this.props.history.push("/login");
+    this.props.redirectTo("/login");
   }
 
   render() {
@@ -65,7 +65,9 @@ class DefaultLayout extends Component {
                         path={route.path}
                         exact={route.exact}
                         name={route.name}
-                        render={props => <route.component {...props} />}
+                        render={props => (
+                          <route.component {...props} {...this.props} />
+                        )}
                       />
                     ) : null;
                   })}

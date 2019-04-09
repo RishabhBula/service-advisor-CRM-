@@ -26,17 +26,17 @@ export class CrmFleetModal extends Component {
     });
   };
   render() {
-    const { fleetModalOpen, toggleLarge } = this.props;
+    const { fleetModalOpen, handleFleetModal } = this.props;
     const { switchValue } = this.state;
     console.log(switchValue);
     return (
       <>
         <Modal
           isOpen={fleetModalOpen}
-          toggle={toggleLarge}
+          toggle={handleFleetModal}
           className="customer-modal"
         >
-          <ModalHeader toggle={toggleLarge}>Create New Fleet</ModalHeader>
+          <ModalHeader toggle={handleFleetModal}>Create New Fleet</ModalHeader>
           <ModalBody>
             <div className="">
               <Row className="justify-content-center">
@@ -264,10 +264,10 @@ export class CrmFleetModal extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={toggleLarge}>
+            <Button color="primary" onClick={handleFleetModal}>
               Do Something
             </Button>{" "}
-            <Button color="secondary" onClick={toggleLarge}>
+            <Button color="secondary" onClick={handleFleetModal}>
               Cancel
             </Button>
           </ModalFooter>
