@@ -129,19 +129,28 @@ export const CustomerPermissionsText = [
 ];
 
 export const CustomerDefaultPermissions = {
-    isCorporateFleetTaxExempt: {
-      status: false
-    },
-    shouldReceiveDiscount: {
-        status: true,
-        percentageDiscount: 0
-    },
-    shouldLaborRateOverride: {
-        status: false,
-        laborRate: "objectId"
-    },
-    shouldPricingMatrixOverride: {
-        status: false,
-        pricingMatrix: "objectId"
-    }
+  isCorporateFleetTaxExempt: {
+    status: false
+  },
+  shouldReceiveDiscount: {
+    status: true,
+    percentageDiscount: 0
+  },
+  shouldLaborRateOverride: {
+    status: false,
+    laborRate: "objectId"
+  },
+  shouldPricingMatrixOverride: {
+    status: false,
+    pricingMatrix: "objectId"
+  }
 }
+
+export const PhoneOptions = [
+  {key: "mobile", text: "Mobile"},
+  {key: "work", text: "Work"},
+  {key: "home", text: "Home"},
+  {key: "office", text: "Office"},
+  {key: "fax", text: "Fax"},
+  {key: "other", text: "Other"},
+]

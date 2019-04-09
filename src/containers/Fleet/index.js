@@ -30,12 +30,15 @@ class Fleet extends Component {
       openCreate: !this.state.openCreate
     });
   };
+  handleAddFleet = (fleetData) => {
+    
+  }
   createUser = data => {
     logger(data);
   };
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addCustomer } = this.props;
+    const { userReducer} = this.props;
     return (
       <>
         <Card>
@@ -68,7 +71,7 @@ class Fleet extends Component {
         <CrmFleetModal
           fleetModalOpen={openCreate}
           handleFleetModal={this.toggleCreateModal}
-          addCustomer={addCustomer}
+          handleAddFleet={this.handleAddFleet}
         />
       </>
     );

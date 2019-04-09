@@ -15,6 +15,8 @@ import { AppSwitch } from "@coreui/react";
 import {
   AppConfig
 } from "../../config/AppConfig";
+import { PhoneOptions } from '../../config/Constants'
+import MaskedInput from "react-maskedinput";
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -22,7 +24,10 @@ export class CrmFleetModal extends Component {
     this.state = {
       switchValue: true,
       companyName: "",
-      phoneDetail: {},
+      phoneDetail: [{
+        phone: "mobile",
+        value: ""
+      }],
       email: "",
       notes: "",
       address1: "",
@@ -32,13 +37,34 @@ export class CrmFleetModal extends Component {
       zipCode: "",
       permission: "",
       errors: {},
-      phoneLength: AppConfig.phoneLength
+      phoneLength: AppConfig.phoneLength,
+
     };
   }
   handleClick = e => {
     this.setState({
       switchValue: !this.state.switchValue
     });
+  };
+
+  handlePhoneNameChange = (index, event) => {
+    const { value } = event.target;
+    const phoneDetail = [...this.state.phoneDetail]
+    phoneDetail[index].phone = value;
+    this.setState({
+      phoneDetail
+    })
+  }
+  handlePhoneValueChange = (index, event) => {
+    const { value } = event.target;
+    if (isNaN(value)) {
+      return;
+    }
+    const phoneDetail = [...this.state.phoneDetail]
+    phoneDetail[index].value = value;
+    this.setState({
+      phoneDetail
+    })
   };
   handleChange = (event) => {
     const { name, value } = event.target;
@@ -55,10 +81,40 @@ export class CrmFleetModal extends Component {
       });
     }
   }
+  handleAddPhoneDetails = () => {
+    const { phoneDetail } = this.state;
+    if (phoneDetail.length < 3) {
+      phoneDetail.push({
+        phone: "mobile",
+        value: ""
+      })
+      console.log(phoneDetail);
+
+      this.setState({
+        phoneDetail: phoneDetail
+      })
+    }
+  }
+  handleRemovePhoneDetails = (event) => {
+    const { phoneDetail } = this.state;
+    if (phoneDetail.length) {
+      let phoneArray = phoneDetail.findIndex(
+        item => item.key === event.key
+      )
+      phoneDetail.splice(phoneArray, 1);
+      console.log(phoneDetail);
+
+      this.setState({
+        phoneDetail: phoneDetail
+      })
+    }
+  }
   render() {
-    const { fleetModalOpen,
+    const {
+      fleetModalOpen,
       handleFleetModal,
-      modalClassName } = this.props;
+      modalClassName,
+      handleAddFleet } = this.props;
     const { switchValue,
       companyName,
       phoneDetail,
@@ -68,7 +124,24 @@ export class CrmFleetModal extends Component {
       address2,
       city,
       state,
-      zipCode } = this.state;
+      zipCode,
+    } = this.state;
+    const fleetData = {
+      companyName,
+      phoneDetail,
+      email,
+      notes,
+      address1,
+      address2,
+      city,
+      state,
+      zipCode,
+    }
+    const phoneOptions = PhoneOptions.map((item, index) => {
+      return (
+        <option value={item.key}>{item.text}</option>
+      )
+    })
     return (
       <>
         <Modal
@@ -91,7 +164,7 @@ export class CrmFleetModal extends Component {
                       type="text"
                       name="companyName"
                       onChange={this.handleChange}
-                      placeholder="John"
+                      placeholder="company name"
                       value={companyName}
                       id="name" required />
                   </FormGroup>
@@ -100,36 +173,116 @@ export class CrmFleetModal extends Component {
             </div>
 
             <div className="">
-              <Row className="justify-content-center">
-                <Col md="3">
-                  <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
-                      Phone
-                    </Label>
-                    <Input type="select" id="name" required>
-                      <option value=" ">Mobile</option>
-                    </Input>
-                  </FormGroup>
-                </Col>
-                <Col md="9">
-                  <FormGroup>
-                    <Label />
-                    <Input
-                      type="text"
-                      placeholder="(555) 055-0555"
-                      id="name"
-                      onChange={this.handleChange}
-                      name="phoneDetail"
-                      value={phoneDetail}
-                      required
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
+
+              {
+                phoneDetail.length ?
+                  phoneDetail.map((item, index) => {
+                    return <Row className="justify-content-center">
+                      {
+                        index < 1 ?
+                          <>
+                            <Col md="3">
+                              <FormGroup>
+                                <Label htmlFor="name" className="customer-modal-text-style">
+                                  Phone
+                                </Label>
+                                <Input onChange={(e) => this.handlePhoneNameChange(index, e)} type="select" id="name" required>
+                                  {phoneOptions}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                            <Col md="9">
+                              <FormGroup>
+                                <Label />
+                                {
+                                  phoneDetail[index].phone === 'mobile' ?
+                                    <MaskedInput
+                                      mask="(111) 111-111"
+                                      name="phoneDetail"
+                                      placeholder="(555) 055-0555"
+                                      className="form-control"
+                                      size="20"
+                                      value={item.value}
+                                      onChange={
+                                        (e) => this.handlePhoneValueChange(index, e)
+                                      }
+                                    /> :
+                                    <MaskedInput
+                                      mask="(111) 111-111 ext 1111"
+                                      name="phoneDetail"
+                                      className="form-control"
+                                      placeholder="(555) 055-0555 ext 1234"
+                                      size="20"
+                                      value={item.value}
+                                      onChange={
+                                        (e) => this.handlePhoneValueChange(index, e)
+                                      }
+                                    />
+                                }
+                              </FormGroup>
+                            </Col>
+                          </>
+                          :
+                          <>
+                            <Col md="3">
+                              <FormGroup>
+                                <Label htmlFor="name">
+                                </Label>
+                                <Input onChange={(e) => this.handlePhoneNameChange(index, e)} type="select" id="name" required>
+                                  {phoneOptions}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                            <Col md="8">
+                              <FormGroup>
+                                <Label />
+                                {
+                                  phoneDetail[index].phone === 'mobile' ?
+                                    <MaskedInput
+                                      mask="(111) 111-111"
+                                      name="phoneDetail"
+                                      placeholder="(555) 055-0555"
+                                      className="form-control"
+                                      size="20"
+                                      value={item.value}
+                                      onChange={
+                                        (e) => this.handlePhoneValueChange(index, e)
+                                      }
+                                    /> :
+                                    <MaskedInput
+                                      mask="(111) 111-111 ext 1111"
+                                      name="phoneDetail"
+                                      className="form-control"
+                                      placeholder="(555) 055-0555 ext 1234"
+                                      size="20"
+                                      value={item.value}
+                                      onChange={
+                                        (e) => this.handlePhoneValueChange(index, e)
+                                      }
+                                    />}
+                              </FormGroup>
+                            </Col>
+                            <Col md="1" className="phone-remove-btn">
+                              <FormGroup className="mb-0">
+                                <Label />
+                                <button onClick={this.handleRemovePhoneDetails} className="btn btn-danger btn-sm btn-round">x</button>
+                              </FormGroup>
+                            </Col>
+                          </>
+                      }
+                    </Row>
+                  })
+                  : null
+              }
               <div>
-                <span className="customer-add-phone">
-                  Add another phone number
-                </span>
+                {
+                  phoneDetail.length < 3 ?
+                    <span onClick={this.handleAddPhoneDetails} className="customer-add-phone">
+                      Add another phone number
+                    </span>
+                    :
+                    null
+                }
               </div>
             </div>
             <div className="">
@@ -339,8 +492,8 @@ export class CrmFleetModal extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={handleFleetModal}>
-              Do Something
+            <Button color="primary" onClick={() => handleAddFleet(fleetData)}>
+              Add New Fleet
             </Button>{" "}
             <Button color="secondary" onClick={handleFleetModal}>
               Cancel
