@@ -6,6 +6,7 @@ export * from "./Users";
 export * from "./Customers";
 export * from "./Matrix";
 export * from "./ProfileInfo";
+export * from "./Fleet";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //
