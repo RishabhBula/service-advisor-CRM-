@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
+import { AppConfig } from "../config/AppConfig";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
 import {
@@ -8,6 +9,7 @@ import {
   usersActions,
   addUserSuccess,
   getUsersListSuccess,
+  getUsersList,
 } from "./../actions";
 
 const getUsersLogic = createLogic({
@@ -20,27 +22,15 @@ const getUsersLogic = createLogic({
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer(
-      "/user",
-      "/getAllUser",
-      "GET",
-      true,
-      action.payload
-    );
+    let result = await api.FetchFromServer("/user", "/", "GET", true, {
+      ...action.payload,
+      limit: AppConfig.ITEMS_PER_PAGE,
+    });
     if (result.isError) {
       dispatch(
         getUsersListSuccess({
           isLoading: false,
-          users: [
-            {
-              firstName: "Sonu",
-              lastName: "B",
-              email: "sonu.chapter247@gmail.com",
-              createdAt: new Date().toString(),
-              isActive: true,
-              role: "Admin",
-            },
-          ],
+          users: [],
         })
       );
       done();
@@ -51,6 +41,7 @@ const getUsersLogic = createLogic({
         getUsersListSuccess({
           isLoading: false,
           users: result.data.data,
+          totalUsers: result.data.totalUsers,
         })
       );
       done();
@@ -85,5 +76,35 @@ const addUsersLogic = createLogic({
     }
   },
 });
+const deleteUserLogic = createLogic({
+  type: usersActions.DELETE_USER,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/user",
+      ["/", action.payload.userId].join(""),
+      "DELETE",
+      true
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.userId;
+      dispatch(
+        getUsersList({
+          ...action.payload,
+        })
+      );
+      done();
+    }
+  },
+});
 
-export const UsersLogic = [getUsersLogic, addUsersLogic];
+export const UsersLogic = [getUsersLogic, addUsersLogic, deleteUserLogic];

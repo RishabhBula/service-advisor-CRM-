@@ -91,8 +91,24 @@ export class CrmUserModal extends Component {
   addUser = e => {
     e.preventDefault();
     try {
-      const { firstName, lastName, email, phone, roleType, rate } = this.state;
-      const payload = { firstName, lastName, email, phone, roleType, rate };
+      const {
+        firstName,
+        lastName,
+        email,
+        phone,
+        roleType,
+        rate,
+        permissions
+      } = this.state;
+      const payload = {
+        firstName,
+        lastName,
+        email,
+        phone,
+        roleType,
+        rate,
+        permissions
+      };
       const { isValid, errors } = Validator(
         payload,
         CreateUserValidations,
@@ -129,7 +145,7 @@ export class CrmUserModal extends Component {
             toggle={handleUserModal}
             className="customer-modal"
           >
-            <ModalHeader toggle={handleUserModal}>Create New User</ModalHeader>
+            <ModalHeader toggle={handleUserModal}>Add New Member</ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">
                 <Col md="6">
@@ -219,7 +235,7 @@ export class CrmUserModal extends Component {
                       id="type"
                       onChange={this.handleInputChange}
                       value={roleType}
-                      name="type"
+                      name="roleType"
                     >
                       <option value="5ca3473d70537232f13ff1f9">Admin</option>
                       <option value="5ca3473d70537232f13ff1fa">

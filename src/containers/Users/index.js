@@ -11,8 +11,9 @@ import {
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getUsersList, addNewUser } from "../../actions";
-
+import { getUsersList, addNewUser, deleteUser } from "../../actions";
+import * as qs from "query-string";
+import { isEqual } from "../../helpers/Object";
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -21,12 +22,18 @@ class Users extends Component {
     };
   }
   componentDidMount() {
-    this.props.getUsers(1);
+    const query = qs.parse(this.props.location.search);
+    this.props.getUsers({ ...query, page: query.page || 1 });
   }
   onPageChange = page => {
-    this.props.getUsers(page);
+    const { location } = this.props;
+    const { search, pathname } = location;
+    const query = qs.parse(search);
+    this.props.redirectTo(
+      [pathname, qs.stringify({ ...query, page })].join("?")
+    );
   };
-  componentDidUpdate({ userReducer }) {
+  componentDidUpdate({ userReducer, location }) {
     if (
       this.props.userReducer.userData.isSuccess !==
       userReducer.userData.isSuccess
@@ -34,6 +41,13 @@ class Users extends Component {
       this.setState({
         openCreate: false
       });
+      const query = qs.parse(this.props.location.search);
+      this.props.getUsers({ ...query, page: query.page || 1 });
+    }
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getUsers({ ...currQuery, page: currQuery.page || 1 });
     }
   }
   toggleCreateModal = e => {
@@ -41,6 +55,17 @@ class Users extends Component {
     this.setState({
       openCreate: !this.state.openCreate
     });
+  };
+  onSearch = data => {
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
+  };
+  deleteUser = userId => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.deleteUser({ ...query, userId });
   };
   render() {
     const { openCreate } = this.state;
@@ -52,7 +77,7 @@ class Users extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Users
+                  <i className={"fa fa-users"} /> Staff Members
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
@@ -65,7 +90,7 @@ class Users extends Component {
                   &nbsp; Add New
                 </Button>
                 <UncontrolledTooltip target={"add-user"}>
-                  Add New User
+                  Add New Staff Member
                 </UncontrolledTooltip>
               </Col>
             </Row>
@@ -74,6 +99,8 @@ class Users extends Component {
             <UsersList
               userData={userReducer}
               onPageChange={this.onPageChange}
+              onSearch={this.onSearch}
+              onDelete={this.deleteUser}
             />
           </CardBody>
         </Card>
@@ -91,11 +118,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUsers: page => {
-    dispatch(getUsersList({ page }));
+  getUsers: data => {
+    dispatch(getUsersList(data));
   },
   addUser: data => {
     dispatch(addNewUser(data));
+  },
+  deleteUser: data => {
+    dispatch(deleteUser(data));
   }
 });
 

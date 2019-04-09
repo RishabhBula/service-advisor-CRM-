@@ -3,7 +3,7 @@ export default {
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: "icon-speedometer"
+      icon: "icon-speedometer",
       // badge: {
       //   variant: "info",
       //   text: "NEW"
@@ -13,32 +13,32 @@ export default {
     {
       name: "Workflow",
       url: "/workflow",
-      icon: "icon-puzzle"
+      icon: "icon-puzzle",
     },
     {
       name: "Calendar",
       url: "/calender",
-      icon: "icon-puzzle"
+      icon: "icon-puzzle",
     },
     {
       name: "Inventory",
       url: "/inventory",
-      icon: "icon-puzzle"
+      icon: "icon-puzzle",
     },
     {
       name: "Time Clocks",
       url: "/timesheets",
-      icon: "icon-puzzle"
+      icon: "icon-puzzle",
     },
     {
       name: "Reports",
       url: "/reports",
-      icon: "icon-puzzle"
+      icon: "icon-puzzle",
     },
     {
       name: "Common",
       url: "/common",
-      icon: "icon-puzzle"
+      icon: "icon-puzzle",
     },
     {
       name: "Settings",
@@ -46,26 +46,26 @@ export default {
       icon: "fa fa-cog",
       children: [
         {
+          name: "Staff Members",
+          url: "/settings/users",
+          icon: "fa fa-users",
+        },
+        {
           name: "Customers",
           url: "/customers",
-          icon: "icon-puzzle"
+          icon: "icon-puzzle",
         },
         {
           name: "Vehicles",
           url: "/vehicles",
-          icon: "icon-puzzle"
+          icon: "icon-puzzle",
         },
         {
           name: "Fleets",
           url: "/fleets",
-          icon: "icon-puzzle"
+          icon: "icon-puzzle",
         },
-        {
-          name: "Users",
-          url: "/users",
-          icon: "fa fa-users"
-        }
-      ]
-    }
-  ]
+      ],
+    },
+  ],
 };

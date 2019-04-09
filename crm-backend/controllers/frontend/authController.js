@@ -14,7 +14,8 @@ const moment = require("moment");
 const fs = require("fs");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
-const { resizeImage } = require('../../common/imageThumbnail')
+const { resizeImage } = require("../../common/imageThumbnail");
+const mongoose = require("mongoose");
 
 const signUp = async (req, res) => {
   try {
@@ -70,7 +71,7 @@ const signUp = async (req, res) => {
 
       return res.status(200).json({
         message: otherMessage.confirmMessage,
-        success: true
+        success: true,
       });
     }
   } catch (error) {
@@ -168,7 +169,7 @@ const loginApp = async (req, res) => {
       throw {
         code: 400,
         message: "you are not authorized to access CRM",
-        success: false
+        success: false,
       };
     }
     if (!commonCrypto.verifyPassword(result.password, password, result.salt)) {
@@ -186,6 +187,7 @@ const loginApp = async (req, res) => {
       {
         $set: {
           loggedInIp: commonSmtp.getIpAddress(req),
+          loggedInAt: new Date(),
         },
       }
     );
@@ -322,7 +324,7 @@ const userResetpassword = async (req, res) => {
     });
   }
   try {
-    const decryptedUserEmail = commonCrypto.decrypt(body.user)
+    const decryptedUserEmail = commonCrypto.decrypt(body.user);
     const userData = await userModel.findOne({ email: decryptedUserEmail });
     if (!userData) {
       return res.status(400).json({
@@ -380,7 +382,7 @@ const userResetpassword = async (req, res) => {
 const userCompanySetup = async (req, res) => {
   const { body, currentUser } = req;
   try {
-    const userData = await userModel.findById(currentUser.id)
+    const userData = await userModel.findById(currentUser.id);
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
@@ -394,12 +396,15 @@ const userCompanySetup = async (req, res) => {
       peopleWork: body.peopleWork,
       serviceOffer: body.serviceOffer,
       vehicleService: body.vehicleService,
-    }
-    const companySetup = await userModel.findByIdAndUpdate({
-      _id: userData.id
-    }, {
-        $set: comapnyData
-      });
+    };
+    const companySetup = await userModel.findByIdAndUpdate(
+      {
+        _id: userData.id,
+      },
+      {
+        $set: comapnyData,
+      }
+    );
     if (!companySetup) {
       return res.status(400).json({
         responsecode: 400,
@@ -420,7 +425,7 @@ const userCompanySetup = async (req, res) => {
       success: false,
     });
   }
-}
+};
 /* ------------User Company Setup End--------------- */
 
 /* ---------------User Image Upload---------------- */
@@ -434,16 +439,24 @@ const imageUpload = async (req, res) => {
         success: false,
       });
     }
-    if (body.imageData != undefined || body.imageData != '') {
-      const base64Image = body.imageData.replace(/^data:image\/\w+;base64,/, "");
-      var buf = new Buffer(base64Image, 'base64');
+    if (body.imageData !== undefined || body.imageData !== "") {
+      const base64Image = body.imageData.replace(
+        /^data:image\/\w+;base64,/,
+        ""
+      );
+      var buf = new Buffer(base64Image, "base64");
 
-      var originalImagePath = __basedir + '/images/' + currentUser.id;
-      var thumbnailImagePath = __basedir + '/images-thumbnail/' + currentUser.id + 'image-thumb';
-      const thumbnailImage = resizeImage(originalImagePath, thumbnailImagePath, 600);
+      var originalImagePath = __basedir + "/images/" + currentUser.id;
+      var thumbnailImagePath =
+        __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
+      const thumbnailImage = resizeImage(
+        originalImagePath,
+        thumbnailImagePath,
+        600
+      );
       console.log("**********This is thumbnailImage", thumbnailImage);
 
-      fs.writeFile(originalImagePath, buf, function (err) {
+      fs.writeFile(originalImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
@@ -451,11 +464,14 @@ const imageUpload = async (req, res) => {
       });
       const imageUploadData = {
         originalImage: currentUser.id,
-        thumbnailImage: currentUser.id + 'image-thumb',
-      }
-      const companyLogo = await userModel.findByIdAndUpdate({ _id: currentUser.id }, {
-        shopLogo: imageUploadData
-      })
+        thumbnailImage: currentUser.id + "image-thumb",
+      };
+      const companyLogo = await userModel.findByIdAndUpdate(
+        { _id: currentUser.id },
+        {
+          shopLogo: imageUploadData,
+        }
+      );
       if (companyLogo) {
         return res.status(200).json({
           responseCode: 200,
@@ -474,8 +490,8 @@ const imageUpload = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Enter valid image.",
-        success: false
-      })
+        success: false,
+      });
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
@@ -500,19 +516,23 @@ const imageDelete = async (req, res) => {
         success: false,
       });
     }
-    if (body.imageData != undefined || body.imageData != '') {
-      const base64Image = body.imageData.replace(/^data:image\/\w+;base64,/, "");
-      var buf = new Buffer(base64Image, 'base64');
+    if (body.imageData !== undefined || body.imageData !== "") {
+      const base64Image = body.imageData.replace(
+        /^data:image\/\w+;base64,/,
+        ""
+      );
+      var buf = new Buffer(base64Image, "base64");
 
-      var originalImagePath = __basedir + '/images/' + currentUser.id;
-      var thumbnailImagePath = __basedir + '/images-thumbnail/' + currentUser.id + 'image-thumb';
-      fs.unlinkSync(originalImagePath, buf, function (err) {
+      var originalImagePath = __basedir + "/images/" + currentUser.id;
+      var thumbnailImagePath =
+        __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
+      fs.unlinkSync(originalImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
@@ -521,10 +541,13 @@ const imageDelete = async (req, res) => {
       const imageUploadData = {
         originalImage: null,
         thumbnailImage: null,
-      }
-      const companyLogo = await userModel.findByIdAndUpdate({ _id: currentUser.id }, {
-        shopLogo: imageUploadData
-      })
+      };
+      const companyLogo = await userModel.findByIdAndUpdate(
+        { _id: currentUser.id },
+        {
+          shopLogo: imageUploadData,
+        }
+      );
       if (companyLogo) {
         return res.status(200).json({
           responseCode: 200,
@@ -542,8 +565,8 @@ const imageDelete = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Enter valid image.",
-        success: false
-      })
+        success: false,
+      });
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
@@ -557,13 +580,8 @@ const imageDelete = async (req, res) => {
 };
 /* ----------------User Image Delete End-------------------- */
 
-
 /*----------------User create by admin------------------ */
 const createUser = async (req, res) => {
-  console.log("req.currentUser");
-  console.log(req.currentUser);
-  console.log("req.currentUser");
-
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -574,55 +592,39 @@ const createUser = async (req, res) => {
     }
     const confirmationNumber = new Date().valueOf();
     let $data = req.body;
+    $data.firstTimeUser = true;
+    $data.userSideActivationValue = confirmationNumber;
     let inserList = {
-      firstName: $data.firstName,
-      lastName: $data.lastName,
-      email: $data.email,
-      parentId: req.currentUser.id
+      ...$data,
+      roleType: mongoose.Types.ObjectId($data.roleType),
+      parentId: req.currentUser.id,
     };
-    let userFind = await userModel.find({ email: $data.email });
-    if (userFind.length >= 1) {
-      return res.status(401).json({
-        message: validationMessage.emailAlreadyExist,
-        success: false
+    let result = await userModel(inserList).save();
+    const emailVar = new Email(res);
+    await emailVar.setTemplate(AvailiableTemplates.USER_ADDED_CONFIRMATION, {
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.email,
+      userId: result._id,
+      userSideActivationValue: confirmationNumber,
+    });
+    await emailVar.sendEmail(result.email);
+    if (result) {
+      return res.status(200).json({
+        message: otherMessage.insertUserMessage,
+        success: true,
       });
     } else {
-      var salt = commonCrypto.generateSalt(6);
-      $data.salt = salt;
-      $data.password = commonCrypto.hashPassword($data.password, salt);
-      $data.roleType = $data.roleType;
-      $data.permission = $data.permission;
-      $data.firstTimeUser = true;
-      $data.loggedInIp = commonSmtp.getIpAddress(req);
-      $data.userSideActivationValue = confirmationNumber;
-
-      let result = await userModel($data).save();
-      const emailVar = new Email(res);
-      await emailVar.setTemplate(AvailiableTemplates.USER_ADDED_CONFIRMATION, {
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-        userId: result._id,
-        userSideActivationValue: confirmationNumber
+      return res.status(400).json({
+        result: result,
+        message: "Error in inserting user.",
+        success: false,
       });
-      await emailVar.sendEmail(result.email);
-      if (result) {
-        return res.status(200).json({
-          message: otherMessage.insertUserMessage,
-          success: true
-        });
-      } else {
-        return res.status(400).json({
-          result: result,
-          message: "Error in inserting user.",
-          success: false
-        });
-      }
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
@@ -634,7 +636,7 @@ const verfiyUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false
+        success: false,
       });
     }
     let $data = req.body;
@@ -642,8 +644,8 @@ const verfiyUser = async (req, res) => {
       $and: [
         { _id: $data.userId },
         { userSideActivation: false },
-        { userSideActivationValue: $data.activeValue }
-      ]
+        { userSideActivationValue: $data.activeValue },
+      ],
     });
     if (userData) {
       let salt = commonCrypto.generateSalt(6);
@@ -651,38 +653,38 @@ const verfiyUser = async (req, res) => {
       let loggedInIp = commonSmtp.getIpAddress(req);
       let roleUpdate = await userModel.updateOne(
         {
-          _id: userData._id
+          _id: userData._id,
         },
         {
           $set: {
             userSideActivation: true,
             userSideActivationValue: "",
             password: password,
-            loggedInIp: loggedInIp
-          }
+            loggedInIp: loggedInIp,
+          },
         }
       );
       if (roleUpdate) {
         res.status(200).json({
           message: otherMessage.userPasswordCreation,
-          success: true
+          success: true,
         });
       } else {
         res.status(401).json({
           message: "Some thing Went Wrong",
-          success: false
+          success: false,
         });
       }
     } else {
       res.status(401).json({
         message: otherMessage.linkExpiration,
-        success: false
+        success: false,
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
@@ -694,7 +696,7 @@ const verfiyUserLink = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false
+        success: false,
       });
     }
     let $data = req.body;
@@ -702,28 +704,27 @@ const verfiyUserLink = async (req, res) => {
       $and: [
         { _id: $data.userId },
         { userSideActivation: false },
-        { userSideActivationValue: $data.activeValue }
-      ]
+        { userSideActivationValue: $data.activeValue },
+      ],
     });
     if (userData) {
       res.status(200).json({
-        message:"Link verified successfully!",
-        success: true
-      }); 
+        message: "Link verified successfully!",
+        success: true,
+      });
     } else {
       res.status(401).json({
         message: otherMessage.linkExpiration,
-        success: false
+        success: false,
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
-
 
 module.exports = {
   signUp,
@@ -737,5 +738,5 @@ module.exports = {
   verfiyUser,
   verfiyUserLink,
   imageUpload,
-  imageDelete
+  imageDelete,
 };
