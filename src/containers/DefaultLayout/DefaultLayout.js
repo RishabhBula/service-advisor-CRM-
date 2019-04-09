@@ -19,6 +19,8 @@ import {
   AppSidebarMinimizer,
   AppSidebarNav,
 } from "@coreui/react";
+import { connect } from "react-redux";
+import { profileInfoRequest } from "../../actions";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -27,6 +29,9 @@ class DefaultLayout extends Component {
   componentDidMount() {
     if (!localStorage.getItem("token")) {
       this.props.redirectTo("/login");
+    }
+    else {
+      this.props.profileInfoAction();
     }
   }
   signOut(e) {
@@ -92,4 +97,18 @@ class DefaultLayout extends Component {
   }
 }
 
-export default DefaultLayout;
+// const mapStateToProps = state => ({
+//   userReducer: state.usersReducer
+// });
+
+const mapDispatchToProps = dispatch => ({
+  profileInfoAction: page => {
+    dispatch(profileInfoRequest({ page }));
+  }
+});
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(DefaultLayout);
+

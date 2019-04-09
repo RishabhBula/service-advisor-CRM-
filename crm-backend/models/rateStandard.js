@@ -10,6 +10,16 @@ const rateStandardSchema = new Schema({
     type: Number,
     default: null
   },
+  parentId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    required: true
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    required: true
+  },
   status: {
     type: Boolean,
     default: true

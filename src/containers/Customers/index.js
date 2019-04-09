@@ -11,7 +11,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getCustomerList, addNewCustomer } from "../../actions";
+import { getCustomerList, addNewCustomer, getMatrixList } from "../../actions";
 import { logger } from "../../helpers/Logger";
 
 class Users extends Component {
@@ -22,7 +22,8 @@ class Users extends Component {
     };
   }
   componentDidMount() {
-    this.props.getUsers(1);
+    this.props.getUsers(1);    
+    this.props.getMatrix();
   }
   toggleCreateModal = e => {
     e.preventDefault();
@@ -35,7 +36,7 @@ class Users extends Component {
   };
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addCustomer } = this.props;
+    const { userReducer, addCustomer, matrixListReducer } = this.props;
     return (
       <>
         <Card>
@@ -69,13 +70,15 @@ class Users extends Component {
           customerModalOpen={openCreate}
           handleCustomerModal={this.toggleCreateModal}
           addCustomer={addCustomer}
+          matrixListReducerData={matrixListReducer}
         />
       </>
     );
   }
 }
 const mapStateToProps = state => ({
-  userReducer: state.usersReducer
+  userReducer: state.usersReducer,
+  matrixListReducer: state.matrixListReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -84,6 +87,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addCustomer: data => {
     dispatch(addNewCustomer(data));
+  },
+  getMatrix: () => {    
+    dispatch(getMatrixList());
   }
 });
 

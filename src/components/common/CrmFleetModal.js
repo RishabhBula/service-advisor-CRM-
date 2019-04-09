@@ -12,12 +12,27 @@ import {
   Input
 } from "reactstrap";
 import { AppSwitch } from "@coreui/react";
+import {
+  AppConfig
+} from "../../config/AppConfig";
 
 export class CrmFleetModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      switchValue: true
+      switchValue: true,
+      companyName: "",
+      phoneDetail: {},
+      email: "",
+      notes: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      permission: "",
+      errors: {},
+      phoneLength: AppConfig.phoneLength
     };
   }
   handleClick = e => {
@@ -25,16 +40,43 @@ export class CrmFleetModal extends Component {
       switchValue: !this.state.switchValue
     });
   };
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    if (
+      (name === 'phoneDetail' ||
+        name === 'zipCode') &&
+      (isNaN(value))
+    ) {
+      return;
+    }
+    else {
+      this.setState({
+        [name]: value,
+      });
+    }
+  }
   render() {
-    const { fleetModalOpen, handleFleetModal } = this.props;
-    const { switchValue } = this.state;
-    console.log(switchValue);
+    const { fleetModalOpen,
+      handleFleetModal,
+      modalClassName } = this.props;
+    const { switchValue,
+      companyName,
+      phoneDetail,
+      email,
+      notes,
+      address1,
+      address2,
+      city,
+      state,
+      zipCode } = this.state;
     return (
       <>
         <Modal
           isOpen={fleetModalOpen}
           toggle={handleFleetModal}
-          className="customer-modal"
+          className={
+            !modalClassName ? "customer-modal" : modalClassName
+          }
         >
           <ModalHeader toggle={handleFleetModal}>Create New Fleet</ModalHeader>
           <ModalBody>
@@ -45,7 +87,13 @@ export class CrmFleetModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Company name (*)
                     </Label>
-                    <Input type="text" placeholder="John" id="name" required />
+                    <Input
+                      type="text"
+                      name="companyName"
+                      onChange={this.handleChange}
+                      placeholder="John"
+                      value={companyName}
+                      id="name" required />
                   </FormGroup>
                 </Col>
               </Row>
@@ -70,6 +118,9 @@ export class CrmFleetModal extends Component {
                       type="text"
                       placeholder="(555) 055-0555"
                       id="name"
+                      onChange={this.handleChange}
+                      name="phoneDetail"
+                      value={phoneDetail}
                       required
                     />
                   </FormGroup>
@@ -93,6 +144,9 @@ export class CrmFleetModal extends Component {
                       className="customer-modal-text-style"
                       placeholder="john.doe@example.com"
                       id="name"
+                      value={email}
+                      onChange={this.handleChange}
+                      name="email"
                       required
                     />
                   </FormGroup>
@@ -110,6 +164,9 @@ export class CrmFleetModal extends Component {
                       type="textarea"
                       placeholder="Enter a note..."
                       id="name"
+                      value={notes}
+                      onChange={this.handleChange}
+                      name="notes"
                       required
                     />
                   </FormGroup>
@@ -127,6 +184,9 @@ export class CrmFleetModal extends Component {
                       type="text"
                       placeholder="Address"
                       id="name"
+                      value={address1}
+                      onChange={this.handleChange}
+                      name="address1"
                       required
                     />
                   </FormGroup>
@@ -144,6 +204,9 @@ export class CrmFleetModal extends Component {
                       type="text"
                       placeholder="Address"
                       id="name"
+                      value={address2}
+                      onChange={this.handleChange}
+                      name="address2"
                       required
                     />
                   </FormGroup>
@@ -160,6 +223,9 @@ export class CrmFleetModal extends Component {
                     <Input
                       type="text"
                       id="name"
+                      name="city"
+                      value={city}
+                      onChange={this.handleChange}
                       placeholder="New York"
                       required
                     />
@@ -170,17 +236,26 @@ export class CrmFleetModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       State
                     </Label>
-                    <Input type="text" id="name" placeholder="NY" required />
+                    <Input
+                      type="text"
+                      name="state"
+                      value={state}
+                      onChange={this.handleChange}
+                      id="name"
+                      placeholder="NY" required />
                   </FormGroup>
                 </Col>
                 <Col md="4">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label htmlFor="name" name="zip" className="customer-modal-text-style">
                       Zip Code
                     </Label>
                     <Input
                       type="text"
                       id="name"
+                      name="zipCode"
+                      value={zipCode}
+                      onChange={this.handleChange}
                       placeholder="Zip Code"
                       required
                     />

@@ -1,5 +1,5 @@
 const userModel = require("../../models/user");
-
+const otherMessage = require("./../../common/validationMessage");
 /* ----------------Grt All User List------------ */
 const getAllUserList = async (req, res) => {
   const { query, currentUser } = req;
@@ -134,7 +134,35 @@ const deleteUser = async ({ params }, res) => {
   }
 };
 /* Delete User */
+
+/* get single user info*/
+const getProfile = async (req, res) => {
+  const { currentUser } = req;
+  try {
+    let userFind = await userModel.findOne({ _id: currentUser.id });
+    if (userFind) {
+      return res.status(200).json({
+        responseCode: 200,
+        data: userFind,
+        success: true,
+      });
+    } else {
+      return res.status(401).json({
+        responseCode: 401,
+        message: otherMessage.userNotExist,
+        success: false,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+
 module.exports = {
-  getAllUserList,
   deleteUser,
+  getAllUserList,
+  getProfile,
 };

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-// import Validator from "js-object-validation";
+import Validator from "js-object-validation";
+import  MaskedInput from "react-maskedinput";
 import {
   Button,
   Modal,
@@ -12,9 +13,11 @@ import {
   Label,
   Input
 } from "reactstrap";
-import { AppSwitch } from "@coreui/react";
 import Select from "react-select";
+import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
+import { CrmSelect } from "../common/CrmSelect";
+
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText
@@ -39,7 +42,14 @@ export class CrmCustomerModal extends Component {
       phone: {},
       type: "admin",
       errors: {},
-      phoneLength: AppConfig.phoneLength
+      phoneLength: AppConfig.phoneLength,
+      percentageDiscount: 0,
+      defaultOptions: [
+        { custom: true },
+        { value: "chocolate", label: "Chocolate" },
+        { value: "strawberry", label: "Strawberry" },
+        { value: "", label: "Add New" }
+      ],
     };
   }
   handleClick (singleState, e) {
@@ -61,18 +71,34 @@ export class CrmCustomerModal extends Component {
     });
   };
 
+  handleInputChange = e => {
+    const { target } = e;
+    const { name, value } = target;
+    this.setState({
+      [name]: value
+    });
+  }
+
   addNewUser = () => {
     this.props.addCustomer();
   }
+
+  addNewSection = () => {
+    alert("testing");
+  }
   
   render() {
-    const { customerModalOpen, handleCustomerModal } = this.props;
+    const { customerModalOpen, handleCustomerModal,matrixListReducerData } = this.props;
     const {
       selectedOption,
       expandForm,
       fleetModalOpen,
-      customerDefaultPermissions
-    } = this.state;
+      customerDefaultPermissions,
+      defaultOptions
+    } = this.state;  
+console.log('====================================');
+console.log(matrixListReducerData);
+console.log('====================================');
     return (
       <>
         <Modal
@@ -80,24 +106,42 @@ export class CrmCustomerModal extends Component {
           toggle={handleCustomerModal}
           className="customer-modal"
         >
-          <ModalHeader toggle={handleCustomerModal}>Create New Customer</ModalHeader>
+          <ModalHeader toggle={handleCustomerModal}>
+            Create New Customer
+          </ModalHeader>
           <ModalBody>
             <div className="">
               <Row className="justify-content-center">
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       First Name
                     </Label>
-                    <Input type="text" placeholder="John" id="name" required />
+                    <Input
+                      type="text"
+                      placeholder="John"
+                      id="name"
+                      required
+                    />
                   </FormGroup>
                 </Col>
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Last Name
                     </Label>
-                    <Input type="text" placeholder="Doe" id="name" required />
+                    <Input
+                      type="text"
+                      placeholder="Doe"
+                      id="name"
+                      required
+                    />
                   </FormGroup>
                 </Col>
               </Row>
@@ -107,7 +151,10 @@ export class CrmCustomerModal extends Component {
               <Row className="justify-content-center">
                 <Col md="3">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Phone
                     </Label>
                     <Input type="select" id="name" required>
@@ -137,7 +184,10 @@ export class CrmCustomerModal extends Component {
               <Row className="justify-content-center">
                 <Col md="12">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Email (Optional)
                     </Label>
                     <Input
@@ -155,7 +205,10 @@ export class CrmCustomerModal extends Component {
               <Row className="justify-content-center">
                 <Col md="12">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Notes
                     </Label>
                     <Input
@@ -332,8 +385,30 @@ export class CrmCustomerModal extends Component {
                   </Row>
                 </div>
                 <div className="">
-                {
-                CustomerPermissionsText.map((permission, index) => {
+                  {CustomerPermissionsText.map((permission, index) => {
+                    let discountShow = false;
+                    let labourRate = false;
+                    let pricingMatrix = false;
+                    if (
+                      permission.key === "shouldReceiveDiscount" &&
+                      customerDefaultPermissions[permission.key].status
+                    ) {
+                      discountShow = true;
+                    }
+
+                    if (
+                      permission.key === "shouldLaborRateOverride" &&
+                      customerDefaultPermissions[permission.key].status
+                    ) {
+                      labourRate = true;
+                    }
+
+                    if (
+                      permission.key === "shouldPricingMatrixOverride" &&
+                      customerDefaultPermissions[permission.key].status
+                    ) {
+                      pricingMatrix = true;
+                    }
                     return (
                       <Row
                         className="justify-content-center pb-2"
@@ -343,9 +418,8 @@ export class CrmCustomerModal extends Component {
                           <AppSwitch
                             className={"mx-1"}
                             checked={
-                              customerDefaultPermissions[
-                                permission.key
-                              ].status
+                              customerDefaultPermissions[permission.key]
+                                .status
                             }
                             onClick={this.handleClick.bind(
                               this,
@@ -361,33 +435,67 @@ export class CrmCustomerModal extends Component {
                             {permission.text}
                           </p>
                         </Col>
-                        {permission.text ===
-                          "shouldReceiveDiscount" &&
-                        customerDefaultPermissions[
-                          permission.key
-                        ].status ? (
+                        {discountShow ? (
                           <Col md="12">
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style"
+                            >
+                              Percent Discount
+                            </Label>
                             <FormGroup>
-                              <Label
-                                htmlFor="name"
-                                className="customer-modal-text-style"
-                              >
-                                Percent Discount
-                              </Label>
-                              <Input
-                                type="text"
-                                id="name"
-                                placeholder="NY"
-                                required
+                              <MaskedInput
+                                mask="11 \%"
+                                name="percentageDiscount"
+                                size="20"
+                                onChange={this.handleInputChange}
                               />
                             </FormGroup>
                           </Col>
                         ) : null}
+
+                        {labourRate ? (
+                          <Col md="12">
+                            <CrmSelect
+                              defaultOptions={defaultOptions}
+                              onClickAddNew={this.addNewSection}
+                            />
+                          </Col>
+                        ) : null}
                         {/* */}
+                        {pricingMatrix ? (
+                          <Col md="12">
+                            <Input type="select" className="">
+                            <option value={""}>Select</option>
+                            {
+                              matrixListReducerData.matrixList.length ?
+                              matrixListReducerData.matrixList.map((item,index) => {
+                                return (
+                                  <option value={item.id} key={index}>
+                                    {item.name}
+                                  </option>
+                                );
+                              })  
+                              : null                            
+                            }
+                            
+                            </Input>
+                          </Col>
+                        ) : null}
                       </Row>
                     );
-                  })
-                }
+                  })}
+                  {expandForm ? (
+                    <div className="text-center">
+                      <span
+                        onClick={this.handleExpandForm}
+                        className="customer-anchor-text customer-click-btn"
+                      >
+                        {" "}
+                        Show Less{" "}
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
               </>
             ) : (
@@ -396,7 +504,7 @@ export class CrmCustomerModal extends Component {
             {fleetModalOpen ? <CrmFleetModal /> : ""}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addNewUser}> 
+            <Button color="primary" onClick={this.addNewUser}>
               Do Something
             </Button>{" "}
             <Button color="secondary" onClick={handleCustomerModal}>
