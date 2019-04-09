@@ -1,6 +1,33 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const UserPermissions = new Schema({
+  isAllowedDashboard: Boolean,
+  isAllowedWorkflow: Boolean,
+  isAllowedCalendar: Boolean,
+  isAllowedInventory: Boolean,
+  isAllowedTimesheets: Boolean,
+  isAllowedReportCenter: Boolean,
+  isAllowedCompanySettings: Boolean,
+  isIncludedToCalendar: Boolean,
+  isAllowedViewEveryonesCalendar: Boolean,
+  isAllowedTimeclock: Boolean,
+  isAllowedManualTimesheets: Boolean,
+  isAllowedInspections: Boolean,
+  isAllowedCannedJobs: Boolean,
+  isAllowedPricingMatrices: Boolean,
+  isAllowedMessagingCustomers: Boolean,
+  isPreventEditingUponAuthorize: Boolean,
+  isPreventEditingUponInvoice: Boolean,
+  isFilteredWorkflowByTechnician: Boolean,
+  isAllowedProfitability: Boolean,
+  isNotifyJobAssigned: Boolean,
+  isNotifyOrderAuthorized: Boolean,
+  isNotifyCustomerSendsMessage: Boolean,
+  isNotifyCustomerMakesPayment: Boolean,
+  isNotifyChangeAppointmentStatus: Boolean,
+});
+
 const userSchema = new Schema({
   firstName: {
     type: String,
@@ -27,9 +54,8 @@ const userSchema = new Schema({
     ref: "role",
     required: true,
   },
-  permission: {
-    type: String,
-    default: null,
+  permissions: {
+    type: UserPermissions,
   },
   firstTimeUser: {
     type: Boolean,
@@ -80,7 +106,8 @@ const userSchema = new Schema({
     default: null,
   },
   parentId: {
-    type: String,
+    type: mongoose.Types.ObjectId,
+    ref: "user",
     default: null,
   },
   createdAt: {

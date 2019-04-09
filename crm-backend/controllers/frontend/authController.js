@@ -590,45 +590,33 @@ const createUser = async (req, res) => {
     }
     const confirmationNumber = new Date().valueOf();
     let $data = req.body;
-    let userFind = await userModel.find({ email: $data.email });
-    if (userFind.length >= 1) {
-      return res.status(401).json({
-        message: validationMessage.emailAlreadyExist,
-        success: false,
+    $data.firstTimeUser = true;
+    $data.userSideActivationValue = confirmationNumber;
+    let inserList = {
+      ...$data,
+      parentId: req.currentUser.id,
+    };
+    let result = await userModel(inserList).save();
+    const emailVar = new Email(res);
+    await emailVar.setTemplate(AvailiableTemplates.USER_ADDED_CONFIRMATION, {
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.email,
+      userId: result._id,
+      userSideActivationValue: confirmationNumber,
+    });
+    await emailVar.sendEmail(result.email);
+    if (result) {
+      return res.status(200).json({
+        message: otherMessage.insertUserMessage,
+        success: true,
       });
     } else {
-      var salt = commonCrypto.generateSalt(6);
-      $data.salt = salt;
-      $data.password = commonCrypto.hashPassword($data.password, salt);
-      $data.firstTimeUser = true;
-      $data.loggedInIp = commonSmtp.getIpAddress(req);
-      $data.userSideActivationValue = confirmationNumber;
-      let inserList = {
-        ...$data,
-        parentId: req.currentUser.id,
-      };
-      let result = await userModel(inserList).save();
-      const emailVar = new Email(res);
-      await emailVar.setTemplate(AvailiableTemplates.USER_ADDED_CONFIRMATION, {
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-        userId: result._id,
-        userSideActivationValue: confirmationNumber,
+      return res.status(400).json({
+        result: result,
+        message: "Error in inserting user.",
+        success: false,
       });
-      await emailVar.sendEmail(result.email);
-      if (result) {
-        return res.status(200).json({
-          message: otherMessage.insertUserMessage,
-          success: true,
-        });
-      } else {
-        return res.status(400).json({
-          result: result,
-          message: "Error in inserting user.",
-          success: false,
-        });
-      }
     }
   } catch (error) {
     res.status(500).json({

@@ -91,8 +91,24 @@ export class CrmUserModal extends Component {
   addUser = e => {
     e.preventDefault();
     try {
-      const { firstName, lastName, email, phone, roleType, rate } = this.state;
-      const payload = { firstName, lastName, email, phone, roleType, rate };
+      const {
+        firstName,
+        lastName,
+        email,
+        phone,
+        roleType,
+        rate,
+        permissions
+      } = this.state;
+      const payload = {
+        firstName,
+        lastName,
+        email,
+        phone,
+        roleType,
+        rate,
+        permissions
+      };
       const { isValid, errors } = Validator(
         payload,
         CreateUserValidations,

@@ -1,5 +1,6 @@
 const { body } = require("express-validator/check");
-const { validationMessage, otherMessage } = require("./validationMessage");
+const { validationMessage } = require("./validationMessage");
+const userModel = require("../models/user");
 
 const signupValidation = [
   body("firstName")
@@ -21,7 +22,7 @@ const signupValidation = [
     .withMessage(validationMessage.passwordValidation)
     .trim()
     .isLength({ min: 6 })
-    .withMessage(validationMessage.minimumPasswordValidation)
+    .withMessage(validationMessage.minimumPasswordValidation),
 ];
 
 const signupConfirmation = [
@@ -33,7 +34,7 @@ const signupConfirmation = [
   body("activeValue")
     .not()
     .isEmpty()
-    .withMessage("Please enter active value.")
+    .withMessage("Please enter active value."),
 ];
 const loginValidation = [
   body("email")
@@ -42,13 +43,13 @@ const loginValidation = [
     .trim(),
   body("password", "Password must be at least 6 character long.")
     .trim()
-    .isLength({ min: 6 })
+    .isLength({ min: 6 }),
 ];
 const forgotPasswordValidation = [
   body("email")
     .isEmail()
     .withMessage("Email must be a valid.")
-    .trim()
+    .trim(),
 ];
 const verifyLinkValidation = [
   body("user")
@@ -65,7 +66,7 @@ const verifyLinkValidation = [
     .not()
     .isEmpty()
     .withMessage("token field is required.")
-    .trim()
+    .trim(),
 ];
 const resetPasswordValidation = [
   body("email")
@@ -76,7 +77,7 @@ const resetPasswordValidation = [
     .not()
     .isEmpty()
     .withMessage("password field is required.")
-    .trim()
+    .trim(),
 ];
 
 const createUserValidation = [
@@ -92,12 +93,19 @@ const createUserValidation = [
   body("email", validationMessage.emailValidation)
     .trim()
     .isEmail()
-    .withMessage(validationMessage.emailInvalid),
+    .withMessage(validationMessage.emailInvalid)
+    .custom(async value => {
+      const userFind = await userModel.find({ email: value });
+      if (userFind.length) {
+        throw new Error(validationMessage.emailAlreadyExist);
+      }
+      return true;
+    }),
   body("roleType")
     .not()
     .isEmpty()
     .withMessage("Role type is required.")
-    .trim()
+    .trim(),
 ];
 
 const userVerify = [
@@ -116,9 +124,8 @@ const userVerify = [
     .withMessage(validationMessage.passwordValidation)
     .trim()
     .isLength({ min: 6 })
-    .withMessage(validationMessage.minimumPasswordValidation)
+    .withMessage(validationMessage.minimumPasswordValidation),
 ];
-
 
 const userVerifyLink = [
   body("userId")
@@ -129,10 +136,8 @@ const userVerifyLink = [
   body("activeValue")
     .not()
     .isEmpty()
-    .withMessage("Active value is required. ")
+    .withMessage("Active value is required. "),
 ];
-
-
 
 module.exports = {
   signupValidation,
@@ -143,5 +148,5 @@ module.exports = {
   resetPasswordValidation,
   createUserValidation,
   userVerify,
-  userVerifyLink
+  userVerifyLink,
 };
