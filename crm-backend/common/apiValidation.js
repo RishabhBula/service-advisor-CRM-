@@ -107,6 +107,26 @@ const createUserValidation = [
     .withMessage("Role type is required.")
     .trim(),
 ];
+const updateUserValidation = [
+  body("firstName")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.firstName)
+    .trim(),
+  body("lastName")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.lastName),
+  body("email", validationMessage.emailValidation)
+    .trim()
+    .isEmail()
+    .withMessage(validationMessage.emailInvalid),
+  body("roleType")
+    .not()
+    .isEmpty()
+    .withMessage("Role type is required.")
+    .trim(),
+];
 
 const userVerify = [
   body("userId")
@@ -147,6 +167,7 @@ module.exports = {
   verifyLinkValidation,
   resetPasswordValidation,
   createUserValidation,
+  updateUserValidation,
   userVerify,
   userVerifyLink,
 };
