@@ -307,6 +307,7 @@
     position: relative;
     top: -13px;
     color: #469af4;
+    cursor: pointer;
     border-bottom: dashed 1px #469af4;
 }
 .customer-add-phone:hover{

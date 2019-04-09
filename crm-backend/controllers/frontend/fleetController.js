@@ -8,7 +8,6 @@ const addNewFleet = async (req, res) => {
          companyName: body.companyName,
          phoneDetail: body.phoneDetail,
          email: body.email,
-         website: body.website,
          notes: body.notes,
          address1: body.address1,
          address2: body.address2,
