@@ -77,6 +77,10 @@ const userSchema = new Schema({
     type: String,
     default: null,
   },
+  loggedInAt: {
+    type: Date,
+    default: null,
+  },
   salt: {
     type: String,
     default: null,

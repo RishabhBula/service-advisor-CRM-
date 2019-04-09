@@ -211,10 +211,16 @@ class UserList extends Component {
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
-                      <td>{user.loggedInIp || "-"}</td>
+                      <td>
+                        {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
+                      </td>
                       <td>{user.loggedInIp || "-"}</td>
                       <td>
-                        <Badge color="success">Active</Badge>
+                        {user.userSideActivation ? (
+                          <Badge color="success">Active</Badge>
+                        ) : (
+                          <Badge color="danger">Inactive</Badge>
+                        )}
                       </td>
                       <td>
                         <Button color={"primary"} size={"sm"}>

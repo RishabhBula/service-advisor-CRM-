@@ -187,6 +187,7 @@ const loginApp = async (req, res) => {
       {
         $set: {
           loggedInIp: commonSmtp.getIpAddress(req),
+          loggedInAt: new Date(),
         },
       }
     );
