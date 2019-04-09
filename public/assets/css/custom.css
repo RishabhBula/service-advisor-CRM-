@@ -378,4 +378,7 @@
 .common-crm-dropdown i:hover {
     color: #20a8d8;
 }
+.cursor_pointer {
+    cursor: pointer;
+}
 /* end of page css */

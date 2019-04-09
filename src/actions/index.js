@@ -4,6 +4,7 @@ export * from "./Login";
 export * from "./SignUp";
 export * from "./Users";
 export * from "./Customers";
+export * from "./Matrix";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

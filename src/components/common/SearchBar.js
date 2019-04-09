@@ -28,8 +28,6 @@ class SearchBar extends Component {
       let results = this.brands.filter(brand => {
         return brand.toLowerCase().startsWith(event.query.toLowerCase());
       });
-      console.log(event.query.length);
-      console.log(results.length);
       if (!results.length) {
         let data = ["no"];
         this.setState({ brandSuggestions: data });
