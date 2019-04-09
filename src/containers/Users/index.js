@@ -11,14 +11,15 @@ import {
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getUsersList, addNewUser, deleteUser } from "../../actions";
+import { getUsersList, addNewUser, deleteUser, editUser } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
 class Users extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openCreate: false
+      openCreate: false,
+      openEdit: false
     };
   }
   componentDidMount() {
@@ -40,6 +41,16 @@ class Users extends Component {
     ) {
       this.setState({
         openCreate: false
+      });
+      const query = qs.parse(this.props.location.search);
+      this.props.getUsers({ ...query, page: query.page || 1 });
+    }
+    if (
+      this.props.userReducer.userData.isEditSuccess !==
+      userReducer.userData.isEditSuccess
+    ) {
+      this.setState({
+        openEdit: !this.state.openEdit
       });
       const query = qs.parse(this.props.location.search);
       this.props.getUsers({ ...query, page: query.page || 1 });
@@ -68,7 +79,7 @@ class Users extends Component {
     this.props.deleteUser({ ...query, userId });
   };
   render() {
-    const { openCreate } = this.state;
+    const { openCreate, openEdit } = this.state;
     const { userReducer, addUser } = this.props;
     return (
       <>
@@ -101,6 +112,8 @@ class Users extends Component {
               onPageChange={this.onPageChange}
               onSearch={this.onSearch}
               onDelete={this.deleteUser}
+              onUpdate={this.props.updateUser}
+              openEdit={openEdit}
             />
           </CardBody>
         </Card>
@@ -123,6 +136,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addUser: data => {
     dispatch(addNewUser(data));
+  },
+  updateUser: (id, data) => {
+    dispatch(editUser({ id, data }));
   },
   deleteUser: data => {
     dispatch(deleteUser(data));

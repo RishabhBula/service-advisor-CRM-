@@ -7,6 +7,7 @@ const initialState = {
   totalUsers: 100,
   userData: {
     isSuccess: false,
+    isEditSuccess: false,
     data: {},
   },
 };
@@ -22,6 +23,13 @@ export const usersReducer = handleActions(
       userData: {
         isSuccess: true,
         data: {},
+      },
+    }),
+    [usersActions.EDIT_USER_SUCCESS]: (state, action) => ({
+      ...state,
+      userData: {
+        ...state.userData,
+        isEditSuccess: true,
       },
     }),
   },

@@ -160,7 +160,7 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "you are not authorized to access CRM",
+        message: "Kindly Verify your Account and try to Login.",
         success: false,
       };
     }
@@ -629,6 +629,42 @@ const createUser = async (req, res) => {
   }
 };
 
+/*----------------User create by admin------------------ */
+const updateUser = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: commonValidation.formatValidationErr(errors.mapped(), true),
+        success: false,
+      });
+    }
+    const confirmationNumber = new Date().valueOf();
+    let $data = req.body;
+    $data.firstTimeUser = true;
+    $data.userSideActivationValue = confirmationNumber;
+    let inserList = {
+      ...$data,
+      roleType: mongoose.Types.ObjectId($data.roleType),
+      parentId: req.currentUser.id,
+    };
+    let result = await userModel.findByIdAndUpdate(
+      req.params.userId,
+      inserList
+    );
+    return res.status(200).json({
+      message: otherMessage.updatedUserMessage,
+      data: result,
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+
 /* verify user */
 const verfiyUser = async (req, res) => {
   try {
@@ -735,6 +771,7 @@ module.exports = {
   userResetpassword,
   userCompanySetup,
   createUser,
+  updateUser,
   verfiyUser,
   verfiyUserLink,
   imageUpload,

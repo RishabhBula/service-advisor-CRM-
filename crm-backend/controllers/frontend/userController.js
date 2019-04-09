@@ -39,7 +39,7 @@ const getAllUserList = async (req, res) => {
       parentId: currentUser.id,
     };
     if (status) {
-      condition.status = status;
+      condition.userSideActivation = status;
     }
     if (searchValue) {
       condition["$and"] = [

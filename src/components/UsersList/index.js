@@ -19,6 +19,7 @@ import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../config/AppConfig";
 import { ConfirmBox } from "../../helpers/SweetAlert";
+import { CrmUserModal } from "../common/CrmUserModal";
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +27,9 @@ class UserList extends Component {
       page: 1,
       search: "",
       status: "",
-      sort: ""
+      sort: "",
+      user: {},
+      openEditModal: false
     };
   }
   componentDidMount() {
@@ -39,6 +42,13 @@ class UserList extends Component {
       status: status || "",
       search: search || ""
     });
+  }
+  componentDidUpdate({ openEdit }) {
+    if (this.props.openEdit !== openEdit) {
+      this.setState({
+        openEditModal: false
+      });
+    }
   }
   handleChange = e => {
     this.setState({
@@ -69,7 +79,8 @@ class UserList extends Component {
       page: 1,
       search: "",
       status: "",
-      sort: ""
+      sort: "",
+      user: {}
     });
     this.props.onSearch({});
   };
@@ -82,10 +93,16 @@ class UserList extends Component {
     }
     this.props.onDelete(userId);
   };
+  editUser = user => {
+    this.setState({ openEditModal: true, user });
+  };
+  onUpdate = (id, data) => {
+    this.props.onUpdate(id, data);
+  };
   render() {
     const { userData } = this.props;
     const { users, isLoading, totalUsers } = userData;
-    const { page, search, sort, status } = this.state;
+    const { page, search, sort, status, user, openEditModal } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -223,7 +240,11 @@ class UserList extends Component {
                         )}
                       </td>
                       <td>
-                        <Button color={"primary"} size={"sm"}>
+                        <Button
+                          color={"primary"}
+                          size={"sm"}
+                          onClick={() => this.editUser(user)}
+                        >
                           <i className={"fa fa-edit"} />
                         </Button>{" "}
                         &nbsp;
@@ -265,6 +286,18 @@ class UserList extends Component {
             pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
+
+        <CrmUserModal
+          userModalOpen={openEditModal}
+          handleUserModal={() => {
+            this.setState({
+              openEditModal: false,
+              user: {}
+            });
+          }}
+          userData={user}
+          updateUser={this.onUpdate}
+        />
       </>
     );
   }

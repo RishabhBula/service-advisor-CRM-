@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
+import { editUserSuccess } from "../actions/Users";
 import { AppConfig } from "../config/AppConfig";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
@@ -76,6 +77,33 @@ const addUsersLogic = createLogic({
     }
   },
 });
+const editUsersLogic = createLogic({
+  type: usersActions.EDIT_USER,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      ["/updateUser", action.payload.id].join("/"),
+      "PUT",
+      true,
+      undefined,
+      action.payload.data
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(editUserSuccess());
+      dispatch(hideLoader());
+      done();
+    }
+  },
+});
 const deleteUserLogic = createLogic({
   type: usersActions.DELETE_USER,
   async process({ action }, dispatch, done) {
@@ -107,4 +135,9 @@ const deleteUserLogic = createLogic({
   },
 });
 
-export const UsersLogic = [getUsersLogic, addUsersLogic, deleteUserLogic];
+export const UsersLogic = [
+  getUsersLogic,
+  addUsersLogic,
+  deleteUserLogic,
+  editUsersLogic,
+];
