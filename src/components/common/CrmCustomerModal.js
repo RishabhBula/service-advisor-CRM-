@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Validator from "js-object-validation";
+// import Validator from "js-object-validation";
 import  MaskedInput from "react-maskedinput";
 import {
   Button,
@@ -31,7 +31,6 @@ export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      switchValue: true,
       selectedOption: null,
       expandForm: false,
       fleetModalOpen: false,
@@ -40,7 +39,6 @@ export class CrmCustomerModal extends Component {
       lastName: "",
       email: "",
       phone: {},
-      type: "admin",
       errors: {},
       phoneLength: AppConfig.phoneLength,
       percentageDiscount: 0,
@@ -60,9 +58,24 @@ export class CrmCustomerModal extends Component {
     });
   };
 
+  handlePercentageChange = (e) => {
+    const { customerDefaultPermissions } = this.state;
+    customerDefaultPermissions["shouldReceiveDiscount"].percentageDiscount = e.target.value;
+    this.setState({
+      ...customerDefaultPermissions
+    });
+  }
+  handleMatrixChange = (e) => {
+    const { customerDefaultPermissions } = this.state;
+    customerDefaultPermissions["shouldPricingMatrixOverride"].pricingMatrix =
+      e.target.value;
+    this.setState({
+      ...customerDefaultPermissions
+    });
+  }
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
   };
 
   handleExpandForm = () => {
@@ -96,9 +109,6 @@ export class CrmCustomerModal extends Component {
       customerDefaultPermissions,
       defaultOptions
     } = this.state;  
-console.log('====================================');
-console.log(matrixListReducerData);
-console.log('====================================');
     return (
       <>
         <Modal
@@ -445,10 +455,10 @@ console.log('====================================');
                             </Label>
                             <FormGroup>
                               <MaskedInput
-                                mask="11 \%"
+                                mask="11\%"
                                 name="percentageDiscount"
                                 size="20"
-                                onChange={this.handleInputChange}
+                                onChange={this.handlePercentageChange}
                               />
                             </FormGroup>
                           </Col>
@@ -465,13 +475,18 @@ console.log('====================================');
                         {/* */}
                         {pricingMatrix ? (
                           <Col md="12">
-                            <Input type="select" className="">
+                            <Input type="select" className="" onChange={this.handleMatrixChange}
+                            name="matrixType"
+                            id="matrixId">
                             <option value={""}>Select</option>
                             {
                               matrixListReducerData.matrixList.length ?
                               matrixListReducerData.matrixList.map((item,index) => {
+                                console.log('====================================');
+                                console.log(item);
+                                console.log('====================================');
                                 return (
-                                  <option value={item.id} key={index}>
+                                  <option value={item._id} key={index}>
                                     {item.name}
                                   </option>
                                 );

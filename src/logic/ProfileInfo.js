@@ -3,8 +3,7 @@ import {
   profileInfoActions,
   profileInfoStarted,
   profileInfoFailed,
-  profileInfoSuccess,
-  loginSuccess
+  profileInfoSuccess
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { push } from "react-router-redux";
