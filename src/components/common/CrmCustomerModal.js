@@ -25,7 +25,7 @@ import {
 import {
   AppConfig
 } from "../../config/AppConfig";
-import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
+// import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
 
 export class CrmCustomerModal extends Component {
   constructor(props) {
@@ -90,7 +90,6 @@ export class CrmCustomerModal extends Component {
   render() {
     const { customerModalOpen, handleCustomerModal } = this.props;
     const {
-      switchValue,
       selectedOption,
       expandForm,
       fleetModalOpen,
@@ -459,12 +458,7 @@ export class CrmCustomerModal extends Component {
                               <option value="5ca3473d70537232f13ff1fa">
                                 Technician
                               </option>
-                            </Input>
-                            <Select
-                              defaultOptions={
-                                defaultOptions
-                              }
-                            />
+                            </Input>                           
                           </Col>
                         ) : null}
                       </Row>

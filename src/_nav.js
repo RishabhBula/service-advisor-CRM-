@@ -56,6 +56,11 @@ export default {
           icon: "icon-puzzle"
         },
         {
+          name: "Fleets",
+          url: "/fleets",
+          icon: "icon-puzzle"
+        },
+        {
           name: "Users",
           url: "/users",
           icon: "fa fa-users"

@@ -1,20 +1,17 @@
 import PropTypes from "prop-types";
 
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import {
-  Badge,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   Nav,
-  NavItem,
 } from "reactstrap";
 // import sygnet from '../../assets/img/brand/sygnet.svg'
-import SearchBar from "../../components/common/SearchBar";
+// import SearchBar from "../../components/common/SearchBar";
 
 import {
-  AppAsideToggler,
   AppHeaderDropdown,
   AppSidebarToggler,
 } from "@coreui/react";
