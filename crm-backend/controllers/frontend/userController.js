@@ -165,7 +165,36 @@ const getAllUserList = async (req, res) => {
   }
 }
 /* ----------------Grt All User List End------------ */
+
+/* get single user info*/
+const getProfile = async (req, res) => {
+  const { currentUser, query } = req;
+  try {
+    let userFind = await userModel.findOne({ _id: currentUser.id });
+    if (userFind) {
+      return res.status(200).json({
+        responseCode: 200,
+        data: userFind,
+        success: true
+      });
+    }
+    else {
+      return res.status(401).json({
+        responseCode: 401,
+        message: otherMessage.userNotExist,
+        success: false
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
 module.exports = {
   listGet,
-  getAllUserList
+  getAllUserList,
+  getProfile
 };

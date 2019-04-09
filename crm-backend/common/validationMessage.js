@@ -26,7 +26,8 @@ const otherMessage = {
   insertUserMessage:
     "User was successfully added.<br/>A confirmation link has been sent to user email id.",
   userPasswordCreation: "Your password was successfully created.",
-  linkExpiration: "Link has been expired."
+  linkExpiration: "Link has been expired.",
+  userNotExist: "User Not Exist"
 };
 module.exports = {
   validationMessage,

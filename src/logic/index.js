@@ -6,6 +6,8 @@ import { LoginLogics } from "./Login";
 import { SignUpLogic } from "./SignUp";
 import { UsersLogic } from "./Users";
 import { CustomersLogic } from "./Customers";
+import { MatrixLogic } from "./Matrix";
+import { ProfileInfoLogic } from "./ProfileInfo";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -15,4 +17,12 @@ export const redirectToLogic = createLogic({
   },
 });
 
-export default [...LoginLogics, ...SignUpLogic, ...UsersLogic, ...CustomersLogic, redirectToLogic];
+export default [
+  ...LoginLogics,
+  ...SignUpLogic,
+  ...UsersLogic,
+  ...CustomersLogic,
+  ...MatrixLogic,
+  ...ProfileInfoLogic,
+  redirectToLogic,
+];
