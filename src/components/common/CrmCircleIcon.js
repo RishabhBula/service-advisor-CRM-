@@ -11,7 +11,7 @@ class CrmCircleIcon extends Component {
 
     return (
       <span style={cssPass ? cssPass : null} className="circle-icon-option">
-        <i class={circleIconPass} />
+        <i className={circleIconPass} />
       </span>
     );
   }

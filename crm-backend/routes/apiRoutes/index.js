@@ -3,5 +3,7 @@ module.exports = {
     auth: require("./authRoute"),
     role: require("./rolesRoutes"),
     vehicle: require("./vehicleRoutes"),
-    fleet: require("./fleetRoutes")
+    fleet: require("./fleetRoutes"),
+    matrix: require("./matrixRoutes"),
+    labour: require("./labourRoutes")
 } 

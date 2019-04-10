@@ -1,161 +1,109 @@
 const userModel = require("../../models/user");
-const {
-  validationMessage,
-  otherMessage,
-} = require("../../common/validationMessage");
-const commonSmtp = require("../../common/index");
-const commonCrypto = require("../../common/crypto");
-const { Email, AvailiableTemplates } = require("../../common/Email");
-
-const listGet = async (req, res) => {
-  try {
-    // let inserList = {
-    //   firstName: "General",
-    //   fleet: "5ca5e3b88b27f17bc0dfaab5",
-    //   permission: [
-    //     {
-    //       shouldReceiveDiscount: {
-    //         status: false,
-    //         percentageDiscount: 0,
-    //       },
-    //       shouldLaborRateOverride: {
-    //         status: false,
-    //         laborRate: "5ca5e2f1a7d08f79f78c8e41",
-    //       },
-    //       shouldPricingMatrixOverride: {
-    //         status: false,
-    //         pricingMatrix: null,
-    //       },
-    //     },
-    //   ],
-    //   parentId: currentUser.id,
-    // };
-    // let data = await new user.()
-    //let result = await customerModel(inserList).save();
-    // let roleUpdate = await roleModel.updateOne(
-    //   {
-    //     userType: "user"
-    //   },
-    //   {
-    //     $set: {
-    //       permissionObject: [
-    //         {
-    //           isAllowedDashboard: false,
-    //           isAllowedWorkflow: true,
-    //           isAllowedCalendar: true,
-    //           isAllowedInventory: true,
-    //           isAllowedTimesheets: true,
-    //           isAllowedReportCenter: false,
-    //           isAllowedCompanySettings: false,
-    //           isIncludedToCalendar: true,
-    //           isAllowedViewEveryonesCalendar: false,
-    //           isAllowedTimeclock: true,
-    //           isAllowedManualTimesheets: false,
-    //           isAllowedInspections: false,
-    //           isAllowedCannedJobs: false,
-    //           isAllowedPricingMatrices: false,
-    //           isAllowedMessagingCustomers: true,
-    //           isPreventEditingUponAuthorize: false,
-    //           isPreventEditingUponInvoice: false,
-    //           isFilteredWorkflowByTechnician: false,
-    //           isAllowedProfitability: false,
-    //           isNotifyJobAssigned: true,
-    //           isNotifyOrderAuthorized: false,
-    //           isNotifyCustomerSendsMessage: false,
-    //           isNotifyCustomerMakesPayment: false,
-    //           isNotifyChangeAppointmentStatus: false
-    //         }
-    //       ]
-    //     }
-    //   }
-    // );
-
-    return res.status(200).json({
-      result: "result",
-    });
-
-    // return res.status(200).json({
-    //   result: roleUpdate
-    // });
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send({ msg: error });
-  }
-};
-
+const otherMessage = require("./../../common/validationMessage");
 /* ----------------Grt All User List------------ */
 const getAllUserList = async (req, res) => {
-  const { currentUser, query } = req
-  console.log("************Qurry", query);
+  const { query, currentUser } = req;
   try {
-    // page number is required
-    // if (!query.page || parseInt(query.page) <= 0) {
-    //   return res.status(404).json({
-    //     responseCode: 404,
-    //     message: "Page not provided or incorrect",
-    //     success: false,
-    //   });
-    // }
-
-    // // limit is required
-    // if (!query.limit || parseInt(query.limit) <= 0) {
-    //   return res.status(404).json({
-    //     responseCode: 404,
-    //     message: "Limit not provided or incorrect",
-    //     success: false,
-    //   });
-    // }
-
-    let limit = parseInt(query.limit); // data limit
-    let page = parseInt(query.page); // page number
-    /* let offset = limit * (page - 1); */ // skip value
-
-    let searchValue = query.search
-    let condition = {};
+    const limit = parseInt(query.limit || 10);
+    const page = parseInt(query.page);
+    const offset = (page - 1) * limit;
+    const searchValue = query.search;
+    const sort = query.sort;
+    const status = query.status;
+    let sortBy = {};
+    switch (sort) {
+      case "loginasc":
+        sortBy = {
+          updatedAt: -1,
+        };
+        break;
+      case "nasc":
+        sortBy = {
+          firstName: 1,
+          lastName: 1,
+        };
+        break;
+      case "ndesc":
+        sortBy = {
+          firstName: -1,
+          lastName: 1,
+        };
+        break;
+      default:
+        sortBy = {
+          createdAt: -1,
+        };
+        break;
+    }
+    let condition = {
+      parentId: currentUser.id,
+    };
+    if (status) {
+      condition.userSideActivation = status;
+    }
     if (searchValue) {
-      condition = {
-        $or: [{
-          firstName: {
-            $regex: new RegExp(searchValue, "i")
-          }
-        }, {
-          lastName: {
-            $regex: new RegExp(searchValue, "i")
-          }
+      condition["$and"] = [
+        {
+          $or: [
+            {
+              firstName: {
+                $regex: new RegExp(searchValue, "i"),
+              },
+            },
+            {
+              lastName: {
+                $regex: new RegExp(searchValue, "i"),
+              },
+            },
+            {
+              email: {
+                $regex: new RegExp(searchValue, "i"),
+              },
+            },
+          ],
         },
         {
-          email: {
-            $regex: new RegExp(searchValue, "i")
-          }
-        }],
-      }
+          $or: [
+            {
+              isDeleted: {
+                $exists: false,
+              },
+            },
+            {
+              isDeleted: false,
+            },
+          ],
+        },
+      ];
+    } else {
+      condition["$or"] = [
+        {
+          isDeleted: {
+            $exists: false,
+          },
+        },
+        {
+          isDeleted: false,
+        },
+      ];
     }
-    const getAllUser = await userModel.find({
-      ...condition,
-      parentId: "5ca5d6f69c6c9f6cb63d919a",
-    }).populate({
-      path: 'roleType',
-      match: { userType: query.userType }
-    }).skip(page).limit(limit)
+    const getAllUser = await userModel
+      .find({
+        ...condition,
+      })
+      .populate("roleType")
+      .sort(sortBy)
+      .skip(offset)
+      .limit(limit);
     const getAllUserCount = await userModel.countDocuments({
       ...condition,
-      parentId: "5ca5d6f69c6c9f6cb63d919a",
-    })
-    let totalPages = Math.ceil(parseInt(getAllUserCount) / limit); // total number of pages for table
-    if (getAllUser) {
-      return res.status(200).json({
-        responsecode: 200,
-        data: getAllUser,
-        totalPages: totalPages,
-        success: true
-      })
-    } else {
-      return res.status(400).json({
-        responsecode: 400,
-        message: "User not found",
-        success: false
-      })
-    }
+    });
+    return res.status(200).json({
+      responsecode: 200,
+      data: getAllUser,
+      totalUsers: getAllUserCount,
+      success: true,
+    });
   } catch (error) {
     console.log("this is get all user error", error);
     return res.status(500).json({
@@ -163,9 +111,58 @@ const getAllUserList = async (req, res) => {
       success: false,
     });
   }
-}
+};
 /* ----------------Grt All User List End------------ */
+
+/* Delete User */
+const deleteUser = async ({ params }, res) => {
+  try {
+    const { userId } = params;
+    const data = await userModel.findByIdAndUpdate(userId, {
+      isDeleted: true,
+    });
+    return res.status(200).json({
+      message: "User deleted successfully!",
+      data,
+    });
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+/* Delete User */
+
+/* get single user info*/
+const getProfile = async (req, res) => {
+  const { currentUser } = req;
+  try {
+    let userFind = await userModel.findOne({ _id: currentUser.id });
+    if (userFind) {
+      return res.status(200).json({
+        responseCode: 200,
+        data: userFind,
+        success: true,
+      });
+    } else {
+      return res.status(401).json({
+        responseCode: 401,
+        message: otherMessage.userNotExist,
+        success: false,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+
 module.exports = {
-  listGet,
-  getAllUserList
+  deleteUser,
+  getAllUserList,
+  getProfile,
 };

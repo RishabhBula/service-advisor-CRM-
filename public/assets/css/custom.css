@@ -308,6 +308,7 @@
     top: -13px;
     color: #469af4;
     cursor: pointer;
+    display: inline-block;
     border-bottom: dashed 1px #469af4;
 }
 .customer-add-phone:hover{
@@ -323,7 +324,10 @@
     cursor: pointer;
 }
 /* end of customer modal */
-
+/* ----------Comman Phone Field------------ */
+.phone-remove-btn{
+    align-self: center;
+}
 /* page css */
 .title-left-section .card-title {
     margin: 0px;

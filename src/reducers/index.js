@@ -4,6 +4,9 @@ import { combineReducers } from "redux";
 import { handleActions } from "redux-actions";
 
 import { usersReducer } from "./Users";
+import { profileInfoReducer } from "./ProfileInfo";
+import { matrixListReducer } from "./MatrixList";
+import { rateStandardListReducer } from "./RateStandard";
 
 export const mainReducer = handleActions(
   {
@@ -22,6 +25,9 @@ export const mainReducer = handleActions(
 const AppReducer = combineReducers({
   mainReducer,
   usersReducer,
+  profileInfoReducer,
+  matrixListReducer,
+  rateStandardListReducer,
   routing: routerReducer,
 });
 

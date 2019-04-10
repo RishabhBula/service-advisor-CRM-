@@ -1,7 +1,4 @@
-import Login from './Login';
-import Register from './Register';
+import Login from "./Login";
+import Register from "./Register";
 
-
-export {
-  Login, Login
-};
+export { Login, Register };
