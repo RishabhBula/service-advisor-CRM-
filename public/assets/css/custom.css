@@ -408,9 +408,13 @@
 .custom-sidebar.sidebar {
     background: linear-gradient(to bottom, #8358f0, #5c43db);
 }
-.custom-sidebar.sidebar .nav-link.active, .custom-sidebar.sidebar .nav-link:hover{
+.custom-sidebar.sidebar .nav-link:hover{
     background: #5d43db;
 }
+.custom-sidebar.sidebar .nav-link.active{
+    background: #fff;
+}
+
 .custom-sidebar.sidebar .sidebar-minimizer:hover{
     background-color:transparent;
 }
@@ -439,8 +443,9 @@
     background-size: 12.5px;
     transition: .3s;
 }
-.custom-sidebar.sidebar .nav-link.active .nav-icon{
-    color:#fff;
+.custom-sidebar.sidebar .nav-link.active .nav-icon, .custom-sidebar.sidebar a.nav-link.active {
+    color:#5c43db;
+    font-weight: bold;
 }
 
 .sidebar-minimized .custom-sidebar.sidebar .sidebar-minimizer{
@@ -525,6 +530,17 @@ span.customer-anchor-text.customer-click-btn:hover::before{
 }
 .custom-form-modal select.form-control{
     padding: 0px 12px;
+}
+.custom-form-modal .form-group.phone-number-feild input.form-control{
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.custom-form-modal .form-group.phone-number-feild select{
+    max-width: 70px;
+    padding: 0px;
+    border-right: none;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
 }
 /*end custom-css */
 /* end of page css */
