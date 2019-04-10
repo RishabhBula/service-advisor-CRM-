@@ -147,8 +147,6 @@ export class CrmCustomerModal extends Component {
         item => item.key === event.key
       )
       phoneDetail.splice(phoneArray, 1);
-      console.log(phoneDetail);
-
       this.setState({
         phoneDetail: phoneDetail
       })
@@ -224,35 +222,6 @@ export class CrmCustomerModal extends Component {
   addNewSection = () => {
     alert("testing");
   }
-
-  componentDidUpdate(prevProps) {
-    console.log('====================================');
-    console.log(prevProps);
-    console.log('====================================');
-    // if(customerModalOpen !== this.props.customerModalOpen) {
-    //   this.setState({
-    //     firstName: "",
-    //     lastName: "",
-    //     phoneDetail: [
-    //       {
-    //         phone: "mobile",
-    //         value: ""
-    //       }
-    //     ],
-    //     email: "",
-    //     notes: "",
-    //     companyName: "",
-    //     referralSource: "",
-    //     fleet: "5ca5e3b88b27f17bc0dfaab5",
-    //     address1: "",
-    //     address2: "",
-    //     city: "",
-    //     state: "",
-    //     zipCode: ""
-    //   })
-    // }
-  }
-
   render() {
     const { customerModalOpen, handleCustomerModal, matrixListReducerData } = this.props;
     const {

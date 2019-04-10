@@ -152,7 +152,6 @@ export class BigModals extends Component {
       }
     }
     else {
-      console.log(event);
       servicesOffer.selectedServices.push(event);
     }
 
@@ -173,11 +172,9 @@ export class BigModals extends Component {
           item => item.key === event.key
         )
         vehicleServicesOffer.selectedVehicleServices.splice(vehicleExistance, 1);
-        console.log("vehicleExistance", vehicleExistance);
       }
     }
     else {
-      console.log(event);
       vehicleServicesOffer.selectedVehicleServices.push(event);
     }
 
@@ -189,8 +186,6 @@ export class BigModals extends Component {
   render() {
     const { modalOpen, toggleLarge } = this.props;
     const { companyLogo, peopleWork, servicesOffer, vehicleServicesOffer } = this.state;
-    console.log(servicesOffer.selectedServices);
-    console.log("companyLogo",companyLogo);
     
     return (
       <>

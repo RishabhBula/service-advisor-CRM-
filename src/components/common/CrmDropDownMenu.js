@@ -47,7 +47,6 @@ class CrmDropDownMenu extends Component {
       classNamePass,
       cssPass,
     } = this.props;
-    console.log(imagePass);
 
     return (
       <div className={classNamePass}>

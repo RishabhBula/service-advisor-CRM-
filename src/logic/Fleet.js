@@ -17,7 +17,6 @@ const fleetAddLogic = createLogic({
         fleetData: []
       })
     );
-    console.log("*********This is fleet action", action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/",

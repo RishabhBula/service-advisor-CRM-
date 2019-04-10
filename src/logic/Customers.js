@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
+import { AppConfig } from "../config/AppConfig";
 import { logger } from "../helpers/Logger";
 import {
   showLoader,
@@ -9,7 +10,9 @@ import {
   customerAddSuccess,
   customerAddFailed,
   customerAddStarted,
-  modelOpenRequest
+  modelOpenRequest,
+  customerGetSuccess,
+  customerGetFailed
 } from "./../actions";
 
 const addCustomerLogic = createLogic({
@@ -62,4 +65,43 @@ const addCustomerLogic = createLogic({
     }
   }
 });
-export const CustomersLogic = [addCustomerLogic];
+
+const getCustomersLogic = createLogic({
+  type: customersAddActions.CUSTOMER_GET_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(
+      customerGetSuccess({
+        isLoading: true,
+        customers: [],
+      })
+    );
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer("/user", "/", "GET", true, {
+      ...action.payload,
+      limit: AppConfig.ITEMS_PER_PAGE,
+    });
+    if (result.isError) {
+      dispatch(
+        customerGetSuccess({
+          isLoading: false,
+          customers: [],
+        })
+      );
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(
+        customerGetFailed({
+          isLoading: false,
+          customers: result.data.data,
+          totalCustomers: result.data.totalCustomers,
+        })
+      );
+      done();
+    }
+  },
+});
+
+
+export const CustomersLogic = [addCustomerLogic, getCustomersLogic];

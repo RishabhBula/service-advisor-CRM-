@@ -9,7 +9,7 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
-import UsersList from "../../components/UsersList";
+import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
 import { customerAddRequest, getMatrixList, modelOpenRequest } from "../../actions";
 import { logger } from "../../helpers/Logger";
@@ -65,7 +65,8 @@ class Users extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <UsersList userData={userReducer} />
+            <CustomerList 
+            userData={userReducer} />
           </CardBody>
         </Card>
         <CrmCustomerModal

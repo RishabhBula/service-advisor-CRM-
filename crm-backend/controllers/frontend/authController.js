@@ -198,6 +198,7 @@ const loginApp = async (req, res) => {
         email: result.email,
         firstName: result.firstName,
         lastName: result.lastName,
+        parentId: result.parentId
       },
       commonCrypto.secret,
       {
