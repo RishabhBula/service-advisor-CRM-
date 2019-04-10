@@ -4,6 +4,13 @@ const fleetModal = require("../../models/fleet");
 const addNewFleet = async (req, res) => {
    const { body } = req;
    try {
+      if (!body.companyName) {
+         return res.status(400).json({
+            responsecode: 400,
+            message: "Company name is required.",
+            success: false
+         })
+      }
       const fleetData = {
          companyName: body.companyName,
          phoneDetail: body.phoneDetail,

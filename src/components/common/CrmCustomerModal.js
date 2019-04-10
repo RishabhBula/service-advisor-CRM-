@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import Validator from "js-object-validation";
-import  MaskedInput from "react-maskedinput";
+import MaskedInput from "react-maskedinput";
 import {
   Button,
   Modal,
@@ -26,7 +26,9 @@ import {
 import {
   AppConfig
 } from "../../config/AppConfig";
-// import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
+import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
+import { logger } from "../../helpers/Logger";
+import Validator from "js-object-validation";
 
 export class CrmCustomerModal extends Component {
   constructor(props) {
@@ -70,7 +72,7 @@ export class CrmCustomerModal extends Component {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
     this.setState({
-     ...customerDefaultPermissions
+      ...customerDefaultPermissions
     });
   };
 
@@ -159,9 +161,9 @@ export class CrmCustomerModal extends Component {
   }
   
   addNewCustomer = () => {
-    const { 
-      firstName, 
-      lastName, 
+    const {
+      firstName,
+      lastName,
       phoneDetail,
       email,
       notes,
@@ -190,27 +192,56 @@ export class CrmCustomerModal extends Component {
       zipCode: zipCode,
       permission: customerDefaultPermissions,
       status: true
-    };   
-    this.props.addCustomer(customerData);
+    };
+    try {
+      const { isValid, errors } = Validator(
+        customerData,
+        CreateCustomerValidations,
+        CreateCustomerValidMessaages
+      );
+      if (!isValid &&
+        (
+          (customerData.email !== '') ||
+          (
+            (customerData.firstName === '') ||
+            (customerData.lastName === '')
+          )
+        )
+      ) {
+        this.setState({
+          errors: errors,
+          isLoading: false,
+        });
+        return;
+      }
+      this.props.addCustomer(customerData)
+    } catch (error) {
+      logger(error);
+    }
   }
 
   addNewSection = () => {
     alert("testing");
   }
-  
+
   render() {
-    const { customerModalOpen, handleCustomerModal,matrixListReducerData } = this.props;
+    const { customerModalOpen, handleCustomerModal, matrixListReducerData } = this.props;
     const {
       selectedOption,
       expandForm,
       fleetModalOpen,
       customerDefaultPermissions,
       defaultOptions,
-      phoneDetail
-    } = this.state;  
+      phoneDetail,
+      errors,
+      firstName,
+      lastName,
+      email
+    } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
+    
     return (
       <>
         <Modal
@@ -236,7 +267,13 @@ export class CrmCustomerModal extends Component {
                       type="text"
                       placeholder="John"
                       name="firstName"
+                      onChange={this.handleInputChange}
                     />
+                    {
+                      !firstName && errors.firstName  ?
+                        <p className="text-danger">{errors.firstName}</p> :
+                        null
+                    }
                   </FormGroup>
                 </Col>
                 <Col md="6">
@@ -250,8 +287,14 @@ export class CrmCustomerModal extends Component {
                     <Input
                       type="text"
                       placeholder="Doe"
+                      onChange={this.handleInputChange}
                       name="lastName"
                     />
+                    {
+                      errors.lastName && !lastName ?
+                        <p className="text-danger">{errors.lastName}</p> :
+                        null
+                    }
                   </FormGroup>
                 </Col>
               </Row>
@@ -260,46 +303,46 @@ export class CrmCustomerModal extends Component {
             <div className="">
               {phoneDetail.length
                 ? phoneDetail.map((item, index) => {
-                    return (
-                      <Row className="justify-content-center">
-                        {index < 1 ? (
-                          <>
-                            <Col md="3">
-                              <FormGroup>
-                                <Label
-                                  htmlFor="name"
-                                  className="customer-modal-text-style"
-                                >
-                                  Phone
+                  return (
+                    <Row className="justify-content-center">
+                      {index < 1 ? (
+                        <>
+                          <Col md="3">
+                            <FormGroup>
+                              <Label
+                                htmlFor="name"
+                                className="customer-modal-text-style"
+                              >
+                                Phone
                                 </Label>
-                                <Input
+                              <Input
+                                onChange={e =>
+                                  this.handlePhoneNameChange(index, e)
+                                }
+                                type="select"
+                                id="name"
+                                required
+                              >
+                                {phoneOptions}
+                              </Input>
+                            </FormGroup>
+                          </Col>
+                          <Col md="9">
+                            <FormGroup>
+                              <Label />
+                              {phoneDetail[index].phone === "mobile" ? (
+                                <MaskedInput
+                                  mask="(111) 111-111"
+                                  name="phoneDetail"
+                                  placeholder="(555) 055-0555"
+                                  className="form-control"
+                                  size="20"
+                                  value={item.value}
                                   onChange={e =>
-                                    this.handlePhoneNameChange(index, e)
+                                    this.handlePhoneValueChange(index, e)
                                   }
-                                  type="select"
-                                  id="name"
-                                  required
-                                >
-                                  {phoneOptions}
-                                </Input>
-                              </FormGroup>
-                            </Col>
-                            <Col md="9">
-                              <FormGroup>
-                                <Label />
-                                {phoneDetail[index].phone === "mobile" ? (
-                                  <MaskedInput
-                                    mask="(111) 111-111"
-                                    name="phoneDetail"
-                                    placeholder="(555) 055-0555"
-                                    className="form-control"
-                                    size="20"
-                                    value={item.value}
-                                    onChange={e =>
-                                      this.handlePhoneValueChange(index, e)
-                                    }
-                                  />
-                                ) : (
+                                />
+                              ) : (
                                   <MaskedInput
                                     mask="(111) 111-111 ext 1111"
                                     name="phoneDetail"
@@ -312,10 +355,10 @@ export class CrmCustomerModal extends Component {
                                     }
                                   />
                                 )}
-                              </FormGroup>
-                            </Col>
-                          </>
-                        ) : (
+                            </FormGroup>
+                          </Col>
+                        </>
+                      ) : (
                           <>
                             <Col md="3">
                               <FormGroup>
@@ -348,18 +391,18 @@ export class CrmCustomerModal extends Component {
                                     }
                                   />
                                 ) : (
-                                  <MaskedInput
-                                    mask="(111) 111-111 ext 1111"
-                                    name="phoneDetail"
-                                    className="form-control"
-                                    placeholder="(555) 055-0555 ext 1234"
-                                    size="20"
-                                    value={item.value}
-                                    onChange={e =>
-                                      this.handlePhoneValueChange(index, e)
-                                    }
-                                  />
-                                )}
+                                    <MaskedInput
+                                      mask="(111) 111-111 ext 1111"
+                                      name="phoneDetail"
+                                      className="form-control"
+                                      placeholder="(555) 055-0555 ext 1234"
+                                      size="20"
+                                      value={item.value}
+                                      onChange={e =>
+                                        this.handlePhoneValueChange(index, e)
+                                      }
+                                    />
+                                  )}
                               </FormGroup>
                             </Col>
                             <Col md="1" className="phone-remove-btn">
@@ -375,9 +418,9 @@ export class CrmCustomerModal extends Component {
                             </Col>
                           </>
                         )}
-                      </Row>
-                    );
-                  })
+                    </Row>
+                  );
+                })
                 : null}
               <div>
                 {phoneDetail.length < 3 ? (
@@ -404,8 +447,14 @@ export class CrmCustomerModal extends Component {
                       type="text"
                       className="customer-modal-text-style"
                       placeholder="john.doe@example.com"
+                      onChange={this.handleInputChange}
                       name="email"
                     />
+                    {
+                      errors.email && email ?
+                        <p className="text-danger">{errors.email}</p> :
+                        null
+                    }
                   </FormGroup>
                 </Col>
               </Row>
@@ -424,6 +473,7 @@ export class CrmCustomerModal extends Component {
                       type="textarea"
                       placeholder="Enter a note..."
                       name="notes"
+                      onChange={this.handleInputChange}
                     />
                   </FormGroup>
                 </Col>
@@ -437,8 +487,8 @@ export class CrmCustomerModal extends Component {
                       Show More{" "}
                     </span>
                   ) : (
-                    ""
-                  )}
+                      ""
+                    )}
                 </div>
               </Row>
             </div>
@@ -458,6 +508,7 @@ export class CrmCustomerModal extends Component {
                           type="text"
                           placeholder="Company"
                           name="companyName"
+                          onChange={this.handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -477,6 +528,7 @@ export class CrmCustomerModal extends Component {
                           type="text"
                           placeholder="Referral"
                           name="Refferal Source"
+                          onChange={this.handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -514,6 +566,7 @@ export class CrmCustomerModal extends Component {
                           type="text"
                           placeholder="Address"
                           name="address1"
+                          onChange={this.handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -533,6 +586,7 @@ export class CrmCustomerModal extends Component {
                           type="text"
                           placeholder="Address"
                           name="address2"
+                          onChange={this.handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -552,6 +606,7 @@ export class CrmCustomerModal extends Component {
                           type="text"
                           placeholder="New York"
                           name="city"
+                          onChange={this.handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -563,7 +618,7 @@ export class CrmCustomerModal extends Component {
                         >
                           State
                         </Label>
-                        <Input type="text" name="state" placeholder="NY" />
+                        <Input type="text" name="state" onChange={this.handleInputChange} placeholder="NY" />
                       </FormGroup>
                     </Col>
                     <Col md="4">
@@ -578,6 +633,7 @@ export class CrmCustomerModal extends Component {
                           type="text"
                           placeholder="Zip Code"
                           name="zipCode"
+                          onChange={this.handleInputChange}
                         />
                       </FormGroup>
                     </Col>
@@ -706,8 +762,8 @@ export class CrmCustomerModal extends Component {
                 </div>
               </>
             ) : (
-              ""
-            )}
+                ""
+              )}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
             <CrmStandardModel 
             openStadardRateModel = {this.state.openStadardRateModel} 
