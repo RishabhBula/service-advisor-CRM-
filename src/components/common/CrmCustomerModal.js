@@ -276,7 +276,7 @@ export class CrmCustomerModal extends Component {
         <Modal
           isOpen={customerModalOpen}
           toggle={handleCustomerModal}
-          className="customer-modal"
+          className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader toggle={handleCustomerModal}>
             Create New Customer
@@ -336,7 +336,7 @@ export class CrmCustomerModal extends Component {
                     <Row className="justify-content-center">
                       {index < 1 ? (
                         <>
-                          <Col md="3">
+                          {/* <Col md="3">
                             <FormGroup>
                               <Label
                                 htmlFor="name"
@@ -355,10 +355,27 @@ export class CrmCustomerModal extends Component {
                                 {phoneOptions}
                               </Input>
                             </FormGroup>
-                          </Col>
-                          <Col md="9">
-                            <FormGroup>
-                              <Label />
+                          </Col> */}
+                          <Col md="12">
+                            <FormGroup className="phone-number-feild">
+                            <Label
+                                htmlFor="name"
+                                className="customer-modal-text-style"
+                              >
+                                Phone
+                                </Label>
+                                {/* <div></div> */}
+                                <Input
+                                onChange={e =>
+                                  this.handlePhoneNameChange(index, e)
+                                }
+                                type="select"
+                                id="name"
+                                required
+                                
+                              >
+                                {phoneOptions}
+                              </Input>
                               {phoneDetail[index].phone === "mobile" ? (
                                 <MaskedInput
                                   mask="(111) 111-111"
@@ -389,7 +406,7 @@ export class CrmCustomerModal extends Component {
                         </>
                       ) : (
                           <>
-                            <Col md="3">
+                            {/* <Col md="3">
                               <FormGroup>
                                 <Label htmlFor="name" />
                                 <Input
@@ -444,23 +461,79 @@ export class CrmCustomerModal extends Component {
                                   x
                                 </button>
                               </FormGroup>
-                            </Col>
+                            </Col> */}
+  <Col md="12">
+                            <FormGroup className="phone-number-feild">
+                            <Label
+                                htmlFor="name"
+                                className="customer-modal-text-style"
+                              >
+                                
+                                </Label>
+                                {/* <div></div> */}
+                                <Input
+                                onChange={e =>
+                                  this.handlePhoneNameChange(index, e)
+                                }
+                                type="select"
+                                id="name"
+                                required
+                                
+                              >
+                                {phoneOptions}
+                              </Input>
+                              {phoneDetail[index].phone === "mobile" ? (
+                                <MaskedInput
+                                  mask="(111) 111-111"
+                                  name="phoneDetail"
+                                  placeholder="(555) 055-0555"
+                                  className="form-control"
+                                  size="20"
+                                  value={item.value}
+                                  onChange={e =>
+                                    this.handlePhoneValueChange(index, e)
+                                  }
+                                />
+                              ) : (
+                                  <MaskedInput
+                                    mask="(111) 111-111 ext 1111"
+                                    name="phoneDetail"
+                                    className="form-control"
+                                    placeholder="(555) 055-0555 ext 1234"
+                                    size="20"
+                                    value={item.value}
+                                    onChange={e =>
+                                      this.handlePhoneValueChange(index, e)
+                                    }
+                                  />
+                                )}
+                            </FormGroup>
+                          </Col>
                           </>
                         )}
                     </Row>
                   );
                 })
                 : null}
-              <div>
-                {phoneDetail.length < 3 ? (
-                  <span
+
+{phoneDetail.length < 3 ? (
+              <Row className="justify-content-center">
+                <Col md="12">
+                  <FormGroup>
+                    <Label></Label>
+                   
+
+                    <span
                     onClick={this.handleAddPhoneDetails}
-                    className="customer-add-phone"
-                  >
+                    className="customer-add-phone customer-anchor-text customer-click-btn"
+                    >
                     Add another phone number
-                  </span>
+                    </span>
+                  
+                  </FormGroup>
+                </Col>
+              </Row>
                 ) : null}
-              </div>
             </div>
             <div className="">
               <Row className="justify-content-center">
