@@ -11,7 +11,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getCustomerList, addNewCustomer } from "../../actions";
+
 // import { getUsersList, addNewUser } from "../../actions";
 import { logger } from "../../helpers/Logger";
 
@@ -36,7 +36,7 @@ class Vehicles extends Component {
   };
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addCustomer } = this.props;
+    const { userReducer } = this.props;
     return (
       <>
         <Card>
@@ -66,29 +66,10 @@ class Vehicles extends Component {
             <UsersList userData={userReducer} />
           </CardBody>
         </Card>
-        <CrmCustomerModal
-          customerModalOpen={openCreate}
-          handleCustomerModal={this.toggleCreateModal}
-          addCustomer={addCustomer}
-        />
+        
       </>
     );
   }
 }
-const mapStateToProps = state => ({
-  userReducer: state.usersReducer
-});
 
-const mapDispatchToProps = dispatch => ({
-  getUsers: page => {
-    dispatch(getCustomerList({ page }));
-  },
-  addCustomer: data => {
-    dispatch(addNewCustomer(data));
-  }
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Vehicles);
+export default Vehicles;

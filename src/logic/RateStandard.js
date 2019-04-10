@@ -1,15 +1,15 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import {
-  matrixActions,
+  rateStandardListActions,
   getMatrixListStart,
   getMatrixListFail,
   getMatrixListSuccess
 } from "./../actions";
 
-const getMatrixLogic = createLogic({
-  type: matrixActions.GET_MATRIX_LIST,
-  cancelType: matrixActions.GET_MATRIX_LIST_FAILED,
+const getStandardRateListLogic = createLogic({
+  type: rateStandardListActions.GET_RATE_STANDARD_LIST_REQUEST,
+  cancelType: rateStandardListActions.GET_RATE_STANDARD_LIST_FAILED,
   async process({ action, getState }, dispatch, done) {
     const profileStateData = getState().profileInfoReducer;
 
@@ -34,24 +34,21 @@ const getMatrixLogic = createLogic({
       undefined,
       data
     );
-    if(result.isError) {
-        dispatch(
-          getMatrixListFail({
-            matrixList: []
-          })
-        );
-    }
-    else {
-        dispatch(
-          getMatrixListSuccess({
-            matrixList: result.data.data
-          })
-        );
+    if (result.isError) {
+      dispatch(
+        getMatrixListFail({
+          matrixList: []
+        })
+      );
+    } else {
+      dispatch(
+        getMatrixListSuccess({
+          matrixList: result.data.data
+        })
+      );
     }
     done();
-   
   }
 });
 
-
-export const MatrixLogic = [getMatrixLogic];
+export const StandardRateLogic = [getStandardRateListLogic];

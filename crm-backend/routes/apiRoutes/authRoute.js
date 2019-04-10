@@ -33,6 +33,12 @@ router.post(
   validation.createUserValidation,
   authController.createUser
 );
+router.put(
+  "/updateUser/:userId",
+  token.authorisedUser,
+  validation.updateUserValidation,
+  authController.updateUser
+);
 router.post("/verfiyUser", validation.userVerify, authController.verfiyUser);
 router.post(
   "/verfiyUserLink",

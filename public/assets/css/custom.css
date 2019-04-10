@@ -320,13 +320,6 @@
     font-weight: 400;
     color: #76838F;
 }
-.customer-anchor-text{
-    color: #469af4;
-    border-bottom: dashed 1px #469af4
-}
-.customer-anchor-text:hover{
-    border: none;
-}
 .customer-click-btn{
     cursor: pointer;
 }
@@ -385,4 +378,113 @@
 .cursor_pointer {
     cursor: pointer;
 }
+
+/* custom-css */
+.modal-dialog.custom-modal-lg{
+    max-width:900px;
+}
+.custom-form-modal .form-group label{
+    min-width: 150px;
+    margin: 6px 10px 0px 5px;
+    text-align: right;
+    font-weight: 600;
+    color: #535459;
+    font-size: 13px;
+}
+
+.custom-form-modal .form-group .form-control{
+    color: #0c0d1c;
+    border: 1px solid #a6a7a7;
+}
+.custom-form-modal .form-group .form-control::placeholder{
+    font-weight: normal;
+    color: #b0b0b8;
+}
+.custom-form-modal .form-group{
+    display: flex;
+}
+.custom-sidebar.sidebar {
+    background: linear-gradient(to bottom, #8358f0, #5c43db);
+}
+.custom-sidebar.sidebar .nav-link.active, .custom-sidebar.sidebar .nav-link:hover{
+    background: #5d43db;
+}
+.custom-sidebar.sidebar .sidebar-minimizer:hover{
+    background-color:transparent;
+}
+.custom-sidebar.sidebar .nav-link .nav-icon{
+    color: #fff;
+}
+.custom-sidebar.sidebar .sidebar-minimizer{
+    background-color:transparent;
+}
+.custom-sidebar.sidebar .nav-link.nav-dropdown-toggle::before{
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23fff' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+}
+
+.custom-sidebar.sidebar .sidebar-minimizer::before{
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23fff' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E") no-repeat;
+    width: 50px;
+    height: 50px;
+    background-size: 12.5px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12.5px;
+    transition: .3s;
+}
+.custom-sidebar.sidebar .nav-link.active .nav-icon{
+    color:#fff;
+}
+
+.sidebar-minimized .custom-sidebar.sidebar .sidebar-minimizer{
+    background-color:transparent;
+}
+.custom-main-logo{
+    display: flex;
+    align-items: center;
+    background: #5d43db;
+    /* width: 200px; */
+}
+.custom-toggle-bar{
+    outline: none!important;
+}
+.custom-toggle-bar i{
+    color: #fff;
+}
+
+.sidebar-lg-show .custom-main-logo{
+    background: #8157ef;
+}
+.sidebar-lg-show .app-header .custom-main-logo .navbar-brand{
+    width: 150px;
+}
+.app-header .custom-main-logo .navbar-brand, .brand-minimized .app-header .custom-main-logo .navbar-brand{
+    width: auto;
+}
+.sidebar-minimized .custom-sidebar.sidebar .nav-item:hover > .nav-link{
+    background: #5d43db;
+}
+.sidebar-minimized .custom-sidebar.sidebar .nav-link:hover{
+    background: #5d43db;
+}
+span.customer-anchor-text.customer-click-btn::before{
+    content: "";
+    border-bottom: dashed 1px #469af4;
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    bottom: 0px;
+}
+.customer-anchor-text{
+    position: relative;
+}
+span.customer-anchor-text.customer-click-btn:hover::before{
+    border: none;
+}
+/*end custom-css */
 /* end of page css */

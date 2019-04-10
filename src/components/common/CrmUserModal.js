@@ -36,10 +36,11 @@ export class CrmUserModal extends Component {
       roleType: "5ca3473d70537232f13ff1f9",
       rate: "",
       permissions: AdminDefaultPermissions,
-      errors: {}
+      errors: {},
+      isEditMode: false
     };
   }
-  componentDidUpdate({ userModalOpen }) {
+  componentDidUpdate({ userModalOpen, userData }) {
     if (this.props.userModalOpen !== userModalOpen) {
       this.setState({
         firstName: "",
@@ -52,10 +53,38 @@ export class CrmUserModal extends Component {
         errors: {}
       });
     }
+    if (
+      this.props.userData &&
+      this.props.userData._id &&
+      userData._id !== this.props.userData._id
+    ) {
+      const {
+        firstName,
+        lastName,
+        email,
+        phone,
+        roleType,
+        rate,
+        permissions
+      } = this.props.userData;
+      this.setState({
+        isEditMode: true,
+        firstName,
+        lastName,
+        email,
+        phone: phone || "",
+        roleType: roleType._id,
+        rate: rate || "",
+        permissions
+      });
+    }
   }
   handleClick = e => {
     this.setState({
-      switchValue: e.target.checked ? "checked" : "no"
+      permissions: {
+        ...this.state.permissions,
+        [e.target.name]: e.target.checked
+      }
     });
   };
   handleInputChange = e => {
@@ -68,7 +97,7 @@ export class CrmUserModal extends Component {
         [name]: null
       }
     });
-    if (name === "type") {
+    if (name === "roleType") {
       switch (value) {
         case "5ca3473d70537232f13ff1f9":
           this.setState({
@@ -98,7 +127,8 @@ export class CrmUserModal extends Component {
         phone,
         roleType,
         rate,
-        permissions
+        permissions,
+        isEditMode
       } = this.state;
       const payload = {
         firstName,
@@ -120,7 +150,11 @@ export class CrmUserModal extends Component {
         });
         return;
       }
-      this.props.addUser(payload);
+      if (!isEditMode) {
+        this.props.addUser(payload);
+      } else {
+        this.props.updateUser(this.props.userData._id, payload);
+      }
     } catch (error) {
       logger(error);
     }
@@ -135,7 +169,8 @@ export class CrmUserModal extends Component {
       phone,
       rate,
       roleType,
-      errors
+      errors,
+      isEditMode
     } = this.state;
     return (
       <>
@@ -145,7 +180,9 @@ export class CrmUserModal extends Component {
             toggle={handleUserModal}
             className="customer-modal"
           >
-            <ModalHeader toggle={handleUserModal}>Add New Member</ModalHeader>
+            <ModalHeader toggle={handleUserModal}>
+              {!isEditMode ? "Add New Member" : `Update member details`}
+            </ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">
                 <Col md="6">
@@ -197,7 +234,7 @@ export class CrmUserModal extends Component {
                       onChange={this.handleInputChange}
                       value={email}
                       name="email"
-                      required
+                      disabled={isEditMode}
                     />
                   </FormGroup>
                   {errors.email ? (
@@ -274,6 +311,7 @@ export class CrmUserModal extends Component {
                         <Col md="2">
                           <AppSwitch
                             className={"mx-1"}
+                            name={permission.key}
                             checked={permissions[permission.key]}
                             onClick={this.handleClick}
                             variant={"3d"}
@@ -293,7 +331,7 @@ export class CrmUserModal extends Component {
             </ModalBody>
             <ModalFooter>
               <Button color="primary" onClick={this.addUser}>
-                Add
+                {isEditMode ? "Update" : "Add"}
               </Button>{" "}
               <Button color="secondary" onClick={handleUserModal}>
                 Cancel

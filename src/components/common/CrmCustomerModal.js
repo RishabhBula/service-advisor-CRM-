@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Validator from "js-object-validation";
+// import Validator from "js-object-validation";
 import  MaskedInput from "react-maskedinput";
 import {
   Button,
@@ -17,7 +17,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmSelect } from "../common/CrmSelect";
-
+import { PhoneOptions } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText
@@ -31,25 +31,36 @@ export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      switchValue: true,
       selectedOption: null,
       expandForm: false,
       fleetModalOpen: false,
-      customerDefaultPermissions: CustomerDefaultPermissions,
       firstName: "",
       lastName: "",
+      phoneDetail: [
+        {
+          phone: "mobile",
+          value: ""
+        }
+      ],
       email: "",
-      phone: {},
-      type: "admin",
+      notes: "",
+      companyName: "",
+      referralSource: "",
+      fleet: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      customerDefaultPermissions: CustomerDefaultPermissions,
       errors: {},
       phoneLength: AppConfig.phoneLength,
-      percentageDiscount: 0,
       defaultOptions: [
         { custom: true },
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
         { value: "", label: "Add New" }
-      ],
+      ]
     };
   }
   handleClick (singleState, e) {
@@ -60,9 +71,24 @@ export class CrmCustomerModal extends Component {
     });
   };
 
+  handlePercentageChange = (e) => {
+    const { customerDefaultPermissions } = this.state;
+    customerDefaultPermissions["shouldReceiveDiscount"].percentageDiscount = e.target.value;
+    this.setState({
+      ...customerDefaultPermissions
+    });
+  }
+  handleMatrixChange = (e) => {
+    const { customerDefaultPermissions } = this.state;
+    customerDefaultPermissions["shouldPricingMatrixOverride"].pricingMatrix =
+      e.target.value;
+    this.setState({
+      ...customerDefaultPermissions
+    });
+  }
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
   };
 
   handleExpandForm = () => {
@@ -79,8 +105,86 @@ export class CrmCustomerModal extends Component {
     });
   }
 
-  addNewUser = () => {
-    this.props.addCustomer();
+  handlePhoneNameChange = (index, event) => {
+    const { value } = event.target;
+    const phoneDetail = [...this.state.phoneDetail]
+    phoneDetail[index].phone = value;
+    this.setState({
+      phoneDetail
+    })
+  }
+  handlePhoneValueChange = (index, event) => {
+    const { value } = event.target;
+    const phoneDetail = [...this.state.phoneDetail]
+    phoneDetail[index].value = value;
+    this.setState({
+      phoneDetail
+    })
+  };
+
+   handleAddPhoneDetails = () => {
+    const { phoneDetail } = this.state;
+    if (phoneDetail.length < 3) {
+      phoneDetail.push({
+        phone: "mobile",
+        value: ""
+      })
+      this.setState({
+        phoneDetail: phoneDetail
+      })
+    }
+  }
+
+  handleRemovePhoneDetails = (event) => {
+    const { phoneDetail } = this.state;
+    if (phoneDetail.length) {
+      let phoneArray = phoneDetail.findIndex(
+        item => item.key === event.key
+      )
+      phoneDetail.splice(phoneArray, 1);
+      console.log(phoneDetail);
+
+      this.setState({
+        phoneDetail: phoneDetail
+      })
+    }
+  }
+
+  addNewCustomer = () => {
+    const { 
+      firstName, 
+      lastName, 
+      phoneDetail,
+      email,
+      notes,
+      companyName,
+      referralSource,
+      fleet,
+      address1,
+      address2,
+      city,
+      state,
+      zipCode,
+      customerDefaultPermissions
+    } = this.state;
+    const fleetData = {
+      firstName: firstName,
+      lastName: lastName,
+      phoneDetail: phoneDetail,
+      email: email,
+      notes: notes,
+      companyName: companyName,
+      referralSource: referralSource,
+      fleet: "fleetId",
+      address1: address1,
+      address2: address2,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+      permission: customerDefaultPermissions,
+      status: true
+    };   
+    this.props.addCustomer(fleetData);
   }
 
   addNewSection = () => {
@@ -94,11 +198,12 @@ export class CrmCustomerModal extends Component {
       expandForm,
       fleetModalOpen,
       customerDefaultPermissions,
-      defaultOptions
+      defaultOptions,
+      phoneDetail
     } = this.state;  
-console.log('====================================');
-console.log(matrixListReducerData);
-console.log('====================================');
+     const phoneOptions = PhoneOptions.map((item, index) => {
+       return <option value={item.key}>{item.text}</option>;
+     });
     return (
       <>
         <Modal
@@ -123,8 +228,7 @@ console.log('====================================');
                     <Input
                       type="text"
                       placeholder="John"
-                      id="name"
-                      required
+                      name="firstName"
                     />
                   </FormGroup>
                 </Col>
@@ -139,8 +243,7 @@ console.log('====================================');
                     <Input
                       type="text"
                       placeholder="Doe"
-                      id="name"
-                      required
+                      name="lastName"
                     />
                   </FormGroup>
                 </Col>
@@ -148,36 +251,136 @@ console.log('====================================');
             </div>
 
             <div className="">
-              <Row className="justify-content-center">
-                <Col md="3">
-                  <FormGroup>
-                    <Label
-                      htmlFor="name"
-                      className="customer-modal-text-style"
-                    >
-                      Phone
-                    </Label>
-                    <Input type="select" id="name" required>
-                      <option value=" ">Mobile</option>
-                    </Input>
-                  </FormGroup>
-                </Col>
-                <Col md="9">
-                  <FormGroup>
-                    <Label />
-                    <Input
-                      type="text"
-                      placeholder="(555) 055-0555"
-                      id="name"
-                      required
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
+              {phoneDetail.length
+                ? phoneDetail.map((item, index) => {
+                    return (
+                      <Row className="justify-content-center">
+                        {index < 1 ? (
+                          <>
+                            <Col md="3">
+                              <FormGroup>
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Phone
+                                </Label>
+                                <Input
+                                  onChange={e =>
+                                    this.handlePhoneNameChange(index, e)
+                                  }
+                                  type="select"
+                                  id="name"
+                                  required
+                                >
+                                  {phoneOptions}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                            <Col md="9">
+                              <FormGroup>
+                                <Label />
+                                {phoneDetail[index].phone === "mobile" ? (
+                                  <MaskedInput
+                                    mask="(111) 111-111"
+                                    name="phoneDetail"
+                                    placeholder="(555) 055-0555"
+                                    className="form-control"
+                                    size="20"
+                                    value={item.value}
+                                    onChange={e =>
+                                      this.handlePhoneValueChange(index, e)
+                                    }
+                                  />
+                                ) : (
+                                  <MaskedInput
+                                    mask="(111) 111-111 ext 1111"
+                                    name="phoneDetail"
+                                    className="form-control"
+                                    placeholder="(555) 055-0555 ext 1234"
+                                    size="20"
+                                    value={item.value}
+                                    onChange={e =>
+                                      this.handlePhoneValueChange(index, e)
+                                    }
+                                  />
+                                )}
+                              </FormGroup>
+                            </Col>
+                          </>
+                        ) : (
+                          <>
+                            <Col md="3">
+                              <FormGroup>
+                                <Label htmlFor="name" />
+                                <Input
+                                  onChange={e =>
+                                    this.handlePhoneNameChange(index, e)
+                                  }
+                                  type="select"
+                                  id="name"
+                                  required
+                                >
+                                  {phoneOptions}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                            <Col md="8">
+                              <FormGroup>
+                                <Label />
+                                {phoneDetail[index].phone === "mobile" ? (
+                                  <MaskedInput
+                                    mask="(111) 111-111"
+                                    name="phoneDetail"
+                                    placeholder="(555) 055-0555"
+                                    className="form-control"
+                                    size="20"
+                                    value={item.value}
+                                    onChange={e =>
+                                      this.handlePhoneValueChange(index, e)
+                                    }
+                                  />
+                                ) : (
+                                  <MaskedInput
+                                    mask="(111) 111-111 ext 1111"
+                                    name="phoneDetail"
+                                    className="form-control"
+                                    placeholder="(555) 055-0555 ext 1234"
+                                    size="20"
+                                    value={item.value}
+                                    onChange={e =>
+                                      this.handlePhoneValueChange(index, e)
+                                    }
+                                  />
+                                )}
+                              </FormGroup>
+                            </Col>
+                            <Col md="1" className="phone-remove-btn">
+                              <FormGroup className="mb-0">
+                                <Label />
+                                <button
+                                  onClick={this.handleRemovePhoneDetails}
+                                  className="btn btn-danger btn-sm btn-round"
+                                >
+                                  x
+                                </button>
+                              </FormGroup>
+                            </Col>
+                          </>
+                        )}
+                      </Row>
+                    );
+                  })
+                : null}
               <div>
-                <span className="customer-add-phone">
-                  Add another phone number
-                </span>
+                {phoneDetail.length < 3 ? (
+                  <span
+                    onClick={this.handleAddPhoneDetails}
+                    className="customer-add-phone"
+                  >
+                    Add another phone number
+                  </span>
+                ) : null}
               </div>
             </div>
             <div className="">
@@ -194,8 +397,7 @@ console.log('====================================');
                       type="text"
                       className="customer-modal-text-style"
                       placeholder="john.doe@example.com"
-                      id="name"
-                      required
+                      name="email"
                     />
                   </FormGroup>
                 </Col>
@@ -214,8 +416,7 @@ console.log('====================================');
                     <Input
                       type="textarea"
                       placeholder="Enter a note..."
-                      id="name"
-                      required
+                      name="notes"
                     />
                   </FormGroup>
                 </Col>
@@ -249,8 +450,7 @@ console.log('====================================');
                         <Input
                           type="text"
                           placeholder="Company"
-                          id="name"
-                          required
+                          name="companyName"
                         />
                       </FormGroup>
                     </Col>
@@ -266,9 +466,10 @@ console.log('====================================');
                         >
                           Referral Source
                         </Label>
-                        <Select
-                          value={selectedOption}
-                          onChange={this.handleChange}
+                        <Input
+                          type="text"
+                          placeholder="Company"
+                          name="Refferal Source"
                         />
                       </FormGroup>
                     </Col>
@@ -305,8 +506,7 @@ console.log('====================================');
                         <Input
                           type="text"
                           placeholder="Address"
-                          id="name"
-                          required
+                          name="address1"
                         />
                       </FormGroup>
                     </Col>
@@ -325,8 +525,7 @@ console.log('====================================');
                         <Input
                           type="text"
                           placeholder="Address"
-                          id="name"
-                          required
+                          name="address2"
                         />
                       </FormGroup>
                     </Col>
@@ -344,9 +543,8 @@ console.log('====================================');
                         </Label>
                         <Input
                           type="text"
-                          id="name"
                           placeholder="New York"
-                          required
+                          name="city"
                         />
                       </FormGroup>
                     </Col>
@@ -358,12 +556,7 @@ console.log('====================================');
                         >
                           State
                         </Label>
-                        <Input
-                          type="text"
-                          id="name"
-                          placeholder="NY"
-                          required
-                        />
+                        <Input type="text" name="state" placeholder="NY" />
                       </FormGroup>
                     </Col>
                     <Col md="4">
@@ -376,9 +569,8 @@ console.log('====================================');
                         </Label>
                         <Input
                           type="text"
-                          id="name"
                           placeholder="Zip Code"
-                          required
+                          name="zipCode"
                         />
                       </FormGroup>
                     </Col>
@@ -445,10 +637,10 @@ console.log('====================================');
                             </Label>
                             <FormGroup>
                               <MaskedInput
-                                mask="11 \%"
+                                mask="11\%"
                                 name="percentageDiscount"
                                 size="20"
-                                onChange={this.handleInputChange}
+                                onChange={this.handlePercentageChange}
                               />
                             </FormGroup>
                           </Col>
@@ -465,20 +657,35 @@ console.log('====================================');
                         {/* */}
                         {pricingMatrix ? (
                           <Col md="12">
-                            <Input type="select" className="">
-                            <option value={""}>Select</option>
-                            {
-                              matrixListReducerData.matrixList.length ?
-                              matrixListReducerData.matrixList.map((item,index) => {
-                                return (
-                                  <option value={item.id} key={index}>
-                                    {item.name}
-                                  </option>
-                                );
-                              })  
-                              : null                            
-                            }
-                            
+                            <Input
+                              type="select"
+                              className=""
+                              onChange={this.handleMatrixChange}
+                              name="matrixType"
+                              id="matrixId"
+                            >
+                              <option value={""}>Select</option>
+                              {matrixListReducerData.matrixList.length
+                                ? matrixListReducerData.matrixList.map(
+                                    (item, index) => {
+                                      console.log(
+                                        "===================================="
+                                      );
+                                      console.log(item);
+                                      console.log(
+                                        "===================================="
+                                      );
+                                      return (
+                                        <option
+                                          value={item._id}
+                                          key={index}
+                                        >
+                                          {item.name}
+                                        </option>
+                                      );
+                                    }
+                                  )
+                                : null}
                             </Input>
                           </Col>
                         ) : null}
@@ -504,8 +711,8 @@ console.log('====================================');
             {fleetModalOpen ? <CrmFleetModal /> : ""}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addNewUser}>
-              Do Something
+            <Button color="primary" onClick={this.addNewCustomer}>
+              Add Customer
             </Button>{" "}
             <Button color="secondary" onClick={handleCustomerModal}>
               Cancel

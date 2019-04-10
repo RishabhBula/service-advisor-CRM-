@@ -17,19 +17,21 @@ const validationMessage = {
   addressValidation: "Please enter the address.",
   cityValidation: "Please enter the city.",
   stateValidation: "Please select the state.",
-  postalValidation: "Please enter the valid postal code."
+  postalValidation: "Please enter the valid postal code.",
 };
 
 const otherMessage = {
   newRegister: "You have Succesfully Registered.",
   confirmMessage: "A confirmation link has been sent to your email id.",
   insertUserMessage:
-    "User was successfully added.<br/>A confirmation link has been sent to user email id.",
+    "Member details added successfully. A confirmation link has been sent to user email id.",
+  updatedUserMessage: "Member details updated successfully.",
   userPasswordCreation: "Your password was successfully created.",
   linkExpiration: "Link has been expired.",
-  userNotExist: "User Not Exist"
+  userNotExist: "User Not Exist",
+  newCustomer: "Customer has been created successfully."
 };
 module.exports = {
   validationMessage,
-  otherMessage
+  otherMessage,
 };

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Validator from "js-object-validation";
 import Select, { components } from "react-select";
 
 class CustomOption extends Component {

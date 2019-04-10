@@ -9,6 +9,7 @@ import { CustomersLogic } from "./Customers";
 import { MatrixLogic } from "./Matrix";
 import { ProfileInfoLogic } from "./ProfileInfo";
 import { FleetAddLogic } from "./Fleet";
+import { StandardRateLogic } from "./RateStandard";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -22,9 +23,11 @@ export default [
   ...LoginLogics,
   ...SignUpLogic,
   ...UsersLogic,
-  ...CustomersLogic,
   ...MatrixLogic,
   ...ProfileInfoLogic,
   ...FleetAddLogic,
   redirectToLogic,
+  ...StandardRateLogic,
+  ...CustomersLogic,
+  redirectToLogic
 ];
