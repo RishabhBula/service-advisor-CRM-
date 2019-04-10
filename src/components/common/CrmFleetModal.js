@@ -17,6 +17,11 @@ import {
 } from "../../config/AppConfig";
 import { PhoneOptions } from '../../config/Constants'
 import MaskedInput from "react-maskedinput";
+import {
+  CustomerDefaultPermissions,
+  CustomerPermissionsText
+} from "../../config/Constants";
+import { CrmSelect } from "../common/CrmSelect";
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -38,14 +43,24 @@ export class CrmFleetModal extends Component {
       permission: "",
       errors: {},
       phoneLength: AppConfig.phoneLength,
-
+      customerDefaultPermissions: CustomerDefaultPermissions,
+      percentageDiscount: 0,
+      defaultOptions: [
+        { custom: true },
+        { value: "chocolate", label: "Chocolate" },
+        { value: "strawberry", label: "Strawberry" },
+        { value: "", label: "Add New" }
+      ],
     };
   }
-  handleClick = e => {
+  handleClick(singleState, e) {
+    const { customerDefaultPermissions } = this.state;
+    customerDefaultPermissions[singleState].status = e.target.checked;
     this.setState({
-      switchValue: !this.state.switchValue
+      ...customerDefaultPermissions
     });
   };
+
 
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
@@ -57,9 +72,6 @@ export class CrmFleetModal extends Component {
   }
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
-    if (isNaN(value)) {
-      return;
-    }
     const phoneDetail = [...this.state.phoneDetail]
     phoneDetail[index].value = value;
     this.setState({
@@ -114,8 +126,10 @@ export class CrmFleetModal extends Component {
       fleetModalOpen,
       handleFleetModal,
       modalClassName,
-      handleAddFleet } = this.props;
-    const { switchValue,
+      handleAddFleet,
+      errorMessage,
+      matrixListReducerData } = this.props;
+    const {
       companyName,
       phoneDetail,
       email,
@@ -125,6 +139,9 @@ export class CrmFleetModal extends Component {
       city,
       state,
       zipCode,
+      customerDefaultPermissions,
+      defaultOptions,
+      percentageDiscount
     } = this.state;
     const fleetData = {
       companyName,
@@ -136,6 +153,8 @@ export class CrmFleetModal extends Component {
       city,
       state,
       zipCode,
+      customerDefaultPermissions,
+      percentageDiscount
     }
     const phoneOptions = PhoneOptions.map((item, index) => {
       return (
@@ -167,6 +186,11 @@ export class CrmFleetModal extends Component {
                       placeholder="company name"
                       value={companyName}
                       id="name" required />
+                    {
+                      !companyName && errorMessage.companyName?
+                        <p className="text-danger">Company name is required.</p> :
+                        null
+                    }
                   </FormGroup>
                 </Col>
               </Row>
@@ -302,6 +326,11 @@ export class CrmFleetModal extends Component {
                       name="email"
                       required
                     />
+                    {
+                     email && errorMessage.email ?
+                        <p className="text-danger">{errorMessage.email}</p> :
+                        null
+                    }
                   </FormGroup>
                 </Col>
               </Row>
@@ -417,78 +446,106 @@ export class CrmFleetModal extends Component {
               </Row>
             </div>
             <div className="">
-              <Row className="justify-content-center pb-2">
-                <Col md="2">
-                  <AppSwitch
-                    className={"mx-1"}
-                    value={switchValue}
-                    onClick={this.handleClick}
-                    variant={"3d"}
-                    color={"primary"}
-                    checked
-                    size={""}
-                  />
-                </Col>
-                <Col md="10">
-                  <p className="customer-modal-text-style">
-                    Is this customer tax exempt?
-                  </p>
-                </Col>
-              </Row>
-              <Row className="justify-content-center pb-2">
-                <Col md="2">
-                  <AppSwitch
-                    className={"mx-1"}
-                    value={switchValue}
-                    onClick={this.handleClick}
-                    variant={"3d"}
-                    color={"primary"}
-                    checked
-                    size={""}
-                  />
-                </Col>
-                <Col md="10">
-                  <p className="customer-modal-text-style">
-                    Does this customer receive a discount?
-                  </p>
-                </Col>
-              </Row>
-              <Row className="justify-content-center pb-2">
-                <Col md="2">
-                  <AppSwitch
-                    className={"mx-1"}
-                    value={switchValue}
-                    onClick={this.handleClick}
-                    variant={"3d"}
-                    color={"primary"}
-                    checked
-                    size={""}
-                  />
-                </Col>
-                <Col md="10">
-                  <p className="customer-modal-text-style">
-                    Does this customer have a labor rate override?
-                  </p>
-                </Col>
-              </Row>
-              <Row className="justify-content-center pb-2">
-                <Col md="2">
-                  <AppSwitch
-                    className={"mx-1"}
-                    value={switchValue}
-                    onClick={this.handleClick}
-                    variant={"3d"}
-                    color={"primary"}
-                    checked
-                    size={""}
-                  />
-                </Col>
-                <Col md="10">
-                  <p className="customer-modal-text-style">
-                    Does this customer have a pricing matrix override?
-                  </p>
-                </Col>
-              </Row>
+              {CustomerPermissionsText.map((permission, index) => {
+                let discountShow = false;
+                let labourRate = false;
+                let pricingMatrix = false;
+                if (
+                  permission.key === "shouldReceiveDiscount" &&
+                  customerDefaultPermissions[permission.key].status
+                ) {
+                  discountShow = true;
+                }
+
+                if (
+                  permission.key === "shouldLaborRateOverride" &&
+                  customerDefaultPermissions[permission.key].status
+                ) {
+                  labourRate = true;
+                }
+
+                if (
+                  permission.key === "shouldPricingMatrixOverride" &&
+                  customerDefaultPermissions[permission.key].status
+                ) {
+                  pricingMatrix = true;
+                }
+                return (
+                  <Row
+                    className="justify-content-center pb-2"
+                    key={index}
+                  >
+                    <Col md="2">
+                      <AppSwitch
+                        className={"mx-1"}
+                        checked={
+                          customerDefaultPermissions[permission.key]
+                            .status
+                        }
+                        onClick={this.handleClick.bind(
+                          this,
+                          permission.key
+                        )}
+                        variant={"3d"}
+                        color={"primary"}
+                        size={"sm"}
+                      />
+                    </Col>
+                    <Col md="10">
+                      <p className="customer-modal-text-style">
+                        {permission.text}
+                      </p>
+                    </Col>
+                    {discountShow ? (
+                      <Col md="12">
+                        <Label
+                          htmlFor="name"
+                          className="customer-modal-text-style"
+                        >
+                          Percent Discount
+                            </Label>
+                        <FormGroup>
+                          <MaskedInput
+                            mask="11 \%"
+                            name="percentageDiscount"
+                            size="20"
+                            onChange={this.handleInputChange}
+                          />
+                        </FormGroup>
+                      </Col>
+                    ) : null}
+
+                    {labourRate ? (
+                      <Col md="12">
+                        <CrmSelect
+                          defaultOptions={defaultOptions}
+                          onClickAddNew={this.addNewSection}
+                        />
+                      </Col>
+                    ) : null}
+                    {/* */}
+                    {pricingMatrix ? (
+                      <Col md="12">
+                        <Input type="select" className="">
+                          <option value={""}>Select</option>
+                          {
+                            matrixListReducerData.matrixList.length ?
+                              matrixListReducerData.matrixList.map((item, index) => {
+                                return (
+                                  <option value={item.id} key={index}>
+                                    {item.name}
+                                  </option>
+                                );
+                              })
+                              : null
+                          }
+
+                        </Input>
+                      </Col>
+                    ) : null}
+                  </Row>
+                );
+              })}
             </div>
           </ModalBody>
           <ModalFooter>

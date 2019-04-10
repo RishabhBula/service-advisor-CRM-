@@ -11,18 +11,18 @@ import {
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import FleetList from "../../components/Fleet/FleetList";
 import { connect } from "react-redux";
-import { fleetListRequest, fleetAddRequest } from "../../actions";
+import { fleetListRequest, fleetAddRequest, getMatrixList } from "../../actions";
 import { logger } from "../../helpers/Logger";
-
+import Validator from "js-object-validation";
+import { CreateFleetValidations, CreateFleetValidMessaages } from "../../validations";
 class Fleet extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      error: {},
+      isLoading: false,
       openCreate: false
     };
-  }
-  componentDidMount() {
-    this.props.getUsers(1);
   }
   toggleCreateModal = e => {
     e.preventDefault();
@@ -30,15 +30,38 @@ class Fleet extends Component {
       openCreate: !this.state.openCreate
     });
   };
+  componentDidMount() {
+    this.props.getMatrix();
+  }
   handleAddFleet = (fleetData) => {
-
+    console.log("This is fleet data", fleetData);
+    this.setState({
+      error: {}
+    });
+    try {
+      const { isValid, errors } = Validator(
+        fleetData,
+        CreateFleetValidations,
+        CreateFleetValidMessaages
+      );
+      if (!isValid && ((fleetData.email !== '') || (fleetData.companyName === ''))) {
+        this.setState({
+          error: errors,
+          isLoading: false,
+        });
+        return;
+      }
+      this.props.addFleet(fleetData)
+    } catch (error) {
+      logger(error);
+    }
   }
   createUser = data => {
     logger(data);
   };
   render() {
-    const { openCreate } = this.state;
-    const { userReducer } = this.props;
+    const { openCreate, error } = this.state;
+    const { matrixListReducer } = this.props
     return (
       <>
         <Card>
@@ -65,21 +88,25 @@ class Fleet extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <FleetList userData={userReducer} />
+            <FleetList userData="dasdsa" />
           </CardBody>
         </Card>
         <CrmFleetModal
           fleetModalOpen={openCreate}
           handleFleetModal={this.toggleCreateModal}
           handleAddFleet={this.handleAddFleet}
+          errorMessage={error}
+          matrixListReducerData={matrixListReducer}
         />
       </>
     );
   }
 }
+
 const mapStateToProps = state => ({
-  userReducer: state.usersReducer
+  matrixListReducer: state.matrixListReducer
 });
+
 
 const mapDispatchToProps = dispatch => ({
   getFleet: page => {
@@ -87,6 +114,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addFleet: data => {
     dispatch(fleetAddRequest(data));
+  },
+  getMatrix: () => {
+    dispatch(getMatrixList());
   }
 });
 

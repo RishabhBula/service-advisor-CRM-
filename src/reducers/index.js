@@ -6,6 +6,7 @@ import { handleActions } from "redux-actions";
 import { usersReducer } from "./Users";
 import { profileInfoReducer } from "./ProfileInfo";
 import { matrixListReducer } from "./MatrixList";
+import { fleetListReducer } from "./FleetList";
 
 export const mainReducer = handleActions(
   {
@@ -26,6 +27,7 @@ const AppReducer = combineReducers({
   usersReducer,
   profileInfoReducer,
   matrixListReducer,
+  fleetListReducer,
   routing: routerReducer,
 });
 
