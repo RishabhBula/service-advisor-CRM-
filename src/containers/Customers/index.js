@@ -9,9 +9,9 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
-import UsersList from "../../components/UsersList";
+import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest } from "../../actions";
 import { logger } from "../../helpers/Logger";
 
 class Users extends Component {
@@ -23,12 +23,14 @@ class Users extends Component {
   }
   componentDidMount() { 
     this.props.getMatrix();
+    const { modelDetails } = this.props.modelInfoReducer;
   }
   toggleCreateModal = e => {
-    e.preventDefault();
-    this.setState({
-      openCreate: !this.state.openCreate
-    });
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      customerModel: !modelDetails.customerModel
+    };
+    this.props.modelOperate(data);
   };
   createUser = data => {
     logger(data);
@@ -36,6 +38,7 @@ class Users extends Component {
   render() {
     const { openCreate } = this.state;
     const { userReducer, addCustomer, matrixListReducer } = this.props;
+    const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
         <Card>
@@ -62,11 +65,12 @@ class Users extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <UsersList userData={userReducer} />
+            <CustomerList 
+            userData={userReducer} />
           </CardBody>
         </Card>
         <CrmCustomerModal
-          customerModalOpen={openCreate}
+          customerModalOpen={modelDetails.customerModel}
           handleCustomerModal={this.toggleCreateModal}
           addCustomer={addCustomer}
           matrixListReducerData={matrixListReducer}
@@ -77,7 +81,8 @@ class Users extends Component {
 }
 const mapStateToProps = state => ({
   userReducer: state.usersReducer,
-  matrixListReducer: state.matrixListReducer
+  matrixListReducer: state.matrixListReducer,
+  modelInfoReducer: state.modelInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({ 
@@ -86,6 +91,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getMatrix: () => {    
     dispatch(getMatrixList());
+  },
+  modelOperate: (data) => {    
+    dispatch(modelOpenRequest({modelDetails: data}));
   }
 });
 

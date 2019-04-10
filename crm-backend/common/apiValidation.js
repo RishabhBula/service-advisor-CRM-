@@ -69,10 +69,6 @@ const verifyLinkValidation = [
     .trim(),
 ];
 const resetPasswordValidation = [
-  body("email")
-    .isEmail()
-    .withMessage("Email must be a valid.")
-    .trim(),
   body("password")
     .not()
     .isEmpty()
@@ -159,6 +155,19 @@ const userVerifyLink = [
     .withMessage("Active value is required. "),
 ];
 
+const createCustomerValidation = [
+  body("firstName")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.firstName)
+    .trim(),
+  body("lastName")
+    .not()
+    .isEmpty()
+    .withMessage(validationMessage.lastName)
+    .trim()
+];
+
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -170,4 +179,5 @@ module.exports = {
   updateUserValidation,
   userVerify,
   userVerifyLink,
+  createCustomerValidation
 };

@@ -49,7 +49,7 @@ export class CrmCustomerModal extends Component {
       notes: "",
       companyName: "",
       referralSource: "",
-      fleet: "",
+      fleet: "5ca5e3b88b27f17bc0dfaab5",
       address1: "",
       address2: "",
       city: "",
@@ -147,8 +147,6 @@ export class CrmCustomerModal extends Component {
         item => item.key === event.key
       )
       phoneDetail.splice(phoneArray, 1);
-      console.log(phoneDetail);
-
       this.setState({
         phoneDetail: phoneDetail
       })
@@ -174,7 +172,8 @@ export class CrmCustomerModal extends Component {
       city,
       state,
       zipCode,
-      customerDefaultPermissions
+      customerDefaultPermissions,
+      fleet
     } = this.state;
     const customerData = {
       firstName: firstName,
@@ -184,7 +183,7 @@ export class CrmCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: "fleetId",
+      fleet: fleet,
       address1: address1,
       address2: address2,
       city: city,
@@ -223,7 +222,6 @@ export class CrmCustomerModal extends Component {
   addNewSection = () => {
     alert("testing");
   }
-
   render() {
     const { customerModalOpen, handleCustomerModal, matrixListReducerData } = this.props;
     const {
@@ -537,6 +535,7 @@ export class CrmCustomerModal extends Component {
                           value={selectedOption}
                           onChange={this.handleChange}
                           className="w-100 form-select"
+                          options = {[ { value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
                         />
                       </FormGroup>
                     </Col>

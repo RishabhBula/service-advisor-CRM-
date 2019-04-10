@@ -24,6 +24,7 @@ import {
   TechincianDefaultPermissions,
   UserPermissions
 } from "../../config/Constants";
+import CurrencyInput from "react-currency-input";
 
 export class CrmUserModal extends Component {
   constructor(props) {
@@ -291,12 +292,12 @@ export class CrmUserModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Rate (optional)
                     </Label>
-                    <Input
-                      type="text"
-                      id="rate"
-                      onChange={this.handleInputChange}
+                    <CurrencyInput
                       value={rate}
-                      name="rate"
+                      name={"rate"}
+                      prefix="$"
+                      onChangeEvent={this.handleInputChange}
+                      className={"form-control"}
                     />
                   </FormGroup>
                   {errors.rate ? (

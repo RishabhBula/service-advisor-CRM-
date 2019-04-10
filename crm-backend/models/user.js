@@ -114,6 +114,10 @@ const userSchema = new Schema({
     ref: "user",
     default: null,
   },
+  rate: {
+    type: Number,
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

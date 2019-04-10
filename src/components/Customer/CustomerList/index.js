@@ -12,15 +12,15 @@ import {
   Input,
   Button
 } from "reactstrap";
-import Loader from "../../containers/Loader/Loader";
-import { formateDate } from "../../helpers/Date";
-import PaginationHelper from "../../helpers/Pagination";
+import Loader from "../../../containers/Loader/Loader";
+import { formateDate } from "../../../helpers/Date";
+import PaginationHelper from "../../../helpers/Pagination";
 import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
-import { AppConfig } from "../../config/AppConfig";
-import { ConfirmBox } from "../../helpers/SweetAlert";
-import { CrmUserModal } from "../common/CrmUserModal";
-class UserList extends Component {
+import { AppConfig } from "../../../config/AppConfig";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
+import { CrmUserModal } from "../../common/CrmUserModal";
+class CustomerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -140,7 +140,7 @@ class UserList extends Component {
                       -- Select Status --
                     </option>
                     <option value={1}>Active</option>
-                    <option value={0}>Inactive</option>
+                    <option value={0}>Deactive</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -303,4 +303,4 @@ class UserList extends Component {
   }
 }
 
-export default withRouter(UserList);
+export default withRouter(CustomerList);

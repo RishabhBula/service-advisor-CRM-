@@ -18,11 +18,25 @@ export const usersReducer = handleActions(
       ...state,
       ...payload,
     }),
+    [usersActions.ADD_USER]: (state, action) => ({
+      ...state,
+      userData: {
+        ...state.userData,
+        isSuccess: false,
+      },
+    }),
     [usersActions.ADD_USER_SUCCESS]: (state, action) => ({
       ...state,
       userData: {
         isSuccess: true,
         data: {},
+      },
+    }),
+    [usersActions.EDIT_USER]: (state, action) => ({
+      ...state,
+      userData: {
+        ...state.userData,
+        isEditSuccess: false,
       },
     }),
     [usersActions.EDIT_USER_SUCCESS]: (state, action) => ({

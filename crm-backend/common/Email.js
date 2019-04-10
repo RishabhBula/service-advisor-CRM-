@@ -1,10 +1,7 @@
-'use strict';
-
 const commonSmtp = require("./index");
 const fs = require("fs");
 var path = require("path");
-// const sgMail = require('@sendgrid/mail');
-const { webURL, mode } = require("./../config/app");
+
 const AvailiableTemplates = {
   SIGNUP_CONFIRMATION: "signupConfirm",
   USER_ADDED_CONFIRMATION: "userConfirm",
@@ -20,11 +17,12 @@ const AvailiableTemplates = {
   REFUND_ORDER: "refundOrderUserEmail",
   REFUND_ORDER_ADMIN: "refundOrderAdminEmail",
   NEWSLETTER_EMAIL: "newsletterEmail",
-  UNSUBSCRIBE_EMAIL: "unSubscribeEmail"
+  UNSUBSCRIBE_EMAIL: "unSubscribeEmail",
 };
 class Email {
-  constructor(res) {
-    this.response = res;
+  constructor(req) {
+    const host = req.headers.referer.split("/");
+    this.host = [host[0], host[1], host[2]].join("/");
     this.body = "";
     this.subject = "";
     this.to = "";
@@ -40,10 +38,6 @@ class Email {
       case AvailiableTemplates.SIGNUP:
         this.subject = "[CRM-360 Degree] Registration";
         break;
-      case AvailiableTemplates.SIGNUP_CONFIRMATION:
-        this.subject = "[CRM-360 Degree] Please confirm your email address";
-        break;
-
       case AvailiableTemplates.USER_ADDED_CONFIRMATION:
         this.subject = "[CRM-360 Degree] You've Been Invited to Join CRM 360 ";
         break;
@@ -90,8 +84,8 @@ class Email {
       path.join(__dirname, `./emailtemplates/${templateName}.html`),
       "utf8"
     );
-    replaceObject.webURL = webURL;
-    
+    replaceObject.webURL = this.host;
+
     for (const key in replaceObject) {
       if (replaceObject.hasOwnProperty(key)) {
         const val = replaceObject[key];
@@ -101,41 +95,28 @@ class Email {
     this.body = content;
     return content;
   }
-  setSubject (subject) {
+  setSubject(subject) {
     this.subject = subject;
   }
-  setBody (body) {
+  setBody(body) {
     this.body = body;
   }
   async sendEmail(email) {
-    
     if (!email) {
-      throw new Error('Please provide email.')
+      throw new Error("Please provide email.");
     }
     const mailOption = {
-      from:
-        mode == "development"
-          ? "CRM-360 <test.chapter247@gmail.com>"
-          : "CRM-360 <test.chapter247@gmail.com>",
+      from: "CRM-360 <test.chapter247@gmail.com>",
       to: email.split(","),
       subject: this.subject,
-      html: this.body
+      html: this.body,
     };
-    let resp;
-    if (mode == "development") {
-       resp = await commonSmtp.smtpTransport.sendMail(mailOption);
-    //  sgMail.setApiKey(sgAPIKey);
-    //   resp = await sgMail.send(mailOption);
-    } else {
-      // sgMail.setApiKey(sgAPIKey);
-      // resp = await sgMail.send(mailOption);
-      resp = await commonSmtp.smtpTransport.sendMail(mailOption);
-    }
+    const resp = await commonSmtp.smtpTransport.sendMail(mailOption);
     return resp;
   }
 }
 
 module.exports = {
-    Email,
-    AvailiableTemplates
-}
+  Email,
+  AvailiableTemplates,
+};

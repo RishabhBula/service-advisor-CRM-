@@ -404,7 +404,7 @@
 .custom-form-modal .form-group .form-select>div{
     min-height: unset;
 }
-.custom-form-modal .form-group .form-select:focus>div{
+.custom-form-modal .form-group .form-select:focus{
     box-shadow: 0 0 0 0.2rem rgba(32, 168, 216, 0.25)!important;
     outline: none!important;
 }

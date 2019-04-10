@@ -100,8 +100,6 @@ export class CrmFleetModal extends Component {
         phone: "mobile",
         value: ""
       })
-      console.log(phoneDetail);
-
       this.setState({
         phoneDetail: phoneDetail
       })
@@ -114,8 +112,6 @@ export class CrmFleetModal extends Component {
         item => item.key === event.key
       )
       phoneDetail.splice(phoneArray, 1);
-      console.log(phoneDetail);
-
       this.setState({
         phoneDetail: phoneDetail
       })
