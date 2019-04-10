@@ -8,6 +8,7 @@ export * from "./Matrix";
 export * from "./ProfileInfo";
 export * from "./RateStandard";
 export * from "./Fleet";
+export * from "./ModelOperation";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

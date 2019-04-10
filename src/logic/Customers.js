@@ -8,7 +8,8 @@ import {
   customersAddActions,
   customerAddSuccess,
   customerAddFailed,
-  customerAddStarted
+  customerAddStarted,
+  modelOpenRequest
 } from "./../actions";
 
 const addCustomerLogic = createLogic({
@@ -52,6 +53,9 @@ const addCustomerLogic = createLogic({
         customerAddSuccess({
           customerAddInfo: result.data.data
         })
+      );
+      dispatch(
+        modelOpenRequest({modelDetails: {customerModel: false}})
       );
       dispatch(hideLoader());
       done();
