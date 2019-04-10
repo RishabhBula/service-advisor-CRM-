@@ -41,21 +41,12 @@ export class CrmVehicleModal extends Component {
             <Modal
                isOpen={vehicleModalOpen}
                toggle={handleVehicleModal}
-               className="customer-modal"
+               className="customer-modal custom-form-modal custom-modal-lg"
 
             >
                <ModalHeader toggle={handleVehicleModal}>Create New Vehicle</ModalHeader>
-               <ModalBody>
-                  <Row className="justify-content-center">
-                     <Col md="12">
-                        <FormGroup>
-                           <Label htmlFor="name" className="customer-modal-text-style">
-                              Notes
-                  			</Label>
-                           <Input type="textarea" placeholder="Enter a note..." id="name" required />
-                        </FormGroup>
-                     </Col>
-                  </Row>
+               <ModalBody >
+                 
                   <Row className="justify-content-center">
                      <Col md="6">
                         <FormGroup>
@@ -68,6 +59,7 @@ export class CrmVehicleModal extends Component {
                               id="year"
                               required
                            />
+                           <div className="error-tool-tip">this field is required</div>
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -81,6 +73,7 @@ export class CrmVehicleModal extends Component {
                               id="make"
                               required
                            />
+                           
                         </FormGroup>
                      </Col>
                   </Row>
@@ -96,8 +89,8 @@ export class CrmVehicleModal extends Component {
                               id="type"
                               placeholder="Accord"
                               required
-                           >
-                           </Input>
+                           />
+                             {/* <div className="error-tool-tip">this field is required</div> */}
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -154,8 +147,8 @@ export class CrmVehicleModal extends Component {
                         </FormGroup>
                      </Col>
                   </Row>
-                  <Row className="justify-content-center">
-                     <Col md="12">
+                  <Row className="">
+                     <Col md="6">
                         <FormGroup>
                            <Label htmlFor="name" className="customer-modal-text-style">
                               VIN(optional)
@@ -163,14 +156,33 @@ export class CrmVehicleModal extends Component {
                            <Input type="text" placeholder="19UAYF3158T0000" id="rate" required />
                         </FormGroup>
                      </Col>
-                     {
+                    {
+                     expandForm ?
+                        <>
+                         
+                              <Col md="6">
+                                 <FormGroup>
+                                    <Label htmlFor="name" className="customer-modal-text-style">
+                                       Sub Model
+                  						</Label>
+                                    <Input type="text" placeholder="Sub Model" id="rate" required />
+                                 </FormGroup>
+                              </Col>
+                           
+                              </> : ""
+                  }
+                  </Row>
+                  <Row className="justify-content-center">
+                     <Col md="12 text-center">
+                  {
                         !expandForm ?
                            <span
                               onClick={this.handleExpandForm}
                               className="customer-anchor-text customer-click-btn">Show More</span> :
                            ""
                      }
-                  </Row>
+                     </Col>
+                     </Row>
                   {
                      expandForm ?
                         <>
@@ -212,8 +224,8 @@ export class CrmVehicleModal extends Component {
                                  </FormGroup>
                               </Col>
                            </Row>
-                           <Row className="justify-content-center">
-                              <Col md="12">
+                           <Row className="">
+                              <Col md="6">
                                  <FormGroup>
                                     <Label htmlFor="name" className="customer-modal-text-style">
                                        Drivetrain
@@ -223,14 +235,30 @@ export class CrmVehicleModal extends Component {
                                     </Input>
                                  </FormGroup>
                               </Col>
-                              {
+                           
+                           </Row>
+                           <Row className="justify-content-center">
+                     <Col md="12">
+                        <FormGroup>
+                           <Label htmlFor="name" className="customer-modal-text-style">
+                              Notes
+                  			</Label>
+                           <Input type="textarea" placeholder="Enter a note..." id="name" required />
+                        </FormGroup>
+                     </Col>
+                  </Row>
+                           <Row className="justify-content-center">
+                     <Col md="12 text-center">
+                     {
                                  expandForm ?
                                     <span
                                        onClick={this.handleExpandForm}
                                        className="customer-anchor-text customer-click-btn">Show Less</span> :
                                     ""
                               }
-                           </Row>
+                     </Col>
+                     </Row>
+                  
                         </> : ""
                   }
                </ModalBody>

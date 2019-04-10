@@ -1,21 +1,31 @@
-import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
+import {
+  fleetAddStarted,
+  fleetAddActions,
+  redirectTo,
+  hideLoader
+} from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
-import { logger } from "../helpers/Logger";
-import { showLoader, hideLoader, fleetListActions } from "./../actions";
+import { toast } from "react-toastify";
 
-const getFleetListLogic = createLogic({
-  type: fleetListActions.FLEET_LIST_REQUEST,
+const fleetAddLogic = createLogic({
+  type: fleetAddActions.FLEET_ADD_REQUEST,
+  cancelType: fleetAddActions.FLEET_ADD_FAILED,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    dispatch(
+      fleetAddStarted({
+        fleetData: []
+      })
+    );
+    console.log("*********This is fleet action", action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/user",
-      "/list",
-      "GET",
+      "/",
+      "fleet/addFleet",
+      "POST",
       true,
-      action.payload,
-      undefined
+      undefined,
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -23,21 +33,12 @@ const getFleetListLogic = createLogic({
       done();
       return;
     } else {
+      toast.success(result.messages[0]);
       dispatch(hideLoader());
+      dispatch(redirectTo({ path: "/fleets" }));
       done();
     }
   }
 });
 
-const addFleetLogic = createLogic({
-  type: fleetActions.ADD_FLEET,
-  async process({ action }, dispatch, done) {
-    dispatch(showLoader());
-    logger(action.payload);
-    
-    // dispatch(hideLoader());
-    done();
-  }
-});
-
-export const FleetLogic = [getFleetListLogic, addFleetLogic];
+export const FleetAddLogic = [fleetAddLogic];

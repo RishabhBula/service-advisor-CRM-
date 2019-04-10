@@ -1,37 +1,61 @@
-// const getCustomersLogic = createLogic({
-//   type: usersActions.GET_USER_LIST,
-//   async process({ action }, dispatch, done) {
-//     dispatch(showLoader());
-//     let api = new ApiHelper();
-//     let result = await api.FetchFromServer(
-//       "/user",
-//       "/list",
-//       "GET",
-//       true,
-//       action.payload,
-//       undefined
-//     );
-//     if (result.isError) {
-//       toast.error(result.messages[0]);
-//       dispatch(hideLoader());
-//       done();
-//       return;
-//     } else {
-//       dispatch(hideLoader());
-//       done();
-//     }
-//   }
-// });
+import { toast } from "react-toastify";
+import { createLogic } from "redux-logic";
+import { ApiHelper } from "../helpers/ApiHelper";
+import { logger } from "../helpers/Logger";
+import {
+  showLoader,
+  hideLoader,
+  customersAddActions,
+  customerAddSuccess,
+  customerAddFailed,
+  customerAddStarted
+} from "./../actions";
 
-// const addCustomersLogic = createLogic({
-//   type: usersActions.ADD_USER,
-//   async process({ action }, dispatch, done) {
-//     dispatch(showLoader());
-//     logger(action.payload);
+const addCustomerLogic = createLogic({
+  type: customersAddActions.CUSTOMER_ADD_REQUEST,
+  cancelType: customersAddActions.CUSTOMER_ADD_FAILED,
+  async process({ getState, action }, dispatch, done) {
+    const profileStateData = getState().profileInfoReducer;
 
-//     // dispatch(hideLoader());
-//     done();
-//   }
-// });
-
-export const CustomersLogic = [];
+    let data = action.payload;
+    data.parentId = profileStateData.profileInfo.parentId;    
+    data.userId = profileStateData.profileInfo._id;   
+    dispatch(showLoader());
+    logger(action.payload);
+    dispatch(
+      customerAddStarted({
+        customerAddInfo: []
+      })
+    );
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/customer",
+      "/createCustomer",
+      "POST",
+      true,
+      undefined,
+      data
+    );
+    if (result.isError) {
+        dispatch(
+          customerAddFailed({
+            customerAddInfo: []
+          })
+        );
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(
+        customerAddSuccess({
+          customerAddInfo: result.data.data
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+export const CustomersLogic = [addCustomerLogic];

@@ -3,7 +3,7 @@ export default {
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: "icon-speedometer",
+      icon: "cui-dashboard",
       authKey: "isAllowedDashboard",
       // badge: {
       //   variant: "info",
@@ -20,7 +20,7 @@ export default {
     {
       name: "Calendar",
       url: "/calender",
-      icon: "icon-puzzle",
+      icon: "cui-calendar",
       authKey: "isAllowedCalendar",
     },
     // {

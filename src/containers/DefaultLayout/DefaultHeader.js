@@ -1,11 +1,15 @@
 import PropTypes from "prop-types";
 
 import React, { Component } from "react";
+
+import { AppNavbarBrand } from '@coreui/react';
+// import logo from '../../assets/img/brand/logo.svg';
 // import { NavLink } from "react-router-dom";
 import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  
   Nav,
 } from "reactstrap";
 // import sygnet from '../../assets/img/brand/sygnet.svg'
@@ -29,23 +33,26 @@ class DefaultHeader extends Component {
 
     return (
       <React.Fragment>
+        <div className="custom-main-logo">
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
-        {/* <AppNavbarBrand
-          full={{ src: logo, width: 89, height: 25, alt: "CRM 360" }}
+        <AppNavbarBrand
+          full={{ src: "/assets/img/logo-white.svg", width: 40, height: 40, alt: "CRM 360" }}
           minimized={{
             src:
-              "https://lh3.googleusercontent.com/-mOdZ60CO41M/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcXgxErxs0owKD3P6zcxZyijqp5pw/s32-c-mo/photo.jpg",
-            width: 30,
-            height: 30,
+              "/assets/img/logo-white.svg",
+            width: 50,
+            height: 50,
             alt: "CoreUI Logo"
           }}
-        /> */}
-        <AppSidebarToggler className="d-md-down-none" display="lg" />
+        />
+        
+        <AppSidebarToggler children={<i className="fa fa-bars" />} className="custom-toggle-bar custom-toggle-ba d-md-down-none"  display="lg" />
         {/* <Nav className="d-md-down-none search-input-wrap" navbar>
           <NavItem className="px-3">
             <SearchBar />
           </NavItem>
         </Nav> */}
+        </div>
         <Nav className="ml-auto" navbar>
           {/* <NavItem className="d-md-down-none">
             <NavLink to="#" className="nav-link"><i className="icon-list"></i></NavLink>

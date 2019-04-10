@@ -5,5 +5,6 @@ module.exports = {
     vehicle: require("./vehicleRoutes"),
     fleet: require("./fleetRoutes"),
     matrix: require("./matrixRoutes"),
-    labour: require("./labourRoutes")
+    labour: require("./labourRoutes"),
+    customer: require("./customerRoutes")
 } 
