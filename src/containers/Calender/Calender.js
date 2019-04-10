@@ -135,7 +135,7 @@ class Calender extends Component {
         //       <PopoverBody>{event.description}</PopoverBody>
         //     </Popover>
         //   );
-        // }
+        // },
       },
       calenderData: {},
     };
