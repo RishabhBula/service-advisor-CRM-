@@ -16,6 +16,7 @@ const {
 /*----------------Customer create by admin/staff------------------ */
 const createCustomer = async (req, res) => {
   try {
+    const { body } = req;
       const fleetData = {
         firstName: body.firstName,
         lastName: body.lastName,
@@ -56,3 +57,7 @@ const createCustomer = async (req, res) => {
     });
   }
 };
+
+module.exports = {
+   createCustomer
+}

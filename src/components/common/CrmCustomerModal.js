@@ -16,6 +16,7 @@ import {
 import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
+import { CrmStandardModel } from "../common/CrmStandardModel";
 import { CrmSelect } from "../common/CrmSelect";
 import { PhoneOptions } from "../../config/Constants";
 import {
@@ -55,14 +56,16 @@ export class CrmCustomerModal extends Component {
       customerDefaultPermissions: CustomerDefaultPermissions,
       errors: {},
       phoneLength: AppConfig.phoneLength,
+      openStadardRateModel: false,
       defaultOptions: [
         { custom: true },
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry" },
+        { value: "123", label: "Chocolate" },
+        { value: "421", label: "Strawberry" },
         { value: "", label: "Add New" }
-      ]
-    };
+      ],
+    }
   }
+
   handleClick (singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -122,7 +125,7 @@ export class CrmCustomerModal extends Component {
     })
   };
 
-   handleAddPhoneDetails = () => {
+  handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
       phoneDetail.push({
@@ -149,7 +152,12 @@ export class CrmCustomerModal extends Component {
       })
     }
   }
-
+  handleStandardRate = () => {
+    this.setState({
+      openStadardRateModel: !this.state.openStadardRateModel
+    })
+  }
+  
   addNewCustomer = () => {
     const { 
       firstName, 
@@ -159,7 +167,6 @@ export class CrmCustomerModal extends Component {
       notes,
       companyName,
       referralSource,
-      fleet,
       address1,
       address2,
       city,
@@ -167,7 +174,7 @@ export class CrmCustomerModal extends Component {
       zipCode,
       customerDefaultPermissions
     } = this.state;
-    const fleetData = {
+    const customerData = {
       firstName: firstName,
       lastName: lastName,
       phoneDetail: phoneDetail,
@@ -184,7 +191,7 @@ export class CrmCustomerModal extends Component {
       permission: customerDefaultPermissions,
       status: true
     };   
-    this.props.addCustomer(fleetData);
+    this.props.addCustomer(customerData);
   }
 
   addNewSection = () => {
@@ -201,9 +208,9 @@ export class CrmCustomerModal extends Component {
       defaultOptions,
       phoneDetail
     } = this.state;  
-     const phoneOptions = PhoneOptions.map((item, index) => {
-       return <option value={item.key}>{item.text}</option>;
-     });
+    const phoneOptions = PhoneOptions.map((item, index) => {
+      return <option value={item.key}>{item.text}</option>;
+    });
     return (
       <>
         <Modal
@@ -468,7 +475,7 @@ export class CrmCustomerModal extends Component {
                         </Label>
                         <Input
                           type="text"
-                          placeholder="Company"
+                          placeholder="Referral"
                           name="Refferal Source"
                         />
                       </FormGroup>
@@ -650,7 +657,7 @@ export class CrmCustomerModal extends Component {
                           <Col md="12">
                             <CrmSelect
                               defaultOptions={defaultOptions}
-                              onClickAddNew={this.addNewSection}
+                              onClickAddNew={this.handleStandardRate}
                             />
                           </Col>
                         ) : null}
@@ -667,14 +674,7 @@ export class CrmCustomerModal extends Component {
                               <option value={""}>Select</option>
                               {matrixListReducerData.matrixList.length
                                 ? matrixListReducerData.matrixList.map(
-                                    (item, index) => {
-                                      console.log(
-                                        "===================================="
-                                      );
-                                      console.log(item);
-                                      console.log(
-                                        "===================================="
-                                      );
+                                    (item, index) => {                                      
                                       return (
                                         <option
                                           value={item._id}
@@ -709,6 +709,9 @@ export class CrmCustomerModal extends Component {
               ""
             )}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
+            <CrmStandardModel 
+            openStadardRateModel = {this.state.openStadardRateModel} 
+            />
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.addNewCustomer}>

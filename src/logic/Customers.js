@@ -15,7 +15,12 @@ import {
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
   cancelType: customersAddActions.CUSTOMER_ADD_FAILED,
-  async process({ action }, dispatch, done) {
+  async process({ getState, action }, dispatch, done) {
+    const profileStateData = getState().profileInfoReducer;
+
+    let data = action.payload;
+    data.parentId = profileStateData.profileInfo.parentId;    
+    data.userId = profileStateData.profileInfo._id;   
     dispatch(showLoader());
     logger(action.payload);
     dispatch(
@@ -25,12 +30,12 @@ const addCustomerLogic = createLogic({
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/auth",
-      "/createUser",
+      "/customer",
+      "/createCustomer",
       "POST",
       true,
       undefined,
-      action.payload
+      data
     );
     if (result.isError) {
         dispatch(
