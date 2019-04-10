@@ -40,20 +40,24 @@ class Users extends Component {
       userReducer.userData.isSuccess
     ) {
       this.setState({
-        openCreate: false
+        openCreate: !this.props.userReducer.userData.isSuccess
       });
-      const query = qs.parse(this.props.location.search);
-      this.props.getUsers({ ...query, page: query.page || 1 });
+      if (this.props.userReducer.userData.isSuccess) {
+        const query = qs.parse(this.props.location.search);
+        this.props.getUsers({ ...query, page: query.page || 1 });
+      }
     }
     if (
       this.props.userReducer.userData.isEditSuccess !==
       userReducer.userData.isEditSuccess
     ) {
       this.setState({
-        openEdit: !this.state.openEdit
+        openEdit: !this.props.userReducer.userData.isEditSuccess
       });
-      const query = qs.parse(this.props.location.search);
-      this.props.getUsers({ ...query, page: query.page || 1 });
+      if (this.props.userReducer.userData.isEditSuccess) {
+        const query = qs.parse(this.props.location.search);
+        this.props.getUsers({ ...query, page: query.page || 1 });
+      }
     }
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);

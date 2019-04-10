@@ -69,10 +69,6 @@ const verifyLinkValidation = [
     .trim(),
 ];
 const resetPasswordValidation = [
-  body("email")
-    .isEmail()
-    .withMessage("Email must be a valid.")
-    .trim(),
   body("password")
     .not()
     .isEmpty()

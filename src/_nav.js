@@ -4,6 +4,7 @@ export default {
       name: "Dashboard",
       url: "/dashboard",
       icon: "icon-speedometer",
+      authKey: "isAllowedDashboard",
       // badge: {
       //   variant: "info",
       //   text: "NEW"
@@ -14,36 +15,42 @@ export default {
       name: "Workflow",
       url: "/workflow",
       icon: "icon-puzzle",
+      authKey: "isAllowedWorkflow",
     },
     {
       name: "Calendar",
       url: "/calender",
       icon: "icon-puzzle",
+      authKey: "isAllowedCalendar",
     },
-    {
-      name: "Inventory",
-      url: "/inventory",
-      icon: "icon-puzzle",
-    },
-    {
-      name: "Time Clocks",
-      url: "/timesheets",
-      icon: "icon-puzzle",
-    },
-    {
-      name: "Reports",
-      url: "/reports",
-      icon: "icon-puzzle",
-    },
-    {
-      name: "Common",
-      url: "/common",
-      icon: "icon-puzzle",
-    },
+    // {
+    //   name: "Inventory",
+    //   url: "/inventory",
+    //   icon: "icon-puzzle",
+    //   authKey: "isAllowedInventory",
+    // },
+    // {
+    //   name: "Time Clocks",
+    //   url: "/timesheets",
+    //   icon: "icon-puzzle",
+    //   authKey: "isAllowedTimesheets",
+    // },
+    // {
+    //   name: "Reports",
+    //   url: "/reports",
+    //   icon: "icon-puzzle",
+    //   authKey: "isAllowedReportCenter",
+    // },
+    // {
+    //   name: "Common",
+    //   url: "/common",
+    //   icon: "icon-puzzle",
+    // },
     {
       name: "Settings",
       url: "/settings",
       icon: "fa fa-cog",
+      authKey: "isAllowedCompanySettings",
       children: [
         {
           name: "Staff Members",
