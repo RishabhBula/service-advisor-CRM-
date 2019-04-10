@@ -585,6 +585,7 @@ const createUser = async (req, res) => {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
+      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2),
     };
     let result = await userModel(inserList).save();
     const emailVar = new Email(req);
@@ -627,10 +628,12 @@ const updateUser = async (req, res) => {
       });
     }
     let $data = req.body;
+
     let inserList = {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
+      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2),
     };
     let result = await userModel.findByIdAndUpdate(
       req.params.userId,

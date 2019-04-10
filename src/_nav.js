@@ -20,7 +20,7 @@ export default {
     {
       name: "Calendar",
       url: "/calender",
-      icon: "cui-calendar",
+      icon: "fa fa-calendar-alt",
       authKey: "isAllowedCalendar",
     },
     // {
