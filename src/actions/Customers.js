@@ -1,14 +1,23 @@
 import { createAction } from "redux-actions";
 
-export const customersActions = {
-  GET_CUSTOMER_LIST: "Customer list Requested!",
-  GET_CUSTOMER_LIST_SUCCESS: "Customer list success!",
-  ADD_CUSTOMER: "Add new customer Requested!"
-};
+export const customersAddActions = {
+         CUSTOMER_ADD_REQUEST: "Customer Add requested!",
+         CUSTOMER_ADD_SUCCESS: "Customer Add successfully!",
+         CUSTOMER_ADD_FAILED: "Customer Add failed!",
+         CUSTOMER_ADD_START: "Customer Add Started!"
+       };
 
-export const getCustomerList = createAction(customersActions.GET_CUSTOMER_LIST);
-export const getCListSuccess = createAction(
-  customersActions.GET_CUSTOMER_LIST_SUCCESS
+export const customerAddRequest = createAction(
+  customersAddActions.CUSTOMER_ADD_REQUEST
 );
-export const addNewCustomer = createAction(customersActions.ADD_CUSTOMER);
+export const customerAddStarted = createAction(
+  customersAddActions.CUSTOMER_ADD_START
+);
+export const customerAddSuccess = createAction(
+  customersAddActions.CUSTOMER_ADD_SUCCESS
+);
+export const customerAddFailed = createAction(
+  customersAddActions.CUSTOMER_ADD_FAILED
+);
+
 

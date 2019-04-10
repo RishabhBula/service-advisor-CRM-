@@ -7,6 +7,7 @@ import { usersReducer } from "./Users";
 import { profileInfoReducer } from "./ProfileInfo";
 import { matrixListReducer } from "./MatrixList";
 import { rateStandardListReducer } from "./RateStandard";
+import { customerInfoReducer } from "./Customer";
 
 export const mainReducer = handleActions(
   {
@@ -28,6 +29,7 @@ const AppReducer = combineReducers({
   profileInfoReducer,
   matrixListReducer,
   rateStandardListReducer,
+  customerInfoReducer,
   routing: routerReducer,
 });
 

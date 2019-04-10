@@ -34,19 +34,27 @@ export class CrmCustomerModal extends Component {
       selectedOption: null,
       expandForm: false,
       fleetModalOpen: false,
-      customerDefaultPermissions: CustomerDefaultPermissions,
       firstName: "",
       lastName: "",
-      email: "",
       phoneDetail: [
         {
           phone: "mobile",
           value: ""
         }
       ],
+      email: "",
+      notes: "",
+      companyName: "",
+      referralSource: "",
+      fleet: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      customerDefaultPermissions: CustomerDefaultPermissions,
       errors: {},
       phoneLength: AppConfig.phoneLength,
-      percentageDiscount: 0,
       defaultOptions: [
         { custom: true },
         { value: "chocolate", label: "Chocolate" },
@@ -107,9 +115,6 @@ export class CrmCustomerModal extends Component {
   }
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
-    if (isNaN(value)) {
-      return;
-    }
     const phoneDetail = [...this.state.phoneDetail]
     phoneDetail[index].value = value;
     this.setState({
@@ -124,8 +129,6 @@ export class CrmCustomerModal extends Component {
         phone: "mobile",
         value: ""
       })
-      console.log(phoneDetail);
-
       this.setState({
         phoneDetail: phoneDetail
       })
@@ -147,8 +150,41 @@ export class CrmCustomerModal extends Component {
     }
   }
 
-  addNewUser = () => {
-    this.props.addCustomer();
+  addNewCustomer = () => {
+    const { 
+      firstName, 
+      lastName, 
+      phoneDetail,
+      email,
+      notes,
+      companyName,
+      referralSource,
+      fleet,
+      address1,
+      address2,
+      city,
+      state,
+      zipCode,
+      customerDefaultPermissions
+    } = this.state;
+    const fleetData = {
+      firstName: firstName,
+      lastName: lastName,
+      phoneDetail: phoneDetail,
+      email: email,
+      notes: notes,
+      companyName: companyName,
+      referralSource: referralSource,
+      fleet: "fleetId",
+      address1: address1,
+      address2: address2,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+      permission: customerDefaultPermissions,
+      status: true
+    };   
+    this.props.addCustomer(fleetData);
   }
 
   addNewSection = () => {
@@ -192,8 +228,7 @@ export class CrmCustomerModal extends Component {
                     <Input
                       type="text"
                       placeholder="John"
-                      id="name"
-                      required
+                      name="firstName"
                     />
                   </FormGroup>
                 </Col>
@@ -208,8 +243,7 @@ export class CrmCustomerModal extends Component {
                     <Input
                       type="text"
                       placeholder="Doe"
-                      id="name"
-                      required
+                      name="lastName"
                     />
                   </FormGroup>
                 </Col>
@@ -363,8 +397,7 @@ export class CrmCustomerModal extends Component {
                       type="text"
                       className="customer-modal-text-style"
                       placeholder="john.doe@example.com"
-                      id="name"
-                      required
+                      name="email"
                     />
                   </FormGroup>
                 </Col>
@@ -383,8 +416,7 @@ export class CrmCustomerModal extends Component {
                     <Input
                       type="textarea"
                       placeholder="Enter a note..."
-                      id="name"
-                      required
+                      name="notes"
                     />
                   </FormGroup>
                 </Col>
@@ -418,8 +450,7 @@ export class CrmCustomerModal extends Component {
                         <Input
                           type="text"
                           placeholder="Company"
-                          id="name"
-                          required
+                          name="companyName"
                         />
                       </FormGroup>
                     </Col>
@@ -435,9 +466,10 @@ export class CrmCustomerModal extends Component {
                         >
                           Referral Source
                         </Label>
-                        <Select
-                          value={selectedOption}
-                          onChange={this.handleChange}
+                        <Input
+                          type="text"
+                          placeholder="Company"
+                          name="Refferal Source"
                         />
                       </FormGroup>
                     </Col>
@@ -474,8 +506,7 @@ export class CrmCustomerModal extends Component {
                         <Input
                           type="text"
                           placeholder="Address"
-                          id="name"
-                          required
+                          name="address1"
                         />
                       </FormGroup>
                     </Col>
@@ -494,8 +525,7 @@ export class CrmCustomerModal extends Component {
                         <Input
                           type="text"
                           placeholder="Address"
-                          id="name"
-                          required
+                          name="address2"
                         />
                       </FormGroup>
                     </Col>
@@ -513,9 +543,8 @@ export class CrmCustomerModal extends Component {
                         </Label>
                         <Input
                           type="text"
-                          id="name"
                           placeholder="New York"
-                          required
+                          name="city"
                         />
                       </FormGroup>
                     </Col>
@@ -527,12 +556,7 @@ export class CrmCustomerModal extends Component {
                         >
                           State
                         </Label>
-                        <Input
-                          type="text"
-                          id="name"
-                          placeholder="NY"
-                          required
-                        />
+                        <Input type="text" name="state" placeholder="NY" />
                       </FormGroup>
                     </Col>
                     <Col md="4">
@@ -545,9 +569,8 @@ export class CrmCustomerModal extends Component {
                         </Label>
                         <Input
                           type="text"
-                          id="name"
                           placeholder="Zip Code"
-                          required
+                          name="zipCode"
                         />
                       </FormGroup>
                     </Col>
@@ -688,8 +711,8 @@ export class CrmCustomerModal extends Component {
             {fleetModalOpen ? <CrmFleetModal /> : ""}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addNewUser}>
-              Do Something
+            <Button color="primary" onClick={this.addNewCustomer}>
+              Add Customer
             </Button>{" "}
             <Button color="secondary" onClick={handleCustomerModal}>
               Cancel

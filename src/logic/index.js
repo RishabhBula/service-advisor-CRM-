@@ -22,9 +22,9 @@ export default [
   ...LoginLogics,
   ...SignUpLogic,
   ...UsersLogic,
-  ...CustomersLogic,
   ...MatrixLogic,
   ...ProfileInfoLogic,
   ...StandardRateLogic,
-  redirectToLogic,
+  ...CustomersLogic,
+  redirectToLogic
 ];
