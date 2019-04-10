@@ -3,7 +3,7 @@ export default {
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: "icon-speedometer"
+      icon: "cui-dashboard"
       // badge: {
       //   variant: "info",
       //   text: "NEW"
@@ -18,7 +18,7 @@ export default {
     {
       name: "Calendar",
       url: "/calender",
-      icon: "icon-puzzle"
+      icon: "cui-calendar"
     },
     {
       name: "Inventory",
