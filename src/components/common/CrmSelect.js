@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import Select, { components } from "react-select";
 
+
 class CustomOption extends Component {
   
   clickedOpen = () => {
-      console.log(this.props);
-    if (this.props.innerProps.onClickAddNew) {
-      this.props.innerProps.onClickAddNew();
-    } 
+      
       
   }
 
@@ -24,7 +22,7 @@ class CustomOption extends Component {
         <span className="ml-3">Add New Customer</span>
       </div>
     ) : (
-      <components.Option {...this.props} className="abc"/>
+      <components.Option {...this.props} />
     );
   }
 }

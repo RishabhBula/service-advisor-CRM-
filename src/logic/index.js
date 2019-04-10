@@ -8,6 +8,7 @@ import { UsersLogic } from "./Users";
 import { CustomersLogic } from "./Customers";
 import { MatrixLogic } from "./Matrix";
 import { ProfileInfoLogic } from "./ProfileInfo";
+import { FleetAddLogic } from "./Fleet";
 import { StandardRateLogic } from "./RateStandard";
 
 export const redirectToLogic = createLogic({
@@ -22,9 +23,10 @@ export default [
   ...LoginLogics,
   ...SignUpLogic,
   ...UsersLogic,
-  ...CustomersLogic,
   ...MatrixLogic,
   ...ProfileInfoLogic,
+  ...FleetAddLogic,
   ...StandardRateLogic,
-  redirectToLogic,
+  ...CustomersLogic,
+  redirectToLogic
 ];

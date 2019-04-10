@@ -8,6 +8,9 @@ export const CreateCustomerValidations = {
   lastName: {
     [ValidationTypes.REQUIRED]: true,
     [ValidationTypes.ALPHA]: true,
+  },
+  email:{
+    [ValidationTypes.EMAIL]: true
   }
 };
 
@@ -17,6 +20,9 @@ export const CreateCustomerValidMessaages = {
   },
   lastName: {
     [ValidationTypes.REQUIRED]: "Please enter password.",
+  },
+  email:{
+    [ValidationTypes.EMAIL]: "Enter valid email address."
   }
 };
 

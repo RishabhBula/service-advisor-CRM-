@@ -64,6 +64,11 @@ const customerSchema = new Schema({
     ref: "user",
     default: null
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    default: null
+  },
   status: {
     type: Boolean,
     default: true

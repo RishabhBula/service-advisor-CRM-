@@ -11,7 +11,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getCustomerList, addNewCustomer, getMatrixList } from "../../actions";
+import { customerAddRequest, getMatrixList } from "../../actions";
 import { logger } from "../../helpers/Logger";
 
 class Users extends Component {
@@ -21,8 +21,7 @@ class Users extends Component {
       openCreate: false
     };
   }
-  componentDidMount() {
-    this.props.getUsers(1);    
+  componentDidMount() { 
     this.props.getMatrix();
   }
   toggleCreateModal = e => {
@@ -81,12 +80,9 @@ const mapStateToProps = state => ({
   matrixListReducer: state.matrixListReducer
 });
 
-const mapDispatchToProps = dispatch => ({
-  getUsers: page => {
-    dispatch(getCustomerList({ page }));
-  },
+const mapDispatchToProps = dispatch => ({ 
   addCustomer: data => {
-    dispatch(addNewCustomer(data));
+    dispatch(customerAddRequest(data));
   },
   getMatrix: () => {    
     dispatch(getMatrixList());
