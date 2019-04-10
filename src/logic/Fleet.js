@@ -1,13 +1,11 @@
 import { createLogic } from "redux-logic";
 import {
-  fleetAddFailed,
   fleetAddStarted,
   fleetAddActions,
   redirectTo,
   hideLoader
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
-import { push } from "react-router-redux";
 import { toast } from "react-toastify";
 
 const fleetAddLogic = createLogic({

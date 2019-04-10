@@ -26,7 +26,6 @@ export default [
   ...MatrixLogic,
   ...ProfileInfoLogic,
   ...FleetAddLogic,
-  redirectToLogic,
   ...StandardRateLogic,
   ...CustomersLogic,
   redirectToLogic
