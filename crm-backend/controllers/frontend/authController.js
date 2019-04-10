@@ -40,26 +40,12 @@ const signUp = async (req, res) => {
       $data.salt = salt;
       $data.password = commonCrypto.hashPassword($data.password, salt);
       $data.roleType = roleType._id;
-      $data.permission = roleType.permissionObject;
+      $data.permissions = roleType.permissionObject;
       $data.firstTimeUser = true;
       $data.loggedInIp = commonSmtp.getIpAddress(req);
       $data.userSideActivationValue = confirmationNumber;
       let result = await userModel($data).save();
-      // var token = jwt.sign(
-      //   {
-      //     id: result._id,
-      //     randomKey: salt,
-      //     email: $data.email,
-      //     firstName: $data.firstName,
-      //     lastName: $data.lastName
-      //   },
-      //   commonCrypto.secret,
-      //   {
-      //     expiresIn: 86400
-      //   }
-      // );
-
-      const emailVar = new Email(res);
+      const emailVar = new Email(req);
       await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
         firstName: result.firstName,
         lastName: result.lastName,
@@ -112,7 +98,7 @@ const confirmationSignUp = async (req, res) => {
         }
       );
       if (roleUpdate) {
-        const emailVar = new Email(res);
+        const emailVar = new Email(req);
         await emailVar.setTemplate(AvailiableTemplates.SIGNUP, {
           firstName: userData.firstName,
           lastName: userData.lastName,
@@ -198,6 +184,7 @@ const loginApp = async (req, res) => {
         email: result.email,
         firstName: result.firstName,
         lastName: result.lastName,
+        parentId: result.parentId,
       },
       commonCrypto.secret,
       {
@@ -243,9 +230,9 @@ const userForgotPassword = async (req, res) => {
     const encrypteVerifyToken = commonCrypto.encrypt(
       userData.email + userData.id
     );
-    const emailVar = new Email(res);
+    const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.FORGET_PASSWORD, {
-      resetPageUrl: "http://192.168.2.126:3000",
+      resetPageUrl: req.headers.host,
       fullName: userData.firstName + " " + userData.lastName,
       email: encrypteUserEmail,
       userId: encryptedUserId,
@@ -600,7 +587,7 @@ const createUser = async (req, res) => {
       parentId: req.currentUser.id,
     };
     let result = await userModel(inserList).save();
-    const emailVar = new Email(res);
+    const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.USER_ADDED_CONFIRMATION, {
       firstName: result.firstName,
       lastName: result.lastName,
@@ -639,10 +626,7 @@ const updateUser = async (req, res) => {
         success: false,
       });
     }
-    const confirmationNumber = new Date().valueOf();
     let $data = req.body;
-    $data.firstTimeUser = true;
-    $data.userSideActivationValue = confirmationNumber;
     let inserList = {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
