@@ -49,7 +49,7 @@ export class CrmCustomerModal extends Component {
       notes: "",
       companyName: "",
       referralSource: "",
-      fleet: "",
+      fleet: "5ca5e3b88b27f17bc0dfaab5",
       address1: "",
       address2: "",
       city: "",
@@ -174,7 +174,8 @@ export class CrmCustomerModal extends Component {
       city,
       state,
       zipCode,
-      customerDefaultPermissions
+      customerDefaultPermissions,
+      fleet
     } = this.state;
     const customerData = {
       firstName: firstName,
@@ -184,7 +185,7 @@ export class CrmCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: "fleetId",
+      fleet: fleet,
       address1: address1,
       address2: address2,
       city: city,
@@ -222,6 +223,34 @@ export class CrmCustomerModal extends Component {
 
   addNewSection = () => {
     alert("testing");
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('====================================');
+    console.log(prevProps);
+    console.log('====================================');
+    // if(customerModalOpen !== this.props.customerModalOpen) {
+    //   this.setState({
+    //     firstName: "",
+    //     lastName: "",
+    //     phoneDetail: [
+    //       {
+    //         phone: "mobile",
+    //         value: ""
+    //       }
+    //     ],
+    //     email: "",
+    //     notes: "",
+    //     companyName: "",
+    //     referralSource: "",
+    //     fleet: "5ca5e3b88b27f17bc0dfaab5",
+    //     address1: "",
+    //     address2: "",
+    //     city: "",
+    //     state: "",
+    //     zipCode: ""
+    //   })
+    // }
   }
 
   render() {
@@ -620,6 +649,7 @@ export class CrmCustomerModal extends Component {
                         <Select
                           value={selectedOption}
                           onChange={this.handleChange}
+                          options = {[ { value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
                         />
                       </FormGroup>
                     </Col>
