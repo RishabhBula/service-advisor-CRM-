@@ -283,6 +283,7 @@ export class CrmCustomerModal extends Component {
                     >
                       First Name
                     </Label>
+                    <div className={"input-block"}>
                     <Input
                       type="text"
                       placeholder="John"
@@ -294,6 +295,7 @@ export class CrmCustomerModal extends Component {
                         <p className="text-danger">{errors.firstName}</p> :
                         null
                     }
+                    </div>
                   </FormGroup>
                 </Col>
                 <Col md="6">
@@ -304,6 +306,7 @@ export class CrmCustomerModal extends Component {
                     >
                       Last Name
                     </Label>
+                    <div className={"input-block"}>
                     <Input
                       type="text"
                       placeholder="Doe"
@@ -315,6 +318,7 @@ export class CrmCustomerModal extends Component {
                         <p className="text-danger">{errors.lastName}</p> :
                         null
                     }
+                    </div>
                   </FormGroup>
                 </Col>
               </Row>
@@ -338,6 +342,7 @@ export class CrmCustomerModal extends Component {
                                 Phone
                                 </Label>
                                 {/* <div></div> */}
+                              
                                 <Input
                                 onChange={e =>
                                   this.handlePhoneNameChange(index, e)
@@ -374,6 +379,7 @@ export class CrmCustomerModal extends Component {
                                     }
                                   />
                                 )}
+                              
                             </FormGroup>
                           </Col>
                         </>
@@ -395,6 +401,7 @@ export class CrmCustomerModal extends Component {
                                 
                                 </Label> */}
                                 {/* <div></div> */}
+                                
                                 <Input
                                 onChange={e =>
                                   this.handlePhoneNameChange(index, e)
@@ -431,6 +438,7 @@ export class CrmCustomerModal extends Component {
                                     }
                                   />
                                 )}
+                                  
                             </FormGroup>
                           </Col>
                           </>
@@ -701,7 +709,7 @@ export class CrmCustomerModal extends Component {
                           </div>
                           {discountShow ? (
                          
-                         <div className="custom-label"    key={index}  >
+                         <div className="custom-label pl-5"    key={index}  >
                            <Label
                              htmlFor="name"
                              className="customer-modal-text-style"
@@ -737,7 +745,7 @@ export class CrmCustomerModal extends Component {
                         ) : null}
                         {/* */}
                         {pricingMatrix ? (
-                          <Col md="12">
+                          <Col md="12" className="p-0">
                             <Input
                               type="select"
                               className=""

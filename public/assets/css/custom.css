@@ -1,6 +1,22 @@
+.btn-theme{
+    background-color: #f6b42a !important;
+    border-color: #f6b42a !important;
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+}
+.btn-theme:hover{
+    background-color: #df9c0f !important;
+}
+.link{
+    cursor: pointer;
+    color: #20a8d8;
+}
+
 .auth-page {
     /* background-image: url("https://results-software.com/wp-content/uploads/2016/08/features.jpg"); */
-    background-image: linear-gradient(to bottom, #0d4eae, #0083c3, #00adb7, #8ccfb1, #e3eecb);
+    /* background-image: linear-gradient(to bottom, #0d4eae, #0083c3, #00adb7, #8ccfb1, #e3eecb); */
+    background-image: linear-gradient(to bottom, #8358f0, #5c43db);
 }
 .margin-top-10 {
 	margin-top: 10px;
@@ -383,6 +399,10 @@
 .modal-dialog.custom-modal-lg{
     max-width:900px;
 }
+.input-block{
+    flex: 1;
+    position: relative;
+}
 .custom-form-modal .form-group label{
     min-width: 150px;
     margin: 6px 10px 0px 5px;
@@ -391,7 +411,9 @@
     color: #535459;
     font-size: 13px;
 }
-
+.custom-form-modal .form-group label.switch{
+    min-width: 32px;
+}
 .custom-form-modal .form-group .form-control, .custom-form-modal .form-group .form-select>div{
     color: #0c0d1c;
     border: 1px solid #a6a7a7;
@@ -416,6 +438,11 @@
     display: flex;
     position: relative;
     margin-bottom: 23px;    
+}
+.custom-form-modal p.text-danger{
+    margin-bottom: 0px;
+    position: absolute;
+    left: 0px;
 }
 .custom-label-padding .form-check-label{
     margin-right: 10px!important;
@@ -561,7 +588,8 @@ span.customer-anchor-text.customer-click-btn:hover::before{
 /*end custom-css */
 /* end of page css */
 .custom-label-padding{
-    padding: 0 50px;
+    padding: 0px 15px 0 150px;
+    margin-left: 0 !important;
 }
 .breadcrumb{
     border-left:1px solid #c8ced3;

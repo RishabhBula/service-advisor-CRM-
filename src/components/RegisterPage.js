@@ -1,9 +1,12 @@
 import Validator from "js-object-validation";
 import React, { Component } from "react";
+import Logo from "./../assets/img/logo-white.svg";
+
 import {
   Button,
   Card,
   CardBody,
+  CardGroup,
   Col,
   Container,
   Form,
@@ -75,12 +78,15 @@ class RegisterPage extends Component {
       <div className="app flex-row align-items-center auth-page">
         <Container>
           <Row className="justify-content-center">
-            <Col md="9" lg="7" xl="6">
+            <Col md="6" lg="7" xl="6">
               <Col className="text-center">
-                <h4 className="logo-title">CRM 360</h4>
+                <h4 className="logo-title">
+                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                </h4>
               </Col>
-              <Card className="mx-4">
-                <CardBody className="p-4">
+               <CardGroup>
+                <Card className="p-4">
+                <CardBody className="">
                   <Form onSubmit={this.handleSubmit}>
                     <h1 className="auth-title">Start Your Free Trial</h1>
                     <p className="text-muted">Create your account</p>
@@ -172,7 +178,7 @@ class RegisterPage extends Component {
                     {errors.confirmPassword ? (
                       <p className={"text-danger"}>{errors.confirmPassword}</p>
                     ) : null}
-                    <Button color="primary" block>
+                      <Button color="" block className={"btn-theme"}>
                       Start Now
                     </Button>
                     <Col
@@ -181,18 +187,20 @@ class RegisterPage extends Component {
                     >
                       <span>OR</span>
                     </Col>
-                    <Button
-                      color="secondary"
-                      block
+                    <Col className={"text-center"}>
+                    Alreadt have an account? Please 
+                    <span className={"link"} color={'primary'}
                       onClick={() => {
                         this.props.redirectTo("/login");
                       }}
-                    >
-                      Login
-                    </Button>
+                      >&nbsp;
+                          Login
+                    </span>
+                    </Col>
                   </Form>
                 </CardBody>
               </Card>
+              </CardGroup>
             </Col>
           </Row>
         </Container>
