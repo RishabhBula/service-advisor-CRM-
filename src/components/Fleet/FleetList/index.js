@@ -1,5 +1,17 @@
 import React, { Component } from "react";
-import { Table, Badge, Button } from "reactstrap";
+import {
+  Table,
+  Badge,
+  Button,
+  Form,
+  FormGroup,
+  Row,
+  Col,
+  Label,
+  InputGroup,
+  Input,
+  UncontrolledTooltip,
+} from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
 import { CrmFleetModal } from '../../common/CrmFleetModal'
 import { connect } from "react-redux";
@@ -7,7 +19,7 @@ import { fleetEditRequest } from "../../../actions";
 import { logger } from "../../../helpers/Logger";
 import Validator from "js-object-validation";
 import { CreateFleetValidations, CreateFleetValidMessaages } from "../../../validations";
-
+import { RoleOptions } from "../../../config/Constants";
 class FleetList extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +28,10 @@ class FleetList extends Component {
       fleetListdata: {},
       error: {},
       isLoading: false,
+      search: "",
+      status: "",
+      sort: "",
+      type: "",
     };
   }
   componentDidUpdate({ openEdit }) {
@@ -25,6 +41,40 @@ class FleetList extends Component {
       });
     }
   }
+  handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+  onSearch = e => {
+    e.preventDefault();
+    const { page, search, sort, status } = this.state;
+    let param = {};
+    if (page && page > 1) {
+      param.page = page;
+    }
+    if (search) {
+      param.search = search;
+    }
+    if (sort) {
+      param.sort = sort;
+    }
+    if (status) {
+      param.status = status;
+    }
+    this.props.onSearch(param);
+  };
+  onReset = e => {
+    e.preventDefault();
+    this.setState({
+      page: 1,
+      search: "",
+      status: "",
+      sort: "",
+      user: {}
+    });
+    this.props.onSearch({});
+  };
   handleAddFleet = (fleetData, isEditMode, fleetId) => {
     this.setState({
       error: {}
@@ -71,11 +121,139 @@ class FleetList extends Component {
     this.props.onUpdate(id, data);
   };
   render() {
-    const { openFleetModal, fleetListdata, error } = this.state
+    const {
+      openFleetModal,
+      fleetListdata,
+      error,
+      search,
+      status,
+      sort,
+      type, } = this.state
     const { fleetListData } = this.props;
     const { isLoading, fleetData } = fleetListData;
     return (
       <>
+        <div className={"filter-block"}>
+          <Form onSubmit={this.onSearch}>
+            <Row>
+              <Col lg={"4"} md={"4"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label className="label">Search</Label>
+                  <InputGroup className="mb-2">
+                    <input
+                      type="text"
+                      name="search"
+                      onChange={this.handleChange}
+                      className="form-control"
+                      value={search}
+                      aria-describedby="searchUser"
+                      placeholder="Search by first name, last name and email"
+                    />
+                  </InputGroup>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label for="exampleSelect" className="label">
+                    Status
+                  </Label>
+                  <Input
+                    type="select"
+                    name="status"
+                    id="exampleSelect"
+                    onChange={this.handleChange}
+                    value={status}
+                  >
+                    <option className="form-control" value={""}>
+                      -- Select Status --
+                    </option>
+                    <option value={1}>Active</option>
+                    <option value={0}>Inactive</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label for="SortFilter" className="label">
+                    Sort By
+                  </Label>
+                  <Input
+                    type="select"
+                    name="sort"
+                    id="SortFilter"
+                    onChange={this.handleChange}
+                    value={sort}
+                  >
+                    <option className="form-control" value={""}>
+                      -- Select Status --
+                    </option>
+                    <option value={"createddesc"}>Last Created</option>
+                    <option value={"loginasc"}>Last login</option>
+                    <option value={"nasc"}>Name A-Z</option>
+                    <option value={"ndesc"}>Name Z-A</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label for="SortFilter" className="label">
+                    User Type
+                  </Label>
+                  <Input
+                    type="select"
+                    name="type"
+                    id="SortFilter"
+                    onChange={this.handleChange}
+                    value={type}
+                  >
+                    <option className="form-control" value={""}>
+                      -- Select Status --
+                    </option>
+                    {RoleOptions.map((role, index) => {
+                      return (
+                        <option value={role.key} key={index}>
+                          {role.text}
+                        </option>
+                      );
+                    })}
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <div className="filter-btn-wrap">
+                  <Label className="height17 label" />
+                  <div className="form-group mb-0">
+                    <span className="mr-2">
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        id="Tooltip-1"
+                      >
+                        <i className="fa fa-search" />
+                      </button>
+                      <UncontrolledTooltip target="Tooltip-1">
+                        Search
+                      </UncontrolledTooltip>
+                    </span>
+                    <span className="">
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        id="Tooltip-2"
+                        onClick={this.onReset}
+                      >
+                        <i className="fa fa-refresh" />
+                      </button>
+                      <UncontrolledTooltip target={"Tooltip-2"}>
+                        Reset all filters
+                      </UncontrolledTooltip>
+                    </span>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </div>
         <Table responsive bordered>
           <thead>
             <tr>

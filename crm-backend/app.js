@@ -19,7 +19,7 @@ if (mode === "development") {
   };
   app.use(cors(corsOption));
 }
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "build")));
 let url = "mongodb://localhost:27017/crm360";
 MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
   if (err) throw err;
@@ -27,6 +27,12 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
 
 const apiApiRoutes = require("./routes/apiRoutes/apiRoutes");
 app.use("/api", apiApiRoutes);
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 const port = process.env.PORT || 8001;
 const server = http.createServer(app);
 server.listen(port, () => {

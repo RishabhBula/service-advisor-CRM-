@@ -12,7 +12,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -29,7 +29,8 @@ class Users extends Component {
     this.props.getMatrix();
     const query = qs.parse(this.props.location.search);
     this.props.getCustomerList({ ...query, page: query.page || 1 });
-    this.props.getStdList();
+    this.props.getStdList("");
+    this.props.setLabourRateDefault();
   }
 
   componentDidUpdate({location }) {
@@ -38,6 +39,10 @@ class Users extends Component {
     if (!isEqual(prevQuery, currQuery)) {
       this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
     }
+  }
+
+  loadTypeRate = input => {
+    this.props.getStdList(input);
   }
   toggleCreateModal = e => {
     this.setState({editMode: false, customer: {}}, () => {
@@ -106,6 +111,13 @@ class Users extends Component {
     this.props.getStdList();
   }
 
+<<<<<<< HEAD
+=======
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  }
+
+>>>>>>> 846dcb01d02f7cf782b64acd1037cb61bbfd192f
   render() {
     const { openCreate, editMode, customer } = this.state;
     const { userReducer, addCustomer, matrixListReducer, customerListReducer, rateStandardListReducer } = this.props;
@@ -154,8 +166,13 @@ class Users extends Component {
           rateStandardListData ={rateStandardListReducer}
           onTypeHeadStdFun = {this.onTypeHeadStdFun}
           onStdAdd = {this.onStdAdd}
+<<<<<<< HEAD
           editMode={editMode}
           customer = {customer}
+=======
+          setDefaultRate={this.setDefaultRate}
+          loadTypeRate= {this.loadTypeRate}
+>>>>>>> 846dcb01d02f7cf782b64acd1037cb61bbfd192f
         />
       </>
     );
@@ -186,8 +203,11 @@ const mapDispatchToProps = dispatch => ({
   deleteCustomer: (data) => {
     dispatch(deleteCustomer(data));
   },
-  getStdList: () => {
-    dispatch(getRateStandardListRequest());
+  getStdList: (data) => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  setLabourRateDefault: (data) => {
+    dispatch(setRateStandardListStart(data));
   },
 
 });

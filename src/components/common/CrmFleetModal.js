@@ -60,27 +60,39 @@ export class CrmFleetModal extends Component {
         { value: "", label: "Add New Customer" }
       ],
       vendorValue: '',
+      openStadardRateModel: false
     };
   }
+  stdModelFun = () => {
+    this.setState({
+      openStadardRateModel: !this.state.openStadardRateModel
+    })
+  }
   handleStandardRate = (selectValue) => {
-    if (selectValue.value === "") {
-      this.setState({
-        openStadardRateModel: !this.state.openStadardRateModel
-      })
-    }
-    else {
-      const { fleetDefaultPermissions } = this.state;
-      fleetDefaultPermissions["shouldLaborRateOverride"].laborRate =
-        selectValue.value;
-      this.setState({
-        ...fleetDefaultPermissions
-      });
+    if (selectValue) {
+      if (selectValue.value === "") {
+        this.setState({
+          openStadardRateModel: !this.state.openStadardRateModel
+        })
+      }
+      else {
+        console.log("##########Selected Value",selectValue);
+        
+        const { fleetDefaultPermissions } = this.state;
+        fleetDefaultPermissions["shouldLaborRateOverride"].laborRate =
+          selectValue.value;
+        this.setState({
+          ...fleetDefaultPermissions
+        });
+        this.props.setDefaultRate(selectValue);
+      }
+    } else{
+      this.props.onTypeHeadStdFun({});
     }
   }
   handleRateAdd = async (data) => {
-    const profileData = this.props.profileInfo.profileInfo
+    const profileData = this.props.profileInfoReducer.profileInfo
     let api = new ApiHelper();
-
     try {
       const { isValid, errors } = Validator(
         data,
@@ -246,6 +258,7 @@ export class CrmFleetModal extends Component {
       zipCode,
       fleetDefaultPermissions,
       vendorValue,
+      errors,
       percentageDiscount,
       isEditMode,
       fleetId
@@ -268,6 +281,8 @@ export class CrmFleetModal extends Component {
         <option value={item.key}>{item.text}</option>
       )
     })
+    console.log("adfsadfsfdsdfs",rateStandardListData);
+    
     return (
       <>
         <Modal
@@ -631,7 +646,7 @@ export class CrmFleetModal extends Component {
                           loadOptions={this.loadOptions}
                           onChange={this.handleStandardRate}
                           isClearable={true}
-                          value={vendorValue}
+                          value={rateStandardListData.selectedOptions}
                         />
                       </Col>
                     ) : null}
@@ -662,6 +677,7 @@ export class CrmFleetModal extends Component {
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}
               stdModelFun={this.stdModelFun}
+              errors={errors}
               handleRateAdd={this.handleRateAdd}
             />
           </ModalBody>
