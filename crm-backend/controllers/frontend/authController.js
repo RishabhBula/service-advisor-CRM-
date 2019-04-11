@@ -43,6 +43,9 @@ const signUp = async (req, res) => {
           : roleType.permissionObject;
       $data.firstTimeUser = true;
       $data.loggedInIp = commonSmtp.getIpAddress(req);
+      var salt = commonCrypto.generateSalt(6);
+      $data.salt = salt;
+      $data.password = commonCrypto.hashPassword($data.password, salt);
       $data.userSideActivationValue = confirmationNumber;
       let result = await userModel($data).save();
       const emailVar = new Email(req);
