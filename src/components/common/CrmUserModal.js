@@ -140,7 +140,7 @@ export class CrmUserModal extends Component {
         email,
         phone,
         roleType,
-        rate: parseFloat(rate.replace(/[$,\s]/g, "")).toFixed(2),
+        rate: rate ? parseFloat(rate.replace(/[$,\s]/g, "")).toFixed(2) : "0",
         permissions
       };
       const { isValid, errors } = Validator(
