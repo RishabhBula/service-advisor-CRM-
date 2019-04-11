@@ -1,17 +1,19 @@
 const rateStandardModel = require("../../models/rateStandard");
 const { validationResult } = require("express-validator/check");
+const commonValidation = require("../../common");
+
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.body;
-     let condition = {};
-     if($data.search !== "") {
-       condition.firstName = {
+    let condition = {};
+    if ($data.search !== "") {
+      condition.firstName = {
         $regex: new RegExp($data.search, "i"),
       }
-     }
-     condition.parentId = $data.parentId;
-    const getAllStdRate = await rateStandardModel.find({ ...condition});
+    }
+    condition.parentId = $data.parentId;
+    const getAllStdRate = await rateStandardModel.find({ ...condition });
     if (getAllStdRate) {
       if (getAllStdRate.length) {
         return res.status(200).json({
@@ -39,17 +41,13 @@ const getAllStandardRate = async (req, res) => {
 /* -------------Add Rate Standard ------------ */
 const addNewrateStandard = async (req, res) => {
   const { body } = req;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false,
-    });
-  }
   try {
+    if (body.parentId === null) {
+      body.parentId = body.userId
+    }
     const newRateData = {
-      name: body.name,
-      hourlyRate: body.hourlyRate,
+      name: body.data.name,
+      hourlyRate: body.data.hourlyRate,
       parentId: body.parentId,
       userId: body.userId,
       status: true

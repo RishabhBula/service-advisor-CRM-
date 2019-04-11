@@ -113,6 +113,7 @@ class Users extends Component {
           customerModalOpen={modelDetails.customerModel}
           handleCustomerModal={this.toggleCreateModal}
           addCustomer={addCustomer}
+          profileInfo={this.props.profileInfoReducer}
           matrixListReducerData={matrixListReducer}
         />
       </>
@@ -122,6 +123,7 @@ class Users extends Component {
 const mapStateToProps = state => ({
   userReducer: state.usersReducer,
   matrixListReducer: state.matrixListReducer,
+  profileInfoReducer: state.profileInfoReducer,
   modelInfoReducer: state.modelInfoReducer,
   customerListReducer: state.customerListReducer
 });
