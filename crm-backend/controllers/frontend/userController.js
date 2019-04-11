@@ -35,57 +35,58 @@ const getAllUserList = async (req, res) => {
         };
         break;
     }
-    let condition = {
-      parentId: currentUser.id,
-    };
+    let condition = {};
     if (status) {
       condition.userSideActivation = status;
     }
-    if (searchValue) {
-      condition["$and"] = [
-        {
-          $or: [
-            {
-              firstName: {
-                $regex: new RegExp(searchValue, "i"),
-              },
-            },
-            {
-              lastName: {
-                $regex: new RegExp(searchValue, "i"),
-              },
-            },
-            {
-              email: {
-                $regex: new RegExp(searchValue, "i"),
-              },
-            },
-          ],
-        },
-        {
-          $or: [
-            {
-              isDeleted: {
-                $exists: false,
-              },
-            },
-            {
-              isDeleted: false,
-            },
-          ],
-        },
-      ];
-    } else {
-      condition["$or"] = [
-        {
-          isDeleted: {
-            $exists: false,
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: currentUser.id,
           },
-        },
-        {
-          isDeleted: false,
-        },
-      ];
+          {
+            parentId: currentUser.parentId,
+          },
+        ],
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false,
+            },
+          },
+          {
+            isDeleted: false,
+          },
+        ],
+      },
+      {
+        _id: { $ne: currentUser.id },
+      },
+    ];
+
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            firstName: {
+              $regex: new RegExp(searchValue, "i"),
+            },
+          },
+          {
+            lastName: {
+              $regex: new RegExp(searchValue, "i"),
+            },
+          },
+          {
+            email: {
+              $regex: new RegExp(searchValue, "i"),
+            },
+          },
+        ],
+      });
     }
     const getAllUser = await userModel
       .find({

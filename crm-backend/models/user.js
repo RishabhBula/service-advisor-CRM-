@@ -54,9 +54,9 @@ const userSchema = new Schema({
     ref: "role",
     required: true,
   },
-  permissions: {
-    type: UserPermissions,
-  },
+  // permissions: {
+  //   type: UserPermissions,
+  // },
   firstTimeUser: {
     type: Boolean,
     default: false,
@@ -112,6 +112,10 @@ const userSchema = new Schema({
   parentId: {
     type: mongoose.Types.ObjectId,
     ref: "user",
+    default: null,
+  },
+  rate: {
+    type: Number,
     default: null,
   },
   createdAt: {

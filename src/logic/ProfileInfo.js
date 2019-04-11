@@ -1,12 +1,12 @@
+import { push } from "react-router-redux";
 import { createLogic } from "redux-logic";
+import { ApiHelper } from "../helpers/ApiHelper";
 import {
   profileInfoActions,
   profileInfoStarted,
   profileInfoFailed,
-  profileInfoSuccess
+  profileInfoSuccess,
 } from "./../actions";
-import { ApiHelper } from "../helpers/ApiHelper";
-import { push } from "react-router-redux";
 
 const profileInfoLogic = createLogic({
   type: profileInfoActions.PROFILE_INFO_REQUEST,
@@ -14,21 +14,17 @@ const profileInfoLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(
       profileInfoStarted({
-        profileInfo: []
+        profileInfo: {},
+        isLoading: true,
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer(
-      "/",
-      "user/getProfile",
-      "GET",
-      true,
-      undefined
-    );
+    let result = await api.FetchFromServer("/user", "/getProfile", "GET", true);
     if (result.isError) {
       dispatch(
         profileInfoFailed({
-          profileInfo: []
+          profileInfo: {},
+          isLoading: false,
         })
       );
       localStorage.removeItem("token");
@@ -38,12 +34,13 @@ const profileInfoLogic = createLogic({
     } else {
       dispatch(
         profileInfoSuccess({
-          profileInfo: result.data.data
+          profileInfo: result.data.data,
+          isLoading: false,
         })
       );
       done();
     }
-  }
+  },
 });
 
 export const ProfileInfoLogic = [profileInfoLogic];

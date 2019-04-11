@@ -46,16 +46,7 @@ export class CrmVehicleModal extends Component {
             >
                <ModalHeader toggle={handleVehicleModal}>Create New Vehicle</ModalHeader>
                <ModalBody >
-                  <Row className="justify-content-center">
-                     <Col md="12">
-                        <FormGroup>
-                           <Label htmlFor="name" className="customer-modal-text-style">
-                              Notes
-                  			</Label>
-                           <Input type="textarea" placeholder="Enter a note..." id="name" required />
-                        </FormGroup>
-                     </Col>
-                  </Row>
+                 
                   <Row className="justify-content-center">
                      <Col md="6">
                         <FormGroup>
@@ -68,6 +59,7 @@ export class CrmVehicleModal extends Component {
                               id="year"
                               required
                            />
+                           <div className="error-tool-tip">this field is required</div>
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -81,6 +73,7 @@ export class CrmVehicleModal extends Component {
                               id="make"
                               required
                            />
+                           
                         </FormGroup>
                      </Col>
                   </Row>
@@ -96,8 +89,8 @@ export class CrmVehicleModal extends Component {
                               id="type"
                               placeholder="Accord"
                               required
-                           >
-                           </Input>
+                           />
+                             {/* <div className="error-tool-tip">this field is required</div> */}
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -245,6 +238,16 @@ export class CrmVehicleModal extends Component {
                            
                            </Row>
                            <Row className="justify-content-center">
+                     <Col md="12">
+                        <FormGroup>
+                           <Label htmlFor="name" className="customer-modal-text-style">
+                              Notes
+                  			</Label>
+                           <Input type="textarea" placeholder="Enter a note..." id="name" required />
+                        </FormGroup>
+                     </Col>
+                  </Row>
+                           <Row className="justify-content-center">
                      <Col md="12 text-center">
                      {
                                  expandForm ?
@@ -255,6 +258,7 @@ export class CrmVehicleModal extends Component {
                               }
                      </Col>
                      </Row>
+                  
                         </> : ""
                   }
                </ModalBody>

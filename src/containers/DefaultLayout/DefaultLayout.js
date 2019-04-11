@@ -1,11 +1,15 @@
 import React, { Component, Suspense } from "react";
+import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Container } from "reactstrap";
 
+import { Container } from "reactstrap";
 // sidebar nav config
 import navigation from "../../_nav";
+import { profileInfoRequest } from "../../actions";
+import { logger } from "../../helpers/Logger";
 // routes config
 import routes from "../../routes";
+import FullPageLoader from "../Loader/FullPageLoader";
 import Loader from "./../Loader/Loader";
 import {
   AppAside,
@@ -19,8 +23,6 @@ import {
   AppSidebarMinimizer,
   AppSidebarNav,
 } from "@coreui/react";
-import { connect } from "react-redux";
-import { profileInfoRequest } from "../../actions";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -29,8 +31,7 @@ class DefaultLayout extends Component {
   componentDidMount() {
     if (!localStorage.getItem("token")) {
       this.props.redirectTo("/login");
-    }
-    else {
+    } else {
       this.props.profileInfoAction();
     }
   }
@@ -39,9 +40,25 @@ class DefaultLayout extends Component {
     localStorage.removeItem("token");
     this.props.redirectTo("/login");
   }
-
+  navigation = permissions => {
+    logger(permissions, navigation);
+    const navItems = {
+      items: [],
+    };
+    navigation.items.forEach((nav, index) => {
+      if (permissions[nav.authKey]) {
+        navItems.items.push(nav);
+      }
+    });
+    return navItems;
+  };
   render() {
-    return (
+    const { profileInfoReducer } = this.props;
+    const { isLoading, profileInfo } = profileInfoReducer;
+    const { permissions } = profileInfo;
+    return isLoading ? (
+      <FullPageLoader />
+    ) : (
       <div className="app">
         <AppHeader fixed>
           <Suspense fallback={<Loader />}>
@@ -53,7 +70,10 @@ class DefaultLayout extends Component {
             <AppSidebarHeader />
             <AppSidebarForm />
             <Suspense>
-              <AppSidebarNav navConfig={navigation} {...this.props} />
+              <AppSidebarNav
+                navConfig={this.navigation(permissions || {})}
+                {...this.props}
+              />
             </Suspense>
             <AppSidebarFooter />
             <AppSidebarMinimizer />
@@ -71,7 +91,11 @@ class DefaultLayout extends Component {
                         exact={route.exact}
                         name={route.name}
                         render={props => (
-                          <route.component {...props} {...this.props} />
+                          <route.component
+                            {...props}
+                            {...this.props}
+                            permissions={permissions}
+                          />
                         )}
                       />
                     ) : null;
@@ -97,18 +121,14 @@ class DefaultLayout extends Component {
   }
 }
 
-// const mapStateToProps = state => ({
-//   userReducer: state.usersReducer
-// });
-
-const mapDispatchToProps = dispatch => ({
-  profileInfoAction: page => {
-    dispatch(profileInfoRequest({ page }));
-  }
+const mapStateToProps = state => ({
+  profileInfoReducer: state.profileInfoReducer,
 });
 
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(DefaultLayout);
+const mapDispatchToProps = dispatch => ({
+  profileInfoAction: () => {
+    dispatch(profileInfoRequest());
+  },
+});
 
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

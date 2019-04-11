@@ -135,15 +135,13 @@ class Calender extends Component {
         //       <PopoverBody>{event.description}</PopoverBody>
         //     </Popover>
         //   );
-        // }
+        // },
       },
       calenderData: {},
     };
   }
 
   handleEventClick(element) {
-    console.log(element);
-    console.log(element.event.extendedProps.description);
     return (
       <Popover
         placement="bottom"

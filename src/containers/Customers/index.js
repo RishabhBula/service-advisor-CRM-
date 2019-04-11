@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as qs from "query-string";
 import {
   Card,
   CardHeader,
@@ -9,10 +10,11 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
-import UsersList from "../../components/UsersList";
+import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer } from "../../actions";
 import { logger } from "../../helpers/Logger";
+import { isEqual } from "../../helpers/Object";
 
 class Users extends Component {
   constructor(props) {
@@ -23,19 +25,56 @@ class Users extends Component {
   }
   componentDidMount() { 
     this.props.getMatrix();
+    const query = qs.parse(this.props.location.search);
+    this.props.getCustomerList({ ...query, page: query.page || 1 });
+  }
+
+  componentDidUpdate({location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
+    }
   }
   toggleCreateModal = e => {
-    e.preventDefault();
-    this.setState({
-      openCreate: !this.state.openCreate
-    });
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      customerModel: !modelDetails.customerModel
+    };
+    this.props.modelOperate(data);
   };
   createUser = data => {
     logger(data);
   };
+
+  onSearch = (data) => {
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
+  }
+
+  onPageChange = page => {
+    const { location } = this.props;
+    const { search, pathname } = location;
+    const query = qs.parse(search);
+    this.props.redirectTo(
+      [pathname, qs.stringify({ ...query, page })].join("?")
+    );
+  };
+
+  deleteUser = userId => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.deleteCustomer({ ...query, userId });
+  };
+
+
+
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addCustomer, matrixListReducer } = this.props;
+    const { userReducer, addCustomer, matrixListReducer, customerListReducer } = this.props;
+    const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
         <Card>
@@ -62,11 +101,16 @@ class Users extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <UsersList userData={userReducer} />
+            <CustomerList 
+              customerData={customerListReducer} 
+              onSearch={this.onSearch}
+              onPageChange={this.onPageChange}
+              onDelete={this.deleteCustomer}
+            />
           </CardBody>
         </Card>
         <CrmCustomerModal
-          customerModalOpen={openCreate}
+          customerModalOpen={modelDetails.customerModel}
           handleCustomerModal={this.toggleCreateModal}
           addCustomer={addCustomer}
           matrixListReducerData={matrixListReducer}
@@ -77,7 +121,9 @@ class Users extends Component {
 }
 const mapStateToProps = state => ({
   userReducer: state.usersReducer,
-  matrixListReducer: state.matrixListReducer
+  matrixListReducer: state.matrixListReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  customerListReducer: state.customerListReducer
 });
 
 const mapDispatchToProps = dispatch => ({ 
@@ -86,7 +132,17 @@ const mapDispatchToProps = dispatch => ({
   },
   getMatrix: () => {    
     dispatch(getMatrixList());
-  }
+  },
+  modelOperate: (data) => {    
+    dispatch(modelOpenRequest({modelDetails: data}));
+  },
+  getCustomerList: (data) => {
+    dispatch(customerGetRequest(data));
+  },
+  deleteCustomer: (data) => {
+    dispatch(deleteCustomer(data));
+  },
+
 });
 
 export default connect(
