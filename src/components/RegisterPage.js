@@ -11,7 +11,9 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row
+  Row,
+  FormGroup,
+  FormFeedback
 } from "reactstrap";
 
 import { logger } from "../helpers/Logger";
@@ -125,96 +127,111 @@ class RegisterPage extends Component {
                     <Form onSubmit={this.handleSubmit}>
                       <h1 className="auth-title">Create your account</h1>
                       <p />
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-user" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="text"
-                          placeholder="First Name"
-                          autoComplete="first-name"
-                          onChange={this.eventHandler}
-                          value={firstName}
-                          name="firstName"
-                        />
-                      </InputGroup>
-                      {errors.firstName ? (
-                        <p className={"text-danger"}>{errors.firstName}</p>
-                      ) : null}
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-user" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="text"
-                          placeholder="Last Name"
-                          autoComplete="last-name"
-                          onChange={this.eventHandler}
-                          value={lastName}
-                          name="lastName"
-                        />
-                      </InputGroup>
-                      {errors.lastName ? (
-                        <p className={"text-danger"}>{errors.lastName}</p>
-                      ) : null}
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>@</InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="text"
-                          placeholder="Email"
-                          autoComplete="email"
-                          onChange={this.eventHandler}
-                          value={email}
-                          name="email"
-                        />
-                      </InputGroup>
-                      {errors.email ? (
-                        <p className={"text-danger"}>{errors.email}</p>
-                      ) : null}
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-lock" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          autoComplete="new-password"
-                          onChange={this.eventHandler}
-                          value={password}
-                          name="password"
-                        />
-                      </InputGroup>
-                      {errors.password ? (
-                        <p className={"text-danger"}>{errors.password}</p>
-                      ) : null}
-                      <InputGroup className="mb-4">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-lock" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="password"
-                          placeholder="Confirm password"
-                          autoComplete="new-password"
-                          onChange={this.eventHandler}
-                          name="confirmPassword"
-                          value={confirmPassword}
-                        />
-                      </InputGroup>
-                      {errors.confirmPassword ? (
-                        <p className={"text-danger"}>
-                          {errors.confirmPassword}
-                        </p>
-                      ) : null}
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-user" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="First Name"
+                            autoComplete="first-name"
+                            onChange={this.eventHandler}
+                            value={firstName}
+                            name="firstName"
+                            invalid={errors.firstName}
+                          />
+                          <FormFeedback>
+                            {errors.firstName ? errors.firstName : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-user" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="Last Name"
+                            autoComplete="last-name"
+                            onChange={this.eventHandler}
+                            value={lastName}
+                            name="lastName"
+                            invalid={errors.lastName}
+                          />
+                          <FormFeedback>
+                            {errors.lastName ? errors.lastName : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>@</InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="Email"
+                            autoComplete="email"
+                            onChange={this.eventHandler}
+                            value={email}
+                            name="email"
+                            invalid={errors.email}
+                          />
+                          <FormFeedback>
+                            {errors.email ? errors.email : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="password"
+                            placeholder="Password"
+                            autoComplete="new-password"
+                            onChange={this.eventHandler}
+                            value={password}
+                            name="password"
+                            invalid={errors.password}
+                          />
+                          <FormFeedback>
+                            {errors.password ? errors.password : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-4">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="password"
+                            placeholder="Confirm password"
+                            autoComplete="new-password"
+                            onChange={this.eventHandler}
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            invalid={errors.confirmPassword}
+                          />
+                          <FormFeedback>
+                            {errors.confirmPassword
+                              ? errors.confirmPassword
+                              : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
                       <Row>
                         <Col sm="6">
                           <Button

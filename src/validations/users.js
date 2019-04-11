@@ -17,6 +17,9 @@ export const CreateUserValidations = {
   type: {
     [ValidationTypes.REQUIRED]: true,
   },
+  rate: {
+    [ValidationTypes.MAXVALUE]: 1000,
+  },
 };
 
 export const CreateUserValidationsMessaages = {
@@ -37,5 +40,8 @@ export const CreateUserValidationsMessaages = {
   },
   type: {
     [ValidationTypes.REQUIRED]: "Please enter select user type.",
+  },
+  rate: {
+    [ValidationTypes.MAXVALUE]: "Rate cann't be more than $1000.",
   },
 };
