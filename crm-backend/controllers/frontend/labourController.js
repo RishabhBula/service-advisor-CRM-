@@ -1,32 +1,33 @@
 const rateStandardModel = require("../../models/rateStandard");
+const mongoose = require("mongoose");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
+  console.log('====================================');
+  console.log("sdfsdf");
+  console.log('====================================');
   try {
-    let $data = req.body;
-     let condition = {};
-     if($data.search !== "") {
-       condition.firstName = {
-        $regex: new RegExp($data.search, "i"),
-      }
-     }
-     condition.parentId = $data.parentId;
-    const getAllStdRate = await rateStandardModel.find({ ...condition});
-    if (getAllStdRate) {
-      if (getAllStdRate.length) {
+     let $data = req.query;
+      let condition = {};
+   
+    const getAllStdRate = await rateStandardModel.find({parentId: mongoose.Types.ObjectId($data.parentId)});
+    console.log('=========d===========================');
+    console.log(getAllStdRate, $data.parentId);
+    console.log('====================================');
+    if (getAllStdRate) {     
         return res.status(200).json({
           responsecode: 200,
           success: true,
           data: getAllStdRate
         });
-      }
+      
     } else {
       return res.status(400).json({
         responsecode: 200,
         success: false
       });
-    }
+    }  
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
       success: false
