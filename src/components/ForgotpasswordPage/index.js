@@ -14,6 +14,8 @@ import {
   InputGroupText,
   Input,
   Button,
+  FormGroup,
+  FormFeedback,
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
@@ -74,30 +76,33 @@ class ForgotpasswordPage extends Component {
                       <p className="text-muted">
                         Enter the email address associated with your account
                       </p>
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>@</InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="email"
-                          placeholder="Email"
-                          autoComplete="forgot-email"
-                          name={"email"}
-                          value={email}
-                          onChange={e => {
-                            this.setState({
-                              email: e.target.value,
-                              errors: {
-                                ...this.state.errors,
-                                email: null,
-                              },
-                            });
-                          }}
-                        />
-                      </InputGroup>
-                      {errors.email ? (
-                        <p className={"text-danger"}>{errors.email}</p>
-                      ) : null}
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>@</InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="email"
+                            placeholder="Email"
+                            autoComplete="forgot-email"
+                            name={"email"}
+                            value={email}
+                            invalid={errors.email}
+                            onChange={e => {
+                              this.setState({
+                                email: e.target.value,
+                                errors: {
+                                  ...this.state.errors,
+                                  email: null,
+                                },
+                              });
+                            }}
+                          />
+                          <FormFeedback>
+                            {errors.email ? errors.email : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
                       <Row>
                         <Col sm="6">
                           <Button

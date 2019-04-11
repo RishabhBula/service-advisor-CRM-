@@ -13,6 +13,8 @@ import {
   InputGroupText,
   Input,
   Button,
+  FormGroup,
+  FormFeedback,
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
@@ -83,44 +85,50 @@ class GeneratePasswordPage extends Component {
                     <Form onSubmit={this.generatePassword}>
                       <h1 className="auth-title">Generate Password</h1>
                       <p className="text-muted">for your Account</p>
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-lock" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          autoComplete="username"
-                          name={"password"}
-                          value={password}
-                          onChange={this.handleInputChange}
-                        />
-                      </InputGroup>
-                      {errors.password ? (
-                        <p className={"text-danger"}>{errors.password}</p>
-                      ) : null}
-                      <InputGroup className="mb-4">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-lock" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="password"
-                          placeholder="Confirm Password"
-                          autoComplete="confirm-password"
-                          name={"confirmPassword"}
-                          value={confirmPassword}
-                          onChange={this.handleInputChange}
-                        />
-                      </InputGroup>
-                      {errors.confirmPassword ? (
-                        <p className={"text-danger"}>
-                          {errors.confirmPassword}
-                        </p>
-                      ) : null}
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="password"
+                            placeholder="Password"
+                            autoComplete="username"
+                            name={"password"}
+                            value={password}
+                            onChange={this.handleInputChange}
+                            invalid={errors.password}
+                          />
+                          <FormFeedback>
+                            {errors.password ? errors.password : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-4">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="password"
+                            placeholder="Confirm Password"
+                            autoComplete="confirm-password"
+                            name={"confirmPassword"}
+                            value={confirmPassword}
+                            onChange={this.handleInputChange}
+                            invalid={errors.password}
+                          />
+                          <FormFeedback>
+                            {errors.confirmPassword ? (
+                              errors.confirmPassword
+                            ) : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
                       <Row>
                         <Col xs="12">
                           <Button
@@ -129,7 +137,7 @@ class GeneratePasswordPage extends Component {
                             block
                             onClick={this.generatePassword}
                           >
-                            Submit
+                            Generate Password
                           </Button>
                         </Col>
                       </Row>

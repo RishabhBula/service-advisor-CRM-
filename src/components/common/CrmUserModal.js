@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as classnames from "classnames";
 import {
   Button,
   Modal,
@@ -10,7 +11,8 @@ import {
   FormGroup,
   Label,
   Input,
-  Form
+  Form,
+  FormFeedback
 } from "reactstrap";
 import { AppSwitch } from "@coreui/react";
 import { logger } from "../../helpers/Logger";
@@ -138,7 +140,7 @@ export class CrmUserModal extends Component {
         email,
         phone,
         roleType,
-        rate,
+        rate: parseFloat(rate.replace(/[$,\s]/g, "")).toFixed(2),
         permissions
       };
       const { isValid, errors } = Validator(
@@ -198,12 +200,12 @@ export class CrmUserModal extends Component {
                       onChange={this.handleInputChange}
                       value={firstName}
                       name="firstName"
-                      required
+                      invalid={errors.firstName}
                     />
+                    <FormFeedback>
+                      {errors.firstName ? errors.firstName : null}
+                    </FormFeedback>
                   </FormGroup>
-                  {errors.firstName ? (
-                    <p className={"text-danger"}>{errors.firstName}</p>
-                  ) : null}
                 </Col>
                 <Col md="6">
                   <FormGroup>
@@ -216,12 +218,12 @@ export class CrmUserModal extends Component {
                       onChange={this.handleInputChange}
                       value={lastName}
                       name="lastName"
-                      required
+                      invalid={errors.lastName}
                     />
+                    <FormFeedback>
+                      {errors.lastName ? errors.lastName : null}
+                    </FormFeedback>
                   </FormGroup>
-                  {errors.lastName ? (
-                    <p className={"text-danger"}>{errors.lastName}</p>
-                  ) : null}
                 </Col>
               </Row>
               <Row className="justify-content-center">
@@ -237,11 +239,12 @@ export class CrmUserModal extends Component {
                       value={email}
                       name="email"
                       disabled={isEditMode}
+                      invalid={errors.email}
                     />
+                    <FormFeedback>
+                      {errors.email ? errors.email : null}
+                    </FormFeedback>
                   </FormGroup>
-                  {errors.email ? (
-                    <p className={"text-danger"}>{errors.email}</p>
-                  ) : null}
                 </Col>
                 <Col md="6">
                   <FormGroup>
@@ -255,11 +258,12 @@ export class CrmUserModal extends Component {
                       onChange={this.handleInputChange}
                       value={phone}
                       name="phone"
+                      invalid={errors.phone}
                     />
+                    <FormFeedback>
+                      {errors.phone ? errors.phone : null}
+                    </FormFeedback>
                   </FormGroup>
-                  {errors.phone ? (
-                    <p className={"text-danger"}>{errors.phone}</p>
-                  ) : null}
                 </Col>
               </Row>
               <Row className="justify-content-center">
@@ -275,6 +279,7 @@ export class CrmUserModal extends Component {
                       onChange={this.handleInputChange}
                       value={roleType}
                       name="roleType"
+                      invalid={errors.roleType}
                     >
                       {RoleOptions.map((role, index) => {
                         return (
@@ -284,29 +289,31 @@ export class CrmUserModal extends Component {
                         );
                       })}
                     </Input>
+                    <FormFeedback>
+                      {errors.roleType ? errors.roleType : null}
+                    </FormFeedback>
                   </FormGroup>
-                  {errors.roleType ? (
-                    <p className={"text-danger"}>{errors.roleType}</p>
-                  ) : null}
                 </Col>
               </Row>
               <Row className="justify-content-center">
                 <Col md="12">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Rate/Hour (optional)
+                      Rate/hour (optional)
                     </Label>
                     <CurrencyInput
                       value={rate}
                       name={"rate"}
                       prefix="$"
                       onChangeEvent={this.handleInputChange}
-                      className={"form-control"}
+                      className={classnames("form-control", {
+                        "is-invalid": errors.rate
+                      })}
                     />
+                    <FormFeedback>
+                      {errors.rate ? errors.rate : null}
+                    </FormFeedback>
                   </FormGroup>
-                  {errors.rate ? (
-                    <p className={"text-danger"}>{errors.rate}</p>
-                  ) : null}
                 </Col>
               </Row>
               {roleType
