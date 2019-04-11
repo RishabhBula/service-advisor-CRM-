@@ -109,36 +109,36 @@ const getCustomersLogic = createLogic({
   },
 });
 
-const deleteCustomerLogic = createLogic({
-  type: customersAddActions.DELETE_CUSTOMER,
-  async process({ action }, dispatch, done) {
-    dispatch(showLoader());
-    logger(action.payload);
-    let api = new ApiHelper();
-    let result = await api.FetchFromServer(
-      "/user",
-      ["/", action.payload.userId].join(""),
-      "DELETE",
-      true
-    );
-    if (result.isError) {
-      toast.error(result.messages[0]);
-      dispatch(hideLoader());
-      done();
-      return;
-    } else {
-      toast.success(result.messages[0]);
-      dispatch(hideLoader());
-      delete action.payload.userId;
-      dispatch(
-        getUsersList({
-          ...action.payload,
-        })
-      );
-      done();
-    }
-  },
-});
+// const deleteCustomerLogic = createLogic({
+//   type: customersAddActions.DELETE_CUSTOMER,
+//   async process({ action }, dispatch, done) {
+//     dispatch(showLoader());
+//     logger(action.payload);
+//     let api = new ApiHelper();
+//     let result = await api.FetchFromServer(
+//       "/user",
+//       ["/", action.payload.userId].join(""),
+//       "DELETE",
+//       true
+//     );
+//     if (result.isError) {
+//       toast.error(result.messages[0]);
+//       dispatch(hideLoader());
+//       done();
+//       return;
+//     } else {
+//       toast.success(result.messages[0]);
+//       dispatch(hideLoader());
+//       delete action.payload.userId;
+//       dispatch(
+//         getUsersList({
+//           ...action.payload,
+//         })
+//       );
+//       done();
+//     }
+//   },
+// });
 
 
 export const CustomersLogic = [addCustomerLogic, getCustomersLogic];

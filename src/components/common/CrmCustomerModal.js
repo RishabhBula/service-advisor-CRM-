@@ -29,7 +29,7 @@ import {
 import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
-
+import Async from 'react-select/lib/Async';
 export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
@@ -60,11 +60,12 @@ export class CrmCustomerModal extends Component {
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
       defaultOptions: [
-        { custom: true },
+        { value: "", label: "Add New Customer" },
         { value: "123", label: "Chocolate" },
         { value: "421", label: "Strawberry" },
         { value: "", label: "Add New" }
       ],
+       vendorValue: '',
     }
   }
 
@@ -152,10 +153,30 @@ export class CrmCustomerModal extends Component {
       })
     }
   }
-  handleStandardRate = () => {
-    this.setState({
-      openStadardRateModel: !this.state.openStadardRateModel
-    })
+  handleStandardRate = (selectValue) => {
+    if(selectValue.value === "") {
+      this.setState({
+        openStadardRateModel: !this.state.openStadardRateModel
+      })
+    }
+    else {
+      const { customerDefaultPermissions } = this.state;
+      customerDefaultPermissions["shouldLaborRateOverride"].laborRate =
+        selectValue.value;
+      this.setState({
+        ...customerDefaultPermissions
+      });
+    }
+  }
+
+  loadOptions = async input => {
+    const defaultOptions = [
+      {
+        value: '',
+        label: 'Add New',
+      },
+    ];
+    return defaultOptions;
   }
   
   addNewCustomer = () => {
@@ -234,7 +255,8 @@ export class CrmCustomerModal extends Component {
       errors,
       firstName,
       lastName,
-      email
+      email,
+      vendorValue
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
@@ -702,21 +724,15 @@ export class CrmCustomerModal extends Component {
                        ) : null}
                         {labourRate ? (
                           <Col md="">
-                            <Select
-                              defaultOptions={defaultOptions}
-                              onClickAddNew={this.handleStandardRate}
-                              className="form-select"
-                              theme={(theme) => ({
-                                ...theme,
-                                borderRadius: 0,
-                                colors: {
-                                ...theme.colors,
-                                  primary25: 'hotpink',
-                                  primary: 'black',
-                                },
-                              })}
-                            ><option>dsfsdfdsf</option>
-                            </Select>
+                          <Async
+                            defaultOptions={defaultOptions}
+                            loadOptions={this.loadOptions}
+                            onChange={this.handleStandardRate}
+                            isClearable={true}
+                            value={vendorValue}
+                          />
+                           
+                         
                           </Col>
                         ) : null}
                         {/* */}
