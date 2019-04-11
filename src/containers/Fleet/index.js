@@ -11,17 +11,20 @@ import {
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import FleetList from "../../components/Fleet/FleetList";
 import { connect } from "react-redux";
-import { fleetListRequest, fleetAddRequest, getMatrixList } from "../../actions";
+import { fleetListRequest, fleetAddRequest, getMatrixList} from "../../actions";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
 import { CreateFleetValidations, CreateFleetValidMessaages } from "../../validations";
+
 class Fleet extends Component {
   constructor(props) {
     super(props);
     this.state = {
       error: {},
       isLoading: false,
-      openCreate: false
+      fleetListData: [],
+      openEdit: false,
+      openCreate: false,
     };
   }
   toggleCreateModal = e => {
@@ -32,9 +35,28 @@ class Fleet extends Component {
   };
   componentDidMount() {
     this.props.getMatrix();
+    const userData = this.props.profileInfoReducer.profileInfo
+    this.props.getFleet(userData._id)
   }
-  handleAddFleet = (fleetData) => {
-    console.log("This is fleet data", fleetData);
+  componentDidUpdate = ({ fleetReducer }) => {
+    if (
+      this.props.fleetReducer.fleetListData.isSuccess !==
+      fleetReducer.fleetListData.isSuccess
+    ) {
+      const userData = this.props.profileInfoReducer.profileInfo
+      this.props.getFleet(userData._id)
+    }
+    if (
+      this.props.fleetReducer.fleetListData.isEditSuccess !==
+      fleetReducer.fleetListData.isEditSuccess
+    ) {
+      this.setState({
+        openEdit: !this.state.openEdit
+      });
+    }
+  }
+
+  handleAddFleet = (fleetData,isEditMode) => {
     this.setState({
       error: {}
     });
@@ -51,17 +73,30 @@ class Fleet extends Component {
         });
         return;
       }
-      this.props.addFleet(fleetData)
+      const userData = this.props.profileInfoReducer.profileInfo
+      const userId = userData._id
+      const parentId = userData.parentId
+      const data = {
+        fleetData: fleetData,
+        userId: userId,
+        parentId: parentId
+      }
+      if (!isEditMode) {
+        this.props.addFleet(data)
+      }else{
+        this.props.updateFleet(data)
+      }
+      this.setState({
+        openCreate: !this.state.openCreate
+      })
     } catch (error) {
       logger(error);
     }
   }
-  createUser = data => {
-    logger(data);
-  };
   render() {
-    const { openCreate, error } = this.state;
-    const { matrixListReducer } = this.props
+    const { openCreate, error, openEdit } = this.state;
+    const { matrixListReducer, profileInfoReducer, fleetReducer } = this.props
+
     return (
       <>
         <Card>
@@ -88,7 +123,11 @@ class Fleet extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <FleetList userData="dasdsa" />
+            <FleetList
+              fleetListData={fleetReducer}
+              handleEditFleet={this.handleEditFleet}
+              onUpdate={this.props.updateFleet}
+              openEdit={openEdit} />
           </CardBody>
         </Card>
         <CrmFleetModal
@@ -96,6 +135,7 @@ class Fleet extends Component {
           handleFleetModal={this.toggleCreateModal}
           handleAddFleet={this.handleAddFleet}
           errorMessage={error}
+          profileInfoReducer={profileInfoReducer}
           matrixListReducerData={matrixListReducer}
         />
       </>
@@ -104,13 +144,15 @@ class Fleet extends Component {
 }
 
 const mapStateToProps = state => ({
-  matrixListReducer: state.matrixListReducer
+  profileInfoReducer: state.profileInfoReducer,
+  matrixListReducer: state.matrixListReducer,
+  fleetReducer: state.fleetReducer
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  getFleet: page => {
-    dispatch(fleetListRequest({ page }));
+  getFleet: userId => {
+    dispatch(fleetListRequest({ userId }));
   },
   addFleet: data => {
     dispatch(fleetAddRequest(data));

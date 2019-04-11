@@ -158,7 +158,12 @@ const userVerifyLink = [
     .isEmpty()
     .withMessage("Active value is required. "),
 ];
-
+const addNewRateStandard = [
+  body("name").not().isEmpty().withMessage("Name is required."),
+  body("hourRate").not().isEmpty().withMessage("Hour rate is required."),
+  body("userId").not().isEmpty().withMessage("userId is required."),
+  body("parentId").not().isEmpty().withMessage("parentId is required."),
+]
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -170,4 +175,5 @@ module.exports = {
   updateUserValidation,
   userVerify,
   userVerifyLink,
+  addNewRateStandard
 };

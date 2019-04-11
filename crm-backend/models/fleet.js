@@ -42,8 +42,18 @@ const fleetSchema = new Schema({
     type: String,
     default: null
   },
-  permission: {
+  fleetDefaultPermissions: {
     type: PermissionObject,
+    default: null
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    default: null
+  },
+  parentId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
     default: null
   },
   status: {

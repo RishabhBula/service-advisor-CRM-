@@ -3,7 +3,6 @@ import { ValidationTypes } from "js-object-validation";
 export const CreateFleetValidations = {
   companyName: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.ALPHA]: true,
   },
   email: {
     [ValidationTypes.EMAIL]: true
