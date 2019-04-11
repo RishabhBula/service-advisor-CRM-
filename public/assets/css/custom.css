@@ -477,7 +477,7 @@
   display: flex;
   align-items: center;
   background: #5d43db;
-  /* width: 200px; */
+  width: 100%;
 }
 .custom-toggle-bar {
   outline: none !important;
