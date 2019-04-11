@@ -76,6 +76,13 @@ class Users extends Component {
     this.onSearch({});
   }
 
+  onTypeHeadStdFun = (data) => {
+    this.props.getStdList(data);
+  }
+
+  onStdAdd = () => {
+    this.props.getStdList();
+  }
 
 
   render() {
@@ -120,8 +127,11 @@ class Users extends Component {
           customerModalOpen={modelDetails.customerModel}
           handleCustomerModal={this.toggleCreateModal}
           addCustomerFun={this.addCustomer}
+          profileInfo={this.props.profileInfoReducer}
           matrixListReducerData={matrixListReducer}
           rateStandardListData ={rateStandardListReducer}
+          onTypeHeadStdFun = {this.onTypeHeadStdFun}
+          onStdAdd = {this.onStdAdd}
         />
       </>
     );
@@ -130,6 +140,7 @@ class Users extends Component {
 const mapStateToProps = state => ({
   userReducer: state.usersReducer,
   matrixListReducer: state.matrixListReducer,
+  profileInfoReducer: state.profileInfoReducer,
   modelInfoReducer: state.modelInfoReducer,
   customerListReducer: state.customerListReducer,
   rateStandardListReducer: state.rateStandardListReducer

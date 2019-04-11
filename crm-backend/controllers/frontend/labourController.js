@@ -1,7 +1,5 @@
 const rateStandardModel = require("../../models/rateStandard");
 const mongoose = require("mongoose");
-const { validationResult } = require("express-validator/check");
-const commonValidation = require("../../common/index");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
   try {
@@ -35,17 +33,13 @@ const getAllStandardRate = async (req, res) => {
 /* -------------Add Rate Standard ------------ */
 const addNewrateStandard = async (req, res) => {
   const { body } = req;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false,
-    });
-  }
   try {
+    if (body.parentId === null) {
+      body.parentId = body.userId
+    }
     const newRateData = {
-      name: body.name,
-      hourlyRate: body.hourlyRate,
+      name: body.data.name,
+      hourlyRate: body.data.hourRate,
       parentId: body.parentId,
       userId: body.userId,
       status: true,
