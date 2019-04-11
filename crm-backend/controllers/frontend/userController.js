@@ -10,6 +10,7 @@ const getAllUserList = async (req, res) => {
     const searchValue = query.search;
     const sort = query.sort;
     const status = query.status;
+    const type = query.type;
     let sortBy = {};
     switch (sort) {
       case "loginasc":
@@ -36,9 +37,6 @@ const getAllUserList = async (req, res) => {
         break;
     }
     let condition = {};
-    if (status) {
-      condition.userSideActivation = status;
-    }
     condition["$and"] = [
       {
         $or: [
@@ -87,6 +85,12 @@ const getAllUserList = async (req, res) => {
           },
         ],
       });
+    }
+    if (status) {
+      condition["$and"].push({ userSideActivation: status });
+    }
+    if (type) {
+      condition["$and"].push({ roleType: type });
     }
     const getAllUser = await userModel
       .find({

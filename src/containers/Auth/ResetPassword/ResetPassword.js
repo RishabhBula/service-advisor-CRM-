@@ -6,6 +6,9 @@ import { validateResetToken, resetPasswordRequest } from "../../../actions";
 import ResetPasswordPage from "../../../components/ResetPasswordPage";
 class ResetPassword extends Component {
   componentDidMount() {
+    if (localStorage.getItem("token")) {
+      this.props.redirectTo("/dashboard");
+    }
     const { token, user, verification } = qs.parse(this.props.location.search);
     if (!token || !user || !verification) {
       this.props.redirectTo("/404");
