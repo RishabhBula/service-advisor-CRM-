@@ -3,7 +3,14 @@ const rateStandardModel = require("../../models/rateStandard");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.body;
-    const getAllStdRate = await rateStandardModel.find({ parentId: $data.parentId });
+     let condition = {};
+     if($data.search !== "") {
+       condition.firstName = {
+        $regex: new RegExp($data.search, "i"),
+      }
+     }
+     condition.parentId = $data.parentId;
+    const getAllStdRate = await rateStandardModel.find({ ...condition});
     if (getAllStdRate) {
       if (getAllStdRate.length) {
         return res.status(200).json({
