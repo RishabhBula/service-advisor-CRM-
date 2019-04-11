@@ -390,7 +390,7 @@ export class CrmCustomerModal extends Component {
                     >
                       First Name
                     </Label>
-                    <div>
+                    <div className={"input-block"}>
                       <Input
                         type="text"
                         placeholder="John"
@@ -414,7 +414,7 @@ export class CrmCustomerModal extends Component {
                     >
                       Last Name
                     </Label>
-                    <div>
+                    <div className={"input-block"}>
                       <Input
                         type="text"
                         placeholder="Doe"
@@ -424,7 +424,7 @@ export class CrmCustomerModal extends Component {
                       />
                       {
                         errors.lastName && !lastName ?
-                          <span className="text-danger">{errors.lastName}</span> :
+                          <p className="text-danger">{errors.lastName}</p> :
                           null
                       }
                     </div>
@@ -451,6 +451,7 @@ export class CrmCustomerModal extends Component {
                                   Phone
                                 </Label>
                                 {/* <div></div> */}
+                              
                                 <Input
                                   onChange={e =>
                                     this.handlePhoneNameChange(index, e)

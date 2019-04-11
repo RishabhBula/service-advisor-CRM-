@@ -20,7 +20,7 @@ import {
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
-import Logo from "./../../assets/serviceadvisorlogo.jpg";
+import Logo from "./../../assets/img/logo-white.svg";
 class LoginPage extends Component {
   constructor(props) {
     super(props);
@@ -131,7 +131,7 @@ class LoginPage extends Component {
                       </FormGroup>
                       <Row>
                         <Col xs="6">
-                          <Button color="primary" className="px-4" block>
+                          <Button className="px-4 btn-theme" block>
                             Login
                           </Button>
                         </Col>
