@@ -4,7 +4,9 @@ import {
   rateStandardListActions,
   getRateStandardListStart,
   getRateStandardListFail,
-  getRateStandardListSuccess
+  getRateStandardListSuccess,
+  setRateStandardListStart,
+  setRateStandardListSuccess
 } from "./../actions";
 
 const getStandardRateListLogic = createLogic({
@@ -18,11 +20,13 @@ const getStandardRateListLogic = createLogic({
       parentId = profileStateData.profileInfo._id;
     }
     let data = {
-      parentId: parentId
+      parentId: parentId,
+      searchValue: action.payload
     };
+    console.log("$$$$$$$$$$$$$$$$$$$",data);
     dispatch(
       getRateStandardListStart({
-        standardRateList: []
+        standardRateList: [],
       })
     );
     let api = new ApiHelper();
@@ -37,7 +41,7 @@ const getStandardRateListLogic = createLogic({
     if (result.isError) {
       dispatch(
         getRateStandardListFail({
-          standardRateList: []
+          standardRateList: [],
         })
       );
     } else {
@@ -53,9 +57,11 @@ const getStandardRateListLogic = createLogic({
 
         dataNewArray.push({ value: resultData[i]._id, label: resultData[i].name + " - " + resultData[i].hourlyRate })
       }
+      console.log("%%%%%%%%%%%%%%",dataNewArray);
+      
       dispatch(
         getRateStandardListSuccess({
-          standardRateList: defaultOptions.concat(dataNewArray)
+          standardRateList: defaultOptions.concat(dataNewArray),
         })
       );
     }
@@ -63,4 +69,19 @@ const getStandardRateListLogic = createLogic({
   }
 });
 
-export const StandardRateLogic = [getStandardRateListLogic];
+
+const setStandardRateListLogic = createLogic({
+  type: rateStandardListActions.SET_SELECTED_STANDARD_LIST_REQUEST,
+  async process({ action, getState }, dispatch, done) {
+    const rateStandardData = getState().rateStandardListReducer;
+    dispatch(
+      getRateStandardListSuccess({
+        standardRateList: rateStandardData.standardRateList,
+        selectedOptions: action.payload
+      })
+    );
+    done();
+  }
+});
+
+export const StandardRateLogic = [getStandardRateListLogic, setStandardRateListLogic];

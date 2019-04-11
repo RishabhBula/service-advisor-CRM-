@@ -98,7 +98,7 @@ export class CrmCustomerModal extends Component {
           isLoading: false,
         });
         return;
-      }else{
+      } else {
         const ratedata = {
           data: data,
           userId: profileData._id,
@@ -119,7 +119,7 @@ export class CrmCustomerModal extends Component {
           this.setState({
             openStadardRateModel: !this.state.openStadardRateModel
           })
-           this.props.onStdAdd();
+          this.props.onStdAdd();
         }
       }
     } catch (error) {
@@ -208,7 +208,7 @@ export class CrmCustomerModal extends Component {
     }
   }
   handleStandardRate = (selectValue) => {
-    if(selectValue) {
+    if (selectValue) {
       if (selectValue.value === "") {
         this.setState({
           openStadardRateModel: !this.state.openStadardRateModel
@@ -222,29 +222,17 @@ export class CrmCustomerModal extends Component {
           ...customerDefaultPermissions,
           selectedLabourRate: selectValue
         });
+
+        this.props.setDefaultRate(selectValue);
       }
     }
     else {
-      this.setState({
-        defaultOptions: [
-          {
-            value: '',
-            label: 'Add New',
-          },
-        ],
-      });
+      this.props.onTypeHeadStdFun({});
     }
   }
 
-  loadOptions = async input => {   
-    const defaultOptions = [
-      {
-        value: '',
-        label: 'Add New',
-      },
-    ];
-    //this.props.onTypeHeadStdFun(input);
-    return defaultOptions;
+  loadOptions = async input => {
+    return this.props.loadTypeRate(input)
   }
 
   addNewCustomer = () => {
@@ -330,6 +318,10 @@ export class CrmCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
+    console.log("rateStandardListData");
+    console.log(rateStandardListData);
+    console.log("rateStandardListData");
+
 
     return (
       <>
@@ -798,7 +790,7 @@ export class CrmCustomerModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={true}
-                                value={selectedLabourRate}
+                                value={rateStandardListData.selectedOptions}
                               />
 
                             </Col>

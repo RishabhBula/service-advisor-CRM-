@@ -2,6 +2,7 @@ import { createLogic } from "redux-logic";
 import {
   fleetAddStarted,
   fleetAddActions,
+  fleetAddSuccess,
   redirectTo,
   hideLoader,
   showLoader,
@@ -14,6 +15,7 @@ import {
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import { logger } from "../helpers/Logger";
+import { AppConfig } from "../config/AppConfig";
 
 const fleetAddLogic = createLogic({
   type: fleetAddActions.FLEET_ADD_REQUEST,
@@ -31,8 +33,10 @@ const fleetAddLogic = createLogic({
       "fleet/addFleet",
       "POST",
       true,
-      undefined,
-      action.payload
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE,
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -42,6 +46,7 @@ const fleetAddLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(hideLoader());
+      dispatch(fleetAddSuccess());
       dispatch(redirectTo({ path: "/fleets" }));
       done();
     }
@@ -111,4 +116,4 @@ const editFleetLogic = createLogic({
   },
 });
 
-export const FleetLogic = [fleetAddLogic, fleetListLogic,editFleetLogic];
+export const FleetLogic = [fleetAddLogic, fleetListLogic, editFleetLogic];
