@@ -62,7 +62,7 @@ class DefaultLayout extends Component {
           <Suspense fallback={<Loader />}>
             <DefaultHeader
               onLogout={e => this.signOut(e)}
-              permissions={permissions}
+              permissions={permissions || {}}
             />
           </Suspense>
         </AppHeader>
@@ -95,7 +95,7 @@ class DefaultLayout extends Component {
                           <route.component
                             {...props}
                             {...this.props}
-                            permissions={permissions}
+                            permissions={permissions || {}}
                           />
                         )}
                       />
