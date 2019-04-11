@@ -4,7 +4,7 @@ const labourController = require("../../controllers/frontend/labourController");
 const token = require("../../common/token");
 
 /* ----------get all Standard routes------------ */
-router.post("/getAllStdRate", token.authorisedUser, labourController.getAllStandardRate);
+router.get("/getAllStdRate", token.authorisedUser, labourController.getAllStandardRate);
 
 /* ----------add new standard rate routes------------ */
 router.post("/addRate", token.authorisedUser, labourController.addNewrateStandard);

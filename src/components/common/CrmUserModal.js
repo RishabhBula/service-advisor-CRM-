@@ -22,7 +22,8 @@ import {
 import {
   AdminDefaultPermissions,
   TechincianDefaultPermissions,
-  UserPermissions
+  UserPermissions,
+  RoleOptions
 } from "../../config/Constants";
 import CurrencyInput from "react-currency-input";
 
@@ -100,12 +101,12 @@ export class CrmUserModal extends Component {
     });
     if (name === "roleType") {
       switch (value) {
-        case "5ca3473d70537232f13ff1f9":
+        case RoleOptions[0].key:
           this.setState({
             permissions: AdminDefaultPermissions
           });
           break;
-        case "5ca3473d70537232f13ff1fa":
+        case RoleOptions[1].key:
           this.setState({
             permissions: TechincianDefaultPermissions
           });
@@ -275,10 +276,13 @@ export class CrmUserModal extends Component {
                       value={roleType}
                       name="roleType"
                     >
-                      <option value="5ca3473d70537232f13ff1f9">Admin</option>
-                      <option value="5ca3473d70537232f13ff1fa">
-                        Technician
-                      </option>
+                      {RoleOptions.map((role, index) => {
+                        return (
+                          <option value={role.key} key={index}>
+                            {role.text}
+                          </option>
+                        );
+                      })}
                     </Input>
                   </FormGroup>
                   {errors.roleType ? (
@@ -290,7 +294,7 @@ export class CrmUserModal extends Component {
                 <Col md="12">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Rate (optional)
+                      Rate/Hour (optional)
                     </Label>
                     <CurrencyInput
                       value={rate}

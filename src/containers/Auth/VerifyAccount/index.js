@@ -9,6 +9,9 @@ class VerifyAccount extends Component {
     this.state = {};
   }
   componentDidMount() {
+    if (localStorage.getItem("token")) {
+      this.props.redirectTo("/dashboard");
+    }
     const { match, verifyUserAccount } = this.props;
     const { params } = match;
     const { userId, activationCode } = params;

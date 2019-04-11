@@ -1,38 +1,30 @@
 const rateStandardModel = require("../../models/rateStandard");
-const { validationResult } = require("express-validator/check");
-const commonValidation = require("../../common");
-
+const mongoose = require("mongoose");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
   try {
-    let $data = req.body;
-    let condition = {};
-    if ($data.search !== "") {
-      condition.firstName = {
-        $regex: new RegExp($data.search, "i"),
-      }
-    }
-    condition.parentId = $data.parentId;
-    const getAllStdRate = await rateStandardModel.find({ ...condition });
-    if (getAllStdRate) {
-      if (getAllStdRate.length) {
+     let $data = req.query;
+      let condition = {};
+   
+    const getAllStdRate = await rateStandardModel.find({parentId: mongoose.Types.ObjectId($data.parentId)});
+    if (getAllStdRate) {     
         return res.status(200).json({
           responsecode: 200,
           success: true,
-          data: getAllStdRate
+          data: getAllStdRate,
         });
-      }
+      
     } else {
       return res.status(400).json({
         responsecode: 200,
-        success: false
+        success: false,
       });
-    }
+    }  
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
 };
@@ -47,36 +39,36 @@ const addNewrateStandard = async (req, res) => {
     }
     const newRateData = {
       name: body.data.name,
-      hourlyRate: body.data.hourlyRate,
+      hourlyRate: body.data.hourRate,
       parentId: body.parentId,
       userId: body.userId,
-      status: true
-    }
-    const addNewRateData = new rateStandardModel(newRateData)
+      status: true,
+    };
+    const addNewRateData = new rateStandardModel(newRateData);
     const result = await addNewRateData.save();
     if (!result) {
       return res.status(400).json({
         message: "Error adding rate standard",
-        success: false
-      })
+        success: false,
+      });
     } else {
       return res.status(200).json({
         message: "Rate standard added successfully!.",
-        success: false
-      })
+        success: false,
+      });
     }
   } catch (error) {
     console.log("*************This is add rate standard error", error);
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false
+      success: false,
     });
   }
-}
+};
 /* -------------Add Rate Standard End------------ */
 
 module.exports = {
   getAllStandardRate,
-  addNewrateStandard
+  addNewrateStandard,
 };

@@ -12,7 +12,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -27,6 +27,7 @@ class Users extends Component {
     this.props.getMatrix();
     const query = qs.parse(this.props.location.search);
     this.props.getCustomerList({ ...query, page: query.page || 1 });
+    this.props.getStdList();
   }
 
   componentDidUpdate({location }) {
@@ -73,7 +74,7 @@ class Users extends Component {
 
   render() {
     const { openCreate } = this.state;
-    const { userReducer, addCustomer, matrixListReducer, customerListReducer } = this.props;
+    const { userReducer, addCustomer, matrixListReducer, customerListReducer, rateStandardListReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
@@ -115,6 +116,7 @@ class Users extends Component {
           addCustomer={addCustomer}
           profileInfo={this.props.profileInfoReducer}
           matrixListReducerData={matrixListReducer}
+          rateStandardListData ={rateStandardListReducer}
         />
       </>
     );
@@ -125,7 +127,8 @@ const mapStateToProps = state => ({
   matrixListReducer: state.matrixListReducer,
   profileInfoReducer: state.profileInfoReducer,
   modelInfoReducer: state.modelInfoReducer,
-  customerListReducer: state.customerListReducer
+  customerListReducer: state.customerListReducer,
+  rateStandardListReducer: state.rateStandardListReducer
 });
 
 const mapDispatchToProps = dispatch => ({ 
@@ -143,6 +146,9 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteCustomer: (data) => {
     dispatch(deleteCustomer(data));
+  },
+  getStdList: () => {
+    dispatch(getRateStandardListRequest());
   },
 
 });
