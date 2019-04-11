@@ -32,7 +32,7 @@ const getStandardRateListLogic = createLogic({
       "get",
       true,
       data,
-      undefined      
+      undefined
     );
     if (result.isError) {
       dispatch(
@@ -42,17 +42,17 @@ const getStandardRateListLogic = createLogic({
       );
     } else {
       var defaultOptions = [
-      {
-        value: '',
-        label: 'Add New Customer',
+        {
+          value: '',
+          label: 'Add New Customer',
+        }
+      ];
+      let resultData = result.data.data;
+      let dataNewArray = [];
+      for (let i = 0; i < resultData.length; i++) {
+
+        dataNewArray.push({ value: resultData[i]._id, label: resultData[i].name + " - " + resultData[i].hourlyRate })
       }
-    ];
-    let resultData = result.data.data;
-    let dataNewArray = [];
-    for(let i=0; i<resultData.length; i++) {
-     
-      dataNewArray.push({ value: resultData[i]._id, label: resultData[i].name + " - " + resultData[i].hourlyRate})
-    }
       dispatch(
         getRateStandardListSuccess({
           standardRateList: defaultOptions.concat(dataNewArray)

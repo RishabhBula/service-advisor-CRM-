@@ -45,7 +45,7 @@ export class CrmStandardModel extends Component {
   }
   render() {
     const { name, hourRate, isSubmitted } = this.state
-    const { openStadardRateModel,errors } = this.props
+    const { openStadardRateModel, errors } = this.props
     return (
       <>
         <Modal
@@ -71,7 +71,7 @@ export class CrmStandardModel extends Component {
                     required
                   />
                   {
-                    !name && errors.name ?
+                    errors && !name && errors.name ?
                       <div className="error-tool-tip">Name is required</div> :
                       null
                   }
@@ -93,7 +93,7 @@ export class CrmStandardModel extends Component {
                     required
                   />
                   {
-                    !hourRate && errors.hourRate ?
+                    errors && !hourRate && errors.hourRate ?
                       <div className="error-tool-tip">Hour rate is required</div> :
                       null
                   }

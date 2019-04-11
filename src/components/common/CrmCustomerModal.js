@@ -737,7 +737,6 @@ export class CrmCustomerModal extends Component {
                     return (
                       <>
 
-
                         <Col md="6" key={index}>
                           <div className="d-flex">
                             <AppSwitch
@@ -778,8 +777,6 @@ export class CrmCustomerModal extends Component {
                                 />
                               </FormGroup>
                             </div>
-
-
                           ) : null}
                           {labourRate ? (
                             <Col md="">
