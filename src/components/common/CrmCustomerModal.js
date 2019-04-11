@@ -297,35 +297,17 @@ export class CrmCustomerModal extends Component {
                 </Col>
               </Row>
             </div>
-
             <div className="">
+            <Row className="">
+            {/* <Row className="justify-content-center"> */}
               {phoneDetail.length
                 ? phoneDetail.map((item, index) => {
                   return (
-                    <Row className="justify-content-center">
+                   <>
                       {index < 1 ? (
                         <>
-                          {/* <Col md="3">
-                            <FormGroup>
-                              <Label
-                                htmlFor="name"
-                                className="customer-modal-text-style"
-                              >
-                                Phone
-                                </Label>
-                              <Input
-                                onChange={e =>
-                                  this.handlePhoneNameChange(index, e)
-                                }
-                                type="select"
-                                id="name"
-                                required
-                              >
-                                {phoneOptions}
-                              </Input>
-                            </FormGroup>
-                          </Col> */}
-                          <Col md="12">
+                          
+                          <Col md="6">
                             <FormGroup className="phone-number-feild">
                             <Label
                                 htmlFor="name"
@@ -375,70 +357,21 @@ export class CrmCustomerModal extends Component {
                         </>
                       ) : (
                           <>
-                            {/* <Col md="3">
-                              <FormGroup>
-                                <Label htmlFor="name" />
-                                <Input
-                                  onChange={e =>
-                                    this.handlePhoneNameChange(index, e)
-                                  }
-                                  type="select"
-                                  id="name"
-                                  required
-                                >
-                                  {phoneOptions}
-                                </Input>
-                              </FormGroup>
-                            </Col>
-                            <Col md="8">
-                              <FormGroup>
-                                <Label />
-                                {phoneDetail[index].phone === "mobile" ? (
-                                  <MaskedInput
-                                    mask="(111) 111-111"
-                                    name="phoneDetail"
-                                    placeholder="(555) 055-0555"
-                                    className="form-control"
-                                    size="20"
-                                    value={item.value}
-                                    onChange={e =>
-                                      this.handlePhoneValueChange(index, e)
-                                    }
-                                  />
-                                ) : (
-                                    <MaskedInput
-                                      mask="(111) 111-111 ext 1111"
-                                      name="phoneDetail"
-                                      className="form-control"
-                                      placeholder="(555) 055-0555 ext 1234"
-                                      size="20"
-                                      value={item.value}
-                                      onChange={e =>
-                                        this.handlePhoneValueChange(index, e)
-                                      }
-                                    />
-                                  )}
-                              </FormGroup>
-                            </Col>
-                            <Col md="1" className="phone-remove-btn">
-                              <FormGroup className="mb-0">
-                                <Label />
-                                <button
+                           
+  <Col md="3">
+  <button
                                   onClick={this.handleRemovePhoneDetails}
-                                  className="btn btn-danger btn-sm btn-round"
+                                  className="btn btn-danger btn-sm btn-round input-close"
                                 >
-                                  x
+                                <i className="fa fa-close"></i>
                                 </button>
-                              </FormGroup>
-                            </Col> */}
-  <Col md="12">
                             <FormGroup className="phone-number-feild">
-                            <Label
+                            {/* <Label
                                 htmlFor="name"
                                 className="customer-modal-text-style"
                               >
                                 
-                                </Label>
+                                </Label> */}
                                 {/* <div></div> */}
                                 <Input
                                 onChange={e =>
@@ -480,13 +413,12 @@ export class CrmCustomerModal extends Component {
                           </Col>
                           </>
                         )}
-                    </Row>
+                  </>
                   );
                 })
                 : null}
-
-{phoneDetail.length < 3 ? (
-              <Row className="justify-content-center">
+                
+                {phoneDetail.length < 3 ? (
                 <Col md="12">
                   <FormGroup>
                     <Label></Label>
@@ -498,15 +430,17 @@ export class CrmCustomerModal extends Component {
                     >
                     Add another phone number
                     </span>
-                  
+                   
                   </FormGroup>
                 </Col>
-              </Row>
-                ) : null}
+              ) : null}
+            </Row>
             </div>
+            
+          
             <div className="">
-              <Row className="justify-content-center">
-                <Col md="12">
+              <Row >
+                <Col md="6">
                   <FormGroup>
                     <Label
                       htmlFor="name"
@@ -528,26 +462,31 @@ export class CrmCustomerModal extends Component {
                     }
                   </FormGroup>
                 </Col>
+                
+            
+                <Col md="6">
+                      <FormGroup>
+                        <Label
+                          htmlFor="name"
+                          className="customer-modal-text-style"
+                        >
+                          Company
+                        </Label>
+                        <Input
+                          type="text"
+                          placeholder="Company"
+                          name="companyName"
+                          onChange={this.handleInputChange}
+                        />
+                      </FormGroup>
+                    </Col>
+                  
+                    
               </Row>
             </div>
             <div className="">
               <Row className="justify-content-center">
-                <Col md="12">
-                  <FormGroup>
-                    <Label
-                      htmlFor="name"
-                      className="customer-modal-text-style"
-                    >
-                      Notes
-                    </Label>
-                    <Input
-                      type="textarea"
-                      placeholder="Enter a note..."
-                      name="notes"
-                      onChange={this.handleInputChange}
-                    />
-                  </FormGroup>
-                </Col>
+              
                 <div>
                   {!expandForm ? (
                     <span
@@ -565,29 +504,10 @@ export class CrmCustomerModal extends Component {
             </div>
             {expandForm ? (
               <>
+            
                 <div className="">
                   <Row className="justify-content-center">
-                    <Col md="12">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Company
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Company"
-                          name="companyName"
-                          onChange={this.handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-                <div className="">
-                  <Row className="justify-content-center">
-                    <Col md="12">
+                    <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -603,11 +523,7 @@ export class CrmCustomerModal extends Component {
                         />
                       </FormGroup>
                     </Col>
-                  </Row>
-                </div>
-                <div className="">
-                  <Row className="justify-content-center">
-                    <Col md="12">
+                    <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -618,15 +534,17 @@ export class CrmCustomerModal extends Component {
                         <Select
                           value={selectedOption}
                           onChange={this.handleChange}
+                          className="w-100 form-select"
                           options = {[ { value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
                 </div>
+              
                 <div className="">
                   <Row className="justify-content-center">
-                    <Col md="12">
+                    <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -642,11 +560,7 @@ export class CrmCustomerModal extends Component {
                         />
                       </FormGroup>
                     </Col>
-                  </Row>
-                </div>
-                <div className="">
-                  <Row className="justify-content-center">
-                    <Col md="12">
+                    <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -664,8 +578,9 @@ export class CrmCustomerModal extends Component {
                     </Col>
                   </Row>
                 </div>
+               
                 <div className="">
-                  <Row className="justify-content-center">
+                  <Row className="">
                     <Col md="6">
                       <FormGroup>
                         <Label
@@ -682,7 +597,7 @@ export class CrmCustomerModal extends Component {
                         />
                       </FormGroup>
                     </Col>
-                    <Col md="2">
+                    <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -693,7 +608,7 @@ export class CrmCustomerModal extends Component {
                         <Input type="text" name="state" onChange={this.handleInputChange} placeholder="NY" />
                       </FormGroup>
                     </Col>
-                    <Col md="4">
+                    <Col md="6 ">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -710,8 +625,10 @@ export class CrmCustomerModal extends Component {
                       </FormGroup>
                     </Col>
                   </Row>
+                  
                 </div>
-                <div className="">
+                <Row className="custom-label-padding ">
+                
                   {CustomerPermissionsText.map((permission, index) => {
                     let discountShow = false;
                     let labourRate = false;
@@ -737,12 +654,12 @@ export class CrmCustomerModal extends Component {
                       pricingMatrix = true;
                     }
                     return (
-                      <Row
-                        className="justify-content-center pb-2"
-                        key={index}
-                      >
-                        <Col md="2">
-                          <AppSwitch
+                      <>
+                     
+                        
+                        <Col md="6" key={index}>
+                        <div className="d-flex">
+                        <AppSwitch
                             className={"mx-1"}
                             checked={
                               customerDefaultPermissions[permission.key]
@@ -756,37 +673,50 @@ export class CrmCustomerModal extends Component {
                             color={"primary"}
                             size={"sm"}
                           />
-                        </Col>
-                        <Col md="10">
                           <p className="customer-modal-text-style">
                             {permission.text}
                           </p>
-                        </Col>
-                        {discountShow ? (
-                          <Col md="12">
-                            <Label
-                              htmlFor="name"
-                              className="customer-modal-text-style"
-                            >
-                              Percent Discount
-                            </Label>
-                            <FormGroup>
-                              <MaskedInput
-                                mask="11\%"
-                                name="percentageDiscount"
-                                size="20"
-                                onChange={this.handlePercentageChange}
-                              />
-                            </FormGroup>
-                          </Col>
-                        ) : null}
-
+                          </div>
+                          {discountShow ? (
+                         
+                         <div className="custom-label"    key={index}  >
+                           <Label
+                             htmlFor="name"
+                             className="customer-modal-text-style"
+                           >
+                             Percent Discount
+                           </Label>
+                           <FormGroup>
+                             <MaskedInput
+                               mask="11\%"
+                               name="percentageDiscount"
+                               size="20"
+                               onChange={this.handlePercentageChange}
+                               className="form-control"
+                               
+                             />
+                           </FormGroup>
+                         </div>
+                        
+                       
+                       ) : null}
                         {labourRate ? (
-                          <Col md="12">
-                            <CrmSelect
+                          <Col md="">
+                            <Select
                               defaultOptions={defaultOptions}
                               onClickAddNew={this.handleStandardRate}
-                            />
+                              className="form-select"
+                              theme={(theme) => ({
+                                ...theme,
+                                borderRadius: 0,
+                                colors: {
+                                ...theme.colors,
+                                  primary25: 'hotpink',
+                                  primary: 'black',
+                                },
+                              })}
+                            ><option>dsfsdfdsf</option>
+                            </Select>
                           </Col>
                         ) : null}
                         {/* */}
@@ -817,11 +747,17 @@ export class CrmCustomerModal extends Component {
                             </Input>
                           </Col>
                         ) : null}
-                      </Row>
-                    );
+                        </Col>
+                        
+
+                       
+                       
+                     
+                   </> );
                   })}
+                 
                   {expandForm ? (
-                    <div className="text-center">
+                    <Col md="12 text-center">
                       <span
                         onClick={this.handleExpandForm}
                         className="customer-anchor-text customer-click-btn"
@@ -829,9 +765,9 @@ export class CrmCustomerModal extends Component {
                         {" "}
                         Show Less{" "}
                       </span>
-                    </div>
+                    </Col>
                   ) : null}
-                </div>
+                </Row>
               </>
             ) : (
                 ""
