@@ -374,14 +374,6 @@ export class CrmCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
-<<<<<<< HEAD
-=======
-    console.log("rateStandardListData");
-    console.log(rateStandardListData);
-    console.log("rateStandardListData");
-
-
->>>>>>> 846dcb01d02f7cf782b64acd1037cb61bbfd192f
     return (
       <>
         <Modal

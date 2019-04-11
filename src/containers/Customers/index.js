@@ -111,13 +111,10 @@ class Users extends Component {
     this.props.getStdList();
   }
 
-<<<<<<< HEAD
-=======
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   }
 
->>>>>>> 846dcb01d02f7cf782b64acd1037cb61bbfd192f
   render() {
     const { openCreate, editMode, customer } = this.state;
     const { userReducer, addCustomer, matrixListReducer, customerListReducer, rateStandardListReducer } = this.props;
@@ -166,13 +163,10 @@ class Users extends Component {
           rateStandardListData ={rateStandardListReducer}
           onTypeHeadStdFun = {this.onTypeHeadStdFun}
           onStdAdd = {this.onStdAdd}
-<<<<<<< HEAD
           editMode={editMode}
           customer = {customer}
-=======
           setDefaultRate={this.setDefaultRate}
           loadTypeRate= {this.loadTypeRate}
->>>>>>> 846dcb01d02f7cf782b64acd1037cb61bbfd192f
         />
       </>
     );
