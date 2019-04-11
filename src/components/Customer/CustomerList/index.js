@@ -93,8 +93,8 @@ class CustomerList extends Component {
     }
     this.props.onDelete(userId);
   };
-  editUser = user => {
-    this.setState({ openEditModal: true, user });
+  editUser = customer => {
+    this.props.updateModel(customer)
   };
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
@@ -206,7 +206,7 @@ class CustomerList extends Component {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
-              <th>Registered At</th>
+              <th>Registered</th>
               <th>Status</th>
               <th>Action</th>
             </tr>

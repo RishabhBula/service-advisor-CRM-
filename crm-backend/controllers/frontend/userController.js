@@ -166,6 +166,49 @@ const getProfile = async (req, res) => {
   }
 };
 
+/* update customer data */
+const updateCustomerdetails = async (req, res) => {
+  const { body } = req;
+  try {
+    if (!body.customerId) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Customer id is required.",
+        success: false,
+      });
+    } else {
+      const updateCustomerDetails = await customerModel.findByIdAndUpdate(
+        body.fleetId,
+        {
+          $set: body.fleetData,
+        }
+      );
+      if (!updateCustomerDetails) {
+        return res.status(400).json({
+          responsecode: 400,
+          message: "Error updating customer details.",
+          success: false,
+        });
+      } else {
+        return res.status(200).json({
+          responsecode: 200,
+          message: "Customer details updated successfully!",
+          success: false,
+        });
+      }
+    }
+  } catch (error) {
+    console.log("This is update Customer error", error);
+    return res.status(500).json({
+      responsecode: 500,
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+
+
+
 module.exports = {
   deleteUser,
   getAllUserList,
