@@ -3,23 +3,23 @@ const mongoose = require("mongoose");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
   try {
-     let $data = req.query;
-      let condition = {};
-   
-    const getAllStdRate = await rateStandardModel.find({parentId: mongoose.Types.ObjectId($data.parentId)});
-    if (getAllStdRate) {     
-        return res.status(200).json({
-          responsecode: 200,
-          success: true,
-          data: getAllStdRate,
-        });
-      
+    let $data = req.query;
+    let condition = {};
+
+    const getAllStdRate = await rateStandardModel.find({ parentId: mongoose.Types.ObjectId($data.parentId) });
+    if (getAllStdRate) {
+      return res.status(200).json({
+        responsecode: 200,
+        success: true,
+        data: getAllStdRate,
+      });
+
     } else {
       return res.status(400).json({
         responsecode: 200,
         success: false,
       });
-    }  
+    }
   } catch (error) {
     return res.status(500).json({
       responsecode: 500,
@@ -37,6 +37,16 @@ const addNewrateStandard = async (req, res) => {
     if (body.parentId === null) {
       body.parentId = body.userId
     }
+    if (!body.data.name ) {
+      return res.status(400).json({
+        message:"Name is required."
+      })
+    }
+    if (!body.data.hourRate ) {
+      return res.status(400).json({
+        message:"Hour rate is required."
+      })
+    }
     const newRateData = {
       name: body.data.name,
       hourlyRate: body.data.hourRate,
@@ -53,6 +63,7 @@ const addNewrateStandard = async (req, res) => {
       });
     } else {
       return res.status(200).json({
+        data: result,
         message: "Rate standard added successfully!.",
         success: false,
       });

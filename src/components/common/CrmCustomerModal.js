@@ -26,7 +26,12 @@ import {
 import {
   AppConfig
 } from "../../config/AppConfig";
-import { CreateCustomerValidations, CreateCustomerValidMessaages } from "../../validations";
+import {
+  CreateCustomerValidations,
+  CreateCustomerValidMessaages,
+  CreateRateValidations,
+  CreateRateValidMessaages
+} from "../../validations";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
 import Async from 'react-select/lib/Async';
@@ -80,26 +85,44 @@ export class CrmCustomerModal extends Component {
   handleRateAdd = async (data) => {
     const profileData = this.props.profileInfo.profileInfo
     let api = new ApiHelper();
-    const ratedata = {
-      data: data,
-      userId: profileData._id,
-      parentId: profileData.parentId
-    }
-    let result = await api.FetchFromServer(
-      "/labour",
-      "/addRate",
-      "POST",
-      true,
-      undefined,
-      ratedata
-    )
-    if (result.isError) {
-      toast.error(result.messages[0]);
-    } else {
-      toast.success(result.messages[0]);
-      this.setState({
-        openStadardRateModel: !this.state.openStadardRateModel
-      })
+
+    try {
+      const { isValid, errors } = Validator(
+        data,
+        CreateRateValidations,
+        CreateRateValidMessaages
+      );
+      if (!isValid) {
+        this.setState({
+          errors: errors,
+          isLoading: false,
+        });
+        return;
+      }else{
+        const ratedata = {
+          data: data,
+          userId: profileData._id,
+          parentId: profileData.parentId
+        }
+        let result = await api.FetchFromServer(
+          "/labour",
+          "/addRate",
+          "POST",
+          true,
+          undefined,
+          ratedata
+        )
+        if (result.isError) {
+          toast.error(result.messages[0]);
+        } else {
+          toast.success(result.messages[0]);
+          this.setState({
+            openStadardRateModel: !this.state.openStadardRateModel
+          })
+        }
+      }
+    } catch (error) {
+      logger(error);
     }
   }
 
@@ -768,7 +791,6 @@ export class CrmCustomerModal extends Component {
                                 value={vendorValue}
                               />
 
-
                             </Col>
                           ) : null}
                           {/* */}
@@ -828,6 +850,7 @@ export class CrmCustomerModal extends Component {
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}
               stdModelFun={this.stdModelFun}
+              errors={errors}
               handleRateAdd={this.handleRateAdd}
             />
           </ModalBody>
