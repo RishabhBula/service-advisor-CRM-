@@ -6,12 +6,7 @@ import "react-app-polyfill/ie9";
 import App from "./App";
 import "./polyfill";
 import * as serviceWorker from "./serviceWorker";
-String.prototype.isNullOrWhitespace = function() {
-  const input = String(this);
-  if (typeof input === undefined || input == null) return true;
 
-  return input.replace(/\s/g, "").length < 1;
-};
 ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
