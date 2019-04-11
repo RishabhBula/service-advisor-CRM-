@@ -1,26 +1,17 @@
+import { logger } from "../helpers/Logger";
+
 export const EnviornmentTypes = {
-  DEV: "development",
-  PROD: "production",
+DEV: "development",
+PROD: "production",
 };
 export const mode = process.env.NODE_ENV || EnviornmentTypes.DEV; //stage,dev,live
-export const isProd = mode === EnviornmentTypes.DEV;
+export const isProd = mode === EnviornmentTypes.PROD;
 let data;
-
-switch (mode) {
-  case EnviornmentTypes.PROD:
-    data = {};
-    break;
-  case EnviornmentTypes.DEV:
-    data = {
-      API_ENDPOINT: "http://192.168.2.117:8001/",
-      API_VERSION: "api",
-      phoneLength: 3,
-    };
-    break;
-  default:
-    data = {};
-    break;
-}
-data.DEFAULT_DATE_FORMAT = "LLL";
-data.ITEMS_PER_PAGE = 5;
+data = {
+API_ENDPOINT: process.env.REACT_APP_API_ENDPOINT,
+API_VERSION: process.env.REACT_APP_API_VERSION,
+phoneLength: 3,
+DEFAULT_DATE_FORMAT: "LLL",
+ITEMS_PER_PAGE: 5,
+};
 export const AppConfig = data;
