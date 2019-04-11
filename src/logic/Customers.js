@@ -25,6 +25,9 @@ const addCustomerLogic = createLogic({
     const profileStateData = getState().profileInfoReducer;
 
     let data = action.payload;
+    console.log('===============add=====================');
+    console.log(data);
+    console.log('====================================');
     data.parentId = profileStateData.profileInfo.parentId;    
     data.userId = profileStateData.profileInfo._id;   
     dispatch(showLoader());
@@ -34,9 +37,6 @@ const addCustomerLogic = createLogic({
         customerAddInfo: []
       })
     );
-    console.log('====================================');
-    console.log(data);
-    console.log('====================================');
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/customer",
@@ -142,7 +142,7 @@ const deleteCustomerLogic = createLogic({
         customerGetRequest({
           ...action.payload,
         })
-      );
+      );      
       done();
     }
   },
@@ -153,6 +153,9 @@ const editCustomerLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
+    let data = {
+      data: action.payload
+    }
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/customer",
@@ -160,7 +163,7 @@ const editCustomerLogic = createLogic({
       "PUT",
       true,
       undefined,
-      action.payload
+      data
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -170,7 +173,14 @@ const editCustomerLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(customerEditSuccess());
-      
+      dispatch(
+        customerGetRequest({
+          ...action.payload,
+        })
+      );   
+      dispatch(
+        modelOpenRequest({modelDetails: {customerModel: false}})
+      );
       dispatch(hideLoader());
       done();
     }

@@ -66,10 +66,10 @@ const getAllFleetList = async (req, res) => {
       let condition = {
          $or: [
             {
-               companyName: new RegExp(query.searchValue, "i")
+               companyName: new RegExp(searchValue, "i")
             },
             {
-               email: new RegExp(query.searchValue, "i")
+               email: new RegExp(searchValue, "i")
             }
          ]
       }
@@ -81,7 +81,7 @@ const getAllFleetList = async (req, res) => {
          ...condition
       }).skip(offset)
          .limit(limit);
-      const getAllFleetCount = await fleetModel.countDocuments({
+      const getAllFleetCount = await fleetModal.countDocuments({
          $or: [
             { userId: mongoose.Types.ObjectId(query.userId) },
             { parentId: mongoose.Types.ObjectId(query.parentId) },

@@ -12,7 +12,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart, customerEditRequest } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -22,7 +22,8 @@ class Users extends Component {
     this.state = {
       openCreate: false,
       customer: {},
-      editMode: false
+      editMode: false,
+      customerId: ""
     };
   }
   componentDidMount() { 
@@ -55,6 +56,10 @@ class Users extends Component {
   };
 
   toggleUpdateModal = (customer) => {
+    this.setState({
+      customerId: customer._id
+    })
+    this.setState({customerId: customer._id});
     this.setState({editMode: true, customer: customer},() => {
       const { modelDetails } = this.props.modelInfoReducer;
       let data = {
@@ -91,9 +96,9 @@ class Users extends Component {
 
   addCustomer = (data, editMode) => {
     if(editMode) {
-      console.log('====================================');
-      console.log("update will run here");
-      console.log('====================================');
+      let customerId = this.state.customerId;
+      data.customerId = customerId;
+      this.props.updateCustomer(data);
     }
     else {
       this.props.addCustomer(data);
@@ -156,7 +161,7 @@ class Users extends Component {
         </Card>
         <CrmCustomerModal
           customerModalOpen={modelDetails.customerModel}
-          handleCustomerModal={this.toggleCreateModal}
+          handleCustomerModalFun={this.toggleCreateModal}
           addCustomerFun={this.addCustomer}
           profileInfo={this.props.profileInfoReducer}
           matrixListReducerData={matrixListReducer}
@@ -202,6 +207,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setLabourRateDefault: (data) => {
     dispatch(setRateStandardListStart(data));
+  },
+  updateCustomer: (data) => {
+    dispatch(customerEditRequest(data));
   },
 
 });

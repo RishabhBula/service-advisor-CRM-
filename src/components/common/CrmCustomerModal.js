@@ -88,7 +88,7 @@ export class CrmCustomerModal extends Component {
         fleet: customer.fleet,
         lastName: customer.lastName,
         notes: customer.notes,
-        permission: customer.permission,
+        customerDefaultPermissions: customer.permission,
         referralSource: customer.referralSource,
         state: customer.state,
         zipCode: customer.zipCode,
@@ -228,6 +228,7 @@ export class CrmCustomerModal extends Component {
       })
     }
   }
+
   handleStandardRate = (selectValue) => {
     if (selectValue) {
       if (selectValue.value === "") {
@@ -311,12 +312,9 @@ export class CrmCustomerModal extends Component {
         });
         return;
       }
-      alert(this.props.editMode)
       if(this.props.editMode) 
       {
-        console.log('====================================');
-        console.log("update will work here");
-        console.log('====================================');
+       this.props.addCustomerFun(customerData, this.props.editMode);
       }
       else {
         this.props.addCustomerFun(customerData, this.props.editMode);
@@ -345,12 +343,9 @@ export class CrmCustomerModal extends Component {
         errors: {}
       })
   }
-  addNewSection = () => {
-    alert("testing");
-  }
 
   handleCustomerModal = () => {
-    this.props.handleCustomerModal();
+    this.props.handleCustomerModalFun();
     if(this.props.customerModalOpen) {
       this.removeAllState();
     }
@@ -587,19 +582,21 @@ export class CrmCustomerModal extends Component {
                     >
                       Email (Optional)
                     </Label>
-                    <Input
-                      type="text"
-                      className="customer-modal-text-style"
-                      placeholder="john.doe@example.com"
-                      onChange={this.handleInputChange}
-                      name="email"
-                      value={this.state.email}
-                    />
-                    {
-                      errors.email && email ?
-                        <p className="text-danger">{errors.email}</p> :
-                        null
-                    }
+                    <div>
+                      <Input
+                        type="text"
+                        className="customer-modal-text-style"
+                        placeholder="john.doe@example.com"
+                        onChange={this.handleInputChange}
+                        name="email"
+                        value={this.state.email}
+                      />
+                      {
+                        errors.email && email ?
+                          <span className="text-danger">{errors.email}</span> :
+                          null
+                      }
+                    </div>
                   </FormGroup>
                 </Col>
 
@@ -770,7 +767,9 @@ export class CrmCustomerModal extends Component {
                 </div>
                 <Row className="custom-label-padding ">
 
-                  {CustomerPermissionsText.map((permission, index) => {
+                  {
+                    CustomerPermissionsText ? 
+                    CustomerPermissionsText.map((permission, index) => {
                     let discountShow = false;
                     let labourRate = false;
                     let pricingMatrix = false;
@@ -794,17 +793,15 @@ export class CrmCustomerModal extends Component {
                     ) {
                       pricingMatrix = true;
                     }
+
                     return (
                       <>
-
                         <Col md="6" key={index}>
                           <div className="d-flex">
                             <AppSwitch
                               className={"mx-1"}
-                              checked={
-                                customerDefaultPermissions[permission.key]
-                                  .status
-                              }
+                              checked={customerDefaultPermissions[permission.key]
+                                  .status}
                               onClick={this.handleClick.bind(
                                 this,
                                 permission.key
@@ -833,7 +830,6 @@ export class CrmCustomerModal extends Component {
                                   size="20"
                                   onChange={this.handlePercentageChange}
                                   className="form-control"
-
                                 />
                               </FormGroup>
                             </div>
@@ -879,13 +875,8 @@ export class CrmCustomerModal extends Component {
                             </Col>
                           ) : null}
                         </Col>
-
-
-
-
-
                       </>);
-                  })}
+                  }): null}
 
                   {expandForm ? (
                     <Col md="12 text-center">
