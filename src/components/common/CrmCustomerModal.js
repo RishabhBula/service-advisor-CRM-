@@ -74,6 +74,27 @@ export class CrmCustomerModal extends Component {
     }
   }
 
+
+  componentDidUpdate(prevProps) { 
+    if(prevProps.customer._id!== this.props.customer._id){ 
+      const { customer } = this.props;
+      this.setState({
+        address1: customer.address1,
+        address2: customer.address2,
+        city: customer.city,
+        companyName: customer.companyName,
+        email: customer.email,
+        firstName: customer.firstName,
+        fleet: customer.fleet,
+        lastName: customer.lastName,
+        notes: customer.notes,
+        permission: customer.permission,
+        referralSource: customer.referralSource,
+        state: customer.state,
+        zipCode: customer.zipCode,
+      })     
+    }
+  }
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -98,7 +119,7 @@ export class CrmCustomerModal extends Component {
           isLoading: false,
         });
         return;
-      }else{
+      } else {
         const ratedata = {
           data: data,
           userId: profileData._id,
@@ -119,7 +140,7 @@ export class CrmCustomerModal extends Component {
           this.setState({
             openStadardRateModel: !this.state.openStadardRateModel
           })
-           this.props.onStdAdd();
+          this.props.onStdAdd();
         }
       }
     } catch (error) {
@@ -208,7 +229,7 @@ export class CrmCustomerModal extends Component {
     }
   }
   handleStandardRate = (selectValue) => {
-    if(selectValue) {
+    if (selectValue) {
       if (selectValue.value === "") {
         this.setState({
           openStadardRateModel: !this.state.openStadardRateModel
@@ -222,29 +243,17 @@ export class CrmCustomerModal extends Component {
           ...customerDefaultPermissions,
           selectedLabourRate: selectValue
         });
+
+        this.props.setDefaultRate(selectValue);
       }
     }
     else {
-      this.setState({
-        defaultOptions: [
-          {
-            value: '',
-            label: 'Add New',
-          },
-        ],
-      });
+      this.props.onTypeHeadStdFun({});
     }
   }
 
-  loadOptions = async input => {   
-    const defaultOptions = [
-      {
-        value: '',
-        label: 'Add New',
-      },
-    ];
-    //this.props.onTypeHeadStdFun(input);
-    return defaultOptions;
+  loadOptions = async input => {
+    return this.props.loadTypeRate(input)
   }
 
   addNewCustomer = () => {
@@ -302,17 +311,52 @@ export class CrmCustomerModal extends Component {
         });
         return;
       }
-      this.props.addCustomerFun(customerData)
+      alert(this.props.editMode)
+      if(this.props.editMode) 
+      {
+        console.log('====================================');
+        console.log("update will work here");
+        console.log('====================================');
+      }
+      else {
+        this.props.addCustomerFun(customerData, this.props.editMode);
+        this.removeAllState();
+      }
     } catch (error) {
       logger(error);
     }
   }
 
+  async removeAllState() {
+    this.setState({
+        firstName: "",
+        lastName: "",
+        phoneDetail: "",
+        email: "",
+        notes: "",
+        companyName: "",
+        referralSource: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        fleet: "",
+        errors: {}
+      })
+  }
   addNewSection = () => {
     alert("testing");
   }
+
+  handleCustomerModal = () => {
+    this.props.handleCustomerModal();
+    if(this.props.customerModalOpen) {
+      this.removeAllState();
+    }
+  }
   render() {
-    const { customerModalOpen, handleCustomerModal, matrixListReducerData, rateStandardListData } = this.props;
+    const { customerModalOpen, handleCustomerModal, matrixListReducerData, rateStandardListData,editMode } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -330,16 +374,15 @@ export class CrmCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
-
     return (
       <>
         <Modal
           isOpen={customerModalOpen}
-          toggle={handleCustomerModal}
+          toggle={this.handleCustomerModal}
           className="customer-modal custom-form-modal custom-modal-lg"
         >
-          <ModalHeader toggle={handleCustomerModal}>
-            Create New Customer
+          <ModalHeader toggle={this.handleCustomerModal}>
+            {editMode ? "Update Customer" : "Create New Customer"}
           </ModalHeader>
           <ModalBody>
             <div className="">
@@ -358,6 +401,7 @@ export class CrmCustomerModal extends Component {
                         placeholder="John"
                         name="firstName"
                         onChange={this.handleInputChange}
+                        value={firstName}
                       />
                       {
                         !firstName && errors.firstName ?
@@ -381,6 +425,7 @@ export class CrmCustomerModal extends Component {
                         placeholder="Doe"
                         onChange={this.handleInputChange}
                         name="lastName"
+                        value={this.state.lastName}
                       />
                       {
                         errors.lastName && !lastName ?
@@ -395,7 +440,7 @@ export class CrmCustomerModal extends Component {
             <div className="">
               <Row className="">
                 {/* <Row className="justify-content-center"> */}
-                {phoneDetail.length
+                {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
                     return (
                       <>
@@ -549,6 +594,7 @@ export class CrmCustomerModal extends Component {
                       placeholder="john.doe@example.com"
                       onChange={this.handleInputChange}
                       name="email"
+                      value={this.state.email}
                     />
                     {
                       errors.email && email ?
@@ -572,6 +618,7 @@ export class CrmCustomerModal extends Component {
                       placeholder="Company"
                       name="companyName"
                       onChange={this.handleInputChange}
+                      value={this.state.companyName}
                     />
                   </FormGroup>
                 </Col>
@@ -799,7 +846,7 @@ export class CrmCustomerModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={true}
-                                value={selectedLabourRate}
+                                value={rateStandardListData.selectedOptions}
                               />
 
                             </Col>
@@ -867,9 +914,9 @@ export class CrmCustomerModal extends Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.addNewCustomer}>
-              Add Customer
+              { editMode ? "Update Customer": "Add Customer" }
             </Button>{" "}
-            <Button color="secondary" onClick={handleCustomerModal}>
+            <Button color="secondary" onClick={this.handleCustomerModal}>
               Cancel
             </Button>
           </ModalFooter>

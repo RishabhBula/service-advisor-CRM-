@@ -26,7 +26,7 @@ export const fleetReducer = handleActions((
             ...state,
             fleetData: action.payload.fleetData,
         }),
-        [fleetAddActions.ADD_FLEET_SUCCESS]: (state, action) => ({
+        [fleetAddActions.FLEET_ADD_SUCCESS]: (state, action) => ({
             ...state,
             fleetListData: {
                 isSuccess: true,

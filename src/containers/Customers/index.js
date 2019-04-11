@@ -12,7 +12,7 @@ import {
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -20,14 +20,17 @@ class Users extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openCreate: false
+      openCreate: false,
+      customer: {},
+      editMode: false
     };
   }
   componentDidMount() { 
     this.props.getMatrix();
     const query = qs.parse(this.props.location.search);
     this.props.getCustomerList({ ...query, page: query.page || 1 });
-    this.props.getStdList();
+    this.props.getStdList("");
+    this.props.setLabourRateDefault();
   }
 
   componentDidUpdate({location }) {
@@ -37,13 +40,29 @@ class Users extends Component {
       this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
     }
   }
+
+  loadTypeRate = input => {
+    this.props.getStdList(input);
+  }
   toggleCreateModal = e => {
-    const { modelDetails } = this.props.modelInfoReducer;
-    let data = {
-      customerModel: !modelDetails.customerModel
-    };
-    this.props.modelOperate(data);
+    this.setState({editMode: false, customer: {}}, () => {
+      const { modelDetails } = this.props.modelInfoReducer;
+      let data = {
+        customerModel: !modelDetails.customerModel
+      };
+      this.props.modelOperate(data);
+    });
   };
+
+  toggleUpdateModal = (customer) => {
+    this.setState({editMode: true, customer: customer},() => {
+      const { modelDetails } = this.props.modelInfoReducer;
+      let data = {
+        customerModel: !modelDetails.customerModel
+      };
+      this.props.modelOperate(data);
+    });
+  }
   createUser = data => {
     logger(data);
   };
@@ -63,17 +82,25 @@ class Users extends Component {
     );
   };
 
-  deleteUser = userId => {
+  deleteCustomer = userId => {
     const { location } = this.props;
     const { search } = location;
     const query = qs.parse(search);
     this.props.deleteCustomer({ ...query, userId });
   };
 
-  addCustomer = (data) => {
-    this.props.addCustomer(data);
-    this.props.getCustomerList();
-    this.onSearch({});
+  addCustomer = (data, editMode) => {
+    if(editMode) {
+      console.log('====================================');
+      console.log("update will run here");
+      console.log('====================================');
+    }
+    else {
+      this.props.addCustomer(data);
+      this.props.getCustomerList();
+      this.onSearch({});
+      this.setState({customer: {}, editMode: false})
+    }
   }
 
   onTypeHeadStdFun = (data) => {
@@ -84,9 +111,12 @@ class Users extends Component {
     this.props.getStdList();
   }
 
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  }
 
   render() {
-    const { openCreate } = this.state;
+    const { openCreate, editMode, customer } = this.state;
     const { userReducer, addCustomer, matrixListReducer, customerListReducer, rateStandardListReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
@@ -120,6 +150,7 @@ class Users extends Component {
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               onDelete={this.deleteCustomer}
+              updateModel={this.toggleUpdateModal}
             />
           </CardBody>
         </Card>
@@ -132,6 +163,10 @@ class Users extends Component {
           rateStandardListData ={rateStandardListReducer}
           onTypeHeadStdFun = {this.onTypeHeadStdFun}
           onStdAdd = {this.onStdAdd}
+          editMode={editMode}
+          customer = {customer}
+          setDefaultRate={this.setDefaultRate}
+          loadTypeRate= {this.loadTypeRate}
         />
       </>
     );
@@ -162,8 +197,11 @@ const mapDispatchToProps = dispatch => ({
   deleteCustomer: (data) => {
     dispatch(deleteCustomer(data));
   },
-  getStdList: () => {
-    dispatch(getRateStandardListRequest());
+  getStdList: (data) => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  setLabourRateDefault: (data) => {
+    dispatch(setRateStandardListStart(data));
   },
 
 });
