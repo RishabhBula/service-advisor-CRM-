@@ -49,7 +49,10 @@ class Fleet extends Component {
       this.props.fleetReducer.fleetListData.isSuccess !==
       fleetReducer.fleetListData.isSuccess
     ) {
-      this.props.getFleet(userData._id)
+      const data = {
+        userId: userData._id
+      }
+      this.props.getFleet(data)
     }
     if (
       this.props.fleetReducer.fleetListData.isEditSuccess !==
