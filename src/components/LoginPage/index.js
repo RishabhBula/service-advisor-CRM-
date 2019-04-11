@@ -15,6 +15,8 @@ import {
   InputGroupAddon,
   InputGroupText,
   Row,
+  FormFeedback,
+  FormGroup,
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
@@ -85,42 +87,48 @@ class LoginPage extends Component {
                     <Form onSubmit={this.login}>
                       <h1 className="auth-title">Login</h1>
                       <p className="text-muted">Sign In to your account</p>
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-user" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="text"
-                          placeholder="Username"
-                          autoComplete="username"
-                          name={"email"}
-                          value={email}
-                          onChange={this.handleChange}
-                        />
-                      </InputGroup>
-                      {errors.email ? (
-                        <p className={"text-danger"}>{errors.email}</p>
-                      ) : null}
-                      <InputGroup className="mb-4">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="icon-lock" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          autoComplete="current-password"
-                          name={"password"}
-                          value={password}
-                          onChange={this.handleChange}
-                        />
-                      </InputGroup>
-                      {errors.password ? (
-                        <p className={"text-danger"}>{errors.password}</p>
-                      ) : null}
+                      <FormGroup>
+                        <InputGroup className="mb-3">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-user" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="Email"
+                            autoComplete="username"
+                            name={"email"}
+                            value={email}
+                            onChange={this.handleChange}
+                            invalid={errors.email}
+                          />
+                          <FormFeedback>
+                            {errors.email ? errors.email : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-4">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="password"
+                            placeholder="Password"
+                            autoComplete="current-password"
+                            name={"password"}
+                            value={password}
+                            onChange={this.handleChange}
+                            invalid={errors.password}
+                          />
+                          <FormFeedback>
+                            {errors.password ? errors.password : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
                       <Row>
                         <Col xs="6">
                           <Button className="px-4 btn-theme" block>

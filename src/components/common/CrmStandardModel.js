@@ -5,60 +5,105 @@ export class CrmStandardModel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false
+      openStadardRateModel: false,
+      name: "",
+      hourRate: "",
+      isSubmitted: false
     };
   }
 
   toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
+    this.props.stdModelFun();
+    // this.setState({
+    //   openStadardRateModel: !this.state.openStadardRateModel
+    // });
   };
-
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    if (
+      (name === 'hourRate') &&
+      (isNaN(value))
+    ) {
+      return;
+    }
+    else {
+      this.setState({
+        [name]: value,
+      });
+    }
+  }
+  handleSubmit = e => {
+    e.preventDefault();
+    this.setState({
+      isSubmitted: true
+    })
+    const data = {
+      name: this.state.name,
+      hourRate: this.state.hourRate
+    }
+    this.props.handleRateAdd(data);
+  }
   render() {
+    const { name, hourRate, isSubmitted } = this.state
+    const { openStadardRateModel, errors } = this.props
     return (
-      <>        
+      <>
         <Modal
-          isOpen={this.props.openStadardRateModel}
+          isOpen={openStadardRateModel}
           toggle={this.toggle}
-          className={"custom-modal-lg" +this.props.className }
+          className={"custom-modal-lg" + this.props.className}
         >
           <ModalHeader toggle={this.toggle}>Create New Rate</ModalHeader>
           <ModalBody>
-           <Row className="justify-content-center">
-                     <Col md="6">
-                        <FormGroup>
-                           <Label htmlFor="name" className="customer-modal-text-style">
-                              Year
-                  			</Label>
-                           <Input
-                              type="text"
-                              placeholder="20XX"
-                              id="year"
-                              required
-                           />
-                           {/* <div className="error-tool-tip">this field is required</div> */}
-                        </FormGroup>
-                     </Col>
-                     <Col md="6">
-                        <FormGroup>
-                           <Label htmlFor="name" className="customer-modal-text-style">
-                              Make
-                  			</Label>
-                           <Input
-                              type="text"
-                              placeholder="Honda"
-                              id="make"
-                              required
-                           />
-                           
-                        </FormGroup>
-                     </Col>
-                  </Row>
+            <Row className="justify-content-center">
+              <Col md="6">
+                <FormGroup>
+                  <Label htmlFor="name" className="customer-modal-text-style">
+                    Name
+                  </Label>
+                  <Input
+                    type="text"
+                    placeholder="rate name"
+                    name="name"
+                    value={name}
+                    onChange={this.handleChange}
+                    id="name"
+                    required
+                  />
+                  {
+                    errors && !name && errors.name ?
+                      <div className="error-tool-tip">Name is required</div> :
+                      null
+                  }
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label htmlFor="name" className="customer-modal-text-style">
+                    Hour Rate
+                  </Label>
+                  <Input
+                    type="text"
+                    name="hourRate"
+                    value={hourRate}
+                    placeholder="20"
+                    onChange={this.handleChange}
+                    id="make"
+                    maxLength='3'
+                    required
+                  />
+                  {
+                    errors && !hourRate && errors.hourRate ?
+                      <div className="error-tool-tip">Hour rate is required</div> :
+                      null
+                  }
+                </FormGroup>
+              </Col>
+            </Row>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>
-              Do Something
+            <Button color="primary" onClick={this.handleSubmit}>
+              Add Rate
             </Button>{" "}
             <Button color="secondary" onClick={this.toggle}>
               Cancel

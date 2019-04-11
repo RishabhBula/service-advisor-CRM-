@@ -54,9 +54,9 @@ const userSchema = new Schema({
     ref: "role",
     required: true,
   },
-  // permissions: {
-  //   type: UserPermissions,
-  // },
+  permissions: {
+    type: UserPermissions,
+  },
   firstTimeUser: {
     type: Boolean,
     default: false,

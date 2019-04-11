@@ -44,7 +44,7 @@ const getAllUserList = async (req, res) => {
             parentId: currentUser.id,
           },
           {
-            parentId: currentUser.parentId,
+            parentId: currentUser.parentId || currentUser.id,
           },
         ],
       },
@@ -64,7 +64,6 @@ const getAllUserList = async (req, res) => {
         _id: { $ne: currentUser.id },
       },
     ];
-
     if (searchValue) {
       condition["$and"].push({
         $or: [

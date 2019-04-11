@@ -239,4 +239,17 @@ body {
   .badge {
     font-size: 100%;
   }
+  .invalid-feedback {
+    margin-top: 0;
+    font-style: italic;
+  }
+  .navbar-nav {
+    .nav-link {
+      color: #fff;
+    }
+    .nav-link.active {
+      color: #fff;
+      font-weight: 600;
+    }
+  }
 }
