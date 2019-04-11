@@ -35,7 +35,10 @@ export class CrmSelect extends Component {
     };
   }
 
-  clickedOpen = () => {
+  clickedOpen = (e) => {
+    console.log('====================================');
+    console.log(e);
+    console.log('====================================');
     if (this.props.onClickAddNew) 
     this.props.onClickAddNew();
   }
@@ -50,7 +53,7 @@ export class CrmSelect extends Component {
             Option: CustomOption
           }}
           options={defaultOptions}
-          onClickAddNew={this.clickedOpen}
+          onChange={this.clickedOpen}
         />
       </>
     );

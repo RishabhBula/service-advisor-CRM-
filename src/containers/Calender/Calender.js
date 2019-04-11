@@ -142,8 +142,6 @@ class Calender extends Component {
   }
 
   handleEventClick(element) {
-    console.log(element);
-    console.log(element.event.extendedProps.description);
     return (
       <Popover
         placement="bottom"

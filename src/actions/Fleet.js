@@ -24,3 +24,11 @@ export const fleetListRequest = createAction(fleetListActions.FLEET_LIST_REQUEST
 export const fleetListStarted = createAction(fleetListActions.FLEET_LIST_START);
 export const fleetListSuccess = createAction(fleetListActions.FLEET_LIST_SUCCESS);
 export const fleetListFailed = createAction(fleetListActions.FLEET_LIST_FAILED);
+
+export const fleetEditAction = {
+  EDIT_FLEET_REQUESTED: "Edit fleet Requested!",
+  EDIT_FLEET_SUCCESS: "Edit fleet Success!",
+}
+ 
+export const fleetEditRequest = createAction(fleetEditAction.EDIT_FLEET_REQUESTED)
+export const fleetEditSuccess = createAction(fleetEditAction.EDIT_FLEET_SUCCESS)

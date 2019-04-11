@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col, FormGroup, Input, Label } from "reactstrap";
 
 export class CrmStandardModel extends Component {
   constructor(props) {
@@ -21,17 +21,40 @@ export class CrmStandardModel extends Component {
         <Modal
           isOpen={this.props.openStadardRateModel}
           toggle={this.toggle}
-          className={this.props.className}
+          className={"custom-modal-lg" +this.props.className }
         >
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Create New Rate</ModalHeader>
           <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+           <Row className="justify-content-center">
+                     <Col md="6">
+                        <FormGroup>
+                           <Label htmlFor="name" className="customer-modal-text-style">
+                              Year
+                  			</Label>
+                           <Input
+                              type="text"
+                              placeholder="20XX"
+                              id="year"
+                              required
+                           />
+                           <div className="error-tool-tip">this field is required</div>
+                        </FormGroup>
+                     </Col>
+                     <Col md="6">
+                        <FormGroup>
+                           <Label htmlFor="name" className="customer-modal-text-style">
+                              Make
+                  			</Label>
+                           <Input
+                              type="text"
+                              placeholder="Honda"
+                              id="make"
+                              required
+                           />
+                           
+                        </FormGroup>
+                     </Col>
+                  </Row>
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.toggle}>
