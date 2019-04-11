@@ -2,9 +2,9 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import {
   rateStandardListActions,
-  getMatrixListStart,
-  getMatrixListFail,
-  getMatrixListSuccess
+  getRateStandardListStart,
+  getRateStandardListFail,
+  getRateStandardListSuccess
 } from "./../actions";
 
 const getStandardRateListLogic = createLogic({
@@ -21,29 +21,41 @@ const getStandardRateListLogic = createLogic({
       parentId: parentId
     };
     dispatch(
-      getMatrixListStart({
-        matrixList: []
+      getRateStandardListStart({
+        standardRateList: []
       })
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/matrix",
-      "/getAllMatrix",
-      "POST",
+      "/labour",
+      "/getAllStdRate",
+      "get",
       true,
-      undefined,
-      data
+      data,
+      undefined      
     );
     if (result.isError) {
       dispatch(
-        getMatrixListFail({
-          matrixList: []
+        getRateStandardListFail({
+          standardRateList: []
         })
       );
     } else {
+      var defaultOptions = [
+      {
+        value: '',
+        label: 'Add New Customer',
+      }
+    ];
+    let resultData = result.data.data;
+    let dataNewArray = [];
+    for(let i=0; i<resultData.length; i++) {
+     
+      dataNewArray.push({ value: resultData[i]._id, label: resultData[i].name + " - " + resultData[i].hourlyRate})
+    }
       dispatch(
-        getMatrixListSuccess({
-          matrixList: result.data.data
+        getRateStandardListSuccess({
+          standardRateList: defaultOptions.concat(dataNewArray)
         })
       );
     }

@@ -26,7 +26,7 @@ const loginLogic = createLogic({
     } else {
       logger(result);
       localStorage.setItem("token", result.data.token);
-      toast.success(result.messages[0]);
+      // toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/dashboard" }));
       done();

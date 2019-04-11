@@ -77,6 +77,7 @@ const Routes = [
 ];
 
 class AppRoutes extends Component {
+  componentDidMount() {}
   render() {
     const { appState } = this.props;
     const { showLoader } = appState;

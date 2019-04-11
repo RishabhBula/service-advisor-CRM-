@@ -5,7 +5,7 @@ const token = require("../../common/token");
 const validation = require("../../common/apiValidation");
 
 /* ----------get all Standard routes------------ */
-router.post("/getAllStdRate", token.authorisedUser, labourController.getAllStandardRate);
+router.get("/getAllStdRate", token.authorisedUser, labourController.getAllStandardRate);
 
 /* ----------add new standard rate routes------------ */
 router.post("/addRate", token.authorisedUser,validation.addNewRateStandard, labourController.addNewrateStandard);

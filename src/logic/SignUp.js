@@ -12,6 +12,7 @@ const signUpLogic = createLogic({
   type: signUpActions.SIGNUP_REQUEST,
   cancelType: signUpActions.SIGNUP_FAILED,
   async process({ action }, dispatch, done) {
+    localStorage.removeItem("userId");
     dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -28,9 +29,10 @@ const signUpLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      // toast.success(result.messages[0]);
+      localStorage.setItem("userId", result.data.user);
       dispatch(hideLoader());
-      dispatch(redirectTo({ path: "/login" }));
+      // dispatch(redirectTo({ path: "/login" }));
       done();
     }
   },
@@ -126,10 +128,36 @@ const generatePasswordLogic = createLogic({
     }
   },
 });
+const resendConfiramtionLinkLogic = createLogic({
+  type: signUpActions.RESEND_LINK,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/resend-confirmation",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+    }
+  },
+});
 
 export const SignUpLogic = [
   signUpLogic,
   verifyAccountLogic,
   generatePasswordLogic,
   verifyGeneratePasswordLogic,
+  resendConfiramtionLinkLogic,
 ];

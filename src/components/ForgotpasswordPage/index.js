@@ -20,6 +20,7 @@ import {
   ForgetPasswordValidations,
   ForgetPasswordValidationsMessaages,
 } from "../../validations";
+import Logo from "./../../assets/serviceadvisorlogo.jpg";
 class ForgotpasswordPage extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +62,9 @@ class ForgotpasswordPage extends Component {
           <Row className="justify-content-center">
             <Col md="6">
               <Col className="text-center">
-                <h4 className="logo-title">CRM 360</h4>
+                <h4 className="logo-title">
+                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                </h4>
               </Col>
               <CardGroup>
                 <Card className="p-4">
@@ -96,14 +99,14 @@ class ForgotpasswordPage extends Component {
                         <p className={"text-danger"}>{errors.email}</p>
                       ) : null}
                       <Row>
-                        <Col sm="12">
+                        <Col sm="6">
                           <Button
                             color="primary"
                             className="px-4"
                             block
                             onClick={this.requestForgetpassword}
                           >
-                            Submit
+                            Send Reset Link
                           </Button>
                         </Col>
                       </Row>

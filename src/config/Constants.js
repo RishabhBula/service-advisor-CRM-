@@ -64,7 +64,6 @@ export const UserPermissions = [
   },
 ];
 
-
 export const TechincianDefaultPermissions = {
   isAllowedDashboard: false,
   isAllowedWorkflow: true,
@@ -119,38 +118,56 @@ export const AdminDefaultPermissions = {
   isNotifyChangeAppointmentStatus: true,
 };
 
-
-
 export const CustomerPermissionsText = [
   { key: "isCorporateFleetTaxExempt", text: "Is this customer tax exempt?" },
-  { key: "shouldReceiveDiscount", text: "Does this customer receive a discount?" },
-  { key: "shouldLaborRateOverride", text: "Does this customer have a labor rate override?" },
-  { key: "shouldPricingMatrixOverride", text: "Does this customer have a pricing matrix override?" }
+  {
+    key: "shouldReceiveDiscount",
+    text: "Does this customer receive a discount?",
+  },
+  {
+    key: "shouldLaborRateOverride",
+    text: "Does this customer have a labor rate override?",
+  },
+  {
+    key: "shouldPricingMatrixOverride",
+    text: "Does this customer have a pricing matrix override?",
+  },
 ];
 
 export const CustomerDefaultPermissions = {
   isCorporateFleetTaxExempt: {
-    status: false
+    status: false,
   },
   shouldReceiveDiscount: {
     status: true,
-    percentageDiscount: 0
+    percentageDiscount: 0,
   },
   shouldLaborRateOverride: {
     status: false,
-    laborRate: "objectId"
+    laborRate: "objectId",
   },
   shouldPricingMatrixOverride: {
     status: false,
-    pricingMatrix: "objectId"
-  }
-}
+    pricingMatrix: "objectId",
+  },
+};
 
 export const PhoneOptions = [
-  {key: "mobile", text: "Mobile"},
-  {key: "work", text: "Work"},
-  {key: "home", text: "Home"},
-  {key: "office", text: "Office"},
-  {key: "fax", text: "Fax"},
-  {key: "other", text: "Other"},
-]
+  { key: "mobile", text: "Mobile" },
+  { key: "work", text: "Work" },
+  { key: "home", text: "Home" },
+  { key: "office", text: "Office" },
+  { key: "fax", text: "Fax" },
+  { key: "other", text: "Other" },
+];
+
+export const RoleOptions = [
+  {
+    key: "5ca3473d70537232f13ff1f9",
+    text: "Sub-Admin",
+  },
+  {
+    key: "5ca3473d70537232f13ff1fa",
+    text: "Technician",
+  },
+];

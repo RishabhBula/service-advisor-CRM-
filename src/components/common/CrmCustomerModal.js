@@ -60,10 +60,7 @@ export class CrmCustomerModal extends Component {
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
       defaultOptions: [
-        { value: "", label: "Add New Customer" },
-        { value: "123", label: "Chocolate" },
-        { value: "421", label: "Strawberry" },
-        { value: "", label: "Add New" }
+        { value: "", label: "Add New Customer" }
       ],
        vendorValue: '',
     }
@@ -244,7 +241,7 @@ export class CrmCustomerModal extends Component {
     alert("testing");
   }
   render() {
-    const { customerModalOpen, handleCustomerModal, matrixListReducerData } = this.props;
+    const { customerModalOpen, handleCustomerModal, matrixListReducerData,rateStandardListData } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -315,7 +312,7 @@ export class CrmCustomerModal extends Component {
                     />
                     {
                       errors.lastName && !lastName ?
-                        <p className="text-danger">{errors.lastName}</p> :
+                        <span className="text-danger">{errors.lastName}</span> :
                         null
                     }
                     </div>
@@ -683,6 +680,9 @@ export class CrmCustomerModal extends Component {
                     ) {
                       pricingMatrix = true;
                     }
+                    console.log('====================================');
+                    console.log(rateStandardListData);
+                    console.log('====================================');
                     return (
                       <>
                      
@@ -733,7 +733,7 @@ export class CrmCustomerModal extends Component {
                         {labourRate ? (
                           <Col md="">
                           <Async
-                            defaultOptions={defaultOptions}
+                            defaultOptions={rateStandardListData.standardRateList}
                             loadOptions={this.loadOptions}
                             onChange={this.handleStandardRate}
                             isClearable={true}

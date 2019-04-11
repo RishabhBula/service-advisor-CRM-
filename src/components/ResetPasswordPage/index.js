@@ -20,6 +20,8 @@ import {
   ResetPasswordValidations,
   ResetPasswordValidationsMessaages,
 } from "../../validations/login";
+import Logo from "./../../assets/serviceadvisorlogo.jpg";
+
 class ResetPasswordPage extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +79,9 @@ class ResetPasswordPage extends Component {
           <Row className="justify-content-center">
             <Col md="6">
               <Col className="text-center">
-                <h4 className="logo-title">CRM 360</h4>
+                <h4 className="logo-title">
+                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                </h4>
               </Col>
               <CardGroup>
                 <Card className="p-4">
@@ -124,14 +128,15 @@ class ResetPasswordPage extends Component {
                         </p>
                       ) : null}
                       <Row>
-                        <Col xs="12">
+                        <Col xs="6">
                           <Button
                             color="primary"
                             className="px-4"
                             block
+                            type="submit"
                             onClick={this.resetPassword}
                           >
-                            Submit
+                            Reset
                           </Button>
                         </Col>
                       </Row>

@@ -35,12 +35,12 @@ const signUp = async (req, res) => {
       });
     } else {
       var roleType = await roleModel.findOne({ userType: "admin" });
-      var salt = commonCrypto.generateSalt(6);
       var $data = req.body;
-      $data.salt = salt;
-      $data.password = commonCrypto.hashPassword($data.password, salt);
       $data.roleType = roleType._id;
-      $data.permissions = roleType.permissionObject;
+      $data.permissions =
+        typeof roleType.permissionObject[0] === "object"
+          ? roleType.permissionObject[0]
+          : roleType.permissionObject;
       $data.firstTimeUser = true;
       $data.loggedInIp = commonSmtp.getIpAddress(req);
       $data.userSideActivationValue = confirmationNumber;
@@ -57,6 +57,7 @@ const signUp = async (req, res) => {
 
       return res.status(200).json({
         message: otherMessage.confirmMessage,
+        user: result._id,
         success: true,
       });
     }
@@ -67,7 +68,33 @@ const signUp = async (req, res) => {
     });
   }
 };
-
+/* Resend Cofirmation Link */
+const resendConfirmationLink = async (req, res) => {
+  try {
+    let {
+      firstName,
+      lastName,
+      email,
+      _id,
+      userSideActivationValue,
+    } = await userModel.findById(req.body.id);
+    const emailVar = new Email(req);
+    await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
+      userId: _id,
+      firstName,
+      lastName,
+      email,
+      userSideActivationValue,
+    });
+    await emailVar.sendEmail(email);
+    return res.status(200).json({
+      message: otherMessage.confirmMessage,
+      user: _id,
+      success: true,
+    });
+  } catch (error) {}
+};
+/*  */
 const confirmationSignUp = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -146,7 +173,7 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "Kindly Verify your Account and try to Login.",
+        message: "Your access has been disabled, please contact your company.",
         success: false,
       };
     }
@@ -154,7 +181,7 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "you are not authorized to access CRM",
+        message: "Kindly Verify your Account and try to Login",
         success: false,
       };
     }
@@ -763,4 +790,5 @@ module.exports = {
   verfiyUserLink,
   imageUpload,
   imageDelete,
+  resendConfirmationLink,
 };

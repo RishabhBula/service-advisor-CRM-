@@ -20,6 +20,7 @@ import * as qs from "query-string";
 import { AppConfig } from "../../config/AppConfig";
 import { ConfirmBox } from "../../helpers/SweetAlert";
 import { CrmUserModal } from "../common/CrmUserModal";
+import { RoleOptions } from "../../config/Constants";
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +29,7 @@ class UserList extends Component {
       search: "",
       status: "",
       sort: "",
+      type: "",
       user: {},
       openEditModal: false
     };
@@ -35,12 +37,13 @@ class UserList extends Component {
   componentDidMount() {
     const { location } = this.props;
     const lSearch = location.search;
-    const { page, search, sort, status } = qs.parse(lSearch);
+    const { page, search, sort, status, type } = qs.parse(lSearch);
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
-      search: search || ""
+      search: search || "",
+      type: type || ""
     });
   }
   componentDidUpdate({ openEdit }) {
@@ -57,11 +60,12 @@ class UserList extends Component {
   };
   onSearch = e => {
     e.preventDefault();
-    const { page, search, sort, status } = this.state;
+    this.setState({
+      page: 1
+    });
+    const { search, sort, status, type } = this.state;
     let param = {};
-    if (page && page > 1) {
-      param.page = page;
-    }
+    param.page = 1;
     if (search) {
       param.search = search;
     }
@@ -70,6 +74,9 @@ class UserList extends Component {
     }
     if (status) {
       param.status = status;
+    }
+    if (type) {
+      param.type = type;
     }
     this.props.onSearch(param);
   };
@@ -102,7 +109,15 @@ class UserList extends Component {
   render() {
     const { userData } = this.props;
     const { users, isLoading, totalUsers } = userData;
-    const { page, search, sort, status, user, openEditModal } = this.state;
+    const {
+      page,
+      search,
+      sort,
+      status,
+      type,
+      user,
+      openEditModal
+    } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -124,7 +139,7 @@ class UserList extends Component {
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
                   <Label for="exampleSelect" className="label">
                     Status
@@ -144,7 +159,7 @@ class UserList extends Component {
                   </Input>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
                   <Label for="SortFilter" className="label">
                     Sort By
@@ -163,6 +178,31 @@ class UserList extends Component {
                     <option value={"loginasc"}>Last login</option>
                     <option value={"nasc"}>Name A-Z</option>
                     <option value={"ndesc"}>Name Z-A</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label for="SortFilter" className="label">
+                    User Type
+                  </Label>
+                  <Input
+                    type="select"
+                    name="type"
+                    id="SortFilter"
+                    onChange={this.handleChange}
+                    value={type}
+                  >
+                    <option className="form-control" value={""}>
+                      -- Select Status --
+                    </option>
+                    {RoleOptions.map((role, index) => {
+                      return (
+                        <option value={role.key} key={index}>
+                          {role.text}
+                        </option>
+                      );
+                    })}
                   </Input>
                 </FormGroup>
               </Col>
@@ -204,12 +244,12 @@ class UserList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>S.no</th>
+              <th>Member Name</th>
               <th>Email</th>
               <th>Role</th>
-              <th>Registered At</th>
-              <th>Last Login At</th>
+              <th>Registered</th>
+              <th>Last Login</th>
               <th>Last Login IP</th>
               <th>Status</th>
               <th>Action</th>
@@ -221,8 +261,12 @@ class UserList extends Component {
                 users.map((user, index) => {
                   return (
                     <tr key={index}>
-                      <td>{user.firstName || "-"}</td>
-                      <td>{user.lastName || "-"}</td>
+                      <td>
+                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
+                      </td>
+                      <td>
+                        {[user.firstName, user.lastName].join(" ").trim()}
+                      </td>
                       <td>{user.email || "-"}</td>
                       <td>{user.roleType ? user.roleType.userType : "-"}</td>
                       <td>
