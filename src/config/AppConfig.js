@@ -3,7 +3,7 @@ export const EnviornmentTypes = {
   PROD: "production",
 };
 export const mode = process.env.NODE_ENV || EnviornmentTypes.DEV; //stage,dev,live
-export const isProd = mode === EnviornmentTypes.PROD;
+export const isProd = mode === EnviornmentTypes.DEV;
 let data;
 
 switch (mode) {
