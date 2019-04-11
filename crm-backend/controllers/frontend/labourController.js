@@ -1,26 +1,19 @@
 const rateStandardModel = require("../../models/rateStandard");
-const { validationResult } = require("express-validator/check");
-const commonValidation = require("../../common/index");
+const mongoose = require("mongoose");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
   try {
-    let $data = req.body;
+    let $data = req.query;
     let condition = {};
-    if ($data.search !== "") {
-      condition.firstName = {
-        $regex: new RegExp($data.search, "i"),
-      };
-    }
-    condition.parentId = $data.parentId;
-    const getAllStdRate = await rateStandardModel.find({ ...condition });
+
+    const getAllStdRate = await rateStandardModel.find({ parentId: mongoose.Types.ObjectId($data.parentId) });
     if (getAllStdRate) {
-      if (getAllStdRate.length) {
-        return res.status(200).json({
-          responsecode: 200,
-          success: true,
-          data: getAllStdRate,
-        });
-      }
+      return res.status(200).json({
+        responsecode: 200,
+        success: true,
+        data: getAllStdRate,
+      });
+
     } else {
       return res.status(400).json({
         responsecode: 200,
@@ -28,7 +21,7 @@ const getAllStandardRate = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
       success: false,
@@ -40,17 +33,23 @@ const getAllStandardRate = async (req, res) => {
 /* -------------Add Rate Standard ------------ */
 const addNewrateStandard = async (req, res) => {
   const { body } = req;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false,
-    });
-  }
   try {
+    if (body.parentId === null) {
+      body.parentId = body.userId
+    }
+    if (!body.data.name ) {
+      return res.status(400).json({
+        message:"Name is required."
+      })
+    }
+    if (!body.data.hourRate ) {
+      return res.status(400).json({
+        message:"Hour rate is required."
+      })
+    }
     const newRateData = {
-      name: body.name,
-      hourlyRate: body.hourlyRate,
+      name: body.data.name,
+      hourlyRate: body.data.hourRate,
       parentId: body.parentId,
       userId: body.userId,
       status: true,
@@ -64,6 +63,7 @@ const addNewrateStandard = async (req, res) => {
       });
     } else {
       return res.status(200).json({
+        data: result,
         message: "Rate standard added successfully!.",
         success: false,
       });

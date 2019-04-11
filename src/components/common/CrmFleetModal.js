@@ -22,6 +22,7 @@ import {
   CustomerPermissionsText
 } from "../../config/Constants";
 import { CrmSelect } from "../common/CrmSelect";
+import { CrmStandardModel } from '../common/CrmStandardModel'
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -54,6 +55,21 @@ export class CrmFleetModal extends Component {
         { value: "", label: "Add New" }
       ],
     };
+  }
+  handleStandardRate = (selectValue) => {
+    if (selectValue.value === "") {
+      this.setState({
+        openStadardRateModel: !this.state.openStadardRateModel
+      })
+    }
+    else {
+      const { fleetDefaultPermissions } = this.state;
+      fleetDefaultPermissions["shouldLaborRateOverride"].laborRate =
+        selectValue.value;
+      this.setState({
+        ...fleetDefaultPermissions
+      });
+    }
   }
   componentDidUpdate({ fleetData }) {
     if (
@@ -92,7 +108,7 @@ export class CrmFleetModal extends Component {
         state,
         zipCode,
         permission,
-        fleetId:_id
+        fleetId: _id
       })
     }
   }
@@ -590,13 +606,18 @@ export class CrmFleetModal extends Component {
                 );
               })}
             </div>
+            <CrmStandardModel
+              openStadardRateModel={this.state.openStadardRateModel}
+              stdModelFun={this.stdModelFun}
+              handleRateAdd={this.handleRateAdd}
+            />
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={() => handleAddFleet(fleetData, isEditMode, fleetId)}>
               {
                 !isEditMode ?
-                "Add New Fleet":
-                "Update Fleet Details"
+                  "Add New Fleet" :
+                  "Update Fleet Details"
               }
             </Button>{" "}
             <Button color="secondary" onClick={handleFleetModal}>
