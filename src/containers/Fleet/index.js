@@ -11,7 +11,7 @@ import {
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import FleetList from "../../components/Fleet/FleetList";
 import { connect } from "react-redux";
-import { fleetListRequest, fleetAddRequest, getMatrixList} from "../../actions";
+import { fleetListRequest, fleetAddRequest, getMatrixList } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
 import { CreateFleetValidations, CreateFleetValidMessaages } from "../../validations";
@@ -56,7 +56,7 @@ class Fleet extends Component {
     }
   }
 
-  handleAddFleet = (fleetData,isEditMode) => {
+  handleAddFleet = (fleetData, isEditMode) => {
     this.setState({
       error: {}
     });
@@ -83,7 +83,7 @@ class Fleet extends Component {
       }
       if (!isEditMode) {
         this.props.addFleet(data)
-      }else{
+      } else {
         this.props.updateFleet(data)
       }
       this.setState({
@@ -95,8 +95,7 @@ class Fleet extends Component {
   }
   render() {
     const { openCreate, error, openEdit } = this.state;
-    const { matrixListReducer, profileInfoReducer, fleetReducer } = this.props
-
+    const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props
     return (
       <>
         <Card>
@@ -135,6 +134,7 @@ class Fleet extends Component {
           handleFleetModal={this.toggleCreateModal}
           handleAddFleet={this.handleAddFleet}
           errorMessage={error}
+          rateStandardListData={rateStandardListReducer}
           profileInfoReducer={profileInfoReducer}
           matrixListReducerData={matrixListReducer}
         />
@@ -146,7 +146,8 @@ class Fleet extends Component {
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
   matrixListReducer: state.matrixListReducer,
-  fleetReducer: state.fleetReducer
+  fleetReducer: state.fleetReducer,
+  rateStandardListReducer: state.rateStandardListReducer
 });
 
 

@@ -70,6 +70,19 @@ class Users extends Component {
     this.props.deleteCustomer({ ...query, userId });
   };
 
+  addCustomer = (data) => {
+    this.props.addCustomer(data);
+    this.props.getCustomerList();
+    this.onSearch({});
+  }
+
+  onTypeHeadStdFun = (data) => {
+    this.props.getStdList(data);
+  }
+
+  onStdAdd = () => {
+    this.props.getStdList();
+  }
 
 
   render() {
@@ -113,10 +126,12 @@ class Users extends Component {
         <CrmCustomerModal
           customerModalOpen={modelDetails.customerModel}
           handleCustomerModal={this.toggleCreateModal}
-          addCustomer={addCustomer}
+          addCustomerFun={this.addCustomer}
           profileInfo={this.props.profileInfoReducer}
           matrixListReducerData={matrixListReducer}
           rateStandardListData ={rateStandardListReducer}
+          onTypeHeadStdFun = {this.onTypeHeadStdFun}
+          onStdAdd = {this.onStdAdd}
         />
       </>
     );

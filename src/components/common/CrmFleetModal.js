@@ -19,10 +19,18 @@ import { PhoneOptions } from '../../config/Constants'
 import MaskedInput from "react-maskedinput";
 import {
   CustomerDefaultPermissions,
-  CustomerPermissionsText
+  CustomerPermissionsText,
 } from "../../config/Constants";
-import { CrmSelect } from "../common/CrmSelect";
+import {
+  CreateRateValidations,
+  CreateRateValidMessaages
+} from "../../validations";
+import Async from 'react-select/lib/Async';
 import { CrmStandardModel } from '../common/CrmStandardModel'
+import { logger } from "../../helpers/Logger";
+import Validator from "js-object-validation";
+import { ApiHelper } from "../../helpers/ApiHelper";
+import { toast } from "react-toastify";
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -49,11 +57,9 @@ export class CrmFleetModal extends Component {
       fleetDefaultPermissions: CustomerDefaultPermissions,
       percentageDiscount: 0,
       defaultOptions: [
-        { custom: true },
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry" },
-        { value: "", label: "Add New" }
+        { value: "", label: "Add New Customer" }
       ],
+      vendorValue: '',
     };
   }
   handleStandardRate = (selectValue) => {
@@ -69,6 +75,49 @@ export class CrmFleetModal extends Component {
       this.setState({
         ...fleetDefaultPermissions
       });
+    }
+  }
+  handleRateAdd = async (data) => {
+    const profileData = this.props.profileInfo.profileInfo
+    let api = new ApiHelper();
+
+    try {
+      const { isValid, errors } = Validator(
+        data,
+        CreateRateValidations,
+        CreateRateValidMessaages
+      );
+      if (!isValid) {
+        this.setState({
+          errors: errors,
+          isLoading: false,
+        });
+        return;
+      } else {
+        const ratedata = {
+          data: data,
+          userId: profileData._id,
+          parentId: profileData.parentId
+        }
+        let result = await api.FetchFromServer(
+          "/labour",
+          "/addRate",
+          "POST",
+          true,
+          undefined,
+          ratedata
+        )
+        if (result.isError) {
+          toast.error(result.messages[0]);
+        } else {
+          toast.success(result.messages[0]);
+          this.setState({
+            openStadardRateModel: !this.state.openStadardRateModel
+          })
+        }
+      }
+    } catch (error) {
+      logger(error);
     }
   }
   componentDidUpdate({ fleetData }) {
@@ -183,6 +232,7 @@ export class CrmFleetModal extends Component {
       handleAddFleet,
       errorMessage,
       matrixListReducerData,
+      rateStandardListData
     } = this.props;
     const {
       companyName,
@@ -195,7 +245,7 @@ export class CrmFleetModal extends Component {
       state,
       zipCode,
       fleetDefaultPermissions,
-      defaultOptions,
+      vendorValue,
       percentageDiscount,
       isEditMode,
       fleetId
@@ -575,10 +625,13 @@ export class CrmFleetModal extends Component {
                     ) : null}
 
                     {labourRate ? (
-                      <Col md="12">
-                        <CrmSelect
-                          defaultOptions={defaultOptions}
-                          onClickAddNew={this.addNewSection}
+                      <Col md="">
+                        <Async
+                          defaultOptions={rateStandardListData.standardRateList}
+                          loadOptions={this.loadOptions}
+                          onChange={this.handleStandardRate}
+                          isClearable={true}
+                          value={vendorValue}
                         />
                       </Col>
                     ) : null}
