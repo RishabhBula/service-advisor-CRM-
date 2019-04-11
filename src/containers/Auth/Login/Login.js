@@ -3,6 +3,11 @@ import { connect } from "react-redux";
 import { loginRequest } from "../../../actions";
 import LoginPage from "../../../components/LoginPage";
 class Login extends Component {
+  componentDidMount() {
+    if (localStorage.getItem("token")) {
+      this.props.redirectTo("/dashboard");
+    }
+  }
   render() {
     const { onLogin } = this.props;
     return <LoginPage onLogin={onLogin} />;

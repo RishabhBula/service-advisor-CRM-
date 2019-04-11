@@ -6,7 +6,6 @@ import { Container } from "reactstrap";
 // sidebar nav config
 import navigation from "../../_nav";
 import { profileInfoRequest } from "../../actions";
-import { logger } from "../../helpers/Logger";
 // routes config
 import routes from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
@@ -41,11 +40,10 @@ class DefaultLayout extends Component {
     this.props.redirectTo("/login");
   }
   navigation = permissions => {
-    logger(permissions, navigation);
     const navItems = {
       items: [],
     };
-    navigation.items.forEach((nav, index) => {
+    navigation.items.forEach(nav => {
       if (permissions[nav.authKey]) {
         navItems.items.push(nav);
       }

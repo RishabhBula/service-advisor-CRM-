@@ -6,6 +6,11 @@ const token = require("../../common/token");
 // eslint-disable-next-line
 router.post("/signUp", validation.signupValidation, authController.signUp);
 router.post(
+  "/resend-confirmation",
+  validation.signupValidation,
+  authController.resendConfirmationLink
+);
+router.post(
   "/confirmation",
   validation.signupConfirmation,
   authController.confirmationSignUp

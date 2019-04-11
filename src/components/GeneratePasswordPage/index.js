@@ -19,6 +19,8 @@ import {
   ResetPasswordValidations,
   ResetPasswordValidationsMessaages,
 } from "../../validations";
+import Logo from "./../../assets/serviceadvisorlogo.jpg";
+
 class GeneratePasswordPage extends Component {
   constructor(props) {
     super(props);
@@ -71,7 +73,9 @@ class GeneratePasswordPage extends Component {
           <Row className="justify-content-center">
             <Col md="6">
               <Col className="text-center">
-                <h4 className="logo-title">CRM 360</h4>
+                <h4 className="logo-title">
+                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                </h4>
               </Col>
               <CardGroup>
                 <Card className="p-4">

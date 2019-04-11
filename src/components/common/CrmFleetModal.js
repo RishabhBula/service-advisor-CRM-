@@ -30,7 +30,7 @@ export class CrmFleetModal extends Component {
       switchValue: true,
       companyName: "",
       phoneDetail: [{
-        phone: "mobile",
+        phone: "",
         value: ""
       }],
       email: "",
@@ -41,9 +41,11 @@ export class CrmFleetModal extends Component {
       state: "",
       zipCode: "",
       permission: "",
+      fleetId: "",
       errors: {},
+      isEditMode: false,
       phoneLength: AppConfig.phoneLength,
-      customerDefaultPermissions: CustomerDefaultPermissions,
+      fleetDefaultPermissions: CustomerDefaultPermissions,
       percentageDiscount: 0,
       defaultOptions: [
         { custom: true },
@@ -53,14 +55,54 @@ export class CrmFleetModal extends Component {
       ],
     };
   }
+  componentDidUpdate({ fleetData }) {
+    if (
+      this.props.fleetData &&
+      this.props.fleetData._id &&
+      fleetData._id !== this.props.fleetData._id
+    ) {
+      const {
+        companyName,
+        phoneDetail: [{
+          phone,
+          value
+        }],
+        email,
+        notes,
+        address1,
+        address2,
+        city,
+        state,
+        zipCode,
+        permission,
+        _id
+      } = this.props.fleetData;
+      this.setState({
+        isEditMode: true,
+        companyName,
+        phoneDetail: [{
+          phone,
+          value
+        }],
+        email,
+        notes,
+        address1,
+        address2,
+        city,
+        state,
+        zipCode,
+        permission,
+        fleetId:_id
+      })
+    }
+  }
   handleClick(singleState, e) {
-    const { customerDefaultPermissions } = this.state;
-    customerDefaultPermissions[singleState].status = e.target.checked;
+    const { fleetDefaultPermissions } = this.state;
+    fleetDefaultPermissions[singleState].status = e.target.checked;
     this.setState({
-      ...customerDefaultPermissions
+      ...fleetDefaultPermissions
     });
   };
-
 
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
@@ -124,7 +166,8 @@ export class CrmFleetModal extends Component {
       modalClassName,
       handleAddFleet,
       errorMessage,
-      matrixListReducerData } = this.props;
+      matrixListReducerData,
+    } = this.props;
     const {
       companyName,
       phoneDetail,
@@ -135,9 +178,11 @@ export class CrmFleetModal extends Component {
       city,
       state,
       zipCode,
-      customerDefaultPermissions,
+      fleetDefaultPermissions,
       defaultOptions,
-      percentageDiscount
+      percentageDiscount,
+      isEditMode,
+      fleetId
     } = this.state;
     const fleetData = {
       companyName,
@@ -149,8 +194,8 @@ export class CrmFleetModal extends Component {
       city,
       state,
       zipCode,
-      customerDefaultPermissions,
-      percentageDiscount
+      fleetDefaultPermissions,
+      percentageDiscount,
     }
     const phoneOptions = PhoneOptions.map((item, index) => {
       return (
@@ -166,7 +211,9 @@ export class CrmFleetModal extends Component {
             !modalClassName ? "customer-modal" : modalClassName
           }
         >
-          <ModalHeader toggle={handleFleetModal}>Create New Fleet</ModalHeader>
+          <ModalHeader toggle={handleFleetModal}>
+            {!isEditMode ? "Add New Fleet" : `Update Fleet details`}
+          </ModalHeader>
           <ModalBody>
             <div className="">
               <Row className="justify-content-center">
@@ -183,7 +230,7 @@ export class CrmFleetModal extends Component {
                       value={companyName}
                       id="name" required />
                     {
-                      !companyName && errorMessage.companyName?
+                      errorMessage && !companyName && errorMessage.companyName ?
                         <p className="text-danger">Company name is required.</p> :
                         null
                     }
@@ -323,7 +370,7 @@ export class CrmFleetModal extends Component {
                       required
                     />
                     {
-                     email && errorMessage.email ?
+                      errorMessage && email && errorMessage.email ?
                         <p className="text-danger">{errorMessage.email}</p> :
                         null
                     }
@@ -448,21 +495,21 @@ export class CrmFleetModal extends Component {
                 let pricingMatrix = false;
                 if (
                   permission.key === "shouldReceiveDiscount" &&
-                  customerDefaultPermissions[permission.key].status
+                  fleetDefaultPermissions[permission.key].status
                 ) {
                   discountShow = true;
                 }
 
                 if (
                   permission.key === "shouldLaborRateOverride" &&
-                  customerDefaultPermissions[permission.key].status
+                  fleetDefaultPermissions[permission.key].status
                 ) {
                   labourRate = true;
                 }
 
                 if (
                   permission.key === "shouldPricingMatrixOverride" &&
-                  customerDefaultPermissions[permission.key].status
+                  fleetDefaultPermissions[permission.key].status
                 ) {
                   pricingMatrix = true;
                 }
@@ -475,7 +522,7 @@ export class CrmFleetModal extends Component {
                       <AppSwitch
                         className={"mx-1"}
                         checked={
-                          customerDefaultPermissions[permission.key]
+                          fleetDefaultPermissions[permission.key]
                             .status
                         }
                         onClick={this.handleClick.bind(
@@ -545,8 +592,12 @@ export class CrmFleetModal extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={() => handleAddFleet(fleetData)}>
-              Add New Fleet
+            <Button color="primary" onClick={() => handleAddFleet(fleetData, isEditMode, fleetId)}>
+              {
+                !isEditMode ?
+                "Add New Fleet":
+                "Update Fleet Details"
+              }
             </Button>{" "}
             <Button color="secondary" onClick={handleFleetModal}>
               Cancel

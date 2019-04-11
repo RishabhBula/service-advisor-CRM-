@@ -6,6 +6,9 @@ import GeneratePasswordPage from "../../../components/GeneratePasswordPage";
 
 class GeneratePassword extends Component {
   componentDidMount() {
+    if (localStorage.getItem("token")) {
+      this.props.redirectTo("/dashboard");
+    }
     const { activationCode, userId } = this.props.match.params;
     if (!activationCode || !userId) {
       this.props.redirectTo("/404");

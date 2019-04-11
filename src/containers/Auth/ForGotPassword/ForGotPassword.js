@@ -1,12 +1,20 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { forgetPasswordRequest } from "../../../actions";
 
 import ForgotpasswordPage from "../../../components/ForgotpasswordPage";
 
-const ForGotPassword = props => (
-  <ForgotpasswordPage onRequest={props.onRequest} />
-);
+class ForGotPassword extends Component {
+  componentDidMount() {
+    if (localStorage.getItem("token")) {
+      this.props.redirectTo("/dashboard");
+    }
+  }
+
+  render() {
+    return <ForgotpasswordPage onRequest={this.props.onRequest} />;
+  }
+}
 
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => {

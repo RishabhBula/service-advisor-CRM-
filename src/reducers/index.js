@@ -6,7 +6,7 @@ import { handleActions } from "redux-actions";
 import { usersReducer } from "./Users";
 import { profileInfoReducer } from "./ProfileInfo";
 import { matrixListReducer } from "./MatrixList";
-import { fleetListReducer } from "./FleetList";
+import { fleetReducer } from "./FleetList";
 import { rateStandardListReducer } from "./RateStandard";
 import { customerInfoReducer, customerListReducer } from "./Customer";
 import { modelInfoReducer } from "./ModelOperation";
@@ -30,7 +30,7 @@ const AppReducer = combineReducers({
   usersReducer,
   profileInfoReducer,
   matrixListReducer,
-  fleetListReducer,
+  fleetReducer,
   rateStandardListReducer,
   customerInfoReducer,
   modelInfoReducer,
