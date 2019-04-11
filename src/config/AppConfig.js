@@ -3,7 +3,7 @@ export const EnviornmentTypes = {
   PROD: "production",
 };
 export const mode = process.env.NODE_ENV || EnviornmentTypes.DEV; //stage,dev,live
-export const isProd = mode === EnviornmentTypes.PROD;
+export const isProd = mode === EnviornmentTypes.DEV;
 let data;
 
 switch (mode) {
@@ -12,7 +12,7 @@ switch (mode) {
     break;
   case EnviornmentTypes.DEV:
     data = {
-      API_ENDPOINT: "http://192.168.2.126:8001/",
+      API_ENDPOINT: "http://192.168.2.117:8001/",
       API_VERSION: "api",
       phoneLength: 3,
     };

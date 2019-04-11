@@ -70,7 +70,7 @@ export class CrmCustomerModal extends Component {
       defaultOptions: [
         { value: "", label: "Add New Customer" }
       ],
-      vendorValue: '',
+      selectedLabourRate: '',
     }
   }
 
@@ -119,6 +119,7 @@ export class CrmCustomerModal extends Component {
           this.setState({
             openStadardRateModel: !this.state.openStadardRateModel
           })
+           this.props.onStdAdd();
         }
       }
     } catch (error) {
@@ -207,28 +208,42 @@ export class CrmCustomerModal extends Component {
     }
   }
   handleStandardRate = (selectValue) => {
-    if (selectValue.value === "") {
-      this.setState({
-        openStadardRateModel: !this.state.openStadardRateModel
-      })
+    if(selectValue) {
+      if (selectValue.value === "") {
+        this.setState({
+          openStadardRateModel: !this.state.openStadardRateModel
+        })
+      }
+      else {
+        const { customerDefaultPermissions } = this.state;
+        customerDefaultPermissions["shouldLaborRateOverride"].laborRate =
+          selectValue.value;
+        this.setState({
+          ...customerDefaultPermissions,
+          selectedLabourRate: selectValue
+        });
+      }
     }
     else {
-      const { customerDefaultPermissions } = this.state;
-      customerDefaultPermissions["shouldLaborRateOverride"].laborRate =
-        selectValue.value;
       this.setState({
-        ...customerDefaultPermissions
+        defaultOptions: [
+          {
+            value: '',
+            label: 'Add New',
+          },
+        ],
       });
     }
   }
 
-  loadOptions = async input => {
+  loadOptions = async input => {   
     const defaultOptions = [
       {
         value: '',
         label: 'Add New',
       },
     ];
+    //this.props.onTypeHeadStdFun(input);
     return defaultOptions;
   }
 
@@ -247,7 +262,7 @@ export class CrmCustomerModal extends Component {
       state,
       zipCode,
       customerDefaultPermissions,
-      fleet
+      fleet,
     } = this.state;
     const customerData = {
       firstName: firstName,
@@ -287,7 +302,7 @@ export class CrmCustomerModal extends Component {
         });
         return;
       }
-      this.props.addCustomer(customerData)
+      this.props.addCustomerFun(customerData)
     } catch (error) {
       logger(error);
     }
@@ -309,7 +324,8 @@ export class CrmCustomerModal extends Component {
       firstName,
       lastName,
       email,
-      vendorValue
+      vendorValue,
+      selectedLabourRate
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
@@ -731,9 +747,6 @@ export class CrmCustomerModal extends Component {
                     ) {
                       pricingMatrix = true;
                     }
-                    console.log('====================================');
-                    console.log(rateStandardListData);
-                    console.log('====================================');
                     return (
                       <>
 
@@ -785,7 +798,7 @@ export class CrmCustomerModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={true}
-                                value={vendorValue}
+                                value={selectedLabourRate}
                               />
 
                             </Col>

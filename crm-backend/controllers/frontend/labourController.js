@@ -4,16 +4,16 @@ const mongoose = require("mongoose");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
-    let condition = {};
 
-    const getAllStdRate = await rateStandardModel.find({ parentId: mongoose.Types.ObjectId($data.parentId) });
+    const getAllStdRate = await rateStandardModel.find({
+      parentId: mongoose.Types.ObjectId($data.parentId),
+    });
     if (getAllStdRate) {
       return res.status(200).json({
         responsecode: 200,
         success: true,
         data: getAllStdRate,
       });
-
     } else {
       return res.status(400).json({
         responsecode: 200,
@@ -35,17 +35,17 @@ const addNewrateStandard = async (req, res) => {
   const { body } = req;
   try {
     if (body.parentId === null) {
-      body.parentId = body.userId
+      body.parentId = body.userId;
     }
-    if (!body.data.name ) {
+    if (!body.data.name) {
       return res.status(400).json({
-        message:"Name is required."
-      })
+        message: "Name is required.",
+      });
     }
-    if (!body.data.hourRate ) {
+    if (!body.data.hourRate) {
       return res.status(400).json({
-        message:"Hour rate is required."
-      })
+        message: "Hour rate is required.",
+      });
     }
     const newRateData = {
       name: body.data.name,

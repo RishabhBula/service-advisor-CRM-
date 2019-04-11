@@ -41,7 +41,7 @@ export class CrmStandardModel extends Component {
       name: this.state.name,
       hourRate: this.state.hourRate
     }
-    this.props.handleRateAdd(data)
+    this.props.handleRateAdd(data);
   }
   render() {
     const { name, hourRate, isSubmitted } = this.state
