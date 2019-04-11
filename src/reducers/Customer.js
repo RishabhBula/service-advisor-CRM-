@@ -32,6 +32,12 @@ export const customerInfoReducer = handleActions(
 
 export const customerListReducer = handleActions(
   {
+    [customersAddActions.CUSTOMER_GET_START]: (state, action) => ({
+        ...state,
+        isLoading: action.payload.isLoading,
+        customers: action.payload.customers,
+        totalCustomers: action.payload.totalCustomers,
+    }),
     [customersAddActions.CUSTOMER_GET_SUCCESS]: (state, action) => ({
         ...state,
         isLoading: action.payload.isLoading,

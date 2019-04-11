@@ -68,7 +68,7 @@ const createCustomer = async (req, res) => {
 
 /* get all the customer list  with search */
 
-const getAllUserList = async (req, res) => {
+const getAllCustomerList = async (req, res) => {
   const { query, currentUser } = req;
   try {
     const limit = parseInt(query.limit || 10);
@@ -102,66 +102,60 @@ const getAllUserList = async (req, res) => {
         };
         break;
     }
-    let condition = {
-      userId: currentUser.id,
-    };
-    if(currentUser.parentId !== null) {
-      parentId: currentUser.parentId
-    }
+    let condition = {};
     if (status) {
       condition.status = status;
     }
-    if (searchValue) {
-      condition["$and"] = [
-        {
-          $or: [
-            {
-              firstName: {
-                $regex: new RegExp(searchValue, "i"),
-              },
-            },
-            {
-              lastName: {
-                $regex: new RegExp(searchValue, "i"),
-              },
-            },
-            {
-              email: {
-                $regex: new RegExp(searchValue, "i"),
-              },
-            },
-          ],
-        },
-        {
-          $or: [
-            {
-              isDeleted: {
-                $exists: false,
-              },
-            },
-            {
-              isDeleted: false,
-            },
-          ],
-        },
-      ];
-    } else {
-      condition["$or"] = [
-        {
-          isDeleted: {
-            $exists: false,
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: currentUser.id,
           },
-        },
-        {
-          isDeleted: false,
-        },
-      ];
+          {
+            parentId: currentUser.parentId,
+          },
+        ],
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false,
+            },
+          },
+          {
+            isDeleted: false,
+          },
+        ],
+      },
+    ];
+
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            firstName: {
+              $regex: new RegExp(searchValue, "i"),
+            },
+          },
+          {
+            lastName: {
+              $regex: new RegExp(searchValue, "i"),
+            },
+          },
+          {
+            email: {
+              $regex: new RegExp(searchValue, "i"),
+            },
+          },
+        ],
+      });
     }
     const getAllCustomer = await customerModel
       .find({
         ...condition,
       })
-      .populate("roleType")
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
@@ -183,6 +177,28 @@ const getAllUserList = async (req, res) => {
   }
 };
 
+/* Delete Customer */
+const deleteCustomer = async ({ params }, res) => {
+  try {
+    const { customerId } = params;
+    const data = await customerModel.findByIdAndUpdate(customerId, {
+      isDeleted: true,
+    });
+    return res.status(200).json({
+      message: "User deleted successfully!",
+      data,
+    });
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+/* Delete Customer */
+
 module.exports = {
-   createCustomer
+   createCustomer,
+   getAllCustomerList
 }

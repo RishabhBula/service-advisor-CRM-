@@ -11,6 +11,7 @@ import {
   customerAddFailed,
   customerAddStarted,
   modelOpenRequest,
+  customerGetStarted,
   customerGetSuccess,
   customerGetFailed
 } from "./../actions";
@@ -68,23 +69,28 @@ const addCustomerLogic = createLogic({
 
 const getCustomersLogic = createLogic({
   type: customersAddActions.CUSTOMER_GET_REQUEST,
+  cancelType: customersAddActions.CUSTOMER_GET_FAILED,
   async process({ action }, dispatch, done) {
     dispatch(
-      customerGetSuccess({
+      customerGetStarted({
         isLoading: true,
         customers: [],
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer("/user", "/", "GET", true, {
+    let result = await api.FetchFromServer(
+      "/customer", 
+      "/getAllCustomerList", 
+      "GET", true, {
       ...action.payload,
       limit: AppConfig.ITEMS_PER_PAGE,
     });
     if (result.isError) {
       dispatch(
-        customerGetSuccess({
+        customerGetFailed({
           isLoading: false,
           customers: [],
+          totalCustomers: 0
         })
       );
       done();
@@ -92,10 +98,41 @@ const getCustomersLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(
-        customerGetFailed({
+        customerGetSuccess({
           isLoading: false,
           customers: result.data.data,
-          totalCustomers: result.data.totalCustomers,
+          totalCustomers: result.data.totalUsers,
+        })
+      );
+      done();
+    }
+  },
+});
+
+const deleteCustomerLogic = createLogic({
+  type: customersAddActions.DELETE_CUSTOMER,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/user",
+      ["/", action.payload.userId].join(""),
+      "DELETE",
+      true
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.userId;
+      dispatch(
+        getUsersList({
+          ...action.payload,
         })
       );
       done();

@@ -100,8 +100,8 @@ class CustomerList extends Component {
     this.props.onUpdate(id, data);
   };
   render() {
-    const { userData } = this.props;
-    const { users, isLoading, totalUsers } = userData;
+    const { customerData } = this.props;
+    const { customers, isLoading, totalCustomers } = customerData;
     const { page, search, sort, status, user, openEditModal } = this.state;
     return (
       <>
@@ -160,7 +160,6 @@ class CustomerList extends Component {
                       -- Select Status --
                     </option>
                     <option value={"createddesc"}>Last Created</option>
-                    <option value={"loginasc"}>Last login</option>
                     <option value={"nasc"}>Name A-Z</option>
                     <option value={"ndesc"}>Name Z-A</option>
                   </Input>
@@ -207,33 +206,26 @@ class CustomerList extends Component {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
-              <th>Role</th>
               <th>Registered At</th>
-              <th>Last Login At</th>
-              <th>Last Login IP</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {!isLoading ? (
-              users.length ? (
-                users.map((user, index) => {
+              customers && customers.length ? (
+                customers.map((user, index) => {
                   return (
                     <tr key={index}>
                       <td>{user.firstName || "-"}</td>
                       <td>{user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
-                      <td>{user.roleType ? user.roleType.userType : "-"}</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
+                    
                       <td>
-                        {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
-                      </td>
-                      <td>{user.loggedInIp || "-"}</td>
-                      <td>
-                        {user.userSideActivation ? (
+                        {user.status ? (
                           <Badge color="success">Active</Badge>
                         ) : (
                           <Badge color="danger">Inactive</Badge>
@@ -262,7 +254,7 @@ class CustomerList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    No staff member found
+                    No customer found
                   </td>
                 </tr>
               )
@@ -275,9 +267,9 @@ class CustomerList extends Component {
             )}
           </tbody>
         </Table>
-        {totalUsers && !isLoading ? (
+        {totalCustomers && !isLoading ? (          
           <PaginationHelper
-            totalRecords={totalUsers}
+            totalRecords={totalCustomers}
             onPageChanged={page => {
               this.setState({ page });
               this.props.onPageChange(page);
