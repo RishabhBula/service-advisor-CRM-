@@ -343,7 +343,7 @@ class FleetList extends Component {
       </>
     );
   }
-}
+}  
 
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
