@@ -495,10 +495,33 @@ export class CrmCustomerModal extends Component {
                                   )}
                               </FormGroup>
                             </Col>
+                            <Col md="6">
+                              <FormGroup>
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Email (Optional)
+                    </Label>
+                                <Input
+                                  type="text"
+                                  className="customer-modal-text-style"
+                                  placeholder="john.doe@example.com"
+                                  onChange={this.handleInputChange}
+                                  name="email"
+                                  value={this.state.email}
+                                />
+                                {
+                                  errors.email && email ?
+                                    <p className="text-danger">{errors.email}</p> :
+                                    null
+                                }
+                              </FormGroup>
+                            </Col>
                           </>
                         ) : (
                             <>
-                              <Col md="3">
+                              <Col md="6">
                                 <button
                                   onClick={this.handleRemovePhoneDetails}
                                   className="btn btn-danger btn-sm btn-round input-close"
@@ -506,12 +529,12 @@ export class CrmCustomerModal extends Component {
                                   <i className="fa fa-close"></i>
                                 </button>
                                 <FormGroup className="phone-number-feild">
-                                  {/* <Label
+                                  <Label
                                 htmlFor="name"
                                 className="customer-modal-text-style"
                               >
-                                
-                                </Label> */}
+                                Phone (optional)
+                                </Label>
                                   {/* <div></div> */}
                                   <Input
                                     onChange={e =>
@@ -560,17 +583,14 @@ export class CrmCustomerModal extends Component {
 
                 {phoneDetail.length < 3 ? (
                   <Col md="12">
-                    <FormGroup>
-                      <Label></Label>
-
-
+                    <FormGroup className={"mb-0"}>
+                    <Label className={"customer-modal-text-style"}></Label>
                       <span
                         onClick={this.handleAddPhoneDetails}
                         className="customer-add-phone customer-anchor-text customer-click-btn"
                       >
                         Add another phone number
                     </span>
-
                     </FormGroup>
                   </Col>
                 ) : null}
@@ -580,31 +600,6 @@ export class CrmCustomerModal extends Component {
 
             <div className="">
               <Row >
-                <Col md="6">
-                  <FormGroup>
-                    <Label
-                      htmlFor="name"
-                      className="customer-modal-text-style"
-                    >
-                      Email (Optional)
-                    </Label>
-                    <Input
-                      type="text"
-                      className="customer-modal-text-style"
-                      placeholder="john.doe@example.com"
-                      onChange={this.handleInputChange}
-                      name="email"
-                      value={this.state.email}
-                    />
-                    {
-                      errors.email && email ?
-                        <p className="text-danger">{errors.email}</p> :
-                        null
-                    }
-                  </FormGroup>
-                </Col>
-
-
                 <Col md="6">
                   <FormGroup>
                     <Label
@@ -622,8 +617,22 @@ export class CrmCustomerModal extends Component {
                     />
                   </FormGroup>
                 </Col>
-
-
+                <Col md="6">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      Fleet
+                        </Label>
+                    <Select
+                      value={selectedOption}
+                      onChange={this.handleChange}
+                      className="w-100 form-select"
+                      options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
+                    />
+                  </FormGroup>
+                </Col>
               </Row>
             </div>
             <div className="">
@@ -647,42 +656,7 @@ export class CrmCustomerModal extends Component {
             {expandForm ? (
               <>
 
-                <div className="">
-                  <Row className="justify-content-center">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Referral Source
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Referral"
-                          name="Refferal Source"
-                          onChange={this.handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Fleet
-                        </Label>
-                        <Select
-                          value={selectedOption}
-                          onChange={this.handleChange}
-                          className="w-100 form-select"
-                          options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
+
 
                 <div className="">
                   <Row className="justify-content-center">
@@ -750,6 +724,11 @@ export class CrmCustomerModal extends Component {
                         <Input type="text" name="state" onChange={this.handleInputChange} placeholder="NY" />
                       </FormGroup>
                     </Col>
+                  </Row>
+
+                </div>
+                <div className="">
+                  <Row >
                     <Col md="6 ">
                       <FormGroup>
                         <Label
@@ -766,8 +745,24 @@ export class CrmCustomerModal extends Component {
                         />
                       </FormGroup>
                     </Col>
-                  </Row>
+                    <Col md="6">
+                      <FormGroup>
+                        <Label
+                          htmlFor="name"
+                          className="customer-modal-text-style"
+                        >
+                          Referral Source
+                        </Label>
+                        <Input
+                          type="text"
+                          placeholder="Referral"
+                          name="Refferal Source"
+                          onChange={this.handleInputChange}
+                        />
+                      </FormGroup>
+                    </Col>
 
+                  </Row>
                 </div>
                 <Row className="custom-label-padding ">
 
@@ -820,14 +815,15 @@ export class CrmCustomerModal extends Component {
                           </div>
                           {discountShow ? (
 
-                            <div className="custom-label" key={index}  >
+                            <div className="custom-label col-12" key={index}  >
                               <Label
                                 htmlFor="name"
                                 className="customer-modal-text-style"
                               >
                                 Percent Discount
-                           </Label>
+                            </Label>
                               <FormGroup>
+                                <Col md="4" className={"p-0"}>
                                 <MaskedInput
                                   mask="11\%"
                                   name="percentageDiscount"
@@ -836,6 +832,7 @@ export class CrmCustomerModal extends Component {
                                   className="form-control"
 
                                 />
+                                </Col>
                               </FormGroup>
                             </div>
                           ) : null}
@@ -888,18 +885,19 @@ export class CrmCustomerModal extends Component {
                       </>);
                   })}
 
-                  {expandForm ? (
-                    <Col md="12 text-center">
-                      <span
-                        onClick={this.handleExpandForm}
-                        className="customer-anchor-text customer-click-btn"
-                      >
-                        {" "}
-                        Show Less{" "}
-                      </span>
-                    </Col>
-                  ) : null}
+               
                 </Row>
+                {expandForm ? (
+                  <Col md="12 text-center pt-3">
+                    <span
+                      onClick={this.handleExpandForm}
+                      className="customer-anchor-text customer-click-btn"
+                    >
+                      {" "}
+                      Show Less{" "}
+                    </span>
+                  </Col>
+                ) : null}
               </>
             ) : (
                 ""
