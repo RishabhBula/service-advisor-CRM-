@@ -22,7 +22,7 @@ export const CreateCustomerValidMessaages = {
     [ValidationTypes.REQUIRED]: "Please enter last name.",
   },
   email:{
-    [ValidationTypes.EMAIL]: "Enter valid email address."
+    [ValidationTypes.EMAIL]: "Please enter valid email address."
   }
 };
 

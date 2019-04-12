@@ -32,9 +32,6 @@ const createCustomer = async (req, res) => {
       userId: body.userId,
       status: true,
     };
-    console.log('====================================');
-    console.log(cusomerData);
-    console.log('====================================');
 
     let result = await customerModel(cusomerData).save();
     if (result) {
@@ -104,7 +101,7 @@ const getAllCustomerList = async (req, res) => {
             parentId: currentUser.id,
           },
           {
-            parentId: currentUser.parentId,
+            parentId: currentUser.parentId || currentUser.id,
           },
         ],
       },

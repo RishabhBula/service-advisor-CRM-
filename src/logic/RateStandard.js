@@ -47,7 +47,7 @@ const getStandardRateListLogic = createLogic({
       var defaultOptions = [
         {
           value: '',
-          label: 'Add New Customer',
+          label: 'Add New Labour Rate',
         }
       ];
       let resultData = result.data.data;
