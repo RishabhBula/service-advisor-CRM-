@@ -75,16 +75,31 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) { 
-      console.log('====================================');
-      console.log(prevProps);
-      console.log(this.props);
-      console.log(this.props.customerModalOpen);
-      console.log('====================================');
+    console.log('====================================');
+    console.log(this.props.customer);
+    console.log(prevProps.customer);
+    console.log(prevProps.customer);
+    console.log(prevProps.customer);
+    console.log('====================================');
+    if(prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
+      this.setState({
+        address1: "",
+        address2: "",
+        city: "",
+        companyName: "",
+        email: "",
+        firstName: "",
+        fleet: "5ca5e3b88b27f17bc0dfaab5",
+        lastName: "",
+        notes: "",
+        customerDefaultPermissions: CustomerDefaultPermissions,
+        referralSource: "",
+        state: "",
+        zipCode: "",
+      })   
+    }
     if(prevProps.customer._id!== this.props.customer._id){       
       const { customer } = this.props;
-        console.log('==================inner==================');
-        console.log(customer);
-        console.log('====================================');
         this.setState({
           address1: customer.address1,
           address2: customer.address2,

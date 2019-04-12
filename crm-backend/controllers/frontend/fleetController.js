@@ -38,9 +38,27 @@ const addNewFleet = async (req, res) => {
             success: false,
          });
       } else {
+         const rateModalData = await fleetModal.aggregate([
+            {
+               $lookup:
+               {
+                  from: "RateStandard",
+                  localField: "laborRate",
+                  foreignField: "_id",
+                  as: "rolldata"
+               }
+            },
+            {
+               $match:
+               {
+                  "fleetDefaultPermissions.shouldLaborRateOverride.laborRate": result.fleetDefaultPermissions.shouldLaborRateOverride.laborRate
+               }
+            }
+         ])
          return res.status(200).json({
             responsecode: 200,
             message: "Fleet data uploaded successfully!",
+            rateData: rateModalData,
             success: true,
          });
       }

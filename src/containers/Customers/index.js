@@ -56,6 +56,7 @@ class Customers extends Component {
   };
 
   toggleEditModal = e => {
+    this.setState({customer: {}})
       const { modelDetails } = this.props.modelInfoReducer;
       let data = {
         customerModel: false,

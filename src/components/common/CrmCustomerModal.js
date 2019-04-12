@@ -74,6 +74,12 @@ export class CrmCustomerModal extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) { 
+    if(prevProps.customerModalOpen !== this.props.customerModalOpen) {
+      this.removeAllState();
+    }
+  }
+
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -161,11 +167,13 @@ export class CrmCustomerModal extends Component {
       [name]: value
     });
   }
+
   stdModelFun = () => {
     this.setState({
       openStadardRateModel: !this.state.openStadardRateModel
     })
   }
+
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
     const phoneDetail = [...this.state.phoneDetail]
@@ -174,6 +182,7 @@ export class CrmCustomerModal extends Component {
       phoneDetail
     })
   }
+
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
     const phoneDetail = [...this.state.phoneDetail]
@@ -330,6 +339,7 @@ export class CrmCustomerModal extends Component {
       //this.removeAllState();
     }
   }
+
   render() {
     const { customerModalOpen, handleCustomerModal, matrixListReducerData, rateStandardListData } = this.props;
     const {
@@ -348,6 +358,7 @@ export class CrmCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
+    
    let customerDefaultPermissions = this.state.customerDefaultPermissions;
     if(!customerDefaultPermissions)
     {
@@ -360,10 +371,6 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-
-    console.log('==============phoneDetail======================');
-    console.log(phoneDetail);
-    console.log('====================================');
 
     return (
       <>

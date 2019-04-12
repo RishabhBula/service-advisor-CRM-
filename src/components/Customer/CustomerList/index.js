@@ -63,7 +63,7 @@ class CustomerList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search.trim();
+      param.search = search.trim(" ");
     }
     if (sort) {
       param.sort = sort;
@@ -203,7 +203,7 @@ class CustomerList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
-              <th>SNO</th>
+              <th>S.NO</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
