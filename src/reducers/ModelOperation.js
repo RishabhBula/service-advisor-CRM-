@@ -3,7 +3,8 @@ import { modelActions } from "./../actions";
 
 const initialAuthState = {
     modelDetails: {
-        "customerModel": false
+        "customerModel": false,
+        "customreEditModel": false
     }
 };
 

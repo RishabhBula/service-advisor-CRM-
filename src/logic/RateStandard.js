@@ -23,7 +23,6 @@ const getStandardRateListLogic = createLogic({
       parentId: parentId,
       searchValue: action.payload
     };
-    console.log("$$$$$$$$$$$$$$$$$$$",data);
     dispatch(
       getRateStandardListStart({
         standardRateList: [],
