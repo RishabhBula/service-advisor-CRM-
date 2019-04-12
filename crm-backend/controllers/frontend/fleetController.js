@@ -57,7 +57,7 @@ const addNewFleet = async (req, res) => {
 
 /* ------------Get Fleet list---------- */
 const getAllFleetList = async (req, res) => {
-   const { query } = req;
+   const { query, currentUser } = req;
    try {
       const limit = parseInt(query.limit || 10);
       const page = parseInt(query.page);
@@ -65,7 +65,6 @@ const getAllFleetList = async (req, res) => {
       const searchValue = query.search;
       const sort = query.sort;
       const status = query.status;
-      let condition = {}
       let sortBy = {};
       switch (sort) {
          case "loginasc":
@@ -75,12 +74,12 @@ const getAllFleetList = async (req, res) => {
             break;
          case "nasc":
             sortBy = {
-               companyName: 1
+               companyName: 1,
             };
             break;
          case "ndesc":
             sortBy = {
-               companyName: -1
+               companyName: -1,
             };
             break;
          default:
@@ -89,106 +88,151 @@ const getAllFleetList = async (req, res) => {
             };
             break;
       }
-      if (status) {
-         condition = { status: status };
-      }
-      if (searchValue) {
-         condition = {
+      let condition = {};
+      condition["$and"] = [
+         {
             $or: [
                {
-                  companyName: new RegExp(searchValue, "i")
+                  parentId: currentUser.id,
                },
                {
-                  email: new RegExp(searchValue, "i")
-               }
-
-            ]
-         }
-      }
-         const fleetList = await fleetModal.find({
-            $or: [
-               { userId: mongoose.Types.ObjectId(query.userId) },
-               { parentId: mongoose.Types.ObjectId(query.parentId) },
+                  parentId: currentUser.parentId || currentUser.id,
+               },
             ],
-            ...condition
-         }).sort(sortBy)
-            .skip(offset)
-            .limit(limit);
-         const getAllFleetCount = await fleetModal.countDocuments({
+         },
+         {
             $or: [
-               { userId: mongoose.Types.ObjectId(query.userId) },
-               { parentId: mongoose.Types.ObjectId(query.parentId) },
+               {
+                  isDeleted: {
+                     $exists: false,
+                  },
+               },
+               {
+                  isDeleted: false,
+               },
             ],
-            ...condition,
+         },
+         {
+            _id: { $ne: currentUser.id },
+         },
+      ];
+      if (searchValue) {
+         condition["$and"].push({
+            $or: [
+               {
+                  companyName: {
+                     $regex: new RegExp(searchValue, "i"),
+                  },
+               },
+               {
+                  email: {
+                     $regex: new RegExp(searchValue, "i"),
+                  },
+               },
+               {
+                  city: {
+                     $regex: new RegExp(searchValue, "i"),
+                  },
+               },
+            ],
          });
-         if (!fleetList) {
+      }
+      if (status) {
+         condition["$and"].push({ status: status });
+      }
+      const getAllFleet = await fleetModal
+         .find({
+            ...condition,
+         })
+         .sort(sortBy)
+         .skip(offset)
+         .limit(limit);
+      const getAllFleetCount = await fleetModal.countDocuments({
+         ...condition,
+      });
+      return res.status(200).json({
+         responsecode: 200,
+         data: getAllFleet,
+         totalfleet: getAllFleetCount,
+         success: true,
+      });
+   } catch (error) {
+      console.log("This is Fleet list error", error);
+      res.status(500).json({
+         responsecode: 500,
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false,
+      });
+   }
+};
+/* ------------Get Fleet list---------- */
+
+/* ------------Update Fleet Details---------- */
+const updateFleetdetails = async (req, res) => {
+   const { body } = req;
+   try {
+      if (!body.fleetId) {
+         return res.status(400).json({
+            responsecode: 400,
+            message: "Fleet id is required.",
+            success: false,
+         });
+      } else {
+         const updateFleetDetails = await fleetModal.findByIdAndUpdate(
+            body.fleetId,
+            {
+               $set: body.fleetData,
+            }
+         );
+         if (!updateFleetDetails) {
             return res.status(400).json({
                responsecode: 400,
-               message: "Fleet data not foud.",
+               message: "Error updating fleet details.",
                success: false,
             });
          } else {
             return res.status(200).json({
                responsecode: 200,
-               data: fleetList,
-               totalUsers: getAllFleetCount,
-               success: true,
-            });
-         }
-      } catch (error) {
-         console.log("This is Fleet list error", error);
-         res.status(500).json({
-            responsecode: 500,
-            message: error.message ? error.message : "Unexpected error occure.",
-            success: false,
-         });
-      }
-   };
-   /* ------------Get Fleet list---------- */
-
-   /* ------------Update Fleet Details---------- */
-   const updateFleetdetails = async (req, res) => {
-      const { body } = req;
-      try {
-         if (!body.fleetId) {
-            return res.status(400).json({
-               responsecode: 400,
-               message: "Fleet id is required.",
+               message: "Fleet details updated successfully!",
                success: false,
             });
-         } else {
-            const updateFleetDetails = await fleetModal.findByIdAndUpdate(
-               body.fleetId,
-               {
-                  $set: body.fleetData,
-               }
-            );
-            if (!updateFleetDetails) {
-               return res.status(400).json({
-                  responsecode: 400,
-                  message: "Error updating fleet details.",
-                  success: false,
-               });
-            } else {
-               return res.status(200).json({
-                  responsecode: 200,
-                  message: "Fleet details updated successfully!",
-                  success: false,
-               });
-            }
          }
-      } catch (error) {
-         console.log("This is update Fleet error", error);
-         return res.status(500).json({
-            responsecode: 500,
-            message: error.message ? error.message : "Unexpected error occure.",
-            success: false,
-         });
       }
-   };
-   /* ------------Update Fleet Details End---------- */
-   module.exports = {
-      addNewFleet,
-      getAllFleetList,
-      updateFleetdetails,
-   };
+   } catch (error) {
+      console.log("This is update Fleet error", error);
+      return res.status(500).json({
+         responsecode: 500,
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false,
+      });
+   }
+};
+/* ------------Update Fleet Details End---------- */
+
+/* Delete Fleet */
+const deleteFleet = async ({ params }, res) => {
+   try {
+      const { fleetId } = params;
+      const data = await fleetModal.findByIdAndUpdate(mongoose.Types.ObjectId(fleetId), {
+         isDeleted: true,
+      });
+      return res.status(200).json({
+         message: "Fleet deleted successfully!",
+         data,
+      });
+   } catch (error) {
+      console.log("this is delete fleet error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false,
+      });
+   }
+};
+/* Delete Fleet End */
+
+module.exports = {
+   addNewFleet,
+   getAllFleetList,
+   updateFleetdetails,
+   deleteFleet
+};

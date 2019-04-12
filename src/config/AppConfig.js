@@ -1,5 +1,3 @@
-import { logger } from "../helpers/Logger";
-
 export const EnviornmentTypes = {
     DEV: "development",
     PROD: "production",

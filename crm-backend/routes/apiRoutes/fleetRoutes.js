@@ -5,6 +5,14 @@ const token = require("../../common/token");
 
 /* ----------Add New Fleet------------ */
 router.post("/addFleet", token.authorisedUser, fleetController.addNewFleet);
+
+/* ----------Get Fleet List------------ */
 router.get("/fleetList", token.authorisedUser, fleetController.getAllFleetList);
+
+/* ----------Update Fleet Details------------ */
 router.put('/updateFleet', token.authorisedUser,fleetController.updateFleetdetails);
+
+/* ----------Delete Fleet------------ */
+router.delete("/:fleetId", token.authorisedUser,fleetController.deleteFleet);
+
 module.exports = router;

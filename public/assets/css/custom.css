@@ -8,6 +8,8 @@
 .btn-theme:hover{
     background-color: #df9c0f !important;
 }
+
+
 .link{
     cursor: pointer;
     color: #20a8d8;
@@ -24,7 +26,9 @@
 .margin-bottom-10 {
   margin-bottom: 10px;
 }
-
+.modal-backdrop{
+  opacity: 0.8 !important;
+}
 /* workflow css */
 .page-title {
   display: flex;
@@ -103,7 +107,9 @@
   top: 50%;
   margin-top: -0.5em;
 }
-
+.d-md-down-none.navbar-nav:not(.search-input-wrap){
+  margin-left: auto;
+}
 .form-control.search-input:focus {
   box-shadow: none;
   border-color: transparent;
@@ -326,7 +332,7 @@
   border-bottom: dashed 1px #469af4;
 }
 .customer-add-phone:hover {
-  border-bottom: none;
+  border-bottom-color: #f9f9f9;
   color: #469af4;
   text-decoration: none;
 }
@@ -416,13 +422,11 @@
     color: #0c0d1c;
     border: 1px solid #a6a7a7;
 }
-
 .custom-form-modal .form-group .form-control,
 .custom-form-modal .form-group .form-select > div {
   color: #0c0d1c;
   border: 1px solid #a6a7a7;
 }
-
 .custom-form-modal .form-group .form-select {
   outline: none !important;
 }
@@ -441,14 +445,60 @@
   display: flex;
   position: relative;
   margin-bottom: 23px;
-}sss
+}
 .custom-form-modal p.text-danger{
-    margin-bottom: 0px;
-    position: absolute;
-    left: 0px;
+  margin-bottom: 0px;
+  position: absolute;
+  left: 0px;
+}
+.custom-form-modal .modal-header{
+  background-color: #7f6cb9;
+  padding: 0.7rem 1rem;
+}
+.custom-form-modal .modal-title{
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-size: 21px;
+}
+.custom-form-modal .modal-header .close{
+  font-size: 52px;
+  position: absolute;
+  right: -75px;
+  color: #fff;
+  opacity: 1;
+  line-height: 100%;
+  padding: 0;
+}
+.custom-form-modal .modal-header .close:focus{
+  outline: none;
+}
+.custom-form-modal .btn-primary{
+  background: linear-gradient(to bottom, #8358f0, #5c43db);
+  border-color: #5c43db;
+  font-size: 16px;
+  font-weight: 600;
+}
+.custom-form-modal .btn-primary:hover{
+  background: linear-gradient(to bottom,  #5c43db, #8358f0);
+   border-color: #5c43db;
+}
+.custom-form-modal .btn-secondary{
+  background: linear-gradient(to bottom, #f6b42a, #df900c);
+  font-size: 16px;
+  color: #fff;
+  border-color: #df900c;
+}
+.custom-form-modal .btn-secondary:hover{
+  background: linear-gradient(to bottom,#df900c,  #f6b42a);
+  border-color: #df900c;
+  color: #fff;
+}
+.custom-form-modal .modal-body{
+  background-color: #f9f9f9;
 }
 .custom-label-padding .form-check-label{
-    margin-right: 10px!important;
+  margin-right: 10px!important;
 }
 .custom-sidebar.sidebar {
   background: linear-gradient(to bottom, #8358f0, #5c43db);
@@ -595,7 +645,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 /*end custom-css */
 /* end of page css */
 .custom-label-padding{
-    padding: 0px 15px 0 150px;
+    padding: 0px 15px 0 80px;
     margin-left: 0 !important;
 }
 .breadcrumb{
