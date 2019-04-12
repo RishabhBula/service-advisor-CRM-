@@ -63,7 +63,10 @@ class CustomerList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search;
+      param.search = search.trim();
+      console.log('====================================');
+      console.log(param.search);
+      console.log('====================================');
     }
     if (sort) {
       param.sort = sort;
@@ -203,6 +206,7 @@ class CustomerList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
+              <th>SNO</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
@@ -217,6 +221,7 @@ class CustomerList extends Component {
                 customers.map((user, index) => {
                   return (
                     <tr key={index}>
+                      <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                       <td>{user.firstName || "-"}</td>
                       <td>{user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>

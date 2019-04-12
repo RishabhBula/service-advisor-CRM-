@@ -408,7 +408,7 @@ export class CrmCustomerModal extends Component {
                       />
                       {
                         !firstName && errors.firstName ?
-                          <span className="text-danger">{errors.firstName}</span> :
+                          <p className="text-danger">{errors.firstName}</p> :
                           null
                       }
                     </div>
@@ -603,29 +603,21 @@ export class CrmCustomerModal extends Component {
 
             <div className="">
               <Row >
-                <Col md="6">
+                 <Col md="6">
                   <FormGroup>
                     <Label
                       htmlFor="name"
                       className="customer-modal-text-style"
                     >
-                      Email (Optional)
-                    </Label>
-                    <div>
-                      <Input
-                        type="text"
-                        className="customer-modal-text-style"
-                        placeholder="john.doe@example.com"
-                        onChange={this.handleInputChange}
-                        name="email"
-                        value={this.state.email}
-                      />
-                      {
-                        errors.email && email ?
-                          <span className="text-danger">{errors.email}</span> :
-                          null
-                      }
-                    </div>
+                      Company
+                        </Label>
+                    <Input
+                      type="text"
+                      placeholder="Company"
+                      name="companyName"
+                      onChange={this.handleInputChange}
+                      value={this.state.companyName}
+                    />
                   </FormGroup>
                 </Col>
                 <Col md="6">
@@ -736,11 +728,6 @@ export class CrmCustomerModal extends Component {
                         <Input type="text" name="state" onChange={this.handleInputChange} placeholder="NY" />
                       </FormGroup>
                     </Col>
-                  </Row>
-
-                </div>
-                <div className="">
-                  <Row >
                     <Col md="6 ">
                       <FormGroup>
                         <Label
@@ -757,6 +744,11 @@ export class CrmCustomerModal extends Component {
                         />
                       </FormGroup>
                     </Col>
+                  </Row>
+
+                </div>
+                <div className="">
+                  <Row >                    
                     <Col md="6">
                       <FormGroup>
                         <Label
