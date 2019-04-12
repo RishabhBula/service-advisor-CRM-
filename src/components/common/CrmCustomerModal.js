@@ -363,6 +363,7 @@ export class CrmCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
+    
    let customerDefaultPermissions = this.state.customerDefaultPermissions;
     if(!customerDefaultPermissions)
     {
