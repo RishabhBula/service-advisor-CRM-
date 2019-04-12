@@ -8,6 +8,7 @@ export const usersActions = {
   EDIT_USER: "Edit user Requested!",
   EDIT_USER_SUCCESS: "Edit user Success!",
   DELETE_USER: "Delete user Requested!",
+  UPDATE_USER_STATUS: "Update user status Requested!"
 };
 
 export const getUsersList = createAction(usersActions.GET_USER_LIST);
@@ -19,3 +20,4 @@ export const addUserSuccess = createAction(usersActions.ADD_USER_SUCCESS);
 export const editUser = createAction(usersActions.EDIT_USER);
 export const editUserSuccess = createAction(usersActions.EDIT_USER_SUCCESS);
 export const deleteUser = createAction(usersActions.DELETE_USER);
+export const updateUserStatus = createAction(usersActions.UPDATE_USER_STATUS);

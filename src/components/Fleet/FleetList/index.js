@@ -13,7 +13,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
-import { CrmFleetModal } from '../../common/CrmFleetModal'
+import { CrmFleetEditModal } from "../../common/CrmFleetEditModal";
 import { connect } from "react-redux";
 import { fleetEditRequest } from "../../../actions";
 import { logger } from "../../../helpers/Logger";
@@ -92,47 +92,8 @@ class FleetList extends Component {
     });
     this.props.onSearch({});
   };
-  handleAddFleet = (fleetData, isEditMode, fleetId) => {
-    this.setState({
-      error: {}
-    });
-    try {
-      const { isValid, errors } = Validator(
-        fleetData,
-        CreateFleetValidations,
-        CreateFleetValidMessaages
-      );
-      if (!isValid && ((fleetData.email !== '') || (fleetData.companyName === ''))) {
-        this.setState({
-          error: errors,
-          isLoading: false,
-        });
-        return;
-      }
-      const userData = this.props.profileInfoReducer.profileInfo
-      const userId = userData._id
-      const parentId = userData.parentId
-      const data = {
-        fleetData: fleetData,
-        userId: userId,
-        parentId: parentId,
-        fleetId: fleetId
-      }
-      if (isEditMode) {
-        this.props.updateFleet(data)
-        this.setState({
-          openCreate: !this.state.openCreate
-        })
-      }
-    } catch (error) {
-      logger(error);
-    }
-  }
   editFleet = fleetData => {
-    this.setState({
-      openFleetModal: true,
-      fleetListdata: fleetData
-    });
+    this.props.updateFleetModel(fleetData)
   };
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
@@ -148,8 +109,6 @@ class FleetList extends Component {
   };
   render() {
     const {
-      openFleetModal,
-      fleetListdata,
       error,
       search,
       status,
@@ -257,6 +216,7 @@ class FleetList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
+              <th>#</th>
               <th>Company Name</th>
               <th>Phone</th>
               <th>Email</th>
@@ -273,6 +233,7 @@ class FleetList extends Component {
                 fleetData.data.map((data, index) => {
                   return (
                     <tr key={index}>
+                      <td>{index + 1}</td>
                       <td>{data.companyName || "-"}</td>
                       <td>{data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {
@@ -342,7 +303,7 @@ class FleetList extends Component {
             pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
-        <CrmFleetModal
+        {/* <CrmFleetEditModal
           fleetModalOpen={openFleetModal}
           handleFleetModal={() => {
             this.setState({
@@ -354,7 +315,7 @@ class FleetList extends Component {
           handleAddFleet={this.handleAddFleet}
           errorMessage={error}
           updateFleet={this.onUpdate}
-        />
+        /> */}
       </>
     );
   }

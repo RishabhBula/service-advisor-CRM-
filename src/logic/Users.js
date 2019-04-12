@@ -10,7 +10,7 @@ import {
   usersActions,
   addUserSuccess,
   getUsersListSuccess,
-  getUsersList,
+  getUsersList
 } from "./../actions";
 
 const getUsersLogic = createLogic({
@@ -19,19 +19,19 @@ const getUsersLogic = createLogic({
     dispatch(
       getUsersListSuccess({
         isLoading: true,
-        users: [],
+        users: []
       })
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer("/user", "/", "GET", true, {
       ...action.payload,
-      limit: AppConfig.ITEMS_PER_PAGE,
+      limit: AppConfig.ITEMS_PER_PAGE
     });
     if (result.isError) {
       dispatch(
         getUsersListSuccess({
           isLoading: false,
-          users: [],
+          users: []
         })
       );
       done();
@@ -42,12 +42,12 @@ const getUsersLogic = createLogic({
         getUsersListSuccess({
           isLoading: false,
           users: result.data.data,
-          totalUsers: result.data.totalUsers,
+          totalUsers: result.data.totalUsers
         })
       );
       done();
     }
-  },
+  }
 });
 
 const addUsersLogic = createLogic({
@@ -75,7 +75,7 @@ const addUsersLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 const editUsersLogic = createLogic({
   type: usersActions.EDIT_USER,
@@ -102,7 +102,7 @@ const editUsersLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 const deleteUserLogic = createLogic({
   type: usersActions.DELETE_USER,
@@ -112,9 +112,11 @@ const deleteUserLogic = createLogic({
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/user",
-      ["/", action.payload.userId].join(""),
-      "DELETE",
-      true
+      "/delete",
+      "POST",
+      true,
+      undefined,
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -127,12 +129,45 @@ const deleteUserLogic = createLogic({
       delete action.payload.userId;
       dispatch(
         getUsersList({
-          ...action.payload,
+          ...action.payload
         })
       );
       done();
     }
-  },
+  }
+});
+const updateUserStatusLogic = createLogic({
+  type: usersActions.UPDATE_USER_STATUS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/user",
+      "/updateStatus",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.users;
+      delete action.payload.status;
+      dispatch(
+        getUsersList({
+          ...action.payload
+        })
+      );
+      done();
+    }
+  }
 });
 
 export const UsersLogic = [
@@ -140,4 +175,5 @@ export const UsersLogic = [
   addUsersLogic,
   deleteUserLogic,
   editUsersLogic,
+  updateUserStatusLogic
 ];

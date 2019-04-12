@@ -9,6 +9,7 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
+import { CrmFleetEditModal } from "../../components/common/CrmFleetEditModal";
 import FleetList from "../../components/Fleet/FleetList";
 import { connect } from "react-redux";
 import {
@@ -17,7 +18,9 @@ import {
   getMatrixList,
   getRateStandardListRequest,
   setRateStandardListStart,
-  deleteFleet
+  deleteFleet,
+  modelOpenRequest,
+  fleetEditRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
@@ -33,6 +36,7 @@ class Fleet extends Component {
       fleetListData: [],
       openEdit: false,
       openCreate: false,
+      fleetSingleData: {}
     };
   }
   toggleCreateModal = e => {
@@ -41,6 +45,28 @@ class Fleet extends Component {
       openCreate: !this.state.openCreate
     });
   };
+
+  updateFleetModel = data => {
+    this.setState({
+      fleetSingleData: data
+    })
+  }
+  toggleEditModal = fleetData => {
+    this.setState({
+      fleetSingleData: fleetData
+    })
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      fleetEditModel: false,
+      fleetEditModel: !modelDetails.fleetEditModel,
+    };
+    this.props.modelOperate(data);
+  }
+
+
+  onTypeHeadStdFun = (data) => {
+    this.props.getStdList(data);
+  }
   onPageChange = page => {
     const { location } = this.props;
     const { search, pathname } = location;
@@ -85,6 +111,43 @@ class Fleet extends Component {
     const { pathname } = location;
     this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
   };
+  handleEditFleet = (fleetData, fleetId) => {
+    this.setState({
+      error: {}
+    });
+    try {
+      const { isValid, errors } = Validator(
+        fleetData,
+        CreateFleetValidations,
+        CreateFleetValidMessaages
+      );
+      if (!isValid && ((fleetData.email !== '') || (fleetData.companyName === ''))) {
+        this.setState({
+          error: errors,
+          isLoading: false,
+        });
+        return;
+      }
+      const userData = this.props.profileInfoReducer.profileInfo
+      const userId = userData._id
+      const parentId = userData.parentId
+      const data = {
+        fleetData: fleetData,
+        userId: userId,
+        parentId: parentId,
+        fleetId: fleetId
+      }
+      this.props.updateFleet(data)
+      const { modelDetails } = this.props.modelInfoReducer;
+      let modaldata = {
+        fleetEditModel: true,
+        fleetEditModel: !modelDetails.fleetEditModel,
+      };
+      this.props.modelOperate(modaldata)
+    } catch (error) {
+      logger(error);
+    }
+  }
   handleAddFleet = (fleetData, isEditMode) => {
     this.setState({
       error: {}
@@ -136,8 +199,9 @@ class Fleet extends Component {
     this.props.deleteFleet(data);
   };
   render() {
-    const { openCreate, error, openEdit } = this.state;
-    const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props
+    const { openCreate, error, openEdit, fleetSingleData } = this.state;
+    const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props;
+    const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
         <Card>
@@ -167,7 +231,7 @@ class Fleet extends Component {
             <FleetList
               fleetListData={fleetReducer}
               handleEditFleet={this.handleEditFleet}
-              onUpdate={this.props.updateFleet}
+              updateFleetModel={this.toggleEditModal}
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               onDelete={this.deleteFleet}
@@ -179,10 +243,23 @@ class Fleet extends Component {
           handleFleetModal={this.toggleCreateModal}
           handleAddFleet={this.handleAddFleet}
           errorMessage={error}
+          onTypeHeadStdFun={this.onTypeHeadStdFun}
           setDefaultRate={this.setDefaultRate}
           rateStandardListData={rateStandardListReducer}
           profileInfoReducer={profileInfoReducer}
           matrixListReducerData={matrixListReducer}
+        />
+        <CrmFleetEditModal
+          onTypeHeadStdFun={this.onTypeHeadStdFun}
+          setDefaultRate={this.setDefaultRate}
+          handleEditFleet={this.handleEditFleet}
+          rateStandardListData={rateStandardListReducer}
+          profileInfoReducer={profileInfoReducer}
+          matrixListReducerData={matrixListReducer}
+          updateFleetModel={this.updateFleetModel}
+          fleetSingleData={fleetSingleData}
+          handleFleetModal={this.toggleEditModal}
+          fleetEditModalOpen={modelDetails.fleetEditModel}
         />
       </>
     );
@@ -193,7 +270,8 @@ const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
   matrixListReducer: state.matrixListReducer,
   fleetReducer: state.fleetReducer,
-  rateStandardListReducer: state.rateStandardListReducer
+  rateStandardListReducer: state.rateStandardListReducer,
+  modelInfoReducer: state.modelInfoReducer
 });
 
 
@@ -215,6 +293,12 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteFleet: data => {
     dispatch(deleteFleet(data));
+  },
+  modelOperate: (data) => {
+    dispatch(modelOpenRequest({ modelDetails: data }));
+  },
+  updateFleet: (data) => {
+    dispatch(fleetEditRequest(data))
   }
 });
 

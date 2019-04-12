@@ -4,7 +4,8 @@ import { modelActions } from "./../actions";
 const initialAuthState = {
     modelDetails: {
         "customerModel": false,
-        "customreEditModel": false
+        "customreEditModel": false,
+        "fleetEditModel": false
     }
 };
 

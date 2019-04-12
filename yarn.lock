@@ -896,9 +896,9 @@
     to-fast-properties "^2.0.0"
 
 "@coreui/coreui-plugin-chartjs-custom-tooltips@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@coreui/coreui-plugin-chartjs-custom-tooltips/-/coreui-plugin-chartjs-custom-tooltips-1.2.0.tgz#de251422454edbba6ba925da451cfecdf9b48b22"
-  integrity sha512-+dCytUJQ4xlMqlLoA9oOTCoxWEJSX9Kv+bCxSFJNqR1PvYzcpXGu/B6AO38GgLfanK0KDKe+uhf1jod7agsMJA==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui-plugin-chartjs-custom-tooltips/-/coreui-plugin-chartjs-custom-tooltips-1.3.0.tgz#421d98bf3f78e5a69101b4daa114ce3a154fe43a"
+  integrity sha512-dT8gQ6C4rWHGmW27JGFkMjDtPTa9vck4hiEyW7osHwrHjGNX/uIcJaTUmea7qsGFGCDhtYaQRZhzIu84ksUPvQ==
   dependencies:
     ms "^2.1.1"
 
@@ -1092,6 +1092,30 @@
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.0.2.tgz#59ef822ba0c4bda60609d8b2d9f71bee8875505b"
   integrity sha512-5DBjqoQretok6L0GNpcqkr0HnCNDzRH0REWJDeTTyHGi62V+8MC3IqZkpmDrFITTkIyDrvf8GHl3WhTI0bjYPQ==
+
+"@fullcalendar/daygrid@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.0.1.tgz#383bfd51dd55bbec2ccc90926e9dbdf710aa3789"
+  integrity sha512-nKFFKgTm5eijOukD6pjsQSLlsBoMrKuHXc00zaHaMWSeJndGHxtseR8oeHOnclNNScMKLXLNZthzEduSqqyuRw==
+
+"@fullcalendar/interaction@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.0.2.tgz#8459f3d89f9e0e56405e35c25513edf573e5a096"
+  integrity sha512-AlOkSmeVI7fDGIGlbaqxHRXxL38SDEMUv6BW/2Cvu8eC7JsrshsHhCIAJE4N17M0RnTTkRwUjtroLZqnkPCHhg==
+
+"@fullcalendar/react@^4.0.2-beta":
+  version "4.0.2-beta"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-4.0.2-beta.tgz#9f7e8517110fe1023a80f324f6af27d3f2b0be82"
+  integrity sha512-ZhhjsUfDxg14pluTi0pt0vvRrrTv2rISnSN8IWNqU8sWt4ctpG8KEPP1TukfHfTXYloTBuxkR44P4Fe2Y7ar6A==
+  dependencies:
+    "@fullcalendar/core" "^4.0.2"
+
+"@fullcalendar/timegrid@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.0.1.tgz#26454567a256af70b2aa6dae7f6351d0c0a92a32"
+  integrity sha512-gCtQ+xjVY5K3TV8o05KuAE9pCizoRIk/pCOueSkkQG8eSOFud34/LMB9OOQKb/yOQcMHx9UXEpup+xodEJC5ow==
+  dependencies:
+    "@fullcalendar/daygrid" "^4.0.1"
 
 "@material-ui/core@^3.9.3":
   version "3.9.3"
@@ -9715,16 +9739,6 @@ pretty-format@^23.6.0:
     ansi-regex "^3.0.0"
     ansi-styles "^3.2.0"
 
-primeicons@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-1.0.0.tgz#90061f168ef6227f21f0a7db8204ffa85cd27aec"
-  integrity sha512-p/hzIjUVccW4eJPhuORHI3AUkDpqfvCQVrjxbFEejnTEdWY4C8fomVfjiaA9jCu83fSQnBHuRIGB96iAR8R6uA==
-
-primereact@^3.1.0:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/primereact/-/primereact-3.1.2.tgz#d5866515268618039f1a960734195073d8ac1269"
-  integrity sha512-QpCtSwPHsskkYSVNBx/uSs0gHbOAKVlm2UZacU8IUMMkVpCEhuwAIb09OsgYxotzwgzwVD9MEVS03kE5tamy+g==
-
 private@^0.1.6, private@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
@@ -10292,9 +10306,9 @@ react-test-renderer@^16.0.0-0, react-test-renderer@^16.8.5:
     scheduler "^0.13.6"
 
 react-toastify@^5.0.0-rc.6:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-5.0.0.tgz#bc59709fe6b56df4326c092dbf705d2c1957de22"
-  integrity sha512-gu2c7ipGMRnIjQ2Tu2haZdhKKSGXpSK5krUSIC+UdEA5cAfORQziQaYaQRKo7MFuSYDvQNo1NOV90jiEhaosDg==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-5.0.1.tgz#ddc5f42ae1f5b2be25270d67790c9e6cd5dcce24"
+  integrity sha512-O492qeG+xNZfG5N/LW0hG9YIteU8EPOzSkU8RviBhCd40kcnnq87QIklbqCkygm/BiwlvSdLFCKIpFPdrvBA7Q==
   dependencies:
     "@babel/runtime" "^7.4.2"
     classnames "^2.2.6"
@@ -11762,9 +11776,9 @@ table@^5.0.2:
     string-width "^3.0.0"
 
 tapable@^1.0.0, tapable@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.1.tgz#4d297923c5a72a42360de2ab52dadfaaec00018e"
-  integrity sha512-9I2ydhj8Z9veORCw5PRm4u9uebCn0mcCa6scWoNcbZ6dAtoo2618u9UUzxgmsCOreJpqDDuv61LvwofW7hLcBA==
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.3.tgz#a1fccc06b58db61fd7a45da2da44f5f3a3e67ba2"
+  integrity sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==
 
 tar@^2.0.0:
   version "2.2.1"
@@ -12265,9 +12279,9 @@ url-loader@1.1.2:
     schema-utils "^1.0.0"
 
 url-parse@^1.4.3:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.4.tgz#cac1556e95faa0303691fec5cf9d5a1bc34648f8"
-  integrity sha512-/92DTTorg4JjktLNLe6GPS2/RvAd/RGr6LuktmWSMLEOa6rjnlrFXNgSbSmkNvCoL2T028A0a1JaJLzRMlFoHg==
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.5.tgz#04cbb6ba2be682a18e4417fa2245aa7e3dfdcc50"
+  integrity sha512-4XDvC5vZRjEpjP0L4znrWeoH8P8F0XGBlfLdABi/6oV4o8xUVbTpyrxWHxkK2bT0pSIpcjdIzSoWUhlUfawCAQ==
   dependencies:
     querystringify "^2.0.0"
     requires-port "^1.0.0"
