@@ -119,7 +119,7 @@ class Customers extends Component {
     this.props.getStdList();
   }
 
-  setDefaultRate = value => {
+  setDefaultRate = value => {   
     this.props.setLabourRateDefault(value);
   }
 
@@ -127,9 +127,6 @@ class Customers extends Component {
     const { openCreate, editMode, customer } = this.state;
     const { userReducer, addCustomer, matrixListReducer, customerListReducer, rateStandardListReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
-    console.log('======================dfdfdf==============');
-    console.log(modelDetails);
-    console.log('====================================');
     return (
       <>
         <Card>

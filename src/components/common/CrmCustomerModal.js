@@ -141,6 +141,7 @@ export class CrmCustomerModal extends Component {
             openStadardRateModel: !this.state.openStadardRateModel
           })
           this.props.onStdAdd();
+          this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
         }
       }
     } catch (error) {
@@ -254,7 +255,7 @@ export class CrmCustomerModal extends Component {
   }
 
   loadOptions = async input => {
-    return this.props.loadTypeRate(input)
+    return this.props.loadTypeRate(input);
   }
 
   addNewCustomer = () => {
