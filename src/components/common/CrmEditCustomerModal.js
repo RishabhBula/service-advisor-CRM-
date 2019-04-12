@@ -684,7 +684,7 @@ export class CrmEditCustomerModal extends Component {
                           htmlFor="name"
                           className="customer-modal-text-style"
                         >
-                          Address 1
+                          Address 
                         </Label>
                         <Input
                           type="text"
