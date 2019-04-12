@@ -31,7 +31,7 @@ const routes = [
   { path: "/settings/users", name: "Users", component: Users },
   { path: "/vehicles", name: "Vehicles", component: Vehicles },
   { path: "/fleets", name: "Fleets", component: Fleet },
-  { path: "/customers", name: "Customers", component: Customers },
+  { path: "/settings/customers", name: "Customers", component: Customers },
   { path: "/common", exact: true, name: "Common", component: CommonPage },
 ];
 

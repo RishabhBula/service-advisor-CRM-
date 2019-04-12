@@ -416,10 +416,11 @@ export class CrmEditCustomerModal extends Component {
                         name="firstName"
                         onChange={this.handleInputChange}
                         value={firstName}
+                        maxLength="30"
                       />
                       {
                         !firstName && errors.firstName ?
-                          <span className="text-danger">{errors.firstName}</span> :
+                          <p className="text-danger">{errors.firstName}</p> :
                           null
                       }
                     </div>
@@ -440,6 +441,7 @@ export class CrmEditCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         name="lastName"
                         value={this.state.lastName}
+                        maxLength="30"
                       />
                       {
                         errors.lastName && !lastName ?
@@ -509,10 +511,37 @@ export class CrmEditCustomerModal extends Component {
                                   )}
                               </FormGroup>
                             </Col>
+                            <Col md="6">
+                              <FormGroup>
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Email (Optional)
+                                </Label>
+                                <div>
+                                  <Input
+                                    type="text"
+                                    className="customer-modal-text-style"
+                                    placeholder="john.doe@example.com"
+                                    onChange={this.handleInputChange}
+                                    name="email"
+                                    value={this.state.email}
+                                    maxLength="100"
+                                  />
+                                  {
+                                    errors.email && email ?
+                                      <span className="text-danger">{errors.email}</span> :
+                                      null
+                                  }
+                                </div>
+                              </FormGroup>
+                            </Col>
+
                           </>
                         ) : (
                             <>
-                              <Col md="3">
+                              <Col md="6">
                                 <button
                                   onClick={this.handleRemovePhoneDetails}
                                   className="btn btn-danger btn-sm btn-round input-close"
@@ -520,12 +549,12 @@ export class CrmEditCustomerModal extends Component {
                                   <i className="fa fa-close"></i>
                                 </button>
                                 <FormGroup className="phone-number-feild">
-                                  {/* <Label
+                                  <Label
                                 htmlFor="name"
                                 className="customer-modal-text-style"
                               >
-                                
-                                </Label> */}
+                                Phone (Optional)
+                                </Label>
                                   {/* <div></div> */}
                                   <Input
                                     onChange={e =>
@@ -534,7 +563,6 @@ export class CrmEditCustomerModal extends Component {
                                     type="select"
                                     id="name"
                                     required
-
                                   >
                                     {phoneOptions}
                                   </Input>
@@ -574,10 +602,8 @@ export class CrmEditCustomerModal extends Component {
 
                 {phoneDetail.length < 3 ? (
                   <Col md="12">
-                    <FormGroup>
+                    <FormGroup className="mb-0">
                       <Label></Label>
-
-
                       <span
                         onClick={this.handleAddPhoneDetails}
                         className="customer-add-phone customer-anchor-text customer-click-btn"
@@ -593,34 +619,7 @@ export class CrmEditCustomerModal extends Component {
 
 
             <div className="">
-              <Row >
-                <Col md="6">
-                  <FormGroup>
-                    <Label
-                      htmlFor="name"
-                      className="customer-modal-text-style"
-                    >
-                      Email (Optional)
-                    </Label>
-                    <div>
-                      <Input
-                        type="text"
-                        className="customer-modal-text-style"
-                        placeholder="john.doe@example.com"
-                        onChange={this.handleInputChange}
-                        name="email"
-                        value={this.state.email}
-                      />
-                      {
-                        errors.email && email ?
-                          <span className="text-danger">{errors.email}</span> :
-                          null
-                      }
-                    </div>
-                  </FormGroup>
-                </Col>
-
-
+              <Row>
                 <Col md="6">
                   <FormGroup>
                     <Label
@@ -628,19 +627,33 @@ export class CrmEditCustomerModal extends Component {
                       className="customer-modal-text-style"
                     >
                       Company
-                        </Label>
+                    </Label>
                     <Input
                       type="text"
                       placeholder="Company"
                       name="companyName"
                       onChange={this.handleInputChange}
                       value={this.state.companyName}
-                      value={this.state.companyName}
+                      maxLength="100"
                     />
                   </FormGroup>
                 </Col>
-
-
+                <Col md="6">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      Fleet
+                    </Label>
+                    <Select
+                      value={selectedOption}
+                      onChange={this.handleChange}
+                      className="w-100 form-select"
+                      options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
+                    />
+                  </FormGroup>
+                </Col>
               </Row>
             </div>
             <div className="">
@@ -663,53 +676,15 @@ export class CrmEditCustomerModal extends Component {
             </div>
             {expandForm ? (
               <>
-
                 <div className="">
-                  <Row className="justify-content-center">
+                  <Row className="">
                     <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
                           className="customer-modal-text-style"
                         >
-                          Referral Source
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Referral"
-                          name="referralSource"
-                          onChange={this.handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Fleet
-                        </Label>
-                        <Select
-                          value={selectedOption}
-                          onChange={this.handleChange}
-                          className="w-100 form-select"
-                          options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-
-                <div className="">
-                  <Row className="justify-content-center">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Address 1
+                          Address 
                         </Label>
                         <Input
                           type="text"
@@ -717,32 +692,11 @@ export class CrmEditCustomerModal extends Component {
                           name="address1"
                           value={this.state.address1}
                           onChange={this.handleInputChange}
+                          maxLength="200"
                         />
                       </FormGroup>
                     </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Address 2
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Address"
-                          name="address2"
-                          value={this.state.address2}
-                          onChange={this.handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-
-                <div className="">
-                  <Row className="">
-                    <Col md="6">
+                     <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -756,9 +710,14 @@ export class CrmEditCustomerModal extends Component {
                           name="city"
                           onChange={this.handleInputChange}
                           value={this.state.city}
+                          maxLength="30"
                         />
                       </FormGroup>
                     </Col>
+                  </Row>
+                </div>
+                <div className="">
+                  <Row className="">                   
                     <Col md="6">
                       <FormGroup>
                         <Label
@@ -768,7 +727,7 @@ export class CrmEditCustomerModal extends Component {
                           State
                         </Label>
                         <Input type="text" name="state"
-                        value={this.state.state} onChange={this.handleInputChange} placeholder="NY" />
+                        value={this.state.state} onChange={this.handleInputChange} placeholder="NY"  maxLength="30"/>
                       </FormGroup>
                     </Col>
                     <Col md="6 ">
@@ -785,11 +744,34 @@ export class CrmEditCustomerModal extends Component {
                           name="zipCode"
                           onChange={this.handleInputChange}
                           value={this.state.zipCode}
+                          maxLength="6"
                         />
                       </FormGroup>
                     </Col>
                   </Row>
 
+                </div>
+                 <div className="">
+                  <Row className="">
+                    <Col md="6">
+                      <FormGroup>
+                        <Label
+                          htmlFor="name"
+                          className="customer-modal-text-style"
+                        >
+                          Referral Source
+                        </Label>
+                        <Input
+                          type="text"
+                          placeholder="Referral"
+                          name="referralSource"
+                          onChange={this.handleInputChange}
+                           maxLength="100"
+                        />
+                      </FormGroup>
+                    </Col>
+                   
+                  </Row>
                 </div>
                 <Row className="custom-label-padding ">
 
@@ -850,13 +832,14 @@ export class CrmEditCustomerModal extends Component {
                            </Label>
                               <FormGroup>
                                 <MaskedInput
-                                  mask="11\%"
+                                  mask="11\.11 \%"
                                   name="percentageDiscount"
                                   size="20"
                                   onChange={this.handlePercentageChange}
                                   className="form-control"
                                   value={customerDefaultPermissions[permission.key]
                                   .percentageDiscount}
+                                  placeholder="00.00%"
                                 />
                               </FormGroup>
                             </div>

@@ -16,13 +16,13 @@ export const CreateCustomerValidations = {
 
 export const CreateCustomerValidMessaages = {
   firstName: {
-    [ValidationTypes.REQUIRED]: "Please enter first Name.",
+    [ValidationTypes.REQUIRED]: "Please enter first name.",
   },
   lastName: {
-    [ValidationTypes.REQUIRED]: "Please enter password.",
+    [ValidationTypes.REQUIRED]: "Please enter last name.",
   },
   email:{
-    [ValidationTypes.EMAIL]: "Enter valid email address."
+    [ValidationTypes.EMAIL]: "Please enter valid email address."
   }
 };
 

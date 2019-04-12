@@ -63,7 +63,7 @@ class CustomerList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search;
+      param.search = search.trim();
     }
     if (sort) {
       param.sort = sort;
@@ -86,7 +86,7 @@ class CustomerList extends Component {
   };
   onDelete = async userId => {
     const { value } = await ConfirmBox({
-      text: "Do you want to delete this user?"
+      text: "Do you want to delete this customer?"
     });
     if (!value) {
       return;
@@ -203,6 +203,7 @@ class CustomerList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
+              <th>SNO</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
@@ -217,6 +218,7 @@ class CustomerList extends Component {
                 customers.map((user, index) => {
                   return (
                     <tr key={index}>
+                      <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                       <td>{user.firstName || "-"}</td>
                       <td>{user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
@@ -254,7 +256,7 @@ class CustomerList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    No customer found
+                    No customer records are available
                   </td>
                 </tr>
               )

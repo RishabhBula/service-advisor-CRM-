@@ -119,7 +119,7 @@ class Customers extends Component {
     this.props.getStdList();
   }
 
-  setDefaultRate = value => {
+  setDefaultRate = value => {   
     this.props.setLabourRateDefault(value);
   }
 

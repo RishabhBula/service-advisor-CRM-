@@ -130,6 +130,10 @@
 }
 .search-input-wrap {
   border-bottom: none;
+  width: 60%;
+}
+.search-input-wrap li {
+  width: 80%;
 }
 .search-input-wrap .input-group-text {
   border: none;
@@ -551,7 +555,7 @@
 .custom-main-logo {
   display: flex;
   align-items: center;
-  background: #5d43db;
+  background: #8157ef;
   width: 100%;
 }
 .custom-toggle-bar {

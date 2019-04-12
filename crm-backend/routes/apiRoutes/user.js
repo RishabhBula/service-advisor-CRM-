@@ -5,7 +5,8 @@ const token = require("../../common/token");
 
 /* ----------Get All user------------ */
 router.get("/", token.authorisedUser, userController.getAllUserList);
-router.delete("/:userId", token.authorisedUser, userController.deleteUser);
+router.post("/delete", token.authorisedUser, userController.deleteUser);
+router.post("/updateStatus", token.authorisedUser, userController.updateStatus);
 router.get("/getProfile", token.authorisedUser, userController.getProfile);
 
 module.exports = router;

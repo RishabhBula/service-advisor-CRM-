@@ -28,6 +28,7 @@ const SettingsNav = [
     name: "Customers",
     link: "/settings/customers",
   },
+  
 ];
 // export const SettingRoutes = [
 //   { path: "/settings/users", name: "Users", component: Users },

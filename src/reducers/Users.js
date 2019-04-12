@@ -8,44 +8,44 @@ const initialState = {
   userData: {
     isSuccess: false,
     isEditSuccess: false,
-    data: {},
-  },
+    data: {}
+  }
 };
 
 export const usersReducer = handleActions(
   {
     [usersActions.GET_USER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload,
+      ...payload
     }),
     [usersActions.ADD_USER]: (state, action) => ({
       ...state,
       userData: {
         ...state.userData,
-        isSuccess: false,
-      },
+        isSuccess: false
+      }
     }),
     [usersActions.ADD_USER_SUCCESS]: (state, action) => ({
       ...state,
       userData: {
         isSuccess: true,
-        data: {},
-      },
+        data: {}
+      }
     }),
     [usersActions.EDIT_USER]: (state, action) => ({
       ...state,
       userData: {
         ...state.userData,
-        isEditSuccess: false,
-      },
+        isEditSuccess: false
+      }
     }),
     [usersActions.EDIT_USER_SUCCESS]: (state, action) => ({
       ...state,
       userData: {
         ...state.userData,
-        isEditSuccess: true,
-      },
-    }),
+        isEditSuccess: true
+      }
+    })
   },
   initialState
 );

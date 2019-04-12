@@ -63,7 +63,7 @@ export class CrmStandardModel extends Component {
                   </Label>
                   <Input
                     type="text"
-                    placeholder="rate name"
+                    placeholder="Rate Name"
                     name="name"
                     value={name}
                     onChange={this.handleChange}
