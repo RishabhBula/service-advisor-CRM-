@@ -165,6 +165,8 @@ const getProfile = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   deleteUser,
   getAllUserList,

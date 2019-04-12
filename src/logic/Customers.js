@@ -13,7 +13,9 @@ import {
   modelOpenRequest,
   customerGetStarted,
   customerGetSuccess,
-  customerGetFailed
+  customerGetFailed,
+  customerGetRequest,
+  customerEditSuccess
 } from "./../actions";
 
 const addCustomerLogic = createLogic({
@@ -23,6 +25,9 @@ const addCustomerLogic = createLogic({
     const profileStateData = getState().profileInfoReducer;
 
     let data = action.payload;
+    console.log('===============add=====================');
+    console.log(data);
+    console.log('====================================');
     data.parentId = profileStateData.profileInfo.parentId;    
     data.userId = profileStateData.profileInfo._id;   
     dispatch(showLoader());
@@ -60,6 +65,9 @@ const addCustomerLogic = createLogic({
       );
       dispatch(
         modelOpenRequest({modelDetails: {customerModel: false}})
+      );
+       dispatch(
+        customerGetRequest()
       );
       dispatch(hideLoader());
       done();
@@ -109,36 +117,74 @@ const getCustomersLogic = createLogic({
   },
 });
 
-// const deleteCustomerLogic = createLogic({
-//   type: customersAddActions.DELETE_CUSTOMER,
-//   async process({ action }, dispatch, done) {
-//     dispatch(showLoader());
-//     logger(action.payload);
-//     let api = new ApiHelper();
-//     let result = await api.FetchFromServer(
-//       "/user",
-//       ["/", action.payload.userId].join(""),
-//       "DELETE",
-//       true
-//     );
-//     if (result.isError) {
-//       toast.error(result.messages[0]);
-//       dispatch(hideLoader());
-//       done();
-//       return;
-//     } else {
-//       toast.success(result.messages[0]);
-//       dispatch(hideLoader());
-//       delete action.payload.userId;
-//       dispatch(
-//         getUsersList({
-//           ...action.payload,
-//         })
-//       );
-//       done();
-//     }
-//   },
-// });
+const deleteCustomerLogic = createLogic({
+  type: customersAddActions.DELETE_CUSTOMER,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/customer",
+      ["/deleteCustomer/", action.payload.userId].join(""),
+      'DELETE',
+      true
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.userId;
+      dispatch(
+        customerGetRequest({
+          ...action.payload,
+        })
+      );      
+      done();
+    }
+  },
+});
 
+const editCustomerLogic = createLogic({
+  type: customersAddActions.EDIT_CUSTOMER_REQUESTED,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let data = {
+      data: action.payload
+    }
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/customer",
+      "/updateCustomerdetails",
+      "PUT",
+      true,
+      undefined,
+      data
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(customerEditSuccess());
+      dispatch(
+        customerGetRequest({
+          ...action.payload,
+        })
+      );   
+      dispatch(
+        modelOpenRequest({modelDetails: {customerModel: false}})
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  },
+});
 
-export const CustomersLogic = [addCustomerLogic, getCustomersLogic];
+export const CustomersLogic = [addCustomerLogic, getCustomersLogic, deleteCustomerLogic, editCustomerLogic];

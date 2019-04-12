@@ -54,10 +54,8 @@ const getStandardRateListLogic = createLogic({
       let resultData = result.data.data;
       let dataNewArray = [];
       for (let i = 0; i < resultData.length; i++) {
-
         dataNewArray.push({ value: resultData[i]._id, label: resultData[i].name + " - " + resultData[i].hourlyRate })
       }
-      console.log("%%%%%%%%%%%%%%",dataNewArray);
       
       dispatch(
         getRateStandardListSuccess({
