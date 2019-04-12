@@ -11,7 +11,13 @@ import {
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
-import { getUsersList, addNewUser, deleteUser, editUser } from "../../actions";
+import {
+  getUsersList,
+  addNewUser,
+  deleteUser,
+  editUser,
+  updateUserStatus
+} from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
 class Users extends Component {
@@ -82,6 +88,12 @@ class Users extends Component {
     const query = qs.parse(search);
     this.props.deleteUser({ ...query, userId });
   };
+  onStatusUpdate = data => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.onStatusUpdate({ ...query, ...data });
+  };
   render() {
     const { openCreate, openEdit } = this.state;
     const { userReducer, addUser } = this.props;
@@ -118,6 +130,7 @@ class Users extends Component {
               onDelete={this.deleteUser}
               onUpdate={this.props.updateUser}
               openEdit={openEdit}
+              onStatusUpdate={this.onStatusUpdate}
             />
           </CardBody>
         </Card>
@@ -146,6 +159,9 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteUser: data => {
     dispatch(deleteUser(data));
+  },
+  onStatusUpdate: data => {
+    dispatch(updateUserStatus(data));
   }
 });
 
