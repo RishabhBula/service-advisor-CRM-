@@ -13,7 +13,7 @@ const createCustomer = async (req, res) => {
       });
     }
     const { body } = req;
-    const fleetData = {
+    const cusomerData = {
       firstName: body.firstName,
       lastName: body.lastName,
       phoneDetail: body.phoneDetail,
@@ -32,8 +32,11 @@ const createCustomer = async (req, res) => {
       userId: body.userId,
       status: true,
     };
+    console.log('====================================');
+    console.log(cusomerData);
+    console.log('====================================');
 
-    let result = await customerModel(fleetData).save();
+    let result = await customerModel(cusomerData).save();
     if (result) {
       return res.status(200).json({
         message: otherMessage.newCustomer,
@@ -168,7 +171,7 @@ const getAllCustomerList = async (req, res) => {
 /* Delete Customer */
 const deleteCustomer = async ({ params }, res) => {
   try {
-     const { userId } = params;
+    const { userId } = params;
     const data = await customerModel.findByIdAndUpdate(userId, {
       isDeleted: true,
     });
@@ -177,7 +180,6 @@ const deleteCustomer = async ({ params }, res) => {
       data,
     });
   } catch (error) {
-    console.log("this is get all user error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false,
@@ -191,7 +193,7 @@ const deleteCustomer = async ({ params }, res) => {
 const updateCustomerdetails = async (req, res) => {
   const { body } = req;
   try {
-    if (!body.customerId) {
+    if (!body.data.customerId) {
       return res.status(400).json({
         responsecode: 400,
         message: "Customer id is required.",
@@ -199,9 +201,9 @@ const updateCustomerdetails = async (req, res) => {
       });
     } else {
       const updateCustomerDetails = await customerModel.findByIdAndUpdate(
-        body.fleetId,
+        body.data.customerId,
         {
-          $set: body.fleetData,
+          $set: body.data,
         }
       );
       if (!updateCustomerDetails) {
