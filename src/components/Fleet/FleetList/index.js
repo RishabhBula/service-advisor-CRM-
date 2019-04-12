@@ -19,7 +19,9 @@ import { fleetEditRequest } from "../../../actions";
 import { logger } from "../../../helpers/Logger";
 import Validator from "js-object-validation";
 import { CreateFleetValidations, CreateFleetValidMessaages } from "../../../validations";
-import { RoleOptions } from "../../../config/Constants";
+import PaginationHelper from "../../../helpers/Pagination";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
+
 class FleetList extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +34,7 @@ class FleetList extends Component {
       status: "",
       sort: "",
       type: "",
+      page: 1,
     };
   }
   componentDidUpdate({ openEdit }) {
@@ -120,6 +123,15 @@ class FleetList extends Component {
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
   };
+  onDelete = async userId => {
+    const { value } = await ConfirmBox({
+      text: "Do you want to delete this fleet?"
+    });
+    if (!value) {
+      return;
+    }
+    this.props.onDelete(userId);
+  };
   render() {
     const {
       openFleetModal,
@@ -128,9 +140,9 @@ class FleetList extends Component {
       search,
       status,
       sort,
-      type, } = this.state
+      page, } = this.state
     const { fleetListData } = this.props;
-    const { isLoading, fleetData } = fleetListData;
+    const { isLoading, fleetData, totalUsers } = fleetListData;
     return (
       <>
         <div className={"filter-block"}>
@@ -167,8 +179,8 @@ class FleetList extends Component {
                     <option className="form-control" value={""}>
                       -- Select Status --
                     </option>
-                    <option value={1}>Active</option>
-                    <option value={0}>Inactive</option>
+                    <option value={true}>Active</option>
+                    <option value={false}>Inactive</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -188,34 +200,8 @@ class FleetList extends Component {
                       -- Select Status --
                     </option>
                     <option value={"createddesc"}>Last Created</option>
-                    <option value={"loginasc"}>Last login</option>
                     <option value={"nasc"}>Name A-Z</option>
                     <option value={"ndesc"}>Name Z-A</option>
-                  </Input>
-                </FormGroup>
-              </Col>
-              <Col lg={"2"} md={"2"} className="mb-0">
-                <FormGroup className="mb-0">
-                  <Label for="SortFilter" className="label">
-                    User Type
-                  </Label>
-                  <Input
-                    type="select"
-                    name="type"
-                    id="SortFilter"
-                    onChange={this.handleChange}
-                    value={type}
-                  >
-                    <option className="form-control" value={""}>
-                      -- Select Status --
-                    </option>
-                    {RoleOptions.map((role, index) => {
-                      return (
-                        <option value={role.key} key={index}>
-                          {role.text}
-                        </option>
-                      );
-                    })}
                   </Input>
                 </FormGroup>
               </Col>
@@ -274,7 +260,13 @@ class FleetList extends Component {
                   return (
                     <tr key={index}>
                       <td>{data.companyName || "-"}</td>
-                      <td>{data.phone || "-"}</td>
+                      <td>{data.phoneDetail ?
+                        data.phoneDetail.map((data, index) => {
+                          return (
+                            <div>{index + 1}.
+                            {" "}{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
+                          )
+                        }) : "-"}</td>
                       <td>{data.email || "-"}</td>
                       <td>0</td>
                       <td>0</td>
@@ -300,6 +292,7 @@ class FleetList extends Component {
                         <Button
                           color={"danger"}
                           size={"sm"}
+                          onClick={() => this.onDelete(data._id)}
                         >
                           <i className={"fa fa-trash"} />
                         </Button>
@@ -324,12 +317,16 @@ class FleetList extends Component {
             }
           </tbody>
         </Table>
-        {/* {totalUsers ? (
+        {totalUsers ? (
           <PaginationHelper
             totalRecords={totalUsers}
-            onPageChanged={this.props.onPageChange}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.props.onPageChange(page);
+            }}
+            currentPage={page}
           />
-        ) : null} */}
+        ) : null}
         <CrmFleetModal
           fleetModalOpen={openFleetModal}
           handleFleetModal={() => {
@@ -346,7 +343,7 @@ class FleetList extends Component {
       </>
     );
   }
-}
+}  
 
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,

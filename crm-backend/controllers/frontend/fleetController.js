@@ -63,99 +63,132 @@ const getAllFleetList = async (req, res) => {
       const page = parseInt(query.page);
       const offset = (page - 1) * limit;
       const searchValue = query.search;
-      let condition = {
-         $or: [
-            {
-               companyName: new RegExp(searchValue, "i")
-            },
-            {
-               email: new RegExp(searchValue, "i")
-            }
-         ]
+      const sort = query.sort;
+      const status = query.status;
+      let condition = {}
+      let sortBy = {};
+      switch (sort) {
+         case "loginasc":
+            sortBy = {
+               updatedAt: -1,
+            };
+            break;
+         case "nasc":
+            sortBy = {
+               companyName: 1
+            };
+            break;
+         case "ndesc":
+            sortBy = {
+               companyName: -1
+            };
+            break;
+         default:
+            sortBy = {
+               createdAt: -1,
+            };
+            break;
       }
-      const fleetList = await fleetModal.find({
-         $or: [
-            { userId: mongoose.Types.ObjectId(query.userId) },
-            { parentId: mongoose.Types.ObjectId(query.parentId) },
-         ],
-         ...condition
-      }).skip(offset)
-         .limit(limit);
-      const getAllFleetCount = await fleetModal.countDocuments({
-         $or: [
-            { userId: mongoose.Types.ObjectId(query.userId) },
-            { parentId: mongoose.Types.ObjectId(query.parentId) },
-         ],
-         ...condition,
-      });
-      if (!fleetList) {
-         return res.status(400).json({
-            responsecode: 400,
-            message: "Fleet data not foud.",
-            success: false,
-         });
-      } else {
-         return res.status(200).json({
-            responsecode: 200,
-            data: fleetList,
-            totalUsers: getAllFleetCount,
-            success: true,
-         });
+      if (status) {
+         condition = { status: status };
       }
-   } catch (error) {
-      console.log("This is Fleet list error", error);
-      res.status(500).json({
-         responsecode: 500,
-         message: error.message ? error.message : "Unexpected error occure.",
-         success: false,
-      });
-   }
-};
-/* ------------Get Fleet list---------- */
+      if (searchValue) {
+         condition = {
+            $or: [
+               {
+                  companyName: new RegExp(searchValue, "i")
+               },
+               {
+                  email: new RegExp(searchValue, "i")
+               }
 
-/* ------------Update Fleet Details---------- */
-const updateFleetdetails = async (req, res) => {
-   const { body } = req;
-   try {
-      if (!body.fleetId) {
-         return res.status(400).json({
-            responsecode: 400,
-            message: "Fleet id is required.",
-            success: false,
+            ]
+         }
+      }
+         const fleetList = await fleetModal.find({
+            $or: [
+               { userId: mongoose.Types.ObjectId(query.userId) },
+               { parentId: mongoose.Types.ObjectId(query.parentId) },
+            ],
+            ...condition
+         }).sort(sortBy)
+            .skip(offset)
+            .limit(limit);
+         const getAllFleetCount = await fleetModal.countDocuments({
+            $or: [
+               { userId: mongoose.Types.ObjectId(query.userId) },
+               { parentId: mongoose.Types.ObjectId(query.parentId) },
+            ],
+            ...condition,
          });
-      } else {
-         const updateFleetDetails = await fleetModal.findByIdAndUpdate(
-            body.fleetId,
-            {
-               $set: body.fleetData,
-            }
-         );
-         if (!updateFleetDetails) {
+         if (!fleetList) {
             return res.status(400).json({
                responsecode: 400,
-               message: "Error updating fleet details.",
+               message: "Fleet data not foud.",
                success: false,
             });
          } else {
             return res.status(200).json({
                responsecode: 200,
-               message: "Fleet details updated successfully!",
-               success: false,
+               data: fleetList,
+               totalUsers: getAllFleetCount,
+               success: true,
             });
          }
+      } catch (error) {
+         console.log("This is Fleet list error", error);
+         res.status(500).json({
+            responsecode: 500,
+            message: error.message ? error.message : "Unexpected error occure.",
+            success: false,
+         });
       }
-   } catch (error) {
-      console.log("This is update Fleet error", error);
-      return res.status(500).json({
-         responsecode: 500,
-         message: error.message ? error.message : "Unexpected error occure.",
-         success: false,
-      });
-   }
-};
-/* ------------Update Fleet Details End---------- */
-module.exports = {
-   addNewFleet,
-   getAllFleetList,
-   updateFleetdetails,
-};
+   };
+   /* ------------Get Fleet list---------- */
+
+   /* ------------Update Fleet Details---------- */
+   const updateFleetdetails = async (req, res) => {
+      const { body } = req;
+      try {
+         if (!body.fleetId) {
+            return res.status(400).json({
+               responsecode: 400,
+               message: "Fleet id is required.",
+               success: false,
+            });
+         } else {
+            const updateFleetDetails = await fleetModal.findByIdAndUpdate(
+               body.fleetId,
+               {
+                  $set: body.fleetData,
+               }
+            );
+            if (!updateFleetDetails) {
+               return res.status(400).json({
+                  responsecode: 400,
+                  message: "Error updating fleet details.",
+                  success: false,
+               });
+            } else {
+               return res.status(200).json({
+                  responsecode: 200,
+                  message: "Fleet details updated successfully!",
+                  success: false,
+               });
+            }
+         }
+      } catch (error) {
+         console.log("This is update Fleet error", error);
+         return res.status(500).json({
+            responsecode: 500,
+            message: error.message ? error.message : "Unexpected error occure.",
+            success: false,
+         });
+      }
+   };
+   /* ------------Update Fleet Details End---------- */
+   module.exports = {
+      addNewFleet,
+      getAllFleetList,
+      updateFleetdetails,
+   };

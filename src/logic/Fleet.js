@@ -33,10 +33,8 @@ const fleetAddLogic = createLogic({
       "fleet/addFleet",
       "POST",
       true,
-      {
-        ...action.payload,
-        limit: AppConfig.ITEMS_PER_PAGE,
-      }
+      undefined,
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -68,7 +66,10 @@ const fleetListLogic = createLogic({
       "fleet/fleetList",
       "GET",
       true,
-      action.payload,
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE,
+      },
       undefined,
     );
     if (result.isError) {
