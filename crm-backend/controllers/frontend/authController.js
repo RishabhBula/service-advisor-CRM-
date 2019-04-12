@@ -713,6 +713,7 @@ const verfiyUser = async (req, res) => {
             userSideActivation: true,
             userSideActivationValue: "",
             password: password,
+            salt,
             loggedInIp: loggedInIp,
           },
         }

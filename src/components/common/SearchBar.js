@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
-import { AutoComplete } from "primereact/autocomplete";
+import { InputGroup, InputGroupAddon, InputGroupText, Input } from "reactstrap";
 class SearchBar extends Component {
   constructor(props) {
     super(props);
@@ -90,17 +89,10 @@ class SearchBar extends Component {
               <i className="fa fa-search fa-lg " />
             </InputGroupText>
           </InputGroupAddon>
-          <AutoComplete
-            value={this.state.brand}
-            suggestions={this.state.brandSuggestions}
-            completeMethod={this.suggestBrands.bind(this)}
-            size={80}
-            minLength={1}
+          <Input
+            type={"text"}
+            className="form-control search-input"
             placeholder="Search customer, cars, orders, or vendors"
-            itemTemplate={this.itemTemplate.bind(this)}
-            onChange={e => this.setState({ brand: e.value })}
-            inputClassName="form-control search-input"
-            className="search-input-parent"
           />
         </InputGroup>
       </div>

@@ -288,17 +288,21 @@ class UserList extends Component {
                           color={"primary"}
                           size={"sm"}
                           onClick={() => this.editUser(user)}
+                          id={`edit-${user._id}`}
                         >
                           <i className={"fa fa-edit"} />
                         </Button>{" "}
+                        <UncontrolledTooltip target={`edit-${user._id}`}>Edit details of {user.firstName}</UncontrolledTooltip>
                         &nbsp;
                         <Button
                           color={"danger"}
                           size={"sm"}
                           onClick={() => this.onDelete(user._id)}
+                          id={`delete-${user._id}`}
                         >
                           <i className={"fa fa-trash"} />
                         </Button>
+                        <UncontrolledTooltip target={`delete-${user._id}`}>Delete {user.firstName}</UncontrolledTooltip>
                       </td>
                     </tr>
                   );
