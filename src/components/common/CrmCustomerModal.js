@@ -74,27 +74,6 @@ export class CrmCustomerModal extends Component {
     }
   }
 
-
-  // componentDidUpdate(prevProps) { 
-  //   if(prevProps.customer._id!== this.props.customer._id){ 
-  //     const { customer } = this.props;
-  //     this.setState({
-  //       address1: customer.address1,
-  //       address2: customer.address2,
-  //       city: customer.city,
-  //       companyName: customer.companyName,
-  //       email: customer.email,
-  //       firstName: customer.firstName,
-  //       fleet: customer.fleet,
-  //       lastName: customer.lastName,
-  //       notes: customer.notes,
-  //       customerDefaultPermissions: customer.permission,
-  //       referralSource: customer.referralSource,
-  //       state: customer.state,
-  //       zipCode: customer.zipCode,
-  //     })     
-  //   }
-  // }
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -325,7 +304,12 @@ export class CrmCustomerModal extends Component {
     this.setState({
         firstName: "",
         lastName: "",
-        phoneDetail: "",
+        phoneDetail:  [
+          {
+            phone: "mobile",
+            value: ""
+          }
+        ],
         email: "",
         notes: "",
         companyName: "",
@@ -343,7 +327,7 @@ export class CrmCustomerModal extends Component {
   handleCustomerModal = () => {
     this.props.handleCustomerModalFun();
     if(this.props.customerModalOpen) {
-      this.removeAllState();
+      //this.removeAllState();
     }
   }
   render() {
@@ -377,6 +361,10 @@ export class CrmCustomerModal extends Component {
       }
     }
 
+    console.log('==============phoneDetail======================');
+    console.log(phoneDetail);
+    console.log('====================================');
+
     return (
       <>
         <Modal
@@ -405,6 +393,7 @@ export class CrmCustomerModal extends Component {
                         name="firstName"
                         onChange={this.handleInputChange}
                         value={firstName}
+                        maxLength="30"
                       />
                       {
                         !firstName && errors.firstName ?
@@ -429,6 +418,7 @@ export class CrmCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         name="lastName"
                         value={this.state.lastName}
+                        maxLength="30"
                       />
                       {
                         errors.lastName && !lastName ?
@@ -505,7 +495,8 @@ export class CrmCustomerModal extends Component {
                                   className="customer-modal-text-style"
                                 >
                                   Email (Optional)
-                    </Label>
+                                </Label>
+                                <div className="input-block">
                                 <Input
                                   type="text"
                                   className="customer-modal-text-style"
@@ -513,12 +504,14 @@ export class CrmCustomerModal extends Component {
                                   onChange={this.handleInputChange}
                                   name="email"
                                   value={this.state.email}
+                                  maxLength="100"
                                 />
                                 {
                                   errors.email && email ?
                                     <p className="text-danger">{errors.email}</p> :
                                     null
                                 }
+                                </div>
                               </FormGroup>
                             </Col>
                           </>
@@ -617,6 +610,7 @@ export class CrmCustomerModal extends Component {
                       name="companyName"
                       onChange={this.handleInputChange}
                       value={this.state.companyName}
+                      maxLength="100"
                     />
                   </FormGroup>
                 </Col>
@@ -658,9 +652,6 @@ export class CrmCustomerModal extends Component {
             </div>
             {expandForm ? (
               <>
-
-
-
                 <div className="">
                   <Row className="justify-content-center">
                     <Col md="6">
@@ -676,6 +667,7 @@ export class CrmCustomerModal extends Component {
                           placeholder="Address"
                           name="address1"
                           onChange={this.handleInputChange}
+                          maxLength="200"
                         />
                       </FormGroup>
                     </Col>
@@ -692,6 +684,7 @@ export class CrmCustomerModal extends Component {
                           placeholder="New York"
                           name="city"
                           onChange={this.handleInputChange}
+                          maxLength="30"
                         />
                       </FormGroup>
                     </Col>
@@ -725,7 +718,11 @@ export class CrmCustomerModal extends Component {
                         >
                           State
                         </Label>
-                        <Input type="text" name="state" onChange={this.handleInputChange} placeholder="NY" />
+                        <Input type="text" 
+                        name="state" 
+                        onChange={this.handleInputChange} 
+                        placeholder="NY" 
+                        maxLength="30"/>
                       </FormGroup>
                     </Col>
                     <Col md="6 ">
@@ -741,6 +738,7 @@ export class CrmCustomerModal extends Component {
                           placeholder="Zip Code"
                           name="zipCode"
                           onChange={this.handleInputChange}
+                          maxLength="6"
                         />
                       </FormGroup>
                     </Col>
@@ -762,6 +760,7 @@ export class CrmCustomerModal extends Component {
                           placeholder="Referral"
                           name="Refferal Source"
                           onChange={this.handleInputChange}
+                          maxLength="100"
                         />
                       </FormGroup>
                     </Col>
@@ -829,11 +828,12 @@ export class CrmCustomerModal extends Component {
                               <FormGroup>
                                 <Col md="4" className={"p-0"}>
                                 <MaskedInput
-                                  mask="11\%"
+                                  mask="11\.11 \%"
                                   name="percentageDiscount"
                                   size="20"
                                   onChange={this.handlePercentageChange}
                                   className="form-control"
+                                  placeholder="00.00%"
                                 />
                                 </Col>
                               </FormGroup>
@@ -881,7 +881,6 @@ export class CrmCustomerModal extends Component {
                         </Col>
                       </>);
                   }): null}
-
                
                 </Row>
                 {expandForm ? (

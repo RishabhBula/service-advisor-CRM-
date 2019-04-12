@@ -59,7 +59,7 @@ export default {
         },
         {
           name: "Customers",
-          url: "/customers",
+          url: "/settings/customers",
           icon: "icon-puzzle",
         },
         {

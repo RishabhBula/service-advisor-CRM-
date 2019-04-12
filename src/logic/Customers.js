@@ -25,7 +25,11 @@ const addCustomerLogic = createLogic({
     const profileStateData = getState().profileInfoReducer;
 
     let data = action.payload;
-    data.parentId = profileStateData.profileInfo.parentId;    
+    data.parentId = profileStateData.profileInfo.parentId;
+    if (profileStateData.profileInfo.parentId === null) {
+      data.parentId = profileStateData.profileInfo._id;
+    }
+
     data.userId = profileStateData.profileInfo._id;   
     dispatch(showLoader());
     logger(action.payload);

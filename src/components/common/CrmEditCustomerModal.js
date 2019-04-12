@@ -416,6 +416,7 @@ export class CrmEditCustomerModal extends Component {
                         name="firstName"
                         onChange={this.handleInputChange}
                         value={firstName}
+                        maxLength="30"
                       />
                       {
                         !firstName && errors.firstName ?
@@ -440,6 +441,7 @@ export class CrmEditCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         name="lastName"
                         value={this.state.lastName}
+                        maxLength="30"
                       />
                       {
                         errors.lastName && !lastName ?
@@ -525,6 +527,7 @@ export class CrmEditCustomerModal extends Component {
                                     onChange={this.handleInputChange}
                                     name="email"
                                     value={this.state.email}
+                                    maxLength="100"
                                   />
                                   {
                                     errors.email && email ?
@@ -560,7 +563,6 @@ export class CrmEditCustomerModal extends Component {
                                     type="select"
                                     id="name"
                                     required
-
                                   >
                                     {phoneOptions}
                                   </Input>
@@ -617,9 +619,7 @@ export class CrmEditCustomerModal extends Component {
 
 
             <div className="">
-              <Row >
-                
-
+              <Row>
                 <Col md="6">
                   <FormGroup>
                     <Label
@@ -627,14 +627,14 @@ export class CrmEditCustomerModal extends Component {
                       className="customer-modal-text-style"
                     >
                       Company
-                        </Label>
+                    </Label>
                     <Input
                       type="text"
                       placeholder="Company"
                       name="companyName"
                       onChange={this.handleInputChange}
                       value={this.state.companyName}
-                      value={this.state.companyName}
+                      maxLength="100"
                     />
                   </FormGroup>
                 </Col>
@@ -692,6 +692,7 @@ export class CrmEditCustomerModal extends Component {
                           name="address1"
                           value={this.state.address1}
                           onChange={this.handleInputChange}
+                          maxLength="200"
                         />
                       </FormGroup>
                     </Col>
@@ -709,32 +710,14 @@ export class CrmEditCustomerModal extends Component {
                           name="city"
                           onChange={this.handleInputChange}
                           value={this.state.city}
+                          maxLength="30"
                         />
                       </FormGroup>
                     </Col>
-                    {/* <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Address 2
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Address"
-                          name="address2"
-                          value={this.state.address2}
-                          onChange={this.handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col> */}
                   </Row>
                 </div>
-
                 <div className="">
-                  <Row className="">
-                   
+                  <Row className="">                   
                     <Col md="6">
                       <FormGroup>
                         <Label
@@ -744,7 +727,7 @@ export class CrmEditCustomerModal extends Component {
                           State
                         </Label>
                         <Input type="text" name="state"
-                        value={this.state.state} onChange={this.handleInputChange} placeholder="NY" />
+                        value={this.state.state} onChange={this.handleInputChange} placeholder="NY"  maxLength="30"/>
                       </FormGroup>
                     </Col>
                     <Col md="6 ">
@@ -761,6 +744,7 @@ export class CrmEditCustomerModal extends Component {
                           name="zipCode"
                           onChange={this.handleInputChange}
                           value={this.state.zipCode}
+                          maxLength="6"
                         />
                       </FormGroup>
                     </Col>
@@ -782,6 +766,7 @@ export class CrmEditCustomerModal extends Component {
                           placeholder="Referral"
                           name="referralSource"
                           onChange={this.handleInputChange}
+                           maxLength="100"
                         />
                       </FormGroup>
                     </Col>
@@ -847,13 +832,14 @@ export class CrmEditCustomerModal extends Component {
                            </Label>
                               <FormGroup>
                                 <MaskedInput
-                                  mask="11\%"
+                                  mask="11\.11 \%"
                                   name="percentageDiscount"
                                   size="20"
                                   onChange={this.handlePercentageChange}
                                   className="form-control"
                                   value={customerDefaultPermissions[permission.key]
                                   .percentageDiscount}
+                                  placeholder="00.00%"
                                 />
                               </FormGroup>
                             </div>

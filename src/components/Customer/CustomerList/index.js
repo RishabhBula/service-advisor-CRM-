@@ -64,9 +64,6 @@ class CustomerList extends Component {
     }
     if (search) {
       param.search = search.trim();
-      console.log('====================================');
-      console.log(param.search);
-      console.log('====================================');
     }
     if (sort) {
       param.sort = sort;
@@ -89,7 +86,7 @@ class CustomerList extends Component {
   };
   onDelete = async userId => {
     const { value } = await ConfirmBox({
-      text: "Do you want to delete this user?"
+      text: "Do you want to delete this customer?"
     });
     if (!value) {
       return;
@@ -259,7 +256,7 @@ class CustomerList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    No customer found
+                    No customer records are available
                   </td>
                 </tr>
               )
