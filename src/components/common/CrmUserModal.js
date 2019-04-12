@@ -182,7 +182,7 @@ export class CrmUserModal extends Component {
           <Modal
             isOpen={userModalOpen}
             toggle={handleUserModal}
-            className="customer-modal"
+            className="customer-modal custom-form-modal custom-modal-lg"
           >
             <ModalHeader toggle={handleUserModal}>
               {!isEditMode ? "Add New Member" : `Update member details`}
@@ -267,7 +267,7 @@ export class CrmUserModal extends Component {
                 </Col>
               </Row>
               <Row className="justify-content-center">
-                <Col md="12">
+                <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Type
@@ -294,9 +294,7 @@ export class CrmUserModal extends Component {
                     </FormFeedback>
                   </FormGroup>
                 </Col>
-              </Row>
-              <Row className="justify-content-center">
-                <Col md="12">
+                <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Rate/hour (optional)
@@ -316,34 +314,41 @@ export class CrmUserModal extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              {roleType
-                ? UserPermissions.map((permission, index) => {
-                    return (
-                      <Row className="justify-content-center pb-2" key={index}>
-                        <Col md="2">
-                          <AppSwitch
-                            className={"mx-1"}
-                            name={permission.key}
-                            checked={permissions[permission.key]}
-                            onClick={this.handleClick}
-                            variant={"3d"}
-                            color={"primary"}
-                            size={"sm"}
-                          />
+              <Row className={"custom-label-padding "}>
+                {roleType
+                  ? UserPermissions.map((permission, index) => {
+                      return (
+                        <Col sm={"6"}>
+                          <Row
+                            className="justify-content-center pb-2"
+                            key={index}
+                          >
+                            <Col md="2">
+                              <AppSwitch
+                                className={"mx-1"}
+                                name={permission.key}
+                                checked={permissions[permission.key]}
+                                onClick={this.handleClick}
+                                variant={"3d"}
+                                color={"primary"}
+                                size={"sm"}
+                              />
+                            </Col>
+                            <Col md="10">
+                              <p className="customer-modal-text-style">
+                                {permission.text}
+                              </p>
+                            </Col>
+                          </Row>
                         </Col>
-                        <Col md="10">
-                          <p className="customer-modal-text-style">
-                            {permission.text}
-                          </p>
-                        </Col>
-                      </Row>
-                    );
-                  })
-                : null}
+                      );
+                    })
+                  : null}
+              </Row>
             </ModalBody>
             <ModalFooter>
               <Button color="primary" onClick={this.addUser}>
-                {isEditMode ? "Update" : "Add"}
+                {isEditMode ? "Update" : "Add"} Member
               </Button>{" "}
               <Button color="secondary" onClick={handleUserModal}>
                 Cancel
