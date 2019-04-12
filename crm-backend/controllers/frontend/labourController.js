@@ -4,9 +4,13 @@ const mongoose = require("mongoose");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
-
+    let condition = {
+      name: new RegExp($data.searchValue, "i")
+    }
+    console.log(condition);
     const getAllStdRate = await rateStandardModel.find({
       parentId: mongoose.Types.ObjectId($data.parentId),
+      ...condition
     });
     if (getAllStdRate) {
       return res.status(200).json({

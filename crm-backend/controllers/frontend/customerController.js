@@ -13,7 +13,7 @@ const createCustomer = async (req, res) => {
       });
     }
     const { body } = req;
-    const fleetData = {
+    const cusomerData = {
       firstName: body.firstName,
       lastName: body.lastName,
       phoneDetail: body.phoneDetail,
@@ -32,8 +32,11 @@ const createCustomer = async (req, res) => {
       userId: body.userId,
       status: true,
     };
+    console.log('====================================');
+    console.log(cusomerData);
+    console.log('====================================');
 
-    let result = await customerModel(fleetData).save();
+    let result = await customerModel(cusomerData).save();
     if (result) {
       return res.status(200).json({
         message: otherMessage.newCustomer,
@@ -168,16 +171,15 @@ const getAllCustomerList = async (req, res) => {
 /* Delete Customer */
 const deleteCustomer = async ({ params }, res) => {
   try {
-    const { customerId } = params;
-    const data = await customerModel.findByIdAndUpdate(customerId, {
+    const { userId } = params;
+    const data = await customerModel.findByIdAndUpdate(userId, {
       isDeleted: true,
     });
     return res.status(200).json({
-      message: "User deleted successfully!",
+      message: "Customer deleted successfully!",
       data,
     });
   } catch (error) {
-    console.log("this is get all user error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false,
@@ -186,8 +188,52 @@ const deleteCustomer = async ({ params }, res) => {
 };
 /* Delete Customer */
 
+
+/* update customer data */
+const updateCustomerdetails = async (req, res) => {
+  const { body } = req;
+  try {
+    if (!body.data.customerId) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Customer id is required.",
+        success: false,
+      });
+    } else {
+      const updateCustomerDetails = await customerModel.findByIdAndUpdate(
+        body.data.customerId,
+        {
+          $set: body.data,
+        }
+      );
+      if (!updateCustomerDetails) {
+        return res.status(400).json({
+          responsecode: 400,
+          message: "Error updating customer details.",
+          success: false,
+        });
+      } else {
+        return res.status(200).json({
+          responsecode: 200,
+          message: "Customer details updated successfully!",
+          success: false,
+        });
+      }
+    }
+  } catch (error) {
+    console.log("This is update Customer error", error);
+    return res.status(500).json({
+      responsecode: 500,
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+
 module.exports = {
   createCustomer,
   getAllCustomerList,
   deleteCustomer,
+  updateCustomerdetails,
+  updateCustomerdetails
 };

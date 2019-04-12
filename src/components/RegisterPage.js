@@ -1,9 +1,12 @@
 import Validator from "js-object-validation";
 import React, { Component } from "react";
+import Logo from "./../assets/img/logo-white.svg";
+
 import {
   Button,
   Card,
   CardBody,
+  CardGroup,
   Col,
   Container,
   Form,
@@ -18,7 +21,6 @@ import {
 
 import { logger } from "../helpers/Logger";
 import { SingupValidations, SingupValidationsMessaages } from "../validations";
-import Logo from "./../assets/serviceadvisorlogo.jpg";
 import MailIcon from "./../assets/img/mail.png";
 import { Link } from "react-router-dom";
 const ResendInvitation = props => {
@@ -115,12 +117,13 @@ class RegisterPage extends Component {
       <div className="app flex-row align-items-center auth-page">
         <Container>
           <Row className="justify-content-center">
-            <Col md="9" lg="7" xl="6">
+            <Col md="6" lg="7" xl="6">
               <Col className="text-center">
                 <h4 className="logo-title">
                   <img src={Logo} alt={"logo"} style={{ width: 80 }} />
                 </h4>
               </Col>
+              <CardGroup>
               <Card className="mx-4">
                 <CardBody className="p-4">
                   {!showResendPage ? (
@@ -269,6 +272,7 @@ class RegisterPage extends Component {
                   )}
                 </CardBody>
               </Card>
+              </CardGroup>
             </Col>
           </Row>
         </Container>

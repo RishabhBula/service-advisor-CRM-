@@ -2,6 +2,7 @@ import { createLogic } from "redux-logic";
 import {
   fleetAddStarted,
   fleetAddActions,
+  fleetAddSuccess,
   redirectTo,
   hideLoader,
   showLoader,
@@ -9,11 +10,14 @@ import {
   fleetListStarted,
   fleetListSuccess,
   fleetEditSuccess,
-  fleetEditAction
+  fleetEditAction,
+  fleetDeleteActions,
+  fleetListRequest
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import { logger } from "../helpers/Logger";
+import { AppConfig } from "../config/AppConfig";
 
 const fleetAddLogic = createLogic({
   type: fleetAddActions.FLEET_ADD_REQUEST,
@@ -42,6 +46,7 @@ const fleetAddLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(hideLoader());
+      dispatch(fleetAddSuccess());
       dispatch(redirectTo({ path: "/fleets" }));
       done();
     }
@@ -63,7 +68,10 @@ const fleetListLogic = createLogic({
       "fleet/fleetList",
       "GET",
       true,
-      action.payload,
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE,
+      },
       undefined,
     );
     if (result.isError) {
@@ -75,7 +83,7 @@ const fleetListLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(
         fleetListSuccess({
-          fleetData: result.data.data
+          fleetData: result.data
         }),
         hideLoader()
       );
@@ -110,5 +118,34 @@ const editFleetLogic = createLogic({
     }
   },
 });
-
-export const FleetLogic = [fleetAddLogic, fleetListLogic,editFleetLogic];
+const deleteFleetLogic = createLogic({
+  type: fleetDeleteActions.DELETE_FLEET,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/fleet",
+      ["/", action.payload.fleetId].join(""),
+      "DELETE",
+      true
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.fleetId;
+      dispatch(
+        fleetListRequest({
+          ...action.payload,
+        })
+      );
+      done();
+    }
+  },
+});
+export const FleetLogic = [fleetAddLogic, fleetListLogic, editFleetLogic, deleteFleetLogic];

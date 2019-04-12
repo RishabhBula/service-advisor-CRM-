@@ -63,7 +63,10 @@ class CustomerList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search;
+      param.search = search.trim();
+      console.log('====================================');
+      console.log(param.search);
+      console.log('====================================');
     }
     if (sort) {
       param.sort = sort;
@@ -93,8 +96,8 @@ class CustomerList extends Component {
     }
     this.props.onDelete(userId);
   };
-  editUser = user => {
-    this.setState({ openEditModal: true, user });
+  editUser = customer => {
+    this.props.updateModel(customer)
   };
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
@@ -203,10 +206,11 @@ class CustomerList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
+              <th>SNO</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
-              <th>Registered At</th>
+              <th>Registered</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -217,6 +221,7 @@ class CustomerList extends Component {
                 customers.map((user, index) => {
                   return (
                     <tr key={index}>
+                      <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                       <td>{user.firstName || "-"}</td>
                       <td>{user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
