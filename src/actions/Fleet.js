@@ -32,3 +32,8 @@ export const fleetEditAction = {
  
 export const fleetEditRequest = createAction(fleetEditAction.EDIT_FLEET_REQUESTED)
 export const fleetEditSuccess = createAction(fleetEditAction.EDIT_FLEET_SUCCESS)
+
+export const fleetDeleteActions = {
+  DELETE_FLEET: "Delete fleet Requested!",
+}
+export const deleteFleet = createAction(fleetDeleteActions.DELETE_FLEET);

@@ -11,7 +11,14 @@ import {
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import FleetList from "../../components/Fleet/FleetList";
 import { connect } from "react-redux";
-import { fleetListRequest, fleetAddRequest, getMatrixList, getRateStandardListRequest, setRateStandardListStart } from "../../actions";
+import {
+  fleetListRequest,
+  fleetAddRequest,
+  getMatrixList,
+  getRateStandardListRequest,
+  setRateStandardListStart,
+  deleteFleet
+} from "../../actions";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
 import { CreateFleetValidations, CreateFleetValidMessaages } from "../../validations";
@@ -34,25 +41,26 @@ class Fleet extends Component {
       openCreate: !this.state.openCreate
     });
   };
+  onPageChange = page => {
+    const { location } = this.props;
+    const { search, pathname } = location;
+    const query = qs.parse(search);
+    this.props.redirectTo(
+      [pathname, qs.stringify({ ...query, page })].join("?")
+    );
+  };
   componentDidMount() {
     this.props.getMatrix();
-    const userData = this.props.profileInfoReducer.profileInfo
-    const data = {
-      userId: userData._id
-    }
-    this.props.getFleet(data)
+    const query = qs.parse(this.props.location.search);
+    this.props.getFleet({ ...query, page: query.page || 1 })
     this.props.getStdList();
   }
   componentDidUpdate = ({ fleetReducer, location }) => {
-    const userData = this.props.profileInfoReducer.profileInfo
     if (
       this.props.fleetReducer.fleetListData.isSuccess !==
       fleetReducer.fleetListData.isSuccess
     ) {
-      const data = {
-        userId: userData._id
-      }
-      this.props.getFleet(data)
+      this.props.getFleet()
     }
     if (
       this.props.fleetReducer.fleetListData.isEditSuccess !==
@@ -66,9 +74,8 @@ class Fleet extends Component {
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
       const data = {
-        userId: userData._id,
-         ...currQuery, 
-         page: currQuery.page || 1
+        ...currQuery,
+        page: currQuery.page || 1
       }
       this.props.getFleet(data);
     }
@@ -118,6 +125,16 @@ class Fleet extends Component {
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   }
+  deleteFleet = fleetId => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    const data = {
+      ...query,
+      fleetId: fleetId,
+    }
+    this.props.deleteFleet(data);
+  };
   render() {
     const { openCreate, error, openEdit } = this.state;
     const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props
@@ -152,6 +169,8 @@ class Fleet extends Component {
               handleEditFleet={this.handleEditFleet}
               onUpdate={this.props.updateFleet}
               onSearch={this.onSearch}
+              onPageChange={this.onPageChange}
+              onDelete={this.deleteFleet}
               openEdit={openEdit} />
           </CardBody>
         </Card>
@@ -194,6 +213,9 @@ const mapDispatchToProps = dispatch => ({
   setLabourRateDefault: (data) => {
     dispatch(setRateStandardListStart(data));
   },
+  deleteFleet: data => {
+    dispatch(deleteFleet(data));
+  }
 });
 
 export default connect(

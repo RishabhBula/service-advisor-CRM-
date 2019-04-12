@@ -21,7 +21,9 @@ import Validator from "js-object-validation";
 import { CreateFleetValidations, CreateFleetValidMessaages } from "../../../validations";
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
-
+import * as qs from "query-string";
+import { withRouter } from "react-router-dom";
+import { AppConfig } from "../../../config/AppConfig";
 class FleetList extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +38,18 @@ class FleetList extends Component {
       type: "",
       page: 1,
     };
+  }
+  componentDidMount() {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page, search, sort, status, type } = qs.parse(lSearch);
+    this.setState({
+      page: parseInt(page) || 1,
+      sort: sort || "",
+      status: status || "",
+      search: search || "",
+      type: type || ""
+    });
   }
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
@@ -123,14 +137,14 @@ class FleetList extends Component {
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
   };
-  onDelete = async userId => {
+  onDelete = async fleetId => {
     const { value } = await ConfirmBox({
       text: "Do you want to delete this fleet?"
     });
     if (!value) {
       return;
     }
-    this.props.onDelete(userId);
+    this.props.onDelete(fleetId);
   };
   render() {
     const {
@@ -142,7 +156,7 @@ class FleetList extends Component {
       sort,
       page, } = this.state
     const { fleetListData } = this.props;
-    const { isLoading, fleetData, totalUsers } = fleetListData;
+    const { isLoading, fleetData } = fleetListData;
     return (
       <>
         <div className={"filter-block"}>
@@ -255,8 +269,8 @@ class FleetList extends Component {
           </thead>
           <tbody>
             {!isLoading ? (
-              fleetData.length ? (
-                fleetData.map((data, index) => {
+              fleetData.length || fleetData.data ? (
+                fleetData.data.map((data, index) => {
                   return (
                     <tr key={index}>
                       <td>{data.companyName || "-"}</td>
@@ -317,14 +331,15 @@ class FleetList extends Component {
             }
           </tbody>
         </Table>
-        {totalUsers ? (
+        {fleetData.totalfleet && !isLoading ? (
           <PaginationHelper
-            totalRecords={totalUsers}
+            totalRecords={fleetData.totalfleet}
             onPageChanged={page => {
               this.setState({ page });
               this.props.onPageChange(page);
             }}
             currentPage={page}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
         <CrmFleetModal
@@ -343,7 +358,7 @@ class FleetList extends Component {
       </>
     );
   }
-}  
+}
 
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
@@ -358,4 +373,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FleetList);
+)(withRouter(FleetList));

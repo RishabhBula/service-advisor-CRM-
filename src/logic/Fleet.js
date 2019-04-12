@@ -10,7 +10,9 @@ import {
   fleetListStarted,
   fleetListSuccess,
   fleetEditSuccess,
-  fleetEditAction
+  fleetEditAction,
+  fleetDeleteActions,
+  fleetListRequest
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
@@ -81,7 +83,7 @@ const fleetListLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(
         fleetListSuccess({
-          fleetData: result.data.data
+          fleetData: result.data
         }),
         hideLoader()
       );
@@ -116,5 +118,34 @@ const editFleetLogic = createLogic({
     }
   },
 });
-
-export const FleetLogic = [fleetAddLogic, fleetListLogic, editFleetLogic];
+const deleteFleetLogic = createLogic({
+  type: fleetDeleteActions.DELETE_FLEET,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/fleet",
+      ["/", action.payload.fleetId].join(""),
+      "DELETE",
+      true
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.fleetId;
+      dispatch(
+        fleetListRequest({
+          ...action.payload,
+        })
+      );
+      done();
+    }
+  },
+});
+export const FleetLogic = [fleetAddLogic, fleetListLogic, editFleetLogic, deleteFleetLogic];
