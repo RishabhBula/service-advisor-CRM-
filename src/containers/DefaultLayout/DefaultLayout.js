@@ -27,6 +27,7 @@ import {
   AppSidebarNav
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
+import { logger } from "../../helpers/Logger";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
