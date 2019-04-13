@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as qs from "query-string";
 import {
   Card,
   CardHeader,
@@ -8,35 +9,36 @@ import {
   Button,
   UncontrolledTooltip
 } from "reactstrap";
-import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
-import UsersList from "../../components/UsersList";
+import { CrmVehicleModal } from '../../components/common/Vehicles/CrmVehicleModal'
+import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
+import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-
-// import { getUsersList, addNewUser } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart, customerEditRequest } from "../../actions";
 import { logger } from "../../helpers/Logger";
+import { isEqual } from "../../helpers/Object";
 
 class Vehicles extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openCreate: false
+      vehicle: {},
     };
   }
-  componentDidMount() {
-    this.props.getUsers(1);
+
+  toggleCreateVehicle = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      vehicleModel: !modelDetails.vehicleModel
+    };
+    this.props.modelOperate(data);
   }
-  toggleCreateModal = e => {
-    e.preventDefault();
-    this.setState({
-      openCreate: !this.state.openCreate
-    });
-  };
-  createUser = data => {
-    logger(data);
-  };
+
+  handleVehicleModal = () => {
+  }
+  
+
   render() {
-    const { openCreate } = this.state;
-    const { userReducer } = this.props;
+   const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
         <Card>
@@ -44,32 +46,49 @@ class Vehicles extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Customer List
+                  <i className={"fa fa-users"} /> Vehicles List
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
                 <Button
                   color="primary"
                   id="add-user"
-                  onClick={this.toggleCreateModal}
+                  onClick={this.toggleCreateVehicle}
                 >
                   <i className={"fa fa-plus"} />
                   &nbsp; Add New
                 </Button>
                 <UncontrolledTooltip target={"add-user"}>
-                  Add New Customer
+                  Add New Vehicles
                 </UncontrolledTooltip>
               </Col>
             </Row>
           </CardHeader>
           <CardBody>
-            <UsersList userData={userReducer} />
+           
           </CardBody>
         </Card>
+        <CrmVehicleModal 
+          vehicleModalOpen={modelDetails.vehicleModel}
+          handleVehicleModal={this.toggleCreateVehicle} />
         
       </>
     );
   }
 }
+const mapStateToProps = state => ({
+  profileInfoReducer: state.profileInfoReducer,
+  modelInfoReducer: state.modelInfoReducer,
+});
 
-export default Vehicles;
+const mapDispatchToProps = dispatch => ({ 
+  modelOperate: (data) => {  
+    dispatch(modelOpenRequest({modelDetails: data}));
+  },
+
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Vehicles);
