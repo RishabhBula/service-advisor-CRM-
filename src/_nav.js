@@ -64,7 +64,7 @@ export default {
         },
         {
           name: "Vehicles",
-          url: "/vehicles",
+          url: "/settings/vehicles",
           icon: "icon-puzzle",
         },
         {

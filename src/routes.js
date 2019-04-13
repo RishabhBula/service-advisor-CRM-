@@ -29,7 +29,7 @@ const routes = [
   { path: "/reports", exact: true, name: "Reports", component: Reports },
   { path: "/settings", exact: true, name: "Settings", component: Settings },
   { path: "/settings/users", name: "Users", component: Users },
-  { path: "/vehicles", name: "Vehicles", component: Vehicles },
+  { path: "/settings/vehicles", name: "Vehicles", component: Vehicles },
   { path: "/fleets", name: "Fleets", component: Fleet },
   { path: "/settings/customers", name: "Customers", component: Customers },
   { path: "/common", exact: true, name: "Common", component: CommonPage },

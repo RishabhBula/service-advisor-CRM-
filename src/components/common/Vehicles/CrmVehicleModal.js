@@ -11,13 +11,74 @@ import {
    Label,
    Input
 } from "reactstrap";
+import Select, { components } from 'react-select';
+import chroma from 'chroma-js';
+import { ColorOptions, GroupedCarsOptions, carsOptions, groupedOptionsA } from "../../../config/Color";
+class CustomOption extends Component {
+
+  render() {
+    const { data, innerRef, innerProps } = this.props;
+    let style ={
+      backgroundColor: data.value,
+
+    }
+   return (
+        <div {...innerProps}   className="cursor_pointer">
+        <span style={style} className="vehicles-select-color"></span>        
+         {data.label}
+        </div>
+    );
+  }
+}
+
+const dot = (color = '#ccc') => ({
+  alignItems: 'center',
+  display: 'flex',
+
+  ':before': {
+    backgroundColor: color,
+    borderRadius: 10,
+    content: '" "',
+    display: 'block',
+    marginRight: 8,
+    height: 10,
+    width: 10,
+  },
+});
+
+const groupStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+const groupBadgeStyles = {
+  backgroundColor: '#EBECF0',
+  borderRadius: '2em',
+  color: '#172B4D',
+  display: 'inline-block',
+  fontSize: 12,
+  fontWeight: 'normal',
+  lineHeight: '1',
+  minWidth: 1,
+  padding: '0.16666666666667em 0.5em',
+  textAlign: 'center',
+};
+
+const formatGroupLabel = (data, innerRef, innerProps ) => (
+  <div   {...innerProps} ref={innerRef} style={groupStyles}>
+    <span>{data.label}</span>
+    <span style={groupBadgeStyles}>{data.options.length}</span>
+  </div>
+);
 
 export class CrmVehicleModal extends Component {
    constructor(props) {
       super(props);
       this.state = {
          switchValue: true,
-         expandForm: false
+         expandForm: false,
+         options: ColorOptions,
+         selectedOption: null,
       };
    }
    handleClick = e => {
@@ -30,7 +91,11 @@ export class CrmVehicleModal extends Component {
          expandForm: !this.state.expandForm
       })
    }
+   handleChange = (selectedOption) => {
+    this.setState({ selectedOption });
+  }
    render() {
+      const { selectedOption } = this.state;
       const {
          vehicleModalOpen,
          handleVehicleModal,
@@ -45,21 +110,22 @@ export class CrmVehicleModal extends Component {
 
             >
                <ModalHeader toggle={handleVehicleModal}>Create New Vehicle</ModalHeader>
-               <ModalBody >
-                 
+               <ModalBody>                 
                   <Row className="justify-content-center">
                      <Col md="6">
                         <FormGroup>
                            <Label htmlFor="name" className="customer-modal-text-style">
                               Year
                   			</Label>
+                           <div className={"input-block"}>
                            <Input
                               type="text"
                               placeholder="20XX"
                               id="year"
                               required
                            />
-                           <div className="error-tool-tip">this field is required</div>
+                           {/* <p className="text-danger">this field is required</p> */}
+                           </div>
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -98,14 +164,12 @@ export class CrmVehicleModal extends Component {
                            <Label htmlFor="name" className="customer-modal-text-style">
                               Type
                   			</Label>
-                           <Input
-                              type="select"
-                              className="customer-modal-text-style"
-                              id="type"
-                              required
-                           >
-                              <option value="">Select a type</option>
-                           </Input>
+                          <Select
+                              defaultValue={carsOptions[1]}
+                              options={groupedOptionsA}
+                              formatGroupLabel={formatGroupLabel}
+                              className="w-100 form-select"
+                           />
                         </FormGroup>
                      </Col>
                   </Row>
@@ -123,9 +187,19 @@ export class CrmVehicleModal extends Component {
                            <Label htmlFor="name" className="customer-modal-text-style">
                               Color (optional)
                   			</Label>
+                           <Select
+                              value={selectedOption}
+                              onChange={this.handleChange}
+                              options={this.state.options}
+                              className="w-100 form-select"
+                              placeholder={"Pick a color"}
+                              isClearable={true}
+                              components={{ Option: CustomOption }}
+                           />
+                           {/* 
                            <Input type="select" placeholder="100,00" id="rate">
                               <option value="">Pick a color</option>
-                           </Input>
+                           </Input> */}
                         </FormGroup>
                      </Col>
                   </Row>

@@ -670,3 +670,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
     z-index: 1;
     box-shadow: none!important;
 }
+.vehicles-select-color{
+  border-radius: 10px;
+  display: inline-block;
+  margin-right: 8px;
+  margin-left: 5px;
+  height: 15px;
+  width: 15px;
+  border: 1px solid #eee;
+}
