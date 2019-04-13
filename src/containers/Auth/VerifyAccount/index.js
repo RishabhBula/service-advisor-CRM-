@@ -21,15 +21,11 @@ class VerifyAccount extends Component {
     }
     verifyUserAccount({
       userId,
-      activeValue: activationCode,
+      activeValue: activationCode
     });
   }
   render() {
-    return (
-      <div className="app flex-row align-items-center auth-page">
-        Verifying your details
-      </div>
-    );
+    return <div className="app flex-row align-items-center auth-page" />;
   }
 }
 
@@ -38,9 +34,12 @@ const mapDispatchToProps = dispatch => {
   return {
     verifyUserAccount: data => {
       dispatch(verifyUserAccount(data));
-    },
+    }
   };
 };
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(VerifyAccount)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(VerifyAccount)
 );

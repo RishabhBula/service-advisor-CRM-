@@ -4,9 +4,7 @@ import {
   rateStandardListActions,
   getRateStandardListStart,
   getRateStandardListFail,
-  getRateStandardListSuccess,
-  setRateStandardListStart,
-  setRateStandardListSuccess
+  getRateStandardListSuccess
 } from "./../actions";
 
 const getStandardRateListLogic = createLogic({
@@ -25,7 +23,7 @@ const getStandardRateListLogic = createLogic({
     };
     dispatch(
       getRateStandardListStart({
-        standardRateList: [],
+        standardRateList: []
       })
     );
     let api = new ApiHelper();
@@ -40,32 +38,34 @@ const getStandardRateListLogic = createLogic({
     if (result.isError) {
       dispatch(
         getRateStandardListFail({
-          standardRateList: [],
+          standardRateList: []
         })
       );
     } else {
       var defaultOptions = [
         {
-          value: '',
-          label: 'Add New Labour Rate',
+          value: "",
+          label: "Add New Labour Rate"
         }
       ];
       let resultData = result.data.data;
       let dataNewArray = [];
       for (let i = 0; i < resultData.length; i++) {
-        dataNewArray.push({ value: resultData[i]._id, label: resultData[i].name + " - " + resultData[i].hourlyRate })
+        dataNewArray.push({
+          value: resultData[i]._id,
+          label: resultData[i].name + " - " + resultData[i].hourlyRate
+        });
       }
-      
+
       dispatch(
         getRateStandardListSuccess({
-          standardRateList: defaultOptions.concat(dataNewArray),
+          standardRateList: defaultOptions.concat(dataNewArray)
         })
       );
     }
     done();
   }
 });
-
 
 const setStandardRateListLogic = createLogic({
   type: rateStandardListActions.SET_SELECTED_STANDARD_LIST_REQUEST,
@@ -81,4 +81,7 @@ const setStandardRateListLogic = createLogic({
   }
 });
 
-export const StandardRateLogic = [getStandardRateListLogic, setStandardRateListLogic];
+export const StandardRateLogic = [
+  getStandardRateListLogic,
+  setStandardRateListLogic
+];

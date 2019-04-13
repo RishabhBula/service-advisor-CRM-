@@ -31,7 +31,11 @@ router.post(
   validation.resetPasswordValidation,
   authController.userResetpassword
 );
-router.post("/company-setup", authController.userCompanySetup);
+router.post(
+  "/company-setup",
+  token.authorisedUser,
+  authController.userCompanySetup
+);
 router.post(
   "/createUser",
   token.authorisedUser,
