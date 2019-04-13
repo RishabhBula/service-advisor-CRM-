@@ -19,7 +19,7 @@ const vehicleSchema = new Schema({
         default: null,
     },
     type: {
-        type: String,
+        type: Object,
         default: null,
     },
     miles: {
@@ -27,7 +27,7 @@ const vehicleSchema = new Schema({
         default: null,
     },
     color: {
-        type: String,
+        type: Object,
         default: null,
     },
     licensePlate: {
@@ -51,7 +51,7 @@ const vehicleSchema = new Schema({
         default: null,
     },
     productionDate: {
-        type: Date,
+        type: String,
         default: null,
     },
     transmission: {
@@ -60,6 +60,16 @@ const vehicleSchema = new Schema({
     },
     drivetrain: {
         type: String,
+        default: null,
+    },
+    parentId: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+        default: null,
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
         default: null,
     },
     createdAt: {

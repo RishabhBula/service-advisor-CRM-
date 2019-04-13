@@ -71,7 +71,7 @@ const formatGroupLabel = (data, innerRef, innerProps ) => (
   </div>
 );
 
-export class CrmVehicleModal extends Component {
+export class CrmEditVehicleModal extends Component {
    constructor(props) {
       super(props);
       this.state = {
@@ -96,7 +96,55 @@ export class CrmVehicleModal extends Component {
       };
    }
 
-   createVehicleFun = () => {
+   componentDidUpdate(prevProps) { 
+     
+      const { vehicleData } = this.props;
+      if (prevProps.vehicleEditModalOpen !== this.props.vehicleEditModalOpen && !this.props.vehicleEditModalOpen) {
+         console.log('====================================');
+         console.log(this.props);
+         console.log('====================================');
+         this.setState({
+           year: "",
+           make: "",
+           modal: "",
+           typeSelected: null,
+           colorSelected: null,
+           miles: "",
+           licensePlate: "",
+           unit: "",
+           vin: "",
+           subModal: "",
+           engineSize: "",
+           productionDate: "",
+           transmissionSelected: "automatic",
+           drivetrainSelected: "2x4",
+           notes: ""
+         });
+      }
+      if (prevProps.vehicleData._id !== vehicleData._id)
+      {
+         this.setState({
+           year: this.props.vehicleData.year,
+           make: this.props.vehicleData.make,
+           modal: this.props.vehicleData.modal,
+           typeSelected: this.props.vehicleData.type,
+           colorSelected: this.props.vehicleData.color,
+           miles: this.props.vehicleData.miles,
+           licensePlate: this.props.vehicleData.licensePlate,
+           unit: this.props.vehicleData.unit,
+           vin: this.props.vehicleData.vin,
+           subModal: this.props.vehicleData.subModal,
+           engineSize: this.props.vehicleData.engineSize,
+           productionDate: this.props.vehicleData.productionDate,
+           transmissionSelected: this.props.vehicleData.transmission,
+           drivetrainSelected: this.props.vehicleData.drivetrain,
+           notes: this.props.vehicleData.notes
+         });
+      }
+   }
+
+   updateVehicleFun = () => {
+      alert("testing");
       let data = {
          year: this.state.year,
          make: this.state.make,
@@ -114,7 +162,7 @@ export class CrmVehicleModal extends Component {
          drivetrain: this.state.drivetrainSelected,
          notes: this.state.year,
       }
-      this.props.submitCreateVehicleFun(data);
+      this.props.submitUpdateVehicleFun(data);
    }
 
    _onInputChange = e => {
@@ -153,24 +201,24 @@ export class CrmVehicleModal extends Component {
    render() {
       const { selectedOption } = this.state;
       const {
-         vehicleModalOpen,
-         handleVehicleModal,
+         vehicleEditModalOpen,
+         handleEditVehicleModal,
          createVehicle } = this.props;
       const { expandForm, 
             transmissionSelected,
             drivetrainSelected,
             typeSelected,
             colorSelected
-         } = this.state
+         } = this.state;
       return (
          <>
             <Modal
-               isOpen={vehicleModalOpen}
-               toggle={handleVehicleModal}
+               isOpen={vehicleEditModalOpen}
+               toggle={handleEditVehicleModal}
                className="customer-modal custom-form-modal custom-modal-lg"
 
             >
-               <ModalHeader toggle={handleVehicleModal}>Create New Vehicle</ModalHeader>
+               <ModalHeader toggle={handleEditVehicleModal}>Update Vehicle</ModalHeader>
                <ModalBody>                 
                   <Row className="justify-content-center">
                      <Col md="6">
@@ -185,6 +233,7 @@ export class CrmVehicleModal extends Component {
                               id="year"
                               name="year" 
                               onChange={this._onInputChange} 
+                              value={this.state.year}
                            />
                            {/* <p className="text-danger">this field is </p> */}
                            </div>
@@ -200,6 +249,7 @@ export class CrmVehicleModal extends Component {
                               placeholder="Honda"                              
                               name="make" 
                               onChange={this._onInputChange} 
+                               value={this.state.make}
                            />
                            
                         </FormGroup>
@@ -217,7 +267,8 @@ export class CrmVehicleModal extends Component {
                               id="type"
                               placeholder="Accord"
                               name="modal" 
-                              onChange={this._onInputChange}                              
+                              onChange={this._onInputChange}         
+                              value={this.state.modal}                     
                            />
                              {/* <div className="error-tool-tip">this field is </div> */}
                         </FormGroup>
@@ -233,6 +284,7 @@ export class CrmVehicleModal extends Component {
                               formatGroupLabel={formatGroupLabel}
                               className="w-100 form-select"
                               onChange={this.handleType}
+                              value={typeSelected}
                            />
                         </FormGroup>
                      </Col>
@@ -243,7 +295,8 @@ export class CrmVehicleModal extends Component {
                            <Label htmlFor="name" className="customer-modal-text-style">
                               Miles (optional)
                   			</Label>
-                           <Input type="text" placeholder="100,00" name="miles" onChange={this._onInputChange}  />
+                           <Input type="text" placeholder="100,00" name="miles" onChange={this._onInputChange}  
+                           value={this.state.miles}/>
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -269,7 +322,8 @@ export class CrmVehicleModal extends Component {
                            <Label htmlFor="name" className="customer-modal-text-style">
                               Licence Plate (optional)
                   			</Label>
-                           <Input type="text" placeholder="AUM 100" name="licensePlate" onChange={this._onInputChange}  />
+                           <Input type="text" placeholder="AUM 100" name="licensePlate" onChange={this._onInputChange} 
+                           value={this.state.licensePlate} />
                         </FormGroup>
                      </Col>
                      <Col md="6">
@@ -277,7 +331,8 @@ export class CrmVehicleModal extends Component {
                            <Label htmlFor="name" className="customer-modal-text-style">
                               Unit #(optional)
                   			</Label>
-                           <Input type="text" placeholder="BA1234"  name="unit" onChange={this._onInputChange}/>
+                           <Input type="text" placeholder="BA1234"  name="unit" onChange={this._onInputChange}
+                           value={this.state.unit}/>
                         </FormGroup>
                      </Col>
                   </Row>
@@ -287,7 +342,8 @@ export class CrmVehicleModal extends Component {
                            <Label htmlFor="name" className="customer-modal-text-style">
                               VIN(optional)
                   			</Label>
-                           <Input type="text" placeholder="19UAYF3158T0000" name="vin" onChange={this._onInputChange}  />
+                           <Input type="text" placeholder="19UAYF3158T0000" name="vin" onChange={this._onInputChange} 
+                           value={this.state.vin} />
                         </FormGroup>
                      </Col>
                     {
@@ -298,7 +354,8 @@ export class CrmVehicleModal extends Component {
                                  <Label htmlFor="name" className="customer-modal-text-style">
                                     Sub Model
                                  </Label>
-                                 <Input type="text" placeholder="Sub Model" name="subModal" onChange={this._onInputChange}/>
+                                 <Input type="text" placeholder="Sub Model" name="subModal" onChange={this._onInputChange}
+                                 value={this.state.subModal}/>
                               </FormGroup>
                            </Col>                           
                         </> : ""
@@ -324,7 +381,7 @@ export class CrmVehicleModal extends Component {
                                     <Label htmlFor="name" className="customer-modal-text-style">
                                        Engine Size
 												</Label>
-                                    <Input type="text" name="engineSize" onChange={this._onInputChange} placeholder="Engine Size" id="rate" />
+                                    <Input type="text" name="engineSize" onChange={this._onInputChange} placeholder="Engine Size" id="rate" value={this.state.engineSize}/>
                                  </FormGroup>
                               </Col>
                               <Col md="6">
@@ -332,7 +389,7 @@ export class CrmVehicleModal extends Component {
                                     <Label htmlFor="name" className="customer-modal-text-style">
                                        Production Date
                   						</Label>
-                                     <MaskedInput name="productionDate"  mask="11/1111"  placeholder="MM/YYYY" onChange={this._onInputChange}/>
+                                     <MaskedInput name="productionDate"  mask="11/1111"  placeholder="MM/YYYY" onChange={this._onInputChange}value={this.state.productionDate}/>
                                  </FormGroup>
                               </Col>
                            </Row>
@@ -390,7 +447,7 @@ export class CrmVehicleModal extends Component {
                                     <Label htmlFor="name" className="customer-modal-text-style">
                                        Notes
                                     </Label>
-                                    <Input name="notes" type="textarea" placeholder="Enter a note..." id="name" />
+                                    <Input name="notes" type="textarea" placeholder="Enter a note..." id="name" value={this.state.notes} />
                                  </FormGroup>
                               </Col>
                            </Row>
@@ -409,10 +466,10 @@ export class CrmVehicleModal extends Component {
                }
                </ModalBody>
                <ModalFooter>
-                  <Button color="primary" onClick={this.createVehicleFun}>
-                     Save vehicle
+                  <Button color="primary" onClick={this.updateVehicleFun}>
+                     Update vehicle
                   </Button>{" "}
-                  <Button color="secondary" onClick={handleVehicleModal}>
+                  <Button color="secondary" onClick={handleEditVehicleModal}>
                      Cancel
                   </Button>
                </ModalFooter>
