@@ -270,6 +270,7 @@
 }
 .auth-page .input-group-text{
   background: #fff;
+  border-color: #fff;
 }
 /* end of auth page */
 
@@ -718,4 +719,13 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   .auth-page .card-group{
     width: 90%;
   }
+}
+.vehicles-select-color{
+  border-radius: 10px;
+  display: inline-block;
+  margin-right: 8px;
+  margin-left: 5px;
+  height: 15px;
+  width: 15px;
+  border: 1px solid #eee;
 }

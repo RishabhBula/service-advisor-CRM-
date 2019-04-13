@@ -15,27 +15,26 @@ import {
   Input,
   Button,
   FormGroup,
-  FormFeedback,
+  FormFeedback
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
   ForgetPasswordValidations,
-  ForgetPasswordValidationsMessaages,
+  ForgetPasswordValidationsMessaages
 } from "../../validations";
-
 import Logo from "./../../assets/img/logo-white.svg";
 class ForgotpasswordPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      errors: {},
+      errors: {}
     };
   }
   requestForgetpassword = e => {
     e.preventDefault();
     this.setState({
-      errors: {},
+      errors: {}
     });
     try {
       const { isValid, errors } = Validator(
@@ -45,13 +44,13 @@ class ForgotpasswordPage extends Component {
       );
       if (!isValid) {
         this.setState({
-          errors,
+          errors
         });
         return;
       }
       const { email } = this.state;
       this.props.onRequest({
-        email,
+        email
       });
     } catch (error) {
       logger(error);
@@ -95,8 +94,8 @@ class ForgotpasswordPage extends Component {
                                 email: e.target.value,
                                 errors: {
                                   ...this.state.errors,
-                                  email: null,
-                                },
+                                  email: null
+                                }
                               });
                             }}
                           />

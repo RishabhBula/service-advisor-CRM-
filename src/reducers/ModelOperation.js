@@ -5,7 +5,8 @@ const initialAuthState = {
     modelDetails: {
         "customerModel": false,
         "customreEditModel": false,
-        "fleetEditModel": false
+        "fleetEditModel": false,
+        "vehicleModel": false,
     }
 };
 

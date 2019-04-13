@@ -14,14 +14,14 @@ import {
   Input,
   Button,
   FormGroup,
-  FormFeedback,
+  FormFeedback
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
   ResetPasswordValidations,
-  ResetPasswordValidationsMessaages,
+  ResetPasswordValidationsMessaages
 } from "../../validations";
-import Logo from "./../../assets/serviceadvisorlogo.jpg";
+import Logo from "./../../assets/img/logo-white.svg";
 
 class GeneratePasswordPage extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class GeneratePasswordPage extends Component {
     this.state = {
       password: "",
       confirmPassword: "",
-      errors: {},
+      errors: {}
     };
   }
   componentDidMount() {
@@ -47,7 +47,7 @@ class GeneratePasswordPage extends Component {
       );
       if (!isValid) {
         this.setState({
-          errors,
+          errors
         });
         return;
       }
@@ -63,8 +63,8 @@ class GeneratePasswordPage extends Component {
       [name]: value,
       errors: {
         ...this.state.errors,
-        [name]: null,
-      },
+        [name]: null
+      }
     });
   };
   render() {
@@ -76,7 +76,7 @@ class GeneratePasswordPage extends Component {
             <Col md="6">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} />
                 </h4>
               </Col>
               <CardGroup>
@@ -123,9 +123,9 @@ class GeneratePasswordPage extends Component {
                             invalid={errors.password}
                           />
                           <FormFeedback>
-                            {errors.confirmPassword ? (
-                              errors.confirmPassword
-                            ) : null}
+                            {errors.confirmPassword
+                              ? errors.confirmPassword
+                              : null}
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
@@ -133,7 +133,7 @@ class GeneratePasswordPage extends Component {
                         <Col xs="12">
                           <Button
                             color="primary"
-                            className="px-4"
+                            className="px-4 btn-theme"
                             block
                             onClick={this.generatePassword}
                           >
