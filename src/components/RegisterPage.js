@@ -114,22 +114,23 @@ class RegisterPage extends Component {
       showResendPage
     } = this.state;
     return (
-      <div className="app flex-row align-items-center auth-page">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md="6" lg="7" xl="6">
+      <div className="app flex-row align-items-center auth-page pt-3 pb-3">
+        <div className="auth-bg"></div>
+        
+          <Row className="justify-content-center m-0">
+            <Col md="12" lg="12" xl="12">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} style={{ width: 120 }} />
                 </h4>
               </Col>
               <CardGroup>
-              <Card className="mx-4">
-                <CardBody className="p-4">
+              <Card className="p-4 pl-4 pr-4">
+                <CardBody className="pl-4 pr-4 pt-0 pb-0">
                   {!showResendPage ? (
                     <Form onSubmit={this.handleSubmit}>
-                      <h1 className="auth-title">Create your account</h1>
-                      <p />
+                      <h1 className="auth-title">Sign In</h1>
+                      <p className="text-muted text-center text-info-line">Create Your Workspace</p>
                       <FormGroup>
                         <InputGroup className="mb-3">
                           <InputGroupAddon addonType="prepend">
@@ -235,20 +236,19 @@ class RegisterPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <Row>
-                        <Col sm="6">
+                      <Row className={"m-0"}>
+                          <Col sm="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
                           <Button
-                            color="primary"
-                            className="px-4"
                             type="submit"
                             block
                             onClick={this.handleSubmit}
+                            className={"btn btn-theme"}
                           >
                             Signup
                           </Button>
                         </Col>
                       </Row>
-                      <Row className="d-block mt-2">
+                      <Row className="d-block mt-3 m-0">
                         <Col
                           xs="12"
                           sm={"12"}
@@ -275,7 +275,7 @@ class RegisterPage extends Component {
               </CardGroup>
             </Col>
           </Row>
-        </Container>
+       
       </div>
     );
   }

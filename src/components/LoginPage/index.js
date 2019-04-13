@@ -72,21 +72,22 @@ class LoginPage extends Component {
   render() {
     const { email, password, errors } = this.state;
     return (
-      <div className="app flex-row align-items-center auth-page">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md="6">
+      <div className="app flex-row align-items-center auth-page  pt-3 pb-3">
+        <div className="auth-bg"></div>
+        
+          <Row className="justify-content-center m-0">
+            <Col md="12" lg="12" xl="12">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} style={{ width: 120 }} />
                 </h4>
               </Col>
               <CardGroup>
-                <Card className="p-4">
-                  <CardBody>
+                <Card className="p-4 pl-4 pr-4">
+                  <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     <Form onSubmit={this.login}>
-                      <h1 className="auth-title">Login</h1>
-                      <p className="text-muted">Sign In to your account</p>
+                      <h1 className="auth-title text-center">Login</h1>
+                      <p className="text-muted text-center text-info-line">To Your Workspace</p>
                       <FormGroup>
                         <InputGroup className="mb-3">
                           <InputGroupAddon addonType="prepend">
@@ -129,13 +130,13 @@ class LoginPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <Row>
-                        <Col xs="6">
+                      <Row className={"m-0"}>
+                        <Col xs="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
                           <Button className="px-4 btn-theme" block>
                             Login
                           </Button>
                         </Col>
-                        <Col xs="6" className="text-right">
+                        <Col xs="12" className="text-center">
                           <Link to="/forgot-password">
                             <Button color="link" className="px-0">
                               Forgot password?
@@ -143,9 +144,11 @@ class LoginPage extends Component {
                           </Link>
                         </Col>
                       </Row>
-                      <Row className="d-block mt-2">
+                      <Row className="d-block mt-2 m-0">
                         <Col
                           xs="12"
+                          sm={"12"}
+                          md={"12"}
                           className="login-or-section text-center mt-2 mb-2"
                         >
                           <span>OR</span>
@@ -164,7 +167,7 @@ class LoginPage extends Component {
               </CardGroup>
             </Col>
           </Row>
-        </Container>
+        
       </div>
     );
   }
