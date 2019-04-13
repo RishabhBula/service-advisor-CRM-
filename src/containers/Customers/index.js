@@ -101,6 +101,14 @@ class Customers extends Component {
     this.props.deleteCustomer({ ...query, userId });
   };
 
+  changeCustomerStatus = (e, customerId) => {
+    let data = {
+      status: e.enabled,
+      customerId: customerId,
+    };
+    this.props.updateCustomer(data);
+  }
+
   addCustomer = (data) => {
     this.props.addCustomer(data);
     this.props.getCustomerList();
@@ -159,6 +167,7 @@ class Customers extends Component {
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               onDelete={this.deleteCustomer}
+              changeStatus={this.changeCustomerStatus}
               updateModel={this.toggleUpdateModal}
             />
           </CardBody>
