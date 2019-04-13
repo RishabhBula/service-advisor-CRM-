@@ -154,7 +154,10 @@ const deleteUser = async ({ body }, res) => {
 const getProfile = async (req, res) => {
   const { currentUser } = req;
   try {
-    let userFind = await userModel.findOne({ _id: currentUser.id });
+    let userFind = await userModel.findOne({
+      _id: currentUser.id,
+      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
+    });
     if (userFind) {
       return res.status(200).json({
         responseCode: 200,

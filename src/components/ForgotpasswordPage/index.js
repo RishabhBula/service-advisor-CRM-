@@ -15,26 +15,26 @@ import {
   Input,
   Button,
   FormGroup,
-  FormFeedback,
+  FormFeedback
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
   ForgetPasswordValidations,
-  ForgetPasswordValidationsMessaages,
+  ForgetPasswordValidationsMessaages
 } from "../../validations";
-import Logo from "./../../assets/serviceadvisorlogo.jpg";
+import Logo from "./../../assets/img/logo-white.svg";
 class ForgotpasswordPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      errors: {},
+      errors: {}
     };
   }
   requestForgetpassword = e => {
     e.preventDefault();
     this.setState({
-      errors: {},
+      errors: {}
     });
     try {
       const { isValid, errors } = Validator(
@@ -44,13 +44,13 @@ class ForgotpasswordPage extends Component {
       );
       if (!isValid) {
         this.setState({
-          errors,
+          errors
         });
         return;
       }
       const { email } = this.state;
       this.props.onRequest({
-        email,
+        email
       });
     } catch (error) {
       logger(error);
@@ -59,21 +59,22 @@ class ForgotpasswordPage extends Component {
   render() {
     const { email, errors } = this.state;
     return (
-      <div className="app flex-row align-items-center auth-page">
-        <Container>
+      <div className="app flex-row align-items-center auth-page  pt-3 pb-3">
+        
+          <div className="auth-bg"></div>
           <Row className="justify-content-center">
-            <Col md="6">
+          <Col md="12" lg="12" xl="12">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} style={{ width: 120 }} />
                 </h4>
               </Col>
               <CardGroup>
                 <Card className="p-4">
-                  <CardBody>
+                <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     <Form onSubmit={this.requestForgetpassword}>
                       <h1 className="auth-title">Forgot Password?</h1>
-                      <p className="text-muted">
+                    <p className="text-muted text-center text-info-line">
                         Enter the email address associated with your account
                       </p>
                       <FormGroup>
@@ -93,8 +94,8 @@ class ForgotpasswordPage extends Component {
                                 email: e.target.value,
                                 errors: {
                                   ...this.state.errors,
-                                  email: null,
-                                },
+                                  email: null
+                                }
                               });
                             }}
                           />
@@ -103,11 +104,10 @@ class ForgotpasswordPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <Row>
-                        <Col sm="6">
+                      <Row className={"m-0"}>
+                      <Col sm="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
                           <Button
-                            color="primary"
-                            className="px-4"
+                            className="btn btn-theme"
                             block
                             onClick={this.requestForgetpassword}
                           >
@@ -115,12 +115,12 @@ class ForgotpasswordPage extends Component {
                           </Button>
                         </Col>
                       </Row>
-                      <Row className="d-block mt-2">
+                      <Row className="d-block mt-2 m-0">
                         <Col
                           xs="12"
                           sm={"12"}
                           md={"12"}
-                          className="login-or-section text-center mt-2 mb-2"
+                          className="login-or-section text-center mt-3 mb-2"
                         >
                           <span>OR</span>
                         </Col>
@@ -137,7 +137,7 @@ class ForgotpasswordPage extends Component {
               </CardGroup>
             </Col>
           </Row>
-        </Container>
+        
       </div>
     );
   }

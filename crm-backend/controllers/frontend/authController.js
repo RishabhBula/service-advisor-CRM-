@@ -7,7 +7,7 @@ const commonSmtp = require("../../common/index");
 const commonCrypto = require("../../common/crypto");
 const {
   validationMessage,
-  otherMessage,
+  otherMessage
 } = require("../../common/validationMessage");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const moment = require("moment");
@@ -24,14 +24,17 @@ const signUp = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
-    let userFind = await userModel.find({ email: req.body.email });
+    let userFind = await userModel.find({
+      email: req.body.email,
+      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
+    });
     if (userFind.length >= 1) {
       return res.status(401).json({
         message: validationMessage.emailAlreadyExist,
-        success: false,
+        success: false
       });
     } else {
       var roleType = await roleModel.findOne({ userType: "admin" });
@@ -54,20 +57,20 @@ const signUp = async (req, res) => {
         lastName: result.lastName,
         email: result.email,
         userId: result._id,
-        userSideActivationValue: confirmationNumber,
+        userSideActivationValue: confirmationNumber
       });
       await emailVar.sendEmail(result.email);
 
       return res.status(200).json({
         message: otherMessage.confirmMessage,
         user: result._id,
-        success: true,
+        success: true
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -79,7 +82,7 @@ const resendConfirmationLink = async (req, res) => {
       lastName,
       email,
       _id,
-      userSideActivationValue,
+      userSideActivationValue
     } = await userModel.findById(req.body.id);
     const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
@@ -87,13 +90,13 @@ const resendConfirmationLink = async (req, res) => {
       firstName,
       lastName,
       email,
-      userSideActivationValue,
+      userSideActivationValue
     });
     await emailVar.sendEmail(email);
     return res.status(200).json({
       message: otherMessage.confirmMessage,
       user: _id,
-      success: true,
+      success: true
     });
   } catch (error) {}
 };
@@ -104,7 +107,7 @@ const confirmationSignUp = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
     let data = req.body;
@@ -112,48 +115,48 @@ const confirmationSignUp = async (req, res) => {
       $and: [
         { _id: data.userId },
         { userSideActivation: false },
-        { userSideActivationValue: data.activeValue },
-      ],
+        { userSideActivationValue: data.activeValue }
+      ]
     });
     if (userData) {
       let roleUpdate = await userModel.updateOne(
         {
-          _id: userData._id,
+          _id: userData._id
         },
         {
           $set: {
             userSideActivation: true,
-            userSideActivationValue: "",
-          },
+            userSideActivationValue: ""
+          }
         }
       );
       if (roleUpdate) {
         const emailVar = new Email(req);
         await emailVar.setTemplate(AvailiableTemplates.SIGNUP, {
           firstName: userData.firstName,
-          lastName: userData.lastName,
+          lastName: userData.lastName
         });
         await emailVar.sendEmail(userData.email);
         res.status(200).json({
           message: userData,
-          success: true,
+          success: true
         });
       } else {
         res.status(401).json({
           message: "Some thing Went Wrong",
-          success: false,
+          success: false
         });
       }
     } else {
       res.status(401).json({
         message: "User already exist.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -162,14 +165,17 @@ const loginApp = async (req, res) => {
   try {
     const { email, password } = req.body;
     const result = await userModel.findOne({
-      $and: [{ email: email }],
+      $and: [
+        { email: email },
+        { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
+      ]
     });
     if (result === null) {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
         message: "Email Address not found!",
-        success: false,
+        success: false
       };
     }
     if (!result.status) {
@@ -177,7 +183,7 @@ const loginApp = async (req, res) => {
       throw {
         code: 400,
         message: "Your access has been disabled, please contact your company.",
-        success: false,
+        success: false
       };
     }
     if (!result.userSideActivation) {
@@ -185,7 +191,7 @@ const loginApp = async (req, res) => {
       throw {
         code: 400,
         message: "Kindly Verify your Account and try to Login",
-        success: false,
+        success: false
       };
     }
     if (!commonCrypto.verifyPassword(result.password, password, result.salt)) {
@@ -193,18 +199,18 @@ const loginApp = async (req, res) => {
       throw {
         code: 400,
         message: "Password did not match!",
-        success: false,
+        success: false
       };
     }
     await userModel.updateOne(
       {
-        _id: result._id,
+        _id: result._id
       },
       {
         $set: {
           loggedInIp: commonSmtp.getIpAddress(req),
-          loggedInAt: new Date(),
-        },
+          loggedInAt: new Date()
+        }
       }
     );
     var token = jwt.sign(
@@ -214,11 +220,11 @@ const loginApp = async (req, res) => {
         email: result.email,
         firstName: result.firstName,
         lastName: result.lastName,
-        parentId: result.parentId,
+        parentId: result.parentId
       },
       commonCrypto.secret,
       {
-        expiresIn: 86400,
+        expiresIn: 86400
       }
     );
     return res.status(200).json({
@@ -227,12 +233,12 @@ const loginApp = async (req, res) => {
       tokenExpire: moment() + 86400,
       token: token,
       message: "Successfully Login",
-      success: true,
+      success: true
     });
   } catch (error) {
     res.status(error.code || 500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -243,7 +249,7 @@ const userForgotPassword = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false,
+      success: false
     });
   }
   try {
@@ -252,7 +258,7 @@ const userForgotPassword = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Email not registered.",
-        success: false,
+        success: false
       });
     }
     const encryptedUserId = commonCrypto.encrypt(userData.id);
@@ -266,14 +272,14 @@ const userForgotPassword = async (req, res) => {
       fullName: userData.firstName + " " + userData.lastName,
       email: encrypteUserEmail,
       userId: encryptedUserId,
-      verifyToken: encrypteVerifyToken,
+      verifyToken: encrypteVerifyToken
     });
     await userModel.update(
       {
-        email: userData.email,
+        email: userData.email
       },
       {
-        verifyToken: encrypteVerifyToken,
+        verifyToken: encrypteVerifyToken
       }
     );
     await emailVar.sendEmail(body.email);
@@ -281,13 +287,13 @@ const userForgotPassword = async (req, res) => {
       responsecode: 200,
       message:
         "Reset password link have been send successfully to your registered email address.",
-      success: true,
+      success: true
     });
   } catch (error) {
     console.log("this is forgot password error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -298,7 +304,7 @@ const userVerifyLink = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false,
+      success: false
     });
   }
   try {
@@ -307,25 +313,25 @@ const userVerifyLink = async (req, res) => {
     const userData = await userModel.findOne({
       email: decryptedUserEmail,
       _id: decryptedUserId,
-      verifyToken: body.token,
+      verifyToken: body.token
     });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
         message: "Your session has been expired.",
-        success: false,
+        success: false
       });
     }
     return res.status(200).json({
       message: "Link verified successfully!",
       data: userData,
-      success: true,
+      success: true
     });
   } catch (error) {
     console.log("this is verify link error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -337,7 +343,7 @@ const userResetpassword = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false,
+      success: false
     });
   }
   try {
@@ -347,7 +353,7 @@ const userResetpassword = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Email not registered.",
-        success: false,
+        success: false
       });
     }
     var salt = commonCrypto.generateSalt(6);
@@ -360,38 +366,38 @@ const userResetpassword = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Your session has been expired.",
-        success: false,
+        success: false
       });
     }
     const result = await userModel.findByIdAndUpdate(
       {
-        _id: userData.id,
+        _id: userData.id
       },
       {
         $set: {
           password: encryptedUserpassword,
           salt: body.salt,
-          verifyToken: null,
-        },
+          verifyToken: null
+        }
       }
     );
     if (result) {
       return res.status(200).json({
         message: "Password updated successfully!",
-        success: true,
+        success: true
       });
     } else {
       return res.status(400).json({
         responsecode: 400,
         message: "Your session has been expired.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     console.log("this is Reset password error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -404,7 +410,7 @@ const userCompanySetup = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "User not registered",
-        success: false,
+        success: false
       });
     }
     const comapnyData = {
@@ -412,39 +418,45 @@ const userCompanySetup = async (req, res) => {
       website: body.website,
       peopleWork: body.peopleWork,
       serviceOffer: body.serviceOffer,
-      vehicleService: body.vehicleService,
+      vehicleService: body.vehicleService
     };
     const companySetup = await userModel.findByIdAndUpdate(
       {
-        _id: userData.id,
+        _id: userData.id
       },
       {
-        $set: comapnyData,
+        $set: comapnyData
       }
     );
     if (!companySetup) {
       return res.status(400).json({
         responsecode: 400,
         message: "Error uploding user company details.",
-        success: false,
+        success: false
       });
     } else {
       return res.status(200).json({
         responsecode: 200,
         message: "User company details uploaded successfully!",
         success: false,
+        info: comapnyData
       });
     }
   } catch (error) {
     console.log("this is Company setup error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
 /* ------------User Company Setup End--------------- */
-
+const types = {
+  "/": "jpg",
+  i: "png",
+  R: "gif",
+  U: "webp"
+};
 /* ---------------User Image Upload---------------- */
 const imageUpload = async (req, res) => {
   try {
@@ -453,7 +465,7 @@ const imageUpload = async (req, res) => {
       return res.status(401).json({
         responseCode: 401,
         message: "Not provided any file to upload!",
-        success: false,
+        success: false
       });
     }
     if (body.imageData !== undefined || body.imageData !== "") {
@@ -461,53 +473,53 @@ const imageUpload = async (req, res) => {
         /^data:image\/\w+;base64,/,
         ""
       );
-      var buf = new Buffer(base64Image, "base64");
-
-      var originalImagePath = __basedir + "/images/" + currentUser.id;
-      var thumbnailImagePath =
-        __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      const thumbnailImage = resizeImage(
-        originalImagePath,
-        thumbnailImagePath,
-        600
+      var buf = new Buffer.from(base64Image, "base64");
+      const type = types[base64Image.charAt(0)];
+      const fileName = [currentUser.id, "_company_logo.", type || "png"].join(
+        ""
       );
-      console.log("**********This is thumbnailImage", thumbnailImage);
+      var originalImagePath = path.join(__basedir, "images", fileName);
 
-      fs.writeFile(originalImagePath, buf, function(err) {
+      fs.writeFile(originalImagePath, buf, async err => {
         if (err) {
-          return console.log(err);
+          throw err;
         }
-        console.log("The file was saved!");
+        var thumbnailImagePath = path.join(
+          __basedir,
+          "images-thumbnail",
+          fileName
+        );
+        await resizeImage(originalImagePath, thumbnailImagePath, 600);
+        const imageUploadData = {
+          originalImage: ["", "images", fileName].join("/"),
+          thumbnailImage: ["", "images-thumbnail", fileName].join("/")
+        };
+        const companyLogo = await userModel.findByIdAndUpdate(
+          { _id: currentUser.id },
+          {
+            shopLogo: imageUploadData
+          }
+        );
+        if (companyLogo) {
+          return res.status(200).json({
+            responseCode: 200,
+            message: "Company Logo uploaded successfully!",
+            success: true,
+            imageUploadData
+          });
+        } else {
+          return res.status(400).json({
+            responseCode: 400,
+            message: "Error uploading company logo.",
+            success: false
+          });
+        }
       });
-      const imageUploadData = {
-        originalImage: currentUser.id,
-        thumbnailImage: currentUser.id + "image-thumb",
-      };
-      const companyLogo = await userModel.findByIdAndUpdate(
-        { _id: currentUser.id },
-        {
-          shopLogo: imageUploadData,
-        }
-      );
-      if (companyLogo) {
-        return res.status(200).json({
-          responseCode: 200,
-          message: "Image uploaded successfully!",
-          imageData: currentUser.id,
-          success: true,
-        });
-      } else {
-        return res.status(400).json({
-          responseCode: 400,
-          message: "Error uploading company logo.",
-          success: false,
-        });
-      }
     } else {
       return res.status(400).json({
         responsecode: 400,
         message: "Enter valid image.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
@@ -516,7 +528,7 @@ const imageUpload = async (req, res) => {
       responseCode: 400,
       message: "Error while saving file!",
       error: error,
-      success: false,
+      success: false
     });
   }
 };
@@ -530,7 +542,7 @@ const imageDelete = async (req, res) => {
       return res.status(401).json({
         responseCode: 401,
         message: "Not provided any file to upload!",
-        success: false,
+        success: false
       });
     }
     if (body.imageData !== undefined || body.imageData !== "") {
@@ -557,32 +569,32 @@ const imageDelete = async (req, res) => {
       });
       const imageUploadData = {
         originalImage: null,
-        thumbnailImage: null,
+        thumbnailImage: null
       };
       const companyLogo = await userModel.findByIdAndUpdate(
         { _id: currentUser.id },
         {
-          shopLogo: imageUploadData,
+          shopLogo: imageUploadData
         }
       );
       if (companyLogo) {
         return res.status(200).json({
           responseCode: 200,
           message: "Image deleted successfully!",
-          success: true,
+          success: true
         });
       } else {
         return res.status(400).json({
           responseCode: 400,
           message: "Error uploading company logo.",
-          success: false,
+          success: false
         });
       }
     } else {
       return res.status(400).json({
         responsecode: 400,
         message: "Enter valid image.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
@@ -591,7 +603,7 @@ const imageDelete = async (req, res) => {
       responseCode: 400,
       message: "Error while saving file!",
       error: error,
-      success: false,
+      success: false
     });
   }
 };
@@ -604,7 +616,7 @@ const createUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
     const confirmationNumber = new Date().valueOf();
@@ -615,7 +627,7 @@ const createUser = async (req, res) => {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
-      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2),
+      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)
     };
     let result = await userModel(inserList).save();
     const emailVar = new Email(req);
@@ -624,25 +636,25 @@ const createUser = async (req, res) => {
       lastName: result.lastName,
       email: result.email,
       userId: result._id,
-      userSideActivationValue: confirmationNumber,
+      userSideActivationValue: confirmationNumber
     });
     await emailVar.sendEmail(result.email);
     if (result) {
       return res.status(200).json({
         message: otherMessage.insertUserMessage,
-        success: true,
+        success: true
       });
     } else {
       return res.status(400).json({
         result: result,
         message: "Error in inserting user.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -654,7 +666,7 @@ const updateUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
     let $data = req.body;
@@ -663,7 +675,7 @@ const updateUser = async (req, res) => {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
-      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2),
+      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)
     };
     let result = await userModel.findByIdAndUpdate(
       req.params.userId,
@@ -672,12 +684,12 @@ const updateUser = async (req, res) => {
     return res.status(200).json({
       message: otherMessage.updatedUserMessage,
       data: result,
-      success: true,
+      success: true
     });
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -689,7 +701,7 @@ const verfiyUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
     let $data = req.body;
@@ -697,8 +709,8 @@ const verfiyUser = async (req, res) => {
       $and: [
         { _id: $data.userId },
         { userSideActivation: false },
-        { userSideActivationValue: $data.activeValue },
-      ],
+        { userSideActivationValue: $data.activeValue }
+      ]
     });
     if (userData) {
       let salt = commonCrypto.generateSalt(6);
@@ -706,7 +718,7 @@ const verfiyUser = async (req, res) => {
       let loggedInIp = commonSmtp.getIpAddress(req);
       let roleUpdate = await userModel.updateOne(
         {
-          _id: userData._id,
+          _id: userData._id
         },
         {
           $set: {
@@ -714,31 +726,31 @@ const verfiyUser = async (req, res) => {
             userSideActivationValue: "",
             password: password,
             salt,
-            loggedInIp: loggedInIp,
-          },
+            loggedInIp: loggedInIp
+          }
         }
       );
       if (roleUpdate) {
         res.status(200).json({
           message: otherMessage.userPasswordCreation,
-          success: true,
+          success: true
         });
       } else {
         res.status(401).json({
           message: "Some thing Went Wrong",
-          success: false,
+          success: false
         });
       }
     } else {
       res.status(401).json({
         message: otherMessage.linkExpiration,
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -750,7 +762,7 @@ const verfiyUserLink = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
     let $data = req.body;
@@ -758,24 +770,24 @@ const verfiyUserLink = async (req, res) => {
       $and: [
         { _id: $data.userId },
         { userSideActivation: false },
-        { userSideActivationValue: $data.activeValue },
-      ],
+        { userSideActivationValue: $data.activeValue }
+      ]
     });
     if (userData) {
       res.status(200).json({
         message: "Link verified successfully!",
-        success: true,
+        success: true
       });
     } else {
       res.status(401).json({
         message: otherMessage.linkExpiration,
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -794,5 +806,5 @@ module.exports = {
   verfiyUserLink,
   imageUpload,
   imageDelete,
-  resendConfirmationLink,
+  resendConfirmationLink
 };

@@ -5,7 +5,11 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Container } from "reactstrap";
 // sidebar nav config
 import navigation from "../../_nav";
-import { profileInfoRequest } from "../../actions";
+import {
+  profileInfoRequest,
+  updateCompanyLogo,
+  updateCompanyDetails
+} from "../../actions";
 // routes config
 import routes from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
@@ -20,8 +24,10 @@ import {
   AppSidebarForm,
   AppSidebarHeader,
   AppSidebarMinimizer,
-  AppSidebarNav,
+  AppSidebarNav
 } from "@coreui/react";
+import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
+import { logger } from "../../helpers/Logger";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -39,9 +45,24 @@ class DefaultLayout extends Component {
     localStorage.removeItem("token");
     this.props.redirectTo("/login");
   }
+  renderCompanyDetailsPopup = profileInfo => {
+    const { companyName, parentId, firstName } = profileInfo;
+    if (!companyName && !parentId) {
+      return (
+        <CrmWelcomeModel
+          modalOpen={true}
+          userName={firstName}
+          onLogoUpdate={this.props.updateCompanyLogo}
+          onCompanyDetailsUdpate={this.props.onCompanyDetailsUdpate}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
   navigation = permissions => {
     const navItems = {
-      items: [],
+      items: []
     };
     navigation.items.forEach(nav => {
       if (permissions[nav.authKey]) {
@@ -58,6 +79,7 @@ class DefaultLayout extends Component {
       <FullPageLoader />
     ) : (
       <div className="app">
+        {this.renderCompanyDetailsPopup(profileInfo || {})}
         <AppHeader fixed>
           <Suspense fallback={<Loader />}>
             <DefaultHeader
@@ -123,13 +145,22 @@ class DefaultLayout extends Component {
 }
 
 const mapStateToProps = state => ({
-  profileInfoReducer: state.profileInfoReducer,
+  profileInfoReducer: state.profileInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
   profileInfoAction: () => {
     dispatch(profileInfoRequest());
   },
+  updateCompanyLogo: data => {
+    dispatch(updateCompanyLogo(data));
+  },
+  onCompanyDetailsUdpate: data => {
+    dispatch(updateCompanyDetails(data));
+  }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DefaultLayout);
