@@ -34,12 +34,7 @@ export const colourOptionsA = [
 
 
 
-export const flavourOptions = [
-  { value: 'vanilla', label: 'Vanilla', rating: 'safe' },
-  { value: 'chocolate', label: 'Chocolate', rating: 'good' },
-  { value: 'strawberry', label: 'Strawberry', rating: 'wild' },
-  { value: 'salted-caramel', label: 'Salted Caramel', rating: 'crazy' },
-];
+
 
 
 
@@ -55,6 +50,13 @@ export const carsOptions = [
   { value: 'wagon', label: 'Wagon', color: '#00875A' },
 ];
 
+export const otherCarsOptions = [
+  { value: 'vanilla', label: 'Vanilla', rating: 'safe' },
+  { value: 'chocolate', label: 'Chocolate', rating: 'good' },
+  { value: 'strawberry', label: 'Strawberry', rating: 'wild' },
+  { value: 'salted-caramel', label: 'Salted Caramel', rating: 'crazy' },
+];
+
 
 
 export const groupedOptionsA = [
@@ -64,6 +66,6 @@ export const groupedOptionsA = [
   },
   {
     label: 'Other',
-    options: flavourOptions,
+    options: otherCarsOptions,
   },
 ];
