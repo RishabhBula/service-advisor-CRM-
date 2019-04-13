@@ -15,26 +15,26 @@ import {
   Input,
   Button,
   FormGroup,
-  FormFeedback,
+  FormFeedback
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
   ForgetPasswordValidations,
-  ForgetPasswordValidationsMessaages,
+  ForgetPasswordValidationsMessaages
 } from "../../validations";
-import Logo from "./../../assets/serviceadvisorlogo.jpg";
+import Logo from "./../../assets/img/logo-white.svg";
 class ForgotpasswordPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      errors: {},
+      errors: {}
     };
   }
   requestForgetpassword = e => {
     e.preventDefault();
     this.setState({
-      errors: {},
+      errors: {}
     });
     try {
       const { isValid, errors } = Validator(
@@ -44,13 +44,13 @@ class ForgotpasswordPage extends Component {
       );
       if (!isValid) {
         this.setState({
-          errors,
+          errors
         });
         return;
       }
       const { email } = this.state;
       this.props.onRequest({
-        email,
+        email
       });
     } catch (error) {
       logger(error);
@@ -65,7 +65,7 @@ class ForgotpasswordPage extends Component {
             <Col md="6">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} />
                 </h4>
               </Col>
               <CardGroup>
@@ -93,8 +93,8 @@ class ForgotpasswordPage extends Component {
                                 email: e.target.value,
                                 errors: {
                                   ...this.state.errors,
-                                  email: null,
-                                },
+                                  email: null
+                                }
                               });
                             }}
                           />
@@ -107,7 +107,7 @@ class ForgotpasswordPage extends Component {
                         <Col sm="6">
                           <Button
                             color="primary"
-                            className="px-4"
+                            className="px-4 btn-theme"
                             block
                             onClick={this.requestForgetpassword}
                           >

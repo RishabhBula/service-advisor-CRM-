@@ -16,7 +16,7 @@ import {
   InputGroupText,
   Row,
   FormFeedback,
-  FormGroup,
+  FormGroup
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
@@ -27,7 +27,7 @@ class LoginPage extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {},
+      errors: {}
     };
   }
   handleChange = e => {
@@ -38,14 +38,14 @@ class LoginPage extends Component {
       [name]: value,
       errors: {
         ...this.state.errors,
-        [name]: false,
-      },
+        [name]: false
+      }
     });
   };
   login = e => {
     e.preventDefault();
     this.setState({
-      errors: {},
+      errors: {}
     });
     try {
       const { isValid, errors } = Validator(
@@ -56,14 +56,14 @@ class LoginPage extends Component {
       if (!isValid) {
         this.setState({
           errors,
-          isLoading: false,
+          isLoading: false
         });
         return;
       }
       const { email, password } = this.state;
       this.props.onLogin({
         email,
-        password,
+        password
       });
     } catch (error) {
       logger(error);
@@ -78,7 +78,7 @@ class LoginPage extends Component {
             <Col md="6">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} />
                 </h4>
               </Col>
               <CardGroup>

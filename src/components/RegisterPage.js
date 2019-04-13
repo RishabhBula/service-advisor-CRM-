@@ -33,8 +33,12 @@ const ResendInvitation = props => {
         <br /> A Confirmation email has been sent to your Email address Kindly
         verify your account to Login
       </p>
-      <Button color="primary" onClick={props.resendConfimationLink}>
-        Resend
+      <Button
+        color="primary"
+        className={"px-4 btn-theme"}
+        onClick={props.resendConfimationLink}
+      >
+        Resend Link
       </Button>
     </>
   );
@@ -120,158 +124,158 @@ class RegisterPage extends Component {
             <Col md="6" lg="7" xl="6">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} />
                 </h4>
               </Col>
               <CardGroup>
-              <Card className="mx-4">
-                <CardBody className="p-4">
-                  {!showResendPage ? (
-                    <Form onSubmit={this.handleSubmit}>
-                      <h1 className="auth-title">Create your account</h1>
-                      <p />
-                      <FormGroup>
-                        <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-user" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="text"
-                            placeholder="First Name"
-                            autoComplete="first-name"
-                            onChange={this.eventHandler}
-                            value={firstName}
-                            name="firstName"
-                            invalid={errors.firstName}
-                          />
-                          <FormFeedback>
-                            {errors.firstName ? errors.firstName : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-user" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="text"
-                            placeholder="Last Name"
-                            autoComplete="last-name"
-                            onChange={this.eventHandler}
-                            value={lastName}
-                            name="lastName"
-                            invalid={errors.lastName}
-                          />
-                          <FormFeedback>
-                            {errors.lastName ? errors.lastName : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>@</InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="text"
-                            placeholder="Email"
-                            autoComplete="email"
-                            onChange={this.eventHandler}
-                            value={email}
-                            name="email"
-                            invalid={errors.email}
-                          />
-                          <FormFeedback>
-                            {errors.email ? errors.email : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="password"
-                            placeholder="Password"
-                            autoComplete="new-password"
-                            onChange={this.eventHandler}
-                            value={password}
-                            name="password"
-                            invalid={errors.password}
-                          />
-                          <FormFeedback>
-                            {errors.password ? errors.password : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup className="mb-4">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="password"
-                            placeholder="Confirm password"
-                            autoComplete="new-password"
-                            onChange={this.eventHandler}
-                            name="confirmPassword"
-                            value={confirmPassword}
-                            invalid={errors.confirmPassword}
-                          />
-                          <FormFeedback>
-                            {errors.confirmPassword
-                              ? errors.confirmPassword
-                              : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <Row>
-                        <Col sm="6">
-                          <Button
-                            color="primary"
-                            className="px-4"
-                            type="submit"
-                            block
-                            onClick={this.handleSubmit}
+                <Card className="mx-4">
+                  <CardBody className="p-4">
+                    {!showResendPage ? (
+                      <Form onSubmit={this.handleSubmit}>
+                        <h1 className="auth-title">Create your account</h1>
+                        <p />
+                        <FormGroup>
+                          <InputGroup className="mb-3">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <i className="icon-user" />
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                              type="text"
+                              placeholder="First Name"
+                              autoComplete="first-name"
+                              onChange={this.eventHandler}
+                              value={firstName}
+                              name="firstName"
+                              invalid={errors.firstName}
+                            />
+                            <FormFeedback>
+                              {errors.firstName ? errors.firstName : null}
+                            </FormFeedback>
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <InputGroup className="mb-3">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <i className="icon-user" />
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                              type="text"
+                              placeholder="Last Name"
+                              autoComplete="last-name"
+                              onChange={this.eventHandler}
+                              value={lastName}
+                              name="lastName"
+                              invalid={errors.lastName}
+                            />
+                            <FormFeedback>
+                              {errors.lastName ? errors.lastName : null}
+                            </FormFeedback>
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <InputGroup className="mb-3">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>@</InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                              type="text"
+                              placeholder="Email"
+                              autoComplete="email"
+                              onChange={this.eventHandler}
+                              value={email}
+                              name="email"
+                              invalid={errors.email}
+                            />
+                            <FormFeedback>
+                              {errors.email ? errors.email : null}
+                            </FormFeedback>
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <InputGroup className="mb-3">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <i className="icon-lock" />
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                              type="password"
+                              placeholder="Password"
+                              autoComplete="new-password"
+                              onChange={this.eventHandler}
+                              value={password}
+                              name="password"
+                              invalid={errors.password}
+                            />
+                            <FormFeedback>
+                              {errors.password ? errors.password : null}
+                            </FormFeedback>
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <InputGroup className="mb-4">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <i className="icon-lock" />
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                              type="password"
+                              placeholder="Confirm password"
+                              autoComplete="new-password"
+                              onChange={this.eventHandler}
+                              name="confirmPassword"
+                              value={confirmPassword}
+                              invalid={errors.confirmPassword}
+                            />
+                            <FormFeedback>
+                              {errors.confirmPassword
+                                ? errors.confirmPassword
+                                : null}
+                            </FormFeedback>
+                          </InputGroup>
+                        </FormGroup>
+                        <Row>
+                          <Col sm="6">
+                            <Button
+                              color="primary"
+                              className="px-4 btn-theme"
+                              type="submit"
+                              block
+                              onClick={this.handleSubmit}
+                            >
+                              Signup
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Row className="d-block mt-2">
+                          <Col
+                            xs="12"
+                            sm={"12"}
+                            md={"12"}
+                            className="login-or-section text-center mt-2 mb-2"
                           >
-                            Signup
-                          </Button>
-                        </Col>
-                      </Row>
-                      <Row className="d-block mt-2">
-                        <Col
-                          xs="12"
-                          sm={"12"}
-                          md={"12"}
-                          className="login-or-section text-center mt-2 mb-2"
-                        >
-                          <span>OR</span>
-                        </Col>
-                        <Col xs="12">
-                          <p className="text-center">
-                            Already have an account?
-                            <Link to="/login"> Sign In </Link>
-                          </p>
-                        </Col>
-                      </Row>
-                    </Form>
-                  ) : (
-                    <ResendInvitation
-                      resendConfimationLink={this.resendConfimationLink}
-                    />
-                  )}
-                </CardBody>
-              </Card>
+                            <span>OR</span>
+                          </Col>
+                          <Col xs="12">
+                            <p className="text-center">
+                              Already have an account?
+                              <Link to="/login"> Sign In </Link>
+                            </p>
+                          </Col>
+                        </Row>
+                      </Form>
+                    ) : (
+                      <ResendInvitation
+                        resendConfimationLink={this.resendConfimationLink}
+                      />
+                    )}
+                  </CardBody>
+                </Card>
               </CardGroup>
             </Col>
           </Row>

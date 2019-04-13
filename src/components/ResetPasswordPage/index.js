@@ -15,14 +15,14 @@ import {
   Input,
   Button,
   FormGroup,
-  FormFeedback,
+  FormFeedback
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import {
   ResetPasswordValidations,
-  ResetPasswordValidationsMessaages,
+  ResetPasswordValidationsMessaages
 } from "../../validations/login";
-import Logo from "./../../assets/serviceadvisorlogo.jpg";
+import Logo from "./../../assets/img/logo-white.svg";
 
 class ResetPasswordPage extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class ResetPasswordPage extends Component {
     this.state = {
       password: "",
       confirmPassword: "",
-      errors: {},
+      errors: {}
     };
   }
   handleInputChange = e => {
@@ -40,14 +40,14 @@ class ResetPasswordPage extends Component {
       [name]: value,
       errors: {
         ...this.state.errors,
-        [name]: null,
-      },
+        [name]: null
+      }
     });
   };
   resetPassword = e => {
     e.preventDefault();
     this.setState({
-      errors: {},
+      errors: {}
     });
     try {
       const { isValid, errors } = Validator(
@@ -57,7 +57,7 @@ class ResetPasswordPage extends Component {
       );
       if (!isValid) {
         this.setState({
-          errors,
+          errors
         });
         return;
       }
@@ -67,7 +67,7 @@ class ResetPasswordPage extends Component {
         password,
         token,
         user,
-        verification,
+        verification
       });
     } catch (error) {
       logger(error);
@@ -82,7 +82,7 @@ class ResetPasswordPage extends Component {
             <Col md="6">
               <Col className="text-center">
                 <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} style={{ width: 80 }} />
+                  <img src={Logo} alt={"logo"} />
                 </h4>
               </Col>
               <CardGroup>
@@ -129,9 +129,9 @@ class ResetPasswordPage extends Component {
                             invalid={errors.confirmPassword}
                           />
                           <FormFeedback>
-                            {errors.confirmPassword ? (
-                              errors.confirmPassword
-                            ) : null}
+                            {errors.confirmPassword
+                              ? errors.confirmPassword
+                              : null}
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
@@ -139,7 +139,7 @@ class ResetPasswordPage extends Component {
                         <Col xs="6">
                           <Button
                             color="primary"
-                            className="px-4"
+                            className="px-4 btn-theme"
                             block
                             type="submit"
                             onClick={this.resetPassword}

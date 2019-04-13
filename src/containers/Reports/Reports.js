@@ -9,7 +9,7 @@ import {
   TabPane
 } from "reactstrap";
 // import classnames from "classnames";
-import { BigModals } from '../../components/common/CrmWelcomeModel'
+import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
 class Reports extends Component {
   constructor(props) {
     super(props);
@@ -68,15 +68,15 @@ class Reports extends Component {
   }
 
   componentDidMount = () => {
-    this.toggleLarge()
-  }
+    this.toggleLarge();
+  };
   toggleLarge = () => {
     this.setState({
       modalOpen: !this.state.modalOpen
     });
   };
   lorem(detailsData) {
-    return Object.keys(detailsData).map(function (key, index) {
+    return Object.keys(detailsData).map(function(key, index) {
       return <li key={index}>{detailsData[key].abc}</li>;
     });
   }
@@ -188,13 +188,14 @@ class Reports extends Component {
             </TabContent>
           </Col>
         </Row>
-        {
-          modalOpen ?
-            <BigModals
-              modalOpen={modalOpen}
-              toggleLarge={this.toggleLarge}
-            /> : ""
-        }
+        {modalOpen ? (
+          <CrmWelcomeModel
+            modalOpen={modalOpen}
+            toggleLarge={this.toggleLarge}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }
