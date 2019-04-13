@@ -11,7 +11,7 @@ const customerSchema = new Schema({
     default: null,
   },
   phoneDetail: {
-    type: String,
+    type: [Object],
     default: null,
   },
   email: {

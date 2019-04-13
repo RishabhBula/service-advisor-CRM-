@@ -378,7 +378,7 @@
 }
 .customer-add-phone {
   position: relative;
-  top: -13px;
+  top: -9px;
   color: #469af4;
   cursor: pointer;
   display: inline-block;
@@ -751,4 +751,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   height: 15px;
   width: 15px;
   border: 1px solid #eee;
+}
+
+.custom-form-modal .select-number-tile .text-danger{
+      left: -70px;
 }
