@@ -1,4 +1,3 @@
-import { push } from "react-router-redux";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import {
@@ -6,6 +5,7 @@ import {
   profileInfoStarted,
   profileInfoFailed,
   profileInfoSuccess,
+  redirectTo
 } from "./../actions";
 
 const profileInfoLogic = createLogic({
@@ -15,7 +15,7 @@ const profileInfoLogic = createLogic({
     dispatch(
       profileInfoStarted({
         profileInfo: {},
-        isLoading: true,
+        isLoading: true
       })
     );
     let api = new ApiHelper();
@@ -24,23 +24,27 @@ const profileInfoLogic = createLogic({
       dispatch(
         profileInfoFailed({
           profileInfo: {},
-          isLoading: false,
+          isLoading: false
         })
       );
       localStorage.removeItem("token");
-      dispatch(push("/login"));
+      dispatch(
+        redirectTo({
+          path: "/login"
+        })
+      );
       done();
       return;
     } else {
       dispatch(
         profileInfoSuccess({
           profileInfo: result.data.data,
-          isLoading: false,
+          isLoading: false
         })
       );
       done();
     }
-  },
+  }
 });
 
 export const ProfileInfoLogic = [profileInfoLogic];
