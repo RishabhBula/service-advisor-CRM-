@@ -306,6 +306,7 @@ export class CrmVehicleModal extends Component {
                       onBlur={this.yearValidation} 
                       onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
+                      value={this.state.year}
                     />
                     {errors.hasOwnProperty('year') ? (
                       <p className='text-danger'>{errors.year}</p>
