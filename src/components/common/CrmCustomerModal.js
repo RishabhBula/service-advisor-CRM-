@@ -201,8 +201,9 @@ export class CrmCustomerModal extends Component {
         value: ""
       })
       this.setState({
-        phoneDetail: phoneDetail
-      })
+        phoneDetail: phoneDetail,
+        phoneErrors: {}
+      });
     }
   }
 
@@ -213,10 +214,10 @@ export class CrmCustomerModal extends Component {
         item => item.key === event.key
       )
       phoneDetail.splice(phoneArray, 1);
-      phoneErrors.splice(phoneArray, 1);
+     // phoneErrors.splice(phoneArray, 1);
       this.setState({
         phoneDetail,
-        phoneErrors
+        phoneErrors: {}
       })
     }
   }
@@ -291,7 +292,11 @@ export class CrmCustomerModal extends Component {
         for (let i = 0; i < phoneDetail.length; i++) {
           const key = phoneDetail[i];
           if (key.value.length) {
-            phoneErrors.splice(i, 1);
+            console.log('===============ffff=====================');
+            console.log(key);
+            console.log('====================================');
+           // phoneErrors.splice(i, 1);
+           phoneErrors[i] = "";
             this.setState({ phoneErrors });
           } else {
             phoneErrors[i] = "Phone number is required";
@@ -299,11 +304,6 @@ export class CrmCustomerModal extends Component {
           }
         }
       }
-
-      // console.log(phoneDetail);
-      // console.log(this.state.phoneErrors);
-      // console.log(Object.keys(this.state.phoneErrors).length)
-
       const { isValid, errors } = Validator(
         customerData,
         CreateCustomerValidations,
