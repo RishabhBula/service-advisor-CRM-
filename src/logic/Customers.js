@@ -212,7 +212,7 @@ const updateCustomerStatusLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(hideLoader());
-      delete action.payload.users;
+      delete action.payload.customers;
       delete action.payload.status;
       dispatch(
         customerGetRequest({

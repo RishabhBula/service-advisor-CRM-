@@ -91,9 +91,6 @@ class DefaultLayout extends Component {
 
   customerAndVehicleModal = () => {
     const { modelDetails } = this.props.modelInfoReducer;
-    console.log('====================================');
-    console.log(modelDetails);
-    console.log('====================================');
     return (
       <CustAndVehicle
         displayModal={modelDetails.custAndVehicle}

@@ -69,7 +69,7 @@ export default {
         },
         {
           name: "Fleets",
-          url: "/fleets",
+          url: "/settings/fleets",
           icon: "icon-puzzle",
         },
       ],

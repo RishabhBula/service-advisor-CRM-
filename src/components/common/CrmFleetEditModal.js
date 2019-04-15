@@ -87,9 +87,10 @@ export class CrmFleetEditModal extends Component {
             fleetDefaultPermissions["shouldLaborRateOverride"].laborRate =
                selectValue.value;
             this.setState({
-               ...fleetDefaultPermissions
+               ...fleetDefaultPermissions,
+               selectedLabourRate: selectValue
             });
-            this.props.setDefaultRate(selectValue);
+            // this.props.setDefaultRate(selectValue);
          }
       } else {
          this.props.onTypeHeadStdFun({});
@@ -129,7 +130,14 @@ export class CrmFleetEditModal extends Component {
             } else {
                toast.success(result.messages[0]);
                this.setState({
-                  openStadardRateModel: !this.state.openStadardRateModel
+                  openStadardRateModel: !this.state.openStadardRateModel,
+                  selectedLabourRate: {
+                     value: result.data.data._id,
+                     label:
+                        result.data.data.name +
+                        " - " +
+                        result.data.data.hourlyRate
+                  }
                })
             }
          }
@@ -138,15 +146,9 @@ export class CrmFleetEditModal extends Component {
       }
    }
    componentDidUpdate({ fleetSingleData }) {
-      console.log("fleetSingleData");
-      console.log(this.props.fleetSingleData);
-      console.log("fleetSingleData");
 
       if (fleetSingleData._id !== this.props.fleetSingleData._id) {
          const { fleetSingleData } = this.props
-         console.log('==================inner==================');
-         console.log(fleetSingleData);
-         console.log('====================================');
          this.setState({
             address1: fleetSingleData.address1,
             city: fleetSingleData.city,
@@ -157,8 +159,46 @@ export class CrmFleetEditModal extends Component {
             state: fleetSingleData.state,
             zipCode: fleetSingleData.zipCode,
             phoneDetail: fleetSingleData.phoneDetail,
-            fleetId: fleetSingleData._id
+            fleetId: fleetSingleData._id,
+            selectedLabourRate: fleetSingleData.fleetDefaultPermissions
          })
+         if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
+
+            this.handleGetRateData(fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate)
+         }
+      }
+
+   }
+   handleGetRateData = async (rateId) => {
+      let api = new ApiHelper();
+      try {
+         const data = {
+            rateId: rateId
+         }
+         let result = await api.FetchFromServer(
+            "/labour",
+            "/getSingleRate",
+            "POST",
+            true,
+            undefined,
+            data
+         )
+         if (result.isError) {
+            toast.error(result.messages[0]);
+         } else {
+            toast.success(result.messages[0]);
+            this.setState({
+               selectedLabourRate: {
+                  value: result.data.data._id,
+                  label:
+                     result.data.data.name +
+                     " - " +
+                     result.data.data.hourlyRate
+               }
+            })
+         }
+      } catch (error) {
+         logger(error);
       }
    }
    handleClick(singleState, e) {
@@ -246,7 +286,7 @@ export class CrmFleetEditModal extends Component {
          zipCode,
          errors,
          percentageDiscount,
-         isEditMode,
+         selectedLabourRate,
          fleetId
       } = this.state;
       const phoneOptions = PhoneOptions.map((item, index) => {
@@ -256,7 +296,6 @@ export class CrmFleetEditModal extends Component {
       })
 
       let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
-      console.log(fleetDefaultPermissions);
 
       if (!fleetDefaultPermissions) {
          fleetDefaultPermissions = {};
@@ -280,9 +319,6 @@ export class CrmFleetEditModal extends Component {
          fleetDefaultPermissions,
          percentageDiscount,
       }
-      console.log("qqqqqqqqqqqqqqqqqq");
-      console.log(rateStandardListData);
-      console.log("qqqqqqqqqqqqqqqqqq");      
       return (
          <>
             <Modal
@@ -658,6 +694,7 @@ export class CrmFleetEditModal extends Component {
                                                    loadOptions={this.loadOptions}
                                                    onChange={this.handleStandardRate}
                                                    isClearable={true}
+                                                   value={selectedLabourRate}
                                                 />
 
                                              </Col>

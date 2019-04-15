@@ -7,7 +7,7 @@ const vehicleSchema = new Schema({
         default: null,
     },
     year: {
-        type: Number,
+        type: String,
         default: null,
     },
     make: {
@@ -71,6 +71,14 @@ const vehicleSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "user",
         default: null,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    status: {
+        type: Boolean,
+        default: true,
     },
     createdAt: {
         type: Date,

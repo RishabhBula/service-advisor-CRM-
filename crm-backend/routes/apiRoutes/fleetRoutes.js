@@ -10,9 +10,11 @@ router.post("/addFleet", token.authorisedUser, fleetController.addNewFleet);
 router.get("/fleetList", token.authorisedUser, fleetController.getAllFleetList);
 
 /* ----------Update Fleet Details------------ */
-router.put('/updateFleet', token.authorisedUser,fleetController.updateFleetdetails);
+router.put('/updateFleet', token.authorisedUser, fleetController.updateFleetdetails);
 
 /* ----------Delete Fleet------------ */
-router.delete("/:fleetId", token.authorisedUser,fleetController.deleteFleet);
+router.post("/delete", token.authorisedUser, fleetController.deleteFleet);
 
+/* ----------Update Fleet Status------------ */
+router.post("/updateStatus", token.authorisedUser, fleetController.updateStatus);
 module.exports = router;

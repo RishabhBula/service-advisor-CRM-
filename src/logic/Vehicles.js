@@ -161,9 +161,11 @@ const deleteVehicleLogic = createLogic({
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/vehicle",
-      ["/deleteVehicle/", action.payload.vehicleId].join(""),
-      "DELETE",
-      true
+      "/delete",
+      "POST",
+      true,
+      undefined,
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -184,9 +186,44 @@ const deleteVehicleLogic = createLogic({
   }
 });
 
+const updateVehicleStatusLogic = createLogic({
+  type: vehicleActions.UPDATE_VEHICLE_STATUS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/vehicle",
+      "/updateStatus",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.vehicles;
+      delete action.payload.status;
+      dispatch(
+        vehicleGetRequest({
+          ...action.payload
+        })
+      );
+      done();
+    }
+  }
+});
+
 export const VehicleLogic = [
-         vehicleAddLogic,
-         getVehiclesLogic,
-         editCustomerLogic,
-         deleteVehicleLogic
-       ];
+  vehicleAddLogic,
+  getVehiclesLogic,
+  editCustomerLogic,
+  deleteVehicleLogic,
+  updateVehicleStatusLogic
+];

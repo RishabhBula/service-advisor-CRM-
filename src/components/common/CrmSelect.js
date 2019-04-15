@@ -36,9 +36,6 @@ export class CrmSelect extends Component {
   }
 
   clickedOpen = (e) => {
-    console.log('====================================');
-    console.log(e);
-    console.log('====================================');
     if (this.props.onClickAddNew) 
     this.props.onClickAddNew();
   }

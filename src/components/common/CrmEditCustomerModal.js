@@ -76,12 +76,6 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('====================================');
-    console.log(this.props.customer);
-    console.log(prevProps.customer);
-    console.log(prevProps.customer);
-    console.log(prevProps.customer);
-    console.log('====================================');
     if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
       this.setState({
         address1: "",
@@ -103,7 +97,10 @@ export class CrmEditCustomerModal extends Component {
             value: ""
           }
         ],
-      })
+        selectedLabourRate: {},
+        phoneErrors: {},
+        expandForm: false
+      });
     }
     if (prevProps.customer._id !== this.props.customer._id) {
       const { customer } = this.props;
@@ -121,20 +118,21 @@ export class CrmEditCustomerModal extends Component {
         referralSource: customer.referralSource,
         state: customer.state,
         zipCode: customer.zipCode,
-        phoneDetail: customer.phoneDetail ? customer.phoneDetail.length ? customer.phoneDetail : [
+        phoneDetail: customer.phoneDetail && customer.phoneDetail.length ? customer.phoneDetail : [
           {
             phone: "mobile",
             value: ""
           }
-        ] : [
-            {
-              phone: "mobile",
-              value: ""
-            }
-          ],
+        ] 
       })
     }
   }
+  setStateAsync(state) {
+		return new Promise(resolve => {
+			this.setState(state, resolve);
+		});
+  }
+  
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -178,8 +176,15 @@ export class CrmEditCustomerModal extends Component {
         } else {
           toast.success(result.messages[0]);
           this.setState({
-            openStadardRateModel: !this.state.openStadardRateModel
-          })
+            openStadardRateModel: !this.state.openStadardRateModel,
+            selectedLabourRate: {
+              value: result.data.data._id,
+              label:
+                result.data.data.name +
+                " - " +
+                result.data.data.hourlyRate
+            }
+          });
           this.props.onStdAdd();
         }
       }
@@ -246,27 +251,25 @@ export class CrmEditCustomerModal extends Component {
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
-      phoneDetail.push({
-        phone: "mobile",
-        value: ""
-      })
       this.setState({
-        phoneDetail: phoneDetail
-      })
+        phoneDetail: phoneDetail.concat([{
+          phone: "mobile",
+          value: ""
+        }]),
+        phoneErrors: []
+      });
     }
   }
 
   handleRemovePhoneDetails = (event) => {
     const { phoneDetail, phoneErrors } = this.state;
     if (phoneDetail.length) {
-      let phoneArray = phoneDetail.findIndex(
+      let phoneArrayIndx = phoneDetail.findIndex(
         item => item.key === event.key
       )
-      phoneDetail.splice(phoneArray, 1);
-      phoneErrors.splice(phoneArray, 1);
       this.setState({
-        phoneDetail,
-        phoneErrors
+        phoneDetail: phoneDetail.filter((s, sidx) => phoneArrayIndx !== sidx),
+        phoneErrors: phoneErrors.filter((s, sidx) => phoneArrayIndx !== sidx)
       })
     }
   }
@@ -287,7 +290,7 @@ export class CrmEditCustomerModal extends Component {
           selectedLabourRate: selectValue
         });
 
-        this.props.setDefaultRate(selectValue);
+        //this.props.setDefaultRate(selectValue);
       }
     }
     else {
@@ -299,7 +302,7 @@ export class CrmEditCustomerModal extends Component {
     return this.props.loadTypeRate(input)
   }
 
-  addNewCustomer = () => {
+  updateNewCustomer = async () => {
     const {
       firstName,
       lastName,
@@ -338,21 +341,18 @@ export class CrmEditCustomerModal extends Component {
 
     try {
       if (phoneDetail.length) {
-        for (let i = 0; i < phoneDetail.length; i++) {
-          const key = phoneDetail[i];
-          if (key.value.length) {
-            phoneErrors.splice(i, 1);
-            this.setState({ phoneErrors });
-          } else {
-            phoneErrors[i] = "Phone number is required";
-            this.setState({ phoneErrors });
-          }
-        }
+        await Promise.all(
+          phoneDetail.map(async (key, i) => {
+            if (key.value.length) {
+              phoneErrors[i] = '';
+              await this.setStateAsync({ phoneErrors: phoneErrors.splice(i, 1) });
+            } else {
+              phoneErrors[i] = 'Phone number is required';
+              await this.setStateAsync({ phoneErrors });
+            }
+          })
+        );
       }
-
-      // console.log(phoneDetail);
-      // console.log(this.state.phoneErrors);
-      // console.log(Object.keys(this.state.phoneErrors).length)
 
       const { isValid, errors } = Validator(
         customerData,
@@ -361,7 +361,7 @@ export class CrmEditCustomerModal extends Component {
       );
       if (!isValid &&
         (
-          (customerData.email !== '') ||
+          (customerData.email !== '') || Object.keys(this.state.phoneErrors).length ||
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')
@@ -920,7 +920,7 @@ export class CrmEditCustomerModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={true}
-                                value={rateStandardListData.selectedOptions}
+                                value={selectedLabourRate}
                               />
 
                             </Col>
@@ -982,7 +982,7 @@ export class CrmEditCustomerModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addNewCustomer}>
+            <Button color="primary" onClick={this.updateNewCustomer}>
               { "Update Customer"}
             </Button>{" "}
             <Button color="secondary" onClick={this.handleCustomerModal}>

@@ -12,6 +12,7 @@ export const vehicleActions = {
     VEHICLES_GET_FAILED: "Vehicles Get failed!",
 
     DELETE_VEHICLE: "Delete vehicle Requested!",
+    UPDATE_VEHICLE_STATUS: "Update vehicle status Requested!",
 
     EDIT_VEHICLE_REQUESTED: "Edit VEHICLE Requested!",
     EDIT_VEHICLE_SUCCESS: "Edit VEHICLE Success!",
@@ -30,6 +31,7 @@ export const vehicleGetFailed = createAction(vehicleActions.VEHICLES_GET_FAILED)
 
 
 export const deleteVehicle = createAction(vehicleActions.DELETE_VEHICLE);
+export const updateVehicleStatus = createAction(vehicleActions.UPDATE_VEHICLE_STATUS);
 
 export const vehicleEditRequest = createAction(
   vehicleActions.EDIT_VEHICLE_REQUESTED
