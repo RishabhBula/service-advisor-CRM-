@@ -133,8 +133,8 @@ class RegisterPage extends Component {
                 <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     {!showResendPage ? (
                       <Form onSubmit={this.handleSubmit}>
-                        <h1 className="auth-title">Create your account</h1>
-                      <p className="text-muted text-center text-info-line">To Your Workspace</p>
+                        <h1 className="auth-title">Sign Up</h1>
+                      <p className="text-muted text-center text-info-line">To Create Your Workspace</p>
                         <FormGroup>
                           <InputGroup className="mb-3">
                             <InputGroupAddon addonType="prepend">
