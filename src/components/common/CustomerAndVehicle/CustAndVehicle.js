@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { AddCustomer } from "./AddCustomer";
 class CustAndVehicle extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +34,9 @@ class CustAndVehicle extends Component {
         <ModalHeader toggle={this.props.toggleModal}>
           {step.selected === 1 ? "Create New Customer" : "Second Section"}
         </ModalHeader>
-        <ModalBody />
+        <ModalBody>
+          <AddCustomer />
+        </ModalBody>
         <ModalFooter>
          {
           step.selected === 1 ?
