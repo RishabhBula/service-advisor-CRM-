@@ -9,11 +9,14 @@ import {
   Button,
   UncontrolledTooltip
 } from "reactstrap";
-import { CrmVehicleModal } from '../../components/common/Vehicles/CrmVehicleModal'
-import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
-import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart, customerEditRequest } from "../../actions";
+import {
+  CrmVehicleModal,
+} from "../../components/common/Vehicles/CrmVehicleModal";
+import { CrmEditVehicleModal } from "../../components/common/Vehicles/CrmEditVehicleModal";
+import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
+import VehicleList from "../../components/Vehicles/VehiclesList";
+import {  modelOpenRequest, vehicleAddRequest, vehicleGetRequest} from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -21,24 +24,62 @@ class Vehicles extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      vehicle: {},
+      vehicleData: {}
     };
+  }
+
+  componentDidMount() {
+    const query = qs.parse(this.props.location.search);
+    this.props.getVehicleList({ ...query, page: query.page || 1 });
   }
 
   toggleCreateVehicle = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
-      vehicleModel: !modelDetails.vehicleModel
+      vehicleModel: !modelDetails.vehicleModel,
+      vehicleEditModel: false
     };
     this.props.modelOperate(data);
-  }
+  };
 
-  handleVehicleModal = () => {
+  submitCreateVehicle = data => {
+    this.props.vehicleAddAction(data);
+  };
+
+  toggleUpdateVehicle = dataValue => {
+    this.setState({
+      vehicleData: dataValue
+    });
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      vehicleModel: false,
+      vehicleEditModel: !modelDetails.vehicleEditModel
+    };
+    this.props.modelOperate(data);
+  };
+
+  toggleEditVehicle = dataValue => {
+    this.setState({
+      vehicleData: {}
+    });
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      vehicleModel: false,
+      vehicleEditModel: !modelDetails.vehicleEditModel
+    };
+    this.props.modelOperate(data);
+  };
+
+  submitUpdateVehicle = (dataValue) => {
+    console.log('====================================');
+    console.log(dataValue);
+    console.log('====================================');
   }
-  
 
   render() {
-   const { modelDetails } = this.props.modelInfoReducer;
+    const { modelDetails } = this.props.modelInfoReducer;
+    const { vehicleListReducer } = this.props;
+    const { vehicleData } = this.state;
     return (
       <>
         <Card>
@@ -65,13 +106,26 @@ class Vehicles extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-           
+            <VehicleList
+              vehicleData={vehicleListReducer}
+              onSearch={this.onSearch}
+              onPageChange={this.onPageChange}
+              onDelete={this.deleteCustomer}
+              updateModel={this.toggleUpdateVehicle}
+            />
           </CardBody>
         </Card>
-        <CrmVehicleModal 
+        <CrmVehicleModal
           vehicleModalOpen={modelDetails.vehicleModel}
-          handleVehicleModal={this.toggleCreateVehicle} />
-        
+          handleVehicleModal={this.toggleCreateVehicle}
+          submitCreateVehicleFun={this.submitCreateVehicle}
+        />
+        <CrmEditVehicleModal
+          vehicleEditModalOpen={modelDetails.vehicleEditModel}
+          handleEditVehicleModal={this.toggleEditVehicle}
+          submitUpdateVehicleFun={this.submitUpdateVehicle}
+          vehicleData = {vehicleData}
+        />
       </>
     );
   }
@@ -79,11 +133,18 @@ class Vehicles extends Component {
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
   modelInfoReducer: state.modelInfoReducer,
+  vehicleListReducer: state.vehicleListReducer,
 });
 
 const mapDispatchToProps = dispatch => ({ 
   modelOperate: (data) => {  
     dispatch(modelOpenRequest({modelDetails: data}));
+  },
+  vehicleAddAction: (data) => {
+    dispatch(vehicleAddRequest(data));
+  },
+  getVehicleList: (data) => {
+    dispatch(vehicleGetRequest(data));
   },
 
 });

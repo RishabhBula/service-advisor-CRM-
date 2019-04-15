@@ -171,3 +171,26 @@ export const RoleOptions = [
     text: "Technician",
   },
 ];
+
+export const Transmission = [
+  {
+    key: "automatic",
+    text: "Automatic",
+  },
+  {
+    key: "manual",
+    text: "Manual",
+  },
+];
+
+export const Drivetrain = [
+  {
+    key: "2x4",
+    text: "2x4",
+  },
+  {
+    key: "4x4",
+    text: "4x4",
+  },
+];
+

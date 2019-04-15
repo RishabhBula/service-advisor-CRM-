@@ -1,36 +1,23 @@
 export const ColorOptions = [
-  { color: "FFFFFF", label: "White",value: "white" },
-  { color: "EFEFEF", label: "Silver",value: "silver" },
-  { color: "7E7E7E", label: "Gray",value: "gray" },
-  { color: "000000", label: "Black",value: "black" },
-  { color: "006090", label: "Blue",value: "blue" },
-  { color: "EB0018", label: "Red",value: "red" },
-  { color: "513911", label: "Brown",value: "brown" },
-  { color: "840026", label: "Burgundy",value: "burgundy" },
-  { color: "FFF6E6", label: "Tan",value: "tan" },
-  { color: "FCF0BF", label: "Gold",value: "gold" },
-  { color: "007520", label: "Green",value: "green" },
-  { color: "FFC63B", label: "Yellow",value: "yellow" },
-  { color: "FFC63B", label: "Orange",value: "orange" },
-  { color: "FC629B", label: "Pink",value: "pink" },
-  { color: "3D1D8E", label: "Purpule",value: "purple" },
-  { color: "E2E9EB", label: "Other",value: "other" },
+  { color: "#FFFFFF", label: "White",value: "white" },
+  { color: "#EFEFEF", label: "Silver",value: "silver" },
+  { color: "#7E7E7E", label: "Gray",value: "gray" },
+  { color: "#000000", label: "Black",value: "black" },
+  { color: "#006090", label: "Blue",value: "blue" },
+  { color: "#EB0018", label: "Red",value: "red" },
+  { color: "#513911", label: "Brown",value: "brown" },
+  { color: "#840026", label: "Burgundy",value: "burgundy" },
+  { color: "#FFF6E6", label: "Tan",value: "tan" },
+  { color: "#FCF0BF", label: "Gold",value: "gold" },
+  { color: "#007520", label: "Green",value: "green" },
+  { color: "#FFC63B", label: "Yellow",value: "yellow" },
+  { color: "#FFC63B", label: "Orange",value: "orange" },
+  { color: "#FC629B", label: "Pink",value: "pink" },
+  { color: "#3D1D8E", label: "Purpule",value: "purple" },
+  { color: "#E2E9EB", label: "Other",value: "other" },
 ];
 
 
-
-export const colourOptionsA = [
-  { value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true },
-  { value: 'blue', label: 'Blue', color: '#0052CC', disabled: true },
-  { value: 'purple', label: 'Purple', color: '#5243AA' },
-  { value: 'red', label: 'Red', color: '#FF5630', isFixed: true },
-  { value: 'orange', label: 'Orange', color: '#FF8B00' },
-  { value: 'yellow', label: 'Yellow', color: '#FFC400' },
-  { value: 'green', label: 'Green', color: '#36B37E' },
-  { value: 'forest', label: 'Forest', color: '#00875A' },
-  { value: 'slate', label: 'Slate', color: '#253858' },
-  { value: 'silver', label: 'Silver', color: '#666666' },
-];
 
 
 
@@ -59,7 +46,7 @@ export const otherCarsOptions = [
 
 
 
-export const groupedOptionsA = [
+export const groupedOptions = [
   {
     label: 'Cars',
     options: carsOptions,
