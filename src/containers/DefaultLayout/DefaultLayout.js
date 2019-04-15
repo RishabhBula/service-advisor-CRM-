@@ -8,7 +8,8 @@ import navigation from "../../_nav";
 import {
   profileInfoRequest,
   updateCompanyLogo,
-  updateCompanyDetails
+  updateCompanyDetails,
+  modelOpenRequest
 } from "../../actions";
 // routes config
 import routes from "../../routes";
@@ -27,12 +28,20 @@ import {
   AppSidebarNav
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
+import CustAndVehicle  from "../../components/common/CustAndVehicle";
 import { logger } from "../../helpers/Logger";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 
 class DefaultLayout extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+
   componentDidMount() {
     if (!localStorage.getItem("token")) {
       this.props.redirectTo("/login");
@@ -71,8 +80,26 @@ class DefaultLayout extends Component {
     });
     return navItems;
   };
+
+  toggleCustAndVehicleProps = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      custAndVehicle: !modelDetails.custAndVehicle,
+    };
+    this.props.modelOperate(data);
+  }
+
+  customerAndVehicleModal = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    return (
+      <CustAndVehicle
+        displayModal={modelDetails.custAndVehicle}
+        toggleModal={this.toggleCustAndVehicleProps}
+      />
+    );
+  }
   render() {
-    const { profileInfoReducer } = this.props;
+    const { profileInfoReducer, modelInfoReducer, } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
     return isLoading ? (
@@ -80,7 +107,9 @@ class DefaultLayout extends Component {
     ) : (
       <div className="app">
         {this.renderCompanyDetailsPopup(profileInfo || {})}
-        <AppHeader fixed>
+        <AppHeader fixed 
+          toggleCustAndVehicleProps={this.toggleCustAndVehicleProps}
+        >
           <Suspense fallback={<Loader />}>
             <DefaultHeader
               onLogout={e => this.signOut(e)}
@@ -139,13 +168,15 @@ class DefaultLayout extends Component {
             <DefaultFooter />
           </Suspense>
         </AppFooter>
+        {this.customerAndVehicleModal()}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  profileInfoReducer: state.profileInfoReducer
+  profileInfoReducer: state.profileInfoReducer,
+  modelInfoReducer: state.modelInfoReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -157,7 +188,10 @@ const mapDispatchToProps = dispatch => ({
   },
   onCompanyDetailsUdpate: data => {
     dispatch(updateCompanyDetails(data));
-  }
+  },
+  modelOperate: (data) => {  
+    dispatch(modelOpenRequest({modelDetails: data}));
+  },
 });
 
 export default connect(
