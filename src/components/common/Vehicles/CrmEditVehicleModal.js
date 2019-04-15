@@ -255,8 +255,8 @@ export class CrmEditVehicleModal extends Component {
       year: '',
       make: '',
       modal: '',
-      typeSelected: null,
-      colorSelected: null,
+      typeSelected: '',
+      colorSelected: '',
       miles: '',
       licensePlate: '',
       unit: '',
@@ -284,7 +284,18 @@ export class CrmEditVehicleModal extends Component {
       drivetrainSelected,
       typeSelected,
       colorSelected,
-      errors
+      year,
+      make,
+      modal,
+      errors,
+      miles,
+      licensePlate,
+      unit,
+      vin,
+      subModal,
+      engineSize,
+      productionDate,
+      notes,
     } = this.state;
     return (
       <>

@@ -373,7 +373,7 @@ export class CrmCustomerModal extends Component {
       errors: {},
       selectedLabourRate: {},
       customerDefaultPermissions: CustomerDefaultPermissions,
-      phoneErrors: {},
+      phoneErrors: [],
       expandForm: false
     })
   }
