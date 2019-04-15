@@ -2,12 +2,14 @@ import { handleActions } from 'redux-actions';
 import { modelActions } from "./../actions";
 
 const initialAuthState = {
-    modelDetails: {
-        "customerModel": false,
-        "customreEditModel": false,
-        "fleetEditModel": false,
-        "vehicleModel": false,
-    }
+  modelDetails: {
+    customerModel: false,
+    customreEditModel: false,
+    fleetEditModel: false,
+    vehicleModel: false,
+    vehicleEditModel: false,
+    custAndVehicle: false
+  }
 };
 
 export const modelInfoReducer = handleActions((

@@ -53,6 +53,12 @@
 .margin-bottom-10 {
   margin-bottom: 10px;
 }
+.switch-3d.switch-sm{
+  width: 38px !important;
+}
+.switch-3d.switch-sm .switch-input:checked ~ .switch-slider::before{
+  transform: translateX(17px) !important;
+}
 .modal-backdrop{
   opacity: 0.8 !important;
 }
@@ -390,6 +396,9 @@
 .customer-click-btn {
   cursor: pointer;
 }
+.price-matrix{
+  letter-spacing: -0.8px;
+}
 /* end of customer modal */
 /* ----------Comman Phone Field------------ */
 .phone-remove-btn {
@@ -455,19 +464,19 @@
     position: relative;
 }
 .custom-form-modal .form-group label{
-    min-width: 150px;
-    margin: 6px 10px 0px 5px;
-    text-align: right;
-    font-weight: 600;
-    color: #535459;
-    font-size: 13px;
+  min-width: 150px;
+  margin: 6px 10px 0px 5px;
+  text-align: right;
+  font-weight: 600;
+  color: #535459;
+  font-size: 13px;
 }
 .custom-form-modal .form-group label.switch{
-    min-width: 32px;
+  min-width: 32px;
 }
 .custom-form-modal .form-group .form-control, .custom-form-modal .form-group .form-select>div{
-    color: #0c0d1c;
-    border: 1px solid #a6a7a7;
+  color: #0c0d1c;
+  border: 1px solid #a6a7a7;
 }
 .custom-form-modal .form-group .form-control,
 .custom-form-modal .form-group .form-select > div {
@@ -556,7 +565,22 @@
 .custom-sidebar.sidebar .nav-link.active {
   background: #fff;
 }
-
+.fleet-block .css-vj8t7z,.fleet-block .css-2o5izw{
+  min-height: unset;
+}
+.fleet-block .css-1ep9fjw,.fleet-block .css-1uq0kb5,.fleet-block .css-1ep9fjw,.fleet-block .css-1uq0kb5
+{
+  padding: 0 8px;
+}
+.fleet-block .css-1hwfws3{
+  height: 29px;
+}
+.fleet-block .css-2o5izw{
+  box-shadow: none;
+}
+.rate-standard-list{
+  margin-bottom: 23px;
+}
 .custom-sidebar.sidebar .sidebar-minimizer:hover {
   background-color: transparent;
 }
@@ -569,7 +593,6 @@
 .custom-sidebar.sidebar .nav-link.nav-dropdown-toggle::before {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23fff' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
 }
-
 .custom-sidebar.sidebar .sidebar-minimizer::before {
   background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23fff' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E")
     no-repeat;

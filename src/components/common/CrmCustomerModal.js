@@ -659,7 +659,7 @@ export class CrmCustomerModal extends Component {
                   </FormGroup>
                 </Col>
                 <Col md="6">
-                  <FormGroup>
+                  <FormGroup className={"fleet-block"}>
                     <Label
                       htmlFor="name"
                       className="customer-modal-text-style"
@@ -842,7 +842,7 @@ export class CrmCustomerModal extends Component {
 
                     return (
                       <>
-                        <Col md="6" key={index}>
+                        <Col md="6" key={index} className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
                           <div className="d-flex">
                             <AppSwitch
                               className={"mx-1"}
@@ -862,15 +862,15 @@ export class CrmCustomerModal extends Component {
                           </div>
                           {discountShow ? (
 
-                            <div className="custom-label col-12" key={index}  >
+                            <div className="custom-label d-flex col-12" key={index}  >
                               <Label
                                 htmlFor="name"
-                                className="customer-modal-text-style"
+                                className="customer-modal-text-style mr-2"
                               >
                                 Percent Discount
                             </Label>
-                              <FormGroup>
-                                <Col md="4" className={"p-0"}>
+                              <FormGroup className={"mb-2"}>
+                                <Col md="5" className={"p-0"}>
                                 <MaskedInput
                                   mask="11\.11 \%"
                                   name="percentageDiscount"
@@ -884,7 +884,7 @@ export class CrmCustomerModal extends Component {
                             </div>
                           ) : null}
                           {labourRate ? (
-                            <Col md="">
+                            <Col md="" className={"fleet-block rate-standard-list"}>
                               <Async
                                 defaultOptions={rateStandardListData.standardRateList}
                                 loadOptions={this.loadOptions}
@@ -896,7 +896,8 @@ export class CrmCustomerModal extends Component {
                           ) : null}
                           {/* */}
                           {pricingMatrix ? (
-                            <Col md="12">
+                            <Col md="12" >
+                              <FormGroup className={"mb-2"}>
                               <Input
                                 type="select"
                                 className=""
@@ -920,6 +921,7 @@ export class CrmCustomerModal extends Component {
                                   )
                                   : null}
                               </Input>
+                              </FormGroup>
                             </Col>
                           ) : null}
                         </Col>

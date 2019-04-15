@@ -23,6 +23,9 @@ const propTypes = {
 const defaultProps = {};
 
 class DefaultHeader extends Component {
+  toggleCustAndVehicle = () => {
+    this.props.toggleCustAndVehicleProps();
+  }
   render() {
     const { permissions } = this.props;
     // eslint-disable-next-line
@@ -35,13 +38,13 @@ class DefaultHeader extends Component {
               src: "/assets/img/logo-white.svg",
               width: 40,
               height: 40,
-              alt: "CRM 360",
+              alt: "CRM 360"
             }}
             minimized={{
               src: "/assets/img/logo-white.svg",
               width: 50,
               height: 50,
-              alt: "CoreUI Logo",
+              alt: "CoreUI Logo"
             }}
           />
 
@@ -107,7 +110,12 @@ class DefaultHeader extends Component {
                   <span className="header-add-icon">
                     <i className="fa fa-bell-o" />
                   </span>
-                  <span className="header-add-text">Customer & Vehicle</span>
+                  <span
+                    className="header-add-text"
+                    onClick={this.toggleCustAndVehicle}
+                  >
+                    Customer & Vehicle
+                  </span>
                 </DropdownItem>
                 <DropdownItem>
                   <span className="header-add-icon">
