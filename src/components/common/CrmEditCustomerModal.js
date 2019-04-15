@@ -123,16 +123,52 @@ export class CrmEditCustomerModal extends Component {
             phone: "mobile",
             value: ""
           }
-        ] 
+        ]
       })
+      if (customer.permission && customer.permission.shouldLaborRateOverride.laborRate !== "objectId") {
+        this.handleGetRateData(customer.permission.shouldLaborRateOverride.laborRate)
+      }
     }
   }
-  setStateAsync(state) {
-		return new Promise(resolve => {
-			this.setState(state, resolve);
-		});
+  handleGetRateData = async (rateId) => {
+    let api = new ApiHelper();
+    try {
+      const data = {
+        rateId: rateId
+      }
+      let result = await api.FetchFromServer(
+        "/labour",
+        "/getSingleRate",
+        "POST",
+        true,
+        undefined,
+        data
+      )
+      if (result.isError) {
+        toast.error(result.messages[0]);
+      } else {
+        toast.success(result.messages[0]);
+        this.setState({
+          selectedLabourRate: {
+            value: result.data.data._id,
+            label:
+              result.data.data.name +
+              " - " +
+              result.data.data.hourlyRate
+          }
+        })
+      }
+    } catch (error) {
+      logger(error);
+    }
   }
-  
+
+  setStateAsync(state) {
+    return new Promise(resolve => {
+      this.setState(state, resolve);
+    });
+  }
+
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -189,11 +225,11 @@ export class CrmEditCustomerModal extends Component {
         }
       }
     } catch (error) {
-     // logger(error);
+      // logger(error);
     }
   }
 
-  handlePercentageChange = (e) => {  
+  handlePercentageChange = (e) => {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions["shouldReceiveDiscount"].percentageDiscount = e.target.value;
     this.setState({
@@ -320,7 +356,19 @@ export class CrmEditCustomerModal extends Component {
       customerDefaultPermissions,
       fleet,
     } = this.state;
-
+    let validationdata
+    if (!email) {
+       validationdata = {
+        firstName: firstName,
+        lastName: lastName
+      }
+    } else {
+      validationdata = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email
+      }
+    }
     const customerData = {
       firstName: firstName,
       lastName: lastName,
@@ -355,10 +403,12 @@ export class CrmEditCustomerModal extends Component {
       }
 
       const { isValid, errors } = Validator(
-        customerData,
+        validationdata,
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
+      console.log("This is error", errors);
+
       if (!isValid &&
         (
           (customerData.email !== '') || Object.keys(this.state.phoneErrors).length ||
@@ -374,36 +424,36 @@ export class CrmEditCustomerModal extends Component {
         });
         return;
       }
-       this.props.addCustomerFun(customerData);
-     
+      this.props.addCustomerFun(customerData);
+
     } catch (error) {
-     // logger(error);
+      // logger(error);
     }
   }
 
   async removeAllState() {
     this.setState({
-        firstName: "",
-        lastName: "",
-        phoneDetail: "",
-        email: "",
-        notes: "",
-        companyName: "",
-        referralSource: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        fleet: "",
-        errors: {},
-        phoneErrors: []
-      })
+      firstName: "",
+      lastName: "",
+      phoneDetail: "",
+      email: "",
+      notes: "",
+      companyName: "",
+      referralSource: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      fleet: "",
+      errors: {},
+      phoneErrors: []
+    })
   }
 
   handleCustomerModal = () => {
     const { customerModalOpen } = this.props;
-    if(customerModalOpen) {
+    if (customerModalOpen) {
       this.setState({
         errors: {}
       })
@@ -426,17 +476,16 @@ export class CrmEditCustomerModal extends Component {
       lastName,
       email,
       vendorValue,
-      selectedLabourRate,      
+      selectedLabourRate,
     } = this.state;
     let customerDefaultPermissions = this.state.customerDefaultPermissions;
-    if(!customerDefaultPermissions)
-    {
+    if (!customerDefaultPermissions) {
       customerDefaultPermissions = {};
       for (const key in CustomerDefaultPermissions) {
         if (CustomerDefaultPermissions.hasOwnProperty(key)) {
           const element = CustomerDefaultPermissions[key];
           customerDefaultPermissions[key] = element;
-          
+
         }
       }
     }
@@ -528,7 +577,7 @@ export class CrmEditCustomerModal extends Component {
                                   Phone
                                 </Label>
                                 {/* <div></div> */}
-                              
+
                                 <Input
                                   onChange={e =>
                                     this.handlePhoneNameChange(index, e)
@@ -612,10 +661,10 @@ export class CrmEditCustomerModal extends Component {
                                 </button>
                                 <FormGroup className="phone-number-feild">
                                   <Label
-                                htmlFor="name"
-                                className="customer-modal-text-style"
-                              >
-                                Phone (Optional)
+                                    htmlFor="name"
+                                    className="customer-modal-text-style"
+                                  >
+                                    Phone (Optional)
                                 </Label>
                                   {/* <div></div> */}
                                   <Input
@@ -753,7 +802,7 @@ export class CrmEditCustomerModal extends Component {
                           htmlFor="name"
                           className="customer-modal-text-style"
                         >
-                          Address 
+                          Address
                         </Label>
                         <Input
                           type="text"
@@ -765,7 +814,7 @@ export class CrmEditCustomerModal extends Component {
                         />
                       </FormGroup>
                     </Col>
-                     <Col md="6">
+                    <Col md="6">
                       <FormGroup>
                         <Label
                           htmlFor="name"
@@ -786,7 +835,7 @@ export class CrmEditCustomerModal extends Component {
                   </Row>
                 </div>
                 <div className="">
-                  <Row className="">                   
+                  <Row className="">
                     <Col md="6">
                       <FormGroup>
                         <Label
@@ -796,7 +845,7 @@ export class CrmEditCustomerModal extends Component {
                           State
                         </Label>
                         <Input type="text" name="state"
-                        value={this.state.state} onChange={this.handleInputChange} placeholder="NY"  maxLength="30"/>
+                          value={this.state.state} onChange={this.handleInputChange} placeholder="NY" maxLength="30" />
                       </FormGroup>
                     </Col>
                     <Col md="6 ">
@@ -820,7 +869,7 @@ export class CrmEditCustomerModal extends Component {
                   </Row>
 
                 </div>
-                 <div className="">
+                <div className="">
                   <Row className="">
                     <Col md="6">
                       <FormGroup>
@@ -835,127 +884,127 @@ export class CrmEditCustomerModal extends Component {
                           placeholder="Referral"
                           name="referralSource"
                           onChange={this.handleInputChange}
-                           maxLength="100"
+                          maxLength="100"
                         />
                       </FormGroup>
                     </Col>
-                   
+
                   </Row>
                 </div>
                 <Row className="custom-label-padding ">
 
                   {
-                    CustomerPermissionsText ? 
-                    CustomerPermissionsText.map((permission, index) => {
-                    let discountShow = false;
-                    let labourRate = false;
-                    let pricingMatrix = false;
-                    if (
-                      permission.key === "shouldReceiveDiscount" &&
-                      customerDefaultPermissions[permission.key].status
-                    ) {
-                      discountShow = true;
-                    }
+                    CustomerPermissionsText ?
+                      CustomerPermissionsText.map((permission, index) => {
+                        let discountShow = false;
+                        let labourRate = false;
+                        let pricingMatrix = false;
+                        if (
+                          permission.key === "shouldReceiveDiscount" &&
+                          customerDefaultPermissions[permission.key].status
+                        ) {
+                          discountShow = true;
+                        }
 
-                    if (
-                      permission.key === "shouldLaborRateOverride" &&
-                      customerDefaultPermissions[permission.key].status
-                    ) {
-                      labourRate = true;
-                    }
+                        if (
+                          permission.key === "shouldLaborRateOverride" &&
+                          customerDefaultPermissions[permission.key].status
+                        ) {
+                          labourRate = true;
+                        }
 
-                    if (
-                      permission.key === "shouldPricingMatrixOverride" &&
-                      customerDefaultPermissions[permission.key].status
-                    ) {
-                      pricingMatrix = true;
-                    }
-                    return (
-                      <>
-                        <Col md="6" key={index} key={index}>
-                          <div className="d-flex">
-                            <AppSwitch
-                              className={"mx-1"}
-                              checked={customerDefaultPermissions[permission.key]
-                                  .status}
-                              onClick={this.handleClick.bind(
-                                this,
-                                permission.key
-                              )}
-                              variant={"3d"}
-                              color={"primary"}
-                              size={"sm"}
-                            />
-                            <p className="customer-modal-text-style">
-                              {permission.text}
-                            </p>
-                          </div>
-                          {discountShow ? (
-
-                            <div className="custom-label" key={index}  >
-                              <Label
-                                htmlFor="name"
-                                className="customer-modal-text-style"
-                              >
-                                Percent Discount
-                           </Label>
-                              <FormGroup>
-                                <MaskedInput
-                                  mask="11\.11 \%"
-                                  name="percentageDiscount"
-                                  size="20"
-                                  onChange={this.handlePercentageChange}
-                                  className="form-control"
-                                  value={customerDefaultPermissions[permission.key]
-                                  .percentageDiscount}
-                                  placeholder="00.00%"
+                        if (
+                          permission.key === "shouldPricingMatrixOverride" &&
+                          customerDefaultPermissions[permission.key].status
+                        ) {
+                          pricingMatrix = true;
+                        }
+                        return (
+                          <>
+                            <Col md="6" key={index} key={index}>
+                              <div className="d-flex">
+                                <AppSwitch
+                                  className={"mx-1"}
+                                  checked={customerDefaultPermissions[permission.key]
+                                    .status}
+                                  onClick={this.handleClick.bind(
+                                    this,
+                                    permission.key
+                                  )}
+                                  variant={"3d"}
+                                  color={"primary"}
+                                  size={"sm"}
                                 />
-                              </FormGroup>
-                            </div>
-                          ) : null}
-                          {labourRate ? (
-                            <Col md="">
-                              <Async
-                                defaultOptions={rateStandardListData.standardRateList}
-                                loadOptions={this.loadOptions}
-                                onChange={this.handleStandardRate}
-                                isClearable={true}
-                                value={selectedLabourRate}
-                              />
+                                <p className="customer-modal-text-style">
+                                  {permission.text}
+                                </p>
+                              </div>
+                              {discountShow ? (
 
+                                <div className="custom-label" key={index}  >
+                                  <Label
+                                    htmlFor="name"
+                                    className="customer-modal-text-style"
+                                  >
+                                    Percent Discount
+                           </Label>
+                                  <FormGroup>
+                                    <MaskedInput
+                                      mask="11\.11 \%"
+                                      name="percentageDiscount"
+                                      size="20"
+                                      onChange={this.handlePercentageChange}
+                                      className="form-control"
+                                      value={customerDefaultPermissions[permission.key]
+                                        .percentageDiscount}
+                                      placeholder="00.00%"
+                                    />
+                                  </FormGroup>
+                                </div>
+                              ) : null}
+                              {labourRate ? (
+                                <Col md="">
+                                  <Async
+                                    defaultOptions={rateStandardListData.standardRateList}
+                                    loadOptions={this.loadOptions}
+                                    onChange={this.handleStandardRate}
+                                    isClearable={true}
+                                    value={selectedLabourRate}
+                                  />
+
+                                </Col>
+                              ) : null}
+                              {/* */}
+                              {pricingMatrix ? (
+                                <Col md="12">
+                                  <Input
+                                    type="select"
+                                    className=""
+                                    onChange={this.handleMatrixChange}
+                                    name="matrixType"
+                                    id="matrixId"
+                                  >
+                                    <option value={""}>Select</option>
+                                    {matrixListReducerData.matrixList.length
+                                      ? matrixListReducerData.matrixList.map(
+                                        (item, index) => {
+                                          return (
+                                            <option
+                                              value={item._id}
+                                              key={index}
+                                            >
+                                              {item.name}
+                                            </option>
+                                          );
+                                        }
+                                      )
+                                      : null}
+                                  </Input>
+                                </Col>
+                              ) : null}
                             </Col>
-                          ) : null}
-                          {/* */}
-                          {pricingMatrix ? (
-                            <Col md="12">
-                              <Input
-                                type="select"
-                                className=""
-                                onChange={this.handleMatrixChange}
-                                name="matrixType"
-                                id="matrixId"
-                              >
-                                <option value={""}>Select</option>
-                                {matrixListReducerData.matrixList.length
-                                  ? matrixListReducerData.matrixList.map(
-                                    (item, index) => {
-                                      return (
-                                        <option
-                                          value={item._id}
-                                          key={index}
-                                        >
-                                          {item.name}
-                                        </option>
-                                      );
-                                    }
-                                  )
-                                  : null}
-                              </Input>
-                            </Col>
-                          ) : null}
-                        </Col>
-                      </>);
-                  }): null}
+                          </>);
+                      }) : null}
 
                   {expandForm ? (
                     <Col md="12 text-center">
@@ -983,7 +1032,7 @@ export class CrmEditCustomerModal extends Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.updateNewCustomer}>
-              { "Update Customer"}
+              {"Update Customer"}
             </Button>{" "}
             <Button color="secondary" onClick={this.handleCustomerModal}>
               Cancel
