@@ -396,7 +396,7 @@ class FleetList extends Component {
                             onClick={() => {
                               this.setState(
                                 {
-                                  selectedUsers: [data._id]
+                                  selectedFleets: [data._id]
                                 },
                                 () => {
                                   this.activateUsers();
@@ -411,7 +411,7 @@ class FleetList extends Component {
                               onClick={() => {
                                 this.setState(
                                   {
-                                    selectedUsers: [data._id]
+                                    selectedFleets: [data._id]
                                   },
                                   () => {
                                     this.deactivateUsers();
