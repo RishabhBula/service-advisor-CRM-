@@ -127,6 +127,12 @@ export class CrmEditCustomerModal extends Component {
       })
     }
   }
+  setStateAsync(state) {
+		return new Promise(resolve => {
+			this.setState(state, resolve);
+		});
+  }
+  
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -245,27 +251,25 @@ export class CrmEditCustomerModal extends Component {
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
-      phoneDetail.push({
-        phone: "mobile",
-        value: ""
-      })
       this.setState({
-        phoneDetail: phoneDetail
-      })
+        phoneDetail: phoneDetail.concat([{
+          phone: "mobile",
+          value: ""
+        }]),
+        phoneErrors: []
+      });
     }
   }
 
   handleRemovePhoneDetails = (event) => {
     const { phoneDetail, phoneErrors } = this.state;
     if (phoneDetail.length) {
-      let phoneArray = phoneDetail.findIndex(
+      let phoneArrayIndx = phoneDetail.findIndex(
         item => item.key === event.key
       )
-      phoneDetail.splice(phoneArray, 1);
-      phoneErrors.splice(phoneArray, 1);
       this.setState({
-        phoneDetail,
-        phoneErrors
+        phoneDetail: phoneDetail.filter((s, sidx) => phoneArrayIndx !== sidx),
+        phoneErrors: phoneErrors.filter((s, sidx) => phoneArrayIndx !== sidx)
       })
     }
   }
@@ -298,7 +302,7 @@ export class CrmEditCustomerModal extends Component {
     return this.props.loadTypeRate(input)
   }
 
-  updateNewCustomer = () => {
+  updateNewCustomer = async () => {
     const {
       firstName,
       lastName,
@@ -337,16 +341,17 @@ export class CrmEditCustomerModal extends Component {
 
     try {
       if (phoneDetail.length) {
-        for (let i = 0; i < phoneDetail.length; i++) {
-          const key = phoneDetail[i];
-          if (key.value.length) {
-            phoneErrors[i] = "";
-            this.setState({ phoneErrors });
-          } else {
-            phoneErrors[i] = "Phone number is required";
-            this.setState({ phoneErrors });
-          }
-        }
+        await Promise.all(
+          phoneDetail.map(async (key, i) => {
+            if (key.value.length) {
+              phoneErrors[i] = '';
+              await this.setStateAsync({ phoneErrors: phoneErrors.splice(i, 1) });
+            } else {
+              phoneErrors[i] = 'Phone number is required';
+              await this.setStateAsync({ phoneErrors });
+            }
+          })
+        );
       }
 
       const { isValid, errors } = Validator(
