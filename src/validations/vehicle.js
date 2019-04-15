@@ -1,21 +1,36 @@
 import { ValidationTypes } from "js-object-validation";
 
-
-export const vehicleValidation = {
+export const VehicleValidations = {
   year: {
-    [ValidationTypes.REQUIRED]: "Please enter year.",
-     [ValidationTypes.ALPHA]: true,
+    [ValidationTypes.REQUIRED]: true,
+    [ValidationTypes.NUMERIC]: true 
   },
   make: {
-    [ValidationTypes.REQUIRED]: "Please enter make.",
+    [ValidationTypes.REQUIRED]: true,
      [ValidationTypes.ALPHA]: true,
   },
   modal: {
-    [ValidationTypes.REQUIRED]: "Please enter modal.",
+    [ValidationTypes.REQUIRED]: true,
     [ValidationTypes.ALPHA]: true,
-  }
+  },
   miles: {
     [ValidationTypes.ALPHA]: true,
-    [ValidationTypes.String]: "Please enter valid email address."
+    [ValidationTypes.NUMERIC]: true
+  }
+};
+
+export const VehicleValidationMessage = {
+  year: {
+    [ValidationTypes.REQUIRED]: "Please enter year.",
+    [ValidationTypes.NUMERIC]: "Only numbers are allowed."  
+  },
+  make: {
+    [ValidationTypes.REQUIRED]: "Please enter make.",
+  },
+  modal: {
+    [ValidationTypes.REQUIRED]: "Please enter modal.",
+  },
+  miles: {
+    [ValidationTypes.NUMERIC]: "Only numbers are allowed."
   }
 };
