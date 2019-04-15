@@ -95,6 +95,8 @@ class DefaultLayout extends Component {
       <CustAndVehicle
         displayModal={modelDetails.custAndVehicle}
         toggleModal={this.toggleCustAndVehicleProps}
+        matrixListReducerData={matrixListReducer}
+        rateStandardListData={rateStandardListReducer}
       />
     );
   }
