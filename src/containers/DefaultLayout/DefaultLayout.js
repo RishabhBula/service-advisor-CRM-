@@ -28,7 +28,7 @@ import {
   AppSidebarNav
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
-import CustAndVehicle  from "../../components/common/CustAndVehicle";
+import CustAndVehicle  from "../../components/common/CustomerAndVehicle/CustAndVehicle";
 import { logger } from "../../helpers/Logger";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
@@ -91,6 +91,9 @@ class DefaultLayout extends Component {
 
   customerAndVehicleModal = () => {
     const { modelDetails } = this.props.modelInfoReducer;
+    console.log('====================================');
+    console.log(modelDetails);
+    console.log('====================================');
     return (
       <CustAndVehicle
         displayModal={modelDetails.custAndVehicle}
@@ -107,13 +110,12 @@ class DefaultLayout extends Component {
     ) : (
       <div className="app">
         {this.renderCompanyDetailsPopup(profileInfo || {})}
-        <AppHeader fixed 
-          toggleCustAndVehicleProps={this.toggleCustAndVehicleProps}
-        >
+        <AppHeader fixed>
           <Suspense fallback={<Loader />}>
             <DefaultHeader
               onLogout={e => this.signOut(e)}
               permissions={permissions || {}}
+              toggleCustAndVehicle={this.toggleCustAndVehicleProps}
             />
           </Suspense>
         </AppHeader>

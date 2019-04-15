@@ -24,7 +24,7 @@ const defaultProps = {};
 
 class DefaultHeader extends Component {
   toggleCustAndVehicle = () => {
-    this.props.toggleCustAndVehicleProps();
+    this.props.toggleCustAndVehicle();
   }
   render() {
     const { permissions } = this.props;
@@ -106,14 +106,11 @@ class DefaultHeader extends Component {
                 style={{ right: "auto" }}
                 className="header-add-new-inner"
               >
-                <DropdownItem>
+                <DropdownItem onClick={this.toggleCustAndVehicle}>
                   <span className="header-add-icon">
                     <i className="fa fa-bell-o" />
                   </span>
-                  <span
-                    className="header-add-text"
-                    onClick={this.toggleCustAndVehicle}
-                  >
+                  <span className="header-add-text">
                     Customer & Vehicle
                   </span>
                 </DropdownItem>
