@@ -81,6 +81,12 @@ export class CrmCustomerModal extends Component {
     }
   }
 
+  setStateAsync(state) {
+		return new Promise(resolve => {
+			this.setState(state, resolve);
+		});
+	}
+
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
@@ -247,7 +253,7 @@ export class CrmCustomerModal extends Component {
     return this.props.loadTypeRate(input);
   }
 
-  addNewCustomer = () => {
+  addNewCustomer = async () => {
     const {
       firstName,
       lastName,
@@ -286,21 +292,18 @@ export class CrmCustomerModal extends Component {
 
     try {
       if (phoneDetail.length) {
-        for (let i = 0; i < phoneDetail.length; i++) {
-          const key = phoneDetail[i];
-          if (key.value.length) {
-            console.log('===============ffff=====================');
-            console.log(key);
-            console.log('====================================');
-           // phoneErrors.splice(i, 1);
-           phoneErrors[i] = "";
-            this.setState({ phoneErrors });
-          } else {
-            phoneErrors[i] = "Phone number is required";
-            this.setState({ phoneErrors });
-          }
-        }
+        await Promise.all(
+          phoneDetail.map(async (key, i) => {
+            if (key.value.length) {
+              await this.setStateAsync({ phoneErrors: phoneErrors.splice(i, 1) });
+            } else {
+              phoneErrors[i] = 'Phone number is required';
+              await this.setStateAsync({ phoneErrors });
+            }
+          })
+        );
       }
+      
       const { isValid, errors } = Validator(
         customerData,
         CreateCustomerValidations,
