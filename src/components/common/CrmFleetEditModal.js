@@ -138,15 +138,9 @@ export class CrmFleetEditModal extends Component {
       }
    }
    componentDidUpdate({ fleetSingleData }) {
-      console.log("fleetSingleData");
-      console.log(this.props.fleetSingleData);
-      console.log("fleetSingleData");
 
       if (fleetSingleData._id !== this.props.fleetSingleData._id) {
          const { fleetSingleData } = this.props
-         console.log('==================inner==================');
-         console.log(fleetSingleData);
-         console.log('====================================');
          this.setState({
             address1: fleetSingleData.address1,
             city: fleetSingleData.city,
@@ -256,7 +250,6 @@ export class CrmFleetEditModal extends Component {
       })
 
       let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
-      console.log(fleetDefaultPermissions);
 
       if (!fleetDefaultPermissions) {
          fleetDefaultPermissions = {};
@@ -279,10 +272,7 @@ export class CrmFleetEditModal extends Component {
          zipCode,
          fleetDefaultPermissions,
          percentageDiscount,
-      }
-      console.log("qqqqqqqqqqqqqqqqqq");
-      console.log(rateStandardListData);
-      console.log("qqqqqqqqqqqqqqqqqq");      
+      } 
       return (
          <>
             <Modal

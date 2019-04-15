@@ -18,18 +18,37 @@ class CustAndVehicle extends Component {
     };
   }
 
+  handleModal = () => {
+    this.props.toggleModal();
+  }
   render() {
     const { displayModal } = this.props;
+    const { step } = this.state;
     return (
       <Modal
         isOpen={displayModal}
-        toggle={this.handleCustomerModal}
+        toggle={this.handleModal}
         className="customer-modal custom-form-modal custom-modal-lg"
       >
         <ModalHeader toggle={this.props.toggleModal}>
-          {"Create New Customer"}
+          {step.selected === 1 ? "Create New Customer" : "Second Section"}
         </ModalHeader>
         <ModalBody />
+        <ModalFooter>
+         {
+          step.selected === 1 ?
+          <Button color="primary" onClick={this.addNewCustomer}>
+            {"Add Customer"}
+          </Button>
+          :
+           <Button color="primary" onClick={this.addNewCustomer}>
+            {"Add Vehicle"}
+          </Button>
+         }
+          <Button color="secondary" onClick={this.handleCustomerModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
       </Modal>
     );
   }

@@ -76,12 +76,6 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('====================================');
-    console.log(this.props.customer);
-    console.log(prevProps.customer);
-    console.log(prevProps.customer);
-    console.log(prevProps.customer);
-    console.log('====================================');
     if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
       this.setState({
         address1: "",
@@ -121,17 +115,12 @@ export class CrmEditCustomerModal extends Component {
         referralSource: customer.referralSource,
         state: customer.state,
         zipCode: customer.zipCode,
-        phoneDetail: customer.phoneDetail ? customer.phoneDetail.length ? customer.phoneDetail : [
+        phoneDetail: customer.phoneDetail && customer.phoneDetail.length ? customer.phoneDetail : [
           {
             phone: "mobile",
             value: ""
           }
-        ] : [
-            {
-              phone: "mobile",
-              value: ""
-            }
-          ],
+        ] 
       })
     }
   }
@@ -299,7 +288,7 @@ export class CrmEditCustomerModal extends Component {
     return this.props.loadTypeRate(input)
   }
 
-  addNewCustomer = () => {
+  updateNewCustomer = () => {
     const {
       firstName,
       lastName,
@@ -361,7 +350,7 @@ export class CrmEditCustomerModal extends Component {
       );
       if (!isValid &&
         (
-          (customerData.email !== '') ||
+          (customerData.email !== '') || Object.keys(this.state.phoneErrors).length ||
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')
@@ -377,6 +366,9 @@ export class CrmEditCustomerModal extends Component {
        this.props.addCustomerFun(customerData);
      
     } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
      // logger(error);
     }
   }
@@ -444,6 +436,9 @@ export class CrmEditCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option key={index} value={item.key}>{item.text}</option>;
     });
+    console.log('====================================');
+    console.log(this.state.phoneErrors);
+    console.log('====================================');
     return (
       <>
         <Modal
@@ -982,7 +977,7 @@ export class CrmEditCustomerModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.addNewCustomer}>
+            <Button color="primary" onClick={this.updateNewCustomer}>
               { "Update Customer"}
             </Button>{" "}
             <Button color="secondary" onClick={this.handleCustomerModal}>
