@@ -59,6 +59,7 @@ export class CrmFleetModal extends Component {
       defaultOptions: [
         { value: "", label: "Add New Customer" }
       ],
+      selectedLabourRate: {},
       vendorValue: '',
       openStadardRateModel: false
     };
@@ -87,9 +88,10 @@ export class CrmFleetModal extends Component {
         fleetDefaultPermissions["shouldLaborRateOverride"].laborRate =
           selectValue.value;
         this.setState({
-          ...fleetDefaultPermissions
+          ...fleetDefaultPermissions,
+          selectedLabourRate: selectValue
         });
-        this.props.setDefaultRate(selectValue);
+        //this.props.setDefaultRate(selectValue);
       }
     } else {
       this.props.onTypeHeadStdFun({});
@@ -129,7 +131,14 @@ export class CrmFleetModal extends Component {
         } else {
           toast.success(result.messages[0]);
           this.setState({
-            openStadardRateModel: !this.state.openStadardRateModel
+            openStadardRateModel: !this.state.openStadardRateModel,
+            selectedLabourRate: {
+              value: result.data.data._id,
+              label:
+                result.data.data.name +
+                " - " +
+                result.data.data.hourlyRate
+            }
           })
         }
       }
@@ -247,7 +256,7 @@ export class CrmFleetModal extends Component {
     const {
       fleetModalOpen,
       handleFleetModal,
-      modalClassName,
+      phoneErrors,
       handleAddFleet,
       errorMessage,
       matrixListReducerData,
@@ -266,7 +275,8 @@ export class CrmFleetModal extends Component {
       errors,
       percentageDiscount,
       isEditMode,
-      fleetId
+      fleetId,
+      selectedLabourRate
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return (
@@ -366,6 +376,7 @@ export class CrmFleetModal extends Component {
                 {/* <Row className="justify-content-center"> */}
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
+                    console.log(index, phoneErrors[index]);
                     return (
                       <>
                         {index < 1 ? (
@@ -393,29 +404,35 @@ export class CrmFleetModal extends Component {
                                   {phoneOptions}
                                 </Input>
                                 {phoneDetail[index].phone === "mobile" ? (
-                                  <MaskedInput
-                                    mask="(111) 111-111"
-                                    name="phoneDetail"
-                                    placeholder="(555) 055-0555"
-                                    className="form-control"
-                                    size="20"
-                                    value={item.value}
-                                    onChange={e =>
-                                      this.handlePhoneValueChange(index, e)
-                                    }
-                                  />
-                                ) : (
+                                  <div className="input-block select-number-tile">
                                     <MaskedInput
-                                      mask="(111) 111-111 ext 1111"
+                                      mask="(111) 111-111"
                                       name="phoneDetail"
+                                      placeholder="(555) 055-0555"
                                       className="form-control"
-                                      placeholder="(555) 055-0555 ext 1234"
                                       size="20"
                                       value={item.value}
                                       onChange={e =>
                                         this.handlePhoneValueChange(index, e)
                                       }
                                     />
+                                    <p className="text-danger">{phoneErrors[index]}</p>
+                                  </div>
+                                ) : (
+                                    <div className="input-block select-number-tile">
+                                      <MaskedInput
+                                        mask="(111) 111-111 ext 1111"
+                                        name="phoneDetail"
+                                        className="form-control"
+                                        placeholder="(555) 055-0555 ext 1234"
+                                        size="20"
+                                        value={item.value}
+                                        onChange={e =>
+                                          this.handlePhoneValueChange(index, e)
+                                        }
+                                      />
+                                      <p className="text-danger">{phoneErrors[index]}</p>
+                                    </div>
                                   )}
                               </FormGroup>
                             </Col>
@@ -672,6 +689,7 @@ export class CrmFleetModal extends Component {
                                   loadOptions={this.loadOptions}
                                   onChange={this.handleStandardRate}
                                   isClearable={true}
+                                  value={selectedLabourRate}
                                 />
 
                               </Col>

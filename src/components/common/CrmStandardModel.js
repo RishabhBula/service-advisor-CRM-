@@ -12,6 +12,17 @@ export class CrmStandardModel extends Component {
     };
   }
 
+    componentDidUpdate({openStadardRateModel}) { 
+      // if (this.props.openStadardRateModel !== openStadardRateModel) {
+      //   this.setState({
+      //     openStadardRateModel: false,
+      //     name: "",
+      //     hourRate: "",
+      //     isSubmitted: false
+      //   });
+      // }
+    }
+
   toggle = () => {
     this.props.stdModelFun();
     // this.setState({
@@ -61,6 +72,7 @@ export class CrmStandardModel extends Component {
                   <Label htmlFor="name" className="customer-modal-text-style">
                     Name
                   </Label>
+                  <div className={"input-block"}>
                   <Input
                     type="text"
                     placeholder="Rate Name"
@@ -72,9 +84,10 @@ export class CrmStandardModel extends Component {
                   />
                   {
                     errors && !name && errors.name ?
-                      <div className="error-tool-tip">Name is required</div> :
+                      <p className="text-danger">Name is required</p> :
                       null
                   }
+                  </div>
                 </FormGroup>
               </Col>
               <Col md="6">
@@ -82,19 +95,21 @@ export class CrmStandardModel extends Component {
                   <Label htmlFor="name" className="customer-modal-text-style">
                     Hour Rate
                   </Label>
-                  <Input
-                    type="text"
-                    name="hourRate"
-                    value={hourRate}
-                    placeholder="20"
-                    onChange={this.handleChange}
-                    id="make"
-                    maxLength='3'
-                    required
-                  />
+                  <div className={"input-block"}>
+                    <Input
+                      type="text"
+                      name="hourRate"
+                      value={hourRate}
+                      placeholder="20"
+                      onChange={this.handleChange}
+                      id="make"
+                      maxLength='3'
+                      required
+                    />
+                  </div>
                   {
                     errors && !hourRate && errors.hourRate ?
-                      <div className="error-tool-tip">Hour rate is required</div> :
+                      <p className="text-danger">Hour rate is required</p> :
                       null
                   }
                 </FormGroup>

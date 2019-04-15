@@ -5,7 +5,7 @@ import {
   signUpActions,
   showLoader,
   hideLoader,
-  redirectTo,
+  redirectTo
 } from "./../actions";
 
 const signUpLogic = createLogic({
@@ -35,7 +35,7 @@ const signUpLogic = createLogic({
       // dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 const verifyAccountLogic = createLogic({
   type: signUpActions.VERIFY_ACCOUNT,
@@ -55,7 +55,7 @@ const verifyAccountLogic = createLogic({
       dispatch(hideLoader());
       dispatch(
         redirectTo({
-          path: "/404",
+          path: "/404"
         })
       );
       done();
@@ -66,7 +66,7 @@ const verifyAccountLogic = createLogic({
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 const verifyGeneratePasswordLogic = createLogic({
   type: signUpActions.VERIFY_GENERATE_PASSWORD,
@@ -85,7 +85,7 @@ const verifyGeneratePasswordLogic = createLogic({
       dispatch(hideLoader());
       dispatch(
         redirectTo({
-          path: "/404",
+          path: "/404"
         })
       );
       done();
@@ -94,7 +94,7 @@ const verifyGeneratePasswordLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 
 const generatePasswordLogic = createLogic({
@@ -115,7 +115,7 @@ const generatePasswordLogic = createLogic({
       dispatch(hideLoader());
       dispatch(
         redirectTo({
-          path: "/404",
+          path: "/404"
         })
       );
       done();
@@ -126,7 +126,7 @@ const generatePasswordLogic = createLogic({
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 const resendConfiramtionLinkLogic = createLogic({
   type: signUpActions.RESEND_LINK,
@@ -151,7 +151,7 @@ const resendConfiramtionLinkLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 
 export const SignUpLogic = [
@@ -159,5 +159,5 @@ export const SignUpLogic = [
   verifyAccountLogic,
   generatePasswordLogic,
   verifyGeneratePasswordLogic,
-  resendConfiramtionLinkLogic,
+  resendConfiramtionLinkLogic
 ];

@@ -64,12 +64,12 @@ export default {
         },
         {
           name: "Vehicles",
-          url: "/vehicles",
+          url: "/settings/vehicles",
           icon: "icon-puzzle",
         },
         {
           name: "Fleets",
-          url: "/fleets",
+          url: "/settings/fleets",
           icon: "icon-puzzle",
         },
       ],

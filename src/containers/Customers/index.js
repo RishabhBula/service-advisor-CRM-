@@ -56,6 +56,7 @@ class Customers extends Component {
   };
 
   toggleEditModal = e => {
+    this.setState({customer: {}})
       const { modelDetails } = this.props.modelInfoReducer;
       let data = {
         customerModel: false,
@@ -99,6 +100,14 @@ class Customers extends Component {
     const query = qs.parse(search);
     this.props.deleteCustomer({ ...query, userId });
   };
+
+  changeCustomerStatus = (e, customerId) => {
+    let data = {
+      status: e.enabled,
+      customerId: customerId,
+    };
+    this.props.updateCustomer(data);
+  }
 
   addCustomer = (data) => {
     this.props.addCustomer(data);
@@ -158,6 +167,7 @@ class Customers extends Component {
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               onDelete={this.deleteCustomer}
+              changeStatus={this.changeCustomerStatus}
               updateModel={this.toggleUpdateModal}
             />
           </CardBody>
