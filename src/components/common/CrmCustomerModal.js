@@ -196,13 +196,12 @@ export class CrmCustomerModal extends Component {
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
-      phoneDetail.push({
-        phone: "mobile",
-        value: ""
-      })
       this.setState({
-        phoneDetail: phoneDetail,
-        phoneErrors: {}
+        phoneDetail: phoneDetail.concat([{
+          phone: "mobile",
+          value: ""
+        }]),
+        phoneErrors: []
       });
     }
   }
@@ -210,14 +209,12 @@ export class CrmCustomerModal extends Component {
   handleRemovePhoneDetails = (event) => {
     const { phoneDetail, phoneErrors } = this.state;
     if (phoneDetail.length) {
-      let phoneArray = phoneDetail.findIndex(
+      let phoneArrayIndx = phoneDetail.findIndex(
         item => item.key === event.key
       )
-      phoneDetail.splice(phoneArray, 1);
-     // phoneErrors.splice(phoneArray, 1);
       this.setState({
-        phoneDetail,
-        phoneErrors: {}
+        phoneDetail: phoneDetail.filter((s, sidx) => phoneArrayIndx !== sidx),
+        phoneErrors: phoneErrors.filter((s, sidx) => phoneArrayIndx !== sidx)
       })
     }
   }
