@@ -75,14 +75,14 @@ export class CrmEditCustomerModal extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) { 
+  componentDidUpdate(prevProps) {
     console.log('====================================');
     console.log(this.props.customer);
     console.log(prevProps.customer);
     console.log(prevProps.customer);
     console.log(prevProps.customer);
     console.log('====================================');
-    if(prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
+    if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
       this.setState({
         address1: "",
         address2: "",
@@ -97,25 +97,42 @@ export class CrmEditCustomerModal extends Component {
         referralSource: "",
         state: "",
         zipCode: "",
-      })   
+        phoneDetail: [
+          {
+            phone: "mobile",
+            value: ""
+          }
+        ],
+      })
     }
-    if(prevProps.customer._id!== this.props.customer._id){       
+    if (prevProps.customer._id !== this.props.customer._id) {
       const { customer } = this.props;
-        this.setState({
-          address1: customer.address1,
-          address2: customer.address2,
-          city: customer.city,
-          companyName: customer.companyName,
-          email: customer.email,
-          firstName: customer.firstName,
-          fleet: customer.fleet,
-          lastName: customer.lastName,
-          notes: customer.notes,
-          customerDefaultPermissions: customer.permission,
-          referralSource: customer.referralSource,
-          state: customer.state,
-          zipCode: customer.zipCode,
-        })   
+      this.setState({
+        address1: customer.address1,
+        address2: customer.address2,
+        city: customer.city,
+        companyName: customer.companyName,
+        email: customer.email,
+        firstName: customer.firstName,
+        fleet: customer.fleet,
+        lastName: customer.lastName,
+        notes: customer.notes,
+        customerDefaultPermissions: customer.permission,
+        referralSource: customer.referralSource,
+        state: customer.state,
+        zipCode: customer.zipCode,
+        phoneDetail: customer.phoneDetail ? customer.phoneDetail.length ? customer.phoneDetail : [
+          {
+            phone: "mobile",
+            value: ""
+          }
+        ] : [
+            {
+              phone: "mobile",
+              value: ""
+            }
+          ],
+      })
     }
   }
   handleClick(singleState, e) {
@@ -519,7 +536,7 @@ export class CrmEditCustomerModal extends Component {
                                   type="select"
                                   id="name"
                                   required
-
+                                  value={item.phone}
                                 >
                                   {phoneOptions}
                                 </Input>
@@ -608,6 +625,7 @@ export class CrmEditCustomerModal extends Component {
                                     type="select"
                                     id="name"
                                     required
+                                    value={item.phone}
                                   >
                                     {phoneOptions}
                                   </Input>

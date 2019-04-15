@@ -144,7 +144,6 @@ export class CrmEditVehicleModal extends Component {
    }
 
    updateVehicleFun = () => {
-      alert("testing");
       let data = {
          year: this.state.year,
          make: this.state.make,
