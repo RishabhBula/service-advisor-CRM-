@@ -47,6 +47,23 @@
   width: 530px;
   margin: 0 auto;
 }
+.confirm-block .icon-block{
+  position: relative;
+  height: 150px;
+  margin-top: -10px;
+}
+.confirm-block .icon-block img{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-60%);
+  top: 0px;
+}
+.confirm-text{
+  color: #56545f;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
 .margin-top-10 {
   margin-top: 10px;
 }
