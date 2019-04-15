@@ -399,7 +399,7 @@ class FleetList extends Component {
                                   selectedFleets: [data._id]
                                 },
                                 () => {
-                                  this.activateUsers();
+                                  this.deactivateUsers();
                                 }
                               );
                             }}
@@ -414,7 +414,7 @@ class FleetList extends Component {
                                     selectedFleets: [data._id]
                                   },
                                   () => {
-                                    this.deactivateUsers();
+                                    this.activateUsers();
                                   }
                                 );
                               }}
@@ -451,7 +451,7 @@ class FleetList extends Component {
                 })
               ) : (
                   <tr>
-                    <td className={"text-center"} colSpan={8}>
+                    <td className={"text-center"} colSpan={10}>
                       No Fleet Found
                   </td>
                   </tr>

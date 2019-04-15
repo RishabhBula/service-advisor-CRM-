@@ -319,6 +319,8 @@ export class CrmFleetEditModal extends Component {
          fleetDefaultPermissions,
          percentageDiscount,
       }
+      console.log("error message", errorMessage);
+
       return (
          <>
             <Modal
