@@ -13,7 +13,7 @@ import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
 import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest,deleteCustomer, getRateStandardListRequest, setRateStandardListStart, customerEditRequest } from "../../actions";
+import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest, deleteCustomer, getRateStandardListRequest, setRateStandardListStart, customerEditRequest, updateCustomerStatus } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -101,13 +101,20 @@ class Customers extends Component {
     this.props.deleteCustomer({ ...query, userId });
   };
 
-  changeCustomerStatus = (e, customerId) => {
-    let data = {
-      status: e.enabled,
-      customerId: customerId,
-    };
-    this.props.updateCustomer(data);
-  }
+  // changeCustomerStatus = (e, customerId) => {
+  //   let data = {
+  //     status: e.enabled,
+  //     customerId: customerId,
+  //   };
+  //   this.props.updateCustomer(data);
+  // }
+
+  onStatusUpdate = data => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.onStatusUpdate({ ...query, ...data });
+  };
 
   addCustomer = (data) => {
     this.props.addCustomer(data);
@@ -168,6 +175,7 @@ class Customers extends Component {
               onPageChange={this.onPageChange}
               onDelete={this.deleteCustomer}
               changeStatus={this.changeCustomerStatus}
+              onStatusUpdate={this.onStatusUpdate}
               updateModel={this.toggleUpdateModal}
             />
           </CardBody>
@@ -227,6 +235,9 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteCustomer: (data) => {
     dispatch(deleteCustomer(data));
+  },
+  onStatusUpdate: (data) => {
+    dispatch(updateCustomerStatus(data));
   },
   getStdList: (data) => {
     dispatch(getRateStandardListRequest(data));

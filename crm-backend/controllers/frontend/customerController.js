@@ -2,6 +2,7 @@ const customerModel = require("../../models/customer");
 const commonValidation = require("../../common/index");
 const { otherMessage } = require("../../common/validationMessage");
 const { validationResult } = require("express-validator/check");
+
 /*----------------Customer create by admin/staff------------------ */
 const createCustomer = async (req, res) => {
   try {
@@ -166,25 +167,46 @@ const getAllCustomerList = async (req, res) => {
 };
 
 /* Delete Customer */
-const deleteCustomer = async ({ params }, res) => {
+const deleteCustomer = async ({ body }, res) => {
+  // try {
+  //   const { userId } = params;
+  //   const data = await customerModel.findByIdAndUpdate(userId, {
+  //     isDeleted: true,
+  //   });
+  //   return res.status(200).json({
+  //     message: "Customer deleted successfully!",
+  //     data,
+  //   });
+  // } catch (error) {
+  //   return res.status(500).json({
+  //     message: error.message ? error.message : "Unexpected error occure.",
+  //     success: false,
+  //   });
+  // }
   try {
-    const { userId } = params;
-    const data = await customerModel.findByIdAndUpdate(userId, {
-      isDeleted: true,
-    });
+    const data = await customerModel.updateMany(
+      {
+        _id: { $in: body.userId }
+      },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
     return res.status(200).json({
       message: "Customer deleted successfully!",
-      data,
+      data
     });
   } catch (error) {
+    console.log("this is get all customer error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
 /* Delete Customer */
-
 
 /* update customer data */
 const updateCustomerdetails = async (req, res) => {
@@ -227,9 +249,38 @@ const updateCustomerdetails = async (req, res) => {
   }
 };
 
+/* UPDATE CUSTOMER STATUS */
+const updateStatus = async ({ body }, res) => {
+  try {
+    const data = await customerModel.updateMany(
+      {
+        _id: { $in: body.customers }
+      },
+      {
+        $set: {
+          status: body.status
+        }
+      }
+    );
+    return res.status(200).json({
+      message: body.status
+        ? "Customer inactivated successfully!"
+        : "Customer activated successfully!",
+      data
+    });
+  } catch (error) {
+    console.log("this is get all customer error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
 module.exports = {
   createCustomer,
   getAllCustomerList,
   deleteCustomer,
   updateCustomerdetails,
+  updateStatus
 };

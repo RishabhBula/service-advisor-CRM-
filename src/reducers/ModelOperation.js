@@ -7,7 +7,8 @@ const initialAuthState = {
     customreEditModel: false,
     fleetEditModel: false,
     vehicleModel: false,
-    vehicleEditModel: false
+    vehicleEditModel: false,
+    custAndVehicle: false
   }
 };
 

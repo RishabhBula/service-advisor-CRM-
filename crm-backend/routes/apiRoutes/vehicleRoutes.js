@@ -7,5 +7,6 @@ const token = require("../../common/token");
 router.post("/addVehicle",token.authorisedUser,vehicleController.addNewVehicle);
 router.get("/getAllVehicleList",token.authorisedUser,vehicleController.getAllVehicleList);
 router.put("/updateVehicleDetails", token.authorisedUser, vehicleController.updateVehicleDetails);
-
+router.post("/delete", token.authorisedUser, vehicleController.deleteVehicle);
+router.post("/updateStatus", token.authorisedUser, vehicleController.updateStatus);
 module.exports = router;

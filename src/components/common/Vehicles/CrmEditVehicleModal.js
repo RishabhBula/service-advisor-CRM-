@@ -100,9 +100,6 @@ export class CrmEditVehicleModal extends Component {
      
       const { vehicleData } = this.props;
       if (prevProps.vehicleEditModalOpen !== this.props.vehicleEditModalOpen && !this.props.vehicleEditModalOpen) {
-         console.log('====================================');
-         console.log(this.props);
-         console.log('====================================');
          this.setState({
            year: "",
            make: "",
@@ -144,7 +141,6 @@ export class CrmEditVehicleModal extends Component {
    }
 
    updateVehicleFun = () => {
-      alert("testing");
       let data = {
          year: this.state.year,
          make: this.state.make,

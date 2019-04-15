@@ -11,6 +11,9 @@ export const vehicleActions = {
     VEHICLES_GET_SUCCESS: "Vehicles Get successfully!",
     VEHICLES_GET_FAILED: "Vehicles Get failed!",
 
+    DELETE_VEHICLE: "Delete vehicle Requested!",
+    UPDATE_VEHICLE_STATUS: "Update vehicle status Requested!",
+
     EDIT_VEHICLE_REQUESTED: "Edit VEHICLE Requested!",
     EDIT_VEHICLE_SUCCESS: "Edit VEHICLE Success!",
 }
@@ -25,10 +28,15 @@ export const vehicleGetStarted = createAction(vehicleActions.VEHICLES_GET_START)
 export const vehicleGetSuccess = createAction(vehicleActions.VEHICLES_GET_SUCCESS);
 export const vehicleGetFailed = createAction(vehicleActions.VEHICLES_GET_FAILED);
 
-export const customerEditRequest = createAction(
+
+
+export const deleteVehicle = createAction(vehicleActions.DELETE_VEHICLE);
+export const updateVehicleStatus = createAction(vehicleActions.UPDATE_VEHICLE_STATUS);
+
+export const vehicleEditRequest = createAction(
   vehicleActions.EDIT_VEHICLE_REQUESTED
 );
-export const customerEditSuccess = createAction(
-  vehicleActions.EDIT_VEHICLE_SUCCESS
+export const vehicleEditSuccess = createAction(
+    vehicleActions.EDIT_VEHICLE_SUCCESS
 );
 

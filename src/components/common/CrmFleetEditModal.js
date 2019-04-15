@@ -296,7 +296,6 @@ export class CrmFleetEditModal extends Component {
       })
 
       let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
-      console.log(fleetDefaultPermissions);
 
       if (!fleetDefaultPermissions) {
          fleetDefaultPermissions = {};
