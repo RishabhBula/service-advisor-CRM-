@@ -98,7 +98,7 @@ export class CrmVehicleModal extends Component {
 
    createVehicleFun = () => {
       let data = {
-         year: this.state.year,
+         year: this.state.year=== "" ? null : this.state.year,
          make: this.state.make,
          modal: this.state.modal,
          type: this.state.typeSelected,

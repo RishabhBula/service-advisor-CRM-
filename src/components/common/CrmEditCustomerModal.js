@@ -97,7 +97,10 @@ export class CrmEditCustomerModal extends Component {
             value: ""
           }
         ],
-      })
+        selectedLabourRate: {},
+        phoneErrors: {},
+        expandForm: false
+      });
     }
     if (prevProps.customer._id !== this.props.customer._id) {
       const { customer } = this.props;
@@ -167,8 +170,15 @@ export class CrmEditCustomerModal extends Component {
         } else {
           toast.success(result.messages[0]);
           this.setState({
-            openStadardRateModel: !this.state.openStadardRateModel
-          })
+            openStadardRateModel: !this.state.openStadardRateModel,
+            selectedLabourRate: {
+              value: result.data.data._id,
+              label:
+                result.data.data.name +
+                " - " +
+                result.data.data.hourlyRate
+            }
+          });
           this.props.onStdAdd();
         }
       }
@@ -276,7 +286,7 @@ export class CrmEditCustomerModal extends Component {
           selectedLabourRate: selectValue
         });
 
-        this.props.setDefaultRate(selectValue);
+        //this.props.setDefaultRate(selectValue);
       }
     }
     else {
@@ -339,10 +349,6 @@ export class CrmEditCustomerModal extends Component {
         }
       }
 
-      // console.log(phoneDetail);
-      // console.log(this.state.phoneErrors);
-      // console.log(Object.keys(this.state.phoneErrors).length)
-
       const { isValid, errors } = Validator(
         customerData,
         CreateCustomerValidations,
@@ -366,9 +372,6 @@ export class CrmEditCustomerModal extends Component {
        this.props.addCustomerFun(customerData);
      
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
      // logger(error);
     }
   }
@@ -436,9 +439,6 @@ export class CrmEditCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option key={index} value={item.key}>{item.text}</option>;
     });
-    console.log('====================================');
-    console.log(this.state.phoneErrors);
-    console.log('====================================');
     return (
       <>
         <Modal
@@ -915,7 +915,7 @@ export class CrmEditCustomerModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={true}
-                                value={rateStandardListData.selectedOptions}
+                                value={selectedLabourRate}
                               />
 
                             </Col>

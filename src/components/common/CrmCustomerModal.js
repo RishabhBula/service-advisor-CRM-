@@ -124,10 +124,17 @@ export class CrmCustomerModal extends Component {
         } else {
           toast.success(result.messages[0]);
           this.setState({
-            openStadardRateModel: !this.state.openStadardRateModel
-          })
+            openStadardRateModel: !this.state.openStadardRateModel,
+            selectedLabourRate: {
+              value: result.data.data._id,
+              label:
+                result.data.data.name +
+                " - " +
+                result.data.data.hourlyRate
+            }
+          });
           this.props.onStdAdd();
-          this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
+          //this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
         }
       }
     } catch (error) {
@@ -251,6 +258,7 @@ export class CrmCustomerModal extends Component {
   }
 
   addNewCustomer = () => {
+   
     const {
       firstName,
       lastName,
@@ -292,9 +300,6 @@ export class CrmCustomerModal extends Component {
         for (let i = 0; i < phoneDetail.length; i++) {
           const key = phoneDetail[i];
           if (key.value.length) {
-            console.log('===============ffff=====================');
-            console.log(key);
-            console.log('====================================');
            // phoneErrors.splice(i, 1);
            phoneErrors[i] = "";
             this.setState({ phoneErrors });
@@ -323,10 +328,8 @@ export class CrmCustomerModal extends Component {
           isLoading: false,
         });
         return;
-      }
-     
+      }  
         this.props.addCustomerFun(customerData);
-        this.removeAllState();
     } catch (error) {
       logger(error);
     }
@@ -352,7 +355,11 @@ export class CrmCustomerModal extends Component {
         state: "",
         zipCode: "",
         fleet: "",
-        errors: {}
+        errors: {},
+        selectedLabourRate: {},
+        customerDefaultPermissions: CustomerDefaultPermissions,
+        phoneErrors: {},
+        expandForm: false
       })
   }
 
@@ -394,7 +401,6 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-
     return (
       <>
         <Modal
@@ -890,6 +896,7 @@ export class CrmCustomerModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={true}
+                                value={selectedLabourRate}
                               />
 
                             </Col>
