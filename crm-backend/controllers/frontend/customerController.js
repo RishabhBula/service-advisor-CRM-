@@ -282,6 +282,5 @@ module.exports = {
   getAllCustomerList,
   deleteCustomer,
   updateCustomerdetails,
-  updateCustomerdetails,
   updateStatus
 };

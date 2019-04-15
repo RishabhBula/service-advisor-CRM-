@@ -20,7 +20,8 @@ import {
   setRateStandardListStart,
   deleteFleet,
   modelOpenRequest,
-  fleetEditRequest
+  fleetEditRequest,
+  updateFleetStatus
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
@@ -34,6 +35,7 @@ class Fleet extends Component {
       error: {},
       isLoading: false,
       fleetListData: [],
+      phoneErrors: [],
       openEdit: false,
       openCreate: false,
       fleetSingleData: {}
@@ -106,6 +108,12 @@ class Fleet extends Component {
       this.props.getFleet(data);
     }
   }
+  onStatusUpdate = data => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.onStatusUpdate({ ...query, ...data });
+  };
   onSearch = data => {
     const { location } = this.props;
     const { pathname } = location;
@@ -153,12 +161,29 @@ class Fleet extends Component {
       error: {}
     });
     try {
+      if (fleetData.phoneDetail.length) {
+        for (let i = 0; i < fleetData.phoneDetail.length; i++) {
+          const key = fleetData.phoneDetail[i];
+          if (key.value.length) {
+            this.state.phoneErrors.splice(i, 1);
+            this.setState({ phoneErrors: this.state.phoneErrors });
+          } else {
+            this.state.phoneErrors[i] = "Phone number is required";
+            this.setState({ phoneErrors: this.state.phoneErrors });
+          }
+        }
+      }
       const { isValid, errors } = Validator(
         fleetData,
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
-      if (!isValid && ((fleetData.email !== '') || (fleetData.companyName === ''))) {
+      if (!isValid &&
+        (
+          (fleetData.email !== '') || Object.keys(this.state.phoneErrors).length ||
+          (fleetData.companyName === '')
+        )
+      ) {
         this.setState({
           error: errors,
           isLoading: false,
@@ -199,7 +224,7 @@ class Fleet extends Component {
     this.props.deleteFleet(data);
   };
   render() {
-    const { openCreate, error, openEdit, fleetSingleData } = this.state;
+    const { openCreate, error, openEdit, fleetSingleData, phoneErrors } = this.state;
     const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
@@ -235,6 +260,7 @@ class Fleet extends Component {
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               onDelete={this.deleteFleet}
+              onStatusUpdate={this.onStatusUpdate}
               openEdit={openEdit} />
           </CardBody>
         </Card>
@@ -243,6 +269,7 @@ class Fleet extends Component {
           handleFleetModal={this.toggleCreateModal}
           handleAddFleet={this.handleAddFleet}
           errorMessage={error}
+          phoneErrors={phoneErrors}
           onTypeHeadStdFun={this.onTypeHeadStdFun}
           setDefaultRate={this.setDefaultRate}
           rateStandardListData={rateStandardListReducer}
@@ -299,6 +326,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateFleet: (data) => {
     dispatch(fleetEditRequest(data))
+  },
+  onStatusUpdate: data => {
+    dispatch(updateFleetStatus(data));
   }
 });
 
