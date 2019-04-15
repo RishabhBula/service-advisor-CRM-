@@ -10,6 +10,7 @@ export const customersAddActions = {
   CUSTOMER_GET_SUCCESS: "Customer Get successfully!",
   CUSTOMER_GET_FAILED: "Customer Get failed!",
   DELETE_CUSTOMER: "Delete customer Requested!",
+  UPDATE_CUSTOMER_STATUS: "Update customer status Requested!",
 
   EDIT_CUSTOMER_REQUESTED: "Edit CUSTOMER Requested!",
   EDIT_CUSTOMER_SUCCESS: "Edit CUSTOMER Success!",
@@ -42,6 +43,8 @@ export const customerGetFailed = createAction(
 ); 
 
 export const deleteCustomer = createAction(customersAddActions.DELETE_CUSTOMER);
+
+export const updateCustomerStatus = createAction(customersAddActions.UPDATE_CUSTOMER_STATUS);
 
 export const customerEditRequest = createAction(customersAddActions.EDIT_CUSTOMER_REQUESTED)
 export const customerEditSuccess = createAction(customersAddActions.EDIT_CUSTOMER_SUCCESS)

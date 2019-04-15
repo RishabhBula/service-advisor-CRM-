@@ -35,6 +35,7 @@ class CustomerList extends Component {
       selectedCustomers: [],
     };
   }
+
   componentDidMount() {
     const { location } = this.props;
     const lSearch = location.search;
@@ -46,6 +47,7 @@ class CustomerList extends Component {
       search: search || '',
     });
   }
+
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
@@ -53,6 +55,25 @@ class CustomerList extends Component {
       });
     }
   }
+
+  handleCheckboxChnage = e => {
+    const { target } = e;
+    const { checked, value } = target;
+    const { selectedCustomers } = this.state;
+    if (checked) {
+      selectedCustomers.push(value);
+      this.setState({
+        selectedCustomers
+      });
+      return;
+    }
+    const index = selectedCustomers.indexOf(value);
+    selectedCustomers.splice(index, 1);
+    this.setState({
+      selectedCustomers
+    });
+  };
+
   handleCheckAllCheckBox = e => {
     const { customerData } = this.props;
     const { customers } = customerData;
@@ -60,7 +81,7 @@ class CustomerList extends Component {
     const { checked } = target;
     if (!checked) {
       this.setState({
-        selectedCustomers: [],
+        selectedCustomers: []
       });
       return;
     }
@@ -69,24 +90,8 @@ class CustomerList extends Component {
       selectedCustomers.push(user._id);
     });
     this.setState({ selectedCustomers });
-  };
-  handleCheckboxChnage = e => {
-    const { target } = e;
-    const { checked, value } = target;
-    const { selectedCustomers } = this.state;
-    if (checked) {
-      selectedCustomers.push(value);
-      this.setState({
-        selectedCustomers,
-      });
-      return;
-    }
-    const index = selectedCustomers.indexOf(value);
-    selectedCustomers.splice(index, 1);
-    this.setState({
-      selectedCustomers,
-    });
-  };
+  }; 
+
   handleActionChange = e => {
     const { selectedCustomers } = this.state;
     const { target } = e;
@@ -95,18 +100,19 @@ class CustomerList extends Component {
       return;
     }
     if (!selectedCustomers.length) {
-      toast.error('Please select at least one customer.');
+      toast.error("Please select at least one customer.");
       return;
     }
-    if (value === 'active') {
-      this.activateUsers(true);
-    } else if (value === 'inactive') {
-      this.deactivateUsers(true);
-    } else if (value === 'delete') {
+    if (value === "active") {
+      this.activateCustomers(true);
+    } else if (value === "inactive") {
+      this.deactivateCustomers(true);
+    } else if (value === "delete") {
       this.onDelete(true);
     }
   };
-  activateUsers = async (isMultiple = false) => {
+
+  activateCustomers = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
         ? 'Do you want to active selected customer(s)?'
@@ -118,9 +124,11 @@ class CustomerList extends Component {
       });
       return;
     }
-    this.props.onStatusUpdate({ status: 1, users: this.state.selectedCustomers });
+    this.props.onStatusUpdate({ status: true, customers: this.state.selectedCustomers });
+    this.setState({selectedCustomers: []});
   };
-  deactivateUsers = async (isMultiple = false) => {
+
+  deactivateCustomers = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
         ? 'Do you want to inactive selected customer(s)?'
@@ -132,9 +140,11 @@ class CustomerList extends Component {
       });
       return;
     }
-    this.props.onStatusUpdate({ status: 0, users: this.state.selectedCustomers });
+    this.props.onStatusUpdate({ status: false, customers: this.state.selectedCustomers });
+    this.setState({ selectedCustomers: [] });
   };
-  onDelete = async (isMultiple = false) => {
+
+  onDelete = async (isMultiple = false) => {    
     const { value } = await ConfirmBox({
       text: isMultiple
         ? "Do you want to delete selected customer(s)?"
@@ -147,12 +157,15 @@ class CustomerList extends Component {
       return;
     }
     this.props.onDelete(this.state.selectedCustomers);
+    this.setState({ selectedCustomers: [] });
   };
+
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
     });
   };
+
   onSearch = e => {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
@@ -171,6 +184,7 @@ class CustomerList extends Component {
     }
     this.props.onSearch(param);
   };
+
   onReset = e => {
     e.preventDefault();
     this.setState({
@@ -183,25 +197,26 @@ class CustomerList extends Component {
     this.props.onSearch({});
   };
 
-  changeStatus = async (e, customerId) => {
-    const { value } = await ConfirmBox({
-      text: 'Do you want to update the status of this customer?',
-    });
-    if (!value) {
-      return;
-    }
-    this.props.changeStatus(e, customerId);
-  };
+  // changeStatus = async (e, customerId) => {
+  //   const { value } = await ConfirmBox({
+  //     text: 'Do you want to update the status of this customer?',
+  //   });
+  //   if (!value) {
+  //     return;
+  //   }
+  //   this.props.changeStatus(e, customerId);
+  // };
 
-  onDelete = async userId => {
-    const { value } = await ConfirmBox({
-      text: 'Do you want to delete this customer?',
-    });
-    if (!value) {
-      return;
-    }
-    this.props.onDelete(userId);
-  };
+  // onDelete = async userId => {
+  //   const { value } = await ConfirmBox({
+  //     text: 'Do you want to delete this customer?',
+  //   });
+  //   if (!value) {
+  //     return;
+  //   }
+  //   this.props.onDelete(userId);
+  // };
+
   editUser = customer => {
     this.props.updateModel(customer);
   };
@@ -386,6 +401,44 @@ class CustomerList extends Component {
                       </td>
 
                       <td>
+                        {user.status ? (
+                          <Badge
+                            className={"badge-button"}
+                            color="success"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedCustomers: [user._id]
+                                },
+                                () => {
+                                  this.deactivateCustomers();
+                                }
+                              );
+                            }}
+                          >
+                            Active
+                          </Badge>
+                        ) : (
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedCustomers: [user._id]
+                                  },
+                                  () => {
+                                    this.activateCustomers();
+                                  }
+                                );
+                              }}
+                            >
+                              Inactive
+                          </Badge>
+                          )}
+                      </td>
+
+                      {/* <td>
                         <Button
                           color={user.status ? 'success' : 'danger'}
                           onClick={() =>
@@ -400,7 +453,7 @@ class CustomerList extends Component {
                         >
                           {user.status ? 'Active' : 'Inactive'}
                         </Button>
-                      </td>
+                      </td> */}
                       <td>
                         <Button
                           color={'primary'}
@@ -411,11 +464,21 @@ class CustomerList extends Component {
                         </Button>{' '}
                         &nbsp;
                         <Button
-                          color={'danger'}
-                          size={'sm'}
-                          onClick={() => this.onDelete(user._id)}
+                          color={"danger"}
+                          size={"sm"}
+                          onClick={() =>
+                            this.setState(
+                              {
+                                selectedCustomers: [user._id]
+                              },
+                              () => {
+                                this.onDelete();
+                              }
+                            )
+                          }
+                          id={`delete-${user._id}`}
                         >
-                          <i className={'fa fa-trash'} />
+                          <i className={"fa fa-trash"} />
                         </Button>
                       </td>
                     </tr>

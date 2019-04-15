@@ -126,9 +126,11 @@ const deleteCustomerLogic = createLogic({
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/customer",
-      ["/deleteCustomer/", action.payload.userId].join(""),
-      'DELETE',
-      true
+      "/delete",
+      'POST',
+      true,
+      undefined,
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -188,4 +190,38 @@ const editCustomerLogic = createLogic({
   },
 });
 
-export const CustomersLogic = [addCustomerLogic, getCustomersLogic, deleteCustomerLogic, editCustomerLogic];
+const updateCustomerStatusLogic = createLogic({
+  type: customersAddActions.UPDATE_CUSTOMER_STATUS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/customer",
+      "/updateStatus",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.users;
+      delete action.payload.status;
+      dispatch(
+        customerGetRequest({
+          ...action.payload
+        })
+      );
+      done();
+    }
+  }
+});
+
+export const CustomersLogic = [addCustomerLogic, getCustomersLogic, deleteCustomerLogic, editCustomerLogic, updateCustomerStatusLogic];
