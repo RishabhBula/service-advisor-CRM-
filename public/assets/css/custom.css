@@ -301,33 +301,57 @@
 .box-contain {
   width: 23%;
   margin-bottom: 20px;
-  box-shadow: inset 0px 0px 0px 1px #e4eaec;
+  box-shadow: inset 0px 0px 0px 1px #a7afb1;
   border-radius: 4px;
-  padding: 24px 16px;
+  padding: 15px 10px;
   text-align: center;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: #fff; 
+  position: relative;
 }
 .box-contain.active {
-  box-shadow: inset 0px 0px 0px 1px #54afc9;
+  box-shadow: inset 0px 0px 0px 1px #5734c2;
 }
 .box-contain.active .welcome-service-text {
-  color: #54afc9;
+  /* color: #54afc9; */
 }
 .box-space {
   justify-content: space-between !important;
   flex-wrap: wrap;
 }
 .box-contain .welcome-service-text {
-  font-weight: 400;
-  color: #76838f;
+  font-weight: 600;
+  color: #292e32;
+  font-size: 15px;
 }
 .box-contain img {
   width: 40px;
   padding-bottom: 5px;
+}
+.box-contain .custom-build .welcome-service-text{
+  position: relative;
+  top: 12px;
+  line-height: 16px;
+}
+.box-contain .custom-build img{
+  position: relative;
+  top: 6px;
+  width: 30px;
+}
+.box-contain .check-icon{
+  display: none;
+}
+.box-contain.active .check-icon{
+  display: inline-block;
+  position: absolute;
+  left: 6px;
+  top: 0px;
+  font-size: 21px;
+  color: #451de7;
 }
 .welcome-image-text {
   font-weight: 400;
@@ -342,7 +366,7 @@
   outline: none;
 }
 .welcome-image-select-background {
-  height: 165px;
+  height: 150px;
   font-weight: 300;
   border-width: 1px;
   border-style: dashed;
@@ -364,7 +388,7 @@
   margin-bottom: 10px;
 }
 .welcome-image-parnet {
-  height: 234px;
+  height: 150px;
   position: relative;
 }
 /* .welcome-image-parnet .welcome-image-upload img{
@@ -380,6 +404,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.cropper-controls{
+  padding: 5px 10px; 
+}
+.cropper-controls .btn-danger{
+  font-size: 16px;
+  font-weight: 600;
+  padding: 1px 7px;
+  position: absolute;
+  right: -6px;
+  bottom: 10px;
+}
+.complete-register-modal .section-head{
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 /* end of welcome modal */
 

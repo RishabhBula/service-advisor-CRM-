@@ -29,7 +29,7 @@ export const fleetEditAction = {
   EDIT_FLEET_REQUESTED: "Edit fleet Requested!",
   EDIT_FLEET_SUCCESS: "Edit fleet Success!",
 }
- 
+
 export const fleetEditRequest = createAction(fleetEditAction.EDIT_FLEET_REQUESTED)
 export const fleetEditSuccess = createAction(fleetEditAction.EDIT_FLEET_SUCCESS)
 
@@ -37,3 +37,9 @@ export const fleetDeleteActions = {
   DELETE_FLEET: "Delete fleet Requested!",
 }
 export const deleteFleet = createAction(fleetDeleteActions.DELETE_FLEET);
+
+export const fleetUpdateStatusAction = {
+  UPDATE_FLEET_STATUS: "Update fleet status Requested!"
+}
+export const updateFleetStatus = createAction(fleetUpdateStatusAction.UPDATE_FLEET_STATUS);
+ 

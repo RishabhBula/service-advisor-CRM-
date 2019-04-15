@@ -83,7 +83,34 @@ const addNewrateStandard = async (req, res) => {
 };
 /* -------------Add Rate Standard End------------ */
 
+/* -------------Get Single Rate Standard------------ */
+const getSingleStandardRate = async (req, res) => {
+  try {
+    let data = req.body;
+    const getSingleStdRate = await rateStandardModel.findById(data.rateId)
+    if (getSingleStdRate) {
+      return res.status(200).json({
+        responsecode: 200,
+        success: true,
+        data: getSingleStdRate,
+      });
+    } else {
+      return res.status(400).json({
+        responsecode: 200,
+        success: false,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      responsecode: 500,
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false,
+    });
+  }
+};
+/* -------------Get Single Rate Standard End------------ */
 module.exports = {
   getAllStandardRate,
   addNewrateStandard,
+  getSingleStandardRate
 };

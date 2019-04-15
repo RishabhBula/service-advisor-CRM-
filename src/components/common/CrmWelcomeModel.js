@@ -17,6 +17,7 @@ import Dropzone from "react-dropzone";
 
 import Slider from "@material-ui/lab/Slider";
 import Cropper from "react-easy-crop";
+import classnames from "classnames";
 import { isValidURL } from "../../helpers/Object";
 const allVehicleServices = [
   {
@@ -298,18 +299,18 @@ export class CrmWelcomeModel extends Component {
           isOpen={modalOpen}
           toggle={toggleLarge}
           className={
-            "modal-lg customer-modal custom-form-modal custom-modal-lg" +
+            "modal-lg customer-modal custom-form-modal custom-modal-lg complete-register-modal " +
             this.props.className
           }
         >
-          <ModalHeader>Step 2</ModalHeader>
+          <ModalHeader>Complete Registration</ModalHeader>
           <Form onSubmit={this.addCompanyDetails}>
             <ModalBody>
               <h2 className="text-center pb-2">
                 Hi {userName}, You're almost Done!
               </h2>
               <div className="pb-5">
-                <h4 className="text-center pb-2">
+                <h4 className="pb-2 section-head">
                   1. Tell us about your shop.
                 </h4>
                 <Row className="justify-content-center">
@@ -330,8 +331,7 @@ export class CrmWelcomeModel extends Component {
                         {errors.companyName ? errors.companyName : null}
                       </FormFeedback>
                     </FormGroup>
-                  </Col>
-                  <Col md="6">
+                
                     <FormGroup>
                       <Label htmlFor="name" className="font-text">
                         Website (optional)
@@ -349,8 +349,6 @@ export class CrmWelcomeModel extends Component {
                       </FormFeedback>
                     </FormGroup>
                   </Col>
-                </Row>
-                <Row className="justify-content-center pb-2">
                   <Col md="6">
                     {companyLogo === "" ? (
                       <Dropzone onDrop={this.onSelectFile}>
@@ -385,17 +383,17 @@ export class CrmWelcomeModel extends Component {
                             <Cropper
                               image={this.state.companyLogo}
                               crop={this.state.crop}
-                              zoom={this.state.zoom}
+                              // zoom={this.state.zoom}
                               aspect={this.state.aspect}
                               onCropChange={this.onCropChange}
-                              onZoomChange={this.onZoomChange}
+                              // onZoomChange={this.onZoomChange}
                             />
                           </div>
                         </div>
-                        <div className="alert cropper-controls">
-                          <Row>
-                            <Col md="8" className="welcome-slider-left">
-                              <Slider
+                        <div className="cropper-controls">
+                          <Row className={"m-0"}>
+                            <Col md="12" className="welcome-slider-left text-center">
+                              {/* <Slider
                                 className=""
                                 value={this.state.zoom}
                                 min={1}
@@ -403,17 +401,16 @@ export class CrmWelcomeModel extends Component {
                                 step={0.1}
                                 aria-labelledby="Zoom"
                                 onChange={(e, zoom) => this.onZoomChange(zoom)}
-                              />
-                            </Col>
-                            <Col md="4">
-                              <Button
+                              /> */}
+                            
+                              {/* <Button
                                 color="primary"
                                 className="btn-sm mr-1"
                                 type={"button"}
                                 onClick={this.saveLogo}
                               >
-                                Save
-                              </Button>
+                                Save Logo
+                              </Button> */}
                               <Button
                                 color="danger"
                                 className="btn-sm"
@@ -424,26 +421,27 @@ export class CrmWelcomeModel extends Component {
                                   });
                                 }}
                               >
-                                Del
+                                <i class="cui-trash icons"></i>
                               </Button>
                             </Col>
                           </Row>
                         </div>
                       </div>
                     ) : null}
-                  </Col>
-                  <Col md="6" className="welcome-image-align">
-                    <div className="welcome-image-text">
-                      <span>
-                        Your logo will appear on quotes, invoices, work orders
-                        and work request forms.
-                      </span>
+
+                    <div className="welcome-image-align">
+                      <div className="welcome-image-text">
+                        <span>
+                          Your logo will appear on quotes, invoices, work orders
+                          and work request forms.
+                        </span>
+                      </div>
                     </div>
-                  </Col>
+                  </Col>          
                 </Row>
               </div>
               <div className="pb-3">
-                <h4 className="text-center pb-2">
+                <h4 className="pb-2 section-head">
                   2. How many people work in your shop?
                 </h4>
                 <div className="justify-content-center">
@@ -460,6 +458,7 @@ export class CrmWelcomeModel extends Component {
                           onClick={() => this.peopleWorkAction(item)}
                         >
                           <div className="welcome-service-text">{item}</div>
+                          <span className="check-icon"><i class="fa fa-check-circle"></i></span>
                         </div>
                       );
                     })}
@@ -470,7 +469,7 @@ export class CrmWelcomeModel extends Component {
                 </div>
               </div>
               <div className="pb-3">
-                <h4 className="text-center pb-2">
+                <h4 className="pb-2 section-head">
                   3. What kinds of services do you offer?
                 </h4>
                 <div className="justify-content-center">
@@ -488,12 +487,13 @@ export class CrmWelcomeModel extends Component {
                           }
                           onClick={() => this.serviceOfferAction(item)}
                         >
-                          <div className="justify-content-center">
+                          <div className={classnames("justify-content-center", index === 2 ? "custom-build" : null )}>
                             <img src={item.icon} alt="" />
-                            <div className="welcome-service-text">
+                            <div className={"welcome-service-text"}>
                               {item.key}
                             </div>
                           </div>
+                          <span className="check-icon"><i class="fa fa-check-circle"></i></span>
                         </div>
                       );
                     })}
@@ -504,7 +504,7 @@ export class CrmWelcomeModel extends Component {
                 </div>
               </div>
               <div className="pb-3">
-                <h4 className="text-center pb-2">
+                <h4 className="pb-2 section-head">
                   4. What types of vehicles do you service?
                 </h4>
                 <div className="justify-content-center">
@@ -529,6 +529,7 @@ export class CrmWelcomeModel extends Component {
                                 {item.key}
                               </div>
                             </div>
+                            <span className="check-icon"><i class="fa fa-check-circle"></i></span>
                           </div>
                         );
                       }

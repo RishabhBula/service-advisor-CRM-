@@ -12,7 +12,8 @@ import {
   fleetEditSuccess,
   fleetEditAction,
   fleetDeleteActions,
-  fleetListRequest
+  fleetListRequest,
+  fleetUpdateStatusAction
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
@@ -47,7 +48,7 @@ const fleetAddLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(fleetAddSuccess());
-      dispatch(redirectTo({ path: "/fleets" }));
+      dispatch(redirectTo({ path: "/settings/fleets" }));
       done();
     }
   }
@@ -126,9 +127,11 @@ const deleteFleetLogic = createLogic({
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/fleet",
-      ["/", action.payload.fleetId].join(""),
-      "DELETE",
-      true
+      "/delete",
+      "POST",
+      true,
+      undefined,
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -148,4 +151,44 @@ const deleteFleetLogic = createLogic({
     }
   },
 });
-export const FleetLogic = [fleetAddLogic, fleetListLogic, editFleetLogic, deleteFleetLogic];
+
+const updateFleetStatusLogic = createLogic({
+  type: fleetUpdateStatusAction.UPDATE_FLEET_STATUS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/fleet",
+      "/updateStatus",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      delete action.payload.fleets;
+      delete action.payload.status;
+      dispatch(
+        fleetListRequest({
+          ...action.payload
+        })
+      );
+      done();
+    }
+  }
+});
+
+export const FleetLogic = [
+  fleetAddLogic,
+  fleetListLogic,
+  editFleetLogic,
+  deleteFleetLogic,
+  updateFleetStatusLogic];

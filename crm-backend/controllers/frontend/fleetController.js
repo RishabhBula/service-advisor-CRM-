@@ -1,5 +1,6 @@
 const fleetModal = require("../../models/fleet");
-const mongoose = require("mongoose");
+const reteModal = require("../../models/rateStandard");
+
 /* ------------Add New Fleet---------- */
 const addNewFleet = async (req, res) => {
    const { body } = req;
@@ -38,23 +39,9 @@ const addNewFleet = async (req, res) => {
             success: false,
          });
       } else {
-         const rateModalData = await fleetModal.aggregate([
-            {
-               $lookup:
-               {
-                  from: "RateStandard",
-                  localField: "laborRate",
-                  foreignField: "_id",
-                  as: "rolldata"
-               }
-            },
-            {
-               $match:
-               {
-                  "fleetDefaultPermissions.shouldLaborRateOverride.laborRate": result.fleetDefaultPermissions.shouldLaborRateOverride.laborRate
-               }
-            }
-         ])
+         console.log("***********this is result", result.fleetDefaultPermissions.shouldLaborRateOverride.laborRate);
+
+         const rateModalData = await reteModal.findById(result.fleetDefaultPermissions.shouldLaborRateOverride.laborRate)
          return res.status(200).json({
             responsecode: 200,
             message: "Fleet data uploaded successfully!",
@@ -129,9 +116,6 @@ const getAllFleetList = async (req, res) => {
                   isDeleted: false,
                },
             ],
-         },
-         {
-            _id: { $ne: currentUser.id },
          },
       ];
       if (searchValue) {
@@ -228,29 +212,66 @@ const updateFleetdetails = async (req, res) => {
 /* ------------Update Fleet Details End---------- */
 
 /* Delete Fleet */
-const deleteFleet = async ({ params }, res) => {
+const deleteFleet = async ({ body }, res) => {
    try {
-      const { fleetId } = params;
-      const data = await fleetModal.findByIdAndUpdate(mongoose.Types.ObjectId(fleetId), {
-         isDeleted: true,
-      });
+      const data = await fleetModal.updateMany(
+         {
+            _id: { $in: body.fleetId }
+         },
+         {
+            $set: {
+               isDeleted: true
+            }
+         }
+      );
       return res.status(200).json({
          message: "Fleet deleted successfully!",
-         data,
+         data
       });
    } catch (error) {
       console.log("this is delete fleet error", error);
       return res.status(500).json({
          message: error.message ? error.message : "Unexpected error occure.",
-         success: false,
+         success: false
       });
    }
 };
 /* Delete Fleet End */
 
+/* Update fleet status */
+
+const updateStatus = async ({ body }, res) => {
+   try {
+      const data = await fleetModal.updateMany(
+         {
+            _id: { $in: body.fleetId }
+         },
+         {
+            $set: {
+               status: body.status
+            }
+         }
+      );
+      return res.status(200).json({
+         message: body.status
+            ? "Fleet inactivated successfully!"
+            : "Fleet activated successfully!",
+         data
+      });
+   } catch (error) {
+      console.log("this is fleet update status error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+};
+/* Update fleet status end*/
+
 module.exports = {
    addNewFleet,
    getAllFleetList,
    updateFleetdetails,
-   deleteFleet
+   deleteFleet,
+   updateStatus
 };

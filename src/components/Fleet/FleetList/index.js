@@ -13,17 +13,15 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
-import { CrmFleetEditModal } from "../../common/CrmFleetEditModal";
 import { connect } from "react-redux";
 import { fleetEditRequest } from "../../../actions";
-import { logger } from "../../../helpers/Logger";
-import Validator from "js-object-validation";
-import { CreateFleetValidations, CreateFleetValidMessaages } from "../../../validations";
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
 import { AppConfig } from "../../../config/AppConfig";
+import { toast } from 'react-toastify';
+
 class FleetList extends Component {
   constructor(props) {
     super(props);
@@ -37,8 +35,10 @@ class FleetList extends Component {
       sort: "",
       type: "",
       page: 1,
+      selectedFleets: []
     };
   }
+
   componentDidMount() {
     const { location } = this.props;
     const lSearch = location.search;
@@ -51,6 +51,7 @@ class FleetList extends Component {
       type: type || ""
     });
   }
+
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
@@ -58,11 +59,99 @@ class FleetList extends Component {
       });
     }
   }
+
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
+
+  handleCheckAllCheckBox = e => {
+    const { fleetListData } = this.props;
+    const { fleetData } = fleetListData;
+    const { data } = fleetData
+    const { target } = e;
+    const { checked } = target;
+    if (!checked) {
+      this.setState({
+        selectedFleets: [],
+      });
+      return;
+    }
+    const selectedFleets = [];
+    data.forEach(data => {
+      selectedFleets.push(data._id);
+    });
+    this.setState({ selectedFleets });
+  };
+
+  handleCheckboxChange = e => {
+    const { target } = e;
+    const { checked, value } = target;
+    const { selectedFleets } = this.state;
+    if (checked) {
+      selectedFleets.push(value);
+      this.setState({
+        selectedFleets,
+      });
+      return;
+    }
+    const index = selectedFleets.indexOf(value);
+    selectedFleets.splice(index, 1);
+    this.setState({
+      selectedFleets,
+    });
+  };
+
+  handleActionChange = e => {
+    const { selectedFleets } = this.state;
+    const { target } = e;
+    const { value } = target;
+    if (!value) {
+      return;
+    }
+    if (!selectedFleets.length) {
+      toast.error('Please select at least one customer.');
+      return;
+    }
+    if (value === 'active') {
+      this.activateUsers(true);
+    } else if (value === 'inactive') {
+      this.deactivateUsers(true);
+    } else if (value === 'delete') {
+      this.onDelete(true);
+    }
+  };
+  activateUsers = async (isMultiple = false) => {
+    const { value } = await ConfirmBox({
+      text: isMultiple
+        ? 'Do you want to active selected fleet(s)?'
+        : 'Do you want to active this fleet?',
+    });
+    if (!value) {
+      this.setState({
+        selectedFleets: [],
+      });
+      return;
+    }
+    this.props.onStatusUpdate({ status: true, fleetId: this.state.selectedFleets });
+  };
+
+  deactivateUsers = async (isMultiple = false) => {
+    const { value } = await ConfirmBox({
+      text: isMultiple
+        ? 'Do you want to inactive selected fleet(s)?'
+        : 'Do you want to inactive this fleet?',
+    });
+    if (!value) {
+      this.setState({
+        selectedFleets: [],
+      });
+      return;
+    }
+    this.props.onStatusUpdate({ status: false, fleetId: this.state.selectedFleets });
+  };
+
   onSearch = e => {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
@@ -71,7 +160,7 @@ class FleetList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search;
+      param.search = search.trim(" ");
     }
     if (sort) {
       param.sort = sort;
@@ -81,6 +170,7 @@ class FleetList extends Component {
     }
     this.props.onSearch(param);
   };
+
   onReset = e => {
     e.preventDefault();
     this.setState({
@@ -92,28 +182,38 @@ class FleetList extends Component {
     });
     this.props.onSearch({});
   };
+
   editFleet = fleetData => {
     this.props.updateFleetModel(fleetData)
   };
+
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
   };
-  onDelete = async fleetId => {
+
+  onDelete = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
-      text: "Do you want to delete this fleet?"
+      text: isMultiple
+        ? "Do you want to delete selected fleet(s)?"
+        : "Do you want to delete this fleet?"
     });
     if (!value) {
+      this.setState({
+        selectedFleets: []
+      });
       return;
     }
-    this.props.onDelete(fleetId);
+    this.props.onDelete(this.state.selectedFleets);
   };
+
   render() {
     const {
       error,
       search,
       status,
       sort,
-      page, } = this.state
+      page,
+      selectedFleets } = this.state
     const { fleetListData } = this.props;
     const { isLoading, fleetData } = fleetListData;
     return (
@@ -132,7 +232,7 @@ class FleetList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by first name, last name and email"
+                      placeholder="Search by company name and email"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -216,7 +316,34 @@ class FleetList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
-              <th>#</th>
+              {fleetData && fleetData.data && fleetData.data.length ? (
+                <th width='90px'>
+                  <div className='table-checkbox-wrap'>
+                    <span className='checkboxli checkbox-custom checkbox-default'>
+                      <Input
+                        type='checkbox'
+                        name='checkbox'
+                        id='checkAll'
+                        checked={selectedFleets.length === fleetData.data.length}
+                        onChange={this.handleCheckAllCheckBox}
+                      />
+                      <label className='' htmlFor='checkAll' />
+                    </span>
+                    <Input
+                      className='commonstatus'
+                      type='select'
+                      id='exampleSelect'
+                      onChange={this.handleActionChange}
+                    >
+                      <option value={''}>Select</option>
+                      <option value={'active'}>Active</option>
+                      <option value={'inactive'}>Inactive</option>
+                      <option value={'delete'}>Delete</option>
+                    </Input>
+                  </div>
+                </th>
+              ) : null}
+              <th>SNo.</th>
               <th>Company Name</th>
               <th>Phone</th>
               <th>Email</th>
@@ -229,17 +356,30 @@ class FleetList extends Component {
           </thead>
           <tbody>
             {!isLoading ? (
-              fleetData.length || fleetData.data ? (
+              fleetData && fleetData.data && fleetData.data.length ? (
                 fleetData.data.map((data, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index + 1}</td>
+                      <td>
+                        <div className='checkbox-custom checkbox-default coloum-checkbox'>
+                          <Input
+                            type='checkbox'
+                            value={data._id}
+                            checked={selectedFleets.indexOf(data._id) > -1}
+                            name='checkbox'
+                            onChange={this.handleCheckboxChange}
+                          />
+                          <label htmlFor={data._id}>
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                          </label>
+                        </div>
+                      </td>
+                      <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                       <td>{data.companyName || "-"}</td>
                       <td>{data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {
                           return (
-                            <div>{index + 1}.
-                            {" "}{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
+                            <div>{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
                           )
                         }) : "-"}</td>
                       <td>{data.email || "-"}</td>
@@ -250,9 +390,35 @@ class FleetList extends Component {
                       </td>
                       <td>
                         {data.status ? (
-                          <Badge color="success">Active</Badge>
+                          <Badge
+                            className={"badge-button"}
+                            color="success"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedUsers: [data._id]
+                                },
+                                () => {
+                                  this.activateUsers();
+                                }
+                              );
+                            }}
+                          >Active</Badge>
                         ) : (
-                            <Badge color="danger">Inactive</Badge>
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedUsers: [data._id]
+                                  },
+                                  () => {
+                                    this.deactivateUsers();
+                                  }
+                                );
+                              }}
+                            >Inactive</Badge>
                           )}
                       </td>
                       <td>
@@ -267,7 +433,15 @@ class FleetList extends Component {
                         <Button
                           color={"danger"}
                           size={"sm"}
-                          onClick={() => this.onDelete(data._id)}
+                          onClick={() =>
+                            this.setState(
+                              {
+                                selectedFleets: [data._id]
+                              },
+                              () => {
+                                this.onDelete();
+                              })
+                          }
                         >
                           <i className={"fa fa-trash"} />
                         </Button>

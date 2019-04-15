@@ -8,4 +8,8 @@ router.get("/getAllStdRate", token.authorisedUser, labourController.getAllStanda
 
 /* ----------add new standard rate routes------------ */
 router.post("/addRate", token.authorisedUser, labourController.addNewrateStandard);
+
+/* ----------Get single rate standard rate------------ */
+router.post("/getSingleRate", token.authorisedUser, labourController.getSingleStandardRate);
+
 module.exports = router;
