@@ -125,7 +125,6 @@ class CustomerList extends Component {
       return;
     }
     this.props.onStatusUpdate({ status: true, customers: this.state.selectedCustomers });
-    this.setState({selectedCustomers: []});
   };
 
   deactivateCustomers = async (isMultiple = false) => {
@@ -141,7 +140,6 @@ class CustomerList extends Component {
       return;
     }
     this.props.onStatusUpdate({ status: false, customers: this.state.selectedCustomers });
-    this.setState({ selectedCustomers: [] });
   };
 
   onDelete = async (isMultiple = false) => {    
@@ -157,7 +155,6 @@ class CustomerList extends Component {
       return;
     }
     this.props.onDelete(this.state.selectedCustomers);
-    this.setState({ selectedCustomers: [] });
   };
 
   handleChange = e => {

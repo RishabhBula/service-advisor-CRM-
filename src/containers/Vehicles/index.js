@@ -21,7 +21,8 @@ import {
   vehicleAddRequest,
   vehicleGetRequest,
   vehicleEditRequest,
-  deleteVehicle
+  deleteVehicle,
+  updateVehicleStatus
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
@@ -91,6 +92,13 @@ class Vehicles extends Component {
     this.props.deleteVehicle({ ...query, vehicleId });
   }
 
+  onStatusUpdate = data => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.onStatusUpdate({ ...query, ...data });
+  };
+
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
     const { vehicleListReducer } = this.props;
@@ -125,8 +133,9 @@ class Vehicles extends Component {
               vehicleData={vehicleListReducer}
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
-              onDelete={this.deleteVehicle}
               updateModel={this.toggleUpdateVehicle}
+              onDelete={this.deleteVehicle}
+              onStatusUpdate={this.onStatusUpdate}
             />
           </CardBody>
         </Card>
@@ -166,6 +175,9 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteVehicle: data => {
     dispatch(deleteVehicle(data));
+  },
+  onStatusUpdate: data => {
+    dispatch(updateVehicleStatus(data));
   }
 });
 

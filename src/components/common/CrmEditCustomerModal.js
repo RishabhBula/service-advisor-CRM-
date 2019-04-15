@@ -341,7 +341,7 @@ export class CrmEditCustomerModal extends Component {
         for (let i = 0; i < phoneDetail.length; i++) {
           const key = phoneDetail[i];
           if (key.value.length) {
-            phoneErrors.splice(i, 1);
+            phoneErrors[i] = "";
             this.setState({ phoneErrors });
           } else {
             phoneErrors[i] = "Phone number is required";

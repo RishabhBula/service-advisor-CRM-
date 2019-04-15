@@ -208,29 +208,79 @@ const updateVehicleDetails = async (req, res) => {
 /* end of update vehicle */
 
 /* Delete Customer */
-const deleteVehicle = async ({ params }, res) => {
+const deleteVehicle = async ({ body }, res) => {
   try {
-    const { vehicleId } = params;
-    const data = await vehicleModal.findByIdAndUpdate(vehicleId, {
-      isDeleted: true
-    });
+    const data = await vehicleModal.updateMany(
+      {
+        _id: { $in: body.vehicleId }
+      },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
     return res.status(200).json({
-      message: "Vehicle deleted successfully!",
-      data,
+      message: "Vehicle(s) deleted successfully!",
+      data
     });
   } catch (error) {
+    console.log("this is get all vehicle error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
+  // try {
+  //   const { vehicleId } = params;
+  //   const data = await vehicleModal.findByIdAndUpdate(vehicleId, {
+  //     isDeleted: true
+  //   });
+  //   return res.status(200).json({
+  //     message: "Vehicle deleted successfully!",
+  //     data,
+  //   });
+  // } catch (error) {
+  //   return res.status(500).json({
+  //     message: error.message ? error.message : "Unexpected error occure.",
+  //     success: false,
+  //   });
+  // }
 };
 /* Delete Customer */
 
+/* Update vehicle status */
+const updateStatus = async ({ body }, res) => {
+  try {
+    const data = await vehicleModal.updateMany(
+      {
+        _id: { $in: body.vehicles }
+      },
+      {
+        $set: {
+          status: body.status
+        }
+      }
+    );
+    return res.status(200).json({
+      message: body.status
+        ? "Vehicle(s) inactivated successfully!"
+        : "Vehicle(s) activated successfully!",
+      data
+    });
+  } catch (error) {
+    console.log("this is get all vehicle error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 
 module.exports = {
   addNewVehicle,
   getAllVehicleList,
   updateVehicleDetails,
-  deleteVehicle
+  deleteVehicle,
+  updateStatus
 };

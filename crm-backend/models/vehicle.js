@@ -72,6 +72,14 @@ const vehicleSchema = new Schema({
         ref: "user",
         default: null,
     },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    status: {
+        type: Boolean,
+        default: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
