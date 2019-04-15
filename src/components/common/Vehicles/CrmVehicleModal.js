@@ -107,6 +107,12 @@ export class CrmVehicleModal extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) { 
+    if(prevProps.vehicleModalOpen !== this.props.vehicleModalOpen) {
+      this.removeAllState();
+    }
+  }
+
   createVehicleFun = () => {
     let yeardata = this.state.year === '' ? '' : this.state.year;
     let data = {
@@ -181,7 +187,7 @@ export class CrmVehicleModal extends Component {
       expandForm: !this.state.expandForm,
     });
   };
-  
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
   };
@@ -193,6 +199,74 @@ export class CrmVehicleModal extends Component {
       [name]: value,
     });
   };
+
+  async removeAllState() {
+    this.setState({
+      expandForm: false,
+      colorOptions: ColorOptions,
+      selectedOption: null,
+      year: '',
+      make: '',
+      modal: '',
+      typeSelected: null,
+      colorSelected: null,
+      miles: '',
+      licensePlate: '',
+      unit: '',
+      vin: '',
+      subModal: '',
+      engineSize: '',
+      productionDate: '',
+      transmissionSelected: 'automatic',
+      drivetrainSelected: '2x4',
+      notes: '',
+      errors: {},
+    });
+  }
+
+  yearValidation = async (ev) => {
+    const { target } = ev;
+    const { value } = target;
+    const year = value;
+    const text = /^[0-9]+$/;
+    let errors = { ...this.state.errors };
+
+    if (year) {
+      if (ev.type === 'blur') {
+        if (year.length === 4 && ev.keyCode != 8 && ev.keyCode != 46) {
+          if (year.length !== 0) {
+            if (year !== '' && !text.test(parseInt(year))) {
+              errors['year'] = 'Please Enter Numeric Values Only';
+              this.setState({errors});
+              return false;
+            }
+
+            if (year.length !== 4) {
+              errors['year'] = 'Year is not proper. Please check';
+              this.setState({ errors });
+              return false;
+            }
+
+            const current_year = new Date().getFullYear();
+            if (year < 1920 || year >= current_year) {
+              errors[
+                'year'
+              ] = `Year should be in range ${new Date().getFullYear() -
+                101} to ${new Date().getFullYear() - 1}`;
+                this.setState({ errors });
+              return false;
+            }
+            errors['year'] = "";
+            this.setState({errors});
+            return true;
+          }
+        } else {
+          errors['year'] = 'Year is not proper. Please check';
+          this.setState({ errors });
+        }
+      }
+    }
+  }
 
   render() {
     const { selectedOption, year, make, modal, errors } = this.state;
@@ -227,9 +301,13 @@ export class CrmVehicleModal extends Component {
                       placeholder='20XX'
                       id='year'
                       name='year'
+                      minLength="4"
+                      maxLength="4"
+                      onBlur={this.yearValidation} 
+                      onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
                     />
-                    {!year && errors.year ? (
+                    {errors.hasOwnProperty('year') ? (
                       <p className='text-danger'>{errors.year}</p>
                     ) : null}
                   </div>

@@ -16,6 +16,9 @@ export const VehicleValidations = {
   miles: {
     [ValidationTypes.ALPHA]: true,
     [ValidationTypes.NUMERIC]: true
+  },
+  typeSelected: {
+    [ValidationTypes.REQUIRED]: true,
   }
 };
 
@@ -32,5 +35,8 @@ export const VehicleValidationMessage = {
   },
   miles: {
     [ValidationTypes.NUMERIC]: "Only numbers are allowed."
+  },
+  typeSelected: {
+    [ValidationTypes.REQUIRED]: "Please select type",
   }
 };
