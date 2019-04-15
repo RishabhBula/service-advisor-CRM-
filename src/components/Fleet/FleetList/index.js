@@ -71,7 +71,7 @@ class FleetList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search;
+      param.search = search.trim(" ");
     }
     if (sort) {
       param.sort = sort;
@@ -229,7 +229,7 @@ class FleetList extends Component {
           </thead>
           <tbody>
             {!isLoading ? (
-              fleetData.length || fleetData.data ? (
+              fleetData.length || fleetData.data  ? (
                 fleetData.data.map((data, index) => {
                   return (
                     <tr key={index}>
@@ -238,8 +238,7 @@ class FleetList extends Component {
                       <td>{data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {
                           return (
-                            <div>{index + 1}.
-                            {" "}{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
+                            <div>{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
                           )
                         }) : "-"}</td>
                       <td>{data.email || "-"}</td>
