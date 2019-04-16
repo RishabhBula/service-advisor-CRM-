@@ -171,6 +171,7 @@ class VehiclesList extends Component {
       return;
     }
     this.props.onDelete(this.state.selectedVehicles);
+    this.setState({ selectedVehicles: [] });
   };
 
   activateVehicle = async (isMultiple = false) => {
@@ -186,6 +187,7 @@ class VehiclesList extends Component {
       return;
     }
     this.props.onStatusUpdate({ status: true, vehicles: this.state.selectedVehicles });
+    this.setState({ selectedVehicles: [] });
   };
 
   deactivateVehicle = async (isMultiple = false) => {
@@ -201,6 +203,7 @@ class VehiclesList extends Component {
       return;
     }
     this.props.onStatusUpdate({ status: false, vehicles: this.state.selectedVehicles });
+    this.setState({ selectedVehicles: [] });
   };
 
   render() {
@@ -463,7 +466,7 @@ class VehiclesList extends Component {
                 })
               ) : (
                 <tr>
-                  <td className={"text-center"} colSpan={10}>
+                  <td className={"text-center"} colSpan={12}>
                     No Vehicle records are available
                   </td>
                 </tr>
