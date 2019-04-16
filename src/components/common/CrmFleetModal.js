@@ -42,7 +42,7 @@ export class CrmFleetModal extends Component {
       companyName: '',
       phoneDetail: [
         {
-          phone: '',
+          phone: 'mobile',
           value: '',
         },
       ],
@@ -62,7 +62,7 @@ export class CrmFleetModal extends Component {
       fleetDefaultPermissions: CustomerDefaultPermissions,
       percentageDiscount: 0,
       defaultOptions: [{ value: '', label: 'Add New Customer' }],
-      selectedLabourRate: {},
+      selectedLabourRate: { value: '', label: 'Select...' },
       vendorValue: '',
       openStadardRateModel: false,
     };
@@ -183,7 +183,7 @@ export class CrmFleetModal extends Component {
       permission: '',
       fleetId: '',
       errors: {},
-      phoneErrors: {},
+      phoneErrors: [''],
       isEditMode: false,
       phoneLength: AppConfig.phoneLength,
       fleetDefaultPermissions: CustomerDefaultPermissions,
@@ -207,7 +207,7 @@ export class CrmFleetModal extends Component {
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
     const phoneDetail = [...this.state.phoneDetail];
-    phoneDetail[index].phone = value;
+    phoneDetail[index].phone = value ? value : 'mobile';
     this.setState({
       phoneDetail,
     });
@@ -334,14 +334,12 @@ export class CrmFleetModal extends Component {
     const {
       fleetModalOpen,
       handleFleetModal,
-      handleAddFleet,
       matrixListReducerData,
       rateStandardListData,
     } = this.props;
     const {
       companyName,
       phoneDetail,
-      phoneErrors,
       email,
       notes,
       address1,
@@ -353,7 +351,6 @@ export class CrmFleetModal extends Component {
       percentageDiscount,
       isEditMode,
       fleetId,
-      error,
       selectedLabourRate,
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
@@ -472,7 +469,7 @@ export class CrmFleetModal extends Component {
                                 >
                                   {phoneOptions}
                                 </Input>
-                                {phoneDetail[index].phone === 'mobile' ? (
+                                {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
                                   <div className='input-block select-number-tile'>
                                     <MaskedInput
                                       mask='(111) 111-111'
@@ -537,7 +534,7 @@ export class CrmFleetModal extends Component {
                                   >
                                     {phoneOptions}
                                   </Input>
-                                  {phoneDetail[index].phone === 'mobile' ? (
+                                  {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
                                     <div className='input-block select-number-tile'>
                                       <MaskedInput
                                         mask='(111) 111-111'
@@ -722,7 +719,7 @@ export class CrmFleetModal extends Component {
 
                   return (
                     <>
-                      <Col md='6' key={index}>
+                      <Col md='6' key={index} className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
                         <div className='d-flex'>
                           <AppSwitch
                             className={'mx-1'}
@@ -742,10 +739,10 @@ export class CrmFleetModal extends Component {
                           </p>
                         </div>
                         {discountShow ? (
-                          <div className='custom-label col-12' key={index}>
+                          <div className='custom-label col-12 d-flex' key={index}>
                             <Label
                               htmlFor='name'
-                              className='customer-modal-text-style'
+                              className='customer-modal-text-style mr-2'
                             >
                               Percent Discount
                               </Label>
@@ -771,7 +768,7 @@ export class CrmFleetModal extends Component {
                           rateStandardListData &&
                           rateStandardListData.standardRateList &&
                           rateStandardListData.standardRateList.length ? (
-                            <Col md=''>
+                            <Col md='' className={"fleet-block rate-standard-list"}>
                               <Async
                                 defaultOptions={
                                   rateStandardListData.standardRateList
