@@ -76,6 +76,10 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('====================================');
+    console.log(this.props.customerModalOpen);
+    console.log(prevProps.customerModalOpen);
+    console.log('====================================');
     if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
       this.setState({
         address1: "",
@@ -124,8 +128,14 @@ export class CrmEditCustomerModal extends Component {
           }
         ]
       })
-      if (customer.permission && customer.permission.shouldLaborRateOverride.laborRate !== "objectId") {
-        this.handleGetRateData(customer.permission.shouldLaborRateOverride.laborRate)
+      if (
+        customer.permission &&
+        customer.permission.shouldLaborRateOverride.laborRate !== null &&
+        customer.permission.shouldLaborRateOverride.laborRate !== "objectId"
+      ) {
+        this.handleGetRateData(
+          customer.permission.shouldLaborRateOverride.laborRate
+        );
       }
       if (customer.fleet && customer.fleet._id) {
         this.setState({
