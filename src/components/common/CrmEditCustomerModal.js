@@ -449,12 +449,12 @@ export class CrmEditCustomerModal extends Component {
         CreateCustomerValidMessaages
       );
 
-      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||        
-          (
-            (customerData.firstName === '') ||
-            (customerData.lastName === '')
-          )
-        
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
+        (
+          (customerData.firstName === '') ||
+          (customerData.lastName === '')
+        )
+
       ) {
         this.setState({
           errors: errors,
@@ -502,7 +502,7 @@ export class CrmEditCustomerModal extends Component {
     // }
   }
   render() {
-    const { customerModalOpen,  matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
+    const { customerModalOpen, matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,

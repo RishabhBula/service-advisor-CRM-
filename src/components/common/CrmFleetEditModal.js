@@ -166,7 +166,8 @@ export class CrmFleetEditModal extends Component {
             fleetId: fleetSingleData._id,
             selectedLabourRate: fleetSingleData.fleetDefaultPermissions
          })
-         if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
+         if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== null &&
+            fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
 
             this.handleGetRateData(fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate)
          }
@@ -321,7 +322,7 @@ export class CrmFleetEditModal extends Component {
          zipCode,
          fleetDefaultPermissions,
          percentageDiscount,
-      }    
+      }
 
       return (
          <>
@@ -697,7 +698,7 @@ export class CrmFleetEditModal extends Component {
                                                    defaultOptions={rateStandardListData.standardRateList}
                                                    loadOptions={this.loadOptions}
                                                    onChange={this.handleStandardRate}
-                                                   isClearable={this.state.selectedLabourRate.value !== '' ? true : false}
+                                                   isClearable={selectedLabourRate.value !== '' ? true : false}
                                                    value={selectedLabourRate}
                                                 />
 
