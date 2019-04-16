@@ -148,27 +148,6 @@ export class CrmEditVehicleModal extends Component {
     }
   }
 
-  updateVehicleFun = () => {
-    let data = {
-      year: this.state.year,
-      make: this.state.make,
-      modal: this.state.modal,
-      type: this.state.typeSelected,
-      color: this.state.colorSelected,
-      miles: this.state.miles,
-      licensePlate: this.state.licensePlate,
-      unit: this.state.unit,
-      vin: this.state.vin,
-      subModal: this.state.subModal,
-      engineSize: this.state.engineSize,
-      productionDate: this.state.productionDate,
-      transmission: this.state.transmissionSelected,
-      drivetrain: this.state.drivetrainSelected,
-      notes: this.state.year,
-    };
-    this.props.submitUpdateVehicleFun(data);
-  };
-
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
@@ -231,7 +210,7 @@ export class CrmEditVehicleModal extends Component {
               errors[
                 'year'
               ] = `Year should be in range ${new Date().getFullYear() -
-                101} to ${new Date().getFullYear() - 1}`;
+              101} to ${new Date().getFullYear() - 1}`;
               this.setState({ errors });
               return false;
             }
@@ -244,6 +223,9 @@ export class CrmEditVehicleModal extends Component {
           this.setState({ errors });
         }
       }
+    } else {
+      errors['year'] = 'Please enter year.';
+      this.setState({ errors });
     }
   };
 
@@ -270,6 +252,27 @@ export class CrmEditVehicleModal extends Component {
       errors: {},
     });
   }
+
+  updateVehicleFun = () => {
+    let data = {
+      year: this.state.year,
+      make: this.state.make,
+      modal: this.state.modal,
+      type: this.state.typeSelected,
+      color: this.state.colorSelected,
+      miles: this.state.miles,
+      licensePlate: this.state.licensePlate,
+      unit: this.state.unit,
+      vin: this.state.vin,
+      subModal: this.state.subModal,
+      engineSize: this.state.engineSize,
+      productionDate: this.state.productionDate,
+      transmission: this.state.transmissionSelected,
+      drivetrain: this.state.drivetrainSelected,
+      notes: this.state.year,
+    };
+    this.props.submitUpdateVehicleFun(data);
+  };
 
   render() {
     const { selectedOption } = this.state;
@@ -343,6 +346,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.make}
                   />
+                  {!make && errors.make ? (
+                    <p className='text-danger'>{errors.make}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
             </Row>
@@ -361,6 +367,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.modal}
                   />
+                  {!modal && errors.modal ? (
+                    <p className='text-danger'>{errors.modal}</p>
+                  ) : null}
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
               </Col>
@@ -377,6 +386,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this.handleType}
                     value={typeSelected}
                   />
+                  {!typeSelected && errors.type ? (
+                    <p className='text-danger'>{errors.type}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
             </Row>
@@ -393,6 +405,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.miles}
                   />
+                  {!miles && errors.miles ? (
+                    <p className='text-danger'>{errors.miles}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
               <Col md='6'>
@@ -474,6 +489,9 @@ export class CrmEditVehicleModal extends Component {
                         onChange={this._onInputChange}
                         value={this.state.subModal}
                       />
+                      {!subModal && errors.subModal ? (
+                        <p className='text-danger'>{errors.subModal}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </>
@@ -514,6 +532,9 @@ export class CrmEditVehicleModal extends Component {
                         id='rate'
                         value={this.state.engineSize}
                       />
+                      {!engineSize && errors.engineSize ? (
+                        <p className='text-danger'>{errors.engineSize}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -531,6 +552,9 @@ export class CrmEditVehicleModal extends Component {
                         onChange={this._onInputChange}
                         value={this.state.productionDate}
                       />
+                      {!productionDate && errors.productionDate ? (
+                        <p className='text-danger'>{errors.productionDate}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -565,6 +589,9 @@ export class CrmEditVehicleModal extends Component {
                             })
                           : null}
                       </Input>
+                      {!transmissionSelected && errors.transmission ? (
+                        <p className='text-danger'>{errors.transmission}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -597,6 +624,9 @@ export class CrmEditVehicleModal extends Component {
                             })
                           : null}
                       </Input>
+                      {!drivetrainSelected && errors.drivetrain ? (
+                        <p className='text-danger'>{errors.drivetrain}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -616,6 +646,9 @@ export class CrmEditVehicleModal extends Component {
                         id='name'
                         value={this.state.notes}
                       />
+                      {!notes && errors.notes ? (
+                        <p className='text-danger'>{errors.notes}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
