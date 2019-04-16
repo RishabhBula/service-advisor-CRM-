@@ -124,7 +124,7 @@ const getAllCustomerList = async (req, res) => {
       condition["$and"].push({
         $or: [
           {
-            firstName: {
+            firstName: { 
               $regex: new RegExp(searchValue.trim(), "i")
             }
           },

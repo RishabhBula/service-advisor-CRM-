@@ -170,11 +170,11 @@ class CustomerList extends Component {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
     let param = {};
-    if (page && page > 1) {
-      param.page = page;
-    }
+      param.page = 1;
+    // if (page && page > 1) {
+    // }
     if (search) {
-      param.search = search;
+      param.search = search !== "" ? search.trim(): "";
     }
     if (sort) {
       param.sort = sort;
@@ -251,7 +251,7 @@ class CustomerList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by first name, last name and email"
+                      placeholder="Search by name and email"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -367,7 +367,7 @@ class CustomerList extends Component {
               <th>Name</th>
               <th>Email</th>
               <th>Phone No.</th>
-              <th>Address</th>
+              {/* <th>Address</th> */}
               <th>Vehicle</th>
               <th>Orders</th>
               <th>Created</th>
@@ -406,9 +406,9 @@ class CustomerList extends Component {
                         {user.phoneDetail
                           ? user.phoneDetail.map((data, index) => {
                               return (
-                                <div>
+                                <div className="text-capitalize">
                                   {data.phone || "NA"}
-                                  {"|"}
+                                  {" |"}
                                   {"  "}
                                   {data.value || "NA"}
                                 </div>
@@ -416,10 +416,10 @@ class CustomerList extends Component {
                             })
                           : "-"}
                       </td>
-                      <td>
+                      {/* <td>
                         {user.address1 || ""} {user.city || ""}{" "}
                         {user.state || ""} {user.zipCode || ""}{" "}
-                      </td>
+                      </td> */}
                       <td>0</td>
                       <td>0</td>
                       <td>

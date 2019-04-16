@@ -926,7 +926,7 @@ export class CrmCustomerModal extends Component {
                                     className="customer-modal-text-style mr-2"
                                   >
                                     Percent Discount
-                            </Label>
+                                  </Label>
                                   <FormGroup className={"mb-2"}>
                                     <Col md="5" className={"p-0"}>
                                       <MaskedInput

@@ -226,7 +226,7 @@ class VehiclesList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by first name, last name and email"
+                      placeholder="Search by type, make, modal"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -318,7 +318,9 @@ class VehiclesList extends Component {
                         type="checkbox"
                         name="checkbox"
                         id="checkAll"
-                        checked={selectedVehicles.length === vehicleList.length}
+                        checked={
+                          selectedVehicles.length === vehicleList.length
+                        }
                         onChange={this.handleCheckAllCheckBox}
                       />
                       <label className="" htmlFor="checkAll" />
@@ -361,12 +363,17 @@ class VehiclesList extends Component {
                           <Input
                             type="checkbox"
                             value={vehicle._id}
-                            checked={selectedVehicles.indexOf(vehicle._id) > -1}
+                            checked={
+                              selectedVehicles.indexOf(vehicle._id) > -1
+                            }
                             name="checkbox"
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={vehicle._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                              index +
+                              1}
+                            .
                           </label>
                         </div>
                       </td>
@@ -377,7 +384,10 @@ class VehiclesList extends Component {
                       <td>
                         {vehicle.color ? (
                           <span
-                            style={{ display: "flex", alignItems: "center" }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center"
+                            }}
                           >
                             <CrmCircleBackground
                               width={"15px"}
@@ -416,23 +426,23 @@ class VehiclesList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedVehicles: [vehicle._id]
-                                  },
-                                  () => {
-                                    this.activateVehicle();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedVehicles: [vehicle._id]
+                                },
+                                () => {
+                                  this.activateVehicle();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
                       <td>
                         <Button

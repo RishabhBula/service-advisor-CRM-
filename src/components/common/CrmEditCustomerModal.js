@@ -148,6 +148,14 @@ export class CrmEditCustomerModal extends Component {
           fleet: customer.fleet._id
         })
       }
+      else {
+         this.setState({
+          selectedOption: {
+            value: "",
+            label: "Select..."
+          }
+        })
+      }
     }
   }
   handleGetRateData = async (rateId) => {
@@ -807,6 +815,7 @@ export class CrmEditCustomerModal extends Component {
                       Fleet
                     </Label>
                     <Select
+                     defaultValue={{ label: "Select..", value: "" }}
                       value={selectedOption}
                       onChange={this.handleChange}
                       className="w-100 form-select"
@@ -984,10 +993,10 @@ export class CrmEditCustomerModal extends Component {
                               </div>
                               {discountShow ? (
 
-                                <div className="custom-label" key={index}  >
+                                <div className="custom-label  d-flex col-12" key={index}  >
                                   <Label
                                     htmlFor="name"
-                                    className="customer-modal-text-style"
+                                    className="customer-modal-text-style mr-2"
                                   >
                                     Percent Discount
                                 </Label>
