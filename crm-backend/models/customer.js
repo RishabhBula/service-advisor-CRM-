@@ -32,7 +32,7 @@ const customerSchema = new Schema({
   },
   fleet: {
     type: Schema.Types.ObjectId,
-    ref: "fleet",
+    ref: "Fleet",
     default: null,
   },
   address1: {

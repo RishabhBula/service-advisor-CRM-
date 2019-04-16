@@ -287,16 +287,16 @@ export class CrmEditVehicleModal extends Component {
       modal: this.state.modal,
       // type: this.state.typeSelected,
       // color: this.state.colorSelected,
-      miles: this.state.miles,
-      licensePlate: this.state.licensePlate,
-      unit: this.state.unit,
-      vin: this.state.vin,
-      subModal: this.state.subModal,
-      engineSize: this.state.engineSize,
-      productionDate: this.state.productionDate,
-      transmission: this.state.transmissionSelected,
-      drivetrain: this.state.drivetrainSelected,
-      notes: this.state.year,
+      // miles: this.state.miles,
+      // licensePlate: this.state.licensePlate,
+      // unit: this.state.unit,
+      // vin: this.state.vin,
+      // subModal: this.state.subModal,
+      // engineSize: this.state.engineSize,
+      // productionDate: this.state.productionDate,
+      // transmission: this.state.transmissionSelected,
+      // drivetrain: this.state.drivetrainSelected,
+      // notes: this.state.year,
     };
 
     if (this.state.miles !== '') {
@@ -315,7 +315,8 @@ export class CrmEditVehicleModal extends Component {
           errors: errors,
           isLoading: false,
         }, () => {
-            const yearValidation = this.yearValidation(this.state.year)
+            const yearValidation = this.yearValidation(this.state.year);
+            console.log(yearValidation);
             if (!yearValidation) {
               return
             }

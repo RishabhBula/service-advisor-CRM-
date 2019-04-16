@@ -42,7 +42,7 @@ export class CrmEditCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: null,
+      selectedOption: {},
       expandForm: false,
       fleetModalOpen: false,
       firstName: "",
@@ -57,7 +57,7 @@ export class CrmEditCustomerModal extends Component {
       notes: "",
       companyName: "",
       referralSource: "",
-      fleet: "5ca5e3b88b27f17bc0dfaab5",
+      fleet: "",
       address1: "",
       address2: "",
       city: "",
@@ -111,7 +111,6 @@ export class CrmEditCustomerModal extends Component {
         companyName: customer.companyName,
         email: customer.email,
         firstName: customer.firstName,
-        fleet: customer.fleet,
         lastName: customer.lastName,
         notes: customer.notes,
         customerDefaultPermissions: customer.permission,
@@ -127,6 +126,15 @@ export class CrmEditCustomerModal extends Component {
       })
       if (customer.permission && customer.permission.shouldLaborRateOverride.laborRate !== "objectId") {
         this.handleGetRateData(customer.permission.shouldLaborRateOverride.laborRate)
+      }
+      if (customer.fleet && customer.fleet._id) {
+        this.setState({
+          selectedOption: {
+            value: customer.fleet._id,
+            label: customer.fleet.companyName
+          },
+          fleet: customer.fleet._id
+        })
       }
     }
   }
@@ -246,7 +254,20 @@ export class CrmEditCustomerModal extends Component {
   }
 
   handleChange = selectedOption => {
-    this.setState({ selectedOption });
+    if (selectedOption) {
+      this.setState({
+        selectedOption: selectedOption,
+        fleet: selectedOption.value
+      });
+    } else {
+      this.setState(
+        {
+          selectedOption: {
+            value: '',
+            label: "Select.."
+          }
+        })
+    }
   };
 
   handleExpandForm = () => {
@@ -469,7 +490,7 @@ export class CrmEditCustomerModal extends Component {
     // }
   }
   render() {
-    const { customerModalOpen,  matrixListReducerData, rateStandardListData, customer } = this.props;
+    const { customerModalOpen,  matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -498,6 +519,10 @@ export class CrmEditCustomerModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option key={index} value={item.key}>{item.text}</option>;
     });
+    const options = []
+    getCustomerFleetList.map((data, index) => {
+      options.push({ value: `${data._id}`, label: `${data.companyName}` });
+    })
     return (
       <>
         <Modal
@@ -773,7 +798,8 @@ export class CrmEditCustomerModal extends Component {
                       value={selectedOption}
                       onChange={this.handleChange}
                       className="w-100 form-select"
-                      options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
+                      isClearable={selectedOption.value !== '' ? true : false}
+                      options={options}
                     />
                   </FormGroup>
                 </Col>

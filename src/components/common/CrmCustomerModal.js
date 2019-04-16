@@ -163,10 +163,19 @@ export class CrmCustomerModal extends Component {
   }
 
   handleChange = selectedOption => {
-    this.setState({
-      selectedOption: selectedOption,
-      fleet: selectedOption.value
-    });
+    if (selectedOption) {
+      this.setState({
+        selectedOption: selectedOption,
+        fleet: selectedOption.value
+      });
+    } else {
+      this.setState({
+        selectedOption: {
+          value: "",
+          label: "Select..."
+        }
+      })
+    }
   };
 
   handleExpandForm = () => {
@@ -716,6 +725,7 @@ export class CrmCustomerModal extends Component {
                       onChange={this.handleChange}
                       className="w-100 form-select"
                       options={options}
+                      isClearable={selectedOption.value !== '' ? true : false}
                     />
                   </FormGroup>
                 </Col>
