@@ -59,7 +59,6 @@ class Fleet extends Component {
     })
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
-      fleetEditModel: false,
       fleetEditModel: !modelDetails.fleetEditModel,
     };
     this.props.modelOperate(data);
@@ -246,7 +245,7 @@ class Fleet extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Fleet List
+                  <i className={"fa fa-building"} /> Fleet List
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
@@ -273,7 +272,8 @@ class Fleet extends Component {
               onPageChange={this.onPageChange}
               onDelete={this.deleteFleet}
               onStatusUpdate={this.onStatusUpdate}
-              openEdit={openEdit} />
+              openEdit={openEdit}
+            />
           </CardBody>
         </Card>
         <CrmFleetModal

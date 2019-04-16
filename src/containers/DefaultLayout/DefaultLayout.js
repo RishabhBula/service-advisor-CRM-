@@ -29,7 +29,7 @@ import {
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
 import CustAndVehicle  from "../../components/common/CustomerAndVehicle/CustAndVehicle";
-import { logger } from "../../helpers/Logger";
+// import { logger } from "../../helpers/Logger";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));

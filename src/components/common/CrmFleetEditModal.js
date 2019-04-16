@@ -272,7 +272,6 @@ export class CrmFleetEditModal extends Component {
       const {
          fleetEditModalOpen,
          handleFleetModal,
-         modalClassName,
          handleEditFleet,
          errorMessage,
          matrixListReducerData,

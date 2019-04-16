@@ -362,10 +362,10 @@ class CustomerList extends Component {
                   </div>
                 ) : null}
               </th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Name</th>
               <th>Email</th>
-              <th>Registered</th>
+              <th>Phone No.</th>
+              <th>Created</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -390,9 +390,14 @@ class CustomerList extends Component {
                           </label>
                         </div>
                       </td>
-                      <td>{user.firstName || "-"}</td>
-                      <td>{user.lastName || "-"}</td>
+                      <td>{user.firstName +" "+ user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
+                      <td>{user.phoneDetail ?
+                        user.phoneDetail.map((data, index) => {
+                          return (
+                            <div>{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
+                          )
+                        }) : "-"}</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
