@@ -69,7 +69,7 @@ export class CrmCustomerModal extends Component {
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
       defaultOptions: [{ value: "", label: "Add New Customer" }],
-      selectedLabourRate: "",
+      selectedLabourRate: { value: "", label: "Select..." },
     };
   }
 
@@ -254,6 +254,12 @@ export class CrmCustomerModal extends Component {
     }
     else {
       this.props.onTypeHeadStdFun({});
+      this.setState({
+        selectedLabourRate: {
+          value: '',
+          label: "Select..."
+        }
+      })
     }
   }
 
@@ -330,7 +336,7 @@ export class CrmCustomerModal extends Component {
         firstName: firstName,
         lastName: lastName,
       }
-      if(email !== "") {
+      if (email !== "") {
         validationData.email = email
       }
       const { isValid, errors } = Validator(
@@ -429,7 +435,8 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-     return (
+    console.log("This is customer fleet list =>", getCustomerFleetList);
+    return (
       <>
         <Modal
           isOpen={customerModalOpen}
@@ -923,7 +930,7 @@ export class CrmCustomerModal extends Component {
                                     defaultOptions={rateStandardListData.standardRateList}
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
-                                    isClearable={true}
+                                    isClearable={selectedLabourRate.value !== '' ? true : false}
                                     value={selectedLabourRate}
                                   />
 

@@ -71,7 +71,7 @@ export class CrmEditCustomerModal extends Component {
       defaultOptions: [
         { value: "", label: "Add New Customer" }
       ],
-      selectedLabourRate: '',
+      selectedLabourRate: { value: '', label: 'Select...' },
     }
   }
 
@@ -97,7 +97,7 @@ export class CrmEditCustomerModal extends Component {
             value: ""
           }
         ],
-        selectedLabourRate: {},
+        selectedLabourRate: { value: '', label: 'Select...' },
         phoneErrors: [''],
         expandForm: false
       });
@@ -334,6 +334,12 @@ export class CrmEditCustomerModal extends Component {
     }
     else {
       this.props.onTypeHeadStdFun({});
+      this.setState({
+        selectedLabourRate: {
+          value: "",
+          label: "Select..."
+        }
+      })
     }
   }
 
@@ -361,7 +367,7 @@ export class CrmEditCustomerModal extends Component {
     } = this.state;
     let validationdata
     if (!email) {
-       validationdata = {
+      validationdata = {
         firstName: firstName,
         lastName: lastName
       }
@@ -950,7 +956,7 @@ export class CrmEditCustomerModal extends Component {
                                     className="customer-modal-text-style"
                                   >
                                     Percent Discount
-                           </Label>
+                                </Label>
                                   <FormGroup>
                                     <MaskedInput
                                       mask="11\.11 \%"
@@ -971,7 +977,7 @@ export class CrmEditCustomerModal extends Component {
                                     defaultOptions={rateStandardListData.standardRateList}
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
-                                    isClearable={true}
+                                    isClearable={selectedLabourRate.value !== '' ? true : false}
                                     value={selectedLabourRate}
                                   />
 
