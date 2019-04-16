@@ -13,7 +13,10 @@ import {
   fleetEditAction,
   fleetDeleteActions,
   fleetListRequest,
-  fleetUpdateStatusAction
+  fleetUpdateStatusAction,
+  customerFleetListAction,
+  getCustomerFleetListRequest,
+  getCustomerfleetListStarted
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
@@ -53,6 +56,7 @@ const fleetAddLogic = createLogic({
     }
   }
 });
+
 const fleetListLogic = createLogic({
   type: fleetListActions.FLEET_LIST_REQUEST,
   cancelType: fleetListActions.FLEET_LIST_FAILED,
@@ -92,6 +96,7 @@ const fleetListLogic = createLogic({
     }
   }
 });
+
 const editFleetLogic = createLogic({
   type: fleetEditAction.EDIT_FLEET_REQUESTED,
   async process({ action }, dispatch, done) {
@@ -119,6 +124,7 @@ const editFleetLogic = createLogic({
     }
   },
 });
+
 const deleteFleetLogic = createLogic({
   type: fleetDeleteActions.DELETE_FLEET,
   async process({ action }, dispatch, done) {
@@ -186,9 +192,52 @@ const updateFleetStatusLogic = createLogic({
   }
 });
 
+const customerFleetListLogic = createLogic({
+  type: customerFleetListAction.CUSTOMER_FLEET_LIST_START,
+  cancelType: customerFleetListAction.CUSTOMER_FLEET_LIST_Failed,
+  async process({ action }, dispatch, done) {
+    console.log("%%%%%%%%%%%%%%%%%%ddd%%Cusromer fleet list Result=>");    
+    dispatch(
+      getCustomerfleetListStarted({
+        customerFleetData: []
+      }),
+      showLoader()
+    );
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/",
+      "fleet/customerFleet",
+      "GET",
+      true,
+      undefined,
+      undefined,
+    );
+    console.log("%%%%%%%%%%%%%%%%%%%%Cusromer fleet list Result=>", result);
+
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(
+        getCustomerFleetListRequest({
+          customerFleetData: result.data
+        }),
+        hideLoader()
+      );
+      done();
+    }
+  }
+});
+
 export const FleetLogic = [
   fleetAddLogic,
   fleetListLogic,
   editFleetLogic,
   deleteFleetLogic,
-  updateFleetStatusLogic];
+  updateFleetStatusLogic,
+  customerFleetListLogic
+];

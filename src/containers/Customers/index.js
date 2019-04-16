@@ -13,7 +13,18 @@ import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
 import CustomerList from "../../components/Customer/CustomerList";
 import { connect } from "react-redux";
-import { customerAddRequest, getMatrixList, modelOpenRequest, customerGetRequest, deleteCustomer, getRateStandardListRequest, setRateStandardListStart, customerEditRequest, updateCustomerStatus } from "../../actions";
+import {
+  customerAddRequest,
+  getMatrixList,
+  modelOpenRequest,
+  customerGetRequest,
+  deleteCustomer,
+  getRateStandardListRequest,
+  setRateStandardListStart,
+  customerEditRequest,
+  updateCustomerStatus,
+  getCustomerFleetListRequest
+} from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
@@ -27,15 +38,16 @@ class Customers extends Component {
       customerId: ""
     };
   }
-  componentDidMount() { 
+  componentDidMount() {
     this.props.getMatrix();
     const query = qs.parse(this.props.location.search);
     this.props.getCustomerList({ ...query, page: query.page || 1 });
     this.props.getStdList("");
     this.props.setLabourRateDefault();
+    this.props.getCustomerFleetListActions();
   }
 
-  componentDidUpdate({location }) {
+  componentDidUpdate({ location }) {
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
@@ -56,18 +68,18 @@ class Customers extends Component {
   };
 
   toggleEditModal = e => {
-    this.setState({customer: {}})
-      const { modelDetails } = this.props.modelInfoReducer;
-      let data = {
-        customerModel: false,
-        customerEditModel: !modelDetails.customerEditModel
-      };
-      this.props.modelOperate(data);
+    this.setState({ customer: {} })
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      customerModel: false,
+      customerEditModel: !modelDetails.customerEditModel
+    };
+    this.props.modelOperate(data);
   };
 
   toggleUpdateModal = (customer) => {
-    this.setState({customerId: customer._id});
-    this.setState({customer: customer},() => {
+    this.setState({ customerId: customer._id });
+    this.setState({ customer: customer }, () => {
       const { modelDetails } = this.props.modelInfoReducer;
       let data = {
         customerEditModel: !modelDetails.customerEditModel
@@ -124,8 +136,8 @@ class Customers extends Component {
 
   updateCustomerForm = (data) => {
     let customerId = this.state.customerId;
-      data.customerId = customerId;
-      this.props.updateCustomer(data);
+    data.customerId = customerId;
+    this.props.updateCustomer(data);
   }
   onTypeHeadStdFun = (data) => {
     this.props.getStdList(data);
@@ -135,13 +147,22 @@ class Customers extends Component {
     this.props.getStdList();
   }
 
-  setDefaultRate = value => {   
+  setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   }
 
   render() {
-    const { openCreate, editMode, customer } = this.state;
-    const { userReducer, addCustomer, matrixListReducer, customerListReducer, rateStandardListReducer } = this.props;
+    const {
+      openCreate,
+      editMode,
+      customer } = this.state;
+    const {
+      userReducer,
+      addCustomer,
+      matrixListReducer,
+      customerListReducer,
+      rateStandardListReducer,
+      getCustomerFleetList } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
@@ -169,8 +190,8 @@ class Customers extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <CustomerList 
-              customerData={customerListReducer} 
+            <CustomerList
+              customerData={customerListReducer}
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               onDelete={this.deleteCustomer}
@@ -186,27 +207,29 @@ class Customers extends Component {
           addCustomerFun={this.addCustomer}
           profileInfo={this.props.profileInfoReducer}
           matrixListReducerData={matrixListReducer}
-          rateStandardListData ={rateStandardListReducer}
-          onTypeHeadStdFun = {this.onTypeHeadStdFun}
-          onStdAdd = {this.onStdAdd}
+          rateStandardListData={rateStandardListReducer}
+          onTypeHeadStdFun={this.onTypeHeadStdFun}
+          onStdAdd={this.onStdAdd}
           editMode={editMode}
-          customer = {customer}
+          customer={customer}
+          getCustomerFleetList={getCustomerFleetList}
           setDefaultRate={this.setDefaultRate}
-          loadTypeRate= {this.loadTypeRate}
+          loadTypeRate={this.loadTypeRate}
         />
-        <CrmEditCustomerModal 
-         customerModalOpen={modelDetails.customerEditModel}
-         handleCustomerModalFun={this.toggleEditModal}
-         addCustomerFun={this.updateCustomerForm}
-         profileInfo={this.props.profileInfoReducer}
-         matrixListReducerData={matrixListReducer}
-         rateStandardListData ={rateStandardListReducer}
-         onTypeHeadStdFun = {this.onTypeHeadStdFun}
-         onStdAdd = {this.onStdAdd}
-         editMode={editMode}
-         customer = {customer}
-         setDefaultRate={this.setDefaultRate}
-         loadTypeRate= {this.loadTypeRate}/>
+        <CrmEditCustomerModal
+          customerModalOpen={modelDetails.customerEditModel}
+          handleCustomerModalFun={this.toggleEditModal}
+          addCustomerFun={this.updateCustomerForm}
+          profileInfo={this.props.profileInfoReducer}
+          matrixListReducerData={matrixListReducer}
+          rateStandardListData={rateStandardListReducer}
+          onTypeHeadStdFun={this.onTypeHeadStdFun}
+          onStdAdd={this.onStdAdd}
+          editMode={editMode}
+          customer={customer}
+          getCustomerFleetList={getCustomerFleetList}
+          setDefaultRate={this.setDefaultRate}
+          loadTypeRate={this.loadTypeRate} />
       </>
     );
   }
@@ -220,15 +243,15 @@ const mapStateToProps = state => ({
   rateStandardListReducer: state.rateStandardListReducer
 });
 
-const mapDispatchToProps = dispatch => ({ 
+const mapDispatchToProps = dispatch => ({
   addCustomer: data => {
     dispatch(customerAddRequest(data));
   },
-  getMatrix: () => {    
+  getMatrix: () => {
     dispatch(getMatrixList());
   },
-  modelOperate: (data) => {  
-    dispatch(modelOpenRequest({modelDetails: data}));
+  modelOperate: (data) => {
+    dispatch(modelOpenRequest({ modelDetails: data }));
   },
   getCustomerList: (data) => {
     dispatch(customerGetRequest(data));
@@ -248,6 +271,10 @@ const mapDispatchToProps = dispatch => ({
   updateCustomer: (data) => {
     dispatch(customerEditRequest(data));
   },
+  getCustomerFleetListActions: () => {
+    console.log("#####################")
+    dispatch(getCustomerFleetListRequest());
+  }
 
 });
 

@@ -386,7 +386,12 @@ export class CrmCustomerModal extends Component {
   }
 
   render() {
-    const { customerModalOpen, handleCustomerModal, matrixListReducerData, rateStandardListData } = this.props;
+    const {
+      customerModalOpen,
+      handleCustomerModal,
+      matrixListReducerData,
+      rateStandardListData,
+      getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -415,7 +420,7 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-    return (
+     return (
       <>
         <Modal
           isOpen={customerModalOpen}
