@@ -146,48 +146,40 @@ export class CrmFleetModal extends Component {
       logger(error);
     }
   }
-  componentDidUpdate({ fleetData }) {
-    if (
-      this.props.fleetData &&
-      this.props.fleetData._id &&
-      fleetData._id !== this.props.fleetData._id
-    ) {
-      const {
-        companyName,
-        phoneDetail: [{
-          phone,
-          value
-        }],
-        email,
-        notes,
-        address1,
-        address2,
-        city,
-        state,
-        zipCode,
-        permission,
-        fleetDefaultPermissions,
-        _id
-      } = this.props.fleetData;
-      this.setState({
-        isEditMode: true,
-        companyName,
-        phoneDetail: [{
-          phone,
-          value
-        }],
-        email,
-        notes,
-        address1,
-        address2,
-        city,
-        state,
-        zipCode,
-        permission,
-        fleetDefaultPermissions,
-        fleetId: _id
-      })
+  componentDidUpdate(prevProps) {
+    if (prevProps.fleetModalOpen !== this.props.fleetModalOpen) {
+      this.removeAllState();
     }
+  }
+
+  async removeAllState() {
+    this.setState({
+      companyName: "",
+      phoneDetail: [{
+        phone: "",
+        value: ""
+      }],
+      email: "",
+      notes: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      permission: "",
+      fleetId: "",
+      errors: {},
+      isEditMode: false,
+      phoneLength: AppConfig.phoneLength,
+      fleetDefaultPermissions: CustomerDefaultPermissions,
+      percentageDiscount: 0,
+      defaultOptions: [
+        { value: "", label: "Add New Customer" }
+      ],
+      selectedLabourRate: {},
+      vendorValue: '',
+      openStadardRateModel: false
+    })
   }
   handleClick(singleState, e) {
     const { fleetDefaultPermissions } = this.state;

@@ -268,10 +268,67 @@ const updateStatus = async ({ body }, res) => {
 };
 /* Update fleet status end*/
 
+/* Get Fleet List For customer*/
+const getFleetListForCustomer = async (req, res) => {
+   const { currentUser } = req;
+   try {
+      let condition = {};
+      condition["$and"] = [
+         {
+            $or: [
+               {
+                  parentId: currentUser.id,
+               },
+               {
+                  parentId: currentUser.parentId || currentUser.id,
+               },
+            ],
+         },
+         {
+            $or: [
+               {
+                  isDeleted: {
+                     $exists: false,
+                  },
+               },
+               {
+                  isDeleted: false,
+               },
+            ],
+         },
+      ];
+      const result = await fleetModal.find({
+         ...condition
+      })
+      if (result) {
+         return res.status(200).json({
+            data: result,
+            success: true
+         })
+      } else {
+         return res.status(200).json({
+            message: "Fleet data not found",
+            success: true
+         })
+      }
+   } catch (error) {
+      console.log("this is fleet update status error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
+
+/* Get Fleet List For customer End*/
+
+
+
 module.exports = {
    addNewFleet,
    getAllFleetList,
    updateFleetdetails,
    deleteFleet,
-   updateStatus
+   updateStatus,
+   getFleetListForCustomer
 };

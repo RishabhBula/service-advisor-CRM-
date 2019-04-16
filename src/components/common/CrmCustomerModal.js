@@ -68,11 +68,9 @@ export class CrmCustomerModal extends Component {
       phoneErrors: [''],
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
-      defaultOptions: [
-        { value: "", label: "Add New Customer" }
-      ],
-      selectedLabourRate: '',
-    }
+      defaultOptions: [{ value: "", label: "Add New Customer" }],
+      selectedLabourRate: "",
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -328,9 +326,15 @@ export class CrmCustomerModal extends Component {
         );
         await this.setStateAsync({phoneErrors: t});
       }
-
+      let validationData = {
+        firstName: firstName,
+        lastName: lastName,
+      }
+      if(email !== "") {
+        validationData.email = email
+      }
       const { isValid, errors } = Validator(
-        validationdata,
+        validationData,
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
@@ -341,8 +345,7 @@ export class CrmCustomerModal extends Component {
             (customerData.firstName === '') ||
             (customerData.lastName === '')
           )
-        )
-      ) {
+        )) {
         this.setState({
           errors: errors,
           isLoading: false,
@@ -391,7 +394,12 @@ export class CrmCustomerModal extends Component {
   }
 
   render() {
-    const { customerModalOpen, handleCustomerModal, matrixListReducerData, rateStandardListData } = this.props;
+    const {
+      customerModalOpen,
+      handleCustomerModal,
+      matrixListReducerData,
+      rateStandardListData,
+      getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -420,7 +428,7 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-    return (
+     return (
       <>
         <Modal
           isOpen={customerModalOpen}

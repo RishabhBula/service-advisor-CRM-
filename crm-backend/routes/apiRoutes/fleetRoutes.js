@@ -17,4 +17,7 @@ router.post("/delete", token.authorisedUser, fleetController.deleteFleet);
 
 /* ----------Update Fleet Status------------ */
 router.post("/updateStatus", token.authorisedUser, fleetController.updateStatus);
+
+/* ----------Get Customer Fleet------------ */
+router.get("/customerFleet", token.authorisedUser, fleetController.getFleetListForCustomer);
 module.exports = router;

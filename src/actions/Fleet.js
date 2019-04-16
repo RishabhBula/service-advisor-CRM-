@@ -42,4 +42,12 @@ export const fleetUpdateStatusAction = {
   UPDATE_FLEET_STATUS: "Update fleet status Requested!"
 }
 export const updateFleetStatus = createAction(fleetUpdateStatusAction.UPDATE_FLEET_STATUS);
- 
+
+export const customerFleetListAction = {
+  CUSTOMER_FLEET_LIST_REQUEST: "Customer fleet List! R",
+  CUSTOMER_FLEET_LIST_START: 'Customer FleetList Started! S',
+  CUSTOMER_FLEET_LIST_FAILED: 'Customer fleet list failed f' 
+}
+export const getCustomerFleetListRequest = createAction(customerFleetListAction.CUSTOMER_FLEET_LIST_REQUEST)
+export const getCustomerfleetListStarted = createAction(customerFleetListAction.CUSTOMER_FLEET_LIST_START);
+export const getCustomerfleetListFailed = createAction(customerFleetListAction.CUSTOMER_FLEET_LIST_FAILED);

@@ -99,7 +99,7 @@ class DefaultLayout extends Component {
     );
   }
   render() {
-    const { profileInfoReducer, modelInfoReducer, } = this.props;
+    const { profileInfoReducer, modelInfoReducer } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
     return isLoading ? (

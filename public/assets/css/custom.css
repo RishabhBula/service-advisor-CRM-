@@ -512,7 +512,12 @@
 .cursor_pointer {
   cursor: pointer;
 }
-
+.error-block-contain{
+  position: relative;
+}
+.error-block-contain .text-danger{
+  bottom: 0px;
+}
 /* custom-css */
 .modal-dialog.custom-modal-lg {
   max-width: 900px;
