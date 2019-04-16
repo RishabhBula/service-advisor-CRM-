@@ -11,7 +11,8 @@ import {
   Label,
   Input,
   Form,
-  FormFeedback
+  FormFeedback,
+  UncontrolledTooltip
 } from "reactstrap";
 import Dropzone from "react-dropzone";
 
@@ -316,20 +317,24 @@ export class CrmWelcomeModel extends Component {
                 <Row className="justify-content-center">
                   <Col md="6">
                     <FormGroup>
-                      <Label htmlFor="name" className="font-text">
-                        Company Name
-                      </Label>
-                      <Input
-                        type="text"
-                        placeholder="Service Adviser"
-                        onChange={this.handleInputChange}
-                        value={companyName}
-                        name="companyName"
-                        invalid={errors.companyName}
-                      />
-                      <FormFeedback>
-                        {errors.companyName ? errors.companyName : null}
-                      </FormFeedback>
+                        <Label htmlFor="name" className="font-text">
+                          Company Name
+                        </Label>
+                        <div className={"input-block"}>
+                          <Input
+                            type="text"
+                            placeholder="Service Adviser"
+                            onChange={this.handleInputChange}
+                            value={companyName}
+                            name="companyName"
+                            invalid={errors.companyName}
+                          />
+                          {
+                            !companyName && errors.companyName ?
+                            <p className="text-danger">{errors.companyName}</p> :
+                            null
+                          }
+                        </div>
                     </FormGroup>
                 
                     <FormGroup>
@@ -411,10 +416,12 @@ export class CrmWelcomeModel extends Component {
                               >
                                 Save Logo
                               </Button> */}
+
                               <Button
                                 color="danger"
                                 className="btn-sm"
                                 type={"button"}
+                                id="Tooltip-1"
                                 onClick={() => {
                                   this.setState({
                                     companyLogo: ""
@@ -423,6 +430,9 @@ export class CrmWelcomeModel extends Component {
                               >
                                 <i class="cui-trash icons"></i>
                               </Button>
+                              <UncontrolledTooltip target="Tooltip-1">
+                                Remove
+                              </UncontrolledTooltip>
                             </Col>
                           </Row>
                         </div>
@@ -444,7 +454,7 @@ export class CrmWelcomeModel extends Component {
                 <h4 className="pb-2 section-head">
                   2. How many people work in your shop?
                 </h4>
-                <div className="justify-content-center">
+                <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
                     {peopleWork.allPeopleArray.map((item, index) => {
                       return (
@@ -472,7 +482,7 @@ export class CrmWelcomeModel extends Component {
                 <h4 className="pb-2 section-head">
                   3. What kinds of services do you offer?
                 </h4>
-                <div className="justify-content-center">
+                <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
                     {servicesOffer.allServices.map((item, index) => {
                       return (
@@ -507,7 +517,7 @@ export class CrmWelcomeModel extends Component {
                 <h4 className="pb-2 section-head">
                   4. What types of vehicles do you service?
                 </h4>
-                <div className="justify-content-center">
+                <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
                     {vehicleServicesOffer.allVehicleServices.map(
                       (item, index) => {
