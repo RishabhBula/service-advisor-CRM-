@@ -343,7 +343,9 @@ class CustomerList extends Component {
                         type="checkbox"
                         name="checkbox"
                         id="checkAll"
-                        checked={selectedCustomers.length === customers.length}
+                        checked={
+                          selectedCustomers.length === customers.length
+                        }
                         onChange={this.handleCheckAllCheckBox}
                       />
                       <label className="" htmlFor="checkAll" />
@@ -362,10 +364,13 @@ class CustomerList extends Component {
                   </div>
                 ) : null}
               </th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Name</th>
               <th>Email</th>
-              <th>Registered</th>
+              <th>Phone No.</th>
+              <th>Address</th>
+              <th>Vehicle</th>
+              <th>Orders</th>
+              <th>Created</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -381,18 +386,42 @@ class CustomerList extends Component {
                           <Input
                             type="checkbox"
                             value={user._id}
-                            checked={selectedCustomers.indexOf(user._id) > -1}
+                            checked={
+                              selectedCustomers.indexOf(user._id) > -1
+                            }
                             name="checkbox"
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={user._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                              index +
+                              1}
+                            .
                           </label>
                         </div>
                       </td>
-                      <td>{user.firstName || "-"}</td>
-                      <td>{user.lastName || "-"}</td>
+                      <td>{user.firstName + " " + user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
+                      <td>
+                        {user.phoneDetail
+                          ? user.phoneDetail.map((data, index) => {
+                              return (
+                                <div>
+                                  {data.phone || "NA"}
+                                  {"|"}
+                                  {"  "}
+                                  {data.value || "NA"}
+                                </div>
+                              );
+                            })
+                          : "-"}
+                      </td>
+                      <td>
+                        {user.address1 || ""} {user.city || ""}{" "}
+                        {user.state || ""} {user.zipCode || ""}{" "}
+                      </td>
+                      <td>0</td>
+                      <td>0</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>

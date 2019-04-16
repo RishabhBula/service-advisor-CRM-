@@ -166,7 +166,8 @@ export class CrmFleetEditModal extends Component {
             fleetId: fleetSingleData._id,
             selectedLabourRate: fleetSingleData.fleetDefaultPermissions
          })
-         if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
+         if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== null &&
+            fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
 
             this.handleGetRateData(fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate)
          }
@@ -268,11 +269,11 @@ export class CrmFleetEditModal extends Component {
          })
       }
    }
+   
    render() {
       const {
          fleetEditModalOpen,
          handleFleetModal,
-         modalClassName,
          handleEditFleet,
          errorMessage,
          matrixListReducerData,
@@ -323,13 +324,13 @@ export class CrmFleetEditModal extends Component {
          fleetDefaultPermissions,
          percentageDiscount,
       }
-      console.log("error message", errorMessage);
 
       return (
          <>
             <Modal
                isOpen={fleetEditModalOpen}
                toggle={handleFleetModal}
+               backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
                <ModalHeader toggle={handleFleetModal}>
@@ -699,7 +700,7 @@ export class CrmFleetEditModal extends Component {
                                                    defaultOptions={rateStandardListData.standardRateList}
                                                    loadOptions={this.loadOptions}
                                                    onChange={this.handleStandardRate}
-                                                   isClearable={this.state.selectedLabourRate.value !== '' ? true : false}
+                                                   isClearable={selectedLabourRate && selectedLabourRate.value !== '' ? true : false}
                                                    value={selectedLabourRate}
                                                 />
 

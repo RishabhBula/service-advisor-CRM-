@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Select, { components } from "react-select";
+// import Select, { components } from "react-select";
 
 
 export class CrmCircleBackground extends Component {
@@ -21,7 +21,7 @@ export class CrmCircleBackground extends Component {
       backgroundColor: backColor,
       marginRight: "5px"
     }
-    const { defaultOptions } = this.props;   
+    //const { defaultOptions } = this.props;   
     return (
       <>
         <span style={styleDisplay}></span>

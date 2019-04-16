@@ -356,6 +356,8 @@ export class CrmCustomerModal extends Component {
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
+      let errorFill = {}
+      this.setState({errors: {}});
       if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
         (
           (
@@ -363,11 +365,11 @@ export class CrmCustomerModal extends Component {
             (customerData.lastName === '')
           )
         )) {
-        this.setState({
-          errors: errors,
-          isLoading: false,
-        });
-        return;
+            this.setState({
+              errors: errors,
+              isLoading: false,
+            });
+            return;
       }
       this.props.addCustomerFun(customerData);
     } catch (error) {
@@ -375,6 +377,7 @@ export class CrmCustomerModal extends Component {
     }
   }
 
+  
   async removeAllState() {
     this.setState({
       firstName: "",

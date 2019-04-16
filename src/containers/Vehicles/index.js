@@ -41,6 +41,14 @@ class Vehicles extends Component {
     this.props.getVehicleList({ ...query, page: query.page || 1 });
   }
 
+  componentDidUpdate({ location, modelInfoReducer }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getVehicleList({ ...currQuery, page: currQuery.page || 1 });
+    }
+  }
+
   toggleCreateVehicle = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
@@ -99,6 +107,21 @@ class Vehicles extends Component {
     this.props.onStatusUpdate({ ...query, ...data });
   };
 
+  onSearch = data => {
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
+  };
+
+  onPageChange = page => {
+    const { location } = this.props;
+    const { search, pathname } = location;
+    const query = qs.parse(search);
+    this.props.redirectTo(
+      [pathname, qs.stringify({ ...query, page })].join("?")
+    );
+  };
+
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
     const { vehicleListReducer } = this.props;
@@ -110,7 +133,7 @@ class Vehicles extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Vehicles List
+                  <i className={"fa fa-automobile"} /> Vehicles List
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>

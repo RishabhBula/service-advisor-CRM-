@@ -156,9 +156,6 @@ const editCustomerLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
-    let data = {
-      data: action.payload.data
-    }
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/customer",
@@ -166,7 +163,7 @@ const editCustomerLogic = createLogic({
       "PUT",
       true,
       undefined,
-      data
+      {data: action.payload.data}
     );
     if (result.isError) {
       toast.error(result.messages[0]);

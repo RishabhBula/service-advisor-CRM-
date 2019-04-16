@@ -105,7 +105,7 @@ class DefaultLayout extends Component {
       <div className="app">
         {this.renderCompanyDetailsPopup(profileInfo || {})}
         <AppHeader fixed>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={""}>
             <DefaultHeader
               onLogout={e => this.signOut(e)}
               permissions={permissions || {}}
@@ -154,13 +154,13 @@ class DefaultLayout extends Component {
             </Container>
           </main>
           <AppAside fixed>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={""}>
               <DefaultAside />
             </Suspense>
           </AppAside>
         </div>
         <AppFooter>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={""}>
             <DefaultFooter />
           </Suspense>
         </AppFooter>

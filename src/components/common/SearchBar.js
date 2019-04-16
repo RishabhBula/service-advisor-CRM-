@@ -37,7 +37,6 @@ class SearchBar extends Component {
   }
 
   itemTemplate(brand) {
-    console.log(brand);
     if (brand === "no") {
       return (
         <div className="p-clearfix search-output">

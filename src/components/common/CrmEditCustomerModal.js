@@ -17,7 +17,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
-import { CrmSelect } from "../common/CrmSelect";
+// import { CrmSelect } from "../common/CrmSelect";
 import { PhoneOptions } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
@@ -77,6 +77,12 @@ export class CrmEditCustomerModal extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
+    console.log('====================================');
+    console.log(this.props.customerModalOpen);
+    console.log(prevProps.customerModalOpen);
+    console.log(this.props.customer);
+    console.log(prevProps.customer);
+    console.log('====================================');
       this.setState({
         address1: "",
         address2: "",
@@ -124,8 +130,14 @@ export class CrmEditCustomerModal extends Component {
           }
         ]
       })
-      if (customer.permission && customer.permission.shouldLaborRateOverride.laborRate !== "objectId") {
-        this.handleGetRateData(customer.permission.shouldLaborRateOverride.laborRate)
+      if (
+        customer.permission &&
+        customer.permission.shouldLaborRateOverride.laborRate !== null &&
+        customer.permission.shouldLaborRateOverride.laborRate !== "objectId"
+      ) {
+        this.handleGetRateData(
+          customer.permission.shouldLaborRateOverride.laborRate
+        );
       }
       if (customer.fleet && customer.fleet._id) {
         this.setState({
@@ -372,7 +384,6 @@ export class CrmEditCustomerModal extends Component {
       firstName,
       lastName,
       phoneDetail,
-      phoneErrors,
       email,
       notes,
       companyName,
@@ -438,12 +449,12 @@ export class CrmEditCustomerModal extends Component {
         CreateCustomerValidMessaages
       );
 
-      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||        
-          (
-            (customerData.firstName === '') ||
-            (customerData.lastName === '')
-          )
-        
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
+        (
+          (customerData.firstName === '') ||
+          (customerData.lastName === '')
+        )
+
       ) {
         this.setState({
           errors: errors,
@@ -491,13 +502,7 @@ export class CrmEditCustomerModal extends Component {
     // }
   }
   render() {
-    const {
-      customerModalOpen,
-      handleCustomerModal,
-      matrixListReducerData,
-      rateStandardListData,
-      customer,
-      getCustomerFleetList } = this.props;
+    const { customerModalOpen, matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -1006,7 +1011,7 @@ export class CrmEditCustomerModal extends Component {
                                     defaultOptions={rateStandardListData.standardRateList}
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
-                                    isClearable={selectedLabourRate.value !== '' ? true : false}
+                                    isClearable={selectedLabourRate && selectedLabourRate.value !== '' ? true : false}
                                     value={selectedLabourRate}
                                   />
 

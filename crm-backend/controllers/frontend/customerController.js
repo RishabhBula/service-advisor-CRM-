@@ -22,7 +22,7 @@ const createCustomer = async (req, res) => {
       notes: body.notes,
       companyName: body.companyName,
       referralSource: body.referralSource,
-      fleet: body.fleet,
+      fleet: body.fleet !== "" ? body.fleet: null,
       address1: body.address1,
       address2: body.address2,
       city: body.city,
@@ -265,8 +265,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "Customer inactivated successfully!"
-        : "Customer activated successfully!",
+        ? "Customer activated successfully!"
+        : "Customer inactivated successfully!",
       data
     });
   } catch (error) {

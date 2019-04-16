@@ -2,11 +2,6 @@ import React, { Component } from "react";
 // import Validator from "js-object-validation";
 import MaskedInput from "react-maskedinput";
 import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
   Row,
   Col,
   FormGroup,

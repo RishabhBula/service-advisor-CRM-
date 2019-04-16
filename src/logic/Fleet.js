@@ -220,7 +220,6 @@ const customerFleetListLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      console.log("$$$$$$$$$$$$$$$$$ =>",result.data.data);
       
       dispatch(
         getCustomerfleetListStarted({
