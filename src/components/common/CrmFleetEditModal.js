@@ -60,6 +60,7 @@ export class CrmFleetEditModal extends Component {
             { value: "", label: "Add New Customer" }
          ],
          vendorValue: '',
+         selectedLabourRate: { value: "", label: "Select..." },
          openStadardRateModel: false
       };
    }
@@ -94,6 +95,9 @@ export class CrmFleetEditModal extends Component {
          }
       } else {
          this.props.onTypeHeadStdFun({});
+         this.setState({
+            selectedLabourRate: { value: "", label: "Select..." },
+         })
       }
    }
    handleRateAdd = async (data) => {
@@ -695,7 +699,7 @@ export class CrmFleetEditModal extends Component {
                                                    defaultOptions={rateStandardListData.standardRateList}
                                                    loadOptions={this.loadOptions}
                                                    onChange={this.handleStandardRate}
-                                                   isClearable={true}
+                                                   isClearable={this.state.selectedLabourRate.value !== '' ? true : false}
                                                    value={selectedLabourRate}
                                                 />
 

@@ -42,7 +42,7 @@ export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: null,
+      selectedOption: '',
       expandForm: false,
       fleetModalOpen: false,
       firstName: "",
@@ -57,7 +57,7 @@ export class CrmCustomerModal extends Component {
       notes: "",
       companyName: "",
       referralSource: "",
-      fleet: "5ca5e3b88b27f17bc0dfaab5",
+      fleet: "",
       address1: "",
       address2: "",
       city: "",
@@ -69,7 +69,7 @@ export class CrmCustomerModal extends Component {
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
       defaultOptions: [{ value: "", label: "Add New Customer" }],
-      selectedLabourRate: "",
+      selectedLabourRate: { value: "", label: "Select..." },
     };
   }
 
@@ -163,7 +163,10 @@ export class CrmCustomerModal extends Component {
   }
 
   handleChange = selectedOption => {
-    this.setState({ selectedOption });
+    this.setState({
+      selectedOption: selectedOption,
+      fleet: selectedOption.value
+    });
   };
 
   handleExpandForm = () => {
@@ -254,6 +257,12 @@ export class CrmCustomerModal extends Component {
     }
     else {
       this.props.onTypeHeadStdFun({});
+      this.setState({
+        selectedLabourRate: {
+          value: '',
+          label: "Select..."
+        }
+      })
     }
   }
 
@@ -277,7 +286,7 @@ export class CrmCustomerModal extends Component {
       state,
       zipCode,
       customerDefaultPermissions,
-      fleet,
+      fleet
     } = this.state;
 
     const customerData = {
@@ -288,12 +297,12 @@ export class CrmCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: fleet,
       address1: address1,
       address2: address2,
       city: city,
       state: state,
       zipCode: zipCode,
+      fleet: fleet,
       permission: customerDefaultPermissions,
       status: true
     };
@@ -324,13 +333,13 @@ export class CrmCustomerModal extends Component {
             }
           })
         );
-        await this.setStateAsync({phoneErrors: t});
+        await this.setStateAsync({ phoneErrors: t });
       }
       let validationData = {
         firstName: firstName,
         lastName: lastName,
       }
-      if(email !== "") {
+      if (email !== "") {
         validationData.email = email
       }
       const { isValid, errors } = Validator(
@@ -338,11 +347,6 @@ export class CrmCustomerModal extends Component {
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-      console.log('====================================');
-      console.log(isValid);
-      console.log(errors);
-      console.log(Object.keys(this.state.phoneErrors).length);
-      console.log('====================================');
       if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
         (
           (
@@ -432,7 +436,11 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-     return (
+    const options = [];
+    getCustomerFleetList.map((data, index) => {
+      options.push({ value: `${data._id}`, label: `${data.companyName}` });
+    })
+    return (
       <>
         <Modal
           isOpen={customerModalOpen}
@@ -707,7 +715,7 @@ export class CrmCustomerModal extends Component {
                       value={selectedOption}
                       onChange={this.handleChange}
                       className="w-100 form-select"
-                      options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
+                      options={options}
                     />
                   </FormGroup>
                 </Col>
@@ -926,7 +934,7 @@ export class CrmCustomerModal extends Component {
                                     defaultOptions={rateStandardListData.standardRateList}
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
-                                    isClearable={true}
+                                    isClearable={selectedLabourRate.value !== '' ? true : false}
                                     value={selectedLabourRate}
                                   />
 

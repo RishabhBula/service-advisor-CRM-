@@ -115,16 +115,6 @@ export class CrmVehicleModal extends Component {
   }
 
   createVehicleFun = async() => {
-    const ev = {
-      target: {
-        name: "year",
-        value: this.state.year
-      }
-    }
-    const yearValidation = await this.yearValidation(ev)
-    if (!yearValidation) {
-      return
-    }
     let yeardata = this.state.year === '' ? '' : this.state.year;
     let data = {
       year: yeardata,
@@ -176,7 +166,12 @@ export class CrmVehicleModal extends Component {
         this.setState({
           errors: errors,
           isLoading: false,
-        });
+        }, () => {
+          const yearValidation = this.yearValidation(this.state.year)
+          if (!yearValidation) {
+            return
+          }});
+        
         return;
       }
 
@@ -251,16 +246,12 @@ export class CrmVehicleModal extends Component {
     });
   }
 
-  yearValidation = async (ev) => {
-    const { target } = ev;
-    const { value } = target;
-    const year = value;
+  yearValidation = async (year) => {
     const text = /^[0-9]+$/;
     let errors = { ...this.state.errors };
 
     if (year) {
-
-      if (year.length === 4 && ev.keyCode != 8 && ev.keyCode != 46) {
+      if (year.length === 4) {
         if (year.length !== 0) {
           if (year !== '' && !text.test(parseInt(year))) {
             errors['year'] = 'Please Enter Numeric Values Only';
@@ -275,8 +266,7 @@ export class CrmVehicleModal extends Component {
           }
 
           const current_year = new Date().getFullYear();
-          const firstYear = 1920;
-          if (year < firstYear || year >= current_year) {
+          if (year < (current_year-101) || year >= current_year) {
             errors[
               "year"
             ] = `Year should be in range ${firstYear} to ${new Date().getFullYear() -
@@ -287,6 +277,9 @@ export class CrmVehicleModal extends Component {
           errors['year'] = '';
           this.setState({ errors });
           return true;
+        } else {
+          errors['year'] = 'Please enter year.';
+          this.setState({ errors });
         }
       } else {
         errors['year'] = 'Year is not proper. Please check';

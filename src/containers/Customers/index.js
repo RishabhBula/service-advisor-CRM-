@@ -168,12 +168,9 @@ class Customers extends Component {
       matrixListReducer,
       customerListReducer,
       rateStandardListReducer,
-      getCustomerFleetList
-    } = this.props;
+      getCustomerFleetList,
+      customerFleetReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
-    console.log('================sdfdsf====================');
-    console.log(modelDetails.customreEditModel);
-    console.log('====================================');
     return (
       <>
         <Card>
@@ -222,7 +219,7 @@ class Customers extends Component {
           onStdAdd={this.onStdAdd}
           editMode={editMode}
           customer={customer}
-          getCustomerFleetList={getCustomerFleetList}
+          getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
           loadTypeRate={this.loadTypeRate}
         />
@@ -237,7 +234,7 @@ class Customers extends Component {
           onStdAdd={this.onStdAdd}
           editMode={editMode}
           customer={customer}
-          getCustomerFleetList={getCustomerFleetList}
+          getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
           loadTypeRate={this.loadTypeRate}
         />
@@ -251,7 +248,8 @@ const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
   modelInfoReducer: state.modelInfoReducer,
   customerListReducer: state.customerListReducer,
-  rateStandardListReducer: state.rateStandardListReducer
+  rateStandardListReducer: state.rateStandardListReducer,
+  customerFleetReducer: state.fleetReducer
 });
 
 const mapDispatchToProps = dispatch => ({
