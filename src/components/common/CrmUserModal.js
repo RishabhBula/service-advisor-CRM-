@@ -318,7 +318,7 @@ export class CrmUserModal extends Component {
                 {roleType
                   ? UserPermissions.map((permission, index) => {
                       return (
-                        <Col sm={"6"}>
+                        <Col sm={"6"} key={index}>
                           <Row
                             className="justify-content-center pb-2"
                             key={index}

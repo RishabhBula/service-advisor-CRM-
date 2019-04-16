@@ -8,7 +8,6 @@ import {
   CardBody,
   CardGroup,
   Col,
-  Container,
   Form,
   Input,
   InputGroup,
@@ -28,21 +27,25 @@ const ResendInvitation = props => {
     <div className={"confirm-block"}>
       <h1 className={"text-center"}>Confirmation Link Sent</h1>
       <div className={"pt-2 pb-2 pr-2 text-center icon-block"}>
-        <img src={MailIcon} alt={"email-icon"} style={{ width: 150, height: 150 }} />
+        <img
+          src={MailIcon}
+          alt={"email-icon"}
+          style={{ width: 150, height: 150 }}
+        />
       </div>
       <h4 className={"text-center"}>Thank you for Signing Up!</h4>
       <p className="confirm-text">
-        A Confirmation email has been sent to your Email address.<br/> Kindly
-        verify your account to Login.
+        A Confirmation email has been sent to your Email address.
+        <br /> Kindly verify your account to Login.
       </p>
       <div className="text-center">
-      <Button
-        color="primary"
-        className={"px-4 btn-theme"}
-        onClick={props.resendConfimationLink}
-      >
-        Resend Link
-      </Button>
+        <Button
+          color="primary"
+          className={"px-4 btn-theme"}
+          onClick={props.resendConfimationLink}
+        >
+          Resend Link
+        </Button>
       </div>
     </div>
   );
@@ -123,22 +126,24 @@ class RegisterPage extends Component {
     } = this.state;
     return (
       <div className="app flex-row align-items-center auth-page pt-3 pb-3">
-        <div className="auth-bg"></div>
-        
-          <Row className="justify-content-center m-0">
-            <Col md="12" lg="12" xl="12">
-              <Col className="text-center">
-                <h4 className="logo-title">
-                <img src={Logo} alt={"logo"} style={{ width: 120 }}/>
-                </h4>
-              </Col>
-              <CardGroup>
+        <div className="auth-bg" />
+
+        <Row className="justify-content-center m-0">
+          <Col md="12" lg="12" xl="12">
+            <Col className="text-center">
+              <h4 className="logo-title">
+                <img src={Logo} alt={"logo"} style={{ width: 120 }} />
+              </h4>
+            </Col>
+            <CardGroup>
               <Card className="p-4 pl-4 pr-4 card">
                 <CardBody className="pl-4 pr-4 pt-0 pb-0">
                   {!showResendPage ? (
                     <Form onSubmit={this.handleSubmit}>
                       <h1 className="auth-title">Sign Up</h1>
-                      <p className="text-muted text-center text-info-line">To Create Your Workspace</p>
+                      <p className="text-muted text-center text-info-line">
+                        To Create Your Workspace
+                      </p>
                       <FormGroup>
                         <InputGroup className="mb-3">
                           <InputGroupAddon addonType="prepend">
@@ -254,7 +259,7 @@ class RegisterPage extends Component {
                             onClick={this.handleSubmit}
                           >
                             Signup
-                            </Button>
+                          </Button>
                         </Col>
                       </Row>
                       <Row className="d-block mt-3 m-0">
@@ -269,23 +274,21 @@ class RegisterPage extends Component {
                         <Col xs="12">
                           <p className="text-center">
                             Already have an account?
-                              <Link to="/login"> Sign In </Link>
+                            <Link to="/login"> Sign In </Link>
                           </p>
                         </Col>
                       </Row>
                     </Form>
                   ) : (
-                      <ResendInvitation
-                        resendConfimationLink={this.resendConfimationLink}
-                      />
-                    )}
-                 
-                  </CardBody>
-                </Card>
-              </CardGroup>
-            </Col>
-          </Row>
-       
+                    <ResendInvitation
+                      resendConfimationLink={this.resendConfimationLink}
+                    />
+                  )}
+                </CardBody>
+              </Card>
+            </CardGroup>
+          </Col>
+        </Row>
       </div>
     );
   }
