@@ -269,7 +269,7 @@ export class CrmVehicleModal extends Component {
           if (year < (current_year-101) || year >= current_year) {
             errors[
               "year"
-            ] = `Year should be in range ${firstYear} to ${new Date().getFullYear() -
+            ] = `Year should be in range ${current_year-101} to ${new Date().getFullYear() -
               1}`;
             this.setState({ errors });
             return false;
