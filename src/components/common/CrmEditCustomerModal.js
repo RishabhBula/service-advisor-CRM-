@@ -1011,7 +1011,7 @@ export class CrmEditCustomerModal extends Component {
                                     defaultOptions={rateStandardListData.standardRateList}
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
-                                    isClearable={selectedLabourRate.value !== '' ? true : false}
+                                    isClearable={selectedLabourRate && selectedLabourRate.value !== '' ? true : false}
                                     value={selectedLabourRate}
                                   />
 
