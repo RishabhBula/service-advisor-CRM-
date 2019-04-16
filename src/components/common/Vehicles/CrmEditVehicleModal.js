@@ -21,6 +21,12 @@ import {
 } from '../../../config/Color';
 import { Transmission, Drivetrain } from '../../../config/Constants';
 import MaskedInput from 'react-maskedinput';
+import {
+  VehicleValidations,
+  VehicleValidationMessage,
+} from '../../../validations';
+import Validator from 'js-object-validation';
+
 class CustomOption extends Component {
   render() {
     const { data, innerRef, innerProps } = this.props;
@@ -86,8 +92,8 @@ export class CrmEditVehicleModal extends Component {
       year: '',
       make: '',
       modal: '',
-      typeSelected: null,
-      colorSelected: null,
+      typeSelected: '',
+      colorSelected: '',
       miles: '',
       licensePlate: '',
       unit: '',
@@ -98,7 +104,8 @@ export class CrmEditVehicleModal extends Component {
       transmissionSelected: 'automatic',
       drivetrainSelected: '2x4',
       notes: '',
-      errors: {}
+      errors: {},
+      isLoading: false
     };
   }
 
@@ -148,30 +155,12 @@ export class CrmEditVehicleModal extends Component {
     }
   }
 
-  updateVehicleFun = () => {
-    let data = {
-      year: this.state.year,
-      make: this.state.make,
-      modal: this.state.modal,
-      type: this.state.typeSelected,
-      color: this.state.colorSelected,
-      miles: this.state.miles,
-      licensePlate: this.state.licensePlate,
-      unit: this.state.unit,
-      vin: this.state.vin,
-      subModal: this.state.subModal,
-      engineSize: this.state.engineSize,
-      productionDate: this.state.productionDate,
-      transmission: this.state.transmissionSelected,
-      drivetrain: this.state.drivetrainSelected,
-      notes: this.state.year,
-    };
-    this.props.submitUpdateVehicleFun(data);
-  };
-
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
+    if ((name === 'year' || name === 'miles') && isNaN(value)) {
+      return
+    }
     this.setState({
       [name]: value,
     });
@@ -203,47 +192,49 @@ export class CrmEditVehicleModal extends Component {
     });
   };
 
-  yearValidation = async ev => {
-    const { target } = ev;
-    const { value } = target;
-    const year = value;
+  yearValidation = async (year) => {
     const text = /^[0-9]+$/;
     let errors = { ...this.state.errors };
 
     if (year) {
-      if (ev.type === 'blur') {
-        if (year.length === 4 && ev.keyCode != 8 && ev.keyCode != 46) {
-          if (year.length !== 0) {
-            if (year !== '' && !text.test(parseInt(year))) {
-              errors['year'] = 'Please Enter Numeric Values Only';
-              this.setState({ errors });
-              return false;
-            }
-
-            if (year.length !== 4) {
-              errors['year'] = 'Year is not proper. Please check';
-              this.setState({ errors });
-              return false;
-            }
-
-            const current_year = new Date().getFullYear();
-            if (year < 1920 || year >= current_year) {
-              errors[
-                'year'
-              ] = `Year should be in range ${new Date().getFullYear() -
-                101} to ${new Date().getFullYear() - 1}`;
-              this.setState({ errors });
-              return false;
-            }
-            errors['year'] = '';
+      if (year.length === 4) {
+        if (year.length !== 0) {
+          if (year !== '' && !text.test(parseInt(year))) {
+            errors['year'] = 'Please Enter Numeric Values Only';
             this.setState({ errors });
-            return true;
+            return false;
           }
+
+          if (year.length !== 4) {
+            errors['year'] = 'Year is not proper. Please check';
+            this.setState({ errors });
+            return false;
+          }
+
+          const current_year = new Date().getFullYear();
+          if (year < (current_year - 101) || year >= current_year) {
+            errors[
+              'year'
+            ] = `Year should be in range ${new Date().getFullYear() -
+            101} to ${new Date().getFullYear() - 1}`;
+            this.setState({ errors });
+            return false;
+          }
+          errors['year'] = '';
+          this.setState({ errors });
+          return true;
         } else {
-          errors['year'] = 'Year is not proper. Please check';
+          errors['year'] = 'Please enter year.';
           this.setState({ errors });
         }
+      } else {
+        errors['year'] = 'Year is not proper. Please check';
+        this.setState({ errors });
       }
+
+    } else {
+      errors['year'] = 'Please enter year.';
+      this.setState({ errors });
     }
   };
 
@@ -270,6 +261,74 @@ export class CrmEditVehicleModal extends Component {
       errors: {},
     });
   }
+
+  updateVehicleFun = async () => {
+    let data = {
+      year: this.state.year,
+      make: this.state.make,
+      modal: this.state.modal,
+      type: this.state.typeSelected,
+      color: this.state.colorSelected,
+      miles: this.state.miles,
+      licensePlate: this.state.licensePlate,
+      unit: this.state.unit,
+      vin: this.state.vin,
+      subModal: this.state.subModal,
+      engineSize: this.state.engineSize,
+      productionDate: this.state.productionDate,
+      transmission: this.state.transmissionSelected,
+      drivetrain: this.state.drivetrainSelected,
+      notes: this.state.year,
+    };
+
+    let validationData = {
+      year: this.state.year,
+      make: this.state.make,
+      modal: this.state.modal,
+      // type: this.state.typeSelected,
+      // color: this.state.colorSelected,
+      miles: this.state.miles,
+      licensePlate: this.state.licensePlate,
+      unit: this.state.unit,
+      vin: this.state.vin,
+      subModal: this.state.subModal,
+      engineSize: this.state.engineSize,
+      productionDate: this.state.productionDate,
+      transmission: this.state.transmissionSelected,
+      drivetrain: this.state.drivetrainSelected,
+      notes: this.state.year,
+    };
+
+    if (this.state.miles !== '') {
+      validationData.miles = this.state.miles;
+    }
+
+    const { isValid, errors } = Validator(
+      validationData,
+      VehicleValidations,
+      VehicleValidationMessage
+    );
+
+    try {
+      if (!isValid) {
+        this.setState({
+          errors: errors,
+          isLoading: false,
+        }, () => {
+            const yearValidation = this.yearValidation(this.state.year)
+            if (!yearValidation) {
+              return
+            }
+        });
+        return;
+      }
+      this.props.submitUpdateVehicleFun(data);
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
+  };
 
   render() {
     const { selectedOption } = this.state;
@@ -320,8 +379,8 @@ export class CrmEditVehicleModal extends Component {
                       placeholder='20XX'
                       id='year'
                       name='year'
-                      onBlur={this.yearValidation} 
-                      onKeyPress={this.yearValidation}
+                        // onBlur={this.yearValidation}
+                        // onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
                       value={this.state.year}
                     />
@@ -343,6 +402,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.make}
                   />
+                  {!make && errors.make ? (
+                    <p className='text-danger'>{errors.make}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
             </Row>
@@ -361,6 +423,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.modal}
                   />
+                  {!modal && errors.modal ? (
+                    <p className='text-danger'>{errors.modal}</p>
+                  ) : null}
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
               </Col>
@@ -377,6 +442,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this.handleType}
                     value={typeSelected}
                   />
+                  {!typeSelected && errors.type ? (
+                    <p className='text-danger'>{errors.type}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
             </Row>
@@ -393,6 +461,9 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.miles}
                   />
+                  {!miles && errors.miles ? (
+                    <p className='text-danger'>{errors.miles}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
               <Col md='6'>
@@ -474,12 +545,15 @@ export class CrmEditVehicleModal extends Component {
                         onChange={this._onInputChange}
                         value={this.state.subModal}
                       />
+                      {!subModal && errors.subModal ? (
+                        <p className='text-danger'>{errors.subModal}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </>
               ) : (
-                ''
-              )}
+                  ''
+                )}
             </Row>
             <Row className='justify-content-center'>
               <Col md='12 text-center'>
@@ -491,8 +565,8 @@ export class CrmEditVehicleModal extends Component {
                     Show More
                   </span>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
               </Col>
             </Row>
             {expandForm ? (
@@ -514,6 +588,9 @@ export class CrmEditVehicleModal extends Component {
                         id='rate'
                         value={this.state.engineSize}
                       />
+                      {!engineSize && errors.engineSize ? (
+                        <p className='text-danger'>{errors.engineSize}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -531,6 +608,9 @@ export class CrmEditVehicleModal extends Component {
                         onChange={this._onInputChange}
                         value={this.state.productionDate}
                       />
+                      {!productionDate && errors.productionDate ? (
+                        <p className='text-danger'>{errors.productionDate}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -553,18 +633,21 @@ export class CrmEditVehicleModal extends Component {
                         <option value={''}>Select</option>
                         {Transmission.length
                           ? Transmission.map((item, index) => {
-                              return (
-                                <option
-                                  selected={item.key === transmissionSelected}
-                                  value={item.key}
-                                  key={index}
-                                >
-                                  {item.text}
-                                </option>
-                              );
-                            })
+                            return (
+                              <option
+                                selected={item.key === transmissionSelected}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
                           : null}
                       </Input>
+                      {!transmissionSelected && errors.transmission ? (
+                        <p className='text-danger'>{errors.transmission}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -585,18 +668,21 @@ export class CrmEditVehicleModal extends Component {
                         <option value={''}>Select</option>
                         {Drivetrain.length
                           ? Drivetrain.map((item, index) => {
-                              return (
-                                <option
-                                  selected={item.key === drivetrainSelected}
-                                  value={item.key}
-                                  key={index}
-                                >
-                                  {item.text}
-                                </option>
-                              );
-                            })
+                            return (
+                              <option
+                                selected={item.key === drivetrainSelected}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
                           : null}
                       </Input>
+                      {!drivetrainSelected && errors.drivetrain ? (
+                        <p className='text-danger'>{errors.drivetrain}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -616,6 +702,9 @@ export class CrmEditVehicleModal extends Component {
                         id='name'
                         value={this.state.notes}
                       />
+                      {!notes && errors.notes ? (
+                        <p className='text-danger'>{errors.notes}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -629,14 +718,14 @@ export class CrmEditVehicleModal extends Component {
                         Show Less
                       </span>
                     ) : (
-                      ''
-                    )}
+                        ''
+                      )}
                   </Col>
                 </Row>
               </>
             ) : (
-              ''
-            )}
+                ''
+              )}
           </ModalBody>
           <ModalFooter>
             <Button color='primary' onClick={this.updateVehicleFun}>

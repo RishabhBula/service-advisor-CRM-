@@ -221,7 +221,7 @@ const deleteVehicle = async ({ body }, res) => {
       }
     );
     return res.status(200).json({
-      message: "Vehicle(s) deleted successfully!",
+      message: "Vehicle deleted successfully!",
       data
     });
   } catch (error) {
@@ -264,8 +264,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "Vehicle(s) inactivated successfully!"
-        : "Vehicle(s) activated successfully!",
+        ? "Vehicle inactivated successfully!"
+        : "Vehicle activated successfully!",
       data
     });
   } catch (error) {

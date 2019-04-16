@@ -42,7 +42,7 @@ export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: null,
+      selectedOption: '',
       expandForm: false,
       fleetModalOpen: false,
       firstName: "",
@@ -57,7 +57,7 @@ export class CrmCustomerModal extends Component {
       notes: "",
       companyName: "",
       referralSource: "",
-      fleet: "5ca5e3b88b27f17bc0dfaab5",
+      fleet: "",
       address1: "",
       address2: "",
       city: "",
@@ -65,14 +65,12 @@ export class CrmCustomerModal extends Component {
       zipCode: "",
       customerDefaultPermissions: CustomerDefaultPermissions,
       errors: {},
-      phoneErrors: [],
+      phoneErrors: [''],
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
-      defaultOptions: [
-        { value: "", label: "Add New Customer" }
-      ],
-      selectedLabourRate: '',
-    }
+      defaultOptions: [{ value: "", label: "Add New Customer" }],
+      selectedLabourRate: { value: "", label: "Select..." },
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -165,7 +163,10 @@ export class CrmCustomerModal extends Component {
   }
 
   handleChange = selectedOption => {
-    this.setState({ selectedOption });
+    this.setState({
+      selectedOption: selectedOption,
+      fleet: selectedOption.value
+    });
   };
 
   handleExpandForm = () => {
@@ -209,26 +210,29 @@ export class CrmCustomerModal extends Component {
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
-      this.setState({
-        phoneDetail: phoneDetail.concat([{
-          phone: "mobile",
-          value: ""
-        }]),
-        phoneErrors: []
+      this.setState((state, props) => {
+        return {
+          phoneDetail: state.phoneDetail.concat([{
+            phone: "mobile",
+            value: ""
+          }]),
+          phoneErrors: state.phoneErrors.concat([''])
+        };
       });
     }
   }
 
-  handleRemovePhoneDetails = (event) => {
+  handleRemovePhoneDetails = (index) => {
     const { phoneDetail, phoneErrors } = this.state;
+    let t = [...phoneDetail];
+    let u = [...phoneErrors];
+    t.splice(index, 1);
+    u.splice(index, 1);
     if (phoneDetail.length) {
-      let phoneArrayIndx = phoneDetail.findIndex(
-        item => item.key === event.key
-      )
       this.setState({
-        phoneDetail: phoneDetail.filter((s, sidx) => phoneArrayIndx !== sidx),
-        phoneErrors: phoneErrors.filter((s, sidx) => phoneArrayIndx !== sidx)
-      })
+        phoneDetail: t,
+        phoneErrors: u,
+      });
     }
   }
 
@@ -253,6 +257,12 @@ export class CrmCustomerModal extends Component {
     }
     else {
       this.props.onTypeHeadStdFun({});
+      this.setState({
+        selectedLabourRate: {
+          value: '',
+          label: "Select..."
+        }
+      })
     }
   }
 
@@ -276,7 +286,7 @@ export class CrmCustomerModal extends Component {
       state,
       zipCode,
       customerDefaultPermissions,
-      fleet,
+      fleet
     } = this.state;
 
     const customerData = {
@@ -287,12 +297,12 @@ export class CrmCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: fleet,
       address1: address1,
       address2: address2,
       city: city,
       state: state,
       zipCode: zipCode,
+      fleet: fleet,
       permission: customerDefaultPermissions,
       status: true
     };
@@ -312,32 +322,38 @@ export class CrmCustomerModal extends Component {
 
     try {
       if (phoneDetail.length) {
+        let t = [];
+        this.setState({ phoneErrors: t });
         await Promise.all(
           phoneDetail.map(async (key, i) => {
             if (key.value.length) {
-              await this.setStateAsync({ phoneErrors: phoneErrors.splice(i, 1) });
+              // t[i] = null
             } else {
-              phoneErrors[i] = 'Phone number is required';
-              await this.setStateAsync({ phoneErrors });
+              t[i] = 'Phone number is required';
             }
           })
         );
+        await this.setStateAsync({ phoneErrors: t });
       }
-
+      let validationData = {
+        firstName: firstName,
+        lastName: lastName,
+      }
+      if (email !== "") {
+        validationData.email = email
+      }
       const { isValid, errors } = Validator(
-        validationdata,
+        validationData,
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-      if (!isValid &&
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
         (
-          (customerData.email !== '') || Object.keys(this.state.phoneErrors).length ||
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')
           )
-        )
-      ) {
+        )) {
         this.setState({
           errors: errors,
           isLoading: false,
@@ -373,7 +389,7 @@ export class CrmCustomerModal extends Component {
       errors: {},
       selectedLabourRate: {},
       customerDefaultPermissions: CustomerDefaultPermissions,
-      phoneErrors: [],
+      phoneErrors: [''],
       expandForm: false
     })
   }
@@ -386,7 +402,12 @@ export class CrmCustomerModal extends Component {
   }
 
   render() {
-    const { customerModalOpen, handleCustomerModal, matrixListReducerData, rateStandardListData } = this.props;
+    const {
+      customerModalOpen,
+      handleCustomerModal,
+      matrixListReducerData,
+      rateStandardListData,
+      getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,
@@ -415,6 +436,10 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
+    const options = [];
+    getCustomerFleetList.map((data, index) => {
+      options.push({ value: `${data._id}`, label: `${data.companyName}` });
+    })
     return (
       <>
         <Modal
@@ -577,7 +602,7 @@ export class CrmCustomerModal extends Component {
                             <>
                               <Col md="6">
                                 <button
-                                  onClick={this.handleRemovePhoneDetails}
+                                  onClick={() => this.handleRemovePhoneDetails(index)}
                                   className="btn btn-danger btn-sm btn-round input-close"
                                 >
                                   <i className="fa fa-close"></i>
@@ -690,7 +715,7 @@ export class CrmCustomerModal extends Component {
                       value={selectedOption}
                       onChange={this.handleChange}
                       className="w-100 form-select"
-                      options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
+                      options={options}
                     />
                   </FormGroup>
                 </Col>
@@ -909,7 +934,7 @@ export class CrmCustomerModal extends Component {
                                     defaultOptions={rateStandardListData.standardRateList}
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
-                                    isClearable={true}
+                                    isClearable={selectedLabourRate.value !== '' ? true : false}
                                     value={selectedLabourRate}
                                   />
 

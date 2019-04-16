@@ -1,15 +1,16 @@
 import { handleActions } from 'redux-actions';
-import { fleetListActions, fleetAddActions, fleetEditAction } from "./../actions";
+import { fleetListActions, fleetAddActions, fleetEditAction, customerFleetListAction } from "./../actions";
 
 const initialAuthState = {
     fleetData: [],
+    customerFleetData: [],
     isLoading: false,
     totalFleets: 100,
     fleetListData: {
         isSuccess: false,
         isEditSuccess: false,
         data: {},
-    },
+    }
 };
 
 export const fleetReducer = handleActions((
@@ -40,6 +41,10 @@ export const fleetReducer = handleActions((
                 isEditSuccess: true,
             },
         }),
+        [customerFleetListAction.CUSTOMER_FLEET_LIST_START]: (state, action) => ({
+            ...state,
+            customerFleetData: action.payload.customerFleetData
+        })
     }),
     initialAuthState
 );
