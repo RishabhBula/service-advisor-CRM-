@@ -264,8 +264,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "Vehicle inactivated successfully!"
-        : "Vehicle activated successfully!",
+        ? "Vehicle activated successfully!"
+        : "Vehicle inactivated successfully!",
       data
     });
   } catch (error) {

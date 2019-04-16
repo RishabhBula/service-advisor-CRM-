@@ -419,7 +419,7 @@ class VehiclesList extends Component {
                               onClick={() => {
                                 this.setState(
                                   {
-                                    selectedUsers: [vehicle._id]
+                                    selectedVehicles: [vehicle._id]
                                   },
                                   () => {
                                     this.activateVehicle();
