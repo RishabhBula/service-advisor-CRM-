@@ -145,7 +145,7 @@ const getAllCustomerList = async (req, res) => {
       .find({
         ...condition,
       })
-      .populate('Fleet')
+      .populate('fleet')
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
