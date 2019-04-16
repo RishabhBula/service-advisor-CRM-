@@ -265,8 +265,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "Customer inactivated successfully!"
-        : "Customer activated successfully!",
+        ? "Customer activated successfully!"
+        : "Customer inactivated successfully!",
       data
     });
   } catch (error) {
