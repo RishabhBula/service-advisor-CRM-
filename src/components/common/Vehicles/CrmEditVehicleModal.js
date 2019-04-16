@@ -21,6 +21,12 @@ import {
 } from '../../../config/Color';
 import { Transmission, Drivetrain } from '../../../config/Constants';
 import MaskedInput from 'react-maskedinput';
+import {
+  VehicleValidations,
+  VehicleValidationMessage,
+} from '../../../validations';
+import Validator from 'js-object-validation';
+
 class CustomOption extends Component {
   render() {
     const { data, innerRef, innerProps } = this.props;
@@ -86,8 +92,8 @@ export class CrmEditVehicleModal extends Component {
       year: '',
       make: '',
       modal: '',
-      typeSelected: null,
-      colorSelected: null,
+      typeSelected: '',
+      colorSelected: '',
       miles: '',
       licensePlate: '',
       unit: '',
@@ -98,7 +104,8 @@ export class CrmEditVehicleModal extends Component {
       transmissionSelected: 'automatic',
       drivetrainSelected: '2x4',
       notes: '',
-      errors: {}
+      errors: {},
+      isLoading: false
     };
   }
 
@@ -253,7 +260,7 @@ export class CrmEditVehicleModal extends Component {
     });
   }
 
-  updateVehicleFun = () => {
+  updateVehicleFun = async() => {
     let data = {
       year: this.state.year,
       make: this.state.make,
@@ -271,7 +278,49 @@ export class CrmEditVehicleModal extends Component {
       drivetrain: this.state.drivetrainSelected,
       notes: this.state.year,
     };
-    this.props.submitUpdateVehicleFun(data);
+
+    let validationData = {
+      year: this.state.year,
+      make: this.state.make,
+      modal: this.state.modal,
+      // type: this.state.typeSelected,
+      // color: this.state.colorSelected,
+      miles: this.state.miles,
+      licensePlate: this.state.licensePlate,
+      unit: this.state.unit,
+      vin: this.state.vin,
+      subModal: this.state.subModal,
+      engineSize: this.state.engineSize,
+      productionDate: this.state.productionDate,
+      transmission: this.state.transmissionSelected,
+      drivetrain: this.state.drivetrainSelected,
+      notes: this.state.year,
+    };
+
+    if (this.state.miles !== '') {
+      validationData.miles = this.state.miles;
+    }
+
+    const { isValid, errors } = Validator(
+      validationData,
+      VehicleValidations,
+      VehicleValidationMessage
+    );
+
+    try {
+      if (!isValid) {
+        this.setState({
+          errors: errors,
+          isLoading: false,
+        });
+        return;
+      }
+      this.props.submitUpdateVehicleFun(data);
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
   };
 
   render() {
