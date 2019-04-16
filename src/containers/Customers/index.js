@@ -137,7 +137,10 @@ class Customers extends Component {
   updateCustomerForm = (data) => {
     let customerId = this.state.customerId;
     data.customerId = customerId;
-    this.props.updateCustomer(data);
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.updateCustomer({ query, data });
   }
   onTypeHeadStdFun = (data) => {
     this.props.getStdList(data);

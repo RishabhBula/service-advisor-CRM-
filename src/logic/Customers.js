@@ -143,7 +143,7 @@ const deleteCustomerLogic = createLogic({
       delete action.payload.userId;
       dispatch(
         customerGetRequest({
-          ...action.payload,
+          ...action.payload.query,
         })
       );      
       done();
@@ -157,7 +157,7 @@ const editCustomerLogic = createLogic({
     dispatch(showLoader());
     logger(action.payload);
     let data = {
-      data: action.payload
+      data: action.payload.data
     }
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -178,7 +178,7 @@ const editCustomerLogic = createLogic({
       dispatch(customerEditSuccess());
       dispatch(
         customerGetRequest({
-          ...action.payload,
+          ...action.payload.query,
         })
       );   
       dispatch(
