@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
-import { editUserSuccess } from "../actions/Users";
 import { AppConfig } from "../config/AppConfig";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
@@ -10,7 +9,8 @@ import {
   usersActions,
   addUserSuccess,
   getUsersListSuccess,
-  getUsersList
+  getUsersList,
+  modelOpenRequest
 } from "./../actions";
 
 const getUsersLogic = createLogic({
@@ -98,7 +98,13 @@ const editUsersLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(editUserSuccess());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            addUserModal: false
+          }
+        })
+      );
       dispatch(hideLoader());
       done();
     }
@@ -156,7 +162,6 @@ const updateUserStatusLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
       dispatch(hideLoader());
       delete action.payload.users;
       delete action.payload.status;
@@ -165,6 +170,14 @@ const updateUserStatusLogic = createLogic({
           ...action.payload
         })
       );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            editUserModal: false
+          }
+        })
+      );
+      toast.success(result.messages[0]);
       done();
     }
   }

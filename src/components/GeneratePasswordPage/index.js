@@ -1,7 +1,6 @@
 import Validator from "js-object-validation";
 import React, { Component } from "react";
 import {
-  Container,
   Row,
   Col,
   CardGroup,
@@ -70,84 +69,83 @@ class GeneratePasswordPage extends Component {
   render() {
     const { password, confirmPassword, errors } = this.state;
     return (
-      <div className="app flex-row align-items-center auth-page">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md="6">
-              <Col className="text-center">
-                <h4 className="logo-title">
-                  <img src={Logo} alt={"logo"} />
-                </h4>
-              </Col>
-              <CardGroup>
-                <Card className="p-4">
-                  <CardBody>
-                    <Form onSubmit={this.generatePassword}>
-                      <h1 className="auth-title">Generate Password</h1>
-                      <p className="text-muted">for your Account</p>
-                      <FormGroup>
-                        <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="password"
-                            placeholder="Password"
-                            autoComplete="username"
-                            name={"password"}
-                            value={password}
-                            onChange={this.handleInputChange}
-                            invalid={errors.password}
-                          />
-                          <FormFeedback>
-                            {errors.password ? errors.password : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup className="mb-4">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="password"
-                            placeholder="Confirm Password"
-                            autoComplete="confirm-password"
-                            name={"confirmPassword"}
-                            value={confirmPassword}
-                            onChange={this.handleInputChange}
-                            invalid={errors.password}
-                          />
-                          <FormFeedback>
-                            {errors.confirmPassword
-                              ? errors.confirmPassword
-                              : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <Row>
-                        <Col xs="12">
-                          <Button
-                            color="primary"
-                            className="px-4 btn-theme"
-                            block
-                            onClick={this.generatePassword}
-                          >
-                            Generate Password
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </CardGroup>
+      <div className="app flex-row align-items-center auth-page  pt-3 pb-3">
+        <div className="auth-bg" />
+        <Row className="justify-content-center">
+          <Col md="6">
+            <Col className="text-center">
+              <h4 className="logo-title">
+                <img src={Logo} alt={"logo"} />
+              </h4>
             </Col>
-          </Row>
-        </Container>
+            <CardGroup>
+              <Card className="p-4">
+                <CardBody>
+                  <Form onSubmit={this.generatePassword}>
+                    <h1 className="auth-title">Generate Password</h1>
+                    <p className="text-muted">for your Account</p>
+                    <FormGroup>
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="icon-lock" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input
+                          type="password"
+                          placeholder="Password"
+                          autoComplete="username"
+                          name={"password"}
+                          value={password}
+                          onChange={this.handleInputChange}
+                          invalid={errors.password}
+                        />
+                        <FormFeedback>
+                          {errors.password ? errors.password : null}
+                        </FormFeedback>
+                      </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                      <InputGroup className="mb-4">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="icon-lock" />
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input
+                          type="password"
+                          placeholder="Confirm Password"
+                          autoComplete="confirm-password"
+                          name={"confirmPassword"}
+                          value={confirmPassword}
+                          onChange={this.handleInputChange}
+                          invalid={errors.password}
+                        />
+                        <FormFeedback>
+                          {errors.confirmPassword
+                            ? errors.confirmPassword
+                            : null}
+                        </FormFeedback>
+                      </InputGroup>
+                    </FormGroup>
+                    <Row>
+                      <Col xs="12">
+                        <Button
+                          color="primary"
+                          className="px-4 btn-theme"
+                          block
+                          onClick={this.generatePassword}
+                        >
+                          Generate Password
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </CardBody>
+              </Card>
+            </CardGroup>
+          </Col>
+        </Row>
       </div>
     );
   }

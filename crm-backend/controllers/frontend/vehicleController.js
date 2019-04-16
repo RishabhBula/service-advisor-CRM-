@@ -119,7 +119,9 @@ const getAllVehicleList = async (req, res) => {
         $or: [
           {
             type: {
-              $regex: new RegExp(searchValue.trim(), "i")
+              label: {
+                $regex: new RegExp(searchValue.trim(), "i")
+              }
             }
           },
           {

@@ -66,9 +66,10 @@ class VehiclesList extends Component {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
     let param = {};
-    if (page && page > 1) {
-      param.page = page;
-    }
+     param.page = 1;
+    // if (page && page > 1) {
+    //   param.page = page;
+    // }
     if (search) {
       param.search = search.trim(" ");
     }
@@ -226,7 +227,7 @@ class VehiclesList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by type, make, modal"
+                      placeholder="Search by make, modal"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -337,7 +338,9 @@ class VehiclesList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   </div>
-                ) : null}
+                ) : (
+                  "SNo."
+                )}
               </th>
               <th>Type</th>
               <th>Color</th>
@@ -345,7 +348,7 @@ class VehiclesList extends Component {
               <th>Make</th>
               <th>Model</th>
               <th>Miles</th>
-              <th>Vin</th>
+              <th style={{ maxWidth: 100 }}>Vin</th>
               <th>License Plate</th>
               <th>Unit</th>
               <th>Status</th>
@@ -403,8 +406,8 @@ class VehiclesList extends Component {
                       <td>{vehicle.year}</td>
                       <td>{vehicle.make}</td>
                       <td>{vehicle.modal}</td>
-                      <th>{vehicle.miles}</th>
-                      <th>{vehicle.vin}</th>
+                      <th style={{ maxWidth: 100 }}>{vehicle.miles}</th>
+                      <th style={{ maxWidth: 100 }}>{vehicle.vin}</th>
                       <th>{vehicle.licensePlate}</th>
                       <th>{vehicle.unit}</th>
                       <td>

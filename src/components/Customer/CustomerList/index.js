@@ -362,7 +362,7 @@ class CustomerList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   </div>
-                ) : null}
+                ) : "Sno."}
               </th>
               <th>Name</th>
               <th>Email</th>

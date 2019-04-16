@@ -121,24 +121,26 @@ const getAllCustomerList = async (req, res) => {
     ];
 
     if (searchValue) {
+      $f = searchValue.split(' ')[0];
+      $l = searchValue.split(' ')[1];
       condition["$and"].push({
         $or: [
           {
-            firstName: { 
-              $regex: new RegExp(searchValue.trim(), "i")
-            }
+            firstName: {
+              $regex: new RegExp($f ? $f : $l, "i"),
+            },
           },
           {
             lastName: {
-              $regex: new RegExp(searchValue.trim(), "i")
-            }
+              $regex: new RegExp($l ? $l : $f, "i"),
+            },
           },
           {
             email: {
-              $regex: new RegExp(searchValue.trim(), "i")
-            }
-          }
-        ]
+              $regex: new RegExp($f ? $f : $l, "i"),
+            },
+          },
+        ],
       });
     }
     const getAllCustomer = await customerModel

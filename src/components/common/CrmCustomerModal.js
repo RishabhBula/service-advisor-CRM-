@@ -88,6 +88,13 @@ export class CrmCustomerModal extends Component {
   handleClick(singleState, e) {
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions[singleState].status = e.target.checked;
+    if (singleState === "shouldLaborRateOverride") {
+      if (!this.state.selectedLabourRate.length) {
+        this.setState({
+          selectedLabourRate: { value: "", label: "Select..." }
+        });
+      }
+    }
     this.setState({
       ...customerDefaultPermissions
     });
@@ -433,6 +440,9 @@ export class CrmCustomerModal extends Component {
       vendorValue,
       selectedLabourRate
     } = this.state;
+    console.log("=======================selectedLabourRate=============");
+    console.log(selectedLabourRate);
+    console.log('====================================');
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
@@ -948,7 +958,7 @@ export class CrmCustomerModal extends Component {
                                     loadOptions={this.loadOptions}
                                     onChange={this.handleStandardRate}
                                     isClearable={selectedLabourRate.value !== '' ? true : false}
-                                    value={selectedLabourRate}
+                                    value={selectedLabourRate }
                                   />
 
                                 </Col>

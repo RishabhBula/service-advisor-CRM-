@@ -193,8 +193,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "User inactivated successfully!"
-        : "User activated successfully!",
+        ? "Member inactivated successfully!"
+        : "Member activated successfully!",
       data
     });
   } catch (error) {

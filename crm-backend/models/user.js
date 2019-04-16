@@ -25,111 +25,114 @@ const UserPermissions = new Schema({
   isNotifyOrderAuthorized: Boolean,
   isNotifyCustomerSendsMessage: Boolean,
   isNotifyCustomerMakesPayment: Boolean,
-  isNotifyChangeAppointmentStatus: Boolean,
+  isNotifyChangeAppointmentStatus: Boolean
 });
 
 const userSchema = new Schema({
   firstName: {
     type: String,
-    default: null,
+    default: null
   },
   lastName: {
     type: String,
-    default: null,
+    default: null
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   password: {
     type: String,
-    default: null,
+    default: null
   },
   verifyToken: {
     type: String,
-    default: null,
+    default: null
   },
   roleType: {
     type: Schema.Types.ObjectId,
     ref: "role",
-    required: true,
+    required: true
   },
   permissions: {
-    type: UserPermissions,
+    type: UserPermissions
+  },
+  phone: {
+    type: String
   },
   firstTimeUser: {
     type: Boolean,
-    default: false,
+    default: false
   },
   userSideActivation: {
     type: Boolean,
-    default: false,
+    default: false
   },
   userSideActivationValue: {
     type: String,
-    default: null,
+    default: null
   },
   status: {
     type: Boolean,
-    default: true,
+    default: true
   },
   loggedInIp: {
     type: String,
-    default: null,
+    default: null
   },
   loggedInAt: {
     type: Date,
-    default: null,
+    default: null
   },
   salt: {
     type: String,
-    default: null,
+    default: null
   },
   companyName: {
     type: String,
-    default: null,
+    default: null
   },
   website: {
     type: String,
-    default: null,
+    default: null
   },
   peopleWork: {
     type: String,
-    default: null,
+    default: null
   },
   serviceOffer: {
     type: [String],
-    default: null,
+    default: null
   },
   vehicleService: {
     type: [String],
-    default: null,
+    default: null
   },
   shopLogo: {
     type: Object,
-    default: null,
+    default: null
   },
   parentId: {
     type: mongoose.Types.ObjectId,
     ref: "user",
-    default: null,
+    default: null
   },
   rate: {
     type: Number,
-    default: null,
+    default: null
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   updatedAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   isDeleted: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 });
 
 module.exports = mongoose.model("user", userSchema);

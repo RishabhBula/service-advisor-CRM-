@@ -7,14 +7,11 @@ export const VehicleValidations = {
   },
   make: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.ALPHA]: true,
   },
   modal: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.ALPHA]: true,
   },
   miles: {
-    [ValidationTypes.ALPHA]: true,
     [ValidationTypes.NUMERIC]: true,
   },
   type: {
@@ -50,6 +47,9 @@ export const VehicleValidationMessage = {
   },
   modal: {
     [ValidationTypes.REQUIRED]: 'Please enter modal.',
+  },
+  miles: {
+    [ValidationTypes.NUMERIC]: "Please enter only numbers",
   },
   type: {
     [ValidationTypes.REQUIRED]: 'Please select type',

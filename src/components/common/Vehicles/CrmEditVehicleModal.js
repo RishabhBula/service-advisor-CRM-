@@ -111,29 +111,29 @@ export class CrmEditVehicleModal extends Component {
 
   componentDidUpdate(prevProps) {
     const { vehicleData } = this.props;
-    if (
-      prevProps.vehicleEditModalOpen !== this.props.vehicleEditModalOpen &&
-      !this.props.vehicleEditModalOpen
-    ) {
-      this.setState({
-        year: '',
-        make: '',
-        modal: '',
-        typeSelected: null,
-        colorSelected: null,
-        miles: '',
-        licensePlate: '',
-        unit: '',
-        vin: '',
-        subModal: '',
-        engineSize: '',
-        productionDate: '',
-        transmissionSelected: 'automatic',
-        drivetrainSelected: '2x4',
-        notes: '',
-        errors: {}
-      });
-    }
+    // if (
+    //   prevProps.vehicleEditModalOpen !== this.props.vehicleEditModalOpen &&
+    //   !this.props.vehicleEditModalOpen
+    // ) {
+    //   this.setState({
+    //     year: '',
+    //     make: '',
+    //     modal: '',
+    //     typeSelected: null,
+    //     colorSelected: null,
+    //     miles: '',
+    //     licensePlate: '',
+    //     unit: '',
+    //     vin: '',
+    //     subModal: '',
+    //     engineSize: '',
+    //     productionDate: '',
+    //     transmissionSelected: 'automatic',
+    //     drivetrainSelected: '2x4',
+    //     notes: '',
+    //     errors: {}
+    //   });
+    // }
     if (prevProps.vehicleData._id !== vehicleData._id) {
       this.setState({
         year: this.props.vehicleData.year,
@@ -355,377 +355,422 @@ export class CrmEditVehicleModal extends Component {
         <Modal
           isOpen={vehicleEditModalOpen}
           toggle={handleEditVehicleModal}
-          className='customer-modal custom-form-modal custom-modal-lg'
+          className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader toggle={handleEditVehicleModal}>
             Update Vehicle
           </ModalHeader>
           <ModalBody>
-            <Row className='justify-content-center'>
-              <Col md='6'>
+            <Row className="justify-content-center">
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Year
                   </Label>
-                  <div className={'input-block'}>
+                  <div className={"input-block"}>
                     <Input
-                      type='text'
-                      placeholder='20XX'
-                      id='year'
-                      name='year'
-                        // onBlur={this.yearValidation}
-                        // onKeyPress={this.yearValidation}
+                      type="text"
+                      placeholder="20XX"
+                      id="year"
+                      name="year"
+                      // onBlur={this.yearValidation}
+                      // onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
                       value={this.state.year}
                     />
-                    {errors.hasOwnProperty('year') ? (
-                      <p className='text-danger'>{errors.year}</p>
+                    {errors.hasOwnProperty("year") ? (
+                      <p className="text-danger">{errors.year}</p>
                     ) : null}
                   </div>
                 </FormGroup>
               </Col>
-              <Col md='6'>
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Make
                   </Label>
                   <Input
-                    type='text'
-                    placeholder='Honda'
-                    name='make'
+                    type="text"
+                    placeholder="Honda"
+                    name="make"
                     onChange={this._onInputChange}
                     value={this.state.make}
+                    maxLength="25"
                   />
                   {!make && errors.make ? (
-                    <p className='text-danger'>{errors.make}</p>
+                    <p className="text-danger">{errors.make}</p>
                   ) : null}
                 </FormGroup>
               </Col>
             </Row>
-            <Row className='justify-content-center'>
-              <Col md='6'>
+            <Row className="justify-content-center">
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Modal
                   </Label>
                   <Input
-                    type='text'
-                    className='customer-modal-text-style'
-                    id='type'
-                    placeholder='Accord'
-                    name='modal'
+                    type="text"
+                    className="customer-modal-text-style"
+                    id="type"
+                    placeholder="Accord OR Q3 Or WR..."
+                    name="modal"
                     onChange={this._onInputChange}
                     value={this.state.modal}
+                    maxLength="25"
                   />
                   {!modal && errors.modal ? (
-                    <p className='text-danger'>{errors.modal}</p>
+                    <p className="text-danger">{errors.modal}</p>
                   ) : null}
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
               </Col>
-              <Col md='6'>
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Type
                   </Label>
                   <Select
                     defaultValue={typeSelected}
                     options={groupedOptions}
                     formatGroupLabel={formatGroupLabel}
-                    className='w-100 form-select'
+                    className="w-100 form-select"
                     onChange={this.handleType}
                     value={typeSelected}
                   />
                   {!typeSelected && errors.type ? (
-                    <p className='text-danger'>{errors.type}</p>
+                    <p className="text-danger">{errors.type}</p>
                   ) : null}
                 </FormGroup>
               </Col>
             </Row>
-            <Row className='justify-content-center'>
-              <Col md='6'>
+            <Row className="justify-content-center">
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Miles (optional)
                   </Label>
-                  <Input
-                    type='text'
-                    placeholder='100,00'
-                    name='miles'
-                    onChange={this._onInputChange}
-                    value={this.state.miles}
-                  />
-                  {!miles && errors.miles ? (
-                    <p className='text-danger'>{errors.miles}</p>
-                  ) : null}
+                  <div className={"input-block"}>
+                    <Input
+                      type="text"
+                      placeholder="100,00"
+                      name="miles"
+                      onChange={this._onInputChange}
+                      value={this.state.miles}
+                      maxLength={15}
+                    />
+                    {!miles && errors.miles ? (
+                      <p className="text-danger">{errors.miles}</p>
+                    ) : null}
+                  </div>
                 </FormGroup>
               </Col>
-              <Col md='6'>
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Color (optional)
                   </Label>
                   <Select
                     value={colorSelected}
                     onChange={this.handleColor}
                     options={this.state.colorOptions}
-                    className='w-100 form-select'
-                    placeholder={'Pick a color'}
+                    className="w-100 form-select"
+                    placeholder={"Pick a color"}
                     isClearable={true}
                     components={{ Option: CustomOption }}
                   />
                 </FormGroup>
               </Col>
             </Row>
-            <Row className='justify-content-center'>
-              <Col md='6'>
+            <Row className="justify-content-center">
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Licence Plate (optional)
                   </Label>
                   <Input
-                    type='text'
-                    placeholder='AUM 100'
-                    name='licensePlate'
+                    type="text"
+                    placeholder="AUM 100"
+                    name="licensePlate"
                     onChange={this._onInputChange}
                     value={this.state.licensePlate}
+                    maxLength={15}
                   />
                 </FormGroup>
               </Col>
-              <Col md='6'>
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Unit #(optional)
                   </Label>
                   <Input
-                    type='text'
-                    placeholder='BA1234'
-                    name='unit'
+                    type="text"
+                    placeholder="BA1234"
+                    name="unit"
                     onChange={this._onInputChange}
                     value={this.state.unit}
+                    maxLength={15}
                   />
                 </FormGroup>
               </Col>
             </Row>
-            <Row className=''>
-              <Col md='6'>
+            <Row className="">
+              <Col md="6">
                 <FormGroup>
-                  <Label htmlFor='name' className='customer-modal-text-style'>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     VIN(optional)
                   </Label>
                   <Input
-                    type='text'
-                    placeholder='19UAYF3158T0000'
-                    name='vin'
+                    type="text"
+                    placeholder="19UAYF3158T0000"
+                    name="vin"
                     onChange={this._onInputChange}
                     value={this.state.vin}
+                    maxLength={100}
                   />
                 </FormGroup>
               </Col>
               {expandForm ? (
                 <>
-                  <Col md='6'>
+                  <Col md="6">
                     <FormGroup>
                       <Label
-                        htmlFor='name'
-                        className='customer-modal-text-style'
+                        htmlFor="name"
+                        className="customer-modal-text-style"
                       >
                         Sub Model
                       </Label>
-                      <Input
-                        type='text'
-                        placeholder='Sub Model'
-                        name='subModal'
-                        onChange={this._onInputChange}
-                        value={this.state.subModal}
-                      />
-                      {!subModal && errors.subModal ? (
-                        <p className='text-danger'>{errors.subModal}</p>
-                      ) : null}
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          placeholder="Sub Model"
+                          name="subModal"
+                          onChange={this._onInputChange}
+                          value={this.state.subModal}
+                        />
+                        {!subModal && errors.subModal ? (
+                          <p className="text-danger">{errors.subModal}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                 </>
               ) : (
-                  ''
-                )}
+                ""
+              )}
             </Row>
-            <Row className='justify-content-center'>
-              <Col md='12 text-center'>
+            <Row className="justify-content-center">
+              <Col md="12 text-center">
                 {!expandForm ? (
                   <span
                     onClick={this.handleExpandForm}
-                    className='customer-anchor-text customer-click-btn'
+                    className="customer-anchor-text customer-click-btn"
                   >
                     Show More
                   </span>
                 ) : (
-                    ''
-                  )}
+                  ""
+                )}
               </Col>
             </Row>
             {expandForm ? (
               <>
-                <Row className='justify-content-center'>
-                  <Col md='6'>
+                <Row className="justify-content-center">
+                  <Col md="6">
                     <FormGroup>
                       <Label
-                        htmlFor='name'
-                        className='customer-modal-text-style'
+                        htmlFor="name"
+                        className="customer-modal-text-style"
                       >
                         Engine Size
                       </Label>
-                      <Input
-                        type='text'
-                        name='engineSize'
-                        onChange={this._onInputChange}
-                        placeholder='Engine Size'
-                        id='rate'
-                        value={this.state.engineSize}
-                      />
-                      {!engineSize && errors.engineSize ? (
-                        <p className='text-danger'>{errors.engineSize}</p>
-                      ) : null}
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          name="engineSize"
+                          onChange={this._onInputChange}
+                          placeholder="Engine Size"
+                          id="rate"
+                          value={this.state.engineSize}
+                        />
+                        {!engineSize && errors.engineSize ? (
+                          <p className="text-danger">{errors.engineSize}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
-                  <Col md='6'>
+                  <Col md="6">
                     <FormGroup>
                       <Label
-                        htmlFor='name'
-                        className='customer-modal-text-style'
+                        htmlFor="name"
+                        className="customer-modal-text-style"
                       >
                         Production Date
                       </Label>
-                      <MaskedInput
-                        name='productionDate'
-                        mask='11/1111'
-                        placeholder='MM/YYYY'
-                        onChange={this._onInputChange}
-                        value={this.state.productionDate}
-                      />
-                      {!productionDate && errors.productionDate ? (
-                        <p className='text-danger'>{errors.productionDate}</p>
-                      ) : null}
+                      <div className={"input-block"}>
+                        <MaskedInput
+                          name="productionDate"
+                          mask="11/1111"
+                          placeholder="MM/YYYY"
+                          onChange={this._onInputChange}
+                          value={this.state.productionDate}
+                        />
+                        {!productionDate && errors.productionDate ? (
+                          <p className="text-danger">
+                            {errors.productionDate}
+                          </p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                 </Row>
-                <Row className='justify-content-center'>
-                  <Col md='6'>
+                <Row className="justify-content-center">
+                  <Col md="6">
                     <FormGroup>
                       <Label
-                        htmlFor='name'
-                        className='customer-modal-text-style'
+                        htmlFor="name"
+                        className="customer-modal-text-style"
                       >
                         Transmission
                       </Label>
                       <Input
-                        type='select'
-                        className=''
+                        type="select"
+                        className=""
                         onChange={this.handleSelectedChange}
-                        name='transmission'
-                        id='matrixId'
+                        name="transmission"
+                        id="matrixId"
                       >
-                        <option value={''}>Select</option>
+                        <option value={""}>Select</option>
                         {Transmission.length
                           ? Transmission.map((item, index) => {
-                            return (
-                              <option
-                                selected={item.key === transmissionSelected}
-                                value={item.key}
-                                key={index}
-                              >
-                                {item.text}
-                              </option>
-                            );
-                          })
+                              return (
+                                <option
+                                  selected={
+                                    item.key === transmissionSelected
+                                  }
+                                  value={item.key}
+                                  key={index}
+                                >
+                                  {item.text}
+                                </option>
+                              );
+                            })
                           : null}
                       </Input>
                       {!transmissionSelected && errors.transmission ? (
-                        <p className='text-danger'>{errors.transmission}</p>
+                        <p className="text-danger">{errors.transmission}</p>
                       ) : null}
                     </FormGroup>
                   </Col>
-                  <Col md='6'>
+                  <Col md="6">
                     <FormGroup>
                       <Label
-                        htmlFor='name'
-                        className='customer-modal-text-style'
+                        htmlFor="name"
+                        className="customer-modal-text-style"
                       >
                         Drivetrain
                       </Label>
                       <Input
-                        type='select'
-                        className=''
+                        type="select"
+                        className=""
                         onChange={this.handleSelectedChange}
-                        name='drivetrain'
-                        id='matrixId'
+                        name="drivetrain"
+                        id="matrixId"
                       >
-                        <option value={''}>Select</option>
+                        <option value={""}>Select</option>
                         {Drivetrain.length
                           ? Drivetrain.map((item, index) => {
-                            return (
-                              <option
-                                selected={item.key === drivetrainSelected}
-                                value={item.key}
-                                key={index}
-                              >
-                                {item.text}
-                              </option>
-                            );
-                          })
+                              return (
+                                <option
+                                  selected={item.key === drivetrainSelected}
+                                  value={item.key}
+                                  key={index}
+                                >
+                                  {item.text}
+                                </option>
+                              );
+                            })
                           : null}
                       </Input>
                       {!drivetrainSelected && errors.drivetrain ? (
-                        <p className='text-danger'>{errors.drivetrain}</p>
+                        <p className="text-danger">{errors.drivetrain}</p>
                       ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
-                <Row className='justify-content-center'>
-                  <Col md='12'>
+                <Row className="justify-content-center">
+                  <Col md="12">
                     <FormGroup>
                       <Label
-                        htmlFor='name'
-                        className='customer-modal-text-style'
+                        htmlFor="name"
+                        className="customer-modal-text-style"
                       >
                         Notes
                       </Label>
                       <Input
-                        name='notes'
-                        type='textarea'
-                        placeholder='Enter a note...'
-                        id='name'
+                        name="notes"
+                        type="textarea"
+                        placeholder="Enter a note..."
+                        id="name"
                         value={this.state.notes}
                       />
                       {!notes && errors.notes ? (
-                        <p className='text-danger'>{errors.notes}</p>
+                        <p className="text-danger">{errors.notes}</p>
                       ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
-                <Row className='justify-content-center'>
-                  <Col md='12 text-center'>
+                <Row className="justify-content-center">
+                  <Col md="12 text-center">
                     {expandForm ? (
                       <span
                         onClick={this.handleExpandForm}
-                        className='customer-anchor-text customer-click-btn'
+                        className="customer-anchor-text customer-click-btn"
                       >
                         Show Less
                       </span>
                     ) : (
-                        ''
-                      )}
+                      ""
+                    )}
                   </Col>
                 </Row>
               </>
             ) : (
-                ''
-              )}
+              ""
+            )}
           </ModalBody>
           <ModalFooter>
-            <Button color='primary' onClick={this.updateVehicleFun}>
-              Update vehicle
-            </Button>{' '}
-            <Button color='secondary' onClick={handleEditVehicleModal}>
+            <Button color="primary" onClick={this.updateVehicleFun}>
+              Update Vehicle
+            </Button>{" "}
+            <Button color="secondary" onClick={handleEditVehicleModal}>
               Cancel
             </Button>
           </ModalFooter>
