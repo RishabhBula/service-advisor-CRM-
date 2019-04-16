@@ -20,19 +20,19 @@ import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { CrmUserModal } from "../../common/CrmUserModal";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 class CustomerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 1,
-      search: '',
-      status: '',
-      sort: '',
+      search: "",
+      status: "",
+      sort: "",
       user: {},
       openEditModal: false,
-      selectedCustomers: [],
+      selectedCustomers: []
     };
   }
 
@@ -42,16 +42,16 @@ class CustomerList extends Component {
     const { page, search, sort, status } = qs.parse(lSearch);
     this.setState({
       page: parseInt(page) || 1,
-      sort: sort || '',
-      status: status || '',
-      search: search || '',
+      sort: sort || "",
+      status: status || "",
+      search: search || ""
     });
   }
 
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
-        openEditModal: false,
+        openEditModal: false
       });
     }
   }
@@ -90,7 +90,7 @@ class CustomerList extends Component {
       selectedCustomers.push(user._id);
     });
     this.setState({ selectedCustomers });
-  }; 
+  };
 
   handleActionChange = e => {
     const { selectedCustomers } = this.state;
@@ -115,51 +115,54 @@ class CustomerList extends Component {
   activateCustomers = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
-        ? 'Do you want to active selected customer(s)?'
-        : 'Do you want to active this customer?',
+        ? "Do you want to active selected customer(s)?"
+        : "Do you want to active this customer?"
     });
-    if (!value) {
-      this.setState({
-        selectedCustomers: [],
+    if (value) {
+      this.props.onStatusUpdate({
+        status: true,
+        customers: this.state.selectedCustomers
       });
-      return;
     }
-    this.props.onStatusUpdate({ status: true, customers: this.state.selectedCustomers });
+    this.setState({
+      selectedCustomers: []
+    });
   };
 
   deactivateCustomers = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
-        ? 'Do you want to inactive selected customer(s)?'
-        : 'Do you want to inactive this customer?',
+        ? "Do you want to inactive selected customer(s)?"
+        : "Do you want to inactive this customer?"
     });
-    if (!value) {
-      this.setState({
-        selectedCustomers: [],
+    if (value) {
+      this.props.onStatusUpdate({
+        status: false,
+        customers: this.state.selectedCustomers
       });
-      return;
     }
-    this.props.onStatusUpdate({ status: false, customers: this.state.selectedCustomers });
+    this.setState({
+      selectedCustomers: []
+    });
   };
 
-  onDelete = async (isMultiple = false) => {    
+  onDelete = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
         ? "Do you want to delete selected customer(s)?"
         : "Do you want to delete this customer?"
     });
-    if (!value) {
-      this.setState({
-        selectedCustomers: []
-      });
-      return;
+    if (value) {
+      this.props.onDelete(this.state.selectedCustomers);
     }
-    this.props.onDelete(this.state.selectedCustomers);
+    this.setState({
+      selectedCustomers: []
+    });
   };
 
   handleChange = e => {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -171,7 +174,7 @@ class CustomerList extends Component {
       param.page = page;
     }
     if (search) {
-      param.search = search.trim(' ');
+      param.search = search.trim(" ");
     }
     if (sort) {
       param.sort = sort;
@@ -186,10 +189,10 @@ class CustomerList extends Component {
     e.preventDefault();
     this.setState({
       page: 1,
-      search: '',
-      status: '',
-      sort: '',
-      user: {},
+      search: "",
+      status: "",
+      sort: "",
+      user: {}
     });
     this.props.onSearch({});
   };
@@ -230,42 +233,42 @@ class CustomerList extends Component {
       status,
       user,
       openEditModal,
-      selectedCustomers,
+      selectedCustomers
     } = this.state;
     return (
       <>
-        <div className={'filter-block'}>
+        <div className={"filter-block"}>
           <Form onSubmit={this.onSearch}>
             <Row>
-              <Col lg={'4'} md={'4'} className='mb-0'>
-                <FormGroup className='mb-0'>
-                  <Label className='label'>Search</Label>
-                  <InputGroup className='mb-2'>
+              <Col lg={"4"} md={"4"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label className="label">Search</Label>
+                  <InputGroup className="mb-2">
                     <input
-                      type='text'
-                      name='search'
+                      type="text"
+                      name="search"
                       onChange={this.handleChange}
-                      className='form-control'
+                      className="form-control"
                       value={search}
-                      aria-describedby='searchUser'
-                      placeholder='Search by first name, last name and email'
+                      aria-describedby="searchUser"
+                      placeholder="Search by first name, last name and email"
                     />
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={'3'} md={'3'} className='mb-0'>
-                <FormGroup className='mb-0'>
-                  <Label for='exampleSelect' className='label'>
+              <Col lg={"3"} md={"3"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label for="exampleSelect" className="label">
                     Status
                   </Label>
                   <Input
-                    type='select'
-                    name='status'
-                    id='exampleSelect'
+                    type="select"
+                    name="status"
+                    id="exampleSelect"
                     onChange={this.handleChange}
                     value={status}
                   >
-                    <option className='form-control' value={''}>
+                    <option className="form-control" value={""}>
                       -- Select Status --
                     </option>
                     <option value={1}>Active</option>
@@ -273,53 +276,53 @@ class CustomerList extends Component {
                   </Input>
                 </FormGroup>
               </Col>
-              <Col lg={'3'} md={'3'} className='mb-0'>
-                <FormGroup className='mb-0'>
-                  <Label for='SortFilter' className='label'>
+              <Col lg={"3"} md={"3"} className="mb-0">
+                <FormGroup className="mb-0">
+                  <Label for="SortFilter" className="label">
                     Sort By
                   </Label>
                   <Input
-                    type='select'
-                    name='sort'
-                    id='SortFilter'
+                    type="select"
+                    name="sort"
+                    id="SortFilter"
                     onChange={this.handleChange}
                     value={sort}
                   >
-                    <option className='form-control' value={''}>
+                    <option className="form-control" value={""}>
                       -- Select Status --
                     </option>
-                    <option value={'createddesc'}>Last Created</option>
-                    <option value={'nasc'}>Name A-Z</option>
-                    <option value={'ndesc'}>Name Z-A</option>
+                    <option value={"createddesc"}>Last Created</option>
+                    <option value={"nasc"}>Name A-Z</option>
+                    <option value={"ndesc"}>Name Z-A</option>
                   </Input>
                 </FormGroup>
               </Col>
-              <Col lg={'2'} md={'2'} className='mb-0'>
-                <div className='filter-btn-wrap'>
-                  <Label className='height17 label' />
-                  <div className='form-group mb-0'>
-                    <span className='mr-2'>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <div className="filter-btn-wrap">
+                  <Label className="height17 label" />
+                  <div className="form-group mb-0">
+                    <span className="mr-2">
                       <button
-                        type='submit'
-                        className='btn btn-primary'
-                        id='Tooltip-1'
+                        type="submit"
+                        className="btn btn-primary"
+                        id="Tooltip-1"
                       >
-                        <i className='fa fa-search' />
+                        <i className="fa fa-search" />
                       </button>
-                      <UncontrolledTooltip target='Tooltip-1'>
+                      <UncontrolledTooltip target="Tooltip-1">
                         Search
                       </UncontrolledTooltip>
                     </span>
-                    <span className=''>
+                    <span className="">
                       <button
-                        type='button'
-                        className='btn btn-danger'
-                        id='Tooltip-2'
+                        type="button"
+                        className="btn btn-danger"
+                        id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className='fa fa-refresh' />
+                        <i className="fa fa-refresh" />
                       </button>
-                      <UncontrolledTooltip target={'Tooltip-2'}>
+                      <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
                       </UncontrolledTooltip>
                     </span>
@@ -332,29 +335,29 @@ class CustomerList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
-              <th width='90px'>
+              <th width="90px">
                 {customers.length ? (
-                  <div className='table-checkbox-wrap'>
-                    <span className='checkboxli checkbox-custom checkbox-default'>
+                  <div className="table-checkbox-wrap">
+                    <span className="checkboxli checkbox-custom checkbox-default">
                       <Input
-                        type='checkbox'
-                        name='checkbox'
-                        id='checkAll'
+                        type="checkbox"
+                        name="checkbox"
+                        id="checkAll"
                         checked={selectedCustomers.length === customers.length}
                         onChange={this.handleCheckAllCheckBox}
                       />
-                      <label className='' htmlFor='checkAll' />
+                      <label className="" htmlFor="checkAll" />
                     </span>
                     <Input
-                      className='commonstatus'
-                      type='select'
-                      id='exampleSelect'
+                      className="commonstatus"
+                      type="select"
+                      id="exampleSelect"
                       onChange={this.handleActionChange}
                     >
-                      <option value={''}>Select</option>
-                      <option value={'active'}>Active</option>
-                      <option value={'inactive'}>Inactive</option>
-                      <option value={'delete'}>Delete</option>
+                      <option value={""}>Select</option>
+                      <option value={"active"}>Active</option>
+                      <option value={"inactive"}>Inactive</option>
+                      <option value={"delete"}>Delete</option>
                     </Input>
                   </div>
                 ) : null}
@@ -373,16 +376,13 @@ class CustomerList extends Component {
                 customers.map((user, index) => {
                   return (
                     <tr key={index}>
-                      {/* <td>
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
-                      </td> */}
                       <td>
-                        <div className='checkbox-custom checkbox-default coloum-checkbox'>
+                        <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
-                            type='checkbox'
+                            type="checkbox"
                             value={user._id}
                             checked={selectedCustomers.indexOf(user._id) > -1}
-                            name='checkbox'
+                            name="checkbox"
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={user._id}>
@@ -390,11 +390,11 @@ class CustomerList extends Component {
                           </label>
                         </div>
                       </td>
-                      <td>{user.firstName || '-'}</td>
-                      <td>{user.lastName || '-'}</td>
-                      <td>{user.email || '-'}</td>
+                      <td>{user.firstName || "-"}</td>
+                      <td>{user.lastName || "-"}</td>
+                      <td>{user.email || "-"}</td>
                       <td>
-                        {user.createdAt ? formateDate(user.createdAt) : '-'}
+                        {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
 
                       <td>
@@ -416,49 +416,33 @@ class CustomerList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedCustomers: [user._id]
-                                  },
-                                  () => {
-                                    this.activateCustomers();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedCustomers: [user._id]
+                                },
+                                () => {
+                                  this.activateCustomers();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
 
-                      {/* <td>
-                        <Button
-                          color={user.status ? 'success' : 'danger'}
-                          onClick={() =>
-                            this.changeStatus(
-                              {
-                                enabled: user.status ? false : true,
-                              },
-                              user._id
-                            )
-                          }
-                          size='sm'
-                        >
-                          {user.status ? 'Active' : 'Inactive'}
-                        </Button>
-                      </td> */}
                       <td>
                         <Button
-                          color={'primary'}
-                          size={'sm'}
+                          color={"primary"}
+                          size={"sm"}
                           onClick={() => this.editUser(user)}
                         >
-                          <i className={'fa fa-edit'} />
-                        </Button>{' '}
+                          <i className={"fa fa-edit"} />
+                        </Button>{" "}
                         &nbsp;
                         <Button
                           color={"danger"}
@@ -483,14 +467,14 @@ class CustomerList extends Component {
                 })
               ) : (
                 <tr>
-                  <td className={'text-center'} colSpan={10}>
+                  <td className={"text-center"} colSpan={10}>
                     No customer records are available
                   </td>
                 </tr>
               )
             ) : (
               <tr>
-                <td className={'text-center'} colSpan={10}>
+                <td className={"text-center"} colSpan={10}>
                   <Loader />
                 </td>
               </tr>
@@ -514,7 +498,7 @@ class CustomerList extends Component {
           handleUserModal={() => {
             this.setState({
               openEditModal: false,
-              user: {},
+              user: {}
             });
           }}
           userData={user}

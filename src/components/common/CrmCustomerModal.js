@@ -356,10 +356,8 @@ export class CrmCustomerModal extends Component {
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-
       if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
         (
-          (customerData.email !== '') ||
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')

@@ -349,7 +349,6 @@ export class CrmEditCustomerModal extends Component {
           ...customerDefaultPermissions,
           selectedLabourRate: selectValue
         });
-
         //this.props.setDefaultRate(selectValue);
       }
     }
@@ -439,14 +438,12 @@ export class CrmEditCustomerModal extends Component {
         CreateCustomerValidMessaages
       );
 
-      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
-        (
-          (customerData.email !== '') ||
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||        
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')
           )
-        )
+        
       ) {
         this.setState({
           errors: errors,

@@ -138,18 +138,18 @@ export class CrmVehicleModal extends Component {
       year: this.state.year,
       make: this.state.make,
       modal: this.state.modal,
-      type: this.state.typeSelected,
-      color: this.state.colorSelected,
-      miles: this.state.miles,
-      licensePlate: this.state.licensePlate,
-      unit: this.state.unit,
-      vin: this.state.vin,
-      subModal: this.state.subModal,
-      engineSize: this.state.engineSize,
-      productionDate: this.state.productionDate,
-      transmission: this.state.transmissionSelected,
-      drivetrain: this.state.drivetrainSelected,
-      notes: this.state.year,
+      // type: this.state.typeSelected,
+      // color: this.state.colorSelected,
+      // miles: this.state.miles,
+      // licensePlate: this.state.licensePlate,
+      // unit: this.state.unit,
+      // vin: this.state.vin,
+      // subModal: this.state.subModal,
+      // engineSize: this.state.engineSize,
+      // productionDate: this.state.productionDate,
+      // transmission: this.state.transmissionSelected,
+      // drivetrain: this.state.drivetrainSelected,
+      // notes: this.state.year,
     };
 
     if (this.state.miles !== '') {
@@ -166,8 +166,9 @@ export class CrmVehicleModal extends Component {
         this.setState({
           errors: errors,
           isLoading: false,
-        }, () => {
-          const yearValidation = this.yearValidation(this.state.year)
+        }, async () => {
+          const yearValidation = await this.yearValidation(this.state.year);
+          console.log(yearValidation);
           if (!yearValidation) {
             return
           }});
@@ -268,9 +269,9 @@ export class CrmVehicleModal extends Component {
           const current_year = new Date().getFullYear();
           if (year < (current_year-101) || year >= current_year) {
             errors[
-              'year'
-            ] = `Year should be in range ${new Date().getFullYear() -
-            101} to ${new Date().getFullYear() - 1}`;
+              "year"
+            ] = `Year should be in range ${current_year-101} to ${new Date().getFullYear() -
+              1}`;
             this.setState({ errors });
             return false;
           }
@@ -280,10 +281,12 @@ export class CrmVehicleModal extends Component {
         } else {
           errors['year'] = 'Please enter year.';
           this.setState({ errors });
+          return false;
         }
       } else {
         errors['year'] = 'Year is not proper. Please check';
         this.setState({ errors });
+        return false;
       }
 
     } else {

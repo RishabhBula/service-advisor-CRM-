@@ -47,17 +47,26 @@ class Customers extends Component {
     this.props.getCustomerFleetListActions();
   }
 
-  componentDidUpdate({ location }) {
+  componentDidUpdate({ location, modelInfoReducer }) {
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
       this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
     }
+    const { modelDetails } = this.props.modelInfoReducer;
+  console.log('====================================');
+  console.log(modelInfoReducer.modelDetails.customreEditModel);
+  console.log(this.props.modelInfoReducer.modelDetails.customerEditModel);
+  console.log('====================================');
+    if (modelInfoReducer.modelDetails.customreEditModel !== modelDetails.customreEditModel) {
+      
+
+    }
   }
 
   loadTypeRate = input => {
     this.props.getStdList(input);
-  }
+  };
   toggleCreateModal = e => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
@@ -68,7 +77,7 @@ class Customers extends Component {
   };
 
   toggleEditModal = e => {
-    this.setState({ customer: {} })
+    this.setState({ customer: {} });
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
       customerModel: false,
@@ -77,7 +86,7 @@ class Customers extends Component {
     this.props.modelOperate(data);
   };
 
-  toggleUpdateModal = (customer) => {
+  toggleUpdateModal = customer => {
     this.setState({ customerId: customer._id });
     this.setState({ customer: customer }, () => {
       const { modelDetails } = this.props.modelInfoReducer;
@@ -86,16 +95,16 @@ class Customers extends Component {
       };
       this.props.modelOperate(data);
     });
-  }
+  };
   createUser = data => {
     logger(data);
   };
 
-  onSearch = (data) => {
+  onSearch = data => {
     const { location } = this.props;
     const { pathname } = location;
     this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
-  }
+  };
 
   onPageChange = page => {
     const { location } = this.props;
@@ -128,40 +137,41 @@ class Customers extends Component {
     this.props.onStatusUpdate({ ...query, ...data });
   };
 
-  addCustomer = (data) => {
+  addCustomer = data => {
     this.props.addCustomer(data);
     this.props.getCustomerList();
     this.onSearch({});
-  }
+  };
 
-  updateCustomerForm = (data) => {
+  updateCustomerForm = data => {
     let customerId = this.state.customerId;
     data.customerId = customerId;
-    this.props.updateCustomer(data);
-  }
-  onTypeHeadStdFun = (data) => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    this.props.updateCustomer(query, data);
+  };
+  onTypeHeadStdFun = data => {
     this.props.getStdList(data);
-  }
+  };
 
   onStdAdd = () => {
     this.props.getStdList();
-  }
+  };
 
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
-  }
+  };
 
   render() {
-    const {
-      openCreate,
-      editMode,
-      customer } = this.state;
+    const { openCreate, editMode, customer } = this.state;
     const {
       userReducer,
       addCustomer,
       matrixListReducer,
       customerListReducer,
       rateStandardListReducer,
+      getCustomerFleetList,
       customerFleetReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
@@ -229,7 +239,8 @@ class Customers extends Component {
           customer={customer}
           getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
-          loadTypeRate={this.loadTypeRate} />
+          loadTypeRate={this.loadTypeRate}
+        />
       </>
     );
   }
