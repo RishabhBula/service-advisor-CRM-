@@ -455,7 +455,7 @@ class FleetList extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={10}>
-                      No Fleet Found
+                    No Fleets are available
                   </td>
                   </tr>
                 )

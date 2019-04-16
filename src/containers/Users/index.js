@@ -45,9 +45,6 @@ class Users extends Component {
       this.props.userReducer.userData.isSuccess !==
       userReducer.userData.isSuccess
     ) {
-      this.setState({
-        openCreate: !this.props.userReducer.userData.isSuccess
-      });
       if (this.props.userReducer.userData.isSuccess) {
         const query = qs.parse(this.props.location.search);
         this.props.getUsers({ ...query, page: query.page || 1 });
@@ -57,9 +54,6 @@ class Users extends Component {
       this.props.userReducer.userData.isEditSuccess !==
       userReducer.userData.isEditSuccess
     ) {
-      this.setState({
-        openEdit: !this.props.userReducer.userData.isEditSuccess
-      });
       if (this.props.userReducer.userData.isEditSuccess) {
         const query = qs.parse(this.props.location.search);
         this.props.getUsers({ ...query, page: query.page || 1 });
@@ -73,8 +67,8 @@ class Users extends Component {
   }
   toggleCreateModal = e => {
     e.preventDefault();
-    this.setState({
-      openCreate: !this.state.openCreate
+    this.props.modelOperate({
+      addUserModal: !this.props.modelInfoReducer.modelDetails.addUserModal
     });
   };
   onSearch = data => {
@@ -95,8 +89,9 @@ class Users extends Component {
     this.props.onStatusUpdate({ ...query, ...data });
   };
   render() {
-    const { openCreate, openEdit } = this.state;
-    const { userReducer, addUser } = this.props;
+    const { userReducer, addUser, modelInfoReducer, modelOperate } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { addUserModal, editUserModal } = modelDetails;
     return (
       <>
         <Card>
@@ -129,13 +124,14 @@ class Users extends Component {
               onSearch={this.onSearch}
               onDelete={this.deleteUser}
               onUpdate={this.props.updateUser}
-              openEdit={openEdit}
+              openEdit={editUserModal}
               onStatusUpdate={this.onStatusUpdate}
+              modelOperate={modelOperate}
             />
           </CardBody>
         </Card>
         <CrmUserModal
-          userModalOpen={openCreate}
+          userModalOpen={addUserModal}
           handleUserModal={this.toggleCreateModal}
           addUser={addUser}
         />

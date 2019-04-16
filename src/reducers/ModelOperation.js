@@ -1,4 +1,4 @@
-import { handleActions } from 'redux-actions';
+import { handleActions } from "redux-actions";
 import { modelActions } from "./../actions";
 
 const initialAuthState = {
@@ -8,26 +8,28 @@ const initialAuthState = {
     fleetEditModel: false,
     vehicleModel: false,
     vehicleEditModel: false,
-    custAndVehicle: false
+    custAndVehicle: false,
+    addUserModal: false,
+    editUserModal: false
   }
 };
 
 export const modelInfoReducer = handleActions(
-         {
-           [modelActions.MODEL_OPEN_REQUEST]: (state, action) => ({
-             ...state,
-             modelDetails: {
-               ...state.modelDetails,
-               ...action.payload.modelDetails
-             }
-           }),
-           [modelActions.MODEL_CLOSE_REQUEST]: (state, action) => ({
-             ...state,
-             modelDetails: {
-               ...state.modelDetails,
-               ...action.payload.modelDetails
-             }
-           })
-         },
-         initialAuthState
-       );
+  {
+    [modelActions.MODEL_OPEN_REQUEST]: (state, action) => ({
+      ...state,
+      modelDetails: {
+        ...state.modelDetails,
+        ...action.payload.modelDetails
+      }
+    }),
+    [modelActions.MODEL_CLOSE_REQUEST]: (state, action) => ({
+      ...state,
+      modelDetails: {
+        ...state.modelDetails,
+        ...action.payload.modelDetails
+      }
+    })
+  },
+  initialAuthState
+);

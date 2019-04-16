@@ -119,7 +119,10 @@ class UserList extends Component {
     this.props.onDelete(this.state.selectedUsers);
   };
   editUser = user => {
-    this.setState({ openEditModal: true, user });
+    this.setState({ user });
+    this.props.modelOperate({
+      editUserModal: true
+    });
   };
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
@@ -206,8 +209,10 @@ class UserList extends Component {
     }
   };
   render() {
-    const { userData } = this.props;
+    const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
+    console.log(openEdit);
+
     const {
       page,
       search,
@@ -216,7 +221,6 @@ class UserList extends Component {
       invitaionStatus,
       type,
       user,
-      openEditModal,
       selectedUsers
     } = this.state;
     return (
@@ -461,7 +465,7 @@ class UserList extends Component {
                                   selectedUsers: [user._id]
                                 },
                                 () => {
-                                  this.activateUsers();
+                                  this.deactivateUsers();
                                 }
                               );
                             }}
@@ -478,7 +482,7 @@ class UserList extends Component {
                                   selectedUsers: [user._id]
                                 },
                                 () => {
-                                  this.deactivateUsers();
+                                  this.activateUsers();
                                 }
                               );
                             }}
@@ -553,11 +557,11 @@ class UserList extends Component {
         ) : null}
 
         <CrmUserModal
-          userModalOpen={openEditModal}
+          userModalOpen={openEdit}
           handleUserModal={() => {
-            this.setState({
-              openEditModal: false,
-              user: {}
+            this.setState({ user: {} });
+            this.props.modelOperate({
+              editUserModal: false
             });
           }}
           userData={user}

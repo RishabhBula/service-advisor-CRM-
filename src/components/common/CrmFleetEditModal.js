@@ -330,6 +330,7 @@ export class CrmFleetEditModal extends Component {
             <Modal
                isOpen={fleetEditModalOpen}
                toggle={handleFleetModal}
+               backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
                <ModalHeader toggle={handleFleetModal}>
@@ -699,7 +700,7 @@ export class CrmFleetEditModal extends Component {
                                                    defaultOptions={rateStandardListData.standardRateList}
                                                    loadOptions={this.loadOptions}
                                                    onChange={this.handleStandardRate}
-                                                   isClearable={selectedLabourRate.value !== '' ? true : false}
+                                                   isClearable={selectedLabourRate && selectedLabourRate.value !== '' ? true : false}
                                                    value={selectedLabourRate}
                                                 />
 

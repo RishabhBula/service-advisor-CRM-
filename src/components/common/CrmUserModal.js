@@ -71,6 +71,15 @@ export class CrmUserModal extends Component {
         rate,
         permissions
       } = this.props.userData;
+      logger({
+        firstName,
+        lastName,
+        email,
+        phone,
+        roleType,
+        rate,
+        permissions
+      });
       this.setState({
         isEditMode: true,
         firstName,
@@ -140,7 +149,9 @@ export class CrmUserModal extends Component {
         email,
         phone,
         roleType,
-        rate: rate ? parseFloat(rate.replace(/[$,\s]/g, "")).toFixed(2) : "0",
+        rate: rate
+          ? parseFloat(rate.toString().replace(/[$,\s]/g, "")).toFixed(2)
+          : "0",
         permissions
       };
       const { isValid, errors } = Validator(

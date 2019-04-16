@@ -7,7 +7,6 @@ const getAllStandardRate = async (req, res) => {
     let condition = {
       name: new RegExp($data.searchValue, "i")
     }
-    console.log(condition);
     const getAllStdRate = await rateStandardModel.find({
       parentId: mongoose.Types.ObjectId($data.parentId),
       ...condition
