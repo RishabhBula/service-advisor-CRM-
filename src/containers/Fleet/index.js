@@ -163,7 +163,6 @@ class Fleet extends Component {
       this.props.updateFleet(data);
       const { modelDetails } = this.props.modelInfoReducer;
       let modaldata = {
-        fleetEditModel: true,
         fleetEditModel: !modelDetails.fleetEditModel,
       };
       this.props.modelOperate(modaldata);
@@ -217,7 +216,7 @@ class Fleet extends Component {
             <Row>
               <Col sm={'6'} className={'pull-left'}>
                 <h4>
-                  <img src="/assets/img/fleetIcon.svg" width="30" /> Fleet List
+                  <img src="/assets/img/fleetIcon.svg" width="30" alt=""/> Fleet List
                 </h4>
               </Col>
               <Col sm={'6'} className={'text-right'}>

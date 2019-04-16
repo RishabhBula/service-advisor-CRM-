@@ -334,14 +334,12 @@ export class CrmFleetModal extends Component {
     const {
       fleetModalOpen,
       handleFleetModal,
-      handleAddFleet,
       matrixListReducerData,
       rateStandardListData,
     } = this.props;
     const {
       companyName,
       phoneDetail,
-      phoneErrors,
       email,
       notes,
       address1,
@@ -353,7 +351,6 @@ export class CrmFleetModal extends Component {
       percentageDiscount,
       isEditMode,
       fleetId,
-      error,
       selectedLabourRate,
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
@@ -722,7 +719,7 @@ export class CrmFleetModal extends Component {
 
                   return (
                     <>
-                      <Col md='6' key={index}>
+                      <Col md='6' key={index} className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
                         <div className='d-flex'>
                           <AppSwitch
                             className={'mx-1'}
@@ -742,10 +739,10 @@ export class CrmFleetModal extends Component {
                           </p>
                         </div>
                         {discountShow ? (
-                          <div className='custom-label col-12' key={index}>
+                          <div className='custom-label col-12 d-flex' key={index}>
                             <Label
                               htmlFor='name'
-                              className='customer-modal-text-style'
+                              className='customer-modal-text-style mr-2'
                             >
                               Percent Discount
                               </Label>
@@ -771,7 +768,7 @@ export class CrmFleetModal extends Component {
                           rateStandardListData &&
                           rateStandardListData.standardRateList &&
                           rateStandardListData.standardRateList.length ? (
-                            <Col md=''>
+                            <Col md='' className={"fleet-block rate-standard-list"}>
                               <Async
                                 defaultOptions={
                                   rateStandardListData.standardRateList

@@ -15,7 +15,6 @@ import {
   fleetListRequest,
   fleetUpdateStatusAction,
   customerFleetListAction,
-  getCustomerFleetListRequest,
   getCustomerfleetListStarted
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
