@@ -68,11 +68,9 @@ export class CrmCustomerModal extends Component {
       phoneErrors: [],
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
-      defaultOptions: [
-        { value: "", label: "Add New Customer" }
-      ],
-      selectedLabourRate: '',
-    }
+      defaultOptions: [{ value: "", label: "Add New Customer" }],
+      selectedLabourRate: "",
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -315,7 +313,10 @@ export class CrmCustomerModal extends Component {
         await Promise.all(
           phoneDetail.map(async (key, i) => {
             if (key.value.length) {
-              await this.setStateAsync({ phoneErrors: phoneErrors.splice(i, 1) });
+              phoneErrors.splice(i, 1)
+              await this.setStateAsync({
+                phoneErrors: phoneErrors
+              });
             } else {
               phoneErrors[i] = 'Phone number is required';
               await this.setStateAsync({ phoneErrors });
@@ -323,21 +324,25 @@ export class CrmCustomerModal extends Component {
           })
         );
       }
-
+      let validationData = {
+        firstName: firstName,
+        lastName: lastName,
+      }
+      if(email !== "") {
+        validationData.email = email
+      }
       const { isValid, errors } = Validator(
-        validationdata,
+        validationData,
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-      if (!isValid &&
-        (
-          (customerData.email !== '') || Object.keys(this.state.phoneErrors).length ||
+      if (!isValid || Object.keys(this.state.phoneErrors).length ||
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')
           )
         )
-      ) {
+       {
         this.setState({
           errors: errors,
           isLoading: false,
@@ -373,7 +378,7 @@ export class CrmCustomerModal extends Component {
       errors: {},
       selectedLabourRate: {},
       customerDefaultPermissions: CustomerDefaultPermissions,
-      phoneErrors: {},
+      phoneErrors: [],
       expandForm: false
     })
   }

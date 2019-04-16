@@ -91,8 +91,8 @@ export class CrmVehicleModal extends Component {
       year: '',
       make: '',
       modal: '',
-      typeSelected: null,
-      colorSelected: null,
+      typeSelected: '',
+      colorSelected: '',
       miles: '',
       licensePlate: '',
       unit: '',
@@ -104,11 +104,12 @@ export class CrmVehicleModal extends Component {
       drivetrainSelected: '2x4',
       notes: '',
       errors: {},
+      isLoading: false
     };
   }
 
-  componentDidUpdate(prevProps) { 
-    if(prevProps.vehicleModalOpen !== this.props.vehicleModalOpen) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.vehicleModalOpen !== this.props.vehicleModalOpen) {
       this.removeAllState();
     }
   }
@@ -134,10 +135,23 @@ export class CrmVehicleModal extends Component {
     };
 
     let validationData = {
-      year: yeardata,
+      year: this.state.year,
       make: this.state.make,
       modal: this.state.modal,
+      type: this.state.typeSelected,
+      color: this.state.colorSelected,
+      miles: this.state.miles,
+      licensePlate: this.state.licensePlate,
+      unit: this.state.unit,
+      vin: this.state.vin,
+      subModal: this.state.subModal,
+      engineSize: this.state.engineSize,
+      productionDate: this.state.productionDate,
+      transmission: this.state.transmissionSelected,
+      drivetrain: this.state.drivetrainSelected,
+      notes: this.state.year,
     };
+
     if (this.state.miles !== '') {
       validationData.miles = this.state.miles;
     }
@@ -208,8 +222,8 @@ export class CrmVehicleModal extends Component {
       year: '',
       make: '',
       modal: '',
-      typeSelected: null,
-      colorSelected: null,
+      typeSelected: '',
+      colorSelected: '',
       miles: '',
       licensePlate: '',
       unit: '',
@@ -224,7 +238,7 @@ export class CrmVehicleModal extends Component {
     });
   }
 
-  yearValidation = async (ev) => {
+  yearValidation = async ev => {
     const { target } = ev;
     const { value } = target;
     const year = value;
@@ -237,7 +251,7 @@ export class CrmVehicleModal extends Component {
           if (year.length !== 0) {
             if (year !== '' && !text.test(parseInt(year))) {
               errors['year'] = 'Please Enter Numeric Values Only';
-              this.setState({errors});
+              this.setState({ errors });
               return false;
             }
 
@@ -253,11 +267,11 @@ export class CrmVehicleModal extends Component {
                 'year'
               ] = `Year should be in range ${new Date().getFullYear() -
                 101} to ${new Date().getFullYear() - 1}`;
-                this.setState({ errors });
+              this.setState({ errors });
               return false;
             }
-            errors['year'] = "";
-            this.setState({errors});
+            errors['year'] = '';
+            this.setState({ errors });
             return true;
           }
         } else {
@@ -265,11 +279,32 @@ export class CrmVehicleModal extends Component {
           this.setState({ errors });
         }
       }
+    } else {
+      errors['year'] = 'Please enter year.';
+      this.setState({ errors });
     }
-  }
+  };
 
   render() {
-    const { selectedOption, year, make, modal, errors } = this.state;
+    const {
+      selectedOption,
+      year,
+      make,
+      modal,
+      type,
+      errors,
+      miles,
+      color,
+      licensePlate,
+      unit,
+      vin,
+      subModal,
+      engineSize,
+      productionDate,
+      transmission,
+      drivetrain,
+      notes,
+    } = this.state;
     const { vehicleModalOpen, handleVehicleModal, createVehicle } = this.props;
     const {
       expandForm,
@@ -301,14 +336,14 @@ export class CrmVehicleModal extends Component {
                       placeholder='20XX'
                       id='year'
                       name='year'
-                      minLength="4"
-                      maxLength="4"
-                      onBlur={this.yearValidation} 
+                      minLength='4'
+                      maxLength='4'
+                      onBlur={this.yearValidation}
                       onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
-                      value={this.state.year}
+                      value={year}
                     />
-                    {errors.hasOwnProperty('year') ? (
+                    {(!year && errors.year) || errors.hasOwnProperty('year') ? (
                       <p className='text-danger'>{errors.year}</p>
                     ) : null}
                   </div>
@@ -363,6 +398,9 @@ export class CrmVehicleModal extends Component {
                     className='w-100 form-select'
                     onChange={this.handleType}
                   />
+                  {!type && errors.type ? (
+                    <p className='text-danger'>{errors.type}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
             </Row>
@@ -378,6 +416,9 @@ export class CrmVehicleModal extends Component {
                     name='miles'
                     onChange={this._onInputChange}
                   />
+                  {!miles && errors.miles ? (
+                    <p className='text-danger'>{errors.miles}</p>
+                  ) : null}
                 </FormGroup>
               </Col>
               <Col md='6'>
@@ -455,6 +496,9 @@ export class CrmVehicleModal extends Component {
                         name='subModal'
                         onChange={this._onInputChange}
                       />
+                      {!subModal && errors.subModal ? (
+                        <p className='text-danger'>{errors.subModal}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </>
@@ -494,6 +538,9 @@ export class CrmVehicleModal extends Component {
                         placeholder='Engine Size'
                         id='rate'
                       />
+                      {!engineSize && errors.engineSize ? (
+                        <p className='text-danger'>{errors.engineSize}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -510,6 +557,9 @@ export class CrmVehicleModal extends Component {
                         placeholder='MM/YYYY'
                         onChange={this._onInputChange}
                       />
+                      {!productionDate && errors.productionDate ? (
+                        <p className='text-danger'>{errors.productionDate}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -544,6 +594,9 @@ export class CrmVehicleModal extends Component {
                             })
                           : null}
                       </Input>
+                      {!transmission && errors.transmission ? (
+                        <p className='text-danger'>{errors.transmission}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -576,6 +629,9 @@ export class CrmVehicleModal extends Component {
                             })
                           : null}
                       </Input>
+                      {!drivetrain && errors.drivetrain ? (
+                        <p className='text-danger'>{errors.drivetrain}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
@@ -594,6 +650,9 @@ export class CrmVehicleModal extends Component {
                         placeholder='Enter a note...'
                         id='name'
                       />
+                      {!notes && errors.notes ? (
+                        <p className='text-danger'>{errors.notes}</p>
+                      ) : null}
                     </FormGroup>
                   </Col>
                 </Row>
