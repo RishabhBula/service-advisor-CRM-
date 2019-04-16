@@ -76,11 +76,13 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
     console.log('====================================');
     console.log(this.props.customerModalOpen);
     console.log(prevProps.customerModalOpen);
+    console.log(this.props.customer);
+    console.log(prevProps.customer);
     console.log('====================================');
-    if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
       this.setState({
         address1: "",
         address2: "",
