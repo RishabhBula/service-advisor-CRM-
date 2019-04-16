@@ -148,7 +148,7 @@ export const CustomerDefaultPermissions = {
   },
   shouldPricingMatrixOverride: {
     status: false,
-    pricingMatrix: "objectId",
+    pricingMatrix: null,
   },
 };
 
