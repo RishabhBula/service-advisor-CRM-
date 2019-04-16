@@ -42,7 +42,7 @@ export class CrmFleetModal extends Component {
       companyName: '',
       phoneDetail: [
         {
-          phone: '',
+          phone: 'mobile',
           value: '',
         },
       ],
@@ -62,7 +62,7 @@ export class CrmFleetModal extends Component {
       fleetDefaultPermissions: CustomerDefaultPermissions,
       percentageDiscount: 0,
       defaultOptions: [{ value: '', label: 'Add New Customer' }],
-      selectedLabourRate: {},
+      selectedLabourRate: { value: '', label: 'Select...' },
       vendorValue: '',
       openStadardRateModel: false,
     };
@@ -183,7 +183,7 @@ export class CrmFleetModal extends Component {
       permission: '',
       fleetId: '',
       errors: {},
-      phoneErrors: {},
+      phoneErrors: [''],
       isEditMode: false,
       phoneLength: AppConfig.phoneLength,
       fleetDefaultPermissions: CustomerDefaultPermissions,
@@ -207,7 +207,7 @@ export class CrmFleetModal extends Component {
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
     const phoneDetail = [...this.state.phoneDetail];
-    phoneDetail[index].phone = value;
+    phoneDetail[index].phone = value ? value : 'mobile';
     this.setState({
       phoneDetail,
     });
@@ -472,7 +472,7 @@ export class CrmFleetModal extends Component {
                                 >
                                   {phoneOptions}
                                 </Input>
-                                {phoneDetail[index].phone === 'mobile' ? (
+                                {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
                                   <div className='input-block select-number-tile'>
                                     <MaskedInput
                                       mask='(111) 111-111'
@@ -537,7 +537,7 @@ export class CrmFleetModal extends Component {
                                   >
                                     {phoneOptions}
                                   </Input>
-                                  {phoneDetail[index].phone === 'mobile' ? (
+                                  {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
                                     <div className='input-block select-number-tile'>
                                       <MaskedInput
                                         mask='(111) 111-111'

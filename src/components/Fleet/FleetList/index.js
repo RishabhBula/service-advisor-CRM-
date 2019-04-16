@@ -152,16 +152,18 @@ class FleetList extends Component {
     }
     this.props.onStatusUpdate({ status: false, fleetId: this.state.selectedFleets });
     this.setState({ selectedFleets: [] });
-  
+
   };
 
   onSearch = e => {
     e.preventDefault();
-    const { page, search, sort, status } = this.state;
+    this.setState({
+      page: 1,
+      selectedFleets: []
+    });
+    const { search, sort, status } = this.state;
     let param = {};
-    if (page && page > 1) {
-      param.page = page;
-    }
+    param.page = 1;
     if (search) {
       param.search = search.trim(" ");
     }
@@ -382,7 +384,7 @@ class FleetList extends Component {
                       <td>{data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {
                           return (
-                            <div>{data.phone || "NA"}{"|"}{"  "}{data.value || "NA"}</div>
+                            <div className="text-capitalize">{data.phone}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value || "-"}</div>
                           )
                         }) : "-"}</td>
                       <td>{data.email || "-"}</td>
@@ -455,7 +457,7 @@ class FleetList extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={10}>
-                    No Fleets are available
+                      No Fleets are available
                   </td>
                   </tr>
                 )

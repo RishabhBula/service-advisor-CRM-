@@ -217,7 +217,7 @@ class Fleet extends Component {
             <Row>
               <Col sm={'6'} className={'pull-left'}>
                 <h4>
-                  <i className={'fa fa-users'} /> Fleet List
+                  <img src="/assets/img/fleetIcon.svg" width="30" /> Fleet List
                 </h4>
               </Col>
               <Col sm={'6'} className={'text-right'}>

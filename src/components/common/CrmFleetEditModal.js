@@ -162,7 +162,12 @@ export class CrmFleetEditModal extends Component {
             fleetDefaultPermissions: fleetSingleData.fleetDefaultPermissions,
             state: fleetSingleData.state,
             zipCode: fleetSingleData.zipCode,
-            phoneDetail: fleetSingleData.phoneDetail,
+            phoneDetail: fleetSingleData.phoneDetail && fleetSingleData.phoneDetail.length ? fleetSingleData.phoneDetail : [
+               {
+                 phone: "mobile",
+                 value: ""
+               }
+             ],
             fleetId: fleetSingleData._id,
             selectedLabourRate: fleetSingleData.fleetDefaultPermissions
          })
@@ -170,6 +175,13 @@ export class CrmFleetEditModal extends Component {
             fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
 
             this.handleGetRateData(fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate)
+         }else{
+            this.setState({
+               selectedLabourRate:{
+                  value:"",
+                  label:"Select..."
+               }
+            })
          }
       }
 
