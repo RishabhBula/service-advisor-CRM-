@@ -28,8 +28,7 @@ import {
   AppSidebarNav
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
-import CustAndVehicle  from "../../components/common/CustomerAndVehicle/CustAndVehicle";
-// import { logger } from "../../helpers/Logger";
+import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVehicle";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -37,9 +36,7 @@ const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 class DefaultLayout extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    }
+    this.state = {};
   }
 
   componentDidMount() {
@@ -84,10 +81,10 @@ class DefaultLayout extends Component {
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
-      custAndVehicle: !modelDetails.custAndVehicle,
+      custAndVehicle: !modelDetails.custAndVehicle
     };
     this.props.modelOperate(data);
-  }
+  };
 
   customerAndVehicleModal = () => {
     const { modelDetails } = this.props.modelInfoReducer;
@@ -97,9 +94,9 @@ class DefaultLayout extends Component {
         toggleModal={this.toggleCustAndVehicleProps}
       />
     );
-  }
+  };
   render() {
-    const { profileInfoReducer, modelInfoReducer } = this.props;
+    const { profileInfoReducer } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
     return isLoading ? (
@@ -108,7 +105,7 @@ class DefaultLayout extends Component {
       <div className="app">
         {this.renderCompanyDetailsPopup(profileInfo || {})}
         <AppHeader fixed>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={""}>
             <DefaultHeader
               onLogout={e => this.signOut(e)}
               permissions={permissions || {}}
@@ -157,13 +154,13 @@ class DefaultLayout extends Component {
             </Container>
           </main>
           <AppAside fixed>
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={""}>
               <DefaultAside />
             </Suspense>
           </AppAside>
         </div>
         <AppFooter>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={""}>
             <DefaultFooter />
           </Suspense>
         </AppFooter>
@@ -175,7 +172,7 @@ class DefaultLayout extends Component {
 
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
-  modelInfoReducer: state.modelInfoReducer,
+  modelInfoReducer: state.modelInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -188,9 +185,9 @@ const mapDispatchToProps = dispatch => ({
   onCompanyDetailsUdpate: data => {
     dispatch(updateCompanyDetails(data));
   },
-  modelOperate: (data) => {  
-    dispatch(modelOpenRequest({modelDetails: data}));
-  },
+  modelOperate: data => {
+    dispatch(modelOpenRequest({ modelDetails: data }));
+  }
 });
 
 export default connect(

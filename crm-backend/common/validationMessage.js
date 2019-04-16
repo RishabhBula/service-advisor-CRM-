@@ -17,7 +17,7 @@ const validationMessage = {
   addressValidation: "Please enter the address.",
   cityValidation: "Please enter the city.",
   stateValidation: "Please select the state.",
-  postalValidation: "Please enter the valid postal code.",
+  postalValidation: "Please enter the valid postal code."
 };
 
 const otherMessage = {
@@ -33,5 +33,5 @@ const otherMessage = {
 };
 module.exports = {
   validationMessage,
-  otherMessage,
+  otherMessage
 };
