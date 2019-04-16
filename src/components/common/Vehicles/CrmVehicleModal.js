@@ -104,6 +104,7 @@ export class CrmVehicleModal extends Component {
       drivetrainSelected: '2x4',
       notes: '',
       errors: {},
+      isLoading: false
     };
   }
 
