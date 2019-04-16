@@ -73,7 +73,6 @@ const addNewrateStandard = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("*************This is add rate standard error", error);
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
