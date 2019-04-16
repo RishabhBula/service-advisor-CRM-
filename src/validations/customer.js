@@ -3,11 +3,9 @@ import { ValidationTypes } from "js-object-validation";
 export const CreateCustomerValidations = {
   firstName: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.ALPHA]: true,
   },
   lastName: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.ALPHA]: true,
   },
   email:{
     [ValidationTypes.EMAIL]: true

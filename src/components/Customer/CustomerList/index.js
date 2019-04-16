@@ -343,7 +343,9 @@ class CustomerList extends Component {
                         type="checkbox"
                         name="checkbox"
                         id="checkAll"
-                        checked={selectedCustomers.length === customers.length}
+                        checked={
+                          selectedCustomers.length === customers.length
+                        }
                         onChange={this.handleCheckAllCheckBox}
                       />
                       <label className="" htmlFor="checkAll" />
@@ -366,6 +368,8 @@ class CustomerList extends Component {
               <th>Email</th>
               <th>Phone No.</th>
               <th>Address</th>
+              <th>Vehicle</th>
+              <th>Orders</th>
               <th>Created</th>
               <th>Status</th>
               <th>Action</th>
@@ -383,55 +387,43 @@ class CustomerList extends Component {
                             type="checkbox"
                             value={user._id}
                             checked={
-                              selectedCustomers.indexOf(
-                                user._id
-                              ) > -1
+                              selectedCustomers.indexOf(user._id) > -1
                             }
                             name="checkbox"
-                            onChange={
-                              this.handleCheckboxChnage
-                            }
+                            onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={user._id}>
-                            {(page - 1) *
-                              AppConfig.ITEMS_PER_PAGE +
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
                               index +
                               1}
                             .
                           </label>
                         </div>
                       </td>
-                      <td>
-                        {user.firstName +
-                          " " +
-                          user.lastName || "-"}
-                      </td>
+                      <td>{user.firstName + " " + user.lastName || "-"}</td>
                       <td>{user.email || "-"}</td>
                       <td>
                         {user.phoneDetail
-                          ? user.phoneDetail.map(
-                              (data, index) => {
-                                return (
-                                  <div>
-                                    {data.phone || "NA"}
-                                    {"|"}
-                                    {"  "}
-                                    {data.value || "NA"}
-                                  </div>
-                                );
-                              }
-                            )
+                          ? user.phoneDetail.map((data, index) => {
+                              return (
+                                <div>
+                                  {data.phone || "NA"}
+                                  {"|"}
+                                  {"  "}
+                                  {data.value || "NA"}
+                                </div>
+                              );
+                            })
                           : "-"}
                       </td>
                       <td>
-                        {user.address1 || ""}{" "}
-                        {user.city || ""} {user.state || ""}{" "}
-                        {user.zipCode || ""}{" "}
+                        {user.address1 || ""} {user.city || ""}{" "}
+                        {user.state || ""} {user.zipCode || ""}{" "}
                       </td>
+                      <td>0</td>
+                      <td>0</td>
                       <td>
-                        {user.createdAt
-                          ? formateDate(user.createdAt)
-                          : "-"}
+                        {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
 
                       <td>
@@ -442,9 +434,7 @@ class CustomerList extends Component {
                             onClick={() => {
                               this.setState(
                                 {
-                                  selectedCustomers: [
-                                    user._id
-                                  ]
+                                  selectedCustomers: [user._id]
                                 },
                                 () => {
                                   this.deactivateCustomers();
@@ -461,9 +451,7 @@ class CustomerList extends Component {
                             onClick={() => {
                               this.setState(
                                 {
-                                  selectedCustomers: [
-                                    user._id
-                                  ]
+                                  selectedCustomers: [user._id]
                                 },
                                 () => {
                                   this.activateCustomers();
