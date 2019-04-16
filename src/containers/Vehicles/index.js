@@ -41,6 +41,14 @@ class Vehicles extends Component {
     this.props.getVehicleList({ ...query, page: query.page || 1 });
   }
 
+  componentDidUpdate({ location, modelInfoReducer }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getVehicleList({ ...currQuery, page: currQuery.page || 1 });
+    }
+  }
+
   toggleCreateVehicle = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
@@ -97,6 +105,21 @@ class Vehicles extends Component {
     const { search } = location;
     const query = qs.parse(search);
     this.props.onStatusUpdate({ ...query, ...data });
+  };
+
+  onSearch = data => {
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
+  };
+
+  onPageChange = page => {
+    const { location } = this.props;
+    const { search, pathname } = location;
+    const query = qs.parse(search);
+    this.props.redirectTo(
+      [pathname, qs.stringify({ ...query, page })].join("?")
+    );
   };
 
   render() {
