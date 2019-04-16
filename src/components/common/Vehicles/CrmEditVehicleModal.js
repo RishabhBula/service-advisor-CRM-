@@ -198,43 +198,40 @@ export class CrmEditVehicleModal extends Component {
 
     if (year) {
       if (year.length === 4) {
-        if (year.length !== 0) {
-          if (year !== '' && !text.test(parseInt(year))) {
-            errors['year'] = 'Please Enter Numeric Values Only';
-            this.setState({ errors });
-            return false;
-          }
-
-          if (year.length !== 4) {
-            errors['year'] = 'Year is not proper. Please check';
-            this.setState({ errors });
-            return false;
-          }
-
-          const current_year = new Date().getFullYear();
-          if (year < (current_year - 101) || year >= current_year) {
-            errors[
-              'year'
-            ] = `Year should be in range ${new Date().getFullYear() -
-            101} to ${new Date().getFullYear() - 1}`;
-            this.setState({ errors });
-            return false;
-          }
-          errors['year'] = '';
+        if (year !== '' && !text.test(parseInt(year))) {
+          errors['year'] = 'Please Enter Numeric Values Only';
           this.setState({ errors });
-          return true;
-        } else {
-          errors['year'] = 'Please enter year.';
-          this.setState({ errors });
+          return false;
         }
+
+        if (year.length !== 4) {
+          errors['year'] = 'Year is not proper. Please check';
+          this.setState({ errors });
+          return false;
+        }
+
+        const current_year = new Date().getFullYear();
+        if (year < (current_year - 101) || year >= current_year) {
+          errors[
+            "year"
+          ] = `Year should be in range ${current_year - 101} to ${new Date().getFullYear() -
+          1}`;
+          this.setState({ errors });
+          return false;
+        }
+        errors['year'] = '';
+        this.setState({ errors });
+        return true;
       } else {
         errors['year'] = 'Year is not proper. Please check';
         this.setState({ errors });
+        return false;
       }
 
     } else {
       errors['year'] = 'Please enter year.';
       this.setState({ errors });
+      return false;
     }
   };
 
@@ -310,17 +307,13 @@ export class CrmEditVehicleModal extends Component {
     );
 
     try {
-      if (!isValid) {
+      const yearValidation = await this.yearValidation(this.state.year);
+
+      if (!isValid || !yearValidation) {
         this.setState({
           errors: errors,
           isLoading: false,
-        }, () => {
-            const yearValidation = this.yearValidation(this.state.year);
-            console.log(yearValidation);
-            if (!yearValidation) {
-              return
-            }
-        });
+        }, async () => { await this.yearValidation(this.state.year); });
         return;
       }
       this.props.submitUpdateVehicleFun(data);
