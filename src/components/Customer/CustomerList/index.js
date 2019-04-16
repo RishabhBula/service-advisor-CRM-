@@ -174,10 +174,7 @@ class CustomerList extends Component {
       param.page = page;
     }
     if (search) {
-      console.log('====================================');
-      console.log(search);
-      console.log('====================================');
-      param.search = search.trim(" ");
+      param.search = search;
     }
     if (sort) {
       param.sort = sort;
