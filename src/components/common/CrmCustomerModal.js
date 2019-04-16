@@ -42,7 +42,7 @@ export class CrmCustomerModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedOption: null,
+      selectedOption: '',
       expandForm: false,
       fleetModalOpen: false,
       firstName: "",
@@ -57,7 +57,7 @@ export class CrmCustomerModal extends Component {
       notes: "",
       companyName: "",
       referralSource: "",
-      fleet: "5ca5e3b88b27f17bc0dfaab5",
+      fleet: "",
       address1: "",
       address2: "",
       city: "",
@@ -163,7 +163,10 @@ export class CrmCustomerModal extends Component {
   }
 
   handleChange = selectedOption => {
-    this.setState({ selectedOption });
+    this.setState({
+      selectedOption: selectedOption,
+      fleet: selectedOption.value
+    });
   };
 
   handleExpandForm = () => {
@@ -283,7 +286,7 @@ export class CrmCustomerModal extends Component {
       state,
       zipCode,
       customerDefaultPermissions,
-      fleet,
+      fleet
     } = this.state;
 
     const customerData = {
@@ -294,12 +297,12 @@ export class CrmCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: fleet,
       address1: address1,
       address2: address2,
       city: city,
       state: state,
       zipCode: zipCode,
+      fleet: fleet,
       permission: customerDefaultPermissions,
       status: true
     };
@@ -330,7 +333,7 @@ export class CrmCustomerModal extends Component {
             }
           })
         );
-        await this.setStateAsync({phoneErrors: t});
+        await this.setStateAsync({ phoneErrors: t });
       }
       let validationData = {
         firstName: firstName,
@@ -344,7 +347,7 @@ export class CrmCustomerModal extends Component {
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-      
+
       if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
         (
           (customerData.email !== '') ||
@@ -435,7 +438,10 @@ export class CrmCustomerModal extends Component {
         }
       }
     }
-    console.log("This is customer fleet list =>", getCustomerFleetList);
+    const options = [];
+    getCustomerFleetList.map((data, index) => {
+      options.push({ value: `${data._id}`, label: `${data.companyName}` });
+    })
     return (
       <>
         <Modal
@@ -711,7 +717,7 @@ export class CrmCustomerModal extends Component {
                       value={selectedOption}
                       onChange={this.handleChange}
                       className="w-100 form-select"
-                      options={[{ value: '5ca5e3b88b27f17bc0dfaab5', label: 'Fleet 1' }]}
+                      options={options}
                     />
                   </FormGroup>
                 </Col>

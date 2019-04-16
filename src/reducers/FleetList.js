@@ -10,12 +10,7 @@ const initialAuthState = {
         isSuccess: false,
         isEditSuccess: false,
         data: {},
-    },
-    customerFleetListData: {
-        isSuccess: false,
-        isEditSuccess: false,
-        data: {},
-    },
+    }
 };
 
 export const fleetReducer = handleActions((
@@ -48,10 +43,7 @@ export const fleetReducer = handleActions((
         }),
         [customerFleetListAction.CUSTOMER_FLEET_LIST_START]: (state, action) => ({
             ...state,
-            customerFleetListData: {
-                ...state.customerFleetData,
-                isEditSuccess: true
-            }
+            customerFleetData: action.payload.customerFleetData
         })
     }),
     initialAuthState

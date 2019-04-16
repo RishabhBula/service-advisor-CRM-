@@ -22,7 +22,7 @@ const createCustomer = async (req, res) => {
       notes: body.notes,
       companyName: body.companyName,
       referralSource: body.referralSource,
-      fleet: body.fleetId,
+      fleet: body.fleet,
       address1: body.address1,
       address2: body.address2,
       city: body.city,
@@ -145,6 +145,7 @@ const getAllCustomerList = async (req, res) => {
       .find({
         ...condition,
       })
+      .populate('Fleet')
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
