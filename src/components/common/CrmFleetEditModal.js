@@ -321,8 +321,7 @@ export class CrmFleetEditModal extends Component {
          zipCode,
          fleetDefaultPermissions,
          percentageDiscount,
-      }
-      console.log("error message", errorMessage);
+      }    
 
       return (
          <>

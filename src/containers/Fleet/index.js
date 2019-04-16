@@ -237,7 +237,6 @@ class Fleet extends Component {
     const { openCreate, error, openEdit, fleetSingleData, phoneErrors } = this.state;
     const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
-    console.log("This is error", error);
     return (
       <>
         <Card>
