@@ -144,11 +144,11 @@ export const CustomerDefaultPermissions = {
   },
   shouldLaborRateOverride: {
     status: false,
-    laborRate: "objectId",
+    laborRate: null,
   },
   shouldPricingMatrixOverride: {
     status: false,
-    pricingMatrix: "objectId",
+    pricingMatrix: null,
   },
 };
 

@@ -76,6 +76,10 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('====================================');
+    console.log(this.props.customerModalOpen);
+    console.log(prevProps.customerModalOpen);
+    console.log('====================================');
     if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
       this.setState({
         address1: "",
@@ -124,8 +128,14 @@ export class CrmEditCustomerModal extends Component {
           }
         ]
       })
-      if (customer.permission && customer.permission.shouldLaborRateOverride.laborRate !== "objectId") {
-        this.handleGetRateData(customer.permission.shouldLaborRateOverride.laborRate)
+      if (
+        customer.permission &&
+        customer.permission.shouldLaborRateOverride.laborRate !== null &&
+        customer.permission.shouldLaborRateOverride.laborRate !== "objectId"
+      ) {
+        this.handleGetRateData(
+          customer.permission.shouldLaborRateOverride.laborRate
+        );
       }
       if (customer.fleet && customer.fleet._id) {
         this.setState({
@@ -437,12 +447,12 @@ export class CrmEditCustomerModal extends Component {
         CreateCustomerValidMessaages
       );
 
-      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||        
-          (
-            (customerData.firstName === '') ||
-            (customerData.lastName === '')
-          )
-        
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
+        (
+          (customerData.firstName === '') ||
+          (customerData.lastName === '')
+        )
+
       ) {
         this.setState({
           errors: errors,
@@ -490,7 +500,7 @@ export class CrmEditCustomerModal extends Component {
     // }
   }
   render() {
-    const { customerModalOpen,  matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
+    const { customerModalOpen, matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,

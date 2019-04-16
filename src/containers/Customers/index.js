@@ -52,16 +52,7 @@ class Customers extends Component {
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
       this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
-    }
-    const { modelDetails } = this.props.modelInfoReducer;
-  console.log('====================================');
-  console.log(modelInfoReducer.modelDetails.customreEditModel);
-  console.log(this.props.modelInfoReducer.modelDetails.customerEditModel);
-  console.log('====================================');
-    if (modelInfoReducer.modelDetails.customreEditModel !== modelDetails.customreEditModel) {
-      
-
-    }
+    }  
   }
 
   loadTypeRate = input => {
