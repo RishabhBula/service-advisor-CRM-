@@ -12,16 +12,16 @@ export class CrmStandardModel extends Component {
     };
   }
 
-    componentDidUpdate({openStadardRateModel}) { 
-      // if (this.props.openStadardRateModel !== openStadardRateModel) {
-      //   this.setState({
-      //     openStadardRateModel: false,
-      //     name: "",
-      //     hourRate: "",
-      //     isSubmitted: false
-      //   });
-      // }
-    }
+  componentDidUpdate({ openStadardRateModel }) {
+    // if (this.props.openStadardRateModel !== openStadardRateModel) {
+    //   this.setState({
+    //     openStadardRateModel: false,
+    //     name: "",
+    //     hourRate: "",
+    //     isSubmitted: false
+    //   });
+    // }
+  }
 
   toggle = () => {
     this.props.stdModelFun();
@@ -63,6 +63,7 @@ export class CrmStandardModel extends Component {
           isOpen={openStadardRateModel}
           toggle={this.toggle}
           className={"custom-modal-lg" + this.props.className}
+          backdrop={"static"}
         >
           <ModalHeader toggle={this.toggle}>Create New Rate</ModalHeader>
           <ModalBody>
@@ -73,20 +74,21 @@ export class CrmStandardModel extends Component {
                     Name
                   </Label>
                   <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    placeholder="Rate Name"
-                    name="name"
-                    value={name}
-                    onChange={this.handleChange}
-                    id="name"
-                    required
-                  />
-                  {
-                    errors && !name && errors.name ?
-                      <p className="text-danger">Name is required</p> :
-                      null
-                  }
+                    <Input
+                      type="text"
+                      placeholder="Rate Name"
+                      name="name"
+                      value={name}
+                      maxLength="20"
+                      onChange={this.handleChange}
+                      id="name"
+                      required
+                    />
+                    {
+                      errors && !name && errors.name ?
+                        <p className="text-danger">Name is required</p> :
+                        null
+                    }
                   </div>
                 </FormGroup>
               </Col>

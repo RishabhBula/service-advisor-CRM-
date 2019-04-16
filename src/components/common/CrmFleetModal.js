@@ -388,6 +388,7 @@ export class CrmFleetModal extends Component {
         <Modal
           isOpen={fleetModalOpen}
           toggle={handleFleetModal}
+          backdrop={"static"}
           className='customer-modal custom-form-modal custom-modal-lg'
         >
           <ModalHeader toggle={handleFleetModal}>
