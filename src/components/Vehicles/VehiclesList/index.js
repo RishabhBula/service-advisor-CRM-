@@ -470,7 +470,7 @@ class VehiclesList extends Component {
               )
             ) : (
               <tr>
-                <td className={"text-center"} colSpan={10}>
+                <td className={"text-center"} colSpan={12}>
                   <Loader />
                 </td>
               </tr>

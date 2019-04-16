@@ -181,6 +181,9 @@ export class CrmVehicleModal extends Component {
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
+    if (name === 'year' && isNaN(value)) {
+      return
+    }
     this.setState({
       [name]: value,
     });
@@ -246,39 +249,39 @@ export class CrmVehicleModal extends Component {
     let errors = { ...this.state.errors };
 
     if (year) {
-      if (ev.type === 'blur') {
-        if (year.length === 4 && ev.keyCode != 8 && ev.keyCode != 46) {
-          if (year.length !== 0) {
-            if (year !== '' && !text.test(parseInt(year))) {
-              errors['year'] = 'Please Enter Numeric Values Only';
-              this.setState({ errors });
-              return false;
-            }
 
-            if (year.length !== 4) {
-              errors['year'] = 'Year is not proper. Please check';
-              this.setState({ errors });
-              return false;
-            }
-
-            const current_year = new Date().getFullYear();
-            if (year < 1920 || year >= current_year) {
-              errors[
-                'year'
-              ] = `Year should be in range ${new Date().getFullYear() -
-                101} to ${new Date().getFullYear() - 1}`;
-              this.setState({ errors });
-              return false;
-            }
-            errors['year'] = '';
+      if (year.length === 4 && ev.keyCode != 8 && ev.keyCode != 46) {
+        if (year.length !== 0) {
+          if (year !== '' && !text.test(parseInt(year))) {
+            errors['year'] = 'Please Enter Numeric Values Only';
             this.setState({ errors });
-            return true;
+            return false;
           }
-        } else {
-          errors['year'] = 'Year is not proper. Please check';
+
+          if (year.length !== 4) {
+            errors['year'] = 'Year is not proper. Please check';
+            this.setState({ errors });
+            return false;
+          }
+
+          const current_year = new Date().getFullYear();
+          if (year < 1920 || year >= current_year) {
+            errors[
+              'year'
+            ] = `Year should be in range ${new Date().getFullYear() -
+            101} to ${new Date().getFullYear() - 1}`;
+            this.setState({ errors });
+            return false;
+          }
+          errors['year'] = '';
           this.setState({ errors });
+          return true;
         }
+      } else {
+        errors['year'] = 'Year is not proper. Please check';
+        this.setState({ errors });
       }
+
     } else {
       errors['year'] = 'Please enter year.';
       this.setState({ errors });
@@ -354,15 +357,17 @@ export class CrmVehicleModal extends Component {
                   <Label htmlFor='name' className='customer-modal-text-style'>
                     Make
                   </Label>
-                  <Input
-                    type='text'
-                    placeholder='Honda'
-                    name='make'
-                    onChange={this._onInputChange}
-                  />
-                  {!make && errors.make ? (
-                    <p className='text-danger'>{errors.make}</p>
-                  ) : null}
+                  <div className={'input-block'}>
+                    <Input
+                      type='text'
+                      placeholder='Honda'
+                      name='make'
+                      onChange={this._onInputChange}
+                    />
+                    {!make && errors.make ? (
+                      <p className='text-danger'>{errors.make}</p>
+                    ) : null}
+                  </div>
                 </FormGroup>
               </Col>
             </Row>
@@ -372,17 +377,19 @@ export class CrmVehicleModal extends Component {
                   <Label htmlFor='name' className='customer-modal-text-style'>
                     Modal
                   </Label>
-                  <Input
-                    type='text'
-                    className='customer-modal-text-style'
-                    id='type'
-                    placeholder='Accord'
-                    name='modal'
-                    onChange={this._onInputChange}
-                  />
-                  {!modal && errors.modal ? (
-                    <p className='text-danger'>{errors.modal}</p>
-                  ) : null}
+                  <div className={'input-block'}>
+                    <Input
+                      type='text'
+                      className='customer-modal-text-style'
+                      id='type'
+                      placeholder='Accord'
+                      name='modal'
+                      onChange={this._onInputChange}
+                    />
+                    {!modal && errors.modal ? (
+                      <p className='text-danger'>{errors.modal}</p>
+                    ) : null}
+                  </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
               </Col>
@@ -391,16 +398,18 @@ export class CrmVehicleModal extends Component {
                   <Label htmlFor='name' className='customer-modal-text-style'>
                     Type
                   </Label>
-                  <Select
-                    defaultValue={typeSelected}
-                    options={groupedOptions}
-                    formatGroupLabel={formatGroupLabel}
-                    className='w-100 form-select'
-                    onChange={this.handleType}
-                  />
-                  {!type && errors.type ? (
-                    <p className='text-danger'>{errors.type}</p>
-                  ) : null}
+                  <div className={'input-block'}>
+                    <Select
+                      defaultValue={typeSelected}
+                      options={groupedOptions}
+                      formatGroupLabel={formatGroupLabel}
+                      className='w-100 form-select'
+                      onChange={this.handleType}
+                    />
+                    {!type && errors.type ? (
+                      <p className='text-danger'>{errors.type}</p>
+                    ) : null}
+                  </div>
                 </FormGroup>
               </Col>
             </Row>
@@ -410,15 +419,17 @@ export class CrmVehicleModal extends Component {
                   <Label htmlFor='name' className='customer-modal-text-style'>
                     Miles (optional)
                   </Label>
-                  <Input
-                    type='text'
-                    placeholder='100,00'
-                    name='miles'
-                    onChange={this._onInputChange}
-                  />
-                  {!miles && errors.miles ? (
-                    <p className='text-danger'>{errors.miles}</p>
-                  ) : null}
+                  <div className={'input-block'}>
+                    <Input
+                      type='text'
+                      placeholder='100,00'
+                      name='miles'
+                      onChange={this._onInputChange}
+                    />
+                    {!miles && errors.miles ? (
+                      <p className='text-danger'>{errors.miles}</p>
+                    ) : null}
+                  </div>
                 </FormGroup>
               </Col>
               <Col md='6'>
@@ -426,15 +437,17 @@ export class CrmVehicleModal extends Component {
                   <Label htmlFor='name' className='customer-modal-text-style'>
                     Color (optional)
                   </Label>
-                  <Select
-                    value={colorSelected}
-                    onChange={this.handleColor}
-                    options={this.state.colorOptions}
-                    className='w-100 form-select'
-                    placeholder={'Pick a color'}
-                    isClearable={true}
-                    components={{ Option: CustomOption }}
-                  />
+                  <div className={'input-block'}>
+                    <Select
+                      value={colorSelected}
+                      onChange={this.handleColor}
+                      options={this.state.colorOptions}
+                      className='w-100 form-select'
+                      placeholder={'Pick a color'}
+                      isClearable={true}
+                      components={{ Option: CustomOption }}
+                    />
+                  </div>
                 </FormGroup>
               </Col>
             </Row>
@@ -490,21 +503,23 @@ export class CrmVehicleModal extends Component {
                       >
                         Sub Model
                       </Label>
-                      <Input
-                        type='text'
-                        placeholder='Sub Model'
-                        name='subModal'
-                        onChange={this._onInputChange}
-                      />
-                      {!subModal && errors.subModal ? (
-                        <p className='text-danger'>{errors.subModal}</p>
-                      ) : null}
+                      <div className={'input-block'}>
+                        <Input
+                          type='text'
+                          placeholder='Sub Model'
+                          name='subModal'
+                          onChange={this._onInputChange}
+                        />
+                        {!subModal && errors.subModal ? (
+                          <p className='text-danger'>{errors.subModal}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                 </>
               ) : (
-                ''
-              )}
+                  ''
+                )}
             </Row>
             <Row className='justify-content-center'>
               <Col md='12 text-center'>
@@ -516,8 +531,8 @@ export class CrmVehicleModal extends Component {
                     Show More
                   </span>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
               </Col>
             </Row>
             {expandForm ? (
@@ -531,16 +546,18 @@ export class CrmVehicleModal extends Component {
                       >
                         Engine Size
                       </Label>
-                      <Input
-                        type='text'
-                        name='engineSize'
-                        onChange={this._onInputChange}
-                        placeholder='Engine Size'
-                        id='rate'
-                      />
-                      {!engineSize && errors.engineSize ? (
-                        <p className='text-danger'>{errors.engineSize}</p>
-                      ) : null}
+                      <div className={'input-block'}>
+                        <Input
+                          type='text'
+                          name='engineSize'
+                          onChange={this._onInputChange}
+                          placeholder='Engine Size'
+                          id='rate'
+                        />
+                        {!engineSize && errors.engineSize ? (
+                          <p className='text-danger'>{errors.engineSize}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -551,15 +568,17 @@ export class CrmVehicleModal extends Component {
                       >
                         Production Date
                       </Label>
-                      <MaskedInput
-                        name='productionDate'
-                        mask='11/1111'
-                        placeholder='MM/YYYY'
-                        onChange={this._onInputChange}
-                      />
-                      {!productionDate && errors.productionDate ? (
-                        <p className='text-danger'>{errors.productionDate}</p>
-                      ) : null}
+                      <div className={'input-block'}>
+                        <MaskedInput
+                          name='productionDate'
+                          mask='11/1111'
+                          placeholder='MM/YYYY'
+                          onChange={this._onInputChange}
+                        />
+                        {!productionDate && errors.productionDate ? (
+                          <p className='text-danger'>{errors.productionDate}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -572,16 +591,17 @@ export class CrmVehicleModal extends Component {
                       >
                         Transmission
                       </Label>
-                      <Input
-                        type='select'
-                        className=''
-                        onChange={this.handleSelectedChange}
-                        name='transmission'
-                        id='matrixId'
-                      >
-                        <option value={''}>Select</option>
-                        {Transmission.length
-                          ? Transmission.map((item, index) => {
+                      <div className={'input-block'}>
+                        <Input
+                          type='select'
+                          className=''
+                          onChange={this.handleSelectedChange}
+                          name='transmission'
+                          id='matrixId'
+                        >
+                          <option value={''}>Select</option>
+                          {Transmission.length
+                            ? Transmission.map((item, index) => {
                               return (
                                 <option
                                   selected={item.key === transmissionSelected}
@@ -592,11 +612,12 @@ export class CrmVehicleModal extends Component {
                                 </option>
                               );
                             })
-                          : null}
-                      </Input>
-                      {!transmission && errors.transmission ? (
-                        <p className='text-danger'>{errors.transmission}</p>
-                      ) : null}
+                            : null}
+                        </Input>
+                        {!transmission && errors.transmission ? (
+                          <p className='text-danger'>{errors.transmission}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                   <Col md='6'>
@@ -607,16 +628,18 @@ export class CrmVehicleModal extends Component {
                       >
                         Drivetrain
                       </Label>
-                      <Input
-                        type='select'
-                        className=''
-                        onChange={this.handleSelectedChange}
-                        name='drivetrain'
-                        id='matrixId'
-                      >
-                        <option value={''}>Select</option>
-                        {Drivetrain.length
-                          ? Drivetrain.map((item, index) => {
+                      <div className={'input-block'}>
+
+                        <Input
+                          type='select'
+                          className=''
+                          onChange={this.handleSelectedChange}
+                          name='drivetrain'
+                          id='matrixId'
+                        >
+                          <option value={''}>Select</option>
+                          {Drivetrain.length
+                            ? Drivetrain.map((item, index) => {
                               return (
                                 <option
                                   selected={item.key === drivetrainSelected}
@@ -627,11 +650,12 @@ export class CrmVehicleModal extends Component {
                                 </option>
                               );
                             })
-                          : null}
-                      </Input>
-                      {!drivetrain && errors.drivetrain ? (
-                        <p className='text-danger'>{errors.drivetrain}</p>
-                      ) : null}
+                            : null}
+                        </Input>
+                        {!drivetrain && errors.drivetrain ? (
+                          <p className='text-danger'>{errors.drivetrain}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -644,15 +668,17 @@ export class CrmVehicleModal extends Component {
                       >
                         Notes
                       </Label>
-                      <Input
-                        name='notes'
-                        type='textarea'
-                        placeholder='Enter a note...'
-                        id='name'
-                      />
-                      {!notes && errors.notes ? (
-                        <p className='text-danger'>{errors.notes}</p>
-                      ) : null}
+                      <div className={'input-block'}>
+                        <Input
+                          name='notes'
+                          type='textarea'
+                          placeholder='Enter a note...'
+                          id='name'
+                        />
+                        {!notes && errors.notes ? (
+                          <p className='text-danger'>{errors.notes}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -666,14 +692,14 @@ export class CrmVehicleModal extends Component {
                         Show Less
                       </span>
                     ) : (
-                      ''
-                    )}
+                        ''
+                      )}
                   </Col>
                 </Row>
               </>
             ) : (
-              ''
-            )}
+                ''
+              )}
           </ModalBody>
           <ModalFooter>
             <Button color='primary' onClick={this.createVehicleFun}>

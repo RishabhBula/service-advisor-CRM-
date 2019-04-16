@@ -193,10 +193,9 @@ const updateFleetStatusLogic = createLogic({
 });
 
 const customerFleetListLogic = createLogic({
-  type: customerFleetListAction.CUSTOMER_FLEET_LIST_START,
+  type: customerFleetListAction.CUSTOMER_FLEET_LIST_REQUEST,
   cancelType: customerFleetListAction.CUSTOMER_FLEET_LIST_Failed,
   async process({ action }, dispatch, done) {
-    console.log("%%%%%%%%%%%%%%%%%%ddd%%Cusromer fleet list Result=>");    
     dispatch(
       getCustomerfleetListStarted({
         customerFleetData: []
@@ -211,9 +210,8 @@ const customerFleetListLogic = createLogic({
       "GET",
       true,
       undefined,
-      undefined,
+      undefined
     );
-    console.log("%%%%%%%%%%%%%%%%%%%%Cusromer fleet list Result=>", result);
 
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -223,7 +221,7 @@ const customerFleetListLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(
-        getCustomerFleetListRequest({
+        getCustomerfleetListStarted({
           customerFleetData: result.data
         }),
         hideLoader()
