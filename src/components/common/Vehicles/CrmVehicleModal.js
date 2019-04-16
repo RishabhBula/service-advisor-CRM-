@@ -114,7 +114,17 @@ export class CrmVehicleModal extends Component {
     }
   }
 
-  createVehicleFun = () => {
+  createVehicleFun = async() => {
+    const ev = {
+      target: {
+        name: "year",
+        value: this.state.year
+      }
+    }
+    const yearValidation = await this.yearValidation(ev)
+    if (!yearValidation) {
+      return
+    }
     let yeardata = this.state.year === '' ? '' : this.state.year;
     let data = {
       year: yeardata,
@@ -181,7 +191,7 @@ export class CrmVehicleModal extends Component {
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
-    if (name === 'year' && isNaN(value)) {
+    if ((name === 'year' || name === 'miles') && isNaN(value)) {
       return
     }
     this.setState({
@@ -241,7 +251,7 @@ export class CrmVehicleModal extends Component {
     });
   }
 
-  yearValidation = async ev => {
+  yearValidation = async (ev) => {
     const { target } = ev;
     const { value } = target;
     const year = value;
@@ -341,8 +351,8 @@ export class CrmVehicleModal extends Component {
                       name='year'
                       minLength='4'
                       maxLength='4'
-                      onBlur={this.yearValidation}
-                      onKeyPress={this.yearValidation}
+                      /* onBlur={this.yearValidation}
+                      onKeyPress={this.yearValidation} */
                       onChange={this._onInputChange}
                       value={year}
                     />
@@ -424,6 +434,7 @@ export class CrmVehicleModal extends Component {
                       type='text'
                       placeholder='100,00'
                       name='miles'
+                      value={miles}
                       onChange={this._onInputChange}
                     />
                     {!miles && errors.miles ? (

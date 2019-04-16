@@ -158,6 +158,9 @@ export class CrmEditVehicleModal extends Component {
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
+    if ((name === 'year' || name === 'miles') && isNaN(value)) {
+      return
+    }
     this.setState({
       [name]: value,
     });
@@ -260,7 +263,17 @@ export class CrmEditVehicleModal extends Component {
     });
   }
 
-  updateVehicleFun = async() => {
+  updateVehicleFun = async () => {
+    const ev = {
+      target: {
+        name: "year",
+        value: this.state.year
+      }
+    }
+    const yearValidation = await this.yearValidation(ev)
+    if (!yearValidation) {
+      return
+    }
     let data = {
       year: this.state.year,
       make: this.state.make,
@@ -372,8 +385,8 @@ export class CrmEditVehicleModal extends Component {
                       placeholder='20XX'
                       id='year'
                       name='year'
-                      onBlur={this.yearValidation} 
-                      onKeyPress={this.yearValidation}
+                        // onBlur={this.yearValidation}
+                        // onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
                       value={this.state.year}
                     />
@@ -545,8 +558,8 @@ export class CrmEditVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                ''
-              )}
+                  ''
+                )}
             </Row>
             <Row className='justify-content-center'>
               <Col md='12 text-center'>
@@ -558,8 +571,8 @@ export class CrmEditVehicleModal extends Component {
                     Show More
                   </span>
                 ) : (
-                  ''
-                )}
+                    ''
+                  )}
               </Col>
             </Row>
             {expandForm ? (
@@ -626,16 +639,16 @@ export class CrmEditVehicleModal extends Component {
                         <option value={''}>Select</option>
                         {Transmission.length
                           ? Transmission.map((item, index) => {
-                              return (
-                                <option
-                                  selected={item.key === transmissionSelected}
-                                  value={item.key}
-                                  key={index}
-                                >
-                                  {item.text}
-                                </option>
-                              );
-                            })
+                            return (
+                              <option
+                                selected={item.key === transmissionSelected}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
                           : null}
                       </Input>
                       {!transmissionSelected && errors.transmission ? (
@@ -661,16 +674,16 @@ export class CrmEditVehicleModal extends Component {
                         <option value={''}>Select</option>
                         {Drivetrain.length
                           ? Drivetrain.map((item, index) => {
-                              return (
-                                <option
-                                  selected={item.key === drivetrainSelected}
-                                  value={item.key}
-                                  key={index}
-                                >
-                                  {item.text}
-                                </option>
-                              );
-                            })
+                            return (
+                              <option
+                                selected={item.key === drivetrainSelected}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
                           : null}
                       </Input>
                       {!drivetrainSelected && errors.drivetrain ? (
@@ -711,14 +724,14 @@ export class CrmEditVehicleModal extends Component {
                         Show Less
                       </span>
                     ) : (
-                      ''
-                    )}
+                        ''
+                      )}
                   </Col>
                 </Row>
               </>
             ) : (
-              ''
-            )}
+                ''
+              )}
           </ModalBody>
           <ModalFooter>
             <Button color='primary' onClick={this.updateVehicleFun}>
