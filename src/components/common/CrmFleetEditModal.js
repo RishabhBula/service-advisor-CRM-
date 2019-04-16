@@ -272,7 +272,6 @@ export class CrmFleetEditModal extends Component {
       const {
          fleetEditModalOpen,
          handleFleetModal,
-         modalClassName,
          handleEditFleet,
          errorMessage,
          matrixListReducerData,
@@ -322,8 +321,7 @@ export class CrmFleetEditModal extends Component {
          zipCode,
          fleetDefaultPermissions,
          percentageDiscount,
-      }
-      console.log("error message", errorMessage);
+      }    
 
       return (
          <>

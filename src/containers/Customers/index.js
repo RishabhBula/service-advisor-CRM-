@@ -149,7 +149,7 @@ class Customers extends Component {
     const { location } = this.props;
     const { search } = location;
     const query = qs.parse(search);
-    this.props.updateCustomer(query, data);
+    this.props.updateCustomer({ query, data });
   };
   onTypeHeadStdFun = data => {
     this.props.getStdList(data);
@@ -262,22 +262,22 @@ const mapDispatchToProps = dispatch => ({
   getMatrix: () => {
     dispatch(getMatrixList());
   },
-  modelOperate: (data) => {
+  modelOperate: data => {
     dispatch(modelOpenRequest({ modelDetails: data }));
   },
-  getCustomerList: (data) => {
+  getCustomerList: data => {
     dispatch(customerGetRequest(data));
   },
-  deleteCustomer: (data) => {
+  deleteCustomer: data => {
     dispatch(deleteCustomer(data));
   },
-  onStatusUpdate: (data) => {
+  onStatusUpdate: data => {
     dispatch(updateCustomerStatus(data));
   },
-  getStdList: (data) => {
+  getStdList: data => {
     dispatch(getRateStandardListRequest(data));
   },
-  setLabourRateDefault: (data) => {
+  setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
   },
   updateCustomer: (data) => {
@@ -286,7 +286,6 @@ const mapDispatchToProps = dispatch => ({
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
   }
-
 });
 
 export default connect(

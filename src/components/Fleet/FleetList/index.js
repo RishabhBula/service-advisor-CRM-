@@ -208,7 +208,6 @@ class FleetList extends Component {
 
   render() {
     const {
-      error,
       search,
       status,
       sort,

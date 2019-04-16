@@ -17,7 +17,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
-import { CrmSelect } from "../common/CrmSelect";
+// import { CrmSelect } from "../common/CrmSelect";
 import { PhoneOptions } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
@@ -372,7 +372,6 @@ export class CrmEditCustomerModal extends Component {
       firstName,
       lastName,
       phoneDetail,
-      phoneErrors,
       email,
       notes,
       companyName,
@@ -491,13 +490,7 @@ export class CrmEditCustomerModal extends Component {
     // }
   }
   render() {
-    const {
-      customerModalOpen,
-      handleCustomerModal,
-      matrixListReducerData,
-      rateStandardListData,
-      customer,
-      getCustomerFleetList } = this.props;
+    const { customerModalOpen,  matrixListReducerData, rateStandardListData, customer, getCustomerFleetList } = this.props;
     const {
       selectedOption,
       expandForm,

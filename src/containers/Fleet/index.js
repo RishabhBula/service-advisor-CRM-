@@ -62,7 +62,6 @@ class Fleet extends Component {
     });
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
-      fleetEditModel: false,
       fleetEditModel: !modelDetails.fleetEditModel,
     };
     this.props.modelOperate(data);

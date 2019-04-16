@@ -110,7 +110,7 @@ class Vehicles extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Vehicles List
+                  <i className={"fa fa-automobile"} /> Vehicles List
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
