@@ -417,7 +417,7 @@ export class CrmEditCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: fleet,
+      fleet: fleet === "" ? null : fleet,
       address1: address1,
       address2: address2,
       city: city,
