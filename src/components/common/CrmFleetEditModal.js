@@ -269,6 +269,7 @@ export class CrmFleetEditModal extends Component {
          })
       }
    }
+   
    render() {
       const {
          fleetEditModalOpen,

@@ -172,48 +172,7 @@ class Fleet extends Component {
     }
   };
   handleAddFleet = data => {
-    this.setState({
-      error: {},
-    });
     try {
-      // if (fleetData.phoneDetail.length) {
-      //   for (let i = 0; i < fleetData.phoneDetail.length; i++) {
-      //     const key = fleetData.phoneDetail[i];
-      //     if (key.value.length) {
-      //       this.state.phoneErrors.splice(i, 1);
-      //       this.setState({ phoneErrors: this.state.phoneErrors });
-      //     } else {
-      //       this.state.phoneErrors[i] = "Phone number is required";
-      //       this.setState({ phoneErrors: this.state.phoneErrors });
-      //     }
-      //   }
-      // }
-      // const { isValid, errors } = Validator(
-      //   fleetData,
-      //   CreateFleetValidations,
-      //   CreateFleetValidMessaages
-      // );
-      // if (!isValid &&
-      //   (
-      //     (fleetData.email !== '') || Object.keys(this.state.phoneErrors).length ||
-      //     (fleetData.companyName === '')
-      //   )
-      // ) {
-      //   this.setState({
-      //     error: errors,
-      //     isLoading: false,
-      //   });
-      //   return;
-      // }
-      // const userData = this.props.profileInfoReducer.profileInfo
-      // const userId = userData._id
-      // const parentId = userData.parentId
-      // const data = {
-      //   fleetData: fleetData,
-      //   userId: userId,
-      //   parentId: parentId
-      // }
-
       this.props.addFleet(data);
       this.setState({
         openCreate: !this.state.openCreate,
