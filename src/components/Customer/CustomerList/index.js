@@ -170,9 +170,7 @@ class CustomerList extends Component {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
     let param = {};
-    if (page && page > 1) {
-      param.page = page;
-    }
+    param.page = 1;
     if (search) {
       param.search = search.trim(" ");
     }
