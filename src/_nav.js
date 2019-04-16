@@ -11,12 +11,12 @@ export default {
       // }
     },
 
-    {
-      name: "Workflow",
-      url: "/workflow",
-      icon: "icon-puzzle",
-      authKey: "isAllowedWorkflow",
-    },
+    // {
+    //   name: "Workflow",
+    //   url: "/workflow",
+    //   icon: "icon-puzzle",
+    //   authKey: "isAllowedWorkflow",
+    // },
     {
       name: "Calendar",
       url: "/calender",
