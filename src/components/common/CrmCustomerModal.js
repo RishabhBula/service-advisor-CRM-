@@ -65,7 +65,7 @@ export class CrmCustomerModal extends Component {
       zipCode: "",
       customerDefaultPermissions: CustomerDefaultPermissions,
       errors: {},
-      phoneErrors: [],
+      phoneErrors: [''],
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
       defaultOptions: [
@@ -209,26 +209,29 @@ export class CrmCustomerModal extends Component {
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
-      this.setState({
-        phoneDetail: phoneDetail.concat([{
-          phone: "mobile",
-          value: ""
-        }]),
-        phoneErrors: []
+      this.setState((state, props) => {
+        return {
+          phoneDetail: state.phoneDetail.concat([{
+            phone: "mobile",
+            value: ""
+          }]),
+          phoneErrors: state.phoneErrors.concat([''])
+        };
       });
     }
   }
 
-  handleRemovePhoneDetails = (event) => {
+  handleRemovePhoneDetails = (index) => {
     const { phoneDetail, phoneErrors } = this.state;
+    let t = [...phoneDetail];
+    let u = [...phoneErrors];
+    t.splice(index, 1);
+    u.splice(index, 1);
     if (phoneDetail.length) {
-      let phoneArrayIndx = phoneDetail.findIndex(
-        item => item.key === event.key
-      )
       this.setState({
-        phoneDetail: phoneDetail.filter((s, sidx) => phoneArrayIndx !== sidx),
-        phoneErrors: phoneErrors.filter((s, sidx) => phoneArrayIndx !== sidx)
-      })
+        phoneDetail: t,
+        phoneErrors: u,
+      });
     }
   }
 
@@ -312,16 +315,18 @@ export class CrmCustomerModal extends Component {
 
     try {
       if (phoneDetail.length) {
+        let t = [];
+        this.setState({ phoneErrors: t });
         await Promise.all(
           phoneDetail.map(async (key, i) => {
             if (key.value.length) {
-              await this.setStateAsync({ phoneErrors: phoneErrors.splice(i, 1) });
+              // t[i] = null
             } else {
-              phoneErrors[i] = 'Phone number is required';
-              await this.setStateAsync({ phoneErrors });
+              t[i] = 'Phone number is required';
             }
           })
         );
+        await this.setStateAsync({phoneErrors: t});
       }
 
       const { isValid, errors } = Validator(
@@ -329,9 +334,9 @@ export class CrmCustomerModal extends Component {
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-      if (!isValid &&
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
         (
-          (customerData.email !== '') || Object.keys(this.state.phoneErrors).length ||
+          (customerData.email !== '') ||
           (
             (customerData.firstName === '') ||
             (customerData.lastName === '')
@@ -373,7 +378,7 @@ export class CrmCustomerModal extends Component {
       errors: {},
       selectedLabourRate: {},
       customerDefaultPermissions: CustomerDefaultPermissions,
-      phoneErrors: [],
+      phoneErrors: [''],
       expandForm: false
     })
   }
@@ -577,7 +582,7 @@ export class CrmCustomerModal extends Component {
                             <>
                               <Col md="6">
                                 <button
-                                  onClick={this.handleRemovePhoneDetails}
+                                  onClick={() => this.handleRemovePhoneDetails(index)}
                                   className="btn btn-danger btn-sm btn-round input-close"
                                 >
                                   <i className="fa fa-close"></i>
