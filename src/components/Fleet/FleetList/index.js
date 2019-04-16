@@ -135,6 +135,7 @@ class FleetList extends Component {
       return;
     }
     this.props.onStatusUpdate({ status: true, fleetId: this.state.selectedFleets });
+    this.setState({ selectedFleets: [] });
   };
 
   deactivateUsers = async (isMultiple = false) => {
@@ -150,6 +151,8 @@ class FleetList extends Component {
       return;
     }
     this.props.onStatusUpdate({ status: false, fleetId: this.state.selectedFleets });
+    this.setState({ selectedFleets: [] });
+  
   };
 
   onSearch = e => {
@@ -204,6 +207,7 @@ class FleetList extends Component {
       return;
     }
     this.props.onDelete(this.state.selectedFleets);
+    this.setState({ selectedFleets: [] });
   };
 
   render() {
