@@ -271,7 +271,6 @@ export class CrmFleetModal extends Component {
   }
 
   handleAddFleet = async (fleetData, isEditMode) => {
-    console.log(fleetData);
     try {
       const { phoneDetail } = this.state;
       if (phoneDetail.length) {
