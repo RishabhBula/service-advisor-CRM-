@@ -182,7 +182,9 @@ const editCustomerLogic = createLogic({
         })
       );   
       dispatch(
-        modelOpenRequest({modelDetails: {customerModel: false}})
+        modelOpenRequest({
+          modelDetails: { customerModel: false, customerEditModel: false }
+        })
       );
       dispatch(hideLoader());
       done();
