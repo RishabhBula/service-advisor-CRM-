@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import MaskedInput from "react-maskedinput";
 import * as classnames from "classnames";
 import {
   Button,
@@ -12,7 +13,8 @@ import {
   Label,
   Input,
   Form,
-  FormFeedback
+  FormFeedback,
+  InputGroup
 } from "reactstrap";
 import { AppSwitch } from "@coreui/react";
 import { logger } from "../../helpers/Logger";
@@ -202,38 +204,52 @@ export class CrmUserModal extends Component {
               <Row className="justify-content-center">
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
-                      First Name
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="John"
-                      onChange={this.handleInputChange}
-                      value={firstName}
-                      name="firstName"
-                      invalid={errors.firstName}
-                    />
-                    <FormFeedback>
-                      {errors.firstName ? errors.firstName : null}
-                    </FormFeedback>
+                    <InputGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        First Name
+                      </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          placeholder="John"
+                          onChange={this.handleInputChange}
+                          value={firstName}
+                          name="firstName"
+                          invalid={errors.firstName}
+                        />
+                        <FormFeedback>
+                          {errors.firstName ? errors.firstName : null}
+                        </FormFeedback>
+                      </div>
+                    </InputGroup>
                   </FormGroup>
                 </Col>
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
-                      Last Name
-                    </Label>
-                    <Input
-                      type="text"
-                      placeholder="Doe"
-                      onChange={this.handleInputChange}
-                      value={lastName}
-                      name="lastName"
-                      invalid={errors.lastName}
-                    />
-                    <FormFeedback>
-                      {errors.lastName ? errors.lastName : null}
-                    </FormFeedback>
+                    <InputGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        Last Name
+                      </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          placeholder="Doe"
+                          onChange={this.handleInputChange}
+                          value={lastName}
+                          name="lastName"
+                          invalid={errors.lastName}
+                        />
+                        <FormFeedback>
+                          {errors.lastName ? errors.lastName : null}
+                        </FormFeedback>
+                      </div>
+                    </InputGroup>
                   </FormGroup>
                 </Col>
               </Row>
@@ -243,18 +259,20 @@ export class CrmUserModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Email
                     </Label>
-                    <Input
-                      type="text"
-                      placeholder="john.doe@example.com"
-                      onChange={this.handleInputChange}
-                      value={email}
-                      name="email"
-                      disabled={isEditMode}
-                      invalid={errors.email}
-                    />
-                    <FormFeedback>
-                      {errors.email ? errors.email : null}
-                    </FormFeedback>
+                    <div className={"input-block"}>
+                      <Input
+                        type="text"
+                        placeholder="john.doe@example.com"
+                        onChange={this.handleInputChange}
+                        value={email}
+                        name="email"
+                        disabled={isEditMode}
+                        invalid={errors.email}
+                      />
+                      <FormFeedback>
+                        {errors.email ? errors.email : null}
+                      </FormFeedback>
+                    </div>
                   </FormGroup>
                 </Col>
                 <Col md="6">
@@ -262,18 +280,21 @@ export class CrmUserModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Phone (optional)
                     </Label>
-                    <Input
-                      type="text"
-                      placeholder="(555) 055-0555"
-                      id="phone"
-                      onChange={this.handleInputChange}
-                      value={phone}
-                      name="phone"
-                      invalid={errors.phone}
-                    />
-                    <FormFeedback>
-                      {errors.phone ? errors.phone : null}
-                    </FormFeedback>
+                    <div className={"input-block"}>
+                      <MaskedInput
+                        mask="(111) 111-111"
+                        name="phone"
+                        placeholder="(555) 055-0555"
+                        className="form-control"
+                        size="20"
+                        value={phone}
+                        onChange={this.handleInputChange}
+                      />
+
+                      <FormFeedback>
+                        {errors.phone ? errors.phone : null}
+                      </FormFeedback>
+                    </div>
                   </FormGroup>
                 </Col>
               </Row>
@@ -283,26 +304,28 @@ export class CrmUserModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Type
                     </Label>
-                    <Input
-                      type="select"
-                      className="customer-modal-text-style"
-                      id="type"
-                      onChange={this.handleInputChange}
-                      value={roleType}
-                      name="roleType"
-                      invalid={errors.roleType}
-                    >
-                      {RoleOptions.map((role, index) => {
-                        return (
-                          <option value={role.key} key={index}>
-                            {role.text}
-                          </option>
-                        );
-                      })}
-                    </Input>
-                    <FormFeedback>
-                      {errors.roleType ? errors.roleType : null}
-                    </FormFeedback>
+                    <div className={"input-block"}>
+                      <Input
+                        type="select"
+                        className="customer-modal-text-style"
+                        id="type"
+                        onChange={this.handleInputChange}
+                        value={roleType}
+                        name="roleType"
+                        invalid={errors.roleType}
+                      >
+                        {RoleOptions.map((role, index) => {
+                          return (
+                            <option value={role.key} key={index}>
+                              {role.text}
+                            </option>
+                          );
+                        })}
+                      </Input>
+                      <FormFeedback>
+                        {errors.roleType ? errors.roleType : null}
+                      </FormFeedback>
+                    </div>
                   </FormGroup>
                 </Col>
                 <Col md="6">
@@ -310,18 +333,20 @@ export class CrmUserModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Rate/hour (optional)
                     </Label>
-                    <CurrencyInput
-                      value={rate}
-                      name={"rate"}
-                      prefix="$"
-                      onChangeEvent={this.handleInputChange}
-                      className={classnames("form-control", {
-                        "is-invalid": errors.rate
-                      })}
-                    />
-                    <FormFeedback>
-                      {errors.rate ? errors.rate : null}
-                    </FormFeedback>
+                    <div className={"input-block"}>
+                      <CurrencyInput
+                        value={rate}
+                        name={"rate"}
+                        prefix="$"
+                        onChangeEvent={this.handleInputChange}
+                        className={classnames("form-control", {
+                          "is-invalid": errors.rate
+                        })}
+                      />
+                      <FormFeedback>
+                        {errors.rate ? errors.rate : null}
+                      </FormFeedback>
+                    </div>
                   </FormGroup>
                 </Col>
               </Row>

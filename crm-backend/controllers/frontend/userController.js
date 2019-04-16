@@ -96,6 +96,7 @@ const getAllUserList = async (req, res) => {
     if (type) {
       condition["$and"].push({ roleType: type });
     }
+
     const getAllUser = await userModel
       .find({
         ...condition

@@ -239,7 +239,7 @@ class UserList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by first name, last name and email"
+                      placeholder="Search by member name and email"
                     />
                   </InputGroup>
                 </FormGroup>

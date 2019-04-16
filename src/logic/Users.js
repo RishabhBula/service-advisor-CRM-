@@ -7,7 +7,6 @@ import {
   showLoader,
   hideLoader,
   usersActions,
-  addUserSuccess,
   getUsersListSuccess,
   getUsersList,
   modelOpenRequest
@@ -71,7 +70,13 @@ const addUsersLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(addUserSuccess());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            addUserModal: false
+          }
+        })
+      );
       dispatch(hideLoader());
       done();
     }
@@ -98,10 +103,11 @@ const editUsersLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
+
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            addUserModal: false
+            editUserModal: false
           }
         })
       );
@@ -170,13 +176,7 @@ const updateUserStatusLogic = createLogic({
           ...action.payload
         })
       );
-      dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            editUserModal: false
-          }
-        })
-      );
+
       toast.success(result.messages[0]);
       done();
     }
