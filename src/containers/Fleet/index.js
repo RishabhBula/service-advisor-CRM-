@@ -124,8 +124,19 @@ class Fleet extends Component {
       error: {}
     });
     try {
+      let validationData
+      if (!fleetData.email) {
+        validationData = {
+          companyName: fleetData.companyName,
+        }
+      } else {
+        validationData = {
+          companyName: fleetData.companyName,
+          email: fleetData.email
+        }
+      }
       const { isValid, errors } = Validator(
-        fleetData,
+        validationData,
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
@@ -227,6 +238,7 @@ class Fleet extends Component {
     const { openCreate, error, openEdit, fleetSingleData, phoneErrors } = this.state;
     const { matrixListReducer, profileInfoReducer, fleetReducer, rateStandardListReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
+    console.log("This is error", error);
     return (
       <>
         <Card>
@@ -285,6 +297,7 @@ class Fleet extends Component {
           matrixListReducerData={matrixListReducer}
           updateFleetModel={this.updateFleetModel}
           fleetSingleData={fleetSingleData}
+          errorMessage={error}
           handleFleetModal={this.toggleEditModal}
           fleetEditModalOpen={modelDetails.fleetEditModel}
         />
