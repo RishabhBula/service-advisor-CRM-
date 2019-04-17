@@ -10,7 +10,7 @@ const createCustomer = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({
         message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false,
+        success: false
       });
     }
     const { body } = req;
@@ -22,7 +22,7 @@ const createCustomer = async (req, res) => {
       notes: body.notes,
       companyName: body.companyName,
       referralSource: body.referralSource,
-      fleet: body.fleet !== "" ? body.fleet: null,
+      fleet: body.fleet !== "" ? body.fleet : null,
       address1: body.address1,
       address2: body.address2,
       city: body.city,
@@ -31,26 +31,26 @@ const createCustomer = async (req, res) => {
       permission: body.permission,
       parentId: body.parentId,
       userId: body.userId,
-      status: true,
+      status: true
     };
 
     let result = await customerModel(cusomerData).save();
     if (result) {
       return res.status(200).json({
         message: otherMessage.newCustomer,
-        success: true,
+        success: true
       });
     } else {
       return res.status(400).json({
         result: result,
         message: "Error in inserting Customer.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -63,31 +63,31 @@ const getAllCustomerList = async (req, res) => {
     const limit = parseInt(query.limit || 10);
     const page = parseInt(query.page);
     const offset = (page - 1) * limit;
-    const searchValue = query.search ? query.search: "";
+    const searchValue = query.search ? query.search : "";
     const sort = query.sort;
     const status = query.status;
     let sortBy = {};
     switch (sort) {
       case "loginasc":
         sortBy = {
-          updatedAt: -1,
+          updatedAt: -1
         };
         break;
       case "nasc":
         sortBy = {
           firstName: 1,
-          lastName: 1,
+          lastName: 1
         };
         break;
       case "ndesc":
         sortBy = {
           firstName: -1,
-          lastName: 1,
+          lastName: 1
         };
         break;
       default:
         sortBy = {
-          createdAt: -1,
+          createdAt: -1
         };
         break;
     }
@@ -99,72 +99,72 @@ const getAllCustomerList = async (req, res) => {
       {
         $or: [
           {
-            parentId: currentUser.id,
+            parentId: currentUser.id
           },
           {
-            parentId: currentUser.parentId || currentUser.id,
-          },
-        ],
+            parentId: currentUser.parentId || currentUser.id
+          }
+        ]
       },
       {
         $or: [
           {
             isDeleted: {
-              $exists: false,
-            },
+              $exists: false
+            }
           },
           {
-            isDeleted: false,
-          },
-        ],
-      },
+            isDeleted: false
+          }
+        ]
+      }
     ];
 
     if (searchValue) {
-      $f = searchValue.split(' ')[0];
-      $l = searchValue.split(' ')[1];
+      const $f = searchValue.split(" ")[0];
+      const $l = searchValue.split(" ")[1];
       condition["$and"].push({
         $or: [
           {
             firstName: {
-              $regex: new RegExp($f ? $f : $l, "i"),
-            },
+              $regex: new RegExp($f ? $f : $l, "i")
+            }
           },
           {
             lastName: {
-              $regex: new RegExp($l ? $l : $f, "i"),
-            },
+              $regex: new RegExp($l ? $l : $f, "i")
+            }
           },
           {
             email: {
-              $regex: new RegExp($f ? $f : $l, "i"),
-            },
-          },
-        ],
+              $regex: new RegExp($f ? $f : $l, "i")
+            }
+          }
+        ]
       });
     }
     const getAllCustomer = await customerModel
       .find({
-        ...condition,
+        ...condition
       })
-      .populate('fleet')
+      .populate("fleet")
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
     const getAllCustomerCount = await customerModel.countDocuments({
-      ...condition,
+      ...condition
     });
     return res.status(200).json({
       responsecode: 200,
       data: getAllCustomer,
       totalUsers: getAllCustomerCount,
-      success: true,
+      success: true
     });
   } catch (error) {
     console.log("this is get all user error", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -219,26 +219,26 @@ const updateCustomerdetails = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Customer id is required.",
-        success: false,
+        success: false
       });
     } else {
       const updateCustomerDetails = await customerModel.findByIdAndUpdate(
         body.data.customerId,
         {
-          $set: body.data,
+          $set: body.data
         }
       );
       if (!updateCustomerDetails) {
         return res.status(400).json({
           responsecode: 400,
           message: "Error updating customer details.",
-          success: false,
+          success: false
         });
       } else {
         return res.status(200).json({
           responsecode: 200,
           message: "Customer details updated successfully!",
-          success: false,
+          success: false
         });
       }
     }
@@ -247,7 +247,7 @@ const updateCustomerdetails = async (req, res) => {
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -267,8 +267,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "Customer activated successfully!"
-        : "Customer inactivated successfully!",
+        ? "Customer Activated successfully!"
+        : "Customer Inactivated successfully!",
       data
     });
   } catch (error) {

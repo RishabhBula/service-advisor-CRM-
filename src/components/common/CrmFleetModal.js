@@ -7,6 +7,7 @@ import {
   ModalHeader,
   Row,
   Col,
+  FormFeedback,
   FormGroup,
   Label,
   Input,
@@ -395,7 +396,7 @@ export class CrmFleetModal extends Component {
                 <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
-                      Company Name
+                      Company Name <span className={"asteric"}>*</span>
                     </Label>
                     <div className={'input-block'}>
                       <Input
@@ -406,10 +407,11 @@ export class CrmFleetModal extends Component {
                         value={companyName}
                         maxLength='20'
                         id='name'
+                        invalid={errors.companyName}
                       />
-                      {errors && !companyName && errors.companyName ? (
-                        <p className='text-danger'>Company name is required.</p>
-                      ) : null}
+                      <FormFeedback>
+                      {errors && !companyName && errors.companyName ? "Company name is requiered" : null }
+                      </FormFeedback>
                     </div>
                   </FormGroup>
                 </Col>
@@ -574,7 +576,13 @@ export class CrmFleetModal extends Component {
                     );
                   })
                   : null}
-
+                {phoneDetail.length < 2 ? (
+                  <Col md='6'>
+                  <FormGroup className='mb-0 phone-info-block'>
+                  <p className={"phone-info-text mb-0"}>You can add more phone number related to your office , home etc.</p>
+                    </FormGroup>
+                  </Col>) : null
+                }
                 {phoneDetail.length < 3 ? (
                   <Col md='12'>
                     <FormGroup className={'mb-0'}>
@@ -833,6 +841,7 @@ export class CrmFleetModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
+            <div class="required-fields">*Fields are Required.</div>
             <Button
               color='primary'
               onClick={() =>

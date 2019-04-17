@@ -323,7 +323,8 @@ class FleetList extends Component {
             <tr>
               <th width='90px'>
                 <div className='table-checkbox-wrap'>
-                  <span className='checkboxli checkbox-custom checkbox-default'>
+                  {fleetData.data && fleetData.data.length ?
+                  <span className='checkboxli checkbox-custom checkbox-default' >
                     <Input
                       type='checkbox'
                       name='checkbox'
@@ -331,10 +332,13 @@ class FleetList extends Component {
                       checked={fleetData.data && fleetData.data.length ? selectedFleets.length === fleetData.data.length : null}
                       onChange={this.handleCheckAllCheckBox}
                     />
-                    <label className='' htmlFor='checkAll'>
-                      {fleetData.data && !fleetData.data.length ?
-                        "Select" : null}</label>
+                      <label className='' htmlFor='checkAll'></label>
+                  </span> :
+                  <span className='checkboxli checkbox-custom checkbox-default' >
+                    <label></label>
                   </span>
+                  }
+
                   {fleetData && fleetData.data && fleetData.data.length ? (
                     <Input
                       className='commonstatus'
@@ -347,7 +351,19 @@ class FleetList extends Component {
                       <option value={'inactive'}>Inactive</option>
                       <option value={'delete'}>Delete</option>
                     </Input>
-                  ) : null}
+                  ) :
+                    <Input
+                      className='commonstatus'
+                      type='select'
+                      id='exampleSelect'
+                      disabled
+                      onChange={this.handleActionChange}
+                    >
+                      <option value={''}>Select</option>
+                      <option value={'active'}>Active</option>
+                      <option value={'inactive'}>Inactive</option>
+                      <option value={'delete'}>Delete</option>
+                    </Input>}
                 </div>
               </th>
               <th>Company Name</th>

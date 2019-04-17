@@ -38,6 +38,7 @@ const getAllUserList = async (req, res) => {
         break;
     }
     let condition = {};
+    let expr = {};
     condition["$and"] = [
       {
         $or: [
@@ -66,21 +67,31 @@ const getAllUserList = async (req, res) => {
       }
     ];
     if (searchValue) {
+      const $f = searchValue.split(" ")[0];
+      const $l = searchValue.split(" ")[1];
       condition["$and"].push({
         $or: [
           {
             firstName: {
-              $regex: new RegExp(searchValue.trim(), "i")
+              $regex: new RegExp($f ? $f : $l, "i")
             }
           },
           {
             lastName: {
-              $regex: new RegExp(searchValue.trim(), "i")
+              $regex: new RegExp($l ? $l : $f, "i")
             }
           },
           {
             email: {
               $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            $expr: {
+              $eq: [
+                searchValue.trim(),
+                { $concat: ["$firstName", " ", "$lastName"] }
+              ]
             }
           }
         ]
@@ -96,10 +107,10 @@ const getAllUserList = async (req, res) => {
     if (type) {
       condition["$and"].push({ roleType: type });
     }
-
     const getAllUser = await userModel
       .find({
-        ...condition
+        ...condition,
+        $expr: expr
       })
       .populate("roleType")
       .sort(sortBy)
@@ -194,8 +205,8 @@ const updateStatus = async ({ body }, res) => {
     );
     return res.status(200).json({
       message: body.status
-        ? "Member inactivated successfully!"
-        : "Member activated successfully!",
+        ? "Member activated successfully!"
+        : "Member inactivated successfully!",
       data
     });
   } catch (error) {
