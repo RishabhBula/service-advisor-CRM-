@@ -33,6 +33,7 @@ import {
   CreateFleetValidations,
   CreateFleetValidMessaages,
 } from '../../validations';
+// import Cleave from 'cleave.js/react';
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -111,7 +112,7 @@ export class CrmFleetModal extends Component {
   };
 
   handleRateAdd = async data => {
-    const profileData = this.props.profileInfoReducer.profileInfo;
+    const profileData = this.props.profileInfoReducer;
     let api = new ApiHelper();
     try {
       const { isValid, errors } = Validator(
@@ -408,7 +409,6 @@ export class CrmFleetModal extends Component {
                         value={companyName}
                         maxLength='20'
                         id='name'
-                        required
                       />
                       {errors && !companyName && errors.companyName ? (
                         <p className='text-danger'>Company name is required.</p>
@@ -465,7 +465,7 @@ export class CrmFleetModal extends Component {
                                   }
                                   type='select'
                                   id='name'
-                                  required
+
                                 >
                                   {phoneOptions}
                                 </Input>
@@ -530,7 +530,7 @@ export class CrmFleetModal extends Component {
                                     }
                                     type='select'
                                     id='name'
-                                    required
+
                                   >
                                     {phoneOptions}
                                   </Input>
@@ -609,7 +609,6 @@ export class CrmFleetModal extends Component {
                       maxLength='200'
                       onChange={this.handleChange}
                       name='address1'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -626,7 +625,6 @@ export class CrmFleetModal extends Component {
                       maxLength='100'
                       onChange={this.handleChange}
                       placeholder='New York'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -643,7 +641,6 @@ export class CrmFleetModal extends Component {
                       id='name'
                       maxLength='100'
                       placeholder='NY'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -664,7 +661,6 @@ export class CrmFleetModal extends Component {
                       maxLength='5'
                       onChange={this.handleChange}
                       placeholder='Zip Code'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -685,7 +681,6 @@ export class CrmFleetModal extends Component {
                       maxLength='500'
                       onChange={this.handleChange}
                       name='notes'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -719,7 +714,10 @@ export class CrmFleetModal extends Component {
 
                   return (
                     <>
-                      <Col md='6' key={index} className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
+                      <Col
+                        md='6'
+                        key={index}
+                        className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
                         <div className='d-flex'>
                           <AppSwitch
                             className={'mx-1'}
@@ -748,6 +746,14 @@ export class CrmFleetModal extends Component {
                               </Label>
                             <FormGroup>
                               <Col md='4' className={'p-0'}>
+                                {/* <Cleave
+                                  placeholder="00.00%"
+                                  options={{
+                                    delimiter: '.',
+                                    blocks: [1, 2],
+                                    numeral: true
+                                  }}
+                                /> */}
                                 <MaskedInput
                                   mask='11\.11 \%'
                                   placeholder='00.00%'

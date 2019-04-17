@@ -86,14 +86,17 @@ class Fleet extends Component {
   }
   componentDidUpdate = ({ fleetReducer, location }) => {
     if (
-      this.props.fleetReducer.fleetListData.isSuccess !==
-      fleetReducer.fleetListData.isSuccess
+      this.props.fleetReducer.isSuccess !==
+      fleetReducer.isSuccess
     ) {
       this.props.getFleet();
     }
+    console.log("!!!!!!!!!!!!!!!", this.props.fleetReducer.isEditSuccess);
+    console.log("$$$$$$$$$$$$$", fleetReducer.isEditSuccess);
+
     if (
-      this.props.fleetReducer.fleetListData.isEditSuccess !==
-      fleetReducer.fleetListData.isEditSuccess
+      this.props.fleetReducer.isEditSuccess !==
+      fleetReducer.isEditSuccess
     ) {
       this.setState({
         openEdit: !this.state.openEdit,
@@ -120,46 +123,8 @@ class Fleet extends Component {
     const { pathname } = location;
     this.props.redirectTo([pathname, qs.stringify(data)].join('?'));
   };
-  handleEditFleet = (fleetData, fleetId) => {
-    this.setState({
-      error: {},
-    });
+  handleEditFleet = (data) => {
     try {
-      let validationData;
-      if (!fleetData.email) {
-        validationData = {
-          companyName: fleetData.companyName,
-        };
-      } else {
-        validationData = {
-          companyName: fleetData.companyName,
-          email: fleetData.email,
-        };
-      }
-      const { isValid, errors } = Validator(
-        validationData,
-        CreateFleetValidations,
-        CreateFleetValidMessaages
-      );
-      if (
-        !isValid &&
-        (fleetData.email !== '' || fleetData.companyName === '')
-      ) {
-        this.setState({
-          error: errors,
-          isLoading: false,
-        });
-        return;
-      }
-      const userData = this.props.profileInfoReducer.profileInfo;
-      const userId = userData._id;
-      const parentId = userData.parentId;
-      const data = {
-        fleetData: fleetData,
-        userId: userId,
-        parentId: parentId,
-        fleetId: fleetId,
-      };
       this.props.updateFleet(data);
       const { modelDetails } = this.props.modelInfoReducer;
       let modaldata = {
@@ -167,7 +132,7 @@ class Fleet extends Component {
       };
       this.props.modelOperate(modaldata);
     } catch (error) {
-      logger(error);
+      logger(error)
     }
   };
   handleAddFleet = data => {
@@ -208,7 +173,6 @@ class Fleet extends Component {
       rateStandardListReducer,
     } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
-    console.log('This is error', error);
     return (
       <>
         <Card>
@@ -216,7 +180,7 @@ class Fleet extends Component {
             <Row>
               <Col sm={'6'} className={'pull-left'}>
                 <h4>
-                  <img src="/assets/img/fleetIcon.svg" width="30" alt=""/> Fleet List
+                  <i className={"fas fa-car"} /> Fleet List
                 </h4>
               </Col>
               <Col sm={'6'} className={'text-right'}>
@@ -251,7 +215,6 @@ class Fleet extends Component {
           fleetModalOpen={openCreate}
           handleFleetModal={this.toggleCreateModal}
           handleAddFleet={this.handleAddFleet}
-          errorMessage={error}
           phoneErrors={phoneErrors}
           onTypeHeadStdFun={this.onTypeHeadStdFun}
           setDefaultRate={this.setDefaultRate}
@@ -265,11 +228,11 @@ class Fleet extends Component {
           setDefaultRate={this.setDefaultRate}
           handleEditFleet={this.handleEditFleet}
           rateStandardListData={rateStandardListReducer}
-          profileInfoReducer={profileInfoReducer}
+          profileInfoReducer={profileInfoReducer.profileInfo}
           matrixListReducerData={matrixListReducer}
           updateFleetModel={this.updateFleetModel}
           fleetSingleData={fleetSingleData}
-          errorMessage={error}
+          updateFleet={this.handleEditFleet}
           handleFleetModal={this.toggleEditModal}
           fleetEditModalOpen={modelDetails.fleetEditModel}
         />

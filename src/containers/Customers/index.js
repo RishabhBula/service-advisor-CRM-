@@ -51,6 +51,9 @@ class Customers extends Component {
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
+      console.log('====================================');
+      console.log(currQuery, currQuery.page);
+      console.log('====================================');
       this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
     }  
   }

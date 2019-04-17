@@ -63,7 +63,7 @@ const getAllCustomerList = async (req, res) => {
     const limit = parseInt(query.limit || 10);
     const page = parseInt(query.page);
     const offset = (page - 1) * limit;
-    const searchValue = query.search;
+    const searchValue = query.search ? query.search: "";
     const sort = query.sort;
     const status = query.status;
     let sortBy = {};
