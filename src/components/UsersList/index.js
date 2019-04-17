@@ -22,6 +22,7 @@ import { ConfirmBox } from "../../helpers/SweetAlert";
 import { CrmUserModal } from "../common/CrmUserModal";
 import { RoleOptions } from "../../config/Constants";
 import { toast } from "react-toastify";
+import { logger } from "../../helpers/Logger";
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -51,13 +52,6 @@ class UserList extends Component {
       type: type || "",
       invitaionStatus: invitaionStatus || ""
     });
-  }
-  componentDidUpdate({ openEdit }) {
-    if (this.props.openEdit !== openEdit) {
-      this.setState({
-        openEditModal: false
-      });
-    }
   }
   handleChange = e => {
     this.setState({
@@ -119,9 +113,10 @@ class UserList extends Component {
     this.props.onDelete(this.state.selectedUsers);
   };
   editUser = user => {
-    this.setState({ user });
-    this.props.modelOperate({
-      editUserModal: true
+    this.setState({ user }, () => {
+      this.props.modelOperate({
+        editUserModal: true
+      });
     });
   };
   onUpdate = (id, data) => {
@@ -211,7 +206,7 @@ class UserList extends Component {
   render() {
     const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
-    console.log(openEdit);
+    logger(openEdit, this.state);
 
     const {
       page,
@@ -403,13 +398,13 @@ class UserList extends Component {
               <th>Member Name</th>
               <th>Email</th>
               <th>Rate/hour</th>
-              <th>Role</th>
+              <th className={"text-center"}>Role</th>
               <th>Registered</th>
               <th>Last Login</th>
               <th>Last Login IP</th>
-              <th>Invitation Status</th>
-              <th>User Status</th>
-              <th>Action</th>
+              <th className={"text-center"}>Invitation Status</th>
+              <th className={"text-center"}>User Status</th>
+              <th className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -439,7 +434,9 @@ class UserList extends Component {
                       <td>
                         {user.rate ? ["$", user.rate.toFixed(2)].join("") : "-"}
                       </td>
-                      <td>{user.roleType ? user.roleType.userType : "-"}</td>
+                      <td className={"text-center"}>
+                        {user.roleType ? user.roleType.userType : "-"}
+                      </td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
@@ -447,14 +444,14 @@ class UserList extends Component {
                         {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
                       </td>
                       <td>{user.loggedInIp || "-"}</td>
-                      <td>
+                      <td className={"text-center"}>
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
                         ) : (
                           <Badge color="warning">Pending</Badge>
                         )}
                       </td>
-                      <td>
+                      <td className={"text-center"}>
                         {user.status ? (
                           <Badge
                             className={"badge-button"}
@@ -491,7 +488,7 @@ class UserList extends Component {
                           </Badge>
                         )}
                       </td>
-                      <td>
+                      <td className={"text-center"}>
                         <Button
                           color={"primary"}
                           size={"sm"}

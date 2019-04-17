@@ -79,6 +79,11 @@
 .modal-backdrop{
   opacity: 0.8 !important;
 }
+.required-fields{
+  flex: 1;
+  color: #f86c6b;
+  font-weight: 500;
+}
 /* workflow css */
 .page-title {
   display: flex;

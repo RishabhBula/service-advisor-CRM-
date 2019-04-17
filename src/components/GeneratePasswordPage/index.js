@@ -82,8 +82,8 @@ class GeneratePasswordPage extends Component {
               <Card className="p-4">
                 <CardBody>
                   <Form onSubmit={this.generatePassword}>
-                    <h1 className="auth-title">Generate Password</h1>
-                    <p className="text-muted">for your Account</p>
+                    <h1 className="auth-title text-center">Generate Password</h1>
+                    <p className="text-muted text-center text-info-line">for your Account</p>
                     <FormGroup>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -128,14 +128,9 @@ class GeneratePasswordPage extends Component {
                         </FormFeedback>
                       </InputGroup>
                     </FormGroup>
-                    <Row>
-                      <Col xs="12">
-                        <Button
-                          color="primary"
-                          className="px-4 btn-theme"
-                          block
-                          onClick={this.generatePassword}
-                        >
+                    <Row className={"m-0"}>
+                      <Col xs="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
+                        <Button className="px-4 btn-theme" block onClick={this.generatePassword}>
                           Generate Password
                         </Button>
                       </Col>
