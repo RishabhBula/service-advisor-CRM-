@@ -506,7 +506,7 @@ export class CrmFleetEditModal extends Component {
                                                 >
                                                    {phoneOptions}
                                                 </Input>
-                                                {phoneDetail[index].phone === "mobile" ? (
+                                                {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
                                                    <div className='input-block select-number-tile'>
                                                       <MaskedInput
                                                          mask="(111) 111-111"
@@ -620,6 +620,14 @@ export class CrmFleetEditModal extends Component {
                               );
                            })
                            : null}
+
+                        {phoneDetail.length < 2 ? (
+                           <Col md='6'>
+                              <FormGroup className='mb-0 phone-info-block'>
+                                 <p className={"phone-info-text mb-0"}>You can add more phone number related to your office , home etc.</p>
+                              </FormGroup>
+                           </Col>) : null
+                        }
 
                         {phoneDetail && phoneDetail.length < 3 ? (
                            <Col md="12">

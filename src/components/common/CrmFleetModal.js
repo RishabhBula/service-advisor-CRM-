@@ -210,7 +210,7 @@ export class CrmFleetModal extends Component {
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
     const phoneDetail = [...this.state.phoneDetail];
-    phoneDetail[index].phone = value ? value : 'mobile';
+    phoneDetail[index].phone = value;
     this.setState({
       phoneDetail,
     });
@@ -380,8 +380,6 @@ export class CrmFleetModal extends Component {
       fleetDefaultPermissions,
       percentageDiscount,
     };
-    console.log(phoneDetail);
-    
     return (
       <>
         <Modal

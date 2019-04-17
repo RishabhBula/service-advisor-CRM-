@@ -66,7 +66,7 @@ class VehiclesList extends Component {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
     let param = {};
-     param.page = 1;
+    param.page = 1;
     // if (page && page > 1) {
     //   param.page = page;
     // }
@@ -312,8 +312,8 @@ class VehiclesList extends Component {
           <thead>
             <tr>
               <th width="90px">
-                {vehicleList && vehicleList.length ? (
-                  <div className="table-checkbox-wrap">
+                <div className="table-checkbox-wrap">
+                  {vehicleList && vehicleList.length ? (
                     <span className="checkboxli checkbox-custom checkbox-default">
                       <Input
                         type="checkbox"
@@ -326,6 +326,12 @@ class VehiclesList extends Component {
                       />
                       <label className="" htmlFor="checkAll" />
                     </span>
+                  ) : (
+                      <span className='checkboxli checkbox-custom checkbox-default' >
+                        <label></label>
+                      </span>
+                    )}
+                  {vehicleList && vehicleList.length ? (
                     <Input
                       className="commonstatus"
                       type="select"
@@ -336,11 +342,19 @@ class VehiclesList extends Component {
                       <option value={"active"}>Active</option>
                       <option value={"inactive"}>Inactive</option>
                       <option value={"delete"}>Delete</option>
-                    </Input>
-                  </div>
-                ) : (
-                  "SNo."
-                )}
+                    </Input>) : <Input
+                      className='commonstatus'
+                      type='select'
+                      id='exampleSelect'
+                      disabled
+                      onChange={this.handleActionChange}
+                    >
+                      <option value={''}>Select</option>
+                      <option value={'active'}>Active</option>
+                      <option value={'inactive'}>Inactive</option>
+                      <option value={'delete'}>Delete</option>
+                    </Input>}
+                </div>
               </th>
               <th>Type</th>
               <th>Color</th>
@@ -400,8 +414,8 @@ class VehiclesList extends Component {
                             {vehicle.color.label}
                           </span>
                         ) : (
-                          "None"
-                        )}
+                            "None"
+                          )}
                       </td>
                       <td>{vehicle.year}</td>
                       <td>{vehicle.make}</td>
@@ -437,23 +451,23 @@ class VehiclesList extends Component {
                             Active
                           </Badge>
                         ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedVehicles: [vehicle._id]
-                                },
-                                () => {
-                                  this.activateVehicle();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedVehicles: [vehicle._id]
+                                  },
+                                  () => {
+                                    this.activateVehicle();
+                                  }
+                                );
+                              }}
+                            >
+                              Inactive
                           </Badge>
-                        )}
+                          )}
                       </td>
                       <td>
                         <Button
@@ -486,19 +500,19 @@ class VehiclesList extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      No Vehicle records are available
+                  </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    No Vehicle records are available
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {totalVehicles && !isLoading ? (
