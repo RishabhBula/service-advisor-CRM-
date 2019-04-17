@@ -401,13 +401,11 @@ export class CrmEditCustomerModal extends Component {
     let validationdata
     if (!email) {
       validationdata = {
-        firstName: firstName,
-        lastName: lastName
+        firstName: firstName,        
       }
     } else {
       validationdata = {
         firstName: firstName,
-        lastName: lastName,
         email: email
       }
     }

@@ -88,14 +88,17 @@ body {
   th,
   td {
     font-size: 14px;
+    font-weight:600;
   }
   .table th,
   .table td {
     padding: 4px;
     vertical-align: middle;
+    color: #000;
   }
   .table td {
     font-size: 13px;
+    font-weight: 400;
   }
   .table-checkbox-wrap {
     position: relative;
@@ -242,6 +245,7 @@ body {
   }
   .badge {
     font-size: 100%;
+    font-weight: 600;
   }
   .invalid-feedback {
     margin-top: 0;
@@ -257,6 +261,11 @@ body {
     }
   }
   .table {
+    thead {
+      th{
+        background: #f1f1f1;
+      }
+    }
     tr {
       height: 45px;
     }

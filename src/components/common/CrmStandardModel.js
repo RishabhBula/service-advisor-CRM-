@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col, FormGroup, Input, Label } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Col, FormGroup, Input, Label } from "reactstrap";
 
 export class CrmStandardModel extends Component {
   constructor(props) {
@@ -81,7 +81,6 @@ export class CrmStandardModel extends Component {
                     maxLength="20"
                     onChange={this.handleChange}
                     id="name"
-                    required
                   />
                   {
                     errors && !name && errors.name ?
@@ -105,7 +104,6 @@ export class CrmStandardModel extends Component {
                     onChange={this.handleChange}
                     id="make"
                     maxLength='3'
-                    required
                   />
                   {
                     errors && !hourRate && errors.hourRate ?

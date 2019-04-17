@@ -294,11 +294,11 @@ export class CrmFleetModal extends Component {
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
-
+      console.log("!!!!!!!!!!!!", isValid, Object.keys(this.state.phoneErrors).length);
       if (
-        !isValid &&
-        (fleetData.email !== '' ||
-          Object.keys(this.state.phoneErrors).length ||
+        !isValid || 
+        ((fleetData.email !== '' &&
+          Object.keys(this.state.phoneErrors).length) || Object.keys(this.state.phoneErrors).length ||
           fleetData.companyName === '')
       ) {
         this.setState({
@@ -432,7 +432,7 @@ export class CrmFleetModal extends Component {
                         value={email}
                       />
                       {errors && errors.email && email ? (
-                        <p className='text-danger'>{errors.email}</p>
+                        <p className='text-danger'>Plese enter valid email address</p>
                       ) : null}
                     </div>
                   </FormGroup>

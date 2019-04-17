@@ -35,7 +35,8 @@ class UserList extends Component {
       type: "",
       user: {},
       openEditModal: false,
-      selectedUsers: []
+      selectedUsers: [],
+      filterApplied: false
     };
   }
   componentDidMount() {
@@ -50,7 +51,8 @@ class UserList extends Component {
       status: status || "",
       search: search || "",
       type: type || "",
-      invitaionStatus: invitaionStatus || ""
+      invitaionStatus: invitaionStatus || "",
+      filterApplied: status || search || type || invitaionStatus || false
     });
   }
   handleChange = e => {
@@ -67,21 +69,27 @@ class UserList extends Component {
     const { search, sort, status, type, invitaionStatus } = this.state;
     let param = {};
     param.page = 1;
+    let hasFilter = false;
     if (search) {
       param.search = search;
+      hasFilter = true;
     }
     if (sort) {
       param.sort = sort;
     }
     if (status) {
       param.status = status;
+      hasFilter = true;
     }
     if (type) {
       param.type = type;
+      hasFilter = true;
     }
     if (invitaionStatus) {
       param.invitaionStatus = invitaionStatus;
+      hasFilter = true;
     }
+    this.setState({ filterApplied: hasFilter });
     this.props.onSearch(param);
   };
   onReset = e => {
@@ -94,7 +102,8 @@ class UserList extends Component {
       sort: "",
       type: "",
       user: {},
-      selectedUsers: []
+      selectedUsers: [],
+      filterApplied: false
     });
     this.props.onSearch({});
   };
@@ -216,7 +225,8 @@ class UserList extends Component {
       invitaionStatus,
       type,
       user,
-      selectedUsers
+      selectedUsers,
+      filterApplied
     } = this.state;
     return (
       <>
@@ -398,13 +408,13 @@ class UserList extends Component {
               <th>Member Name</th>
               <th>Email</th>
               <th>Rate/hour</th>
-              <th>Role</th>
+              <th className={"text-center"}>Role</th>
               <th>Registered</th>
               <th>Last Login</th>
               <th>Last Login IP</th>
-              <th>Invitation Status</th>
-              <th>User Status</th>
-              <th>Action</th>
+              <th className={"text-center"}>Invitation Status</th>
+              <th className={"text-center"}>User Status</th>
+              <th className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -434,7 +444,9 @@ class UserList extends Component {
                       <td>
                         {user.rate ? ["$", user.rate.toFixed(2)].join("") : "-"}
                       </td>
-                      <td>{user.roleType ? user.roleType.userType : "-"}</td>
+                      <td className={"text-center"}>
+                        {user.roleType ? user.roleType.userType : "-"}
+                      </td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
@@ -442,14 +454,14 @@ class UserList extends Component {
                         {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
                       </td>
                       <td>{user.loggedInIp || "-"}</td>
-                      <td>
+                      <td className={"text-center"}>
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
                         ) : (
                           <Badge color="warning">Pending</Badge>
                         )}
                       </td>
-                      <td>
+                      <td className={"text-center"}>
                         {user.status ? (
                           <Badge
                             className={"badge-button"}
@@ -486,7 +498,7 @@ class UserList extends Component {
                           </Badge>
                         )}
                       </td>
-                      <td>
+                      <td className={"text-center"}>
                         <Button
                           color={"primary"}
                           size={"sm"}
@@ -526,7 +538,13 @@ class UserList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    No staff member available
+                    {filterApplied ? (
+                      <React.Fragment>
+                        No staff member found for your search
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>No staff member available</React.Fragment>
+                    )}
                   </td>
                 </tr>
               )

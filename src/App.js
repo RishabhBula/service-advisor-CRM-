@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { routerMiddleware } from "react-router-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast, Zoom } from "react-toastify";
 import { createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import { createLogicMiddleware } from "redux-logic";
@@ -31,7 +31,14 @@ class App extends Component {
             <AppRoutes />
           </React.Suspense>
         </Router>
-        <ToastContainer />
+        <ToastContainer
+          position={toast.POSITION.TOP_RIGHT}
+          autoClose={8000}
+          hideProgressBar
+          pauseOnFocusLoss={false}
+          pauseOnHover={false}
+          transition={Zoom}
+        />
       </Provider>
     );
   }

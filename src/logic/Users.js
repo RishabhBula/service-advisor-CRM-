@@ -9,7 +9,8 @@ import {
   usersActions,
   getUsersListSuccess,
   getUsersList,
-  modelOpenRequest
+  modelOpenRequest,
+  addUserSuccess
 } from "./../actions";
 
 const getUsersLogic = createLogic({
@@ -77,6 +78,7 @@ const addUsersLogic = createLogic({
           }
         })
       );
+      dispatch(addUserSuccess());
       dispatch(hideLoader());
       done();
     }
