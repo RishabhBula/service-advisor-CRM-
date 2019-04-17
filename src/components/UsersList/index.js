@@ -434,7 +434,9 @@ class UserList extends Component {
                       <td>
                         {user.rate ? ["$", user.rate.toFixed(2)].join("") : "-"}
                       </td>
-                      <td className={"text-center"}>{user.roleType ? user.roleType.userType : "-"}</td>
+                      <td className={"text-center"}>
+                        {user.roleType ? user.roleType.userType : "-"}
+                      </td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
