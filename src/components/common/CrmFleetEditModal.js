@@ -433,7 +433,7 @@ export class CrmFleetEditModal extends Component {
                                     placeholder="Company Name"
                                     value={companyName}
                                     maxLength="20"
-                                    id="name" required />
+                                    id="name"  />
                                  {
                                     errors && !companyName && errors.companyName ?
                                        <p className="text-danger">Company name is required.</p> :
@@ -497,7 +497,7 @@ export class CrmFleetEditModal extends Component {
                                                    }
                                                    type="select"
                                                    id="name"
-                                                   required
+                                                
 
                                                 >
                                                    {phoneOptions}
@@ -564,7 +564,7 @@ export class CrmFleetEditModal extends Component {
                                                       }
                                                       type="select"
                                                       id="name"
-                                                      required
+                                                   
 
                                                    >
                                                       {phoneOptions}
@@ -644,7 +644,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="200"
                                  onChange={this.handleChange}
                                  name="address1"
-                                 required
+                              
                               />
                            </FormGroup>
                         </Col>
@@ -661,7 +661,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="100"
                                  onChange={this.handleChange}
                                  placeholder="New York"
-                                 required
+                              
                               />
                            </FormGroup>
                         </Col>
@@ -677,7 +677,7 @@ export class CrmFleetEditModal extends Component {
                                  onChange={this.handleChange}
                                  id="name"
                                  maxLength="100"
-                                 placeholder="NY" required />
+                                 placeholder="NY" />
                            </FormGroup>
                         </Col>
                         <Col md="6">
@@ -693,7 +693,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="5"
                                  onChange={this.handleChange}
                                  placeholder="Zip Code"
-                                 required
+                              
                               />
                            </FormGroup>
                         </Col>
@@ -714,7 +714,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="500"
                                  onChange={this.handleChange}
                                  name="notes"
-                                 required
+                              
                               />
                            </FormGroup>
                         </Col>

@@ -220,7 +220,6 @@ class FleetList extends Component {
       page,
       selectedFleets } = this.state
     const { fleetListData } = this.props;
-    console.log("############# =>", fleetListData);
     const { isLoading, fleetData } = fleetListData;
     return (
       <>
@@ -322,19 +321,21 @@ class FleetList extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
-              {fleetData && fleetData.data && fleetData.data.length ? (
-                <th width='90px'>
-                  <div className='table-checkbox-wrap'>
-                    <span className='checkboxli checkbox-custom checkbox-default'>
-                      <Input
-                        type='checkbox'
-                        name='checkbox'
-                        id='checkAll'
-                        checked={selectedFleets.length === fleetData.data.length}
-                        onChange={this.handleCheckAllCheckBox}
-                      />
-                      <label className='' htmlFor='checkAll' />
-                    </span>
+              <th width='90px'>
+                <div className='table-checkbox-wrap'>
+                  <span className='checkboxli checkbox-custom checkbox-default'>
+                    <Input
+                      type='checkbox'
+                      name='checkbox'
+                      id='checkAll'
+                      checked={fleetData.data && fleetData.data.length ? selectedFleets.length === fleetData.data.length : null}
+                      onChange={this.handleCheckAllCheckBox}
+                    />
+                    <label className='' htmlFor='checkAll'>
+                      {fleetData.data && !fleetData.data.length ?
+                        "Select" : null}</label>
+                  </span>
+                  {fleetData && fleetData.data && fleetData.data.length ? (
                     <Input
                       className='commonstatus'
                       type='select'
@@ -346,9 +347,9 @@ class FleetList extends Component {
                       <option value={'inactive'}>Inactive</option>
                       <option value={'delete'}>Delete</option>
                     </Input>
-                  </div>
-                </th>
-              ) : null}
+                  ) : null}
+                </div>
+              </th>
               <th>Company Name</th>
               <th>Phone</th>
               <th>Email</th>

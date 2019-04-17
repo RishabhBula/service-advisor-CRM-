@@ -50,6 +50,11 @@ const fleetAddLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(fleetAddSuccess());
+      dispatch(
+        fleetListRequest({
+          ...action.payload,
+        })
+      )
       dispatch(redirectTo({ path: "/settings/fleets" }));
       done();
     }
@@ -89,7 +94,7 @@ const fleetListLogic = createLogic({
         fleetListSuccess({
           fleetData: result.data
         }),
-        hideLoader()
+        hideLoader(),
       );
       done();
     }

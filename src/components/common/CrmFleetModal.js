@@ -409,7 +409,6 @@ export class CrmFleetModal extends Component {
                         value={companyName}
                         maxLength='20'
                         id='name'
-                        required
                       />
                       {errors && !companyName && errors.companyName ? (
                         <p className='text-danger'>Company name is required.</p>
@@ -466,7 +465,7 @@ export class CrmFleetModal extends Component {
                                   }
                                   type='select'
                                   id='name'
-                                  required
+
                                 >
                                   {phoneOptions}
                                 </Input>
@@ -531,7 +530,7 @@ export class CrmFleetModal extends Component {
                                     }
                                     type='select'
                                     id='name'
-                                    required
+
                                   >
                                     {phoneOptions}
                                   </Input>
@@ -610,7 +609,6 @@ export class CrmFleetModal extends Component {
                       maxLength='200'
                       onChange={this.handleChange}
                       name='address1'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -627,7 +625,6 @@ export class CrmFleetModal extends Component {
                       maxLength='100'
                       onChange={this.handleChange}
                       placeholder='New York'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -644,7 +641,6 @@ export class CrmFleetModal extends Component {
                       id='name'
                       maxLength='100'
                       placeholder='NY'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -665,7 +661,6 @@ export class CrmFleetModal extends Component {
                       maxLength='5'
                       onChange={this.handleChange}
                       placeholder='Zip Code'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -686,7 +681,6 @@ export class CrmFleetModal extends Component {
                       maxLength='500'
                       onChange={this.handleChange}
                       name='notes'
-                      required
                     />
                   </FormGroup>
                 </Col>
@@ -752,9 +746,14 @@ export class CrmFleetModal extends Component {
                               </Label>
                             <FormGroup>
                               <Col md='4' className={'p-0'}>
-                                {/* <Cleave placeholder="Enter your credit card number"
-                                  options={{ creditCard: true }}
-                                  onChange={this.onChange.bind(this)} /> */}
+                                {/* <Cleave
+                                  placeholder="00.00%"
+                                  options={{
+                                    delimiter: '.',
+                                    blocks: [1, 2],
+                                    numeral: true
+                                  }}
+                                /> */}
                                 <MaskedInput
                                   mask='11\.11 \%'
                                   placeholder='00.00%'
