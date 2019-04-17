@@ -51,6 +51,7 @@ export default {
       url: "/settings",
       icon: "fa fa-cog",
       authKey: "isAllowedCompanySettings",
+      isOpen: true,
       children: [
         {
           name: "Staff Members",
