@@ -47,7 +47,6 @@ export class CrmUserModal extends Component {
     };
   }
   componentDidUpdate({ userModalOpen, userData }) {
-    logger(this.props.userData._id, userData._id);
     if (
       this.props.userModalOpen !== userModalOpen &&
       !this.props.userModalOpen
