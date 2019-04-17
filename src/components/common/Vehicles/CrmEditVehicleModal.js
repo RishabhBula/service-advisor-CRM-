@@ -162,7 +162,6 @@ export class CrmEditVehicleModal extends Component {
     if ((name === 'year' || name === 'miles') && isNaN(value)) {
       return
     }
-    console.log(name);
     
     this.setState({
       [name]: value,
