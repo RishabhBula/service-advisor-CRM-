@@ -51,6 +51,7 @@ export default {
       url: "/settings",
       icon: "fa fa-cog",
       authKey: "isAllowedCompanySettings",
+      isOpen: true,
       children: [
         {
           name: "Staff Members",
@@ -70,7 +71,7 @@ export default {
         {
           name: "Fleets",
           url: "/settings/fleets",
-          icon: "icon-puzzle",
+          icon: "fas fa-car",
         },
       ],
     },

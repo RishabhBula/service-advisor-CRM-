@@ -26,6 +26,7 @@
     "chart.js": "^2.8.0",
     "chroma-js": "^2.0.3",
     "classnames": "^2.2.6",
+    "cleave.js": "^1.4.10",
     "core-js": "^2.6.5",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
