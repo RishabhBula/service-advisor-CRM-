@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   FormGroup,
+  FormFeedback,
   Label,
   Input,
 } from 'reactstrap';
@@ -189,6 +190,10 @@ export class CrmVehicleModal extends Component {
     }
     this.setState({
       [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -347,11 +352,17 @@ export class CrmVehicleModal extends Component {
                       onKeyPress={this.yearValidation} */
                       onChange={this._onInputChange}
                       value={year}
+                      invalid={errors.year}
                     />
-                    {(!year && errors.year) ||
-                    errors.hasOwnProperty("year") ? (
-                      <p className="text-danger">{errors.year}</p>
-                    ) : null}
+                    <FormFeedback>
+                      {(!year && errors.year) ||
+                      errors.hasOwnProperty("year") ? (
+                        (errors.year)
+                      ) : null}
+                    </FormFeedback>
+                    {/* <FormFeedback>
+                      {errors.year ? errors.year : null}
+                    </FormFeedback> */}
                   </div>
                 </FormGroup>
               </Col>
@@ -370,10 +381,14 @@ export class CrmVehicleModal extends Component {
                       name="make"
                       onChange={this._onInputChange}
                       maxLength="25"
+                      invalid={errors.make}
                     />
-                    {!make && errors.make ? (
+                    {/* {!make && errors.make ? (
                       <p className="text-danger">{errors.make}</p>
-                    ) : null}
+                    ) : null} */}
+                    <FormFeedback>
+                      {errors.make ? errors.make : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
@@ -396,10 +411,14 @@ export class CrmVehicleModal extends Component {
                       name="modal"
                       onChange={this._onInputChange}
                       maxLength="25"
+                      invalid={errors.modal}
                     />
-                    {!modal && errors.modal ? (
+                    {/* {!modal && errors.modal ? (
                       <p className="text-danger">{errors.modal}</p>
-                    ) : null}
+                    ) : null} */}
+                    <FormFeedback>
+                      {errors.modal ? errors.modal : null}
+                    </FormFeedback>
                   </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
@@ -434,7 +453,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Miles (optional)
+                    Miles
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -457,7 +476,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Color (optional)
+                    Color
                   </Label>
                   <div className={"input-block"}>
                     <Select
@@ -480,7 +499,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Licence Plate (optional)
+                    Licence Plate
                   </Label>
                   <Input
                     type="text"
@@ -497,7 +516,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Unit #(optional)
+                    Unit #
                   </Label>
                   <Input
                     type="text"
@@ -516,7 +535,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    VIN(optional)
+                    VIN
                   </Label>
                   <Input
                     type="text"

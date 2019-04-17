@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import Validator from "js-object-validation";
+import * as classnames from "classnames";
 import MaskedInput from "react-maskedinput";
 import {
   Button,
@@ -9,10 +10,10 @@ import {
   ModalHeader,
   Row,
   Col,
-  FormFeedback,
   FormGroup,
   Label,
-  Input
+  Input,
+  FormFeedback
 } from "reactstrap";
 import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
@@ -452,6 +453,9 @@ export class CrmCustomerModal extends Component {
     getCustomerFleetList.map((data, index) => {
       options.push({ value: `${data._id}`, label: `${data.companyName}` });
     });
+    console.log('====================================');
+    console.log(errors);
+    console.log('====================================');
     return (
       <>
         <Modal
@@ -467,7 +471,10 @@ export class CrmCustomerModal extends Component {
               <Row className="justify-content-center">
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       First Name <span className={"asteric"}>*</span>
                     </Label>
                     <div className={"input-block"}>
@@ -481,7 +488,8 @@ export class CrmCustomerModal extends Component {
                         invalid={!firstName && errors.firstName}
                       />
                       <FormFeedback>
-                        {!firstName && errors.firstName ? <>{errors.firstName}</>
+                        {!firstName && errors.firstName
+                          ? errors.firstName
                           : null}
                       </FormFeedback>
                     </div>
@@ -489,7 +497,10 @@ export class CrmCustomerModal extends Component {
                 </Col>
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Last Name
                     </Label>
                     <div className={"input-block"}>
@@ -524,7 +535,8 @@ export class CrmCustomerModal extends Component {
                                   htmlFor="name"
                                   className="customer-modal-text-style"
                                 >
-                                  Phone <span className={"asteric"}>*</span>
+                                  Phone{" "}
+                                  <span className={"asteric"}>*</span>
                                 </Label>
                                 {/* <div></div> */}
 
@@ -544,33 +556,39 @@ export class CrmCustomerModal extends Component {
                                       mask="(111) 111-111"
                                       name="phoneDetail"
                                       placeholder="(555) 055-0555"
-                                      className="form-control"
+                                      className={classnames("form-control", {
+                                        "is-invalid": this.state.phoneErrors[index] !== ''
+                                      })}
                                       size="20"
                                       value={item.value}
                                       onChange={e =>
-                                        this.handlePhoneValueChange(index, e)
+                                        this.handlePhoneValueChange(
+                                          index,
+                                          e
+                                        )
                                       }
                                     />
-                                    <p className="text-danger">
-                                      {this.state.phoneErrors[index]}
-                                    </p>
+                                    <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
                                   </div>
                                 ) : (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
                                         mask="(111) 111-111 ext 1111"
                                         name="phoneDetail"
-                                        className="form-control"
+                                        className={classnames("form-control", {
+                                          "is-invalid": this.state.phoneErrors[index] !== ''
+                                        })}
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
                                         onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
+                                          this.handlePhoneValueChange(
+                                            index,
+                                            e
+                                          )
                                         }
                                       />
-                                      <p className="text-danger">
-                                        {this.state.phoneErrors[index]}
-                                      </p>
+                                      <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
                                     </div>
                                   )}
                               </FormGroup>
@@ -581,7 +599,7 @@ export class CrmCustomerModal extends Component {
                                   htmlFor="name"
                                   className="customer-modal-text-style"
                                 >
-                                  Email (Optional)
+                                  Email
                                   </Label>
                                 <div className="input-block">
                                   <Input
@@ -618,7 +636,7 @@ export class CrmCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Phone (optional)
+                                    Phone
                                   </Label>
                                   {/* <div></div> */}
                                   <Input
@@ -637,33 +655,39 @@ export class CrmCustomerModal extends Component {
                                         mask="(111) 111-111"
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
-                                        className="form-control"
+                                        className={classnames("form-control", {
+                                          "is-invalid": this.state.phoneErrors[index] !== ''
+                                        })}
                                         size="20"
                                         value={item.value}
                                         onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
+                                          this.handlePhoneValueChange(
+                                            index,
+                                            e
+                                          )
                                         }
                                       />
-                                      <p className="text-danger">
-                                        {this.state.phoneErrors[index]}
-                                      </p>
+                                      <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
                                     </div>
                                   ) : (
                                       <div className="input-block select-number-tile">
                                         <MaskedInput
                                           mask="(111) 111-111 ext 1111"
                                           name="phoneDetail"
-                                          className="form-control"
+                                          className={classnames("form-control", {
+                                            "is-invalid": this.state.phoneErrors[index] !== ''
+                                          })}
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
                                           value={item.value}
                                           onChange={e =>
-                                            this.handlePhoneValueChange(index, e)
+                                            this.handlePhoneValueChange(
+                                              index,
+                                              e
+                                            )
                                           }
                                         />
-                                        <p className="text-danger">
-                                          {this.state.phoneErrors[index]}
-                                        </p>
+                                        <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
                                       </div>
                                     )}
                                 </FormGroup>
@@ -695,7 +719,10 @@ export class CrmCustomerModal extends Component {
               <Row>
                 <Col md="6">
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Company
                     </Label>
                     <Input
@@ -710,7 +737,10 @@ export class CrmCustomerModal extends Component {
                 </Col>
                 <Col md="6">
                   <FormGroup className={"fleet-block"}>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Fleet
                     </Label>
                     <Select
@@ -718,7 +748,9 @@ export class CrmCustomerModal extends Component {
                       onChange={this.handleChange}
                       className="w-100 form-select"
                       options={options}
-                      isClearable={selectedOption.value !== "" ? true : false}
+                      isClearable={
+                        selectedOption.value !== "" ? true : false
+                      }
                     />
                   </FormGroup>
                 </Col>
@@ -878,7 +910,8 @@ export class CrmCustomerModal extends Component {
                       }
 
                       if (
-                        permission.key === "shouldPricingMatrixOverride" &&
+                        permission.key ===
+                        "shouldPricingMatrixOverride" &&
                         customerDefaultPermissions[permission.key].status
                       ) {
                         pricingMatrix = true;
@@ -890,7 +923,8 @@ export class CrmCustomerModal extends Component {
                             md="6"
                             key={index}
                             className={
-                              permission.key === "shouldPricingMatrixOverride"
+                              permission.key ===
+                                "shouldPricingMatrixOverride"
                                 ? "price-matrix"
                                 : null
                             }
@@ -899,8 +933,9 @@ export class CrmCustomerModal extends Component {
                               <AppSwitch
                                 className={"mx-1"}
                                 checked={
-                                  customerDefaultPermissions[permission.key]
-                                    .status
+                                  customerDefaultPermissions[
+                                    permission.key
+                                  ].status
                                 }
                                 onClick={this.handleClick.bind(
                                   this,
@@ -931,7 +966,9 @@ export class CrmCustomerModal extends Component {
                                       mask="11\.11 \%"
                                       name="percentageDiscount"
                                       size="20"
-                                      onChange={this.handlePercentageChange}
+                                      onChange={
+                                        this.handlePercentageChange
+                                      }
                                       className="form-control"
                                       placeholder="00.00%"
                                     />
@@ -942,7 +979,9 @@ export class CrmCustomerModal extends Component {
                             {labourRate ? (
                               <Col
                                 md=""
-                                className={"fleet-block rate-standard-list"}
+                                className={
+                                  "fleet-block rate-standard-list"
+                                }
                               >
                                 <Async
                                   defaultOptions={
@@ -971,7 +1010,8 @@ export class CrmCustomerModal extends Component {
                                     id="matrixId"
                                   >
                                     <option value={""}>Select</option>
-                                    {matrixListReducerData.matrixList.length
+                                    {matrixListReducerData.matrixList
+                                      .length
                                       ? matrixListReducerData.matrixList.map(
                                         (item, index) => {
                                           return (
