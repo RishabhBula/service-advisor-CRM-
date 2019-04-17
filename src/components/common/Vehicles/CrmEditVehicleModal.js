@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   FormGroup,
+  FormFeedback,
   Label,
   Input,
 } from 'reactstrap';
@@ -161,8 +162,14 @@ export class CrmEditVehicleModal extends Component {
     if ((name === 'year' || name === 'miles') && isNaN(value)) {
       return
     }
+    console.log(name);
+    
     this.setState({
       [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -380,10 +387,14 @@ export class CrmEditVehicleModal extends Component {
                       // onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
                       value={this.state.year}
+                      invalid={errors.year}
                     />
-                    {errors.hasOwnProperty("year") ? (
+                    {/* {errors.hasOwnProperty("year") ? (
                       <p className="text-danger">{errors.year}</p>
-                    ) : null}
+                    ) : null} */}
+                    <FormFeedback>
+                      {errors.year ? errors.year : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
@@ -395,6 +406,7 @@ export class CrmEditVehicleModal extends Component {
                   >
                     Make <span className={"asteric"}>*</span>
                   </Label>
+                  <div className={"input-block"}>
                   <Input
                     type="text"
                     placeholder="Honda"
@@ -402,10 +414,15 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.make}
                     maxLength="25"
+                    invalid={errors.make}
                   />
-                  {!make && errors.make ? (
+                  {/* {!make && errors.make ? (
                     <p className="text-danger">{errors.make}</p>
-                  ) : null}
+                  ) : null} */}
+                  <FormFeedback>
+                    {errors.make ? errors.make : null}
+                  </FormFeedback>
+                  </div>
                 </FormGroup>
               </Col>
             </Row>
@@ -418,6 +435,7 @@ export class CrmEditVehicleModal extends Component {
                   >
                     Model <span className={"asteric"}>*</span>
                   </Label>
+                  <div className={"input-block"}>
                   <Input
                     type="text"
                     className="customer-modal-text-style"
@@ -427,10 +445,15 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this._onInputChange}
                     value={this.state.modal}
                     maxLength="25"
+                    invalid={errors.modal}
                   />
-                  {!modal && errors.modal ? (
+                  {/* {!modal && errors.modal ? (
                     <p className="text-danger">{errors.modal}</p>
-                  ) : null}
+                  ) : null} */}
+                  <FormFeedback>
+                    {errors.modal ? errors.modal : null}
+                  </FormFeedback>
+                  </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
               </Col>
