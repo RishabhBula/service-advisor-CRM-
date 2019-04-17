@@ -16,7 +16,6 @@ import {
 } from "reactstrap";
 import Dropzone from "react-dropzone";
 
-import Slider from "@material-ui/lab/Slider";
 import Cropper from "react-easy-crop";
 import classnames from "classnames";
 import { isValidURL } from "../../helpers/Object";
@@ -317,26 +316,24 @@ export class CrmWelcomeModel extends Component {
                 <Row className="justify-content-center">
                   <Col md="6">
                     <FormGroup>
-                        <Label htmlFor="name" className="font-text">
-                          Company Name
-                        </Label>
-                        <div className={"input-block"}>
-                          <Input
-                            type="text"
-                            placeholder="Service Adviser"
-                            onChange={this.handleInputChange}
-                            value={companyName}
-                            name="companyName"
-                            invalid={errors.companyName}
-                          />
-                          {
-                            !companyName && errors.companyName ?
-                            <p className="text-danger">{errors.companyName}</p> :
-                            null
-                          }
-                        </div>
+                      <Label htmlFor="name" className="font-text">
+                        Company Name
+                      </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          placeholder="Service Adviser"
+                          onChange={this.handleInputChange}
+                          value={companyName}
+                          name="companyName"
+                          invalid={errors.companyName}
+                        />
+                        {!companyName && errors.companyName ? (
+                          <p className="text-danger">{errors.companyName}</p>
+                        ) : null}
+                      </div>
                     </FormGroup>
-                
+
                     <FormGroup>
                       <Label htmlFor="name" className="font-text">
                         Website (optional)
@@ -397,7 +394,10 @@ export class CrmWelcomeModel extends Component {
                         </div>
                         <div className="cropper-controls">
                           <Row className={"m-0"}>
-                            <Col md="12" className="welcome-slider-left text-center">
+                            <Col
+                              md="12"
+                              className="welcome-slider-left text-center"
+                            >
                               {/* <Slider
                                 className=""
                                 value={this.state.zoom}
@@ -407,7 +407,7 @@ export class CrmWelcomeModel extends Component {
                                 aria-labelledby="Zoom"
                                 onChange={(e, zoom) => this.onZoomChange(zoom)}
                               /> */}
-                            
+
                               {/* <Button
                                 color="primary"
                                 className="btn-sm mr-1"
@@ -428,7 +428,7 @@ export class CrmWelcomeModel extends Component {
                                   });
                                 }}
                               >
-                                <i class="cui-trash icons"></i>
+                                <i class="cui-trash icons" />
                               </Button>
                               <UncontrolledTooltip target="Tooltip-1">
                                 Remove
@@ -447,7 +447,7 @@ export class CrmWelcomeModel extends Component {
                         </span>
                       </div>
                     </div>
-                  </Col>          
+                  </Col>
                 </Row>
               </div>
               <div className="pb-3">
@@ -468,7 +468,9 @@ export class CrmWelcomeModel extends Component {
                           onClick={() => this.peopleWorkAction(item)}
                         >
                           <div className="welcome-service-text">{item}</div>
-                          <span className="check-icon"><i class="fa fa-check-circle"></i></span>
+                          <span className="check-icon">
+                            <i class="fa fa-check-circle" />
+                          </span>
                         </div>
                       );
                     })}
@@ -497,13 +499,20 @@ export class CrmWelcomeModel extends Component {
                           }
                           onClick={() => this.serviceOfferAction(item)}
                         >
-                          <div className={classnames("justify-content-center", index === 2 ? "custom-build" : null )}>
+                          <div
+                            className={classnames(
+                              "justify-content-center",
+                              index === 2 ? "custom-build" : null
+                            )}
+                          >
                             <img src={item.icon} alt="" />
                             <div className={"welcome-service-text"}>
                               {item.key}
                             </div>
                           </div>
-                          <span className="check-icon"><i class="fa fa-check-circle"></i></span>
+                          <span className="check-icon">
+                            <i class="fa fa-check-circle" />
+                          </span>
                         </div>
                       );
                     })}
@@ -539,7 +548,9 @@ export class CrmWelcomeModel extends Component {
                                 {item.key}
                               </div>
                             </div>
-                            <span className="check-icon"><i class="fa fa-check-circle"></i></span>
+                            <span className="check-icon">
+                              <i class="fa fa-check-circle" />
+                            </span>
                           </div>
                         );
                       }
