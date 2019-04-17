@@ -67,8 +67,8 @@ const getAllUserList = async (req, res) => {
       }
     ];
     if (searchValue) {
-      const $f = searchValue.split(" ")[0];
-      const $l = searchValue.split(" ")[1];
+      const $f = searchValue.trim().split(" ")[0];
+      const $l = searchValue.trim().split(" ")[1];
       condition["$and"].push({
         $or: [
           {
