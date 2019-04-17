@@ -173,7 +173,8 @@ export class CrmFleetEditModal extends Component {
                }
             ],
             fleetId: fleetSingleData._id,
-            selectedLabourRate: fleetSingleData.fleetDefaultPermissions
+            selectedLabourRate: fleetSingleData.fleetDefaultPermissions,
+            errors:{}
          })
          if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== null &&
             fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
@@ -293,6 +294,9 @@ export class CrmFleetEditModal extends Component {
    }
 
    handleEditFleet = async (fleetData, fleetId) => {
+      this.setState({
+         errors: {}
+      })
       try {
          const { phoneDetail } = this.state;
          if (phoneDetail.length) {
@@ -309,7 +313,6 @@ export class CrmFleetEditModal extends Component {
             );
             await this.setStateAsync({ phoneErrors: t });
          }
-
          let validationData;
          if (!fleetData.email) {
             validationData = {
@@ -327,8 +330,10 @@ export class CrmFleetEditModal extends Component {
             CreateFleetValidMessaages
          );
          if (
-            !isValid || Object.keys(this.state.phoneErrors).length ||
-            (fleetData.email !== '' || fleetData.companyName === '')
+            !isValid ||
+            ((fleetData.email !== '' &&
+               Object.keys(this.state.phoneErrors).length) || Object.keys(this.state.phoneErrors).length ||
+               fleetData.companyName === '')
          ) {
             this.setState({
                errors,
@@ -355,8 +360,6 @@ export class CrmFleetEditModal extends Component {
       const {
          fleetEditModalOpen,
          handleFleetModal,
-         handleEditFleet,
-         errorMessage,
          matrixListReducerData,
          rateStandardListData
       } = this.props;
@@ -433,7 +436,7 @@ export class CrmFleetEditModal extends Component {
                                     placeholder="Company Name"
                                     value={companyName}
                                     maxLength="20"
-                                    id="name"  />
+                                    id="name" />
                                  {
                                     errors && !companyName && errors.companyName ?
                                        <p className="text-danger">Company name is required.</p> :
@@ -461,8 +464,8 @@ export class CrmFleetEditModal extends Component {
                                     value={email}
                                  />
                                  {
-                                    errors && errors.email && email ?
-                                       <p className="text-danger">{errors.email}</p> :
+                                    errors && errors.email ?
+                                       <p className="text-danger">Please enter valid email address</p> :
                                        null
                                  }
                               </div>
@@ -497,7 +500,7 @@ export class CrmFleetEditModal extends Component {
                                                    }
                                                    type="select"
                                                    id="name"
-                                                
+
 
                                                 >
                                                    {phoneOptions}
@@ -564,7 +567,7 @@ export class CrmFleetEditModal extends Component {
                                                       }
                                                       type="select"
                                                       id="name"
-                                                   
+
 
                                                    >
                                                       {phoneOptions}
@@ -644,7 +647,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="200"
                                  onChange={this.handleChange}
                                  name="address1"
-                              
+
                               />
                            </FormGroup>
                         </Col>
@@ -661,7 +664,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="100"
                                  onChange={this.handleChange}
                                  placeholder="New York"
-                              
+
                               />
                            </FormGroup>
                         </Col>
@@ -693,7 +696,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="5"
                                  onChange={this.handleChange}
                                  placeholder="Zip Code"
-                              
+
                               />
                            </FormGroup>
                         </Col>
@@ -714,7 +717,7 @@ export class CrmFleetEditModal extends Component {
                                  maxLength="500"
                                  onChange={this.handleChange}
                                  name="notes"
-                              
+
                               />
                            </FormGroup>
                         </Col>

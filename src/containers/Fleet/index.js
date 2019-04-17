@@ -24,11 +24,6 @@ import {
   updateFleetStatus,
 } from '../../actions';
 import { logger } from '../../helpers/Logger';
-import Validator from 'js-object-validation';
-import {
-  CreateFleetValidations,
-  CreateFleetValidMessaages,
-} from '../../validations';
 import * as qs from 'query-string';
 import { isEqual } from '../../helpers/Object';
 class Fleet extends Component {
@@ -91,9 +86,6 @@ class Fleet extends Component {
     ) {
       this.props.getFleet();
     }
-    console.log("!!!!!!!!!!!!!!!", this.props.fleetReducer.isEditSuccess);
-    console.log("$$$$$$$$$$$$$", fleetReducer.isEditSuccess);
-
     if (
       this.props.fleetReducer.isEditSuccess !==
       fleetReducer.isEditSuccess
@@ -161,7 +153,6 @@ class Fleet extends Component {
   render() {
     const {
       openCreate,
-      error,
       openEdit,
       fleetSingleData,
       phoneErrors,
