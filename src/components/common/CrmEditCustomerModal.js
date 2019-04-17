@@ -11,7 +11,8 @@ import {
   Col,
   FormGroup,
   Label,
-  Input
+  Input,
+  FormFeedback
 } from "reactstrap";
 import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
@@ -563,10 +564,16 @@ export class CrmEditCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
+                        invalid={!firstName && errors.firstName}
                       />
-                      {!firstName && errors.firstName ? (
+                      <FormFeedback>
+                        {!firstName && errors.firstName
+                          ? errors.firstName
+                          : null}
+                      </FormFeedback>
+                      {/* {!firstName && errors.firstName ? (
                         <p className="text-danger">{errors.firstName}</p>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </FormGroup>
                 </Col>
@@ -610,7 +617,8 @@ export class CrmEditCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Phone <span className={"asteric"}>*</span>
+                                    Phone{" "}
+                                    <span className={"asteric"}>*</span>
                                   </Label>
                                   {/* <div></div> */}
 
@@ -674,7 +682,7 @@ export class CrmEditCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Email 
+                                    Email
                                   </Label>
                                   <div className="input-block">
                                     <Input
@@ -711,7 +719,7 @@ export class CrmEditCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Phone 
+                                    Phone
                                   </Label>
                                   {/* <div></div> */}
                                   <Input
