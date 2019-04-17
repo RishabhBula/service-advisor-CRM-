@@ -858,6 +858,7 @@ export class CrmFleetEditModal extends Component {
                   />
                </ModalBody>
                <ModalFooter>
+                  <div class="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleEditFleet(fleetData, fleetId)}>
                      {
                         "Update Fleet Details"
