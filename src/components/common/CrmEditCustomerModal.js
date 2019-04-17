@@ -426,7 +426,6 @@ export class CrmEditCustomerModal extends Component {
       state: state,
       zipCode: zipCode,
       permission: customerDefaultPermissions,
-      status: true
     };
 
     try {
