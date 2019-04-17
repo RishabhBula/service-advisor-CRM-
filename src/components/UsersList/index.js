@@ -36,7 +36,8 @@ class UserList extends Component {
       user: {},
       openEditModal: false,
       selectedUsers: [],
-      filterApplied: false
+      filterApplied: false,
+      bulkAction: ""
     };
   }
   componentDidMount() {
@@ -153,7 +154,8 @@ class UserList extends Component {
     const { checked } = target;
     if (!checked) {
       this.setState({
-        selectedUsers: []
+        selectedUsers: [],
+        bulkAction: ""
       });
       return;
     }
@@ -173,7 +175,8 @@ class UserList extends Component {
     });
     if (!value) {
       this.setState({
-        selectedUsers: []
+        selectedUsers: [],
+        bulkAction: ""
       });
       return;
     }
@@ -187,7 +190,8 @@ class UserList extends Component {
     });
     if (!value) {
       this.setState({
-        selectedUsers: []
+        selectedUsers: [],
+        bulkAction: ""
       });
       return;
     }
@@ -197,6 +201,9 @@ class UserList extends Component {
     const { selectedUsers } = this.state;
     const { target } = e;
     const { value } = target;
+    this.setState({
+      bulkAction: value
+    });
     if (!value) {
       return;
     }
@@ -226,7 +233,8 @@ class UserList extends Component {
       type,
       user,
       selectedUsers,
-      filterApplied
+      filterApplied,
+      bulkAction
     } = this.state;
     return (
       <>
@@ -379,51 +387,37 @@ class UserList extends Component {
           <thead>
             <tr>
               <th width="90px">
-                {/* {users.length ? ( */}
                 <div className="table-checkbox-wrap">
-                {users.length ?
                   <span className="checkboxli checkbox-custom checkbox-default">
                     <Input
                       type="checkbox"
                       name="checkbox"
                       id="checkAll"
-                      checked={selectedUsers.length === users.length}
+                      checked={
+                        selectedUsers.length === users.length && users.length
+                      }
                       onChange={this.handleCheckAllCheckBox}
                     />
                     <label className="" htmlFor="checkAll" />
                   </span>
-                    : <span className="checkboxli checkbox-custom checkbox-default">
-                      <label></label>
-                    </span>
-                }
-                  {
-                    users && users.length ?
-                      <Input
-                        className="commonstatus"
-                        type="select"
-                        id="exampleSelect"
-                        onChange={this.handleActionChange}
-                      >
-                        <option value={""}>Select</option>
+                  <Input
+                    className="commonstatus"
+                    type="select"
+                    id="exampleSelect"
+                    onChange={this.handleActionChange}
+                    disabled={!users.length}
+                    value={bulkAction}
+                  >
+                    <option value={""}>Select</option>
+                    {users.length ? (
+                      <>
                         <option value={"active"}>Active</option>
                         <option value={"inactive"}>Inactive</option>
                         <option value={"delete"}>Delete</option>
-                      </Input> :
-                      <Input
-                        className="commonstatus"
-                        type="select"
-                        id="exampleSelect"
-                        onChange={this.handleActionChange}
-                        disabled
-                      >
-                        <option value={""}>Select</option>
-                        <option value={"active"}>Active</option>
-                        <option value={"inactive"}>Inactive</option>
-                        <option value={"delete"}>Delete</option>
-                      </Input>
-                  }
+                      </>
+                    ) : null}
+                  </Input>
                 </div>
-                {/* ) : null} */}
               </th>
               <th>Member Name</th>
               <th>Email</th>
@@ -478,8 +472,8 @@ class UserList extends Component {
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
                         ) : (
-                            <Badge color="warning">Pending</Badge>
-                          )}
+                          <Badge color="warning">Pending</Badge>
+                        )}
                       </td>
                       <td className={"text-center"}>
                         {user.status ? (
@@ -500,23 +494,23 @@ class UserList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedUsers: [user._id]
-                                  },
-                                  () => {
-                                    this.activateUsers();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedUsers: [user._id]
+                                },
+                                () => {
+                                  this.activateUsers();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
                       <td className={"text-center"}>
                         <Button
@@ -556,13 +550,6 @@ class UserList extends Component {
                   );
                 })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={12}>
-                      No staff member available
-                  </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
                     {filterApplied ? (
@@ -574,7 +561,14 @@ class UserList extends Component {
                     )}
                   </td>
                 </tr>
-              )}
+              )
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={12}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         {totalUsers && !isLoading ? (
