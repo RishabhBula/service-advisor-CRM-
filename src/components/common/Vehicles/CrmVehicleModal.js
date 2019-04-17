@@ -354,13 +354,15 @@ export class CrmVehicleModal extends Component {
                       value={year}
                       invalid={errors.year}
                     />
-                    {/* {(!year && errors.year) ||
-                    errors.hasOwnProperty("year") ? (
-                      <p className="text-danger">{errors.year}</p>
-                    ) : null} */}
                     <FormFeedback>
-                      {errors.year ? errors.year : null}
+                      {(!year && errors.year) ||
+                      errors.hasOwnProperty("year") ? (
+                        (errors.year)
+                      ) : null}
                     </FormFeedback>
+                    {/* <FormFeedback>
+                      {errors.year ? errors.year : null}
+                    </FormFeedback> */}
                   </div>
                 </FormGroup>
               </Col>
@@ -451,7 +453,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Miles 
+                    Miles
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -474,7 +476,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Color 
+                    Color
                   </Label>
                   <div className={"input-block"}>
                     <Select
@@ -497,7 +499,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Licence Plate 
+                    Licence Plate
                   </Label>
                   <Input
                     type="text"

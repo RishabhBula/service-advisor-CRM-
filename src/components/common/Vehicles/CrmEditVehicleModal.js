@@ -389,12 +389,14 @@ export class CrmEditVehicleModal extends Component {
                       value={this.state.year}
                       invalid={errors.year}
                     />
-                    {/* {errors.hasOwnProperty("year") ? (
-                      <p className="text-danger">{errors.year}</p>
-                    ) : null} */}
                     <FormFeedback>
-                      {errors.year ? errors.year : null}
+                      {errors.hasOwnProperty("year") ? (
+                      (errors.year)
+                    ) : null}
                     </FormFeedback>
+                    {/* <FormFeedback>
+                      {errors.year ? errors.year : null}
+                    </FormFeedback> */}
                   </div>
                 </FormGroup>
               </Col>
@@ -407,21 +409,21 @@ export class CrmEditVehicleModal extends Component {
                     Make <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    placeholder="Honda"
-                    name="make"
-                    onChange={this._onInputChange}
-                    value={this.state.make}
-                    maxLength="25"
-                    invalid={errors.make}
-                  />
-                  {/* {!make && errors.make ? (
+                    <Input
+                      type="text"
+                      placeholder="Honda"
+                      name="make"
+                      onChange={this._onInputChange}
+                      value={this.state.make}
+                      maxLength="25"
+                      invalid={errors.make}
+                    />
+                    {/* {!make && errors.make ? (
                     <p className="text-danger">{errors.make}</p>
                   ) : null} */}
-                  <FormFeedback>
-                    {errors.make ? errors.make : null}
-                  </FormFeedback>
+                    <FormFeedback>
+                      {errors.make ? errors.make : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
@@ -436,23 +438,23 @@ export class CrmEditVehicleModal extends Component {
                     Model <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    id="type"
-                    placeholder="Accord OR Q3 Or WR..."
-                    name="modal"
-                    onChange={this._onInputChange}
-                    value={this.state.modal}
-                    maxLength="25"
-                    invalid={errors.modal}
-                  />
-                  {/* {!modal && errors.modal ? (
+                    <Input
+                      type="text"
+                      className="customer-modal-text-style"
+                      id="type"
+                      placeholder="Accord OR Q3 Or WR..."
+                      name="modal"
+                      onChange={this._onInputChange}
+                      value={this.state.modal}
+                      maxLength="25"
+                      invalid={errors.modal}
+                    />
+                    {/* {!modal && errors.modal ? (
                     <p className="text-danger">{errors.modal}</p>
                   ) : null} */}
-                  <FormFeedback>
-                    {errors.modal ? errors.modal : null}
-                  </FormFeedback>
+                    <FormFeedback>
+                      {errors.modal ? errors.modal : null}
+                    </FormFeedback>
                   </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
                 </FormGroup>
@@ -486,7 +488,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Miles 
+                    Miles
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -509,7 +511,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Color 
+                    Color
                   </Label>
                   <Select
                     value={colorSelected}
@@ -530,7 +532,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Licence Plate 
+                    Licence Plate
                   </Label>
                   <Input
                     type="text"
