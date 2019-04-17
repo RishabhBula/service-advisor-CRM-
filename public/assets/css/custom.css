@@ -10,8 +10,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
-
 .btn-theme{
   background-color: #f6b42a !important;
   border-color: #f6b42a !important;
@@ -23,16 +21,17 @@
   background-color: #df9c0f !important;
 }
 .link{
-    cursor: pointer;
-    color: #20a8d8;
+  cursor: pointer;
+  color: #20a8d8;
 }
 .text-info-line {
   font-size: 16px;
 }
-.auth-page {
-    /* background-image: url("https://results-software.com/wp-content/uploads/2016/08/features.jpg"); */
-    /* background-image: linear-gradient(to bottom, #0d4eae, #0083c3, #00adb7, #8ccfb1, #e3eecb); */
-    /* background-image: linear-gradient(to bottom, #8358f0, #5c43db); */
+.asteric{
+  color: red;
+  font-size: 16px;
+  position: absolute;
+  top: 3px;
 }
 .auth-bg{
   background-image: linear-gradient(to bottom, #8358f0, #5c43db);
@@ -321,9 +320,7 @@
 .box-contain.active {
   box-shadow: inset 0px 0px 0px 1px #5734c2;
 }
-.box-contain.active .welcome-service-text {
-  /* color: #54afc9; */
-}
+
 .box-space {
   justify-content: space-between !important;
   flex-wrap: wrap;
@@ -804,7 +801,13 @@ span.customer-anchor-text.customer-click-btn:hover::before {
     z-index: 1;
     box-shadow: none!important;
 }
-
+.phone-info-block{
+  background-color: #ddd;
+  border-color: #ddd;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px
+}
 
 @media(max-width:530px){
   .auth-page .card-group{

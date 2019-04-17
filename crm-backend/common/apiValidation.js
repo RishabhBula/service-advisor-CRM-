@@ -165,11 +165,6 @@ const createCustomerValidation = [
     .not()
     .isEmpty()
     .withMessage(validationMessage.firstName)
-    .trim(),
-  body("lastName")
-    .not()
-    .isEmpty()
-    .withMessage(validationMessage.lastName)
     .trim()
 ];
 

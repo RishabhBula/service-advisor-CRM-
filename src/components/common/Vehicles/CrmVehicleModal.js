@@ -131,7 +131,7 @@ export class CrmVehicleModal extends Component {
       productionDate: this.state.productionDate,
       transmission: this.state.transmissionSelected,
       drivetrain: this.state.drivetrainSelected,
-      notes: this.state.year,
+      notes: this.state.notes
     };
 
     let validationData = {
@@ -333,7 +333,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Year
+                    Year <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -361,7 +361,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Make
+                    Make <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -385,7 +385,7 @@ export class CrmVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Modal
+                    Model <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -743,6 +743,7 @@ export class CrmVehicleModal extends Component {
             )}
           </ModalBody>
           <ModalFooter>
+            <div className="required-fields">*Fields are Required.</div>
             <Button color="primary" onClick={this.createVehicleFun}>
               Save Vehicle
             </Button>{" "}

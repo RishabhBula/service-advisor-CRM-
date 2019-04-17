@@ -347,9 +347,8 @@ export class CrmCustomerModal extends Component {
         await this.setStateAsync({ phoneErrors: t });
       }
       let validationData = {
-        firstName: firstName,
-        lastName: lastName
-      };
+        firstName: firstName
+      }
       if (email !== "") {
         validationData.email = email;
       }
@@ -358,18 +357,19 @@ export class CrmCustomerModal extends Component {
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-      let errorFill = {};
-      this.setState({ errors: {} });
-      if (
-        !isValid ||
-        Object.keys(this.state.phoneErrors).length > 0 ||
-        (customerData.firstName === "" || customerData.lastName === "")
-      ) {
-        this.setState({
-          errors: errors,
-          isLoading: false
-        });
-        return;
+      let errorFill = {}
+      this.setState({errors: {}});
+      if (!isValid || Object.keys(this.state.phoneErrors).length > 0 ||
+        (
+          (
+            (customerData.firstName === '') 
+          )
+        )) {
+            this.setState({
+              errors: errors,
+              isLoading: false,
+            });
+            return;
       }
       this.props.addCustomerFun(customerData);
     } catch (error) {
@@ -433,9 +433,6 @@ export class CrmCustomerModal extends Component {
       vendorValue,
       selectedLabourRate
     } = this.state;
-    console.log("=======================selectedLabourRate=============");
-    console.log(selectedLabourRate);
-    console.log("====================================");
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
@@ -470,7 +467,7 @@ export class CrmCustomerModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      First Name
+                      First Name <span className={"asteric"}>*</span>
                     </Label>
                     <div className={"input-block"}>
                       <Input
@@ -524,7 +521,7 @@ export class CrmCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Phone
+                                    Phone <span className={"asteric"}>*</span>
                                   </Label>
                                   {/* <div></div> */}
 
@@ -1019,7 +1016,7 @@ export class CrmCustomerModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <div className="required-fields">*All fields are Required.</div>
+            <div className="required-fields">*Fields are Required.</div>
             <Button color="primary" onClick={this.addNewCustomer}>
               {"Add Customer"}
             </Button>{" "}

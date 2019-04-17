@@ -47,6 +47,7 @@
     "react-dropzone": "^10.1.0",
     "react-easy-crop": "^1.10.0",
     "react-maskedinput": "^4.0.1",
+    "react-number-format": "^4.0.7",
     "react-redux": "^6.0.1",
     "react-router-config": "^4.4.0-beta.8",
     "react-router-dom": "~4.3.1",
