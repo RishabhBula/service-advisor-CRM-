@@ -174,7 +174,7 @@ export class CrmFleetEditModal extends Component {
             ],
             fleetId: fleetSingleData._id,
             selectedLabourRate: fleetSingleData.fleetDefaultPermissions,
-            errors:{}
+            errors: {}
          })
          if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== null &&
             fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
@@ -330,10 +330,9 @@ export class CrmFleetEditModal extends Component {
             CreateFleetValidMessaages
          );
          if (
-            !isValid ||
-            ((fleetData.email !== '' &&
-               Object.keys(this.state.phoneErrors).length) || Object.keys(this.state.phoneErrors).length ||
-               fleetData.companyName === '')
+            !isValid &&
+            fleetData.email !== '' || Object.keys(this.state.phoneErrors).length ||
+            fleetData.companyName === ''
          ) {
             this.setState({
                errors,
