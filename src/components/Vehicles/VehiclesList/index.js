@@ -66,9 +66,10 @@ class VehiclesList extends Component {
     e.preventDefault();
     const { page, search, sort, status } = this.state;
     let param = {};
-    if (page && page > 1) {
-      param.page = page;
-    }
+     param.page = 1;
+    // if (page && page > 1) {
+    //   param.page = page;
+    // }
     if (search) {
       param.search = search.trim(" ");
     }
@@ -226,7 +227,7 @@ class VehiclesList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by first name, last name and email"
+                      placeholder="Search by make, modal"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -318,7 +319,9 @@ class VehiclesList extends Component {
                         type="checkbox"
                         name="checkbox"
                         id="checkAll"
-                        checked={selectedVehicles.length === vehicleList.length}
+                        checked={
+                          selectedVehicles.length === vehicleList.length
+                        }
                         onChange={this.handleCheckAllCheckBox}
                       />
                       <label className="" htmlFor="checkAll" />
@@ -335,7 +338,9 @@ class VehiclesList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   </div>
-                ) : null}
+                ) : (
+                  "SNo."
+                )}
               </th>
               <th>Type</th>
               <th>Color</th>
@@ -343,7 +348,7 @@ class VehiclesList extends Component {
               <th>Make</th>
               <th>Model</th>
               <th>Miles</th>
-              <th>Vin</th>
+              <th style={{ maxWidth: 100 }}>Vin</th>
               <th>License Plate</th>
               <th>Unit</th>
               <th>Status</th>
@@ -361,12 +366,17 @@ class VehiclesList extends Component {
                           <Input
                             type="checkbox"
                             value={vehicle._id}
-                            checked={selectedVehicles.indexOf(vehicle._id) > -1}
+                            checked={
+                              selectedVehicles.indexOf(vehicle._id) > -1
+                            }
                             name="checkbox"
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={vehicle._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                              index +
+                              1}
+                            .
                           </label>
                         </div>
                       </td>
@@ -377,7 +387,10 @@ class VehiclesList extends Component {
                       <td>
                         {vehicle.color ? (
                           <span
-                            style={{ display: "flex", alignItems: "center" }}
+                            style={{
+                              display: "flex",
+                              alignItems: "center"
+                            }}
                           >
                             <CrmCircleBackground
                               width={"15px"}
@@ -393,8 +406,8 @@ class VehiclesList extends Component {
                       <td>{vehicle.year}</td>
                       <td>{vehicle.make}</td>
                       <td>{vehicle.modal}</td>
-                      <th>{vehicle.miles}</th>
-                      <th>{vehicle.vin}</th>
+                      <th style={{ maxWidth: 100 }}>{vehicle.miles}</th>
+                      <th style={{ maxWidth: 100 }}>{vehicle.vin}</th>
                       <th>{vehicle.licensePlate}</th>
                       <th>{vehicle.unit}</th>
                       <td>
@@ -416,23 +429,23 @@ class VehiclesList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedVehicles: [vehicle._id]
-                                  },
-                                  () => {
-                                    this.activateVehicle();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedVehicles: [vehicle._id]
+                                },
+                                () => {
+                                  this.activateVehicle();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
                       <td>
                         <Button

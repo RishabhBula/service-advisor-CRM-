@@ -118,17 +118,19 @@ const getAllVehicleList = async (req, res) => {
       condition["$and"].push({
         $or: [
           {
-            firstName: {
+            type: {
+              label: {
+                $regex: new RegExp(searchValue.trim(), "i")
+              }
+            }
+          },
+          {
+            make: {
               $regex: new RegExp(searchValue.trim(), "i")
             }
           },
           {
-            lastName: {
-              $regex: new RegExp(searchValue.trim(), "i")
-            }
-          },
-          {
-            email: {
+            modal: {
               $regex: new RegExp(searchValue.trim(), "i")
             }
           }

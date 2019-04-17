@@ -76,38 +76,32 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
-    console.log('====================================');
-    console.log(this.props.customerModalOpen);
-    console.log(prevProps.customerModalOpen);
-    console.log(this.props.customer);
-    console.log(prevProps.customer);
-    console.log('====================================');
-      this.setState({
-        address1: "",
-        address2: "",
-        city: "",
-        companyName: "",
-        email: "",
-        firstName: "",
-        fleet: "5ca5e3b88b27f17bc0dfaab5",
-        lastName: "",
-        notes: "",
-        customerDefaultPermissions: CustomerDefaultPermissions,
-        referralSource: "",
-        state: "",
-        zipCode: "",
-        phoneDetail: [
-          {
-            phone: "mobile",
-            value: ""
-          }
-        ],
-        selectedLabourRate: { value: '', label: 'Select...' },
-        phoneErrors: [''],
-        expandForm: false
-      });
-    }
+    // if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
+    //   this.setState({
+    //     address1: "",
+    //     address2: "",
+    //     city: "",
+    //     companyName: "",
+    //     email: "",
+    //     firstName: "",
+    //     fleet: "5ca5e3b88b27f17bc0dfaab5",
+    //     lastName: "",
+    //     notes: "",
+    //     customerDefaultPermissions: CustomerDefaultPermissions,
+    //     referralSource: "",
+    //     state: "",
+    //     zipCode: "",
+    //     phoneDetail: [
+    //       {
+    //         phone: "mobile",
+    //         value: ""
+    //       }
+    //     ],
+    //     selectedLabourRate: { value: '', label: 'Select...' },
+    //     phoneErrors: [''],
+    //     expandForm: false
+    //   });
+    // }
     if (prevProps.customer._id !== this.props.customer._id) {
       const { customer } = this.props;
       this.setState({
@@ -146,6 +140,14 @@ export class CrmEditCustomerModal extends Component {
             label: customer.fleet.companyName
           },
           fleet: customer.fleet._id
+        })
+      }
+      else {
+         this.setState({
+          selectedOption: {
+            value: "",
+            label: "Select..."
+          }
         })
       }
     }
@@ -417,7 +419,7 @@ export class CrmEditCustomerModal extends Component {
       notes: notes,
       companyName: companyName,
       referralSource: referralSource,
-      fleet: fleet,
+      fleet: fleet === "" ? null : fleet,
       address1: address1,
       address2: address2,
       city: city,
@@ -807,6 +809,7 @@ export class CrmEditCustomerModal extends Component {
                       Fleet
                     </Label>
                     <Select
+                     defaultValue={{ label: "Select..", value: "" }}
                       value={selectedOption}
                       onChange={this.handleChange}
                       className="w-100 form-select"
@@ -984,10 +987,10 @@ export class CrmEditCustomerModal extends Component {
                               </div>
                               {discountShow ? (
 
-                                <div className="custom-label" key={index}  >
+                                <div className="custom-label  d-flex col-12" key={index}  >
                                   <Label
                                     htmlFor="name"
-                                    className="customer-modal-text-style"
+                                    className="customer-modal-text-style mr-2"
                                   >
                                     Percent Discount
                                 </Label>

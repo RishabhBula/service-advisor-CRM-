@@ -267,4 +267,8 @@ body {
   .badge-button {
     cursor: pointer;
   }
+  .form-control:invalid,
+  .form-control.is-invalid {
+    border-color: #f86c6b !important;
+  }
 }
