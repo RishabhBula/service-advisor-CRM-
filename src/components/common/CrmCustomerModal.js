@@ -578,7 +578,7 @@ export class CrmCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Email (Optional)
+                                    Email 
                                   </Label>
                                   <div className="input-block">
                                     <Input
@@ -615,7 +615,7 @@ export class CrmCustomerModal extends Component {
                                     htmlFor="name"
                                     className="customer-modal-text-style"
                                   >
-                                    Phone (optional)
+                                    Phone 
                                   </Label>
                                   {/* <div></div> */}
                                   <Input
