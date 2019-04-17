@@ -62,65 +62,63 @@ export class CrmStandardModel extends Component {
         <Modal
           isOpen={openStadardRateModel}
           toggle={this.toggle}
-          className={"custom-modal-lg" + this.props.className}
+          className='customer-modal custom-form-modal '
           backdrop={"static"}
         >
-          <ModalHeader toggle={this.toggle}>Create New Rate</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Create New Labour Rate</ModalHeader>
           <ModalBody>
-            <Row className="justify-content-center">
-              <Col md="6">
-                <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
-                    Name
+            <Col md="12">
+              <FormGroup>
+                <Label htmlFor="name" className="customer-modal-text-style">
+                  Name
                   </Label>
-                  <div className={"input-block"}>
-                    <Input
-                      type="text"
-                      placeholder="Rate Name"
-                      name="name"
-                      value={name}
-                      maxLength="20"
-                      onChange={this.handleChange}
-                      id="name"
-                      required
-                    />
-                    {
-                      errors && !name && errors.name ?
-                        <p className="text-danger">Name is required</p> :
-                        null
-                    }
-                  </div>
-                </FormGroup>
-              </Col>
-              <Col md="6">
-                <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
-                    Hour Rate
+                <div className={"input-block"}>
+                  <Input
+                    type="text"
+                    placeholder="Rate Name"
+                    name="name"
+                    value={name}
+                    maxLength="20"
+                    onChange={this.handleChange}
+                    id="name"
+                    required
+                  />
+                  {
+                    errors && !name && errors.name ?
+                      <p className="text-danger">Name is required</p> :
+                      null
+                  }
+                </div>
+              </FormGroup>
+            </Col>
+            <Col md="12">
+              <FormGroup>
+                <Label htmlFor="name" className="customer-modal-text-style">
+                  Hour Rate
                   </Label>
-                  <div className={"input-block"}>
-                    <Input
-                      type="text"
-                      name="hourRate"
-                      value={hourRate}
-                      placeholder="20"
-                      onChange={this.handleChange}
-                      id="make"
-                      maxLength='3'
-                      required
-                    />
-                  </div>
+                <div className={"input-block"}>
+                  <Input
+                    type="text"
+                    name="hourRate"
+                    value={hourRate}
+                    placeholder="20"
+                    onChange={this.handleChange}
+                    id="make"
+                    maxLength='3'
+                    required
+                  />
                   {
                     errors && !hourRate && errors.hourRate ?
                       <p className="text-danger">Hour rate is required</p> :
                       null
                   }
-                </FormGroup>
-              </Col>
-            </Row>
+                </div>
+              </FormGroup>
+            </Col>
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.handleSubmit}>
-              Add Rate
+              Add Labour Rate
             </Button>{" "}
             <Button color="secondary" onClick={this.toggle}>
               Cancel

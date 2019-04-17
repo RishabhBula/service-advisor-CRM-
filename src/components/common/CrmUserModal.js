@@ -47,7 +47,10 @@ export class CrmUserModal extends Component {
     };
   }
   componentDidUpdate({ userModalOpen, userData }) {
-    if (this.props.userModalOpen !== userModalOpen) {
+    if (
+      this.props.userModalOpen !== userModalOpen &&
+      !this.props.userModalOpen
+    ) {
       this.setState({
         firstName: "",
         lastName: "",
@@ -62,7 +65,7 @@ export class CrmUserModal extends Component {
     if (
       this.props.userData &&
       this.props.userData._id &&
-      userData._id !== this.props.userData._id
+      (userData._id !== this.props.userData._id || !this.state.email)
     ) {
       const {
         firstName,

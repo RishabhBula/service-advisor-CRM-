@@ -22,6 +22,7 @@ import { ConfirmBox } from "../../helpers/SweetAlert";
 import { CrmUserModal } from "../common/CrmUserModal";
 import { RoleOptions } from "../../config/Constants";
 import { toast } from "react-toastify";
+import { logger } from "../../helpers/Logger";
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -51,13 +52,6 @@ class UserList extends Component {
       type: type || "",
       invitaionStatus: invitaionStatus || ""
     });
-  }
-  componentDidUpdate({ openEdit }) {
-    if (this.props.openEdit !== openEdit) {
-      this.setState({
-        openEditModal: false
-      });
-    }
   }
   handleChange = e => {
     this.setState({
@@ -119,9 +113,10 @@ class UserList extends Component {
     this.props.onDelete(this.state.selectedUsers);
   };
   editUser = user => {
-    this.setState({ user });
-    this.props.modelOperate({
-      editUserModal: true
+    this.setState({ user }, () => {
+      this.props.modelOperate({
+        editUserModal: true
+      });
     });
   };
   onUpdate = (id, data) => {
@@ -211,7 +206,7 @@ class UserList extends Component {
   render() {
     const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
-    console.log(openEdit);
+    logger(openEdit, this.state);
 
     const {
       page,

@@ -71,7 +71,7 @@ export default {
         {
           name: "Fleets",
           url: "/settings/fleets",
-          icon: "icon-puzzle",
+          icon: "fas fa-car",
         },
       ],
     },

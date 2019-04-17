@@ -254,8 +254,8 @@ const updateStatus = async ({ body }, res) => {
       );
       return res.status(200).json({
          message: body.status
-            ? "Fleet activated successfully!"
-            : "Fleet inactivated successfully!",
+            ? "Fleet Activated successfully!"
+            : "Fleet Inactivated successfully!",
          data
       });
    } catch (error) {
