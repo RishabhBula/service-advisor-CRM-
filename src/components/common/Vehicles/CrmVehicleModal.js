@@ -356,9 +356,9 @@ export class CrmVehicleModal extends Component {
                     />
                     <FormFeedback>
                       {(!year && errors.year) ||
-                      errors.hasOwnProperty("year") ? (
-                        (errors.year)
-                      ) : null}
+                      errors.hasOwnProperty("year")
+                        ? errors.year
+                        : null}
                     </FormFeedback>
                     {/* <FormFeedback>
                       {errors.year ? errors.year : null}
@@ -734,6 +734,7 @@ export class CrmVehicleModal extends Component {
                           type="textarea"
                           placeholder="Enter a note..."
                           id="name"
+                          onChange={this._onInputChange}
                         />
                         {!notes && errors.notes ? (
                           <p className="text-danger">{errors.notes}</p>
