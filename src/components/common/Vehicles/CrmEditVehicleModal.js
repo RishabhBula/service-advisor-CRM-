@@ -275,7 +275,7 @@ export class CrmEditVehicleModal extends Component {
       productionDate: this.state.productionDate,
       transmission: this.state.transmissionSelected,
       drivetrain: this.state.drivetrainSelected,
-      notes: this.state.year,
+      notes: this.state.notes
     };
 
     let validationData = {
@@ -368,7 +368,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Year
+                    Year <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -393,7 +393,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Make
+                    Make <span className={"asteric"}>*</span>
                   </Label>
                   <Input
                     type="text"
@@ -416,7 +416,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Modal
+                    Model <span className={"asteric"}>*</span>
                   </Label>
                   <Input
                     type="text"
@@ -740,6 +740,7 @@ export class CrmEditVehicleModal extends Component {
                         placeholder="Enter a note..."
                         id="name"
                         value={this.state.notes}
+                        onChange={this._onInputChange}
                       />
                       {!notes && errors.notes ? (
                         <p className="text-danger">{errors.notes}</p>

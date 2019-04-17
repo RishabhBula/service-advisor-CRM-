@@ -3,8 +3,8 @@ export default {
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: "cui-dashboard",
-      authKey: "isAllowedDashboard",
+      icon: "fa fa-dashboard",
+      authKey: "isAllowedDashboard"
       // badge: {
       //   variant: "info",
       //   text: "NEW"
@@ -21,7 +21,7 @@ export default {
       name: "Calendar",
       url: "/calender",
       icon: "fa fa-calendar-alt",
-      authKey: "isAllowedCalendar",
+      authKey: "isAllowedCalendar"
     },
     // {
     //   name: "Inventory",
@@ -47,33 +47,58 @@ export default {
     //   icon: "icon-puzzle",
     // },
     {
-      name: "Settings",
-      url: "/settings",
-      icon: "fa fa-cog",
-      authKey: "isAllowedCompanySettings",
-      isOpen: true,
-      children: [
-        {
-          name: "Staff Members",
-          url: "/settings/users",
-          icon: "fa fa-users",
-        },
-        {
-          name: "Customers",
-          url: "/settings/customers",
-          icon: "icon-puzzle",
-        },
-        {
-          name: "Vehicles",
-          url: "/settings/vehicles",
-          icon: "icon-puzzle",
-        },
-        {
-          name: "Fleets",
-          url: "/settings/fleets",
-          icon: "fas fa-car",
-        },
-      ],
+      name: "Staff Members",
+      url: "/settings/users",
+      icon: "fa fa-users",
+      authKey: "isAllowedCompanySettings"
     },
-  ],
+    {
+      name: "Customers",
+      url: "/settings/customers",
+      icon: "fa fa-users",
+      authKey: "isAllowedCompanySettings"
+    },
+    {
+      name: "Vehicles",
+      url: "/settings/vehicles",
+      icon: "fa fa-cab",
+      authKey: "isAllowedCompanySettings"
+    },
+    {
+      name: "Fleets",
+      url: "/settings/fleets",
+      icon: "fas fa-car",
+      authKey: "isAllowedCompanySettings"
+    }
+    // {
+    //   name: "Settings",
+    //   isOpen: true,
+    //   url: "/settings",
+    //   icon: "fa fa-cog",
+    //   authKey: "isAllowedCompanySettings",
+    //   children: [
+    //     {
+    //       name: "Staff Members",
+    //       url: "/settings/users",
+    //       icon: "fa fa-users",
+    //       isOpen: true
+    //     },
+    //     {
+    //       name: "Customers",
+    //       url: "/settings/customers",
+    //       icon: "fa fa-users"
+    //     },
+    //     {
+    //       name: "Vehicles",
+    //       url: "/settings/vehicles",
+    //       icon: "fa fa-cab"
+    //     },
+    //     {
+    //       name: "Fleets",
+    //       url: "/settings/fleets",
+    //       icon: "fas fa-car"
+    //     }
+    //   ]
+    // }
+  ]
 };
