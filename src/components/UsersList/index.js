@@ -398,13 +398,13 @@ class UserList extends Component {
               <th>Member Name</th>
               <th>Email</th>
               <th>Rate/hour</th>
-              <th>Role</th>
+              <th className={"text-center"}>Role</th>
               <th>Registered</th>
               <th>Last Login</th>
               <th>Last Login IP</th>
-              <th>Invitation Status</th>
-              <th>User Status</th>
-              <th>Action</th>
+              <th className={"text-center"}>Invitation Status</th>
+              <th className={"text-center"}>User Status</th>
+              <th className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -434,7 +434,7 @@ class UserList extends Component {
                       <td>
                         {user.rate ? ["$", user.rate.toFixed(2)].join("") : "-"}
                       </td>
-                      <td>{user.roleType ? user.roleType.userType : "-"}</td>
+                      <td className={"text-center"}>{user.roleType ? user.roleType.userType : "-"}</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
                       </td>
@@ -442,14 +442,14 @@ class UserList extends Component {
                         {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
                       </td>
                       <td>{user.loggedInIp || "-"}</td>
-                      <td>
+                      <td className={"text-center"}>
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
                         ) : (
                           <Badge color="warning">Pending</Badge>
                         )}
                       </td>
-                      <td>
+                      <td className={"text-center"}>
                         {user.status ? (
                           <Badge
                             className={"badge-button"}
@@ -486,7 +486,7 @@ class UserList extends Component {
                           </Badge>
                         )}
                       </td>
-                      <td>
+                      <td className={"text-center"}>
                         <Button
                           color={"primary"}
                           size={"sm"}
