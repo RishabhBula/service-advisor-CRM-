@@ -743,6 +743,7 @@ export class CrmVehicleModal extends Component {
             )}
           </ModalBody>
           <ModalFooter>
+            <div className="required-fields">*Fields are Required.</div>
             <Button color="primary" onClick={this.createVehicleFun}>
               Save Vehicle
             </Button>{" "}

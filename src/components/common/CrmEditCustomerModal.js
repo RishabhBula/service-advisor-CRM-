@@ -1129,6 +1129,7 @@ export class CrmEditCustomerModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
+            <div className="required-fields">*Fields are Required.</div>
             <Button color="primary" onClick={this.updateNewCustomer}>
               {"Update Customer"}
             </Button>{" "}

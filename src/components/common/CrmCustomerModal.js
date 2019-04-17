@@ -1016,7 +1016,7 @@ export class CrmCustomerModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <div className="required-fields">*All fields are Required.</div>
+            <div className="required-fields">*Fields are Required.</div>
             <Button color="primary" onClick={this.addNewCustomer}>
               {"Add Customer"}
             </Button>{" "}

@@ -76,15 +76,6 @@ export class CrmUserModal extends Component {
         rate,
         permissions
       } = this.props.userData;
-      logger({
-        firstName,
-        lastName,
-        email,
-        phone,
-        roleType,
-        rate,
-        permissions
-      });
       this.setState({
         isEditMode: true,
         firstName,
@@ -212,7 +203,7 @@ export class CrmUserModal extends Component {
                         htmlFor="name"
                         className="customer-modal-text-style"
                       >
-                        First Name
+                        First Name <span className={"asteric"}>*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Input
@@ -237,7 +228,7 @@ export class CrmUserModal extends Component {
                         htmlFor="name"
                         className="customer-modal-text-style"
                       >
-                        Last Name
+                        Last Name <span className={"asteric"}>*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Input
@@ -260,7 +251,7 @@ export class CrmUserModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Email
+                      Email <span className={"asteric"}>*</span>
                     </Label>
                     <div className={"input-block"}>
                       <Input
@@ -386,6 +377,7 @@ export class CrmUserModal extends Component {
               </Row>
             </ModalBody>
             <ModalFooter>
+              <div class="required-fields">*Fields are Required.</div>
               <Button color="primary" onClick={this.addUser}>
                 {isEditMode ? "Update" : "Add"} Member
               </Button>{" "}

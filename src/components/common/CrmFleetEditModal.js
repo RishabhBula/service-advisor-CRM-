@@ -174,7 +174,7 @@ export class CrmFleetEditModal extends Component {
             ],
             fleetId: fleetSingleData._id,
             selectedLabourRate: fleetSingleData.fleetDefaultPermissions,
-            errors:{}
+            errors: {}
          })
          if (fleetSingleData.fleetDefaultPermissions && fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== null &&
             fleetSingleData.fleetDefaultPermissions.shouldLaborRateOverride.laborRate !== "objectId") {
@@ -330,10 +330,9 @@ export class CrmFleetEditModal extends Component {
             CreateFleetValidMessaages
          );
          if (
-            !isValid ||
-            ((fleetData.email !== '' &&
-               Object.keys(this.state.phoneErrors).length) || Object.keys(this.state.phoneErrors).length ||
-               fleetData.companyName === '')
+            !isValid &&
+            fleetData.email !== '' || Object.keys(this.state.phoneErrors).length ||
+            fleetData.companyName === ''
          ) {
             this.setState({
                errors,
@@ -426,7 +425,7 @@ export class CrmFleetEditModal extends Component {
                         <Col md="6">
                            <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style">
-                                 Company Name
+                                 Company Name <span className={"asteric"}>*</span>
                               </Label>
                               <div className={"input-block"}>
                                  <Input
@@ -451,7 +450,7 @@ export class CrmFleetEditModal extends Component {
                                  htmlFor="name"
                                  className="customer-modal-text-style"
                               >
-                                 Email (Optional)
+                                 Email
                                </Label>
                               <div className={"input-block"}>
                                  <Input
@@ -490,7 +489,7 @@ export class CrmFleetEditModal extends Component {
                                                    htmlFor="name"
                                                    className="customer-modal-text-style"
                                                 >
-                                                   Phone
+                                                   Phone <span className={"asteric"}>*</span>
                                                 </Label>
                                                 {/* <div></div> */}
 
@@ -558,7 +557,7 @@ export class CrmFleetEditModal extends Component {
                                                       htmlFor="name"
                                                       className="customer-modal-text-style"
                                                    >
-                                                      Phone (optional)
+                                                      Phone
                                                    </Label>
                                                    {/* <div></div> */}
                                                    <Input
@@ -858,6 +857,7 @@ export class CrmFleetEditModal extends Component {
                   />
                </ModalBody>
                <ModalFooter>
+                  <div class="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleEditFleet(fleetData, fleetId)}>
                      {
                         "Update Fleet Details"
