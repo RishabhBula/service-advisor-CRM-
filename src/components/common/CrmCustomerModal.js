@@ -453,9 +453,6 @@ export class CrmCustomerModal extends Component {
     getCustomerFleetList.map((data, index) => {
       options.push({ value: `${data._id}`, label: `${data.companyName}` });
     });
-    console.log('====================================');
-    console.log(errors);
-    console.log('====================================');
     return (
       <>
         <Modal
