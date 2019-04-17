@@ -295,12 +295,10 @@ export class CrmFleetModal extends Component {
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
-      console.log("!!!!!!!!!!!!", isValid, Object.keys(this.state.phoneErrors).length);
       if (
-        !isValid || 
-        ((fleetData.email !== '' &&
-          Object.keys(this.state.phoneErrors).length) || Object.keys(this.state.phoneErrors).length ||
-          fleetData.companyName === '')
+        !isValid &&
+        fleetData.email !== '' || Object.keys(this.state.phoneErrors).length ||
+        fleetData.companyName === ''
       ) {
         this.setState({
           errors,
@@ -358,7 +356,6 @@ export class CrmFleetModal extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
     });
-
     let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
     if (!fleetDefaultPermissions) {
       fleetDefaultPermissions = {};
@@ -434,7 +431,7 @@ export class CrmFleetModal extends Component {
                         value={email}
                       />
                       {errors && errors.email && email ? (
-                        <p className='text-danger'>Plese enter valid email address</p>
+                        <p className='text-danger'>Please enter valid email address</p>
                       ) : null}
                     </div>
                   </FormGroup>
@@ -523,7 +520,7 @@ export class CrmFleetModal extends Component {
                                     htmlFor='name'
                                     className='customer-modal-text-style'
                                   >
-                                    Phone (optional)
+                                    Phone <span className={"asteric"}>*</span>
                                   </Label>
                                   {/* <div></div> */}
                                   <Input

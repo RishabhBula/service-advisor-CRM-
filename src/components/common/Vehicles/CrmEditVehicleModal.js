@@ -486,7 +486,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Miles (optional)
+                    Miles 
                   </Label>
                   <div className={"input-block"}>
                     <Input
@@ -509,7 +509,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Color (optional)
+                    Color 
                   </Label>
                   <Select
                     value={colorSelected}
@@ -530,7 +530,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Licence Plate (optional)
+                    Licence Plate 
                   </Label>
                   <Input
                     type="text"
@@ -548,7 +548,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    Unit #(optional)
+                    Unit #
                   </Label>
                   <Input
                     type="text"
@@ -568,7 +568,7 @@ export class CrmEditVehicleModal extends Component {
                     htmlFor="name"
                     className="customer-modal-text-style"
                   >
-                    VIN(optional)
+                    VIN
                   </Label>
                   <Input
                     type="text"

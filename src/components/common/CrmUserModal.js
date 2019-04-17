@@ -76,15 +76,6 @@ export class CrmUserModal extends Component {
         rate,
         permissions
       } = this.props.userData;
-      logger({
-        firstName,
-        lastName,
-        email,
-        phone,
-        roleType,
-        rate,
-        permissions
-      });
       this.setState({
         isEditMode: true,
         firstName,
