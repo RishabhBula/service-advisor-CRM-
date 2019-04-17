@@ -227,7 +227,7 @@ class VehiclesList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by make, modal"
+                      placeholder="Search by make, model"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -406,10 +406,18 @@ class VehiclesList extends Component {
                       <td>{vehicle.year}</td>
                       <td>{vehicle.make}</td>
                       <td>{vehicle.modal}</td>
-                      <td style={{ maxWidth: 100 }}>{vehicle.miles ? vehicle.miles: "N/A"}</td>
-                      <td style={{ maxWidth: 100 }}>{vehicle.vin? vehicle.vin: "N/A"}</td>
-                      <td>{vehicle.licensePlate? vehicle.licensePlate: "N/A"}</td>
-                      <td>{vehicle.unit? vehicle.unit: "N/A"}</td>
+                      <td style={{ maxWidth: 100 }}>
+                        {vehicle.miles ? vehicle.miles : "N/A"}
+                      </td>
+                      <td style={{ maxWidth: 100 }}>
+                        {vehicle.vin ? vehicle.vin : "N/A"}
+                      </td>
+                      <td>
+                        {vehicle.licensePlate
+                          ? vehicle.licensePlate
+                          : "N/A"}
+                      </td>
+                      <td>{vehicle.unit ? vehicle.unit : "N/A"}</td>
                       <td>
                         {vehicle.status ? (
                           <Badge
