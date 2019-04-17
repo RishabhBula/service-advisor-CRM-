@@ -117,8 +117,16 @@ const editFleetLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(fleetEditSuccess());
-      dispatch(hideLoader());
+      dispatch(hideLoader())
+      dispatch(fleetEditSuccess({
+        ...action.payload
+      }),
+      );
+      dispatch(
+        fleetListRequest({
+          ...action.payload,
+        })
+      )
       done();
     }
   },
@@ -219,7 +227,7 @@ const customerFleetListLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      
+
       dispatch(
         getCustomerfleetListStarted({
           customerFleetData: result.data.data

@@ -9,7 +9,6 @@ export const CreateRateValidations = {
         [ValidationTypes.NUMERIC]: true
     }
 };
-
 export const CreateRateValidMessaages = {
     name: {
         [ValidationTypes.REQUIRED]: "Please enter name.",

@@ -220,6 +220,7 @@ class FleetList extends Component {
       page,
       selectedFleets } = this.state
     const { fleetListData } = this.props;
+    console.log("############# =>", fleetListData);
     const { isLoading, fleetData } = fleetListData;
     return (
       <>
@@ -348,7 +349,6 @@ class FleetList extends Component {
                   </div>
                 </th>
               ) : null}
-              <th>SNo.</th>
               <th>Company Name</th>
               <th>Phone</th>
               <th>Email</th>
@@ -379,7 +379,6 @@ class FleetList extends Component {
                           </label>
                         </div>
                       </td>
-                      <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                       <td>{data.companyName || "-"}</td>
                       <td>{data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {

@@ -33,6 +33,7 @@ import {
   CreateFleetValidations,
   CreateFleetValidMessaages,
 } from '../../validations';
+// import Cleave from 'cleave.js/react';
 
 export class CrmFleetModal extends Component {
   constructor(props) {
@@ -111,7 +112,7 @@ export class CrmFleetModal extends Component {
   };
 
   handleRateAdd = async data => {
-    const profileData = this.props.profileInfoReducer.profileInfo;
+    const profileData = this.props.profileInfoReducer;
     let api = new ApiHelper();
     try {
       const { isValid, errors } = Validator(
@@ -719,7 +720,10 @@ export class CrmFleetModal extends Component {
 
                   return (
                     <>
-                      <Col md='6' key={index} className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
+                      <Col
+                        md='6'
+                        key={index}
+                        className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
                         <div className='d-flex'>
                           <AppSwitch
                             className={'mx-1'}
@@ -748,6 +752,9 @@ export class CrmFleetModal extends Component {
                               </Label>
                             <FormGroup>
                               <Col md='4' className={'p-0'}>
+                                {/* <Cleave placeholder="Enter your credit card number"
+                                  options={{ creditCard: true }}
+                                  onChange={this.onChange.bind(this)} /> */}
                                 <MaskedInput
                                   mask='11\.11 \%'
                                   placeholder='00.00%'
