@@ -423,7 +423,7 @@ export class CrmFleetEditModal extends Component {
                         <Col md="6">
                            <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style">
-                                 Company Name
+                                 Company Name <span className={"asteric"}>*</span>
                               </Label>
                               <div className={"input-block"}>
                                  <Input
@@ -448,7 +448,7 @@ export class CrmFleetEditModal extends Component {
                                  htmlFor="name"
                                  className="customer-modal-text-style"
                               >
-                                 Email (Optional)
+                                 Email
                                </Label>
                               <div className={"input-block"}>
                                  <Input
@@ -487,7 +487,7 @@ export class CrmFleetEditModal extends Component {
                                                    htmlFor="name"
                                                    className="customer-modal-text-style"
                                                 >
-                                                   Phone
+                                                   Phone <span className={"asteric"}>*</span>
                                                 </Label>
                                                 {/* <div></div> */}
 
@@ -555,7 +555,7 @@ export class CrmFleetEditModal extends Component {
                                                       htmlFor="name"
                                                       className="customer-modal-text-style"
                                                    >
-                                                      Phone (optional)
+                                                      Phone
                                                    </Label>
                                                    {/* <div></div> */}
                                                    <Input
