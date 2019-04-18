@@ -194,3 +194,8 @@ export const Drivetrain = [
   },
 ];
 
+export const orderPermission =  {
+  isShowHours: true,
+  showNoteOnQuotesInvoices: true
+}
+
