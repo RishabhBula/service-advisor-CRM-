@@ -45,6 +45,12 @@ const PermissionObject = new Schema({
   shouldPricingMatrixOverride: {
     type: PriceMatrixOptions,
   },
+  isShowHours: {
+    type: Boolean
+  },
+  showNoteOnQuotesInvoices: {
+    type: Boolean
+  }
 });
 
 module.exports = { PermissionObject };

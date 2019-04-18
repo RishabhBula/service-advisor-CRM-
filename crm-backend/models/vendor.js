@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { CommanPersonObject, AddressObject } = require("./vendorCommanObject")
 const vendorSchema = new Schema({
     name: {
         type: String,
@@ -14,11 +15,11 @@ const vendorSchema = new Schema({
         default: null
     },
     contactPerson: {
-        type: Object,
+        type: CommanPersonObject,
         default: null
     },
     address: {
-        type: Object,
+        type: AddressObject,
         default: null
     },
     userId: {
