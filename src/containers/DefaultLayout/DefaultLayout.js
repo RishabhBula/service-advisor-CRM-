@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 
 import { Container } from "reactstrap";
 // sidebar nav config
-import navigation from "../../_nav";
+import navigation, { ValidatedRoutes } from "../../_nav";
 import {
   profileInfoRequest,
   updateCompanyLogo,
@@ -30,6 +30,8 @@ import {
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
 import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVehicle";
 import { AppConfig } from "../../config/AppConfig";
+import { logger } from "../../helpers/Logger";
+import { AppRoutes } from "../../config/AppRoutes";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -47,8 +49,30 @@ class DefaultLayout extends Component {
       this.props.profileInfoAction();
     }
   }
-  signOut(e) {
-    e.preventDefault();
+  componentDidUpdate({ location }) {
+    const { profileInfoReducer, location: newLocation } = this.props;
+    const { profileInfo } = profileInfoReducer;
+    if (
+      location.pathname !== newLocation.pathname &&
+      profileInfo &&
+      profileInfo.permissions &&
+      newLocation.pathname !== AppRoutes.HOME.url
+    ) {
+      const currentPage = this.props.location.pathname;
+      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
+      logger(ind, currentPage);
+      if (ind > -1) {
+        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+          logger("Allowed to use");
+        } else {
+          this.signOut();
+        }
+      } else {
+        this.signOut();
+      }
+    }
+  }
+  signOut() {
     localStorage.removeItem("token");
     this.props.redirectTo("/login");
   }

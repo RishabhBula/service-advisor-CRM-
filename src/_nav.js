@@ -1,104 +1,99 @@
+import { AppRoutes } from "./config/AppRoutes";
+
 export default {
   items: [
     {
-      name: "Dashboard",
-      url: "/dashboard",
+      name: AppRoutes.HOME.name,
+      url: AppRoutes.DASHBOARD.url,
       icon: "fa fa-dashboard",
       authKey: "isAllowedDashboard"
-      // badge: {
-      //   variant: "info",
-      //   text: "NEW"
-      // }
     },
-
-    // {
-    //   name: "Workflow",
-    //   url: "/workflow",
-    //   icon: "icon-puzzle",
-    //   authKey: "isAllowedWorkflow",
-    // },
     {
-      name: "Calendar",
-      url: "/calender",
+      name: AppRoutes.CALENDER.name,
+      url: AppRoutes.CALENDER.url,
       icon: "fa fa-calendar-alt",
       authKey: "isAllowedCalendar"
     },
-    // {
-    //   name: "Inventory",
-    //   url: "/inventory",
-    //   icon: "icon-puzzle",
-    //   authKey: "isAllowedInventory",
-    // },
-    // {
-    //   name: "Time Clocks",
-    //   url: "/timesheets",
-    //   icon: "icon-puzzle",
-    //   authKey: "isAllowedTimesheets",
-    // },
-    // {
-    //   name: "Reports",
-    //   url: "/reports",
-    //   icon: "icon-puzzle",
-    //   authKey: "isAllowedReportCenter",
-    // },
-    // {
-    //   name: "Common",
-    //   url: "/common",
-    //   icon: "icon-puzzle",
-    // },
     {
-      name: "Staff Members",
-      url: "/settings/users",
+      name: AppRoutes.INVENTORY.name,
+      url: AppRoutes.INVENTORY.url,
+      icon: "fa fa-database",
+      authKey: "isAllowedInventory"
+    },
+    {
+      name: AppRoutes.STAFF_MEMBERS.name,
+      url: AppRoutes.STAFF_MEMBERS.url,
       icon: "fa fa-users",
       authKey: "isAllowedCompanySettings"
     },
     {
-      name: "Customers",
-      url: "/settings/customers",
+      name: AppRoutes.CUSTOMERS.name,
+      url: AppRoutes.CUSTOMERS.url,
       icon: "fa fa-users",
       authKey: "isAllowedCompanySettings"
     },
     {
-      name: "Vehicles",
-      url: "/settings/vehicles",
+      name: AppRoutes.VEHICLES.name,
+      url: AppRoutes.VEHICLES.url,
       icon: "fa fa-cab",
       authKey: "isAllowedCompanySettings"
     },
     {
-      name: "Fleets",
-      url: "/settings/fleets",
+      name: AppRoutes.FLEETS.name,
+      url: AppRoutes.FLEETS.url,
       icon: "fas fa-car",
       authKey: "isAllowedCompanySettings"
     }
-    // {
-    //   name: "Settings",
-    //   isOpen: true,
-    //   url: "/settings",
-    //   icon: "fa fa-cog",
-    //   authKey: "isAllowedCompanySettings",
-    //   children: [
-    //     {
-    //       name: "Staff Members",
-    //       url: "/settings/users",
-    //       icon: "fa fa-users",
-    //       isOpen: true
-    //     },
-    //     {
-    //       name: "Customers",
-    //       url: "/settings/customers",
-    //       icon: "fa fa-users"
-    //     },
-    //     {
-    //       name: "Vehicles",
-    //       url: "/settings/vehicles",
-    //       icon: "fa fa-cab"
-    //     },
-    //     {
-    //       name: "Fleets",
-    //       url: "/settings/fleets",
-    //       icon: "fas fa-car"
-    //     }
-    //   ]
-    // }
   ]
 };
+
+export const ValidatedRoutes = [
+  {
+    url: AppRoutes.DASHBOARD.url,
+    authKey: "isAllowedDashboard"
+  },
+  {
+    url: AppRoutes.CALENDER.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
+    url: AppRoutes.INVENTORY.url,
+    authKey: "isAllowedInventory"
+  },
+  {
+    url: AppRoutes.INVENTORY_PARTS.url,
+    authKey: "isAllowedInventory"
+  },
+  {
+    url: AppRoutes.INVENTORY_TIRES.url,
+    authKey: "isAllowedInventory"
+  },
+  {
+    url: AppRoutes.INVENTORY_LABOURS.url,
+    authKey: "isAllowedInventory"
+  },
+  {
+    url: AppRoutes.INVENTORY_VENDORS.url,
+    authKey: "isAllowedInventory"
+  },
+  {
+    url: AppRoutes.SETTINGS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
+    url: AppRoutes.STAFF_MEMBERS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
+    url: AppRoutes.CUSTOMERS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
+    url: AppRoutes.VEHICLES.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
+    url: AppRoutes.FLEETS.url,
+    authKey: "isAllowedCompanySettings"
+  }
+];
