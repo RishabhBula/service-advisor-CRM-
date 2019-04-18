@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownToggle,
   Nav,
-  NavItem,
+  NavItem
 } from "reactstrap";
 import SearchBar from "../../components/common/SearchBar";
 import { AppNavbarBrand } from "@coreui/react";
@@ -17,7 +17,7 @@ import { AppNavbarBrand } from "@coreui/react";
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
 
 const propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node
 };
 
 const defaultProps = {};
@@ -25,7 +25,7 @@ const defaultProps = {};
 class DefaultHeader extends Component {
   toggleCustAndVehicle = () => {
     this.props.toggleCustAndVehicle();
-  }
+  };
   render() {
     const { permissions } = this.props;
     // eslint-disable-next-line
@@ -35,16 +35,16 @@ class DefaultHeader extends Component {
           <AppSidebarToggler className="d-lg-none" display="md" mobile />
           <AppNavbarBrand
             full={{
-              src: "/assets/img/logo-white.svg",
+              src: this.props.shopLogo || "/assets/img/logo-white.svg",
               width: 40,
               height: 40,
-              alt: "CRM 360"
+              alt: "Service Adviser"
             }}
             minimized={{
-              src: "/assets/img/logo-white.svg",
+              src: this.props.shopLogo || "/assets/img/logo-white.svg",
               width: 50,
               height: 50,
-              alt: "CoreUI Logo"
+              alt: "Service Adviser"
             }}
           />
 
@@ -76,7 +76,7 @@ class DefaultHeader extends Component {
             {permissions.isAllowedCompanySettings ? (
               <NavItem className="px-3">
                 <NavLink to="/settings/users" className="nav-link">
-                  Staffs
+                  Staff
                 </NavLink>
               </NavItem>
             ) : null}
@@ -110,9 +110,7 @@ class DefaultHeader extends Component {
                   <span className="header-add-icon">
                     <i className="fa fa-bell-o" />
                   </span>
-                  <span className="header-add-text">
-                    Customer & Vehicle
-                  </span>
+                  <span className="header-add-text">Customer & Vehicle</span>
                 </DropdownItem>
                 <DropdownItem>
                   <span className="header-add-icon">

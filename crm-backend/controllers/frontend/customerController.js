@@ -2,6 +2,7 @@ const customerModel = require("../../models/customer");
 const commonValidation = require("../../common/index");
 const { otherMessage } = require("../../common/validationMessage");
 const { validationResult } = require("express-validator/check");
+const mongoose = require("mongoose");
 
 /*----------------Customer create by admin/staff------------------ */
 const createCustomer = async (req, res) => {
@@ -92,6 +93,8 @@ const getAllCustomerList = async (req, res) => {
         break;
     }
     let condition = {};
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
     if (status) {
       condition.status = status;
     }
@@ -99,10 +102,10 @@ const getAllCustomerList = async (req, res) => {
       {
         $or: [
           {
-            parentId: currentUser.id
+            parentId: mongoose.Types.ObjectId(id)
           },
           {
-            parentId: currentUser.parentId || currentUser.id
+            parentId: mongoose.Types.ObjectId(parentId)
           }
         ]
       },
@@ -121,43 +124,48 @@ const getAllCustomerList = async (req, res) => {
     ];
 
     if (searchValue) {
-      const $f = searchValue.split(" ")[0];
-      const $l = searchValue.split(" ")[1];
       condition["$and"].push({
         $or: [
           {
-            firstName: {
-              $regex: new RegExp($f ? $f : $l, "i")
-            }
-          },
-          {
-            lastName: {
-              $regex: new RegExp($l ? $l : $f, "i")
+            name: {
+              $regex: new RegExp(searchValue.trim(), "i")
             }
           },
           {
             email: {
-              $regex: new RegExp($f ? $f : $l, "i")
+              $regex: new RegExp(searchValue.trim(), "i")
             }
           }
         ]
       });
     }
-    const getAllCustomer = await customerModel
-      .find({
-        ...condition
-      })
-      .populate("fleet")
+    const users = await customerModel
+      .aggregate([
+        { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+        {
+          $match: { ...condition }
+        }
+      ])
+      .collation({ locale: "en" })
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
-    const getAllCustomerCount = await customerModel.countDocuments({
-      ...condition
+    const getAllCustomer = await customerModel.populate(users, {
+      path: "fleet"
     });
+    const getAllCustomerCount = await customerModel.aggregate([
+      { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
     return res.status(200).json({
       responsecode: 200,
       data: getAllCustomer,
-      totalUsers: getAllCustomerCount,
+      totalUsers: getAllCustomerCount[0] ? getAllCustomerCount[0].count : 0,
       success: true
     });
   } catch (error) {

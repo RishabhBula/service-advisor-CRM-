@@ -254,6 +254,7 @@ export class CrmWelcomeModel extends Component {
         const element = selectedVehicleServices[index];
         vehicleServicesOfferTemp.push(element.key);
       }
+      this.saveLogo(e);
       this.props.onCompanyDetailsUdpate({
         peopleWork: peopleWork.selected,
         servicesOffer: servicesOfferTemp,
@@ -303,12 +304,9 @@ export class CrmWelcomeModel extends Component {
             this.props.className
           }
         >
-          <ModalHeader>Complete Registration</ModalHeader>
+          <ModalHeader>Hi {userName}, You're almost Done!</ModalHeader>
           <Form onSubmit={this.addCompanyDetails}>
             <ModalBody>
-              <h2 className="text-center pb-2">
-                Hi {userName}, You're almost Done!
-              </h2>
               <div className="pb-5">
                 <h4 className="pb-2 section-head">
                   1. Tell us about your shop.

@@ -29,6 +29,7 @@ import {
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
 import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVehicle";
+import { AppConfig } from "../../config/AppConfig";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -98,7 +99,7 @@ class DefaultLayout extends Component {
   render() {
     const { profileInfoReducer } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
-    const { permissions } = profileInfo;
+    const { permissions, shopLogo } = profileInfo;
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -109,6 +110,11 @@ class DefaultLayout extends Component {
             <DefaultHeader
               onLogout={e => this.signOut(e)}
               permissions={permissions || {}}
+              shopLogo={
+                shopLogo
+                  ? [AppConfig.IMAGE_ENDPOINT, shopLogo.thumbnailImage].join("")
+                  : null
+              }
               toggleCustAndVehicle={this.toggleCustAndVehicleProps}
             />
           </Suspense>

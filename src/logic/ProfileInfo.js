@@ -67,7 +67,7 @@ const updateCompanyLogoLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      // toast.success(result.messages[0]);
       dispatch(
         updateCompanyLogoSuccess({
           shopLogo: result.data.imageUploadData
