@@ -1,173 +1,117 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 import {
-  Col,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
   Card,
+  Row,
+  Col,
+  UncontrolledTooltip,
   CardBody,
+  CardHeader,
+  Button
 } from "reactstrap";
-import CrmDropDownMenu from "../../components/common/CrmDropDownMenu";
-// import { CrmVehicleModal } from '../../components/common/CrmVehicleModal'
+
+import { AppRoutes } from "../../config/AppRoutes";
+import Loader from "../Loader/Loader";
+
+const InventoryStats = React.lazy(() =>
+  import("../../components/Inventory/InventoryStats")
+);
+const InventoryTab = React.lazy(() =>
+  import("../../components/Inventory/InventoryTab")
+);
+export const InventoryRoutes = [
+  {
+    path: AppRoutes.INVENTORY_PARTS.url,
+    name: AppRoutes.INVENTORY_PARTS.name,
+    component: InventoryStats
+  },
+  {
+    path: AppRoutes.INVENTORY_TIRES.url,
+    name: AppRoutes.INVENTORY_TIRES.name,
+    component: InventoryTab
+  },
+  {
+    path: AppRoutes.INVENTORY_LABOURS.url,
+    name: AppRoutes.INVENTORY_LABOURS.name,
+    component: InventoryStats
+  },
+  {
+    path: AppRoutes.INVENTORY_VENDORS.url,
+    name: AppRoutes.INVENTORY_VENDORS.name,
+    component: InventoryTab
+  }
+];
 class Inventory extends Component {
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      activeTab: new Array(4).fill("1"),
-      userModalOpen: false,
-      tabDetails: [
-        {
-          name: "Parts",
-          details: [
-            {
-              abc: "name1",
-            },
-            {
-              abc: "name",
-            },
-          ],
-        },
-        {
-          name: "Tires",
-          details: [
-            {
-              abc: "name",
-            },
-            {
-              abc: "name",
-            },
-          ],
-        },
-        {
-          name: "Labor",
-          details: [
-            {
-              abc: "name",
-            },
-            {
-              abc: "name",
-            },
-          ],
-        },
-        {
-          name: "Vendors",
-          details: [
-            {
-              abc: "name",
-            },
-            {
-              abc: "name",
-            },
-          ],
-        },
-      ],
-    };
+    this.state = {};
   }
-
-  lorem(detailsData) {
-    return Object.keys(detailsData).map(function (key, index) {
-      return <li key={index}>{detailsData[key].abc}</li>;
-    });
-  }
-
-  toggle(tabPane, tab) {
-    const newArray = this.state.activeTab.slice();
-    newArray[tabPane] = tab;
-    this.setState({
-      activeTab: newArray,
-    });
-  }
-
-  tabPane() {
-    const { tabDetails } = this.state;
-    return tabDetails.map((item, index) => {
-      return (
-        <TabPane tabId={(index + 1).toString()} key={index}>
-          {index + 1} {this.lorem(item.details)}
-        </TabPane>
-      );
-    });
-  }
-
-  performInventoryAction = options => {
-    console.log(options);
+  rednerAddNewButton = () => {
+    return (
+      <>
+        <Button color="primary" id="add-user">
+          <i className={"fa fa-plus"} />
+          &nbsp; Add New
+        </Button>
+        <UncontrolledTooltip target={"add-user"}>
+          Add New Part
+        </UncontrolledTooltip>
+      </>
+    );
   };
-  componentDidMount = () => {
-    this.handleUserModal()
-  }
-  handleUserModal = () => {
-    this.setState({
-      userModalOpen: !this.state.userModalOpen
-    })
-  }
   render() {
-    const { tabDetails, userModalOpen } = this.state;
-    let dropdownOptions = [
-      { value: "import", label: "Import" },
-      { value: "export", label: "export" },
-    ];
     return (
       <div className="animated fadeIn">
         <Card>
-          <CardBody>
-            <Row className="mb-4">
-              <Col className="title-left-section">
-                <h4 className="card-title">Inventory</h4>
+          <CardHeader>
+            <Row>
+              <Col sm={"6"} className={"pull-left"}>
+                <h4>
+                  <i className={"fa fa-database"} />
+                  &nbsp;Inventory
+                </h4>
               </Col>
-              <Col className="title-right-section">
-                <button className="btn btn-primary btn-sm">
-                  <i className="fa fa-plus mr-1" />
-                  Add Part
-                </button>
-                <CrmDropDownMenu
-                  classNamePass={"common-crm-dropdown"}
-                  imageDisplay={false}
-                  iconPass={"icon-options icons"}
-                  options={dropdownOptions}
-                  returnCrmDropAction={this.performInventoryAction}
-                  cssPass={""}
-                />
+              <Col sm={"6"} className={"text-right"}>
+                {this.rednerAddNewButton()}
               </Col>
             </Row>
-            <Nav tabs>
-              {tabDetails.map((item, index) => {
-                return (
-                  <NavItem key={index}>
-                    <NavLink
-                      active={
-                        parseInt(this.state.activeTab[0]) ===
-                        parseInt(index) + 1
-                      }
-                      onClick={() => {
-                        this.toggle(0, (parseInt(index) + 1).toString());
-                      }}
-                    >
-                      {item.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })}
-            </Nav>
-            <TabContent activeTab={this.state.activeTab[0]}>
-              {this.tabPane()}
-            </TabContent>
+          </CardHeader>
+          <CardBody>
+            <Suspense fallback={""}>
+              <InventoryStats />
+            </Suspense>
+            <Suspense fallback={""}>
+              <InventoryTab />
+            </Suspense>
+            <Suspense fallback={<Loader />}>
+              <Switch>
+                {InventoryRoutes.map((route, idx) => {
+                  return route.component ? (
+                    <Route
+                      key={idx}
+                      path={route.path}
+                      exact={route.exact}
+                      name={route.name}
+                      render={props => <route.component {...props} />}
+                    />
+                  ) : null;
+                })}
+                <Redirect
+                  from={AppRoutes.INVENTORY.url}
+                  to={AppRoutes.INVENTORY_PARTS.url}
+                />
+              </Switch>
+            </Suspense>
           </CardBody>
         </Card>
-        {
-          {/* userModalOpen ?
-            <CrmVehicleModal
-            vehicleModalOpen={userModalOpen}
-            handleVehicleModal={this.handleUserModal}
-            /> : "" */}
-        }
       </div>
     );
   }
 }
-
-export default Inventory;
+const mapStateToProps = state => ({});
+const mapDispatchToProps = dispatch => ({});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Inventory);

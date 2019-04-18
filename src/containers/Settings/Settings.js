@@ -1,7 +1,8 @@
 import React, { Component, Suspense } from "react";
-// import { Route, Switch } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Row, Col } from "reactstrap";
 import Loader from "../Loader/Loader";
+import { AppRoutes } from "../../config/AppRoutes";
 
 const Sidebar = React.lazy(() => import("./Sidebar"));
 // const Users = React.lazy(() => import("./Users"));
@@ -11,24 +12,23 @@ const SettingsNav = [
   {
     heading: true,
     icon: "fa fa-cog",
-    name: "Settings",
+    name: "Settings"
   },
   {
     icon: "fa fa-users",
     name: "Users",
-    link: "/settings/users",
+    link: "/settings/users"
   },
   {
     heading: true,
     icon: "fa fa-users",
-    name: "List",
+    name: "List"
   },
   {
     icon: "fa fa-users",
     name: "Customers",
-    link: "/settings/customers",
-  },
-  
+    link: "/settings/customers"
+  }
 ];
 // export const SettingRoutes = [
 //   { path: "/settings/users", name: "Users", component: Users },
@@ -51,19 +51,10 @@ class Settings extends Component {
           </Col>
           <Col sm={"10"}>
             <Suspense fallback={<Loader />}>
-              {/* <Switch>
-                {SettingRoutes.map((route, idx) => {
-                  return route.component ? (
-                    <Route
-                      key={idx}
-                      path={route.path}
-                      exact={route.exact}
-                      name={route.name}
-                      render={props => <route.component {...props} />}
-                    />
-                  ) : null;
-                })}
-              </Switch> */}
+              <Redirect
+                from={AppRoutes.SETTINGS.url}
+                to={AppRoutes.STAFF_MEMBERS.url}
+              />
             </Suspense>
           </Col>
         </Row>
