@@ -1,5 +1,6 @@
 const userModel = require("../../models/user");
 const otherMessage = require("./../../common/validationMessage");
+const mongoose = require("mongoose");
 /* ----------------Grt All User List------------ */
 const getAllUserList = async (req, res) => {
   const { query, currentUser } = req;
@@ -37,16 +38,17 @@ const getAllUserList = async (req, res) => {
         };
         break;
     }
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
     let condition = {};
-    let expr = {};
     condition["$and"] = [
       {
         $or: [
           {
-            parentId: currentUser.id
+            parentId: mongoose.Types.ObjectId(id)
           },
           {
-            parentId: currentUser.parentId || currentUser.id
+            parentId: mongoose.Types.ObjectId(parentId)
           }
         ]
       },
@@ -63,35 +65,20 @@ const getAllUserList = async (req, res) => {
         ]
       },
       {
-        _id: { $ne: currentUser.id }
+        _id: { $ne: mongoose.Types.ObjectId(id) }
       }
     ];
     if (searchValue) {
-      const $f = searchValue.trim().split(" ")[0];
-      const $l = searchValue.trim().split(" ")[1];
       condition["$and"].push({
         $or: [
           {
-            firstName: {
-              $regex: new RegExp($f ? $f : $l, "i")
-            }
-          },
-          {
-            lastName: {
-              $regex: new RegExp($l ? $l : $f, "i")
+            name: {
+              $regex: new RegExp(searchValue.trim(), "i")
             }
           },
           {
             email: {
               $regex: new RegExp(searchValue.trim(), "i")
-            }
-          },
-          {
-            $expr: {
-              $eq: [
-                searchValue.trim(),
-                { $concat: ["$firstName", " ", "$lastName"] }
-              ]
             }
           }
         ]
@@ -105,24 +92,33 @@ const getAllUserList = async (req, res) => {
       condition["$and"].push({ userSideActivation: invitaionStatus });
     }
     if (type) {
-      condition["$and"].push({ roleType: type });
+      condition["$and"].push({ roleType: mongoose.Types.ObjectId(type) });
     }
-    const getAllUser = await userModel
-      .find({
-        ...condition,
-        $expr: expr
-      })
-      .populate("roleType")
+    const users = await userModel
+      .aggregate([
+        { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+        {
+          $match: { ...condition }
+        }
+      ])
+      .collation({ locale: "en" })
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
-    const getAllUserCount = await userModel.countDocuments({
-      ...condition
-    });
+    const getAllUser = await userModel.populate(users, { path: "roleType" });
+    const getAllUserCount = await userModel.aggregate([
+      { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
     return res.status(200).json({
       responsecode: 200,
       data: getAllUser,
-      totalUsers: getAllUserCount,
+      totalUsers: getAllUserCount[0] ? getAllUserCount[0].count : 0,
       success: true
     });
   } catch (error) {

@@ -76,7 +76,7 @@ class DefaultHeader extends Component {
             {permissions.isAllowedCompanySettings ? (
               <NavItem className="px-3">
                 <NavLink to="/settings/users" className="nav-link">
-                  Staffs
+                  Staff
                 </NavLink>
               </NavItem>
             ) : null}
