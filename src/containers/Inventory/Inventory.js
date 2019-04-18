@@ -10,11 +10,17 @@ import {
   CardHeader,
   Button
 } from "reactstrap";
-import InventoryStats from "../../components/Inventory/InventoryStats";
-import InventoryTab from "../../components/Inventory/InventoryTab";
+
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
-export const SettingRoutes = [
+
+const InventoryStats = React.lazy(() =>
+  import("../../components/Inventory/InventoryStats")
+);
+const InventoryTab = React.lazy(() =>
+  import("../../components/Inventory/InventoryTab")
+);
+export const InventoryRoutes = [
   {
     path: AppRoutes.INVENTORY_PARTS.url,
     name: AppRoutes.INVENTORY_PARTS.name,
@@ -72,11 +78,15 @@ class Inventory extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <InventoryStats />
-            <InventoryTab />
+            <Suspense fallback={""}>
+              <InventoryStats />
+            </Suspense>
+            <Suspense fallback={""}>
+              <InventoryTab />
+            </Suspense>
             <Suspense fallback={<Loader />}>
               <Switch>
-                {SettingRoutes.map((route, idx) => {
+                {InventoryRoutes.map((route, idx) => {
                   return route.component ? (
                     <Route
                       key={idx}
