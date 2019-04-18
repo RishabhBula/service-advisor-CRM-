@@ -169,11 +169,13 @@ const createCustomerValidation = [
 ];
 const createNewLabourValidations = [
   body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
+  body("discription", "Discription should have atleast 20 wards and maximum 200 wards").isLength({ min: 20, max: 200 }).trim(),
   body("hours", "Hours should be numeric").isNumeric(),
   body("discount", "Discount should be numeric").isNumeric()
 ];
 const updateLabourValidations = [
   body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
+  body("discription", "Discription should have atleast 20 wards and maximum 200 wards").isLength({ min: 20, max: 200 }).trim(),
   body("labourId").not().isEmpty().withMessage("Labour Id is required.").trim(),
   body("hours", "Hours should be numeric").isNumeric(),
   body("discount", "Discount should be numeric").isNumeric()
