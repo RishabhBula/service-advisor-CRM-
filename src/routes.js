@@ -1,4 +1,5 @@
 import React from "react";
+import { AppRoutes } from "./config/AppRoutes";
 
 const Dashboard = React.lazy(() => import("./views/Dashboard"));
 const WorkFlow = React.lazy(() => import("./containers/WorkFlow"));
@@ -13,26 +14,79 @@ const Fleet = React.lazy(() => import("./containers/Fleet"));
 const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 
-// https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: "/", exact: true, name: "Home" },
-  { path: "/dashboard", name: "Dashboard", component: Dashboard },
-  { path: "/workflow", name: "WorkFlow", component: WorkFlow },
-  { path: "/calender", exact: true, name: "Calender", component: Calender },
-  { path: "/inventory", exact: true, name: "Inventory", component: Inventory },
   {
-    path: "/timesheets",
-    exact: true,
-    name: "Time Clocks",
-    component: TimeClocks,
+    path: AppRoutes.HOME.url,
+    exact: AppRoutes.HOME.exact,
+    name: AppRoutes.HOME.name
   },
-  { path: "/reports", exact: true, name: "Reports", component: Reports },
-  { path: "/settings", exact: true, name: "Settings", component: Settings },
-  { path: "/settings/users", name: "Users", component: Users },
-  { path: "/settings/vehicles", name: "Vehicles", component: Vehicles },
-  { path: "/settings/fleets", name: "Fleets", component: Fleet },
-  { path: "/settings/customers", name: "Customers", component: Customers },
-  { path: "/common", exact: true, name: "Common", component: CommonPage },
+  {
+    path: AppRoutes.DASHBOARD.url,
+    exact: AppRoutes.DASHBOARD.exact,
+    name: AppRoutes.DASHBOARD.name,
+    component: Dashboard
+  },
+  {
+    path: AppRoutes.WORKFLOW.url,
+    exact: AppRoutes.WORKFLOW.exact,
+    name: AppRoutes.WORKFLOW.name,
+    component: WorkFlow
+  },
+  {
+    path: AppRoutes.CALENDER.url,
+    exact: AppRoutes.CALENDER.exact,
+    name: AppRoutes.CALENDER.name,
+    component: Calender
+  },
+  {
+    path: AppRoutes.INVENTORY.url,
+    exact: AppRoutes.INVENTORY.exact,
+    name: AppRoutes.INVENTORY.name,
+    component: Inventory
+  },
+  {
+    path: AppRoutes.TIMESHEETS.url,
+    exact: AppRoutes.TIMESHEETS.exact,
+    name: AppRoutes.TIMESHEETS.name,
+    component: TimeClocks
+  },
+  {
+    path: AppRoutes.REPORTS.url,
+    exact: AppRoutes.REPORTS.exact,
+    name: AppRoutes.REPORTS.name,
+    component: Reports
+  },
+  {
+    path: AppRoutes.SETTINGS.url,
+    exact: AppRoutes.SETTINGS.exact,
+    name: AppRoutes.SETTINGS.name,
+    component: Settings
+  },
+  {
+    path: AppRoutes.STAFF_MEMBERS.url,
+    exact: AppRoutes.STAFF_MEMBERS.exact,
+    name: AppRoutes.STAFF_MEMBERS.name,
+    component: Users
+  },
+  {
+    path: AppRoutes.VEHICLES.url,
+    exact: AppRoutes.VEHICLES.exact,
+    name: AppRoutes.VEHICLES.name,
+    component: Vehicles
+  },
+  {
+    path: AppRoutes.FLEETS.url,
+    exact: AppRoutes.FLEETS.exact,
+    name: AppRoutes.FLEETS.name,
+    component: Fleet
+  },
+  {
+    path: AppRoutes.CUSTOMERS.url,
+    exact: AppRoutes.CUSTOMERS.exact,
+    name: AppRoutes.CUSTOMERS.name,
+    component: Customers
+  },
+  { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];
 
 export default routes;

@@ -324,19 +324,19 @@ class FleetList extends Component {
               <th width='90px'>
                 <div className='table-checkbox-wrap'>
                   {fleetData.data && fleetData.data.length ?
-                  <span className='checkboxli checkbox-custom checkbox-default' >
-                    <Input
-                      type='checkbox'
-                      name='checkbox'
-                      id='checkAll'
-                      checked={fleetData.data && fleetData.data.length ? selectedFleets.length === fleetData.data.length : null}
-                      onChange={this.handleCheckAllCheckBox}
-                    />
+                    <span className='checkboxli checkbox-custom checkbox-default' >
+                      <Input
+                        type='checkbox'
+                        name='checkbox'
+                        id='checkAll'
+                        checked={fleetData.data && fleetData.data.length ? selectedFleets.length === fleetData.data.length : null}
+                        onChange={this.handleCheckAllCheckBox}
+                      />
                       <label className='' htmlFor='checkAll'></label>
-                  </span> :
-                  <span className='checkboxli checkbox-custom checkbox-default' >
-                    <label></label>
-                  </span>
+                    </span> :
+                    <span className='checkboxli checkbox-custom checkbox-default' >
+                      <label></label>
+                    </span>
                   }
 
                   {fleetData && fleetData.data && fleetData.data.length ? (
@@ -400,7 +400,7 @@ class FleetList extends Component {
                       <td>{data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {
                           return (
-                            <div className="text-capitalize">{data.phone}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value || "-"}</div>
+                            <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value || "-"}</div>
                           )
                         }) : "-"}</td>
                       <td>{data.email || "-"}</td>

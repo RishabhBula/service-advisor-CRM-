@@ -168,16 +168,29 @@ const createCustomerValidation = [
     .trim()
 ];
 const createNewLabourValidations = [
-  body("discription").not().isEmpty().withMessage("Discription is required.").trim()
+  body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
+  body("discription", "Discription should have atleast 20 wards and maximum 200 wards").isLength({ min: 20, max: 200 }).trim(),
+  body("hours", "Hours should be numeric").isNumeric(),
+  body("discount", "Discount should be numeric").isNumeric()
 ];
 const updateLabourValidations = [
+  body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
+  body("discription", "Discription should have atleast 20 wards and maximum 200 wards").isLength({ min: 20, max: 200 }).trim(),
   body("labourId").not().isEmpty().withMessage("Labour Id is required.").trim(),
+  body("hours", "Hours should be numeric").isNumeric(),
+  body("discount", "Discount should be numeric").isNumeric()
 ];
 const createVendorValidations = [
   body("name").not().isEmpty().withMessage("Name is required.").trim(),
-  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim()
+  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
+  body("accountNumber", "Account Number should be a number").isNumeric(),
+  body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim()
 ];
 const updateVendorValidations = [
+  body("name").not().isEmpty().withMessage("Name is required.").trim(),
+  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
+  body("accountNumber", "Account Number should be a number").isNumeric(),
+  body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
   body("vendorId").not().isEmpty().withMessage("Vendor Id is required.").trim(),
 ];
 module.exports = {

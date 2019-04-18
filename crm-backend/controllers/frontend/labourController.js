@@ -114,14 +114,14 @@ const getSingleStandardRate = async (req, res) => {
 /* -------------Create new labour------------ */
 const createNewLabour = async (req, res) => {
   const { body, currentUser } = req;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: commonValidation.formatValidationErr(errors.mapped(), true),
+      success: false
+    });
+  }
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false
-      });
-    }
 
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
       currentUser.parentId = currentUser.id
@@ -138,13 +138,13 @@ const createNewLabour = async (req, res) => {
     }
     const labourData = new labourModel(addNewLabour)
     const result = labourData.save();
-    if (result) {
-      return res.status(200).json({
-        responsecode: 200,
-        message: "Labour added successfully!",
-        success: true,
-      });
-    }
+
+    return res.status(200).json({
+      responsecode: 200,
+      message: "Labour added successfully!",
+      success: true,
+    });
+
   } catch (error) {
     console.log("**************This is add new labour error =>", error);
     return res.status(500).json({
@@ -159,35 +159,26 @@ const createNewLabour = async (req, res) => {
 /* ------------Update Labour Details---------- */
 const updateLabourdetails = async (req, res) => {
   const { body } = req;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: commonValidation.formatValidationErr(errors.mapped(), true),
+      success: false
+    });
+  }
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        message: commonValidation.formatValidationErr(errors.mapped(), true),
-        success: false
-      });
-    }
 
     const updateLabourDetails = await labourModel.findByIdAndUpdate(
-      body.labourId,
+      mongoose.Types.ObjectId(body.labourId),
       {
         $set: body,
       }
     );
-    if (!updateLabourDetails) {
-      return res.status(400).json({
-        responsecode: 400,
-        message: "Error updating labour details,check vendor id.",
-        success: false,
-      });
-    } else {
-      return res.status(200).json({
-        responsecode: 200,
-        message: "labour details updated successfully!",
-        success: true,
-      });
-    }
-
+    return res.status(200).json({
+      responsecode: 200,
+      message: "labour details updated successfully!",
+      success: true,
+    });
   } catch (error) {
     console.log("This is update labour error", error);
     return res.status(500).json({
@@ -232,29 +223,31 @@ const getAllLabourList = async (req, res) => {
         };
         break;
     }
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
     let condition = {};
     condition["$and"] = [
       {
         $or: [
           {
-            parentId: currentUser.id,
+            parentId: mongoose.Types.ObjectId(id)
           },
           {
-            parentId: currentUser.parentId || currentUser.id,
-          },
-        ],
+            parentId: mongoose.Types.ObjectId(parentId)
+          }
+        ]
       },
       {
         $or: [
           {
             isDeleted: {
-              $exists: false,
-            },
+              $exists: false
+            }
           },
           {
-            isDeleted: false,
-          },
-        ],
+            isDeleted: false
+          }
+        ]
       },
     ];
     if (searchValue) {
@@ -262,22 +255,22 @@ const getAllLabourList = async (req, res) => {
         $or: [
           {
             discription: {
-              $regex: new RegExp(searchValue, "i"),
+              $regex: new RegExp(searchValue.trim(), "i"),
             },
           },
           {
             note: {
-              $regex: new RegExp(searchValue, "i"),
+              $regex: new RegExp(searchValue.trim(), "i"),
             },
           },
           {
             hour: {
-              $regex: new RegExp(searchValue, "i"),
+              $regex: new RegExp(searchValue.trim(), "i"),
             },
           },
           {
             discount: {
-              $regex: new RegExp(searchValue, "i"),
+              $regex: new RegExp(searchValue.trim(), "i"),
             },
           },
         ],

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const PermissionObject = require("./commonPermission");
+
 const labourSchema = new Schema({
     discription: {
         type: String,
@@ -23,7 +25,7 @@ const labourSchema = new Schema({
         default: null
     },
     permission: {
-        type: [Object],
+        type: PermissionObject,
         default: null
     },
     userId: {
