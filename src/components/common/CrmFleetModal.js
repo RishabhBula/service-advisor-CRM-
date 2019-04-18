@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as classnames from "classnames";
 import {
   Button,
   Modal,
@@ -209,7 +210,7 @@ export class CrmFleetModal extends Component {
   handlePhoneNameChange = (index, event) => {
     const { value } = event.target;
     const phoneDetail = [...this.state.phoneDetail];
-    phoneDetail[index].phone = value ? value : 'mobile';
+    phoneDetail[index].phone = value;
     this.setState({
       phoneDetail,
     });
@@ -410,7 +411,7 @@ export class CrmFleetModal extends Component {
                         invalid={errors.companyName}
                       />
                       <FormFeedback>
-                      {errors && !companyName && errors.companyName ? "Company name is requiered" : null }
+                        {errors && !companyName && errors.companyName ? "Company name is requiered" : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -429,10 +430,13 @@ export class CrmFleetModal extends Component {
                         maxLength='40'
                         name='email'
                         value={email}
+                        invalid={errors && errors.email && email}
                       />
-                      {errors && errors.email && email ? (
-                        <p className='text-danger'>Please enter valid email address</p>
-                      ) : null}
+                      <FormFeedback>
+                        {errors && errors.email && email ? (
+                          "Please enter valid email address"
+                        ) : null}
+                      </FormFeedback>
                     </div>
                   </FormGroup>
                 </Col>
@@ -455,7 +459,7 @@ export class CrmFleetModal extends Component {
                                   className='customer-modal-text-style'
                                 >
                                   Phone <span className={"asteric"}>*</span>
-                                  </Label>
+                                </Label>
                                 {/* <div></div> */}
 
                                 <Input
@@ -474,16 +478,23 @@ export class CrmFleetModal extends Component {
                                       mask='(111) 111-111'
                                       name='phoneDetail'
                                       placeholder='(555) 055-0555'
-                                      className='form-control'
+                                      className={classnames("form-control", {
+                                        "is-invalid": this.state.phoneErrors[index] !== ''
+                                      })}
                                       size='20'
                                       value={item.value}
                                       onChange={e =>
                                         this.handlePhoneValueChange(index, e)
                                       }
                                     />
+                                    <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
+                                    {/* {
+                                      console.log(typeof this.state.phoneErrors[index], "adadadaada")
+
+                                    }
                                     <p className='text-danger'>
                                       {this.state.phoneErrors[index]}
-                                    </p>
+                                    </p> */}
                                   </div>
                                 ) : (
                                     <div className='input-block select-number-tile'>
@@ -539,23 +550,28 @@ export class CrmFleetModal extends Component {
                                         mask='(111) 111-111'
                                         name='phoneDetail'
                                         placeholder='(555) 055-0555'
-                                        className='form-control'
+                                        className={classnames("form-control", {
+                                          "is-invalid": this.state.phoneErrors[index] !== ''
+                                        })}
                                         size='20'
                                         value={item.value}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
                                       />
-                                      <p className='text-danger'>
+                                      <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
+                                      {/* <p className='text-danger'>
                                         {this.state.phoneErrors[index]}
-                                      </p>
+                                      </p> */}
                                     </div>
                                   ) : (
                                       <div className='input-block select-number-tile'>
                                         <MaskedInput
                                           mask='(111) 111-111 ext 1111'
                                           name='phoneDetail'
-                                          className='form-control'
+                                          className={classnames("form-control", {
+                                            "is-invalid": this.state.phoneErrors[index] !== ''
+                                          })}
                                           placeholder='(555) 055-0555 ext 1234'
                                           size='20'
                                           value={item.value}
@@ -563,9 +579,10 @@ export class CrmFleetModal extends Component {
                                             this.handlePhoneValueChange(index, e)
                                           }
                                         />
-                                        <p className='text-danger'>
+                                        <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
+                                        {/* <p className='text-danger'>
                                           {this.state.phoneErrors[index]}
-                                        </p>
+                                        </p> */}
                                       </div>
                                     )}
                                 </FormGroup>
@@ -578,8 +595,8 @@ export class CrmFleetModal extends Component {
                   : null}
                 {phoneDetail.length < 2 ? (
                   <Col md='6'>
-                  <FormGroup className='mb-0 phone-info-block'>
-                  <p className={"phone-info-text mb-0"}>You can add more phone number related to your office , home etc.</p>
+                    <FormGroup className='mb-0 phone-info-block'>
+                      <p className={"phone-info-text mb-0"}>You can add more phone number related to your office , home etc.</p>
                     </FormGroup>
                   </Col>) : null
                 }
