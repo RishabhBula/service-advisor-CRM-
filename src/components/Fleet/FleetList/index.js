@@ -255,7 +255,7 @@ class FleetList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                      -- Select --
                     </option>
                     <option value={true}>Active</option>
                     <option value={false}>Inactive</option>
@@ -275,7 +275,7 @@ class FleetList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                      -- Select --
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>

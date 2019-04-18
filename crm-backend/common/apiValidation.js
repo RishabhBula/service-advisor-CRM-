@@ -167,7 +167,19 @@ const createCustomerValidation = [
     .withMessage(validationMessage.firstName)
     .trim()
 ];
-
+const createNewLabourValidations = [
+  body("discription").not().isEmpty().withMessage("Discription is required.").trim()
+];
+const updateLabourValidations = [
+  body("labourId").not().isEmpty().withMessage("Labour Id is required.").trim(),
+];
+const createVendorValidations = [
+  body("name").not().isEmpty().withMessage("Name is required.").trim(),
+  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim()
+];
+const updateVendorValidations = [
+  body("vendorId").not().isEmpty().withMessage("Vendor Id is required.").trim(),
+];
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -180,5 +192,9 @@ module.exports = {
   userVerify,
   userVerifyLink,
   addNewRateStandard,
-  createCustomerValidation
+  createCustomerValidation,
+  createNewLabourValidations,
+  updateLabourValidations,
+  createVendorValidations,
+  updateVendorValidations
 };
