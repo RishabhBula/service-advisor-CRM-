@@ -13,6 +13,7 @@ import {
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
+import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal"
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -45,7 +46,17 @@ export const InventoryRoutes = [
 class Inventory extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      tyreModalOpen: false
+    };
+  }
+  componentDidMount() {
+    this.handleTierModal()
+  }
+  handleTierModal = () => {
+    this.setState({
+      tyreModalOpen: !this.state.tyreModalOpen
+    })
   }
   rednerAddNewButton = () => {
     return (
@@ -105,6 +116,10 @@ class Inventory extends Component {
             </Suspense>
           </CardBody>
         </Card>
+        <CrmTyreModal
+          tyreModalOpen={this.state.tyreModalOpen}
+          handleTierModal={this.handleTierModal}
+        />
       </div>
     );
   }

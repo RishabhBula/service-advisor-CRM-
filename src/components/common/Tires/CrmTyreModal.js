@@ -8,23 +8,23 @@ import {
    ModalHeader,
    Row,
    Col,
+   ButtonGroup,
    FormFeedback,
    FormGroup,
    Label,
    Input,
 } from 'reactstrap';
-import { PhoneOptions } from '../../config/Constants';
+import { PhoneOptions } from '../../../config/Constants';
 import MaskedInput from 'react-maskedinput';
-import { logger } from '../../helpers/Logger';
+import { logger } from '../../../helpers/Logger';
 import Validator from 'js-object-validation';
 import { toast } from 'react-toastify';
 import {
    CreateFleetValidations,
    CreateFleetValidMessaages,
-} from '../../validations';
-// import Cleave from 'cleave.js/react';
+} from '../../../validations';
 
-export class CrmFleetModal extends Component {
+export class CrmTyreModal extends Component {
    constructor(props) {
       super(props);
       this.state = {
@@ -49,20 +49,53 @@ export class CrmFleetModal extends Component {
                backdrop={"static"}
                className='customer-modal custom-form-modal custom-modal-lg'
             >
-               <ModalHeader toggle={handleTyreModal}>
+               <ModalHeader toggle={handleTierModal}>
                   Create New Tire
                </ModalHeader>
                <ModalBody>
                   <div className=''>
                      <Row className='justify-content-center'>
-                        <Col md='6'>
+                        <Col md='4'>
                            <FormGroup>
                               <Label htmlFor='name' className='customer-modal-text-style'>
-                                 Company Name <span className={"asteric"}>*</span>
+                                 Brand Name
                               </Label>
+                              <Input
+                                 className={"form-control"}
+                                 type={"text"}
+                              />
+                           </FormGroup>
+                        </Col>
+                        <Col md='4'>
+                           <FormGroup>
+                              <Label htmlFor='name' className='customer-modal-text-style'>
+                                 Modal Name
+                              </Label>
+                              <Input
+                                 className={"form-control"}
+                                 type={"text"}
+                              />
+                           </FormGroup>
+                        </Col>
+                        <Col md='4'>
+                           <FormGroup>
+                              <Label htmlFor='name' className='customer-modal-text-style'>
+                                 Vendor
+                              </Label>
+                              <Input
+                                 className={"form-control"}
+                                 type={"text"}
+                              />
                            </FormGroup>
                         </Col>
                      </Row>
+                     <div className="">
+                        <ButtonGroup className="tyre-season">
+                           <Button color="info">Summer</Button>
+                           <Button color="info">Winter</Button>
+                           <Button color="info">All Seasons</Button>
+                        </ButtonGroup>
+                     </div>
                   </div>
                </ModalBody>
                <ModalFooter>
