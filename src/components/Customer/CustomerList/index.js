@@ -168,13 +168,11 @@ class CustomerList extends Component {
 
   onSearch = e => {
     e.preventDefault();
-    const { page, search, sort, status } = this.state;
+    const { search, sort, status } = this.state;
     let param = {};
-      param.page = 1;
-    // if (page && page > 1) {
-    // }
+    param.page = 1;
     if (search) {
-      param.search = search !== "" ? search.trim(): "";
+      param.search = search !== "" ? search.trim() : "";
     }
     if (sort) {
       param.sort = sort;
@@ -343,9 +341,7 @@ class CustomerList extends Component {
                         type="checkbox"
                         name="checkbox"
                         id="checkAll"
-                        checked={
-                          selectedCustomers.length === customers.length
-                        }
+                        checked={selectedCustomers.length === customers.length}
                         onChange={this.handleCheckAllCheckBox}
                       />
                       <label className="" htmlFor="checkAll" />
@@ -362,7 +358,9 @@ class CustomerList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   </div>
-                ) : "Sno."}
+                ) : (
+                  "Sno."
+                )}
               </th>
               <th>Name</th>
               <th>Email</th>
@@ -386,17 +384,12 @@ class CustomerList extends Component {
                           <Input
                             type="checkbox"
                             value={user._id}
-                            checked={
-                              selectedCustomers.indexOf(user._id) > -1
-                            }
+                            checked={selectedCustomers.indexOf(user._id) > -1}
                             name="checkbox"
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={user._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
-                              index +
-                              1}
-                            .
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                           </label>
                         </div>
                       </td>
