@@ -10,7 +10,7 @@ class NoAccess extends Component {
           <h4>403 Access Forbidden</h4>
         </CardHeader>
         <CardBody className={"text-center"}>
-          <img src={LockIcon} alt={"lock-icon"} />
+          <img src={LockIcon} alt={"lock-icon"} style={{ maxWidth: 250 }} />
           <h5>
             You tried to access a page that you didn't have prior authorization
             for.
