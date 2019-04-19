@@ -10,7 +10,8 @@ const initialAuthState = {
     vehicleEditModel: false,
     custAndVehicle: false,
     addUserModal: false,
-    editUserModal: false
+    editUserModal: false,
+    typeAddModalOpen: false
   }
 };
 

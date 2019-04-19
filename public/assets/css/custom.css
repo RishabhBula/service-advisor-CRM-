@@ -827,3 +827,19 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .custom-form-modal .select-number-tile .text-danger{
       left: -70px;
 }
+/* Tyre CSS */
+.tyre-season{
+  width: 100%
+}
+.tyre-size-col{
+  display: flex;
+  align-items: flex-start;
+  border: 1px solid #E4EAEC;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.child-row{
+  margin: 0 -7.5px!important;
+}
+/* Tyre CSS */
