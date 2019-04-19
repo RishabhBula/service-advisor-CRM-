@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Button,
   Modal,
@@ -10,69 +10,49 @@ import {
   FormGroup,
   FormFeedback,
   Label,
-  Input,
-} from 'reactstrap';
-import Select, { components } from 'react-select';
+  Input
+} from "reactstrap";
+import Select from "react-select";
 import {
   VehicleValidations,
-  VehicleValidationMessage,
-} from '../../../validations';
-import Validator from 'js-object-validation';
-import {
-  ColorOptions,
-  GroupedCarsOptions,
-  carsOptions,
-  groupedOptions,
-} from '../../../config/Color';
-import { Transmission, Drivetrain } from '../../../config/Constants';
-import MaskedInput from 'react-maskedinput';
+  VehicleValidationMessage
+} from "../../../validations";
+import Validator from "js-object-validation";
+import { ColorOptions, groupedOptions } from "../../../config/Color";
+import { Transmission, Drivetrain } from "../../../config/Constants";
+import MaskedInput from "react-maskedinput";
 
 class CustomOption extends Component {
   render() {
-    const { data, innerRef, innerProps } = this.props;
+    const { data, innerProps } = this.props;
     let style = {
-      backgroundColor: data.value,
+      backgroundColor: data.value
     };
     return (
-      <div {...innerProps} className='cursor_pointer'>
-        <span style={style} className='vehicles-select-color' />
+      <div {...innerProps} className="cursor_pointer">
+        <span style={style} className="vehicles-select-color" />
         {data.label}
       </div>
     );
   }
 }
-
-const dot = (color = '#ccc') => ({
-  alignItems: 'center',
-  display: 'flex',
-  ':before': {
-    backgroundColor: color,
-    borderRadius: 10,
-    content: '" "',
-    display: 'block',
-    marginRight: 8,
-    height: 10,
-    width: 10,
-  },
-});
-
 const groupStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between"
 };
 
 const groupBadgeStyles = {
-  backgroundColor: '#EBECF0',
-  borderRadius: '2em',
-  color: '#172B4D',
-  display: 'inline-block',
+  backgroundColor: "#EBECF0",
+  borderRadius: "2em",
+  color: "#172B4D",
+  display: "inline-block",
   fontSize: 12,
-  fontWeight: 'normal',
-  lineHeight: '1',
+  fontWeight: "normal",
+  lineHeight: "1",
   minWidth: 1,
-  padding: '0.16666666666667em 0.5em',
-  textAlign: 'center',
+  padding: "0.16666666666667em 0.5em",
+  textAlign: "center"
 };
 
 const formatGroupLabel = (data, innerRef, innerProps) => (
@@ -89,21 +69,21 @@ export class CrmVehicleModal extends Component {
       expandForm: false,
       colorOptions: ColorOptions,
       selectedOption: null,
-      year: '',
-      make: '',
-      modal: '',
-      typeSelected: '',
-      colorSelected: '',
-      miles: '',
-      licensePlate: '',
-      unit: '',
-      vin: '',
-      subModal: '',
-      engineSize: '',
-      productionDate: '',
-      transmissionSelected: 'automatic',
-      drivetrainSelected: '2x4',
-      notes: '',
+      year: "",
+      make: "",
+      modal: "",
+      typeSelected: "",
+      colorSelected: "",
+      miles: "",
+      licensePlate: "",
+      unit: "",
+      vin: "",
+      subModal: "",
+      engineSize: "",
+      productionDate: "",
+      transmissionSelected: "automatic",
+      drivetrainSelected: "2x4",
+      notes: "",
       errors: {},
       isLoading: false
     };
@@ -115,8 +95,8 @@ export class CrmVehicleModal extends Component {
     }
   }
 
-  createVehicleFun = async() => {
-    let yeardata = this.state.year === '' ? '' : this.state.year;
+  createVehicleFun = async () => {
+    let yeardata = this.state.year === "" ? "" : this.state.year;
     let data = {
       year: yeardata,
       make: this.state.make,
@@ -138,7 +118,7 @@ export class CrmVehicleModal extends Component {
     let validationData = {
       year: this.state.year,
       make: this.state.make,
-      modal: this.state.modal,
+      modal: this.state.modal
       // type: this.state.typeSelected,
       // color: this.state.colorSelected,
       // miles: this.state.miles,
@@ -153,7 +133,7 @@ export class CrmVehicleModal extends Component {
       // notes: this.state.year,
     };
 
-    if (this.state.miles !== '') {
+    if (this.state.miles !== "") {
       validationData.miles = this.state.miles;
     }
 
@@ -165,28 +145,33 @@ export class CrmVehicleModal extends Component {
 
     try {
       const yearValidation = await this.yearValidation(this.state.year);
-      
+
       if (!isValid || !yearValidation) {
-        this.setState({
-          errors: errors,
-          isLoading: false,
-        }, async () => { await this.yearValidation(this.state.year); });
+        this.setState(
+          {
+            errors: errors,
+            isLoading: false
+          },
+          async () => {
+            await this.yearValidation(this.state.year);
+          }
+        );
         return;
       }
 
       this.props.submitCreateVehicleFun(data);
     } catch (error) {
-      console.log('====================================');
+      console.log("====================================");
       console.log(error);
-      console.log('====================================');
+      console.log("====================================");
     }
   };
 
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
-    if ((name === 'year' || name === 'miles') && isNaN(value)) {
-      return
+    if ((name === "year" || name === "miles") && isNaN(value)) {
+      return;
     }
     this.setState({
       [name]: value,
@@ -203,13 +188,13 @@ export class CrmVehicleModal extends Component {
 
   handleType = selectedType => {
     this.setState({
-      typeSelected: selectedType,
+      typeSelected: selectedType
     });
   };
 
   handleExpandForm = () => {
     this.setState({
-      expandForm: !this.state.expandForm,
+      expandForm: !this.state.expandForm
     });
   };
 
@@ -221,7 +206,7 @@ export class CrmVehicleModal extends Component {
     const { target } = selectedOption;
     const { name, value } = target;
     this.setState({
-      [name]: value,
+      [name]: value
     });
   };
 
@@ -230,63 +215,60 @@ export class CrmVehicleModal extends Component {
       expandForm: false,
       colorOptions: ColorOptions,
       selectedOption: null,
-      year: '',
-      make: '',
-      modal: '',
-      typeSelected: '',
-      colorSelected: '',
-      miles: '',
-      licensePlate: '',
-      unit: '',
-      vin: '',
-      subModal: '',
-      engineSize: '',
-      productionDate: '',
-      transmissionSelected: 'automatic',
-      drivetrainSelected: '2x4',
-      notes: '',
-      errors: {},
+      year: "",
+      make: "",
+      modal: "",
+      typeSelected: "",
+      colorSelected: "",
+      miles: "",
+      licensePlate: "",
+      unit: "",
+      vin: "",
+      subModal: "",
+      engineSize: "",
+      productionDate: "",
+      transmissionSelected: "automatic",
+      drivetrainSelected: "2x4",
+      notes: "",
+      errors: {}
     });
   }
 
-  yearValidation = async (year) => {
+  yearValidation = async year => {
     const text = /^[0-9]+$/;
     let errors = { ...this.state.errors };
 
     if (year) {
       if (year.length === 4) {
-        if (year !== '' && !text.test(parseInt(year))) {
-          errors['year'] = 'Please Enter Numeric Values Only';
+        if (year !== "" && !text.test(parseInt(year))) {
+          errors["year"] = "Please Enter Numeric Values Only";
           this.setState({ errors });
           return false;
         }
 
         if (year.length !== 4) {
-          errors['year'] = 'Year is not proper. Please check';
+          errors["year"] = "Year is not proper. Please check";
           this.setState({ errors });
           return false;
         }
 
         const current_year = new Date().getFullYear();
-        if (year < (current_year - 101) || year >= current_year) {
-          errors[
-            "year"
-          ] = `Year should be in range ${current_year - 101} to ${new Date().getFullYear() -
-          1}`;
+        if (year < current_year - 101 || year >= current_year) {
+          errors["year"] = `Year should be in range ${current_year -
+            101} to ${new Date().getFullYear() - 1}`;
           this.setState({ errors });
           return false;
         }
-        errors['year'] = '';
+        errors["year"] = "";
         this.setState({ errors });
         return true;
       } else {
-        errors['year'] = 'Year is not proper. Please check';
+        errors["year"] = "Year is not proper. Please check";
         this.setState({ errors });
         return false;
       }
-
     } else {
-      errors['year'] = 'Please enter year.';
+      errors["year"] = "Please enter year.";
       this.setState({ errors });
       return false;
     }
@@ -294,31 +276,24 @@ export class CrmVehicleModal extends Component {
 
   render() {
     const {
-      selectedOption,
       year,
-      make,
-      modal,
       type,
       errors,
       miles,
-      color,
-      licensePlate,
-      unit,
-      vin,
       subModal,
       engineSize,
       productionDate,
       transmission,
       drivetrain,
-      notes,
+      notes
     } = this.state;
-    const { vehicleModalOpen, handleVehicleModal, createVehicle } = this.props;
+    const { vehicleModalOpen, handleVehicleModal } = this.props;
     const {
       expandForm,
       transmissionSelected,
       drivetrainSelected,
       typeSelected,
-      colorSelected,
+      colorSelected
     } = this.state;
     return (
       <>
@@ -334,10 +309,7 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Year <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -355,8 +327,7 @@ export class CrmVehicleModal extends Component {
                       invalid={errors.year}
                     />
                     <FormFeedback>
-                      {(!year && errors.year) ||
-                      errors.hasOwnProperty("year")
+                      {(!year && errors.year) || errors.hasOwnProperty("year")
                         ? errors.year
                         : null}
                     </FormFeedback>
@@ -368,10 +339,7 @@ export class CrmVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Make <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -396,10 +364,7 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Model <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -425,10 +390,7 @@ export class CrmVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Type
                   </Label>
                   <div className={"input-block"}>
@@ -449,10 +411,7 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Miles
                   </Label>
                   <div className={"input-block"}>
@@ -472,10 +431,7 @@ export class CrmVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Color
                   </Label>
                   <div className={"input-block"}>
@@ -495,10 +451,7 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Licence Plate
                   </Label>
                   <Input
@@ -512,10 +465,7 @@ export class CrmVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Unit #
                   </Label>
                   <Input
@@ -531,10 +481,7 @@ export class CrmVehicleModal extends Component {
             <Row className="">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     VIN
                   </Label>
                   <Input
@@ -629,9 +576,7 @@ export class CrmVehicleModal extends Component {
                           onChange={this._onInputChange}
                         />
                         {!productionDate && errors.productionDate ? (
-                          <p className="text-danger">
-                            {errors.productionDate}
-                          </p>
+                          <p className="text-danger">{errors.productionDate}</p>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -659,9 +604,7 @@ export class CrmVehicleModal extends Component {
                             ? Transmission.map((item, index) => {
                                 return (
                                   <option
-                                    selected={
-                                      item.key === transmissionSelected
-                                    }
+                                    selected={item.key === transmissionSelected}
                                     value={item.key}
                                     key={index}
                                   >
@@ -672,9 +615,7 @@ export class CrmVehicleModal extends Component {
                             : null}
                         </Input>
                         {!transmission && errors.transmission ? (
-                          <p className="text-danger">
-                            {errors.transmission}
-                          </p>
+                          <p className="text-danger">{errors.transmission}</p>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -700,9 +641,7 @@ export class CrmVehicleModal extends Component {
                             ? Drivetrain.map((item, index) => {
                                 return (
                                   <option
-                                    selected={
-                                      item.key === drivetrainSelected
-                                    }
+                                    selected={item.key === drivetrainSelected}
                                     value={item.key}
                                     key={index}
                                   >

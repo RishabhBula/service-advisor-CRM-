@@ -52,7 +52,7 @@ class Customers extends Component {
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
       this.props.getCustomerList({ ...currQuery, page: currQuery.page || 1 });
-    }  
+    }
   }
 
   loadTypeRate = input => {
@@ -155,15 +155,13 @@ class Customers extends Component {
   };
 
   render() {
-    const { openCreate, editMode, customer } = this.state;
+    const { editMode, customer } = this.state;
     const {
-      userReducer,
-      addCustomer,
       matrixListReducer,
       customerListReducer,
       rateStandardListReducer,
-      getCustomerFleetList,
-      customerFleetReducer } = this.props;
+      customerFleetReducer
+    } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
@@ -271,7 +269,7 @@ const mapDispatchToProps = dispatch => ({
   setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
   },
-  updateCustomer: (data) => {
+  updateCustomer: data => {
     dispatch(customerEditRequest(data));
   },
   getCustomerFleetListActions: () => {

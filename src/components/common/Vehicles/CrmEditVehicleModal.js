@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Button,
   Modal,
@@ -10,70 +10,49 @@ import {
   FormGroup,
   FormFeedback,
   Label,
-  Input,
-} from 'reactstrap';
-import Select, { components } from 'react-select';
-import chroma from 'chroma-js';
-import {
-  ColorOptions,
-  GroupedCarsOptions,
-  carsOptions,
-  groupedOptions,
-} from '../../../config/Color';
-import { Transmission, Drivetrain } from '../../../config/Constants';
-import MaskedInput from 'react-maskedinput';
+  Input
+} from "reactstrap";
+import Select from "react-select";
+
+import { ColorOptions, groupedOptions } from "../../../config/Color";
+import { Transmission, Drivetrain } from "../../../config/Constants";
+import MaskedInput from "react-maskedinput";
 import {
   VehicleValidations,
-  VehicleValidationMessage,
-} from '../../../validations';
-import Validator from 'js-object-validation';
+  VehicleValidationMessage
+} from "../../../validations";
+import Validator from "js-object-validation";
 
 class CustomOption extends Component {
   render() {
-    const { data, innerRef, innerProps } = this.props;
+    const { data, innerProps } = this.props;
     let style = {
-      backgroundColor: data.value,
+      backgroundColor: data.value
     };
     return (
-      <div {...innerProps} className='cursor_pointer'>
-        <span style={style} className='vehicles-select-color' />
+      <div {...innerProps} className="cursor_pointer">
+        <span style={style} className="vehicles-select-color" />
         {data.label}
       </div>
     );
   }
 }
-
-const dot = (color = '#ccc') => ({
-  alignItems: 'center',
-  display: 'flex',
-
-  ':before': {
-    backgroundColor: color,
-    borderRadius: 10,
-    content: '" "',
-    display: 'block',
-    marginRight: 8,
-    height: 10,
-    width: 10,
-  },
-});
-
 const groupStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between"
 };
 const groupBadgeStyles = {
-  backgroundColor: '#EBECF0',
-  borderRadius: '2em',
-  color: '#172B4D',
-  display: 'inline-block',
+  backgroundColor: "#EBECF0",
+  borderRadius: "2em",
+  color: "#172B4D",
+  display: "inline-block",
   fontSize: 12,
-  fontWeight: 'normal',
-  lineHeight: '1',
+  fontWeight: "normal",
+  lineHeight: "1",
   minWidth: 1,
-  padding: '0.16666666666667em 0.5em',
-  textAlign: 'center',
+  padding: "0.16666666666667em 0.5em",
+  textAlign: "center"
 };
 
 const formatGroupLabel = (data, innerRef, innerProps) => (
@@ -90,21 +69,21 @@ export class CrmEditVehicleModal extends Component {
       expandForm: false,
       colorOptions: ColorOptions,
       selectedOption: null,
-      year: '',
-      make: '',
-      modal: '',
-      typeSelected: '',
-      colorSelected: '',
-      miles: '',
-      licensePlate: '',
-      unit: '',
-      vin: '',
-      subModal: '',
-      engineSize: '',
-      productionDate: '',
-      transmissionSelected: 'automatic',
-      drivetrainSelected: '2x4',
-      notes: '',
+      year: "",
+      make: "",
+      modal: "",
+      typeSelected: "",
+      colorSelected: "",
+      miles: "",
+      licensePlate: "",
+      unit: "",
+      vin: "",
+      subModal: "",
+      engineSize: "",
+      productionDate: "",
+      transmissionSelected: "automatic",
+      drivetrainSelected: "2x4",
+      notes: "",
       errors: {},
       isLoading: false
     };
@@ -151,7 +130,7 @@ export class CrmEditVehicleModal extends Component {
         productionDate: this.props.vehicleData.productionDate,
         transmissionSelected: this.props.vehicleData.transmission,
         drivetrainSelected: this.props.vehicleData.drivetrain,
-        notes: this.props.vehicleData.notes,
+        notes: this.props.vehicleData.notes
       });
     }
   }
@@ -159,10 +138,10 @@ export class CrmEditVehicleModal extends Component {
   _onInputChange = e => {
     const { target } = e;
     const { name, value } = target;
-    if ((name === 'year' || name === 'miles') && isNaN(value)) {
-      return
+    if ((name === "year" || name === "miles") && isNaN(value)) {
+      return;
     }
-    
+
     this.setState({
       [name]: value,
       errors: {
@@ -178,13 +157,13 @@ export class CrmEditVehicleModal extends Component {
 
   handleType = selectedType => {
     this.setState({
-      typeSelected: selectedType,
+      typeSelected: selectedType
     });
   };
 
   handleExpandForm = () => {
     this.setState({
-      expandForm: !this.state.expandForm,
+      expandForm: !this.state.expandForm
     });
   };
   handleChange = selectedOption => {
@@ -194,48 +173,45 @@ export class CrmEditVehicleModal extends Component {
     const { target } = selectedOption;
     const { name, value } = target;
     this.setState({
-      [name]: value,
+      [name]: value
     });
   };
 
-  yearValidation = async (year) => {
+  yearValidation = async year => {
     const text = /^[0-9]+$/;
     let errors = { ...this.state.errors };
 
     if (year) {
       if (year.length === 4) {
-        if (year !== '' && !text.test(parseInt(year))) {
-          errors['year'] = 'Please Enter Numeric Values Only';
+        if (year !== "" && !text.test(parseInt(year))) {
+          errors["year"] = "Please Enter Numeric Values Only";
           this.setState({ errors });
           return false;
         }
 
         if (year.length !== 4) {
-          errors['year'] = 'Year is not proper. Please check';
+          errors["year"] = "Year is not proper. Please check";
           this.setState({ errors });
           return false;
         }
 
         const current_year = new Date().getFullYear();
-        if (year < (current_year - 101) || year >= current_year) {
-          errors[
-            "year"
-          ] = `Year should be in range ${current_year - 101} to ${new Date().getFullYear() -
-          1}`;
+        if (year < current_year - 101 || year >= current_year) {
+          errors["year"] = `Year should be in range ${current_year -
+            101} to ${new Date().getFullYear() - 1}`;
           this.setState({ errors });
           return false;
         }
-        errors['year'] = '';
+        errors["year"] = "";
         this.setState({ errors });
         return true;
       } else {
-        errors['year'] = 'Year is not proper. Please check';
+        errors["year"] = "Year is not proper. Please check";
         this.setState({ errors });
         return false;
       }
-
     } else {
-      errors['year'] = 'Please enter year.';
+      errors["year"] = "Please enter year.";
       this.setState({ errors });
       return false;
     }
@@ -246,22 +222,22 @@ export class CrmEditVehicleModal extends Component {
       expandForm: false,
       colorOptions: ColorOptions,
       selectedOption: null,
-      year: '',
-      make: '',
-      modal: '',
-      typeSelected: '',
-      colorSelected: '',
-      miles: '',
-      licensePlate: '',
-      unit: '',
-      vin: '',
-      subModal: '',
-      engineSize: '',
-      productionDate: '',
-      transmissionSelected: 'automatic',
-      drivetrainSelected: '2x4',
-      notes: '',
-      errors: {},
+      year: "",
+      make: "",
+      modal: "",
+      typeSelected: "",
+      colorSelected: "",
+      miles: "",
+      licensePlate: "",
+      unit: "",
+      vin: "",
+      subModal: "",
+      engineSize: "",
+      productionDate: "",
+      transmissionSelected: "automatic",
+      drivetrainSelected: "2x4",
+      notes: "",
+      errors: {}
     });
   }
 
@@ -287,7 +263,7 @@ export class CrmEditVehicleModal extends Component {
     let validationData = {
       year: this.state.year,
       make: this.state.make,
-      modal: this.state.modal,
+      modal: this.state.modal
       // type: this.state.typeSelected,
       // color: this.state.colorSelected,
       // miles: this.state.miles,
@@ -302,7 +278,7 @@ export class CrmEditVehicleModal extends Component {
       // notes: this.state.year,
     };
 
-    if (this.state.miles !== '') {
+    if (this.state.miles !== "") {
       validationData.miles = this.state.miles;
     }
 
@@ -316,45 +292,39 @@ export class CrmEditVehicleModal extends Component {
       const yearValidation = await this.yearValidation(this.state.year);
 
       if (!isValid || !yearValidation) {
-        this.setState({
-          errors: errors,
-          isLoading: false,
-        }, async () => { await this.yearValidation(this.state.year); });
+        this.setState(
+          {
+            errors: errors,
+            isLoading: false
+          },
+          async () => {
+            await this.yearValidation(this.state.year);
+          }
+        );
         return;
       }
       this.props.submitUpdateVehicleFun(data);
     } catch (error) {
-      console.log('====================================');
+      console.log("====================================");
       console.log(error);
-      console.log('====================================');
+      console.log("====================================");
     }
   };
 
   render() {
-    const { selectedOption } = this.state;
-    const {
-      vehicleEditModalOpen,
-      handleEditVehicleModal,
-      createVehicle,
-    } = this.props;
+    const { vehicleEditModalOpen, handleEditVehicleModal } = this.props;
     const {
       expandForm,
       transmissionSelected,
       drivetrainSelected,
       typeSelected,
       colorSelected,
-      year,
-      make,
-      modal,
       errors,
       miles,
-      licensePlate,
-      unit,
-      vin,
       subModal,
       engineSize,
       productionDate,
-      notes,
+      notes
     } = this.state;
     return (
       <>
@@ -370,10 +340,7 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Year <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -382,29 +349,19 @@ export class CrmEditVehicleModal extends Component {
                       placeholder="20XX"
                       id="year"
                       name="year"
-                      // onBlur={this.yearValidation}
-                      // onKeyPress={this.yearValidation}
                       onChange={this._onInputChange}
                       value={this.state.year}
                       invalid={errors.year}
                     />
                     <FormFeedback>
-                      {errors.hasOwnProperty("year") ? (
-                      (errors.year)
-                    ) : null}
+                      {errors.hasOwnProperty("year") ? errors.year : null}
                     </FormFeedback>
-                    {/* <FormFeedback>
-                      {errors.year ? errors.year : null}
-                    </FormFeedback> */}
                   </div>
                 </FormGroup>
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Make <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -430,10 +387,7 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Model <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -460,10 +414,7 @@ export class CrmEditVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Type
                   </Label>
                   <Select
@@ -483,10 +434,7 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Miles
                   </Label>
                   <div className={"input-block"}>
@@ -506,10 +454,7 @@ export class CrmEditVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Color
                   </Label>
                   <Select
@@ -527,10 +472,7 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Licence Plate
                   </Label>
                   <Input
@@ -545,10 +487,7 @@ export class CrmEditVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Unit #
                   </Label>
                   <Input
@@ -565,10 +504,7 @@ export class CrmEditVehicleModal extends Component {
             <Row className="">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     VIN
                   </Label>
                   <Input
@@ -667,9 +603,7 @@ export class CrmEditVehicleModal extends Component {
                           value={this.state.productionDate}
                         />
                         {!productionDate && errors.productionDate ? (
-                          <p className="text-danger">
-                            {errors.productionDate}
-                          </p>
+                          <p className="text-danger">{errors.productionDate}</p>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -696,9 +630,7 @@ export class CrmEditVehicleModal extends Component {
                           ? Transmission.map((item, index) => {
                               return (
                                 <option
-                                  selected={
-                                    item.key === transmissionSelected
-                                  }
+                                  selected={item.key === transmissionSelected}
                                   value={item.key}
                                   key={index}
                                 >
