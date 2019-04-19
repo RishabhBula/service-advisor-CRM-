@@ -13,7 +13,6 @@ import {
   Button
 } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
-import { formateDate } from "../../../helpers/Date";
 import PaginationHelper from "../../../helpers/Pagination";
 import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
@@ -64,12 +63,10 @@ class VehiclesList extends Component {
 
   onSearch = e => {
     e.preventDefault();
-    const { page, search, sort, status } = this.state;
+    const { search, sort, status } = this.state;
     let param = {};
     param.page = 1;
-    // if (page && page > 1) {
-    //   param.page = page;
-    // }
+
     if (search) {
       param.search = search.trim(" ");
     }
@@ -187,7 +184,10 @@ class VehiclesList extends Component {
       });
       return;
     }
-    this.props.onStatusUpdate({ status: true, vehicles: this.state.selectedVehicles });
+    this.props.onStatusUpdate({
+      status: true,
+      vehicles: this.state.selectedVehicles
+    });
     this.setState({ selectedVehicles: [] });
   };
 
@@ -203,14 +203,17 @@ class VehiclesList extends Component {
       });
       return;
     }
-    this.props.onStatusUpdate({ status: false, vehicles: this.state.selectedVehicles });
+    this.props.onStatusUpdate({
+      status: false,
+      vehicles: this.state.selectedVehicles
+    });
     this.setState({ selectedVehicles: [] });
   };
 
   render() {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
-    const { page, search, sort, status, selectedVehicles, user, openEditModal } = this.state;
+    const { page, search, sort, status, selectedVehicles } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -319,18 +322,16 @@ class VehiclesList extends Component {
                         type="checkbox"
                         name="checkbox"
                         id="checkAll"
-                        checked={
-                          selectedVehicles.length === vehicleList.length
-                        }
+                        checked={selectedVehicles.length === vehicleList.length}
                         onChange={this.handleCheckAllCheckBox}
                       />
                       <label className="" htmlFor="checkAll" />
                     </span>
                   ) : (
-                      <span className='checkboxli checkbox-custom checkbox-default' >
-                        <label></label>
-                      </span>
-                    )}
+                    <span className="checkboxli checkbox-custom checkbox-default">
+                      <label />
+                    </span>
+                  )}
                   {vehicleList && vehicleList.length ? (
                     <Input
                       className="commonstatus"
@@ -342,18 +343,21 @@ class VehiclesList extends Component {
                       <option value={"active"}>Active</option>
                       <option value={"inactive"}>Inactive</option>
                       <option value={"delete"}>Delete</option>
-                    </Input>) : <Input
-                      className='commonstatus'
-                      type='select'
-                      id='exampleSelect'
+                    </Input>
+                  ) : (
+                    <Input
+                      className="commonstatus"
+                      type="select"
+                      id="exampleSelect"
                       disabled
                       onChange={this.handleActionChange}
                     >
-                      <option value={''}>Select</option>
-                      <option value={'active'}>Active</option>
-                      <option value={'inactive'}>Inactive</option>
-                      <option value={'delete'}>Delete</option>
-                    </Input>}
+                      <option value={""}>Select</option>
+                      <option value={"active"}>Active</option>
+                      <option value={"inactive"}>Inactive</option>
+                      <option value={"delete"}>Delete</option>
+                    </Input>
+                  )}
                 </div>
               </th>
               <th>Type</th>
@@ -380,17 +384,12 @@ class VehiclesList extends Component {
                           <Input
                             type="checkbox"
                             value={vehicle._id}
-                            checked={
-                              selectedVehicles.indexOf(vehicle._id) > -1
-                            }
+                            checked={selectedVehicles.indexOf(vehicle._id) > -1}
                             name="checkbox"
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={vehicle._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
-                              index +
-                              1}
-                            .
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                           </label>
                         </div>
                       </td>
@@ -414,8 +413,8 @@ class VehiclesList extends Component {
                             {vehicle.color.label}
                           </span>
                         ) : (
-                            "None"
-                          )}
+                          "None"
+                        )}
                       </td>
                       <td>{vehicle.year}</td>
                       <td>{vehicle.make}</td>
@@ -427,9 +426,7 @@ class VehiclesList extends Component {
                         {vehicle.vin ? vehicle.vin : "N/A"}
                       </td>
                       <td>
-                        {vehicle.licensePlate
-                          ? vehicle.licensePlate
-                          : "N/A"}
+                        {vehicle.licensePlate ? vehicle.licensePlate : "N/A"}
                       </td>
                       <td>{vehicle.unit ? vehicle.unit : "N/A"}</td>
                       <td>
@@ -451,23 +448,23 @@ class VehiclesList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedVehicles: [vehicle._id]
-                                  },
-                                  () => {
-                                    this.activateVehicle();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedVehicles: [vehicle._id]
+                                },
+                                () => {
+                                  this.activateVehicle();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
                       <td>
                         <Button
@@ -500,19 +497,19 @@ class VehiclesList extends Component {
                   );
                 })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={12}>
-                      No Vehicle records are available
-                  </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    <Loader />
+                    No Vehicle records are available
                   </td>
                 </tr>
-              )}
+              )
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={12}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         {totalVehicles && !isLoading ? (

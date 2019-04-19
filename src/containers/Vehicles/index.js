@@ -10,11 +10,8 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { connect } from "react-redux";
-import {
-  CrmVehicleModal,
-} from "../../components/common/Vehicles/CrmVehicleModal";
+import { CrmVehicleModal } from "../../components/common/Vehicles/CrmVehicleModal";
 import { CrmEditVehicleModal } from "../../components/common/Vehicles/CrmEditVehicleModal";
-import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
 import VehicleList from "../../components/Vehicles/VehiclesList";
 import {
   modelOpenRequest,
@@ -24,7 +21,6 @@ import {
   deleteVehicle,
   updateVehicleStatus
 } from "../../actions";
-import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 
 class Vehicles extends Component {
@@ -93,12 +89,12 @@ class Vehicles extends Component {
     this.props.editVehicleAction(dataValue);
   };
 
-  deleteVehicle = (vehicleId) => {
+  deleteVehicle = vehicleId => {
     const { location } = this.props;
     const { search } = location;
     const query = qs.parse(search);
     this.props.deleteVehicle({ ...query, vehicleId });
-  }
+  };
 
   onStatusUpdate = data => {
     const { location } = this.props;
@@ -180,7 +176,7 @@ class Vehicles extends Component {
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
   modelInfoReducer: state.modelInfoReducer,
-  vehicleListReducer: state.vehicleListReducer,
+  vehicleListReducer: state.vehicleListReducer
 });
 
 const mapDispatchToProps = dispatch => ({
