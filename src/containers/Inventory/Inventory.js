@@ -14,6 +14,7 @@ import {
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
+import CrmInventoryPart from "../../components/common/CrmInventoryPart";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -101,10 +102,19 @@ class Inventory extends Component {
     const { activeTab } = this.state;
     const { modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { typeAddModalOpen } = modelDetails;
+    const { typeAddModalOpen, partAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
-        return null;
+        return (
+          <CrmInventoryPart
+            isOpen={partAddModalOpen}
+            toggle={() =>
+              modelOperate({
+                partAddModalOpen: !partAddModalOpen
+              })
+            }
+          />
+        );
       case AppRoutes.INVENTORY_TIRES.url:
         return (
           <CrmTyreModal
@@ -129,7 +139,10 @@ class Inventory extends Component {
     let modelDetails = {};
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
-        return null;
+        modelDetails = {
+          partAddModalOpen: true
+        };
+        break;
       case AppRoutes.INVENTORY_TIRES.url:
         modelDetails = {
           typeAddModalOpen: true
