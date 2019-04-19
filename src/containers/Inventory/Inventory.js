@@ -14,6 +14,9 @@ import {
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
+import {
+  addNewTier,
+} from '../../actions'
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -114,6 +117,7 @@ class Inventory extends Component {
                 typeAddModalOpen: !typeAddModalOpen
               })
             }
+            addTier={this.props.addTier}
           />
         );
       case AppRoutes.INVENTORY_LABOURS.url:
@@ -218,7 +222,11 @@ class Inventory extends Component {
   }
 }
 const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  addTier: data => {
+    dispatch(addNewTier(data));
+  },
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps

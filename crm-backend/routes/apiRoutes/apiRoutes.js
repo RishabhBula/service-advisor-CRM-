@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { user, auth, role, vehicle, fleet, matrix, labour, customer, vendor } = require("./index");
+const { user, auth, role, vehicle, fleet, matrix, labour, customer, vendor, tier } = require("./index");
 
 router.use("/auth", auth);
 router.use("/user", user);
@@ -11,6 +11,7 @@ router.use("/fleet", fleet);
 router.use("/matrix", matrix);
 router.use("/labour", labour);
 router.use("/customer", customer);
-router.use("/vendor", vendor)
+router.use("/vendor", vendor);
+router.use("/tier", tier);
 
 module.exports = router;
