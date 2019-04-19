@@ -13,7 +13,7 @@ import {
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
-import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal"
+import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -94,22 +94,61 @@ class Inventory extends Component {
       }
     }
   }
-  handleTierModal = () => {
-    this.setState({
-      tyreModalOpen: !this.state.tyreModalOpen
-    })
-  }
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
+  };
+  renderModals = () => {
+    const { activeTab } = this.state;
+    const { modelInfoReducer, modelOperate } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { typeAddModalOpen } = modelDetails;
+    switch (InventoryTabs[activeTab].url) {
+      case AppRoutes.INVENTORY_PARTS.url:
+        return null;
+      case AppRoutes.INVENTORY_TIRES.url:
+        return (
+          <CrmTyreModal
+            tyreModalOpen={typeAddModalOpen}
+            handleTierModal={() =>
+              modelOperate({
+                typeAddModalOpen: !typeAddModalOpen
+              })
+            }
+          />
+        );
+      case AppRoutes.INVENTORY_LABOURS.url:
+        return null;
+      case AppRoutes.INVENTORY_VENDORS.url:
+        return null;
+      default:
+        return null;
+    }
+  };
+  onAddClick = () => {
+    const { activeTab } = this.state;
+    let modelDetails = {};
+    switch (InventoryTabs[activeTab].url) {
+      case AppRoutes.INVENTORY_PARTS.url:
+        return null;
+      case AppRoutes.INVENTORY_TIRES.url:
+        modelDetails = {
+          typeAddModalOpen: true
+        };
+        break;
+      case AppRoutes.INVENTORY_LABOURS.url:
+        return null;
+      case AppRoutes.INVENTORY_VENDORS.url:
+        return null;
+      default:
+        return null;
+    }
+    this.props.modelOperate(modelDetails);
   };
   rednerAddNewButton = () => {
     const { activeTab } = this.state;
     return (
       <>
-        <Button color="primary" onClick={InventoryTabs[activeTab].name.slice(
-          0,
-          InventoryTabs[activeTab].name.length - 1
-        ) ? this.handleTierModal : null} id="add-user">
+        <Button color="primary" onClick={this.onAddClick} id="add-user">
           <i className={"fa fa-plus"} />
           &nbsp; Add New
         </Button>
@@ -173,10 +212,7 @@ class Inventory extends Component {
             </Suspense>
           </CardBody>
         </Card>
-        <CrmTyreModal
-          tyreModalOpen={this.state.tyreModalOpen}
-          handleTierModal={this.handleTierModal}
-        />
+        {this.renderModals()}
       </div>
     );
   }
