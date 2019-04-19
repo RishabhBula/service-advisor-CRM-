@@ -20,34 +20,75 @@ const InventoryStats = React.lazy(() =>
 const InventoryTab = React.lazy(() =>
   import("../../components/Inventory/InventoryTab")
 );
+const Parts = React.lazy(() => import("../../components/Inventory/Parts"));
+const Tires = React.lazy(() => import("../../components/Inventory/Tires"));
+const Labours = React.lazy(() => import("../../components/Inventory/Labours"));
+const Vendors = React.lazy(() => import("../../components/Inventory/Vendors"));
 export const InventoryRoutes = [
   {
     path: AppRoutes.INVENTORY_PARTS.url,
     name: AppRoutes.INVENTORY_PARTS.name,
-    component: InventoryStats
+    component: Parts
   },
   {
     path: AppRoutes.INVENTORY_TIRES.url,
     name: AppRoutes.INVENTORY_TIRES.name,
-    component: InventoryTab
+    component: Tires
   },
   {
     path: AppRoutes.INVENTORY_LABOURS.url,
     name: AppRoutes.INVENTORY_LABOURS.name,
-    component: InventoryStats
+    component: Labours
   },
   {
     path: AppRoutes.INVENTORY_VENDORS.url,
     name: AppRoutes.INVENTORY_VENDORS.name,
-    component: InventoryTab
+    component: Vendors
+  }
+];
+const InventoryTabs = [
+  {
+    name: AppRoutes.INVENTORY_PARTS.name,
+    url: AppRoutes.INVENTORY_PARTS.url
+  },
+  {
+    name: AppRoutes.INVENTORY_TIRES.name,
+    url: AppRoutes.INVENTORY_TIRES.url
+  },
+  {
+    name: AppRoutes.INVENTORY_LABOURS.name,
+    url: AppRoutes.INVENTORY_LABOURS.url
+  },
+  {
+    name: AppRoutes.INVENTORY_VENDORS.name,
+    url: AppRoutes.INVENTORY_VENDORS.url
   }
 ];
 class Inventory extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      activeTab: 0
+    };
   }
+  componentDidUpdate({ location }) {
+    const { location: newLocation } = this.props;
+    if (location.pathname !== newLocation.pathname) {
+      const index = InventoryTabs.findIndex(
+        d => d.url === newLocation.pathname
+      );
+      if (index > -1) {
+        this.setState({
+          activeTab: index
+        });
+      }
+    }
+  }
+  onTabChange = activeTab => {
+    this.props.redirectTo(InventoryTabs[activeTab].url);
+  };
   rednerAddNewButton = () => {
+    const { activeTab } = this.state;
     return (
       <>
         <Button color="primary" id="add-user">
@@ -55,12 +96,17 @@ class Inventory extends Component {
           &nbsp; Add New
         </Button>
         <UncontrolledTooltip target={"add-user"}>
-          Add New Part
+          Add New{" "}
+          {InventoryTabs[activeTab].name.slice(
+            0,
+            InventoryTabs[activeTab].name.length - 1
+          )}
         </UncontrolledTooltip>
       </>
     );
   };
   render() {
+    const { activeTab } = this.state;
     return (
       <div className="animated fadeIn">
         <Card>
@@ -78,11 +124,15 @@ class Inventory extends Component {
             </Row>
           </CardHeader>
           <CardBody>
-            <Suspense fallback={""}>
+            <Suspense fallback={"Loading.."}>
               <InventoryStats />
             </Suspense>
-            <Suspense fallback={""}>
-              <InventoryTab />
+            <Suspense fallback={"Loading.."}>
+              <InventoryTab
+                tabs={InventoryTabs}
+                activeTab={activeTab}
+                onTabChange={this.onTabChange}
+              />
             </Suspense>
             <Suspense fallback={<Loader />}>
               <Switch>
