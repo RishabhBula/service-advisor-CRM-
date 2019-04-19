@@ -71,6 +71,15 @@ class Inventory extends Component {
       activeTab: 0
     };
   }
+  componentDidMount() {
+    const { location } = this.props;
+    const index = InventoryTabs.findIndex(d => d.url === location.pathname);
+    if (index > -1) {
+      this.setState({
+        activeTab: index
+      });
+    }
+  }
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
     if (location.pathname !== newLocation.pathname) {
