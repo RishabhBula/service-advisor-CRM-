@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import * as classnames from "classnames";
 import {
   Button,
@@ -11,30 +11,30 @@ import {
   FormFeedback,
   FormGroup,
   Label,
-  Input,
-} from 'reactstrap';
-import { AppSwitch } from '@coreui/react';
-import { AppConfig } from '../../config/AppConfig';
-import { PhoneOptions } from '../../config/Constants';
-import MaskedInput from 'react-maskedinput';
+  Input
+} from "reactstrap";
+import { AppSwitch } from "@coreui/react";
+import { AppConfig } from "../../config/AppConfig";
+import { PhoneOptions } from "../../config/Constants";
+import MaskedInput from "react-maskedinput";
 import {
   CustomerDefaultPermissions,
-  CustomerPermissionsText,
-} from '../../config/Constants';
+  CustomerPermissionsText
+} from "../../config/Constants";
 import {
   CreateRateValidations,
-  CreateRateValidMessaages,
-} from '../../validations';
-import Async from 'react-select/lib/Async';
-import { CrmStandardModel } from '../common/CrmStandardModel';
-import { logger } from '../../helpers/Logger';
-import Validator from 'js-object-validation';
-import { ApiHelper } from '../../helpers/ApiHelper';
-import { toast } from 'react-toastify';
+  CreateRateValidMessaages
+} from "../../validations";
+import Async from "react-select/lib/Async";
+import { CrmStandardModel } from "../common/CrmStandardModel";
+import { logger } from "../../helpers/Logger";
+import Validator from "js-object-validation";
+import { ApiHelper } from "../../helpers/ApiHelper";
+import { toast } from "react-toastify";
 import {
   CreateFleetValidations,
-  CreateFleetValidMessaages,
-} from '../../validations';
+  CreateFleetValidMessaages
+} from "../../validations";
 // import Cleave from 'cleave.js/react';
 
 export class CrmFleetModal extends Component {
@@ -42,63 +42,63 @@ export class CrmFleetModal extends Component {
     super(props);
     this.state = {
       switchValue: true,
-      companyName: '',
+      companyName: "",
       phoneDetail: [
         {
-          phone: 'mobile',
-          value: '',
-        },
+          phone: "mobile",
+          value: ""
+        }
       ],
-      phoneErrors: [''],
-      email: '',
-      notes: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      permission: '',
-      fleetId: '',
+      phoneErrors: [""],
+      email: "",
+      notes: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      permission: "",
+      fleetId: "",
       errors: {},
       isEditMode: false,
       phoneLength: AppConfig.phoneLength,
       fleetDefaultPermissions: CustomerDefaultPermissions,
       percentageDiscount: 0,
-      defaultOptions: [{ value: '', label: 'Add New Customer' }],
-      selectedLabourRate: { value: '', label: 'Select...' },
-      vendorValue: '',
-      openStadardRateModel: false,
+      defaultOptions: [{ value: "", label: "Add New Customer" }],
+      selectedLabourRate: { value: "", label: "Select..." },
+      vendorValue: "",
+      openStadardRateModel: false
     };
   }
 
   stdModelFun = () => {
     this.setState({
-      openStadardRateModel: !this.state.openStadardRateModel,
+      openStadardRateModel: !this.state.openStadardRateModel
     });
   };
 
   handlePercentageChange = e => {
     const { fleetDefaultPermissions } = this.state;
-    fleetDefaultPermissions['shouldReceiveDiscount'].percentageDiscount =
+    fleetDefaultPermissions["shouldReceiveDiscount"].percentageDiscount =
       e.target.value;
     this.setState({
-      ...fleetDefaultPermissions,
+      ...fleetDefaultPermissions
     });
   };
 
   handleStandardRate = selectValue => {
     if (selectValue) {
-      if (selectValue.value === '') {
+      if (selectValue.value === "") {
         this.setState({
-          openStadardRateModel: !this.state.openStadardRateModel,
+          openStadardRateModel: !this.state.openStadardRateModel
         });
       } else {
         const { fleetDefaultPermissions } = this.state;
-        fleetDefaultPermissions['shouldLaborRateOverride'].laborRate =
+        fleetDefaultPermissions["shouldLaborRateOverride"].laborRate =
           selectValue.value;
         this.setState({
           ...fleetDefaultPermissions,
-          selectedLabourRate: selectValue,
+          selectedLabourRate: selectValue
         });
         //this.props.setDefaultRate(selectValue);
       }
@@ -106,9 +106,9 @@ export class CrmFleetModal extends Component {
       this.props.onTypeHeadStdFun({});
       this.setState({
         selectedLabourRate: {
-          value: '',
-          label: 'Select...',
-        },
+          value: "",
+          label: "Select..."
+        }
       });
     }
   };
@@ -125,19 +125,19 @@ export class CrmFleetModal extends Component {
       if (!isValid) {
         this.setState({
           errors: errors,
-          isLoading: false,
+          isLoading: false
         });
         return;
       } else {
         const ratedata = {
           data: data,
           userId: profileData._id,
-          parentId: profileData.parentId,
+          parentId: profileData.parentId
         };
         let result = await api.FetchFromServer(
-          '/labour',
-          '/addRate',
-          'POST',
+          "/labour",
+          "/addRate",
+          "POST",
           true,
           undefined,
           ratedata
@@ -150,9 +150,8 @@ export class CrmFleetModal extends Component {
             openStadardRateModel: !this.state.openStadardRateModel,
             selectedLabourRate: {
               value: result.data.data._id,
-              label:
-                result.data.data.name + ' - ' + result.data.data.hourlyRate,
-            },
+              label: result.data.data.name + " - " + result.data.data.hourlyRate
+            }
           });
         }
       }
@@ -169,33 +168,33 @@ export class CrmFleetModal extends Component {
 
   async removeAllState() {
     this.setState({
-      companyName: '',
+      companyName: "",
       phoneDetail: [
         {
-          phone: '',
-          value: '',
-        },
+          phone: "",
+          value: ""
+        }
       ],
-      email: '',
-      notes: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      permission: '',
-      fleetId: '',
+      email: "",
+      notes: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      permission: "",
+      fleetId: "",
       errors: {},
-      phoneErrors: [''],
+      phoneErrors: [""],
       isEditMode: false,
       phoneLength: AppConfig.phoneLength,
       fleetDefaultPermissions: CustomerDefaultPermissions,
       percentageDiscount: 0,
-      defaultOptions: [{ value: '', label: 'Add New Customer' }],
-      selectedLabourRate: { value: '', label: 'Select...' },
-      vendorValue: '',
+      defaultOptions: [{ value: "", label: "Add New Customer" }],
+      selectedLabourRate: { value: "", label: "Select..." },
+      vendorValue: "",
       error: {},
-      openStadardRateModel: false,
+      openStadardRateModel: false
     });
   }
 
@@ -203,7 +202,7 @@ export class CrmFleetModal extends Component {
     const { fleetDefaultPermissions } = this.state;
     fleetDefaultPermissions[singleState].status = e.target.checked;
     this.setState({
-      ...fleetDefaultPermissions,
+      ...fleetDefaultPermissions
     });
   }
 
@@ -212,7 +211,7 @@ export class CrmFleetModal extends Component {
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].phone = value;
     this.setState({
-      phoneDetail,
+      phoneDetail
     });
   };
 
@@ -221,17 +220,17 @@ export class CrmFleetModal extends Component {
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
-      phoneDetail,
+      phoneDetail
     });
   };
 
   handleChange = event => {
     const { name, value } = event.target;
-    if ((name === 'phoneDetail' || name === 'zipCode') && isNaN(value)) {
+    if ((name === "phoneDetail" || name === "zipCode") && isNaN(value)) {
       return;
     } else {
       this.setState({
-        [name]: value,
+        [name]: value
       });
     }
   };
@@ -243,11 +242,11 @@ export class CrmFleetModal extends Component {
         return {
           phoneDetail: state.phoneDetail.concat([
             {
-              phone: 'mobile',
-              value: '',
-            },
+              phone: "mobile",
+              value: ""
+            }
           ]),
-          phoneErrors: state.phoneErrors.concat(['']),
+          phoneErrors: state.phoneErrors.concat([""])
         };
       });
     }
@@ -262,7 +261,7 @@ export class CrmFleetModal extends Component {
     if (phoneDetail.length) {
       this.setState({
         phoneDetail: t,
-        phoneErrors: u,
+        phoneErrors: u
       });
     }
   };
@@ -284,7 +283,7 @@ export class CrmFleetModal extends Component {
             if (key.value.length) {
               // t[i] = null
             } else {
-              t[i] = 'Phone number is required';
+              t[i] = "Phone number is required";
             }
           })
         );
@@ -297,13 +296,13 @@ export class CrmFleetModal extends Component {
         CreateFleetValidMessaages
       );
       if (
-        !isValid &&
-        fleetData.email !== '' || Object.keys(this.state.phoneErrors).length ||
-        fleetData.companyName === ''
+        (!isValid && fleetData.email !== "") ||
+        Object.keys(this.state.phoneErrors).length ||
+        fleetData.companyName === ""
       ) {
         this.setState({
           errors,
-          isLoading: false,
+          isLoading: false
         });
         return;
       }
@@ -314,7 +313,7 @@ export class CrmFleetModal extends Component {
       const data = {
         fleetData,
         userId: userId,
-        parentId: parentId,
+        parentId: parentId
       };
 
       if (!isEditMode) {
@@ -324,7 +323,7 @@ export class CrmFleetModal extends Component {
       }
 
       this.setState({
-        openCreate: !this.state.openCreate,
+        openCreate: !this.state.openCreate
       });
     } catch (error) {
       logger(error);
@@ -336,7 +335,7 @@ export class CrmFleetModal extends Component {
       fleetModalOpen,
       handleFleetModal,
       matrixListReducerData,
-      rateStandardListData,
+      rateStandardListData
     } = this.props;
     const {
       companyName,
@@ -352,7 +351,7 @@ export class CrmFleetModal extends Component {
       percentageDiscount,
       isEditMode,
       fleetId,
-      selectedLabourRate,
+      selectedLabourRate
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
@@ -378,7 +377,7 @@ export class CrmFleetModal extends Component {
       state,
       zipCode,
       fleetDefaultPermissions,
-      percentageDiscount,
+      percentageDiscount
     };
     return (
       <>
@@ -386,56 +385,58 @@ export class CrmFleetModal extends Component {
           isOpen={fleetModalOpen}
           toggle={handleFleetModal}
           backdrop={"static"}
-          className='customer-modal custom-form-modal custom-modal-lg'
+          className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader toggle={handleFleetModal}>
-            {!isEditMode ? 'Add New Fleet' : `Update Fleet details`}
+            {!isEditMode ? "Add New Fleet" : `Update Fleet details`}
           </ModalHeader>
           <ModalBody>
-            <div className=''>
-              <Row className='justify-content-center'>
-                <Col md='6'>
+            <div className="">
+              <Row className="justify-content-center">
+                <Col md="6">
                   <FormGroup>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor="name" className="customer-modal-text-style">
                       Company Name <span className={"asteric"}>*</span>
                     </Label>
-                    <div className={'input-block'}>
+                    <div className={"input-block"}>
                       <Input
-                        type='text'
-                        name='companyName'
+                        type="text"
+                        name="companyName"
                         onChange={this.handleChange}
-                        placeholder='Company Name'
+                        placeholder="Company Name"
                         value={companyName}
-                        maxLength='20'
-                        id='name'
+                        maxLength="20"
+                        id="name"
                         invalid={errors.companyName}
                       />
                       <FormFeedback>
-                        {errors && !companyName && errors.companyName ? "Company name is requiered" : null}
+                        {errors && !companyName && errors.companyName
+                          ? "Company name is requiered"
+                          : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
                 </Col>
-                <Col md='6'>
+                <Col md="6">
                   <FormGroup>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor="name" className="customer-modal-text-style">
                       Email
                     </Label>
-                    <div className={'input-block'}>
+                    <div className={"input-block"}>
                       <Input
-                        type='text'
-                        className='customer-modal-text-style'
-                        placeholder='john.doe@example.com'
+                        type="text"
+                        className="customer-modal-text-style"
+                        placeholder="john.doe@example.com"
                         onChange={this.handleChange}
-                        maxLength='40'
-                        name='email'
+                        maxLength="40"
+                        name="email"
                         value={email}
                         invalid={errors && errors.email && email}
                       />
                       <FormFeedback>
-                        {errors && errors.email && email ? (
-                          "Please enter valid email address"
-                        ) : null}
+                        {errors && errors.email && email
+                          ? "Please enter valid email address"
+                          : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -443,93 +444,96 @@ export class CrmFleetModal extends Component {
               </Row>
             </div>
 
-            <div className=''>
-              <Row className=''>
+            <div className="">
+              <Row className="">
                 {/* <Row className="justify-content-center"> */}
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
-                    return (
-                      <>
-                        {index < 1 ? (
-                          <>
-                            <Col md='6'>
-                              <FormGroup className='phone-number-feild'>
-                                <Label
-                                  htmlFor='name'
-                                  className='customer-modal-text-style'
-                                >
-                                  Phone <span className={"asteric"}>*</span>
-                                </Label>
-                                {/* <div></div> */}
+                      return (
+                        <>
+                          {index < 1 ? (
+                            <>
+                              <Col md="6">
+                                <FormGroup className="phone-number-feild">
+                                  <Label
+                                    htmlFor="name"
+                                    className="customer-modal-text-style"
+                                  >
+                                    Phone <span className={"asteric"}>*</span>
+                                  </Label>
+                                  {/* <div></div> */}
 
-                                <Input
-                                  onChange={e =>
-                                    this.handlePhoneNameChange(index, e)
-                                  }
-                                  type='select'
-                                  id='name'
-
-                                >
-                                  {phoneOptions}
-                                </Input>
-                                {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
-                                  <div className='input-block select-number-tile'>
-                                    <MaskedInput
-                                      mask='(111) 111-111'
-                                      name='phoneDetail'
-                                      placeholder='(555) 055-0555'
-                                      className={classnames("form-control", {
-                                        "is-invalid": this.state.phoneErrors[index] !== ''
-                                      })}
-                                      size='20'
-                                      value={item.value}
-                                      onChange={e =>
-                                        this.handlePhoneValueChange(index, e)
-                                      }
-                                    />
-                                    <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
-                                    {/* {
+                                  <Input
+                                    onChange={e =>
+                                      this.handlePhoneNameChange(index, e)
+                                    }
+                                    type="select"
+                                    id="name"
+                                  >
+                                    {phoneOptions}
+                                  </Input>
+                                  {phoneDetail[index].phone === "mobile" ||
+                                  phoneDetail[index].phone === "" ? (
+                                    <div className="input-block select-number-tile">
+                                      <MaskedInput
+                                        mask="(111) 111-111"
+                                        name="phoneDetail"
+                                        placeholder="(555) 055-0555"
+                                        className={classnames("form-control", {
+                                          "is-invalid":
+                                            this.state.phoneErrors[index] !== ""
+                                        })}
+                                        size="20"
+                                        value={item.value}
+                                        onChange={e =>
+                                          this.handlePhoneValueChange(index, e)
+                                        }
+                                      />
+                                      <FormFeedback>
+                                        {this.state.phoneErrors[index]}
+                                      </FormFeedback>
+                                      {/* {
                                       console.log(typeof this.state.phoneErrors[index], "adadadaada")
 
                                     }
                                     <p className='text-danger'>
                                       {this.state.phoneErrors[index]}
                                     </p> */}
-                                  </div>
-                                ) : (
-                                    <div className='input-block select-number-tile'>
+                                    </div>
+                                  ) : (
+                                    <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask='(111) 111-111 ext 1111'
-                                        name='phoneDetail'
-                                        className='form-control'
-                                        placeholder='(555) 055-0555 ext 1234'
-                                        size='20'
+                                        mask="(111) 111-111 ext 1111"
+                                        name="phoneDetail"
+                                        className="form-control"
+                                        placeholder="(555) 055-0555 ext 1234"
+                                        size="20"
                                         value={item.value}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
                                       />
-                                      <p className='text-danger'>
+                                      <p className="text-danger">
                                         {this.state.phoneErrors[index]}
                                       </p>
                                     </div>
                                   )}
-                              </FormGroup>
-                            </Col>
-                          </>
-                        ) : (
+                                </FormGroup>
+                              </Col>
+                            </>
+                          ) : (
                             <>
-                              <Col md='6'>
+                              <Col md="6">
                                 <button
                                   onClick={this.handleRemovePhoneDetails}
-                                  className='btn btn-danger btn-sm btn-round input-close'
+                                  className="btn btn-danger btn-sm btn-round input-close"
                                 >
-                                  <i className='fa fa-close' />
+                                  <i className="fa fa-close" />
                                 </button>
-                                <FormGroup className='phone-number-feild'>
+                                <FormGroup className="phone-number-feild">
                                   <Label
-                                    htmlFor='name'
-                                    className='customer-modal-text-style'
+                                    htmlFor="name"
+                                    className="customer-modal-text-style"
                                   >
                                     Phone <span className={"asteric"}>*</span>
                                   </Label>
@@ -538,75 +542,84 @@ export class CrmFleetModal extends Component {
                                     onChange={e =>
                                       this.handlePhoneNameChange(index, e)
                                     }
-                                    type='select'
-                                    id='name'
-
+                                    type="select"
+                                    id="name"
                                   >
                                     {phoneOptions}
                                   </Input>
-                                  {phoneDetail[index].phone === 'mobile' || phoneDetail[index].phone === '' ? (
-                                    <div className='input-block select-number-tile'>
+                                  {phoneDetail[index].phone === "mobile" ||
+                                  phoneDetail[index].phone === "" ? (
+                                    <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask='(111) 111-111'
-                                        name='phoneDetail'
-                                        placeholder='(555) 055-0555'
+                                        mask="(111) 111-111"
+                                        name="phoneDetail"
+                                        placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
-                                          "is-invalid": this.state.phoneErrors[index] !== ''
+                                          "is-invalid":
+                                            this.state.phoneErrors[index] !== ""
                                         })}
-                                        size='20'
+                                        size="20"
                                         value={item.value}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
                                       />
-                                      <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
+                                      <FormFeedback>
+                                        {this.state.phoneErrors[index]}
+                                      </FormFeedback>
                                       {/* <p className='text-danger'>
                                         {this.state.phoneErrors[index]}
                                       </p> */}
                                     </div>
                                   ) : (
-                                      <div className='input-block select-number-tile'>
-                                        <MaskedInput
-                                          mask='(111) 111-111 ext 1111'
-                                          name='phoneDetail'
-                                          className={classnames("form-control", {
-                                            "is-invalid": this.state.phoneErrors[index] !== ''
-                                          })}
-                                          placeholder='(555) 055-0555 ext 1234'
-                                          size='20'
-                                          value={item.value}
-                                          onChange={e =>
-                                            this.handlePhoneValueChange(index, e)
-                                          }
-                                        />
-                                        <FormFeedback>{this.state.phoneErrors[index]}</FormFeedback>
-                                        {/* <p className='text-danger'>
+                                    <div className="input-block select-number-tile">
+                                      <MaskedInput
+                                        mask="(111) 111-111 ext 1111"
+                                        name="phoneDetail"
+                                        className={classnames("form-control", {
+                                          "is-invalid":
+                                            this.state.phoneErrors[index] !== ""
+                                        })}
+                                        placeholder="(555) 055-0555 ext 1234"
+                                        size="20"
+                                        value={item.value}
+                                        onChange={e =>
+                                          this.handlePhoneValueChange(index, e)
+                                        }
+                                      />
+                                      <FormFeedback>
+                                        {this.state.phoneErrors[index]}
+                                      </FormFeedback>
+                                      {/* <p className='text-danger'>
                                           {this.state.phoneErrors[index]}
                                         </p> */}
-                                      </div>
-                                    )}
+                                    </div>
+                                  )}
                                 </FormGroup>
                               </Col>
                             </>
                           )}
-                      </>
-                    );
-                  })
+                        </>
+                      );
+                    })
                   : null}
                 {phoneDetail.length < 2 ? (
-                  <Col md='6'>
-                    <FormGroup className='mb-0 phone-info-block'>
-                      <p className={"phone-info-text mb-0"}>You can add more phone number related to your office , home etc.</p>
+                  <Col md="6">
+                    <FormGroup className="mb-0 phone-info-block">
+                      <p className={"phone-info-text mb-0"}>
+                        You can add more phone number related to your office ,
+                        home etc.
+                      </p>
                     </FormGroup>
-                  </Col>) : null
-                }
+                  </Col>
+                ) : null}
                 {phoneDetail.length < 3 ? (
-                  <Col md='12'>
-                    <FormGroup className={'mb-0'}>
-                      <Label className={'customer-modal-text-style'} />
+                  <Col md="12">
+                    <FormGroup className={"mb-0"}>
+                      <Label className={"customer-modal-text-style"} />
                       <span
                         onClick={this.handleAddPhoneDetails}
-                        className='customer-add-phone customer-anchor-text customer-click-btn'
+                        className="customer-add-phone customer-anchor-text customer-click-btn"
                       >
                         Add another phone number
                       </span>
@@ -616,159 +629,167 @@ export class CrmFleetModal extends Component {
               </Row>
             </div>
 
-            <div className=''>
-              <Row className='justify-content-center'>
-                <Col md='6'>
+            <div className="">
+              <Row className="justify-content-center">
+                <Col md="6">
                   <FormGroup>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor="name" className="customer-modal-text-style">
                       Address
                     </Label>
                     <Input
-                      type='text'
-                      placeholder='Address'
-                      id='name'
+                      type="text"
+                      placeholder="Address"
+                      id="name"
                       value={address1}
-                      maxLength='200'
+                      maxLength="200"
                       onChange={this.handleChange}
-                      name='address1'
+                      name="address1"
                     />
                   </FormGroup>
                 </Col>
-                <Col md='6'>
+                <Col md="6">
                   <FormGroup>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor="name" className="customer-modal-text-style">
                       City
                     </Label>
                     <Input
-                      type='text'
-                      id='name'
-                      name='city'
+                      type="text"
+                      id="name"
+                      name="city"
                       value={city}
-                      maxLength='100'
+                      maxLength="100"
                       onChange={this.handleChange}
-                      placeholder='New York'
+                      placeholder="New York"
                     />
                   </FormGroup>
                 </Col>
-                <Col md='6'>
+                <Col md="6">
                   <FormGroup>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor="name" className="customer-modal-text-style">
                       State
                     </Label>
                     <Input
-                      type='text'
-                      name='state'
+                      type="text"
+                      name="state"
                       value={state}
                       onChange={this.handleChange}
-                      id='name'
-                      maxLength='100'
-                      placeholder='NY'
+                      id="name"
+                      maxLength="100"
+                      placeholder="NY"
                     />
                   </FormGroup>
                 </Col>
-                <Col md='6'>
+                <Col md="6">
                   <FormGroup>
                     <Label
-                      htmlFor='name'
-                      name='zip'
-                      className='customer-modal-text-style'
+                      htmlFor="name"
+                      name="zip"
+                      className="customer-modal-text-style"
                     >
                       Zip Code
                     </Label>
                     <Input
-                      type='text'
-                      id='name'
-                      name='zipCode'
+                      type="text"
+                      id="name"
+                      name="zipCode"
                       value={zipCode}
-                      maxLength='5'
+                      maxLength="5"
                       onChange={this.handleChange}
-                      placeholder='Zip Code'
+                      placeholder="Zip Code"
                     />
                   </FormGroup>
                 </Col>
               </Row>
             </div>
-            <div className=''>
-              <Row className='justify-content-center'>
-                <Col md='12'>
+            <div className="">
+              <Row className="justify-content-center">
+                <Col md="12">
                   <FormGroup>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor="name" className="customer-modal-text-style">
                       Notes
                     </Label>
                     <Input
-                      type='textarea'
-                      placeholder='Enter a note...'
-                      id='name'
+                      type="textarea"
+                      placeholder="Enter a note..."
+                      id="name"
                       value={notes}
-                      maxLength='500'
+                      maxLength="500"
                       onChange={this.handleChange}
-                      name='notes'
+                      name="notes"
                     />
                   </FormGroup>
                 </Col>
               </Row>
             </div>
-            <Row className='custom-label-padding '>
+            <Row className="custom-label-padding ">
               {CustomerPermissionsText
                 ? CustomerPermissionsText.map((permission, index) => {
-                  let discountShow = false;
-                  let labourRate = false;
-                  let pricingMatrix = false;
-                  if (
-                    permission.key === 'shouldReceiveDiscount' &&
-                    fleetDefaultPermissions[permission.key].status
-                  ) {
-                    discountShow = true;
-                  }
-                  if (
-                    permission.key === 'shouldLaborRateOverride' &&
-                    fleetDefaultPermissions[permission.key].status
-                  ) {
-                    labourRate = true;
-                  }
+                    let discountShow = false;
+                    let labourRate = false;
+                    let pricingMatrix = false;
+                    if (
+                      permission.key === "shouldReceiveDiscount" &&
+                      fleetDefaultPermissions[permission.key].status
+                    ) {
+                      discountShow = true;
+                    }
+                    if (
+                      permission.key === "shouldLaborRateOverride" &&
+                      fleetDefaultPermissions[permission.key].status
+                    ) {
+                      labourRate = true;
+                    }
 
-                  if (
-                    permission.key === 'shouldPricingMatrixOverride' &&
-                    fleetDefaultPermissions[permission.key].status
-                  ) {
-                    pricingMatrix = true;
-                  }
+                    if (
+                      permission.key === "shouldPricingMatrixOverride" &&
+                      fleetDefaultPermissions[permission.key].status
+                    ) {
+                      pricingMatrix = true;
+                    }
 
-                  return (
-                    <>
-                      <Col
-                        md='6'
-                        key={index}
-                        className={permission.key === "shouldPricingMatrixOverride" ? "price-matrix" : null}>
-                        <div className='d-flex'>
-                          <AppSwitch
-                            className={'mx-1'}
-                            checked={
-                              fleetDefaultPermissions[permission.key].status
-                            }
-                            onClick={this.handleClick.bind(
-                              this,
-                              permission.key
-                            )}
-                            variant={'3d'}
-                            color={'primary'}
-                            size={'sm'}
-                          />
-                          <p className='customer-modal-text-style'>
-                            {permission.text}
-                          </p>
-                        </div>
-                        {discountShow ? (
-                          <div className='custom-label col-12 d-flex' key={index}>
-                            <Label
-                              htmlFor='name'
-                              className='customer-modal-text-style mr-2'
+                    return (
+                      <>
+                        <Col
+                          md="6"
+                          key={index}
+                          className={
+                            permission.key === "shouldPricingMatrixOverride"
+                              ? "price-matrix"
+                              : null
+                          }
+                        >
+                          <div className="d-flex">
+                            <AppSwitch
+                              className={"mx-1"}
+                              checked={
+                                fleetDefaultPermissions[permission.key].status
+                              }
+                              onClick={this.handleClick.bind(
+                                this,
+                                permission.key
+                              )}
+                              variant={"3d"}
+                              color={"primary"}
+                              size={"sm"}
+                            />
+                            <p className="customer-modal-text-style">
+                              {permission.text}
+                            </p>
+                          </div>
+                          {discountShow ? (
+                            <div
+                              className="custom-label col-12 d-flex"
+                              key={index}
                             >
-                              Percent Discount
+                              <Label
+                                htmlFor="name"
+                                className="customer-modal-text-style mr-2"
+                              >
+                                Percent Discount
                               </Label>
-                            <FormGroup>
-                              <Col md='4' className={'p-0'}>
-                                {/* <Cleave
+                              <FormGroup>
+                                <Col md="4" className={"p-0"}>
+                                  {/* <Cleave
                                   placeholder="00.00%"
                                   options={{
                                     delimiter: '.',
@@ -776,27 +797,30 @@ export class CrmFleetModal extends Component {
                                     numeral: true
                                   }}
                                 /> */}
-                                <MaskedInput
-                                  mask='11\.11 \%'
-                                  placeholder='00.00%'
-                                  name='percentageDiscount'
-                                  size='20'
-                                  onChange={this.handlePercentageChange}
-                                  className='form-control'
-                                  value={
-                                    fleetDefaultPermissions[permission.key]
-                                      .percentageDiscount
-                                  }
-                                />
-                              </Col>
-                            </FormGroup>
-                          </div>
-                        ) : null}
-                        {labourRate &&
+                                  <MaskedInput
+                                    mask="11\.11 \%"
+                                    placeholder="00.00%"
+                                    name="percentageDiscount"
+                                    size="20"
+                                    onChange={this.handlePercentageChange}
+                                    className="form-control"
+                                    value={
+                                      fleetDefaultPermissions[permission.key]
+                                        .percentageDiscount
+                                    }
+                                  />
+                                </Col>
+                              </FormGroup>
+                            </div>
+                          ) : null}
+                          {labourRate &&
                           rateStandardListData &&
                           rateStandardListData.standardRateList &&
                           rateStandardListData.standardRateList.length ? (
-                            <Col md='' className={"fleet-block rate-standard-list"}>
+                            <Col
+                              md=""
+                              className={"fleet-block rate-standard-list"}
+                            >
                               <Async
                                 defaultOptions={
                                   rateStandardListData.standardRateList
@@ -804,7 +828,7 @@ export class CrmFleetModal extends Component {
                                 loadOptions={this.loadOptions}
                                 onChange={this.handleStandardRate}
                                 isClearable={
-                                  this.state.selectedLabourRate.value !== ''
+                                  this.state.selectedLabourRate.value !== ""
                                     ? true
                                     : false
                                 }
@@ -812,42 +836,42 @@ export class CrmFleetModal extends Component {
                               />
                             </Col>
                           ) : null}
-                        {/* */}
-                        {pricingMatrix ? (
-                          <Col md='12'>
-                            <FormGroup>
-                              <Input
-                                type='select'
-                                className=''
-                                onChange={this.handleMatrixChange}
-                                name='matrixType'
-                                id='matrixId'
-                              >
-                                <option value={''}>Select</option>
-                                {matrixListReducerData &&
+                          {/* */}
+                          {pricingMatrix ? (
+                            <Col md="12">
+                              <FormGroup>
+                                <Input
+                                  type="select"
+                                  className=""
+                                  onChange={this.handleMatrixChange}
+                                  name="matrixType"
+                                  id="matrixId"
+                                >
+                                  <option value={""}>Select</option>
+                                  {matrixListReducerData &&
                                   matrixListReducerData.matrixList &&
                                   matrixListReducerData.matrixList.length
-                                  ? matrixListReducerData.matrixList.map(
-                                    (item, index) => {
-                                      return (
-                                        <option
-                                          value={item._id}
-                                          key={index}
-                                        >
-                                          {item.name}
-                                        </option>
-                                      );
-                                    }
-                                  )
-                                  : null}
-                              </Input>
-                            </FormGroup>
-                          </Col>
-                        ) : null}
-                      </Col>
-                    </>
-                  );
-                })
+                                    ? matrixListReducerData.matrixList.map(
+                                        (item, index) => {
+                                          return (
+                                            <option
+                                              value={item._id}
+                                              key={index}
+                                            >
+                                              {item.name}
+                                            </option>
+                                          );
+                                        }
+                                      )
+                                    : null}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                          ) : null}
+                        </Col>
+                      </>
+                    );
+                  })
                 : null}
             </Row>
             <CrmStandardModel
@@ -860,14 +884,14 @@ export class CrmFleetModal extends Component {
           <ModalFooter>
             <div class="required-fields">*Fields are Required.</div>
             <Button
-              color='primary'
+              color="primary"
               onClick={() =>
                 this.handleAddFleet(fleetData, isEditMode, fleetId)
               }
             >
-              {!isEditMode ? 'Add New Fleet' : 'Update Fleet Details'}
-            </Button>{' '}
-            <Button color='secondary' onClick={handleFleetModal}>
+              {!isEditMode ? "Add New Fleet" : "Update Fleet Details"}
+            </Button>{" "}
+            <Button color="secondary" onClick={handleFleetModal}>
               Cancel
             </Button>
           </ModalFooter>
