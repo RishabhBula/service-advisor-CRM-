@@ -18,7 +18,7 @@ const CRMModal = props => (
     <ModalBody>{props.children}</ModalBody>
     <ModalFooter>
       {props.showfooterMsg ? (
-        <div class="required-fields">
+        <div className="required-fields">
           {props.footerMessage || "*Fields are Required."}
         </div>
       ) : null}
@@ -34,6 +34,7 @@ const CRMModal = props => (
                 }
               }}
               type={button.type}
+              key={index}
             >
               {button.text || "Button"}
             </Button>
