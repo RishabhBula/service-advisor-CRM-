@@ -39,7 +39,8 @@ const createCustomer = async (req, res) => {
     if (result) {
       return res.status(200).json({
         message: otherMessage.newCustomer,
-        success: true
+        success: true,
+        data: result
       });
     } else {
       return res.status(400).json({
@@ -62,7 +63,7 @@ const getAllCustomerList = async (req, res) => {
   const { query, currentUser } = req;
   try {
     const limit = parseInt(query.limit || 10);
-    const page = parseInt(query.page);
+    const page = query.page && query.page > 1 ? parseInt(query.page) : 1;
     const offset = (page - 1) * limit;
     const searchValue = query.search ? query.search : "";
     const sort = query.sort;
@@ -179,21 +180,6 @@ const getAllCustomerList = async (req, res) => {
 
 /* Delete Customer */
 const deleteCustomer = async ({ body }, res) => {
-  // try {
-  //   const { userId } = params;
-  //   const data = await customerModel.findByIdAndUpdate(userId, {
-  //     isDeleted: true,
-  //   });
-  //   return res.status(200).json({
-  //     message: "Customer deleted successfully!",
-  //     data,
-  //   });
-  // } catch (error) {
-  //   return res.status(500).json({
-  //     message: error.message ? error.message : "Unexpected error occure.",
-  //     success: false,
-  //   });
-  // }
   try {
     const data = await customerModel.updateMany(
       {
