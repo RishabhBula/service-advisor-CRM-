@@ -72,33 +72,11 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if (prevProps.customerModalOpen !== this.props.customerModalOpen && !this.props.customerModalOpen) {
-    //   this.setState({
-    //     address1: "",
-    //     address2: "",
-    //     city: "",
-    //     companyName: "",
-    //     email: "",
-    //     firstName: "",
-    //     fleet: "5ca5e3b88b27f17bc0dfaab5",
-    //     lastName: "",
-    //     notes: "",
-    //     customerDefaultPermissions: CustomerDefaultPermissions,
-    //     referralSource: "",
-    //     state: "",
-    //     zipCode: "",
-    //     phoneDetail: [
-    //       {
-    //         phone: "mobile",
-    //         value: ""
-    //       }
-    //     ],
-    //     selectedLabourRate: { value: '', label: 'Select...' },
-    //     phoneErrors: [''],
-    //     expandForm: false
-    //   });
-    // }
-    if (prevProps.customer._id !== this.props.customer._id) {
+    if (
+      this.props.customer &&
+      this.props.customer._id &&
+      (prevProps.customer._id !== this.props.customer._id || !this.state.email)
+    ) {
       const { customer } = this.props;
       this.setState({
         address1: customer.address1,
@@ -597,7 +575,7 @@ export class CrmEditCustomerModal extends Component {
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
                       return (
-                        <>
+                        <React.Fragment key={index}>
                           {index < 1 ? (
                             <>
                               <Col md="6">
@@ -766,7 +744,7 @@ export class CrmEditCustomerModal extends Component {
                               </Col>
                             </>
                           )}
-                        </>
+                        </React.Fragment>
                       );
                     })
                   : null}
@@ -968,7 +946,7 @@ export class CrmEditCustomerModal extends Component {
                           pricingMatrix = true;
                         }
                         return (
-                          <>
+                          <React.Fragment key={index}>
                             <Col
                               md="6"
                               key={index}
@@ -1079,7 +1057,7 @@ export class CrmEditCustomerModal extends Component {
                                 </Col>
                               ) : null}
                             </Col>
-                          </>
+                          </React.Fragment>
                         );
                       })
                     : null}

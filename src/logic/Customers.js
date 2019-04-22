@@ -7,7 +7,6 @@ import {
   showLoader,
   hideLoader,
   customersAddActions,
-  customerAddSuccess,
   customerAddFailed,
   customerAddStarted,
   modelOpenRequest,
@@ -15,7 +14,8 @@ import {
   customerGetSuccess,
   customerGetFailed,
   customerGetRequest,
-  customerEditSuccess
+  customerEditSuccess,
+  customerAddSuccess
 } from "./../actions";
 
 const addCustomerLogic = createLogic({
@@ -30,12 +30,12 @@ const addCustomerLogic = createLogic({
       data.parentId = profileStateData.profileInfo._id;
     }
 
-    data.userId = profileStateData.profileInfo._id;   
+    data.userId = profileStateData.profileInfo._id;
     dispatch(showLoader());
     logger(action.payload);
     dispatch(
       customerAddStarted({
-        customerAddInfo: []
+        customerAddInfo: {}
       })
     );
     let api = new ApiHelper();
@@ -48,28 +48,37 @@ const addCustomerLogic = createLogic({
       data
     );
     if (result.isError) {
-        dispatch(
-          customerAddFailed({
-            customerAddInfo: []
-          })
-        );
+      dispatch(
+        customerAddFailed({
+          customerAddInfo: {}
+        })
+      );
+
       toast.error(result.messages[0]);
+
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!data.showAddVehicle) {
+        toast.success(result.messages[0]);
+      } else {
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              custAndVehicleCustomer: false,
+              custAndVehicleVehicle: true
+            }
+          })
+        );
+      }
       dispatch(
         customerAddSuccess({
           customerAddInfo: result.data.data
         })
       );
-      dispatch(
-        modelOpenRequest({modelDetails: {customerModel: false}})
-      );
-       dispatch(
-        customerGetRequest()
-      );
+      dispatch(modelOpenRequest({ modelDetails: { customerModel: false } }));
+      dispatch(customerGetRequest());
       dispatch(hideLoader());
       done();
     }
@@ -83,17 +92,20 @@ const getCustomersLogic = createLogic({
     dispatch(
       customerGetStarted({
         isLoading: true,
-        customers: [],
+        customers: []
       })
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/customer", 
-      "/getAllCustomerList", 
-      "GET", true, {
-      ...action.payload,
-      limit: AppConfig.ITEMS_PER_PAGE,
-    });
+      "/customer",
+      "/getAllCustomerList",
+      "GET",
+      true,
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
+    );
     if (result.isError) {
       dispatch(
         customerGetFailed({
@@ -110,12 +122,12 @@ const getCustomersLogic = createLogic({
         customerGetSuccess({
           isLoading: false,
           customers: result.data.data,
-          totalCustomers: result.data.totalUsers,
+          totalCustomers: result.data.totalUsers
         })
       );
       done();
     }
-  },
+  }
 });
 
 const deleteCustomerLogic = createLogic({
@@ -127,7 +139,7 @@ const deleteCustomerLogic = createLogic({
     let result = await api.FetchFromServer(
       "/customer",
       "/delete",
-      'POST',
+      "POST",
       true,
       undefined,
       action.payload
@@ -143,12 +155,12 @@ const deleteCustomerLogic = createLogic({
       delete action.payload.userId;
       dispatch(
         customerGetRequest({
-          ...action.payload.query,
+          ...action.payload.query
         })
-      );      
+      );
       done();
     }
-  },
+  }
 });
 
 const editCustomerLogic = createLogic({
@@ -163,7 +175,7 @@ const editCustomerLogic = createLogic({
       "PUT",
       true,
       undefined,
-      {data: action.payload.data}
+      { data: action.payload.data }
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -171,13 +183,24 @@ const editCustomerLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!action.payload.showAddVehicle) {
+        toast.success(result.messages[0]);
+      } else {
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              custAndVehicleCustomer: false,
+              custAndVehicleVehicle: true
+            }
+          })
+        );
+      }
       dispatch(customerEditSuccess());
       dispatch(
         customerGetRequest({
-          ...action.payload.query,
+          ...action.payload.query
         })
-      );   
+      );
       dispatch(
         modelOpenRequest({
           modelDetails: { customerModel: false, customerEditModel: false }
@@ -186,7 +209,7 @@ const editCustomerLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 
 const updateCustomerStatusLogic = createLogic({
@@ -223,4 +246,10 @@ const updateCustomerStatusLogic = createLogic({
   }
 });
 
-export const CustomersLogic = [addCustomerLogic, getCustomersLogic, deleteCustomerLogic, editCustomerLogic, updateCustomerStatusLogic];
+export const CustomersLogic = [
+  addCustomerLogic,
+  getCustomersLogic,
+  deleteCustomerLogic,
+  editCustomerLogic,
+  updateCustomerStatusLogic
+];

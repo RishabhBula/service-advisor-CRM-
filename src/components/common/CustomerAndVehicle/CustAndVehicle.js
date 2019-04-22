@@ -1,60 +1,174 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { AddCustomer } from "./AddCustomer";
+import { connect } from "react-redux";
+
+import { CrmCustomerModal } from "../CrmCustomerModal";
+import {
+  customerAddRequest,
+  getMatrixList,
+  getRateStandardListRequest,
+  setRateStandardListStart,
+  getCustomerFleetListRequest,
+  customerEditRequest,
+  vehicleAddRequest,
+  customerAddSuccess
+} from "../../../actions";
+import { CrmVehicleModal } from "../Vehicles/CrmVehicleModal";
+import { CrmEditCustomerModal } from "../CrmEditCustomerModal";
+
 class CustAndVehicle extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      step: {
-        selected: 1,
-        stepList: [
-          {
-            text: "Create New Customer"
-          },
-          {
-            text: "Create New Vehicle"
-          }
-        ]
-      }
-    };
+    this.state = {};
   }
+  componentDidMount() {
+    this.props.getStdList("");
+    this.props.setLabourRateDefault();
+    this.props.getCustomerFleetList();
+  }
+  loadTypeRate = input => {
+    this.props.getStdList(input);
+  };
+  onTypeHeadStdFun = data => {
+    this.props.getStdList(data);
+  };
 
+  onStdAdd = () => {
+    this.props.getStdList();
+  };
   handleModal = () => {
     this.props.toggleModal();
-  }
+  };
+  handlAddCustomerAndVehicleAdd = e => {
+    e.preventDefault();
+  };
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  };
+  openCustomerForm = () => {
+    this.props.modelOperate({
+      custAndVehicleCustomer: true,
+      custAndVehicleVehicle: false
+    });
+  };
+  updateCustomerForm = data => {
+    const { customerInfoReducer } = this.props;
+    const { customerAddInfo } = customerInfoReducer;
+    this.props.updateCustomer({
+      data: { ...data, customerId: customerAddInfo._id }
+    });
+  };
+  toggleModal = () => {
+    this.props.resetCustomerInfo();
+    this.props.toggleModal();
+  };
+  submitCreateVehicleFun = data => {
+    const { customerInfoReducer } = this.props;
+    const { customerAddInfo } = customerInfoReducer;
+
+    this.props.vehicleAddAction({
+      ...data,
+      customerId: customerAddInfo._id
+    });
+  };
   render() {
-    const { displayModal } = this.props;
-    const { step } = this.state;
+    const {
+      matrixListReducer,
+      rateStandardListReducer,
+      customerFleetReducer,
+      addCustomer,
+      profileInfoReducer,
+      modelInfoReducer,
+      customerInfoReducer
+    } = this.props;
+    const { customerAddInfo } = customerInfoReducer;
+    const { modelDetails } = modelInfoReducer;
+    const { custAndVehicleCustomer, custAndVehicleVehicle } = modelDetails;
     return (
-      <Modal
-        isOpen={displayModal}
-        toggle={this.handleModal}
-        className="customer-modal custom-form-modal custom-modal-lg"
-      >
-        <ModalHeader toggle={this.props.toggleModal}>
-          {step.selected === 1 ? "Create New Customer" : "Second Section"}
-        </ModalHeader>
-        <ModalBody>
-          <AddCustomer />
-        </ModalBody>
-        <ModalFooter>
-         {
-          step.selected === 1 ?
-          <Button color="primary" onClick={this.addNewCustomer}>
-            {"Add Customer"}
-          </Button>
-          :
-           <Button color="primary" onClick={this.addNewCustomer}>
-            {"Add Vehicle"}
-          </Button>
-         }
-          <Button color="secondary" onClick={this.handleCustomerModal}>
-            Cancel
-          </Button>
-        </ModalFooter>
-      </Modal>
+      <>
+        {customerAddInfo && customerAddInfo._id ? (
+          <CrmEditCustomerModal
+            customerModalOpen={custAndVehicleCustomer}
+            handleCustomerModalFun={this.toggleModal}
+            addCustomerFun={this.updateCustomerForm}
+            profileInfo={this.props.profileInfoReducer}
+            matrixListReducerData={matrixListReducer}
+            rateStandardListData={rateStandardListReducer}
+            onTypeHeadStdFun={this.onTypeHeadStdFun}
+            onStdAdd={this.onStdAdd}
+            editMode={true}
+            customer={customerAddInfo}
+            getCustomerFleetList={customerFleetReducer.customerFleetData}
+            setDefaultRate={this.setDefaultRate}
+            loadTypeRate={this.loadTypeRate}
+          />
+        ) : (
+          <CrmCustomerModal
+            customerModalOpen={custAndVehicleCustomer}
+            handleCustomerModalFun={this.toggleModal}
+            addCustomerFun={addCustomer}
+            profileInfo={profileInfoReducer}
+            matrixListReducerData={matrixListReducer}
+            rateStandardListData={rateStandardListReducer}
+            onTypeHeadStdFun={this.onTypeHeadStdFun}
+            onStdAdd={this.onStdAdd}
+            getCustomerFleetList={customerFleetReducer.customerFleetData}
+            setDefaultRate={this.setDefaultRate}
+            loadTypeRate={this.loadTypeRate}
+          />
+        )}
+        <CrmVehicleModal
+          vehicleModalOpen={custAndVehicleVehicle}
+          handleVehicleModal={this.openCustomerForm}
+          submitCreateVehicleFun={this.submitCreateVehicleFun}
+        />
+      </>
     );
   }
 }
 
-export default CustAndVehicle;
+const mapStateToProps = state => ({
+  userReducer: state.usersReducer,
+  matrixListReducer: state.matrixListReducer,
+  profileInfoReducer: state.profileInfoReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  customerListReducer: state.customerListReducer,
+  rateStandardListReducer: state.rateStandardListReducer,
+  customerFleetReducer: state.fleetReducer,
+  customerInfoReducer: state.customerInfoReducer
+});
+
+const mapDispatchToProps = dispatch => ({
+  addCustomer: data => {
+    dispatch(customerAddRequest({ ...data, showAddVehicle: true }));
+  },
+  vehicleAddAction: data => {
+    dispatch(vehicleAddRequest(data));
+  },
+  getMatrix: () => {
+    dispatch(getMatrixList());
+  },
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
+  getCustomerFleetList: () => {
+    dispatch(getCustomerFleetListRequest());
+  },
+  updateCustomer: data => {
+    dispatch(customerEditRequest({ ...data, showAddVehicle: true }));
+  },
+  resetCustomerInfo: () => {
+    dispatch(
+      customerAddSuccess({
+        customerAddInfo: {}
+      })
+    );
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CustAndVehicle);
