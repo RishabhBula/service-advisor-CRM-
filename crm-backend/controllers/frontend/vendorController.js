@@ -61,9 +61,9 @@ const updateVendordetails = async (req, res) => {
    try {
 
       const updateVendorDetails = await vendorModel.findByIdAndUpdate(
-         mongoose.Types.ObjectId(body.vendorId),
+         mongoose.Types.ObjectId(body.id),
          {
-            $set: body,
+            $set: body.data,
          }
       );
       return res.status(200).json({

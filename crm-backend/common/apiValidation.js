@@ -187,11 +187,11 @@ const createVendorValidations = [
   body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim()
 ];
 const updateVendorValidations = [
-  body("name").not().isEmpty().withMessage("Name is required.").trim(),
-  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
-  body("accountNumber", "Account Number should be a number").isNumeric(),
-  body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
-  body("vendorId").not().isEmpty().withMessage("Vendor Id is required.").trim(),
+  body("data.name").not().isEmpty().withMessage("Name is required.").trim(),
+  body("data.accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
+  body("data.accountNumber", "Account Number should be a number").isNumeric(),
+  body("data.accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
+  body("id").not().isEmpty().withMessage("Vendor Id is required.").trim(),
 ];
 const createTierValidation = [
   body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
