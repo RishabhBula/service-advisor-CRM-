@@ -7,20 +7,149 @@ import {
   Label,
   Input,
   FormFeedback,
-  InputGroup
+  InputGroup,
+  ButtonGroup,
+  Button
 } from "reactstrap";
 import CRMModal from "./Modal";
 import { logger } from "../../helpers/Logger";
+import {
+  MarkupChangeValues,
+  MarginChangeValues,
+  CreatePartOptions
+} from "../../config/Constants";
+import { AppSwitch } from "@coreui/react";
+import Validator from "js-object-validation";
+import { PartValidations } from "../../validations";
+import {
+  CalculateMarkupPercent,
+  CalculateMarginPercent,
+  CalculateRetailPriceByMarkupPercent,
+  CalculateRetailPriceByMarginPercent
+} from "../../helpers/Sales";
+import { Async } from "react-select";
 class CrmInventoryPart extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      errors: {},
+      partDescription: "",
+      note: "",
+      partNumber: "",
+      vendorId: "",
+      location: "",
+      priceMatrix: "",
+      cost: "",
+      price: "",
+      markup: "",
+      margin: "",
+      partOptions: {
+        isTaxed: true,
+        showNumberOnQuoteAndInvoice: false,
+        showPriceOnQuoteAndInvoice: true,
+        showNoteOnQuoteAndInvoice: true
+      }
+    };
   }
   addPart = e => {
     e.preventDefault();
-    logger("start", e, "end");
+    try {
+      const {
+        partDescription,
+        note,
+        partNumber,
+        vendorId,
+        location,
+        priceMatrix,
+        cost,
+        price,
+        markup,
+        margin
+      } = this.state;
+      const data = {
+        partDescription,
+        note,
+        partNumber,
+        vendorId,
+        location,
+        priceMatrix,
+        cost,
+        price,
+        markup,
+        margin
+      };
+      const { isValid, errors } = Validator(data, PartValidations);
+      logger(errors, isValid);
+    } catch (error) {}
+  };
+  handleClick = e => {
+    this.setState({
+      partOptions: {
+        ...this.state.partOptions,
+        [e.target.name]: e.target.checked
+      }
+    });
+  };
+  handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+  handleRetailsPriceChange = e => {
+    this.setState(
+      {
+        price: e.target.value
+      },
+      () => {
+        const { cost, price } = this.state;
+        this.setState({
+          markup:
+            parseFloat(cost) && parseFloat(price)
+              ? CalculateMarkupPercent(cost, price).toFixed(2)
+              : "",
+          margin:
+            parseFloat(cost) && parseFloat(price)
+              ? CalculateMarginPercent(cost, price).toFixed(2)
+              : ""
+        });
+      }
+    );
+  };
+  setPriceByMarkup = markupPercent => {
+    const { cost } = this.state;
+    this.setState({
+      price:
+        cost && markupPercent
+          ? CalculateRetailPriceByMarkupPercent(cost, markupPercent).toFixed(2)
+          : this.state.price
+    });
+  };
+  setPriceByMargin = marginPercent => {
+    const { cost } = this.state;
+    this.setState({
+      price:
+        cost && marginPercent
+          ? CalculateRetailPriceByMarginPercent(cost, marginPercent).toFixed(2)
+          : this.state.price
+    });
+  };
+  loadOptions = (input, callback) => {
+    this.props.getInventoryPartsVendors({ input, callback });
   };
   render() {
+    const {
+      errors,
+      partDescription,
+      note,
+      partNumber,
+      location,
+      priceMatrix,
+      cost,
+      price,
+      markup,
+      partOptions,
+      margin
+    } = this.state;
     const { isOpen, toggle } = this.props;
     const buttons = [
       {
@@ -54,14 +183,17 @@ class CrmInventoryPart extends Component {
                   <div className={"input-block"}>
                     <Input
                       type="text"
-                      name="companyName"
+                      name="partDescription"
                       onChange={this.handleChange}
-                      placeholder="Company Name"
+                      placeholder="Part Description"
                       maxLength="20"
                       id="name"
-                      invalid={true}
+                      value={partDescription}
+                      invalid={errors.partDescription}
                     />
-                    <FormFeedback>fasdf</FormFeedback>
+                    {errors.partDescription ? (
+                      <FormFeedback>{errors.partDescription}</FormFeedback>
+                    ) : null}
                   </div>
                 </InputGroup>
               </FormGroup>
@@ -75,12 +207,16 @@ class CrmInventoryPart extends Component {
                   <Input
                     type="text"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
+                    placeholder="Note"
                     onChange={this.handleChange}
                     maxLength="40"
-                    name="email"
+                    name="note"
+                    value={note}
+                    invalid={errors.note}
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  {errors.note ? (
+                    <FormFeedback>{errors.note}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -93,12 +229,16 @@ class CrmInventoryPart extends Component {
                   <Input
                     type="text"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
+                    placeholder="#10000"
                     onChange={this.handleChange}
-                    maxLength="40"
-                    name="email"
+                    maxLength="10"
+                    name="partNumber"
+                    value={partNumber}
+                    invalid={errors.partNumber}
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  {errors.partNumber ? (
+                    <FormFeedback>{errors.partNumber}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -108,15 +248,10 @@ class CrmInventoryPart extends Component {
                   Vendor
                 </Label>
                 <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="email"
-                  />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  <Async loadOptions={this.loadOptions} />
+                  {errors.vendorId ? (
+                    <FormFeedback>{errors.vendorId}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -129,12 +264,16 @@ class CrmInventoryPart extends Component {
                   <Input
                     type="text"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
+                    placeholder="Bin/Location"
                     onChange={this.handleChange}
                     maxLength="40"
-                    name="email"
+                    name="location"
+                    value={location}
+                    invalid={errors.location}
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  {errors.location ? (
+                    <FormFeedback>{errors.location}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -147,12 +286,16 @@ class CrmInventoryPart extends Component {
                   <Input
                     type="text"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
+                    placeholder="Price metrix"
                     onChange={this.handleChange}
                     maxLength="40"
-                    name="email"
+                    name="priceMatrix"
+                    value={priceMatrix}
+                    invalid={errors.priceMatrix}
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  {errors.priceMatrix ? (
+                    <FormFeedback>{errors.priceMatrix}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -163,14 +306,18 @@ class CrmInventoryPart extends Component {
                 </Label>
                 <div className={"input-block"}>
                   <Input
-                    type="text"
+                    type="number"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
+                    placeholder="$"
                     onChange={this.handleChange}
                     maxLength="40"
-                    name="email"
+                    name="cost"
+                    invalid={errors.cost}
+                    value={cost}
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  {errors.cost ? (
+                    <FormFeedback>{errors.cost}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -181,14 +328,18 @@ class CrmInventoryPart extends Component {
                 </Label>
                 <div className={"input-block"}>
                   <Input
-                    type="text"
+                    type="number"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
-                    onChange={this.handleChange}
+                    placeholder="$"
+                    onChange={this.handleRetailsPriceChange}
                     maxLength="40"
-                    name="email"
+                    name="price"
+                    invalid={errors.price}
+                    value={price}
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  {errors.price ? (
+                    <FormFeedback>{errors.price}</FormFeedback>
+                  ) : null}
                 </div>
               </FormGroup>
             </Col>
@@ -198,15 +349,29 @@ class CrmInventoryPart extends Component {
                   Markup
                 </Label>
                 <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="email"
-                  />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  <ButtonGroup>
+                    {MarkupChangeValues.map((mark, index) => {
+                      return (
+                        <Button
+                          key={index}
+                          type={"button"}
+                          color={"primary"}
+                          size={"sm"}
+                          onClick={() => this.setPriceByMarkup(mark.value)}
+                        >
+                          {mark.key}
+                        </Button>
+                      );
+                    })}
+                    <Button type={"button"} size={"sm"}>
+                      <Input
+                        type={"text"}
+                        placeholder={"Markup"}
+                        defaultValue={markup}
+                        onChange={e => this.setPriceByMarkup(e.target.value)}
+                      />
+                    </Button>
+                  </ButtonGroup>
                 </div>
               </FormGroup>
             </Col>
@@ -216,15 +381,29 @@ class CrmInventoryPart extends Component {
                   Margin
                 </Label>
                 <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="email"
-                  />
-                  <FormFeedback>fasdfa</FormFeedback>
+                  <ButtonGroup>
+                    {MarginChangeValues.map((mark, index) => {
+                      return (
+                        <Button
+                          key={index}
+                          type={"button"}
+                          color={"primary"}
+                          size={"sm"}
+                          onClick={() => this.setPriceByMargin(mark.value)}
+                        >
+                          {mark.key}
+                        </Button>
+                      );
+                    })}
+                    <Button type={"button"} size={"sm"}>
+                      <Input
+                        type={"text"}
+                        placeholder={"Margin"}
+                        defaultValue={margin}
+                        onChange={e => this.setPriceByMargin(e.target.value)}
+                      />
+                    </Button>
+                  </ButtonGroup>
                 </div>
               </FormGroup>
             </Col>
@@ -239,15 +418,38 @@ class CrmInventoryPart extends Component {
                   <Input
                     type="text"
                     className="customer-modal-text-style"
-                    placeholder="john.doe@example.com"
+                    placeholder="Item reference"
                     onChange={this.handleChange}
                     maxLength="40"
                     name="email"
                   />
-                  <FormFeedback>fasdfa</FormFeedback>
                 </div>
               </FormGroup>
             </Col>
+          </Row>
+          <Row>
+            {CreatePartOptions.map((option, index) => {
+              return (
+                <Col sm={{ size: 5, offset: 1 }} key={index}>
+                  <Row className="justify-content-center pb-2" key={index}>
+                    <Col md="2">
+                      <AppSwitch
+                        className={"mx-1"}
+                        name={option.key}
+                        checked={partOptions[option.key]}
+                        onClick={this.handleClick}
+                        variant={"3d"}
+                        color={"primary"}
+                        size={"sm"}
+                      />
+                    </Col>
+                    <Col md="10">
+                      <p className="customer-modal-text-style">{option.text}</p>
+                    </Col>
+                  </Row>
+                </Col>
+              );
+            })}
           </Row>
         </CRMModal>
       </Form>

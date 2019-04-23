@@ -15,6 +15,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
+import { getInventoryPartVendors } from "../../actions";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -100,7 +101,12 @@ class Inventory extends Component {
   };
   renderModals = () => {
     const { activeTab } = this.state;
-    const { modelInfoReducer, modelOperate } = this.props;
+    const {
+      modelInfoReducer,
+      modelOperate,
+      inventoryPartsData,
+      getInventoryPartsVendors
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { typeAddModalOpen, partAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
@@ -113,6 +119,8 @@ class Inventory extends Component {
                 partAddModalOpen: !partAddModalOpen
               })
             }
+            inventoryPartsData={inventoryPartsData}
+            getInventoryPartsVendors={getInventoryPartsVendors}
           />
         );
       case AppRoutes.INVENTORY_TIRES.url:
@@ -230,8 +238,14 @@ class Inventory extends Component {
     );
   }
 }
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = state => ({
+  inventoryPartsData: state.inventoryPartsReducers
+});
+const mapDispatchToProps = dispatch => ({
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  }
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps
