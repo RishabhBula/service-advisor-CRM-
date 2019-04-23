@@ -9,10 +9,13 @@ const initialAuthState = {
     vehicleModel: false,
     vehicleEditModel: false,
     custAndVehicle: false,
+    custAndVehicleCustomer: false,
+    custAndVehicleVehicle: false,
     addUserModal: false,
     editUserModal: false,
     typeAddModalOpen: false,
-    vendorAddModalOpen:false
+    vendorAddModalOpen:false,
+    partAddModalOpen: false
   }
 };
 

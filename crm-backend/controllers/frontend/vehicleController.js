@@ -1,4 +1,5 @@
 const vehicleModal = require("../../models/vehicle");
+const customerModel = require("../../models/customer");
 
 /* ------------Add New Vehicle------------ */
 const addNewVehicle = async (req, res) => {
@@ -24,31 +25,35 @@ const addNewVehicle = async (req, res) => {
       userId: body.userId
     };
     const addVehicleData = new vehicleModal(vehicleData);
-    const result = await addVehicleData.save();
-    if (!result) {
-      return res.status(400).json({
-        responsecode: 400,
-        message: "Error uploading vehicle data.",
-        success: false,
-      });
-    } else {
-      return res.status(200).json({
-        responsecode: 200,
-        message: "Vehicle data uploaded successfully!",
-        success: true,
-      });
+    const vehicles = await addVehicleData.save();
+    if (body.customerId) {
+      // vehicles
+      await customerModel.updateOne(
+        { _id: body.customerId },
+        {
+          $push: {
+            vehicles: vehicles._id
+          }
+        }
+      );
     }
+    return res.status(200).json({
+      responsecode: 200,
+      message: !body.customerId
+        ? "Vehicle data uploaded successfully!"
+        : "Vehicle assigned to customer successfully!",
+      success: true
+    });
   } catch (error) {
     console.log("This is vehicle adding error", error);
     res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
 /* ------------Add New Vehicle End------------ */
-
 
 /* ----------------Grt All User List------------ */
 const getAllVehicleList = async (req, res) => {
@@ -60,7 +65,6 @@ const getAllVehicleList = async (req, res) => {
     const searchValue = query.search;
     const sort = query.sort;
     const status = query.status;
-    const type = query.type;
     let sortBy = {};
     switch (sort) {
       case "loginasc":
@@ -175,7 +179,7 @@ const updateVehicleDetails = async (req, res) => {
       return res.status(400).json({
         responsecode: 400,
         message: "Vehicle id is required.",
-        success: false,
+        success: false
       });
     } else {
       const updateVehicleDetails = await vehicleModal.findByIdAndUpdate(
@@ -188,13 +192,13 @@ const updateVehicleDetails = async (req, res) => {
         return res.status(400).json({
           responsecode: 400,
           message: "Error updating customer details.",
-          success: false,
+          success: false
         });
       } else {
         return res.status(200).json({
           responsecode: 200,
           message: "Vehicle details updated successfully!",
-          success: false,
+          success: false
         });
       }
     }
@@ -203,7 +207,7 @@ const updateVehicleDetails = async (req, res) => {
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };

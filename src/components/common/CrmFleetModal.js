@@ -35,7 +35,6 @@ import {
   CreateFleetValidations,
   CreateFleetValidMessaages
 } from "../../validations";
-// import Cleave from 'cleave.js/react';
 
 export class CrmFleetModal extends Component {
   constructor(props) {
