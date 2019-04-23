@@ -165,7 +165,8 @@ export class CrmInventoryVendor extends Component {
       if (!isEditMode) {
         this.props.addVendor(data);
       }
-      this.props.updateVendor(data);
+      const vendorId = this.props.vendorData._id
+      this.props.updateVendor(vendorId,data);
 
     } catch (error) {
       console.log(error)
@@ -328,8 +329,7 @@ export class CrmInventoryVendor extends Component {
                         onChange={(e) => this.handleChange('contactPerson', e)}
                         placeholder='Email'
                         value={contactPerson.email}
-                        maxLength='20'
-                        id='name'
+                        id='email'
                         invalid={errors.email}
                       />
                       <FormFeedback>

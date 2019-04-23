@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import * as qs from "query-string";
 import Loader from "../../../containers/Loader/Loader";
 import CrmInventoryVendor from "../../../components/common/CrmInventoryVendor";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
 import {
   Table,
   Button,
@@ -33,9 +34,9 @@ class Vendors extends Component {
       const query = qs.parse(this.props.location.search);
       this.props.getVendorsList({ ...query, page: query.page || 1 });
     }
+
   }
   editVendor = vendor => {
-    
     this.setState({ vendor: vendor }, () => {
       this.props.modelOperate({
         vendorEditModalOpen: true
@@ -43,13 +44,29 @@ class Vendors extends Component {
     });
   };
 
+  onUpdate = (id, data) =>{
+    this.props.updateVendor(id, data);
+  }
+
+  deleteVendor = async (isMultiple = false, vendorId) => {
+    const { value } = await ConfirmBox({
+      text: isMultiple
+        ? "Do you want to delete this Vendor"
+        : "Do you want to delete this Vendor"
+    });
+    if (!value) {
+      console.log("Cancle", vendorId)
+      return;
+    }
+    console.log("Success", vendorId)
+  }
+
   render() {
     const { vendor } = this.state;
     const { vendorReducer, modelOperate, modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { vendorEditModalOpen } = modelDetails;
-    const { vendors, isLoading, totalUsers } = vendorReducer;
-    console.log("********** vendor ******", vendor)
+    const { vendors, isLoading } = vendorReducer;
     return (
       <>
         <Table responsive bordered className={"mt-3"}>
@@ -73,7 +90,7 @@ class Vendors extends Component {
                   <tr key={index}>
                       <td className={"text-center"}>{index + 1}</td>
                       <td>{vendor.name}</td>
-                      <td>{vendor.url ? vendor.url : 'NA'}</td>
+                    <td>{vendor.url ? <a href={vendor.url} target={"_blank"}>{vendor.url}</a> : 'NA'}</td>
                       <td>{vendor.accountNumber ? vendor.accountNumber : 'NA'}</td>
                       <td className={"text-capitalize"}>
                         {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : 'NA'}
@@ -106,6 +123,7 @@ class Vendors extends Component {
                           color={"danger"}
                           size={"sm"}
                           id={`delete-${vendor._id}`}
+                          onClick={() => this.deleteVendor(vendor._id)}
                         >
                           <i className={"fa fa-trash"} />
                         </Button>
@@ -133,7 +151,7 @@ class Vendors extends Component {
           </tbody>
         </Table>
         <CrmInventoryVendor
-          updateVendor={this.updateVendor}
+          updateVendor={this.onUpdate}
           vendorAddModalOpen={vendorEditModalOpen}
           handleVendorAddModal={() =>
             modelOperate({
@@ -156,8 +174,8 @@ const mapDispatchToProps = dispatch => ({
   getVendorsList: data => {
     dispatch(getVendorsList(data));
   },
-  editVendor: data => {
-    dispatch(editVendor(data));
+  updateVendor: (id, data) => {
+    dispatch(editVendor({id, data}));
   },
 })
 

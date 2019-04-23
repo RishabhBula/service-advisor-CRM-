@@ -6,6 +6,7 @@ import { AppConfig } from "../config/AppConfig";
 import { 
   addVendorSuccess,
   editVendorSuccess,
+  getVendorsList,
   getVendorsListSuccess,
   showLoader,
   hideLoader,
@@ -113,6 +114,11 @@ const editVendorsLogic = createLogic({
         })
       );
       dispatch(editVendorSuccess());
+      dispatch(
+        getVendorsList({
+          ...action.payload
+        })
+      );
       dispatch(hideLoader());
       done();
     }
