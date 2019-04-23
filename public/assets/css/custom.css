@@ -851,4 +851,56 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   right: -10px;
   position: absolute;
 }
-/* Tyre CSS */
+.tire-table tr td:nth-child(4){
+  padding: 0px;
+}
+.tire-table tr td.action-td{
+  width: 75px;
+  max-width: 75px;
+}
+.tire-table tr td.season-td{
+  width: 100px;
+  max-width: 100px;
+}
+.tire-table tr th.tire-th{
+  width: 70px !important;
+  max-width: 70px;
+}
+.tire-table tr th.tire-size-th{
+  width: 100px !important;
+  max-width: 100px !important;
+}
+.tire-size-table{
+  margin-bottom: 0px !important;
+  display: flex;
+  flex-flow: wrap;
+}
+.tire-size-table tr{
+  width: 100%;
+}
+.tire-size-table tr td{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 0px;
+  border-right: 0; 
+  height: 100%;
+}
+.tire-size-table tr td:not(:nth-child(6)){
+  width: 70px !important;
+  max-width: 70px;
+}
+.tire-size-table tr td:nth-child(6) {
+  width: calc(100% - 380px) ;
+  max-width: calc(100% - 380px);
+}
+.tire-size-table tr td:first-child{
+  width: 100px !important;
+  max-width: 100px !important;
+}
+.tire-size-table tr:nth-child(1) td{
+  border-top: 0px;
+}
+
+/* Tyre CSS END*/
+

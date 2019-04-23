@@ -198,8 +198,8 @@ const createTierValidation = [
   body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim()
 ];
 const updateTierValidation = [
-  body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
-  body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim()
+  body("data.brandName").not().isEmpty().withMessage("Brand name is required").trim(),
+  body("data.brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim()
 ];
 module.exports = {
   signupValidation,

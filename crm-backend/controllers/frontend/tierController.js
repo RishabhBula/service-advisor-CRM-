@@ -53,7 +53,7 @@ const updateTierdetails = async (req, res) => {
     const { body } = req;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({
+        return res.status(400).json({
             message: commonValidation.formatValidationErr(errors.mapped(), true),
             success: false
         });
@@ -61,9 +61,9 @@ const updateTierdetails = async (req, res) => {
     try {
 
         const updateTierDetails = await tierModel.findByIdAndUpdate(
-            mongoose.Types.ObjectId(body.tierId),
+            mongoose.Types.ObjectId(body.id),
             {
-                $set: body,
+                $set: body.data,
             }
         );
         return res.status(200).json({
@@ -153,6 +153,11 @@ const getAllTierList = async (req, res) => {
                     },
                     {
                         modalName: {
+                            $regex: new RegExp(searchValue.trim(), "i"),
+                        },
+                    },
+                    {
+                        seasonality: {
                             $regex: new RegExp(searchValue.trim(), "i"),
                         },
                     },
