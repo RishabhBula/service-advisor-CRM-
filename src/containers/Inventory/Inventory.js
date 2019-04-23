@@ -15,6 +15,9 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
+import {
+  addNewTier,
+} from '../../actions'
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
 
 import { addNewVendor } from "../../actions";
@@ -87,6 +90,7 @@ class Inventory extends Component {
       });
     }
   }
+
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
     if (location.pathname !== newLocation.pathname) {
@@ -107,7 +111,7 @@ class Inventory extends Component {
     const { activeTab } = this.state;
     const { modelInfoReducer, modelOperate, addVendor } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { typeAddModalOpen, vendorAddModalOpen, partAddModalOpen} = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen} = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -123,12 +127,13 @@ class Inventory extends Component {
       case AppRoutes.INVENTORY_TIRES.url:
         return (
           <CrmTyreModal
-            tyreModalOpen={typeAddModalOpen}
+            tyreModalOpen={tireAddModalOpen}
             handleTierModal={() =>
               modelOperate({
-                typeAddModalOpen: !typeAddModalOpen
+                tireAddModalOpen: !tireAddModalOpen
               })
             }
+            addTier={this.props.addTier}
           />
         );
       case AppRoutes.INVENTORY_LABOURS.url:
@@ -158,7 +163,7 @@ class Inventory extends Component {
         break;
       case AppRoutes.INVENTORY_TIRES.url:
         modelDetails = {
-          typeAddModalOpen: true
+          tireAddModalOpen: true
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
@@ -229,7 +234,7 @@ class Inventory extends Component {
                       path={route.path}
                       exact={route.exact}
                       name={route.name}
-                      render={props => <route.component {...props} />}
+                      render={props => <route.component {...props} {...this.props} />}
                     />
                   ) : null;
                 })}
@@ -246,16 +251,15 @@ class Inventory extends Component {
     );
   }
 }
-const mapStateToProps = state => ({
-
-});
-
+const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
-  addVendor: data => {
+    addVendor: data => {
     dispatch(addNewVendor(data));
   },
+  addTier: data => {
+    dispatch(addNewTier(data));
+  }
 });
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps

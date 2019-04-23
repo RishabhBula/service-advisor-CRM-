@@ -11,6 +11,7 @@ export * from "./Fleet";
 export * from "./ModelOperation";
 export * from "./Vehicles";
 export * from "./InventoryVendor"
+export * from "./Tier";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

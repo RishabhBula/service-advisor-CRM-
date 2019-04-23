@@ -11,7 +11,8 @@ import { ProfileInfoLogic } from "./ProfileInfo";
 import { FleetLogic } from "./Fleet";
 import { StandardRateLogic } from "./RateStandard";
 import { VehicleLogic } from "./Vehicles";
-import { VendorLogic } from "./Vendor"
+import { VendorLogic } from "./Vendor";
+import { TiersLogic } from "./Tier";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -32,5 +33,6 @@ export default [
   ...CustomersLogic,
   ...VehicleLogic,
   ...VendorLogic,
+  ...TiersLogic,
   redirectToLogic
 ];

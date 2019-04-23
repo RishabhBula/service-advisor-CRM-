@@ -838,8 +838,17 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 16px;
   border-radius: 4px;
   margin-bottom: 10px;
+  position: relative;
 }
 .child-row{
   margin: 0 -7.5px!important;
+}
+.tire-col {
+  min-width: 80px !important;
+}
+.remove-tire-btn{
+  top: -19px;
+  right: -10px;
+  position: absolute;
 }
 /* Tyre CSS */

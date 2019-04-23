@@ -3,6 +3,7 @@ import { vendorActions } from "../actions"
 
 const initialState = {
   vendors:[],
+  isLoading:false,
   totalVendors: 100,
   vendorData:{
     isSuccess: false,

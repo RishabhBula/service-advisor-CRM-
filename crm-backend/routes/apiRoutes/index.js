@@ -7,5 +7,6 @@ module.exports = {
     matrix: require("./matrixRoutes"),
     labour: require("./labourRoutes"),
     customer: require("./customerRoutes"),
-    vendor: require("./vendorRoutes")
+    vendor: require("./vendorRoutes"),
+    tier: require("./tierRoutes")
 } 

@@ -13,7 +13,8 @@ const initialAuthState = {
     custAndVehicleVehicle: false,
     addUserModal: false,
     editUserModal: false,
-    typeAddModalOpen: false,
+    tireAddModalOpen: false,
+    tireEditModalOpen: false,
     vendorAddModalOpen:false,
     partAddModalOpen: false
   }

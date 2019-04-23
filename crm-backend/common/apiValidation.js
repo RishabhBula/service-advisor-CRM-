@@ -193,6 +193,14 @@ const updateVendorValidations = [
   body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
   body("vendorId").not().isEmpty().withMessage("Vendor Id is required.").trim(),
 ];
+const createTierValidation = [
+  body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
+  body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim()
+];
+const updateTierValidation = [
+  body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
+  body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim()
+];
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -209,5 +217,7 @@ module.exports = {
   createNewLabourValidations,
   updateLabourValidations,
   createVendorValidations,
-  updateVendorValidations
+  updateVendorValidations,
+  createTierValidation,
+  updateTierValidation
 };
