@@ -17,7 +17,20 @@ export const vendorsReducer = handleActions(
       ...state,
       ...payload
     }),
-
+    [vendorActions.ADD_VENDOR]: (state, action) => ({
+      ...state,
+      vendorData: {
+        ...state.userData,
+        isSuccess: false
+      }
+    }),
+    [vendorActions.ADD_VENDOR_SUCCESS]: (state, action) => ({
+      ...state,
+      vendorData: {
+        isSuccess: true,
+        data: {}
+      }
+    }),
   },
   initialState
 )

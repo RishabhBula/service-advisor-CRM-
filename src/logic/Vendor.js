@@ -5,7 +5,7 @@ import { AppConfig } from "../config/AppConfig";
 
 import { 
   addVendorSuccess,
-  getVendorsList,
+  editVendorSuccess,
   getVendorsListSuccess,
   showLoader,
   hideLoader,
@@ -85,7 +85,42 @@ const addVendorsLogic = createLogic({
   }
 });
 
+const editVendorsLogic = createLogic({
+  type: vendorActions.EDIT_VENDOR,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/vendor",
+      "/updateVendor",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            vendorEditModalOpen: false
+          }
+        })
+      );
+      dispatch(editVendorSuccess());
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
 export const VendorLogic = [
   addVendorsLogic,
-  getVendorLogic
+  getVendorLogic,
+  editVendorsLogic
 ];

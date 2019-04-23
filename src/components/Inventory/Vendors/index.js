@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as qs from "query-string";
 import Loader from "../../../containers/Loader/Loader";
+import CrmInventoryVendor from "../../../components/common/CrmInventoryVendor";
 import {
   Table,
   Button,
@@ -9,14 +10,14 @@ import {
 } from "reactstrap";
 import {
   getVendorsList,
+  editVendor
 } from "../../../actions";
 
 class Vendors extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      vendros:{},
-
+      vendor:{},
     };
   }
 
@@ -24,20 +25,31 @@ class Vendors extends Component {
     const query = qs.parse(this.props.location.search);
     this.props.getVendorsList({ ...query, page: query.page || 1 });
   }
-  // componentDidUpdate({ vendorReducer, location }) {
-  //   if (
-  //     this.props.vendorReducer.vendorData.isSuccess !==
-  //     vendorReducer.userData.isSuccess
-  //   ) {
-  //     console.log("we got it")
-  //   }
-  // }
-  render() {
-    // const { vendors } = this.state;
+  componentDidUpdate({ vendorReducer, location }) {
+    if (
+      this.props.vendorReducer.vendorData.isSuccess !==
+      vendorReducer.vendorData.isSuccess
+    ) {
+      const query = qs.parse(this.props.location.search);
+      this.props.getVendorsList({ ...query, page: query.page || 1 });
+    }
+  }
+  editVendor = vendor => {
+    
+    this.setState({ vendor: vendor }, () => {
+      this.props.modelOperate({
+        vendorEditModalOpen: true
+      });
+    });
+  };
 
-    const { vendorReducer } = this.props;
+  render() {
+    const { vendor } = this.state;
+    const { vendorReducer, modelOperate, modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { vendorEditModalOpen } = modelDetails;
     const { vendors, isLoading, totalUsers } = vendorReducer;
-  
+    console.log("********** vendor ******", vendor)
     return (
       <>
         <Table responsive bordered className={"mt-3"}>
@@ -58,23 +70,30 @@ class Vendors extends Component {
             {!isLoading ? (
             vendors.length ? vendors.map((vendor, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                       <td className={"text-center"}>{index + 1}</td>
                       <td>{vendor.name}</td>
-                      <td>{vendor.url}</td>
-                      <td>{vendor.accountNumber}</td>
-                      <td><span className={"text-capitalize"}>{vendor.contactPerson.firstName}</span></td>
-                      <td><span className={"text-capitalize"}>{vendor.contactPerson.lastName}</span></td>
-                      <td>{vendor.contactPerson.email}</td>
-                      <td>
-                        <span className={"text-capitalize"}>{vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone ? vendor.contactPerson.phoneNumber.phone : 'NA'}</span>&nbsp;<b>|</b>&nbsp;
+                      <td>{vendor.url ? vendor.url : 'NA'}</td>
+                      <td>{vendor.accountNumber ? vendor.accountNumber : 'NA'}</td>
+                      <td className={"text-capitalize"}>
+                        {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : 'NA'}
+                      </td>
+                      <td className={"text-capitalize"}>
+                      {vendor.contactPerson.lastName ? vendor.contactPerson.lastName : 'NA'}
+                      </td>
+                      <td>{vendor.contactPerson.email ? vendor.contactPerson.email : 'NA'}</td>
+                      <td className={"text-capitalize"}>
+                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone && vendor.contactPerson.phoneNumber.value !== '' ? vendor.contactPerson.phoneNumber.phone : 'NA'} 
+
+                        {vendor.contactPerson.phoneNumber.value ? <span>&nbsp;<b>|</b>&nbsp;</span> : ''}
+
                         {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone ? vendor.contactPerson.phoneNumber.value : 'NA'}
                       </td>
                       <td>
                         <Button
                           color={"primary"}
                           size={"sm"}
-                          onClick={() => this.editVendor()}
+                          onClick={() => this.editVendor(vendor)}
                           id={`edit-${vendor._id}`}
                         >
                           <i className={"fa fa-edit"} />
@@ -113,6 +132,16 @@ class Vendors extends Component {
               
           </tbody>
         </Table>
+        <CrmInventoryVendor
+          updateVendor={this.updateVendor}
+          vendorAddModalOpen={vendorEditModalOpen}
+          handleVendorAddModal={() =>
+            modelOperate({
+              vendorEditModalOpen: !vendorEditModalOpen
+            })
+          }
+          vendorData={vendor}
+        />
       </>
     )
   }
@@ -120,11 +149,15 @@ class Vendors extends Component {
 
 const mapStateToProps = state => ({
   vendorReducer: state.vendorsReducer,
+  modelInfoReducer: state.modelInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
   getVendorsList: data => {
     dispatch(getVendorsList(data));
+  },
+  editVendor: data => {
+    dispatch(editVendor(data));
   },
 })
 

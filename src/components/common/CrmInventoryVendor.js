@@ -43,9 +43,36 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros:''
+      urlErros:'',
+      isEditMode:false
     }
   }
+
+  componentDidUpdate = ({ vendorAddModalOpen, vendorData }) => {
+    if (
+      this.props.vendorData && this.props.vendorData._id &&
+      (vendorData._id !== this.props.vendorData._id)
+    ){
+      
+      const {
+        name,
+        accountNumber,
+        url,
+        contactPerson,
+        address,
+      } = this.props.vendorData
+
+      this.setState({
+        isEditMode :true,
+        name,
+        accountNumber,
+        url,
+        contactPerson,
+        address,
+      })
+    }
+  }
+
   handleChange = (label, event) => {
     const { name, value } = event.target;
     if ((name === "accountNumber" && isNaN(value)) || (name === "zip" && isNaN(value)) ){
@@ -92,7 +119,8 @@ export class CrmInventoryVendor extends Component {
       accountNumber,
       url,
       contactPerson,
-      address
+      address,
+      isEditMode
     } = this.state;
     let validData
     if (contactPerson.email !== '') {
@@ -134,7 +162,10 @@ export class CrmInventoryVendor extends Component {
         console.log(errors)
         return;
       } 
-      this.props.addVendor(data);
+      if (!isEditMode) {
+        this.props.addVendor(data);
+      }
+      this.props.updateVendor(data);
 
     } catch (error) {
       console.log(error)
@@ -428,7 +459,7 @@ export class CrmInventoryVendor extends Component {
               color='primary'
               onClick={this.handleAddVendor}
             >
-              Add New Vendor
+              {!isEditMode ? "Add New Vendor " : "Edit Vendor"}
             </Button>{' '}
             <Button color='secondary' >
               Cancel
