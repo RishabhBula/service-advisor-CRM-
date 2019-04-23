@@ -11,6 +11,7 @@ import { rateStandardListReducer } from "./RateStandard";
 import { customerInfoReducer, customerListReducer } from "./Customer";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { modelInfoReducer } from "./ModelOperation";
+import { vendorsReducer } from "./Vendors"
 
 export const mainReducer = handleActions(
   {
@@ -38,7 +39,9 @@ const AppReducer = combineReducers({
   customerListReducer,
   vehicleAddInfoReducer,
   vehicleListReducer,
+  vendorsReducer,
   routing: routerReducer,
+
 });
 
 export default AppReducer;
