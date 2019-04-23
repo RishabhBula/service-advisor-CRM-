@@ -111,17 +111,17 @@ class DefaultLayout extends Component {
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
-      custAndVehicle: !modelDetails.custAndVehicle
+      custAndVehicle: !modelDetails.custAndVehicle,
+      custAndVehicleCustomer: !modelDetails.custAndVehicle
     };
     this.props.modelOperate(data);
   };
 
   customerAndVehicleModal = () => {
-    const { modelDetails } = this.props.modelInfoReducer;
     return (
       <CustAndVehicle
-        displayModal={modelDetails.custAndVehicle}
         toggleModal={this.toggleCustAndVehicleProps}
+        {...this.props}
       />
     );
   };

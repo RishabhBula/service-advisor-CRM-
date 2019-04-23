@@ -16,7 +16,8 @@ import {
   vehicleGetSuccess,
   vehicleGetFailed,
   vehicleGetRequest,
-  vehicleEditSuccess
+  vehicleEditSuccess,
+  customerAddStarted
 } from "./../actions";
 
 const vehicleAddLogic = createLogic({
@@ -30,6 +31,7 @@ const vehicleAddLogic = createLogic({
     if (profileStateData.profileInfo.parentId === null) {
       data.parentId = profileStateData.profileInfo._id;
     }
+    dispatch(showLoader());
     dispatch(
       vehicleAddStarted({
         vehicleAddInfo: [],
@@ -64,7 +66,17 @@ const vehicleAddLogic = createLogic({
           isLoading: false
         })
       );
-      dispatch(modelOpenRequest({ modelDetails: { vehicleModel: false } }));
+      dispatch(showLoader());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            vehicleModel: false,
+            custAndVehicleCustomer: false,
+            custAndVehicleVehicle: false,
+            custAndVehicle: false
+          }
+        })
+      );
       dispatch(vehicleGetRequest());
       done();
     }
@@ -98,6 +110,7 @@ const getVehiclesLogic = createLogic({
           vehicleList: []
         })
       );
+      dispatch(hideLoader());
       done();
       return;
     } else {
@@ -109,6 +122,7 @@ const getVehiclesLogic = createLogic({
           totalVehicles: result.data.totalVehicles
         })
       );
+      dispatch(customerAddStarted({}));
       done();
     }
   }
@@ -144,9 +158,7 @@ const editCustomerLogic = createLogic({
           ...action.payload
         })
       );
-      dispatch(
-        modelOpenRequest({ modelDetails: { vehicleEditModel: false } })
-      );
+      dispatch(modelOpenRequest({ modelDetails: { vehicleEditModel: false } }));
       dispatch(hideLoader());
       done();
     }

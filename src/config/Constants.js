@@ -9,59 +9,59 @@ export const UserPermissions = [
   { key: "isIncludedToCalendar", text: "Include this user on the calendar?" },
   {
     key: "isAllowedViewEveryonesCalendar",
-    text: "Allow viewing of everyone’s calendar?",
+    text: "Allow viewing of everyone’s calendar?"
   },
   { key: "isAllowedTimeclock", text: "Include a time clock for this user?" },
   {
     key: "isAllowedManualTimesheets",
     text:
-      "Allow adding of time manually and editing of existing time clock entries?",
+      "Allow adding of time manually and editing of existing time clock entries?"
   },
   { key: "isAllowedInspections", text: "Allow editing Inspection Templates?" },
   { key: "isAllowedCannedJobs", text: "Allow editing Canned Services?" },
   {
     key: "isAllowedPricingMatrices",
-    text: "Allow editing of Pricing Matrices?",
+    text: "Allow editing of Pricing Matrices?"
   },
   { key: "isAllowedMessagingCustomers", text: "Allow messaging customers?" },
   {
     key: "isPreventEditingUponAuthorize",
-    text: "Prevent editing orders upon authorization?",
+    text: "Prevent editing orders upon authorization?"
   },
   {
     key: "isPreventEditingUponInvoice",
-    text: "Prevent editing orders upon converting to invoice?",
+    text: "Prevent editing orders upon converting to invoice?"
   },
   {
     key: "isFilteredWorkflowByTechnician",
-    text: "Filter Workflow to only show orders assigned to this user?",
+    text: "Filter Workflow to only show orders assigned to this user?"
   },
   {
     key: "isAllowedProfitability",
-    text: "Allow viewing of order profitability?",
+    text: "Allow viewing of order profitability?"
   },
   {
     key: "isNotifyJobAssigned",
     text:
-      "Receive email notifications when services are assigned or unassigned?",
+      "Receive email notifications when services are assigned or unassigned?"
   },
   {
     key: "isNotifyOrderAuthorized",
-    text: "Receive email notifications when customer authorizes order?",
+    text: "Receive email notifications when customer authorizes order?"
   },
   {
     key: "isNotifyCustomerSendsMessage",
-    text: "Receive email notification when customer sends message?",
+    text: "Receive email notification when customer sends message?"
   },
   {
     key: "isNotifyCustomerMakesPayment",
-    text: "Receive email notification when customer makes payment?",
+    text: "Receive email notification when customer makes payment?"
   },
   {
     key: "isNotifyChangeAppointmentStatus",
     text:
-      "Receive email notifications when appointments are confirmed or cancelled?",
-  },
+      "Receive email notifications when appointments are confirmed or cancelled?"
+  }
 ];
 
 export const TechincianDefaultPermissions = {
@@ -88,7 +88,7 @@ export const TechincianDefaultPermissions = {
   isNotifyOrderAuthorized: false,
   isNotifyCustomerSendsMessage: false,
   isNotifyCustomerMakesPayment: false,
-  isNotifyChangeAppointmentStatus: false,
+  isNotifyChangeAppointmentStatus: false
 };
 
 export const AdminDefaultPermissions = {
@@ -115,41 +115,41 @@ export const AdminDefaultPermissions = {
   isNotifyOrderAuthorized: true,
   isNotifyCustomerSendsMessage: true,
   isNotifyCustomerMakesPayment: true,
-  isNotifyChangeAppointmentStatus: true,
+  isNotifyChangeAppointmentStatus: true
 };
 
 export const CustomerPermissionsText = [
   { key: "isCorporateFleetTaxExempt", text: "Is this customer tax exempt?" },
   {
     key: "shouldReceiveDiscount",
-    text: "Does this customer receive a discount?",
+    text: "Does this customer receive a discount?"
   },
   {
     key: "shouldLaborRateOverride",
-    text: "Does this customer have a labor rate override?",
+    text: "Does this customer have a labor rate override?"
   },
   {
     key: "shouldPricingMatrixOverride",
-    text: "Does this customer have a pricing matrix override?",
-  },
+    text: "Does this customer have a pricing matrix override?"
+  }
 ];
 
 export const CustomerDefaultPermissions = {
   isCorporateFleetTaxExempt: {
-    status: false,
+    status: false
   },
   shouldReceiveDiscount: {
     status: false,
-    percentageDiscount: "0",
+    percentageDiscount: "0"
   },
   shouldLaborRateOverride: {
     status: false,
-    laborRate: null,
+    laborRate: null
   },
   shouldPricingMatrixOverride: {
     status: false,
-    pricingMatrix: null,
-  },
+    pricingMatrix: null
+  }
 };
 
 export const PhoneOptions = [
@@ -158,40 +158,40 @@ export const PhoneOptions = [
   { key: "home", text: "Home" },
   { key: "office", text: "Office" },
   { key: "fax", text: "Fax" },
-  { key: "other", text: "Other" },
+  { key: "other", text: "Other" }
 ];
 
 export const RoleOptions = [
   {
     key: "5ca3473d70537232f13ff1f9",
-    text: "Sub-Admin",
+    text: "Sub-Admin"
   },
   {
     key: "5ca3473d70537232f13ff1fa",
-    text: "Technician",
-  },
+    text: "Technician"
+  }
 ];
 
 export const Transmission = [
   {
     key: "automatic",
-    text: "Automatic",
+    text: "Automatic"
   },
   {
     key: "manual",
-    text: "Manual",
-  },
+    text: "Manual"
+  }
 ];
 
 export const Drivetrain = [
   {
     key: "2x4",
-    text: "2x4",
+    text: "2x4"
   },
   {
     key: "4x4",
-    text: "4x4",
-  },
+    text: "4x4"
+  }
 ];
 
 export const labourPermission = {
@@ -208,3 +208,26 @@ export const labourPermissionText = {
 export const tierPermissionText = {
   showNoteOnQuotesInvoices:"Display note on quote & invoice"
 }
+export const orderPermission = {
+  isShowHours: true,
+  showNoteOnQuotesInvoices: true
+};
+
+export const CreatePartOptions = [
+  {
+    key: "isTaxed",
+    text: "Should this be taxed?"
+  },
+  {
+    key: "showNumberOnQuoteAndInvoice",
+    text: "Display part number on quote & invoice"
+  },
+  {
+    key: "showPriceOnQuoteAndInvoice",
+    text: "Display price and quantity on quote & invoice"
+  },
+  {
+    key: "showNoteOnQuoteAndInvoice",
+    text: "Display note on quote & invoice"
+  }
+];
