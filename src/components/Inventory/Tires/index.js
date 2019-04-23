@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getTiersList, updateTierStatus, deleteTier } from '../../../actions'
+import { getTiersList, updateTierStatus, deleteTier, editTier } from '../../../actions'
 import { connect } from "react-redux";
 import * as qs from "query-string";
 import { isEqual } from "../../../helpers/Object";
@@ -13,7 +13,6 @@ import {
   Label,
   InputGroup,
   Input,
-  Badge,
   Button
 } from "reactstrap";
 import { AppConfig } from "../../../config/AppConfig";
@@ -104,11 +103,14 @@ class Tires extends Component {
       hasFilter = true;
     }
     this.setState({ filterApplied: hasFilter });
-    this.props.onSearch(param);
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(param)].join("?"))
   };
 
   onReset = e => {
     e.preventDefault();
+    this.onSearch(e);
     this.setState({
       page: 1,
       search: "",
@@ -119,7 +121,6 @@ class Tires extends Component {
       selectedTires: [],
       filterApplied: false
     });
-    this.props.onSearch({});
   };
 
   onDelete = async (isMultiple = false) => {
@@ -154,7 +155,7 @@ class Tires extends Component {
   };
 
   onUpdate = (id, data) => {
-    this.props.onUpdate(id, data);
+    this.props.updateTire(id, data);
   };
 
   handleCheckboxChnage = e => {
@@ -267,7 +268,6 @@ class Tires extends Component {
       page,
       search,
       sort,
-      status,
       selectedTires,
       tire
     } = this.state;
@@ -287,12 +287,12 @@ class Tires extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by brand name and modal name"
+                      placeholder="Search by brand, modal and seasonality"
                     />
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={"2"} md={"2"} className="mb-0">
+              {/* <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
                   <Label htmlFor="exampleSelect" className="label">
                     Tire Status
@@ -311,7 +311,7 @@ class Tires extends Component {
                     <option value={0}>Inactive</option>
                   </Input>
                 </FormGroup>
-              </Col>
+              </Col> */}
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
                   <Label htmlFor="SortFilter" className="label">
@@ -373,7 +373,7 @@ class Tires extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive bordered className={"tire-table"}>
           <thead>
             <tr>
               <th width="90px">
@@ -402,8 +402,6 @@ class Tires extends Component {
                       onChange={this.handleActionChange}
                     >
                       <option value={''}>Select</option>
-                      <option value={'active'}>Active</option>
-                      <option value={'inactive'}>Inactive</option>
                       <option value={'delete'}>Delete</option>
                     </Input>
                   ) :
@@ -415,24 +413,22 @@ class Tires extends Component {
                       onChange={this.handleActionChange}
                     >
                       <option value={''}>Select</option>
-                      <option value={'active'}>Active</option>
-                      <option value={'inactive'}>Inactive</option>
                       <option value={'delete'}>Delete</option>
                     </Input>}
                 </div>
               </th>
               <th>Brand Name</th>
               <th>Modal Name</th>
-              <th>Size</th>
-              <th>Part Number</th>
-              <th>Cost</th>
-              <th>Retails Price</th>
-              <th>Quatity</th>
-              <th>BIN/Location</th>
+              <th className={"tire-size-th"} width={"100"}>Size</th>
+              <th className={"tire-th"} width={"70"}>Part Number</th>
+              <th className={"tire-th"} width={"70"}>Cost</th>
+              <th className={"tire-th"} width={"70"}>Retails Price</th>
+              <th className={"tire-th"} width={"70"}>Quatity</th>
+              <th className={"tire-bin-th"} width={"70"}>BIN/Location</th>
               <th>Vendor</th>
               <th>Seasonality</th>
-              <th className={"text-center"}>Tire Status</th>
-              <th className={"text-center"}>Action</th>
+              {/* <th className={"text-center"}>Tire Status</th> */}
+              <th className={"text-center action-td"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -459,23 +455,27 @@ class Tires extends Component {
                         {tire.brandName || "-"}
                       </td>
                       <td>{tire.modalName || "-"}</td>
-                      {tire.tierSize ? tire.tierSize.map((size, index) => {
-                        return (
-                          <React.Fragment key={index}>
-                            <td>{size.baseInfo || "-"}</td>
-                            <td>{size.part || "-"}</td>
-                            <td>{size.cost || "-"}</td>
-                            <td>{size.retailPrice || "-"}</td>
-                            <td>{size.quantity || "-"}</td>
-                            <td>{size.bin || "-"}</td>
-                          </React.Fragment>
-                        )
-                      }) : null}
+                      <td colSpan={"6"}>
+                        <table className={"table tire-size-table"}>
+                          {tire.tierSize ? tire.tierSize.map((size, index) => {
+                            return (
+                              <tr key={index}>
+                                <td width={"100"}>{size.baseInfo || "-"}</td>
+                                <td width={"70"}>{size.part || "-"}</td>
+                                <td width={"70"}>{size.cost || "-"}</td>
+                                <td width={"70"}>{size.retailPrice || "-"}</td>
+                                <td width={"70"}>{size.quantity || "-"}</td>
+                                <td width={"70"}>{size.bin || "-"}</td>
+                              </tr>
+                            )
+                          }) : null}
+                        </table>
+                      </td>
                       <td>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
-                      <td>
+                      <td className={"season-td"}>
                         {tire.seasonality || "-"}
                       </td>
-                      <td className={"text-center"}>
+                      {/* <td className={"text-center"}>
                         {tire.status ? (
                           <Badge
                             className={"badge-button"}
@@ -511,8 +511,8 @@ class Tires extends Component {
                               Inactive
                           </Badge>
                           )}
-                      </td>
-                      <td className={"text-center"}>
+                      </td> */}
+                      <td className={"text-center action-td"}>
                         <Button
                           color={"primary"}
                           size={"sm"}
@@ -546,6 +546,7 @@ class Tires extends Component {
                           Delete {tire.brandName}
                         </UncontrolledTooltip>
                       </td>
+
                     </tr>
                   );
                 })
@@ -607,6 +608,9 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteTire: data => {
     dispatch(deleteTier(data));
+  },
+  updateTire: (id, data) => {
+    dispatch(editTier({ id, data }));
   }
 });
 export default connect(

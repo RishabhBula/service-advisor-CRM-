@@ -20,6 +20,7 @@ import {
    CreateTierValidations,
    CreateTierValidMessaages
 } from "../../../validations";
+import MaskedInput from "react-maskedinput";
 
 export class CrmTyreModal extends Component {
    constructor(props) {
@@ -51,7 +52,7 @@ export class CrmTyreModal extends Component {
    }
 
    componentDidUpdate = ({ tyreModalOpen, tireData }) => {
-      if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.tireData._id) {
+      if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.tireData) {
          this.removeAllState();
       }
       if (
@@ -91,6 +92,8 @@ export class CrmTyreModal extends Component {
       const { name, value } = event.target;
       const tierSize = [...this.state.tierSize];
       tierSize[index][name] = value;
+      console.log("tierSize[index][name]", index);
+      console.log("tierSize", tierSize);
       this.setState({
          tierSize
       });
@@ -149,21 +152,7 @@ export class CrmTyreModal extends Component {
          modalName,
          vendor,
          seasonality,
-         tierSize: [
-            {
-               baseInfo,
-               notes,
-               part,
-               bin,
-               quantity,
-               criticalQuantity,
-               priceMatrix,
-               cost,
-               retailPrice,
-               markup,
-               margin
-            }
-         ],
+         tierSize,
          tierDefaultPermissions
       } = this.state
 
@@ -172,21 +161,7 @@ export class CrmTyreModal extends Component {
          modalName,
          vendor,
          seasonality,
-         tierSize: [
-            {
-               baseInfo,
-               notes,
-               part,
-               bin,
-               quantity,
-               criticalQuantity,
-               priceMatrix,
-               cost,
-               retailPrice,
-               markup,
-               margin
-            }
-         ],
+         tierSize,
          tierDefaultPermissions
       }
       const { isValid, errors } = Validator(
@@ -200,7 +175,12 @@ export class CrmTyreModal extends Component {
          });
          return;
       } else {
-         this.props.addTier(payload)
+         if (!this.state.isEditMode) {
+            this.props.addTier(payload)
+         } else {
+            const tireId = this.props.tireData._id
+            this.props.updateTire(tireId, payload)
+         }
       }
    };
 
@@ -306,10 +286,12 @@ export class CrmTyreModal extends Component {
                                     <Col md="6">
                                        <h6>Base Info</h6>
                                        <FormGroup>
-                                          <Input
+                                          <MaskedInput
+                                             mask="111/11R11 11T"
                                              type="text"
+                                             className={"form-control"}
                                              name="baseInfo"
-                                             value={tierSize.baseInfo}
+                                             value={tierSize[index].baseInfo}
                                              onChange={e => this.handleTireSizeStates(index, e)}
                                              placeholder={"175/70R13 82T"}
                                           />
@@ -320,7 +302,7 @@ export class CrmTyreModal extends Component {
                                              type="textarea"
                                              col={"2"}
                                              row={"5"}
-                                             value={tierSize.notes}
+                                             value={tierSize[index].notes}
                                              name="notes"
                                              onChange={e => this.handleTireSizeStates(index, e)}
                                              placeholder={"175/70R13 82T"}
@@ -334,7 +316,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="part"
-                                                      value={tierSize.part}
+                                                      value={tierSize[index].part}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -346,7 +328,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="bin"
-                                                      value={tierSize.bin}
+                                                      value={tierSize[index].bin}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -360,7 +342,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="quantity"
-                                                      value={tierSize.quantity}
+                                                      value={tierSize[index].quantity}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -372,7 +354,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="criticalQuantity"
-                                                      value={tierSize.criticalQuantity}
+                                                      value={tierSize[index].criticalQuantity}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -398,7 +380,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="cost"
-                                                      value={tierSize.cost}
+                                                      value={tierSize[index].cost}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -410,7 +392,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="retailPrice"
-                                                      value={tierSize.retailPrice}
+                                                      value={tierSize[index].retailPrice}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -471,6 +453,7 @@ export class CrmTyreModal extends Component {
                               }
                               onClick={this.handleClick}
                               variant={"3d"}
+                              value={tierDefaultPermissions.showNoteOnQuotesInvoices}
                               color={"primary"}
                               size={"sm"}
                            />
@@ -481,7 +464,7 @@ export class CrmTyreModal extends Component {
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleAddTire()}>
-                     Add New Tier
+                     {!isEditMode ? "Add New Tier" : `Update tire details`}
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel

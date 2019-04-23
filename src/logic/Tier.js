@@ -156,37 +156,41 @@ const deleteTireLogic = createLogic({
 const editTiresLogic = createLogic({
    type: tiersActions.EDIT_TIER,
    async process({ action }, dispatch, done) {
-     dispatch(showLoader());
-     logger(action.payload);
-     let api = new ApiHelper();
-     let result = await api.FetchFromServer(
-       "/tier",
-       ["/updateTier", action.payload.id].join("/"),
-       "PUT",
-       true,
-       undefined,
-       action.payload.data
-     );
-     if (result.isError) {
-       toast.error(result.messages[0]);
-       dispatch(hideLoader());
-       done();
-       return;
-     } else {
-       toast.success(result.messages[0]);
- 
-       dispatch(
-         modelOpenRequest({
-           modelDetails: {
-            tireEditModalOpen: false
-           }
-         })
-       );
-       dispatch(hideLoader());
-       done();
-     }
+      dispatch(showLoader());
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/tier",
+         "/updateTier",
+         "PUT",
+         true,
+         undefined,
+         action.payload
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         dispatch(hideLoader());
+         done();
+         return;
+      } else {
+         toast.success(result.messages[0]);
+         dispatch(
+            getTiersList({
+               ...action.payload
+            })
+         );
+         dispatch(
+            modelOpenRequest({
+               modelDetails: {
+                  tireEditModalOpen: false
+               }
+            })
+         );
+         dispatch(hideLoader());
+         done();
+      }
    }
- });
+});
 
 export const TiersLogic = [
    addTireLogic,
