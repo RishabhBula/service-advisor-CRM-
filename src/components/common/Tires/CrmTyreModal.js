@@ -45,13 +45,37 @@ export class CrmTyreModal extends Component {
             }
          ],
          tierDefaultPermissions: tierPermission,
-         errors: {}
+         errors: {},
+         isEditMode: false
       };
    }
 
-   componentDidUpdate = (prevProps) => {
-      if (prevProps.tyreModalOpen !== this.props.tyreModalOpen) {
+   componentDidUpdate = ({ tyreModalOpen, tireData }) => {
+      if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.tireData._id) {
          this.removeAllState();
+      }
+      if (
+         this.props.tireData &&
+         this.props.tireData._id &&
+         (tireData._id !== this.props.tireData._id)
+      ) {
+         const {
+            brandName,
+            modalName,
+            vendor,
+            seasonality,
+            tierSize,
+            tierPermission
+         } = this.props.tireData;
+         this.setState({
+            isEditMode: true,
+            brandName,
+            modalName,
+            vendor,
+            seasonality,
+            tierSize,
+            tierPermission
+         });
       }
    }
 
@@ -208,7 +232,7 @@ export class CrmTyreModal extends Component {
 
    render() {
       const { tyreModalOpen, handleTierModal } = this.props;
-      const { tierSize, tierDefaultPermissions, errors, brandName } = this.state;
+      const { tierSize, tierDefaultPermissions, errors, modalName, seasonality, brandName, isEditMode } = this.state;
       return (
          <>
             <Modal
@@ -217,21 +241,22 @@ export class CrmTyreModal extends Component {
                backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
-               <ModalHeader toggle={handleTierModal}>Create New Tire</ModalHeader>
+               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}</ModalHeader>
                <ModalBody>
                   <div className="">
                      <Row className="justify-content-center">
                         <Col md="4">
                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style">
+                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Brand Name <span className={"asteric"}>*</span>
                               </Label>
                               <Input
                                  onChange={this.handleChange}
                                  className={"form-control"}
                                  name="brandName"
+                                 value={brandName}
                                  type={"text"}
-                                 invalid={errors.brandName}
+                                 invalid={errors.brandName && !brandName}
                               />
                               <FormFeedback>
                                  {errors && !brandName && errors.brandName
@@ -242,11 +267,12 @@ export class CrmTyreModal extends Component {
                         </Col>
                         <Col md="4">
                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style">
+                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Modal Name
                               </Label>
                               <Input
                                  name="modalName"
+                                 value={modalName}
                                  onChange={this.handleChange}
                                  className={"form-control"}
                                  type={"text"} />
@@ -254,7 +280,7 @@ export class CrmTyreModal extends Component {
                         </Col>
                         <Col md="4">
                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style">
+                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Vendor
                               </Label>
                               <Input className={"form-control"} type={"text"} />
@@ -265,9 +291,9 @@ export class CrmTyreModal extends Component {
                         <h6>Seasonality</h6>
                         <FormGroup>
                            <ButtonGroup className="tyre-season">
-                              <Button onClick={() => this.handleButtonClick("summer")} color="info">Summer</Button>
-                              <Button onClick={() => this.handleButtonClick("winter")} color="info">Winter</Button>
-                              <Button onClick={() => this.handleButtonClick("all seasons")} color="info">All Seasons</Button>
+                              <Button value={seasonality} onClick={() => this.handleButtonClick("summer")} color="info">Summer</Button>
+                              <Button value={seasonality} onClick={() => this.handleButtonClick("winter")} color="info">Winter</Button>
+                              <Button value={seasonality} onClick={() => this.handleButtonClick("all seasons")} color="info">All Seasons</Button>
                            </ButtonGroup>
                         </FormGroup>
                      </div>
@@ -283,6 +309,7 @@ export class CrmTyreModal extends Component {
                                           <Input
                                              type="text"
                                              name="baseInfo"
+                                             value={tierSize.baseInfo}
                                              onChange={e => this.handleTireSizeStates(index, e)}
                                              placeholder={"175/70R13 82T"}
                                           />
@@ -293,6 +320,7 @@ export class CrmTyreModal extends Component {
                                              type="textarea"
                                              col={"2"}
                                              row={"5"}
+                                             value={tierSize.notes}
                                              name="notes"
                                              onChange={e => this.handleTireSizeStates(index, e)}
                                              placeholder={"175/70R13 82T"}
@@ -306,6 +334,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="part"
+                                                      value={tierSize.part}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -317,6 +346,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="bin"
+                                                      value={tierSize.bin}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -330,6 +360,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="quantity"
+                                                      value={tierSize.quantity}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -341,6 +372,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="criticalQuantity"
+                                                      value={tierSize.criticalQuantity}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -366,6 +398,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="cost"
+                                                      value={tierSize.cost}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -377,6 +410,7 @@ export class CrmTyreModal extends Component {
                                                    <Input
                                                       type="text"
                                                       name="retailPrice"
+                                                      value={tierSize.retailPrice}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
                                                       placeholder={"175/70R13 82T"}
                                                    />
@@ -407,7 +441,7 @@ export class CrmTyreModal extends Component {
                                     </Col>
                                  </Row>
                                  <Button
-                                    className="btn-sm"
+                                    className="btn-sm btn btn-danger remove-tire-btn"
                                     onClick={() => this.handleRemoveTierSize(index)}
                                  >
                                     <i className="fas fa-times" />

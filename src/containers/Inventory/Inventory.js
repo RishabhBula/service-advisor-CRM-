@@ -17,7 +17,6 @@ import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import {
   addNewTier,
 } from '../../actions'
-
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
 );
@@ -84,6 +83,7 @@ class Inventory extends Component {
       });
     }
   }
+
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
     if (location.pathname !== newLocation.pathname) {
@@ -104,17 +104,17 @@ class Inventory extends Component {
     const { activeTab } = this.state;
     const { modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { typeAddModalOpen } = modelDetails;
+    const { tireAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return null;
       case AppRoutes.INVENTORY_TIRES.url:
         return (
           <CrmTyreModal
-            tyreModalOpen={typeAddModalOpen}
+            tyreModalOpen={tireAddModalOpen}
             handleTierModal={() =>
               modelOperate({
-                typeAddModalOpen: !typeAddModalOpen
+                tireAddModalOpen: !tireAddModalOpen
               })
             }
             addTier={this.props.addTier}
@@ -136,7 +136,7 @@ class Inventory extends Component {
         return null;
       case AppRoutes.INVENTORY_TIRES.url:
         modelDetails = {
-          typeAddModalOpen: true
+          tireAddModalOpen: true
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
@@ -204,7 +204,7 @@ class Inventory extends Component {
                       path={route.path}
                       exact={route.exact}
                       name={route.name}
-                      render={props => <route.component {...props} />}
+                      render={props => <route.component {...props} {...this.props} />}
                     />
                   ) : null;
                 })}
@@ -225,7 +225,7 @@ const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
   addTier: data => {
     dispatch(addNewTier(data));
-  },
+  }
 });
 export default connect(
   mapStateToProps,

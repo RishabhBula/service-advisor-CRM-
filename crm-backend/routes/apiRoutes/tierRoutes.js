@@ -15,4 +15,7 @@ router.get("/tierList", token.authorisedUser, tierController.getAllTierList);
 
 /* ----------Delete tier routes------------ */
 router.delete("/delete", token.authorisedUser, tierController.deleteTier);
+
+/* ----------Update status tier routes------------ */
+router.post("/updateStatus", token.authorisedUser, tierController.updateStatus);
 module.exports = router;

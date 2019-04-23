@@ -13,14 +13,14 @@ export class CrmStandardModel extends Component {
   }
 
   componentDidUpdate({ openStadardRateModel }) {
-    // if (this.props.openStadardRateModel !== openStadardRateModel) {
-    //   this.setState({
-    //     openStadardRateModel: false,
-    //     name: "",
-    //     hourRate: "",
-    //     isSubmitted: false
-    //   });
-    // }
+    if (this.props.openStadardRateModel !== openStadardRateModel) {
+      this.setState({
+        openStadardRateModel: false,
+        name: "",
+        hourRate: "",
+        isSubmitted: false
+      });
+    }
   }
 
   toggle = () => {

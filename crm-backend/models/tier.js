@@ -10,7 +10,7 @@ const tierSchema = new Schema({
         type: String,
         default: null
     },
-    vendor: {
+    vendorId: {
         type: Schema.Types.ObjectId,
         ref: "Vendor",
         default: null

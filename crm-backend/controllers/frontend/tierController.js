@@ -21,7 +21,7 @@ const createNewTier = async (req, res) => {
         const addNewTier = {
             brandName: body.brandName,
             modalName: body.modalName,
-            vendor: body.vendor ? body.vendor : null,
+            vendorId: body.vendor ? body.vendor : null,
             seasonality: body.seasonality,
             tierSize: body.tierSize,
             tierPermission: body.tierDefaultPermissions,
@@ -163,9 +163,10 @@ const getAllTierList = async (req, res) => {
             condition["$and"].push({ status: status });
         }
         const getAllTier = await tierModel
-            .find({
-                ...condition,
-            })
+            .find(
+                condition,
+            )
+            .populate("vendorId")
             .sort(sortBy)
             .skip(offset)
             .limit(limit);
@@ -194,7 +195,7 @@ const deleteTier = async ({ body }, res) => {
     try {
         const data = await tierModel.updateMany(
             {
-                _id: { $in: body.tierId }
+                _id: { $in: body.tireId }
             },
             {
                 $set: {
@@ -216,9 +217,37 @@ const deleteTier = async ({ body }, res) => {
 };
 /*----------------Delete tier End-------------*/
 
+/* Update tire status */
+const updateStatus = async ({ body }, res) => {
+    try {
+        const data = await tierModel.updateMany(
+            {
+                _id: { $in: body.tires }
+            },
+            {
+                $set: {
+                    status: body.status
+                }
+            }
+        );
+        return res.status(200).json({
+            message: body.status
+                ? "Tire activated successfully!"
+                : "Tire inactivated successfully!",
+            data
+        });
+    } catch (error) {
+        console.log("this is update status of tire error", error);
+        return res.status(500).json({
+            message: error.message ? error.message : "Unexpected error occure.",
+            success: false
+        });
+    }
+};
 module.exports = {
     createNewTier,
     updateTierdetails,
     getAllTierList,
-    deleteTier
+    deleteTier,
+    updateStatus
 };
