@@ -83,7 +83,7 @@ class Tires extends Component {
       page: 1,
       selectedTires: []
     });
-    const { search, sort, status, type } = this.state;
+    const { search, sort } = this.state;
     let param = {};
     param.page = 1;
     let hasFilter = false;
@@ -93,14 +93,6 @@ class Tires extends Component {
     }
     if (sort) {
       param.sort = sort;
-    }
-    if (status) {
-      param.status = status;
-      hasFilter = true;
-    }
-    if (type) {
-      param.type = type;
-      hasFilter = true;
     }
     this.setState({ filterApplied: hasFilter });
     const { location } = this.props;
@@ -456,8 +448,8 @@ class Tires extends Component {
                       </td>
                       <td>{tire.modalName || "-"}</td>
                       <td colSpan={"6"}>
-                        <table className={"table tire-size-table"}>
-                          {tire.tierSize ? tire.tierSize.map((size, index) => {
+                        <table className={"table tire-size-table justify-content-center"}>
+                          {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
                             return (
                               <tr key={index}>
                                 <td width={"100"}>{size.baseInfo || "-"}</td>
@@ -468,7 +460,11 @@ class Tires extends Component {
                                 <td width={"70"}>{size.bin || "-"}</td>
                               </tr>
                             )
-                          }) : null}
+                          }) :
+                            <div className={"justify-content-center"}>
+                              No tire size added
+                          </div>
+                          }
                         </table>
                       </td>
                       <td>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
@@ -589,6 +585,7 @@ class Tires extends Component {
           }
           tireData={tire}
           updateTire={this.onUpdate}
+          vendorList={this.props.vendorReducer}
         />
       </>
     );
@@ -597,7 +594,8 @@ class Tires extends Component {
 
 const mapStateToProps = state => ({
   tireReducer: state.tiresReducer,
-  modelInfoReducer: state.modelInfoReducer
+  modelInfoReducer: state.modelInfoReducer,
+  vendorReducer: state.vendorsReducer
 });
 const mapDispatchToProps = dispatch => ({
   getTires: data => {
@@ -611,7 +609,7 @@ const mapDispatchToProps = dispatch => ({
   },
   updateTire: (id, data) => {
     dispatch(editTier({ id, data }));
-  }
+  },
 });
 export default connect(
   mapStateToProps,

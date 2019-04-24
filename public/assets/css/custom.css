@@ -594,23 +594,23 @@
 .custom-form-modal .modal-header .close:focus{
   outline: none;
 }
-.custom-form-modal .btn-primary{
+.custom-form-modal .modal-footer .btn-primary{
   background: linear-gradient(to bottom, #8358f0, #5c43db);
   border-color: #5c43db;
   font-size: 16px;
   font-weight: 600;
 }
-.custom-form-modal .btn-primary:hover{
+.custom-form-modal .modal-footer .btn-primary:hover{
   background: linear-gradient(to bottom,  #5c43db, #8358f0);
    border-color: #5c43db;
 }
-.custom-form-modal .btn-secondary{
+.custom-form-modal .modal-footer .btn-secondary{
   background: linear-gradient(to bottom, #f6b42a, #df900c);
   font-size: 16px;
   color: #fff;
   border-color: #df900c;
 }
-.custom-form-modal .btn-secondary:hover{
+.custom-form-modal .modal-footer .btn-secondary:hover{
   background: linear-gradient(to bottom,#df900c,  #f6b42a);
   border-color: #df900c;
   color: #fff;
@@ -903,6 +903,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .tire-size-table tr:nth-child(1) td{
   border-top: 0px;
 }
-
+.season-btn{
+  background-color: #fff !important;
+  border-color: #000;
+}
 /* Tyre CSS END*/
 

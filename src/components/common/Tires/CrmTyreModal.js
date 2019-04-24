@@ -21,6 +21,7 @@ import {
    CreateTierValidMessaages
 } from "../../../validations";
 import MaskedInput from "react-maskedinput";
+import Async from "react-select/lib/Async";
 
 export class CrmTyreModal extends Component {
    constructor(props) {
@@ -45,8 +46,9 @@ export class CrmTyreModal extends Component {
                margin: ""
             }
          ],
-         tierDefaultPermissions: tierPermission,
+         tierPermission: tierPermission,
          errors: {},
+         seasonBtnClass: "",
          isEditMode: false
       };
    }
@@ -81,19 +83,26 @@ export class CrmTyreModal extends Component {
    }
 
    handleClick = (e) => {
-      let { tierDefaultPermissions } = this.state;
-      tierDefaultPermissions.showNoteOnQuotesInvoices = e.target.checked;
+      let { tierPermission } = this.state;
+      tierPermission.showNoteOnQuotesInvoices = e.target.checked;
       this.setState({
-         tierDefaultPermissions
+         tierPermission
       });
    }
 
    handleTireSizeStates = (index, event) => {
       const { name, value } = event.target;
+      if (
+         (name === 'quantity' ||
+          name === 'criticalQuantity' ||
+          name === 'cost' ||
+          name === 'retailPrice') &&
+         isNaN(value)
+      ) {
+         return
+      }
       const tierSize = [...this.state.tierSize];
       tierSize[index][name] = value;
-      console.log("tierSize[index][name]", index);
-      console.log("tierSize", tierSize);
       this.setState({
          tierSize
       });
@@ -136,7 +145,8 @@ export class CrmTyreModal extends Component {
    };
    handleButtonClick = (value) => {
       this.setState({
-         seasonality: value
+         seasonality: value,
+         seasonBtnClass: "season-btn-active"
       })
    }
    handleChange = event => {
@@ -153,7 +163,7 @@ export class CrmTyreModal extends Component {
          vendor,
          seasonality,
          tierSize,
-         tierDefaultPermissions
+         tierPermission
       } = this.state
 
       const payload = {
@@ -162,7 +172,7 @@ export class CrmTyreModal extends Component {
          vendor,
          seasonality,
          tierSize,
-         tierDefaultPermissions
+         tierPermission
       }
       const { isValid, errors } = Validator(
          payload,
@@ -205,14 +215,24 @@ export class CrmTyreModal extends Component {
                margin: ""
             }
          ],
-         tierDefaultPermissions: tierPermission,
+         tierPermission: tierPermission,
          errors: {}
       });
    }
 
    render() {
-      const { tyreModalOpen, handleTierModal } = this.props;
-      const { tierSize, tierDefaultPermissions, errors, modalName, seasonality, brandName, isEditMode } = this.state;
+      const { tyreModalOpen, handleTierModal, vendorList } = this.props;
+      const {
+         tierSize,
+         tierPermission,
+         errors,
+         modalName,
+         seasonality,
+         brandName,
+         isEditMode,
+         seasonBtnClass } = this.state;
+      console.log("*****Vendor List*****", vendorList);
+
       return (
          <>
             <Modal
@@ -235,6 +255,7 @@ export class CrmTyreModal extends Component {
                                  className={"form-control"}
                                  name="brandName"
                                  value={brandName}
+                                 placeholder={"MRF"}
                                  type={"text"}
                                  invalid={errors.brandName && !brandName}
                               />
@@ -253,17 +274,23 @@ export class CrmTyreModal extends Component {
                               <Input
                                  name="modalName"
                                  value={modalName}
+                                 placeholder={"Road Grip"}
                                  onChange={this.handleChange}
                                  className={"form-control"}
                                  type={"text"} />
                            </FormGroup>
                         </Col>
                         <Col md="4">
-                           <FormGroup>
+                           <FormGroup className={"fleet-block"}>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Vendor
                               </Label>
-                              <Input className={"form-control"} type={"text"} />
+                              <Async
+                                 // defaultOptions={}
+                                 className={"w-100 form-select"}
+                                 loadOptions={this.loadOptions}
+                                 onChange={this.handleStandardRate}
+                              />
                            </FormGroup>
                         </Col>
                      </Row>
@@ -271,9 +298,23 @@ export class CrmTyreModal extends Component {
                         <h6>Seasonality</h6>
                         <FormGroup>
                            <ButtonGroup className="tyre-season">
-                              <Button value={seasonality} onClick={() => this.handleButtonClick("summer")} color="info">Summer</Button>
-                              <Button value={seasonality} onClick={() => this.handleButtonClick("winter")} color="info">Winter</Button>
-                              <Button value={seasonality} onClick={() => this.handleButtonClick("all seasons")} color="info">All Seasons</Button>
+                              <Button
+                                 value={seasonality}
+                                 className={seasonality === 'summer' ? seasonBtnClass : "season-btn"}
+                                 onClick={() => this.handleButtonClick("summer")}
+                              >
+                                 Summer
+                              </Button>
+                              <Button
+                                 value={seasonality}
+                                 className={seasonality === 'winter' ? seasonBtnClass : "season-btn"}
+                                 onClick={() => this.handleButtonClick("winter")}
+                              >Winter</Button>
+                              <Button
+                                 value={seasonality}
+                                 className={seasonality === 'all seasons' ? seasonBtnClass : "season-btn"}
+                                 onClick={() => this.handleButtonClick("all seasons")}
+                              >All Seasons</Button>
                            </ButtonGroup>
                         </FormGroup>
                      </div>
@@ -301,11 +342,10 @@ export class CrmTyreModal extends Component {
                                           <Input
                                              type="textarea"
                                              col={"2"}
-                                             row={"5"}
+                                             row={"3"}
                                              value={tierSize[index].notes}
                                              name="notes"
                                              onChange={e => this.handleTireSizeStates(index, e)}
-                                             placeholder={"175/70R13 82T"}
                                           />
                                        </FormGroup>
                                        <div className="child-row">
@@ -344,7 +384,7 @@ export class CrmTyreModal extends Component {
                                                       name="quantity"
                                                       value={tierSize[index].quantity}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175/70R13 82T"}
+                                                      placeholder={"123"}
                                                    />
                                                 </FormGroup>
                                              </Col>
@@ -356,7 +396,7 @@ export class CrmTyreModal extends Component {
                                                       name="criticalQuantity"
                                                       value={tierSize[index].criticalQuantity}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175/70R13 82T"}
+                                                      placeholder={"1"}
                                                    />
                                                 </FormGroup>
                                              </Col>
@@ -369,7 +409,6 @@ export class CrmTyreModal extends Component {
                                           <Input
                                              type="text"
                                              onChange={e => this.handleTireSizeStates(index, e)}
-                                             placeholder={"175/70R13 82T"}
                                           />
                                        </FormGroup>
                                        <div className="child-row">
@@ -446,14 +485,18 @@ export class CrmTyreModal extends Component {
                            <p className="customer-modal-text-style">
                               {tierPermissionText.showNoteOnQuotesInvoices}
                            </p>
+                           {
+                              (tierPermission.showNoteOnQuotesInvoices)
+
+                           }
                            <AppSwitch
                               className={"mx-1"}
                               checked={
-                                 tierDefaultPermissions.showNoteOnQuotesInvoices
+                                 tierPermission.showNoteOnQuotesInvoices
                               }
                               onClick={this.handleClick}
                               variant={"3d"}
-                              value={tierDefaultPermissions.showNoteOnQuotesInvoices}
+                              // value={tierPermission.showNoteOnQuotesInvoices}
                               color={"primary"}
                               size={"sm"}
                            />
