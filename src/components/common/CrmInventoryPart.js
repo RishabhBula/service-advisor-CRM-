@@ -73,7 +73,8 @@ class CrmInventoryPart extends Component {
         markup,
         margin,
         criticalQuantity,
-        quantity
+        quantity,
+        partOptions
       } = this.state;
       let data = {
         partDescription,
@@ -87,7 +88,8 @@ class CrmInventoryPart extends Component {
         markup,
         margin,
         criticalQuantity,
-        quantity
+        quantity,
+        partOptions
       };
       const { isValid, errors } = Validator(
         data,

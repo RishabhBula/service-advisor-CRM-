@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  getInventoryPartsList,
-  getInventoryPartVendors
-} from "../../../actions";
+import { getInventoryPartsList } from "../../../actions";
 import {
   Row,
   Col,
@@ -13,11 +10,15 @@ import {
   InputGroup,
   Input,
   UncontrolledTooltip,
-  Table
+  Table,
+  Badge
 } from "reactstrap";
 import { Async } from "react-select";
-import { logger } from "../../../helpers/Logger";
+import * as qs from "query-string";
 import Loader from "../../../containers/Loader/Loader";
+import { AppConfig } from "../../../config/AppConfig";
+import PaginationHelper from "../../../helpers/Pagination";
+import { logger } from "../../../helpers/Logger";
 class Parts extends Component {
   constructor(props) {
     super(props);
@@ -25,12 +26,58 @@ class Parts extends Component {
       vendorId: "",
       search: "",
       status: "",
-      sort: ""
+      sort: "",
+      filterApplied: false,
+      limit: AppConfig.ITEMS_PER_PAGE,
+      page: 1
     };
   }
   componentDidMount() {
-    this.props.getParts();
+    const { limit } = this.state;
+    let query = {
+      limit
+    };
+    const queryParams = qs.parse(this.props.location.search);
+    const { page, search, status, sort, vendorId } = queryParams;
+    logger(page);
+    this.setState({
+      page: page && page > 0 ? parseInt(page) : 1,
+      search,
+      status,
+      sort,
+      vendorId: vendorId ? qs.parse(vendorId) : ""
+    });
+    if (vendorId) {
+      query.vendorId = qs.parse(vendorId).value;
+    }
+    this.props.getParts({ ...queryParams, ...query });
   }
+  componentDidUpdate({ location }) {
+    const { location: currentLocation } = this.props;
+    const { search } = location;
+    const { search: currentSearch } = currentLocation;
+    if (search !== currentSearch) {
+      let query = qs.parse(currentSearch);
+      this.setState({ ...query, page: parseInt(query.page) });
+      if (query.vendorId) {
+        query.vendorId = qs.parse(query.vendorId).value;
+      }
+      this.props.getParts(query);
+    }
+  }
+  onPageChange = page => {
+    const { location } = this.props;
+    const { pathname } = location;
+    const { search, status, sort, vendorId } = this.state;
+    const query = {
+      page,
+      search,
+      status,
+      sort,
+      vendorId: vendorId ? qs.stringify(vendorId) : undefined
+    };
+    this.props.redirectTo(`${pathname}?${qs.stringify(query)}`);
+  };
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -38,15 +85,40 @@ class Parts extends Component {
   };
   onSearch = e => {
     e.preventDefault();
-    logger(this.state);
+    const { location } = this.props;
+    const { pathname } = location;
+    const { search, status, sort, vendorId } = this.state;
+    const query = {
+      page: 1,
+      search,
+      status,
+      sort,
+      vendorId: vendorId ? qs.stringify(vendorId) : undefined
+    };
+    this.setState({
+      filterApplied: true,
+      page: 1
+    });
+    this.props.redirectTo(`${pathname}?${qs.stringify(query)}`);
+  };
+  onReset = e => {
+    e.preventDefault();
+    this.setState({
+      filterApplied: false,
+      vendorId: "",
+      page: 1
+    });
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo(`${pathname}`);
   };
   loadOptions = (input, callback) => {
     this.props.getInventoryPartsVendors({ input, callback });
   };
   render() {
-    const { vendorId, search, status, sort } = this.state;
+    const { vendorId, search, status, sort, filterApplied, page } = this.state;
     const { inventoryPartsData } = this.props;
-    const { isLoading, parts } = inventoryPartsData;
+    const { isLoading, parts, totalParts } = inventoryPartsData;
     return (
       <>
         <div className={"filter-block"}>
@@ -62,7 +134,7 @@ class Parts extends Component {
                       onChange={this.handleChange}
                       className="form-control"
                       aria-describedby="searchUser"
-                      placeholder="Search by part description and note"
+                      placeholder="Search by part description, note, part number and location"
                       value={search}
                     />
                   </InputGroup>
@@ -109,6 +181,7 @@ class Parts extends Component {
                     <option value={"chtol"}>Cost(High to High)</option>
                     <option value={"rpltoh"}>Retail Price(Low to High)</option>
                     <option value={"rphtol"}>Retail Price(High to High)</option>
+                    <option value={"cdltoh"}>Last created</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -128,6 +201,7 @@ class Parts extends Component {
                             vendorId: e
                           });
                         }}
+                        clearable={true}
                       />
                     </FormGroup>
                   </Col>
@@ -172,15 +246,14 @@ class Parts extends Component {
           <thead>
             <tr>
               <th width="90px">S.no</th>
-              <th>Member Name</th>
-              <th>Email</th>
-              <th>Rate/hour</th>
-              <th className={"text-center"}>Role</th>
-              <th>Registered</th>
-              <th>Last Login</th>
-              <th>Last Login IP</th>
-              <th className={"text-center"}>Invitation Status</th>
-              <th className={"text-center"}>User Status</th>
+              <th>Part Description</th>
+              <th>Note</th>
+              <th>Part number</th>
+              <th className={"text-center"}>Vendor</th>
+              <th>Bin/Location</th>
+              <th>Cost</th>
+              <th>Retail Price</th>
+              <th className={"text-center"}>Quantity</th>
               <th className={"text-center"}>Action</th>
             </tr>
           </thead>
@@ -191,9 +264,53 @@ class Parts extends Component {
                   <Loader />
                 </td>
               </tr>
-            ) : null}
+            ) : parts && parts.length ? (
+              parts.map((part, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{part.description || "-"}</td>
+                    <td>{part.note || "-"}</td>
+                    <td>{part.partNumber || "-"}</td>
+                    <td>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
+                    <td>{part.location || "-"}</td>
+                    <td>{part.cost || "-"}</td>
+                    <td>{part.retailPrice || "-"}</td>
+                    <td>
+                      {part.quantity || 0}&nbsp;
+                      {part.quantity <= part.criticalQuantity ? (
+                        <Badge color={"warning"}>Reorder</Badge>
+                      ) : null}
+                    </td>
+                    <td>Action</td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={12}>
+                  {filterApplied ? (
+                    <React.Fragment>
+                      No Parts found for your search
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>No Parts available</React.Fragment>
+                  )}
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
+        {totalParts && !isLoading ? (
+          <PaginationHelper
+            totalRecords={totalParts}
+            onPageChanged={page => {
+              this.onPageChange(page);
+            }}
+            currentPage={page}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
       </>
     );
   }
@@ -202,9 +319,6 @@ const mapStateToProps = state => ({
   inventoryPartsData: state.inventoryPartsReducers
 });
 const mapDispatchToProps = dispatch => ({
-  getInventoryPartsVendors: data => {
-    dispatch(getInventoryPartVendors(data));
-  },
   getParts: params => {
     dispatch(getInventoryPartsList(params));
   }

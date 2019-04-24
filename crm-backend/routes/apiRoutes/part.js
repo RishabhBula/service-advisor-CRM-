@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { add } = require("./../../controllers/frontend/parts");
-router.get("/", (req, res) => {
-  return res.json({
-    test: "fadsf"
-  });
-});
+const { add, getList } = require("./../../controllers/frontend/parts");
+router.get("/", getList);
 router.post("/", add);
 module.exports = router;
