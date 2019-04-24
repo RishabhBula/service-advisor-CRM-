@@ -14,10 +14,15 @@ import {
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
+import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
 import {
   addNewTier,
 } from '../../actions'
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
+
+import { addNewVendor } from "../../actions";
+
+
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -104,9 +109,9 @@ class Inventory extends Component {
   };
   renderModals = () => {
     const { activeTab } = this.state;
-    const { modelInfoReducer, modelOperate } = this.props;
+    const { modelInfoReducer, modelOperate, addVendor } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireAddModalOpen, partAddModalOpen } = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen} = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -134,7 +139,15 @@ class Inventory extends Component {
       case AppRoutes.INVENTORY_LABOURS.url:
         return null;
       case AppRoutes.INVENTORY_VENDORS.url:
-        return null;
+        return <CrmInventoryVendor 
+        addVendor={addVendor} 
+          vendorAddModalOpen={vendorAddModalOpen}
+           handleVendorAddModal={() =>
+              modelOperate({
+                vendorAddModalOpen: !vendorAddModalOpen
+          })
+        }
+        />;
       default:
         return null;
     }
@@ -156,7 +169,10 @@ class Inventory extends Component {
       case AppRoutes.INVENTORY_LABOURS.url:
         return null;
       case AppRoutes.INVENTORY_VENDORS.url:
-        return null;
+        modelDetails = {
+          vendorAddModalOpen: true
+        };
+      break
       default:
         return null;
     }
@@ -237,6 +253,9 @@ class Inventory extends Component {
 }
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({
+    addVendor: data => {
+    dispatch(addNewVendor(data));
+  },
   addTier: data => {
     dispatch(addNewTier(data));
   }
