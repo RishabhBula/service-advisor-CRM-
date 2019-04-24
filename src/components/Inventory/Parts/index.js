@@ -42,9 +42,9 @@ class Parts extends Component {
     logger(page);
     this.setState({
       page: page && page > 0 ? parseInt(page) : 1,
-      search,
-      status,
-      sort,
+      search: search || "",
+      status: status || "",
+      sort: sort || "",
       vendorId: vendorId ? qs.parse(vendorId) : ""
     });
     if (vendorId) {
@@ -60,7 +60,11 @@ class Parts extends Component {
       let query = qs.parse(currentSearch);
       this.setState({ ...query, page: parseInt(query.page) });
       if (query.vendorId) {
-        query.vendorId = qs.parse(query.vendorId).value;
+        const vendorId = qs.parse(query.vendorId);
+        this.setState({
+          vendorId
+        });
+        query.vendorId = vendorId.value;
       }
       this.props.getParts(query);
     }
