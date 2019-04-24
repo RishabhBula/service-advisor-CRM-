@@ -33,7 +33,10 @@ import { toast } from "react-toastify";
 class CrmInventoryPart extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = { errors: {}, partOptions: {} };
+  }
+  setInitialState = () => {
+    this.setState({
       errors: {},
       partDescription: "",
       note: "",
@@ -53,7 +56,16 @@ class CrmInventoryPart extends Component {
         showPriceOnQuoteAndInvoice: true,
         showNoteOnQuoteAndInvoice: true
       }
-    };
+    });
+  };
+  componentDidMount() {
+    this.setInitialState();
+  }
+  componentDidUpdate({ isOpen: isOpenOld }) {
+    const { isOpen } = this.props;
+    if (!isOpen && isOpenOld !== isOpen) {
+      this.setInitialState();
+    }
   }
   addPart = e => {
     e.preventDefault();
