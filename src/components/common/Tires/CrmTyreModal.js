@@ -437,7 +437,7 @@ export class CrmTyreModal extends Component {
                            onClick={this.handleAddTierSize}
                            className="customer-add-phone customer-anchor-text customer-click-btn"
                         >
-                           Add Tier Size
+                           Add Tire Size
                         </span>
                      ) : null}
 

@@ -865,10 +865,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .tire-table tr th.tire-th{
   width: 70px !important;
   max-width: 70px;
+  text-align: center;
 }
 .tire-table tr th.tire-size-th{
   width: 100px !important;
   max-width: 100px !important;
+  text-align: center;
 }
 .tire-size-table{
   margin-bottom: 0px !important;
