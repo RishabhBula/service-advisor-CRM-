@@ -12,6 +12,8 @@ import {
   hideLoader,
   modelOpenRequest,
   vendorActions,
+  deleteVendor,
+  deleteVendorSuccess
 } from "../actions"
 
 
@@ -125,8 +127,41 @@ const editVendorsLogic = createLogic({
   }
 });
 
+const deleteVendorLogic = createLogic({
+  type: vendorActions.DELETE_VENDOR,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/vendor",
+      "/delete",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(deleteVendorSuccess());
+      dispatch(
+        getVendorsList({
+          ...action.payload
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
 export const VendorLogic = [
   addVendorsLogic,
   getVendorLogic,
-  editVendorsLogic
+  editVendorsLogic,
+  deleteVendorLogic
 ];

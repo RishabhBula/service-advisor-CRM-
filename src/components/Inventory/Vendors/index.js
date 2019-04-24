@@ -11,7 +11,8 @@ import {
 } from "reactstrap";
 import {
   getVendorsList,
-  editVendor
+  editVendor,
+  deleteVendor,
 } from "../../../actions";
 
 class Vendors extends Component {
@@ -48,17 +49,17 @@ class Vendors extends Component {
     this.props.updateVendor(id, data);
   }
 
-  deleteVendor = async (isMultiple = false, vendorId) => {
+  deleteVendor = async ( vendorId) => {
     const { value } = await ConfirmBox({
-      text: isMultiple
-        ? "Do you want to delete this Vendor"
-        : "Do you want to delete this Vendor"
+      text:"Do you want to delete this Vendor"
     });
     if (!value) {
       console.log("Cancle", vendorId)
       return;
     }
-    console.log("Success", vendorId)
+    const data = { vendorId: vendorId} 
+    this.props.deleteVendor(data)
+    console.log("Success", data)
   }
 
   render() {
@@ -176,6 +177,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateVendor: (id, data) => {
     dispatch(editVendor({id, data}));
+  },
+  deleteVendor: data => {
+    dispatch(deleteVendor(data));
   },
 })
 
