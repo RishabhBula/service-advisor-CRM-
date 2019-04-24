@@ -42,7 +42,14 @@ class Tires extends Component {
   componentDidMount() {
     const { location } = this.props;
     const query = qs.parse(location.search);
+    const lSearch = location.search;
+    const { page, search, sort } = qs.parse(lSearch);   
     this.props.getTires({ ...query, page: query.page || 1 });
+    this.setState({
+      page: parseInt(page) || 1,
+      sort: sort || "",
+      search: search || ""
+    });
   }
 
   componentDidUpdate({ tireReducer, location }) {

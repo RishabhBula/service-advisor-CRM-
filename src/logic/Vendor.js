@@ -12,7 +12,6 @@ import {
   hideLoader,
   modelOpenRequest,
   vendorActions,
-  deleteVendor,
   deleteVendorSuccess
 } from "../actions"
 
@@ -27,10 +26,15 @@ const getVendorLogic = createLogic({
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer("/vendor", "/vendorList", "GET", true, {
+    let result = await api.FetchFromServer(
+      "/vendor",
+       "/vendorList",
+        "GET",
+       true, {
       ...action.payload,
       limit: AppConfig.ITEMS_PER_PAGE
-    });
+    },
+     undefined,);
     if (result.isError) {
       dispatch(
         getVendorsListSuccess({

@@ -16,7 +16,7 @@ import Validator from "js-object-validation";
 import { VendorValidations, VendorValidationMessage } from "../../validations/inventoryVendor";
 import { PhoneOptions } from "../../config/Constants";
 import MaskedInput from "react-maskedinput";
-import { isValidURL } from "../../helpers/Object"
+import { validUrlCheck } from "../../helpers/Object"
 
 export class CrmInventoryVendor extends Component {
 
@@ -43,12 +43,15 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros:'',
-      isEditMode:false
+      urlErros:''
     }
   }
 
   componentDidUpdate = ({ vendorAddModalOpen, vendorData }) => {
+    if (vendorAddModalOpen !== this.props.vendorAddModalOpen && !this.props.vendorData) {
+      this.removeAllState();
+    }
+
     if (
       this.props.vendorData && this.props.vendorData._id &&
       (vendorData._id !== this.props.vendorData._id)
@@ -72,7 +75,30 @@ export class CrmInventoryVendor extends Component {
       })
     }
   }
-
+  async removeAllState() {
+    this.setState({
+     name: '',
+      accountNumber: '',
+      url: '',
+      contactPerson: {
+        firstName: '',
+        email: '',
+        lastName: '',
+        phoneNumber: {
+          phone: 'mobile',
+          value: ''
+        }
+      },
+      address: {
+        address: '',
+        city: '',
+        state: '',
+        zip: ''
+      },
+      errors: {},
+      urlErros:'',
+    });
+  }
   handleChange = (label, event) => {
     const { name, value } = event.target;
     if ((name === "accountNumber" && isNaN(value)) || (name === "zip" && isNaN(value)) ){
@@ -101,6 +127,18 @@ export class CrmInventoryVendor extends Component {
   }
   handlePhoneNameChange = (event) => {
     const { name, value } = event.target;
+    if(this.props.vendorData){
+      this.setState({
+        contactPerson:{
+          ...this.state.contactPerson,
+          phoneNumber: {
+            ...this.state.contactPerson.phoneNumber,
+            value: ""
+          }
+        }
+      })
+      // console.log("jfigjudfiidfjgdfjgoifj", this.state.contactPerson.phoneNumber.value)
+    }
     this.setState({
       contactPerson: {
         ...this.state.contactPerson,
@@ -135,9 +173,9 @@ export class CrmInventoryVendor extends Component {
         accountNumber: accountNumber,
       }
     }
-    if (url && !isValidURL(url)) {
+    if (url && !validUrlCheck(url)) {
       this.setState({
-        urlErros: "invalid URL"
+        urlErros: "Please enter Valid URL( http:// )"
       })
     }
     else {
@@ -154,12 +192,12 @@ export class CrmInventoryVendor extends Component {
     }
     try {
       const { isValid, errors } = Validator(validData, VendorValidations, VendorValidationMessage);
-      if (!isValid ) {
+      if (!isValid || (url && !validUrlCheck(url)) ) {
         this.setState({
           errors: errors,
           isLoading: false
         });
-        console.log(errors)
+        
         return;
       } 
       if (!isEditMode) {
@@ -187,7 +225,8 @@ export class CrmInventoryVendor extends Component {
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option key={index} value={item.key}>{item.text}</option>;
     });
-    
+
+    // console.log("contactPerson.phoneNumber.value",contactPerson.phoneNumber.value)
     return (
       <>
         <Modal
@@ -214,7 +253,7 @@ export class CrmInventoryVendor extends Component {
                         onChange={
                           (e) => this.handleChange('', e)
                         }
-                        placeholder='Vendor Name'
+                        placeholder='John'
                         value={name}
                         maxLength='50'
                         id='name'
@@ -259,7 +298,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='accountNumber'
                         onChange={(e) => this.handleChange('', e)}
-                        placeholder='Accoutn Number'
+                        placeholder='898989898998'
                         value={accountNumber}
                         maxLength='20'
                         id='accountNumber'
@@ -284,7 +323,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='firstName'
                         onChange={(e) => this.handleChange('contactPerson', e)}
-                        placeholder='First Name'
+                        placeholder='John'
                         value={contactPerson.firstName}
                         maxLength='35'
                         id='name'
@@ -303,7 +342,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='lastName'
                         onChange={(e) => this.handleChange('contactPerson', e)}
-                        placeholder='Last Name'
+                        placeholder='Deo'
                         value={contactPerson.lastName}
                         maxLength='35'
                         id='name'
@@ -327,7 +366,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='email'
                         onChange={(e) => this.handleChange('contactPerson', e)}
-                        placeholder='Email'
+                        placeholder='john@gmail.com'
                         value={contactPerson.email}
                         id='email'
                         invalid={errors.email}
@@ -355,17 +394,32 @@ export class CrmInventoryVendor extends Component {
                       {phoneOptions}
                     </Input>
                     <div className={'input-block'}>
-                      <MaskedInput
+                      {contactPerson.phoneNumber.phone === 'mobile' ?
+                      <MaskedInput 
                         mask="(111) 111-111"
+                        placeholder="(555) 055-0555"
                         name='value'
                         onChange={(e) => this.handlePhoneNameChange(e)}
-                        placeholder="(555) 055-0555"
                         value={contactPerson.phoneNumber.value}
                         className={"form-control"}
                         size='20'
                         id='phoneNumber'
                       // invalid={errors.companyName}
                       />
+                        : 
+                        <MaskedInput
+                          mask="(111) 111-111 ext 1111"
+                          placeholder="(555) 055-0555 ext 1234"
+                          name='value'
+                          onChange={(e) => this.handlePhoneNameChange(e)}
+                          value={contactPerson.phoneNumber.value}
+                          className={"form-control"}
+                          size='20'
+                          id='phoneNumber'
+                        // invalid={errors.companyName}
+                        />
+                      
+                      }
                       <FormFeedback>
                         {errors.phoneNumber ? errors.phoneNumber : null}
                       </FormFeedback>
@@ -404,7 +458,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='city'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='City'
+                        placeholder='New York'
                         value={address.city}
                         maxLength='35'
                         id='city'
@@ -424,7 +478,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='state'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='State'
+                        placeholder='NY'
                         value={address.state}
                         maxLength='35'
                         id='name'
@@ -442,7 +496,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='zip'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='Zip'
+                        placeholder='Zip Code'
                         value={address.zip}
                         maxLength='5'
                         id='name'
@@ -461,7 +515,7 @@ export class CrmInventoryVendor extends Component {
             >
               {!isEditMode ? "Add New Vendor " : "Edit Vendor"}
             </Button>{' '}
-            <Button color='secondary' >
+            <Button color='secondary' onClick={this.props.handleVendorAddModal}>
               Cancel
             </Button>
           </ModalFooter>
