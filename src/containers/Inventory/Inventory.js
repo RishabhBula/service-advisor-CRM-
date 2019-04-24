@@ -15,8 +15,8 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
-import { getInventoryPartVendors } from "../../actions";
-
+import { getInventoryPartVendors, requestAddPart } from "../../actions";
+import * as qs from "query-string";
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
 );
@@ -99,6 +99,13 @@ class Inventory extends Component {
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
+  getQuerParams = () => {
+    return qs.parse(this.props.location.search);
+  };
+  addInventoryPart = data => {
+    const query = this.getQuerParams();
+    this.props.addInventoryPart({ data, query });
+  };
   renderModals = () => {
     const { activeTab } = this.state;
     const {
@@ -121,6 +128,7 @@ class Inventory extends Component {
             }
             inventoryPartsData={inventoryPartsData}
             getInventoryPartsVendors={getInventoryPartsVendors}
+            addInventoryPart={this.addInventoryPart}
           />
         );
       case AppRoutes.INVENTORY_TIRES.url:
@@ -165,7 +173,7 @@ class Inventory extends Component {
     }
     this.props.modelOperate(modelDetails);
   };
-  rednerAddNewButton = () => {
+  renderAddNewButton = () => {
     const { activeTab } = this.state;
     return (
       <>
@@ -197,7 +205,7 @@ class Inventory extends Component {
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
-                {this.rednerAddNewButton()}
+                {this.renderAddNewButton()}
               </Col>
             </Row>
           </CardHeader>
@@ -244,6 +252,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
+  },
+  addInventoryPart: data => {
+    dispatch(requestAddPart(data));
   }
 });
 export default connect(

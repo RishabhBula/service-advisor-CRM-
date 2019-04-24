@@ -13,6 +13,8 @@ export class ApiHelper {
   constructor() {
     this._portalGateway = AppConfig.API_ENDPOINT;
     this._apiVersion = AppConfig.API_VERSION;
+    this.source = Axios.CancelToken.source();
+    this.cancelToken = this.source.token;
   }
   setHost = host => {
     this._portalGateway = host;
@@ -52,7 +54,8 @@ export class ApiHelper {
         url,
         data: body,
         headers: headers,
-        params: queryOptions
+        params: queryOptions,
+        cancelToken: this.cancelToken
       });
 
       if (response.ok === false || response.status !== 200) {
@@ -66,8 +69,17 @@ export class ApiHelper {
       const data = new SuccessHandlerHelper(response.data);
       return data.data;
     } catch (err) {
+      if (Axios.isCancel(err)) {
+        console.log("%s Req Cancelled", err);
+      }
       const errorHelper = new ErrorHandlerHelper(err.response);
       return errorHelper.error;
     }
   }
+  /**
+   * Cancels the last request.
+   */
+  cancelRequest = () => {
+    this.source.cancel("Operation canceled by the user.");
+  };
 }

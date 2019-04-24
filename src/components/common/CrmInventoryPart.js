@@ -16,11 +16,12 @@ import { logger } from "../../helpers/Logger";
 import {
   MarkupChangeValues,
   MarginChangeValues,
-  CreatePartOptions
+  CreatePartOptions,
+  DefaultErrorMessage
 } from "../../config/Constants";
 import { AppSwitch } from "@coreui/react";
 import Validator from "js-object-validation";
-import { PartValidations } from "../../validations";
+import { PartValidations, PartValidationMessages } from "../../validations";
 import {
   CalculateMarkupPercent,
   CalculateMarginPercent,
@@ -28,6 +29,7 @@ import {
   CalculateRetailPriceByMarginPercent
 } from "../../helpers/Sales";
 import { Async } from "react-select";
+import { toast } from "react-toastify";
 class CrmInventoryPart extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +45,8 @@ class CrmInventoryPart extends Component {
       price: "",
       markup: "",
       margin: "",
+      criticalQuantity: "",
+      quantity: "",
       partOptions: {
         isTaxed: true,
         showNumberOnQuoteAndInvoice: false,
@@ -53,6 +57,9 @@ class CrmInventoryPart extends Component {
   }
   addPart = e => {
     e.preventDefault();
+    this.setState({
+      errors: {}
+    });
     try {
       const {
         partDescription,
@@ -64,9 +71,11 @@ class CrmInventoryPart extends Component {
         cost,
         price,
         markup,
-        margin
+        margin,
+        criticalQuantity,
+        quantity
       } = this.state;
-      const data = {
+      let data = {
         partDescription,
         note,
         partNumber,
@@ -76,11 +85,27 @@ class CrmInventoryPart extends Component {
         cost,
         price,
         markup,
-        margin
+        margin,
+        criticalQuantity,
+        quantity
       };
-      const { isValid, errors } = Validator(data, PartValidations);
-      logger(errors, isValid);
-    } catch (error) {}
+      const { isValid, errors } = Validator(
+        data,
+        PartValidations,
+        PartValidationMessages
+      );
+      if (!isValid) {
+        this.setState({
+          errors
+        });
+        return;
+      }
+      data.vendorId = vendorId ? vendorId.value : "";
+      this.props.addInventoryPart(data);
+    } catch (error) {
+      logger(error);
+      toast.error(DefaultErrorMessage);
+    }
   };
   handleClick = e => {
     this.setState({
@@ -92,7 +117,11 @@ class CrmInventoryPart extends Component {
   };
   handleChange = e => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+      errors: {
+        ...this.state.errors,
+        [e.target.name]: null
+      }
     });
   };
   handleRetailsPriceChange = e => {
@@ -148,7 +177,10 @@ class CrmInventoryPart extends Component {
       price,
       markup,
       partOptions,
-      margin
+      margin,
+      vendorId,
+      criticalQuantity,
+      quantity
     } = this.state;
     const { isOpen, toggle } = this.props;
     const buttons = [
@@ -186,7 +218,6 @@ class CrmInventoryPart extends Component {
                       name="partDescription"
                       onChange={this.handleChange}
                       placeholder="Part Description"
-                      maxLength="20"
                       id="name"
                       value={partDescription}
                       invalid={errors.partDescription}
@@ -209,7 +240,6 @@ class CrmInventoryPart extends Component {
                     className="customer-modal-text-style"
                     placeholder="Note"
                     onChange={this.handleChange}
-                    maxLength="40"
                     name="note"
                     value={note}
                     invalid={errors.note}
@@ -248,7 +278,16 @@ class CrmInventoryPart extends Component {
                   Vendor
                 </Label>
                 <div className={"input-block"}>
-                  <Async loadOptions={this.loadOptions} />
+                  <Async
+                    placeholder={"Type vendor name"}
+                    loadOptions={this.loadOptions}
+                    value={vendorId}
+                    onChange={e => {
+                      this.setState({
+                        vendorId: e
+                      });
+                    }}
+                  />
                   {errors.vendorId ? (
                     <FormFeedback>{errors.vendorId}</FormFeedback>
                   ) : null}
@@ -339,6 +378,50 @@ class CrmInventoryPart extends Component {
                   />
                   {errors.price ? (
                     <FormFeedback>{errors.price}</FormFeedback>
+                  ) : null}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col md="6">
+              <FormGroup>
+                <Label htmlFor="name" className="customer-modal-text-style">
+                  Quantity in hand
+                </Label>
+                <div className={"input-block"}>
+                  <Input
+                    type="number"
+                    className="customer-modal-text-style"
+                    placeholder="100"
+                    onChange={this.handleChange}
+                    maxLength="10"
+                    name="quantity"
+                    invalid={errors.quantity}
+                    value={quantity}
+                  />
+                  {errors.quantity ? (
+                    <FormFeedback>{errors.quantity}</FormFeedback>
+                  ) : null}
+                </div>
+              </FormGroup>
+            </Col>
+            <Col md="6">
+              <FormGroup>
+                <Label htmlFor="name" className="customer-modal-text-style">
+                  Critical Quantity
+                </Label>
+                <div className={"input-block"}>
+                  <Input
+                    type="number"
+                    className="customer-modal-text-style"
+                    placeholder="10"
+                    onChange={this.handleChange}
+                    maxLength="10"
+                    name="criticalQuantity"
+                    invalid={errors.criticalQuantity}
+                    value={criticalQuantity}
+                  />
+                  {errors.criticalQuantity ? (
+                    <FormFeedback>{errors.criticalQuantity}</FormFeedback>
                   ) : null}
                 </div>
               </FormGroup>
