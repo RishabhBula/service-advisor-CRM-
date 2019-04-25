@@ -158,7 +158,7 @@ class CrmInventoryPart extends Component {
       }
       data.vendorId = vendorId ? vendorId.value : "";
       const { addInventoryPart, updateInventoryPart, partDetails } = this.props;
-      if (partDetails._id) {
+      if (partDetails && partDetails._id) {
         updateInventoryPart({ ...data, id: partDetails._id });
       } else {
         addInventoryPart(data);
