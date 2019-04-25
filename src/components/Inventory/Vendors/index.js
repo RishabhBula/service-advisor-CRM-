@@ -49,6 +49,7 @@ class Vendors extends Component {
       search: search || ""
     });
   }
+
   componentDidUpdate({ vendorReducer, location }) {
     if (
       this.props.vendorReducer.vendorData.isSuccess !==
@@ -64,8 +65,8 @@ class Vendors extends Component {
     if (!isEqual(prevQuery, currQuery)) {
       this.props.getVendorsList({ ...currQuery, page: currQuery.page || 1 });
     }
-
   }
+  
   editVendor = vendor => {
     this.setState({ vendor: vendor }, () => {
       this.props.modelOperate({
@@ -264,7 +265,8 @@ class Vendors extends Component {
 
                         {vendor.contactPerson.phoneNumber.value ? <span>&nbsp;<b>|</b>&nbsp;</span> : ''}
 
-                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone ? vendor.contactPerson.phoneNumber.value : 'NA'}
+                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.value ? vendor.contactPerson.phoneNumber.value : 'NA'}
+                      {console.log("vendor.contactPerson.phoneNumber check+++++++++",vendor.contactPerson.phoneNumber)}
                       </td>
                       <td>
                         <Button

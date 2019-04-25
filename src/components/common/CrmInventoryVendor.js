@@ -15,7 +15,7 @@ import {
 import Validator from "js-object-validation";
 import { VendorValidations, VendorValidationMessage } from "../../validations/inventoryVendor";
 import { PhoneOptions } from "../../config/Constants";
-import MaskedInput from "react-maskedinput";
+import MaskedInput from "react-text-mask";
 import { validUrlCheck } from "../../helpers/Object"
 
 export class CrmInventoryVendor extends Component {
@@ -43,7 +43,7 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros:''
+      urlErros: ''
     }
   }
 
@@ -55,8 +55,8 @@ export class CrmInventoryVendor extends Component {
     if (
       this.props.vendorData && this.props.vendorData._id &&
       (vendorData._id !== this.props.vendorData._id)
-    ){
-      
+    ) {
+
       const {
         name,
         accountNumber,
@@ -66,7 +66,7 @@ export class CrmInventoryVendor extends Component {
       } = this.props.vendorData
 
       this.setState({
-        isEditMode :true,
+        isEditMode: true,
         name,
         accountNumber,
         url,
@@ -77,7 +77,7 @@ export class CrmInventoryVendor extends Component {
   }
   async removeAllState() {
     this.setState({
-     name: '',
+      name: '',
       accountNumber: '',
       url: '',
       contactPerson: {
@@ -96,12 +96,13 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros:'',
+      urlErros: '',
     });
   }
+
   handleChange = (label, event) => {
     const { name, value } = event.target;
-    if ((name === "accountNumber" && isNaN(value)) || (name === "zip" && isNaN(value)) ){
+    if ((name === "accountNumber" && isNaN(value)) || (name === "zip" && isNaN(value))) {
       return
     }
     if (label !== '') {
@@ -125,26 +126,26 @@ export class CrmInventoryVendor extends Component {
     }
 
   }
-  handlePhoneNameChange = (event) => {
-    const { name, value } = event.target;
-    if(this.props.vendorData){
-      this.setState({
-        contactPerson:{
-          ...this.state.contactPerson,
-          phoneNumber: {
-            ...this.state.contactPerson.phoneNumber,
-            value: ""
-          }
-        }
-      })
-      // console.log("jfigjudfiidfjgdfjgoifj", this.state.contactPerson.phoneNumber.value)
-    }
+  handlePhoneValueChange = (event) => {
+    const { value } = event.target;
     this.setState({
       contactPerson: {
         ...this.state.contactPerson,
         phoneNumber: {
-          ...this.state.contactPerson.phoneNumber,      
-          [name]: value
+          ...this.state.contactPerson.phoneNumber,
+          value: value
+        }
+      }
+    })
+  }
+  handlePhoneNameChange = (event) => {
+    const { value } = event.target;
+    this.setState({
+      contactPerson: {
+        ...this.state.contactPerson,
+        phoneNumber: {
+          value: "",
+          phone: value
         }
       }
     })
@@ -162,12 +163,12 @@ export class CrmInventoryVendor extends Component {
     } = this.state;
     let validData
     if (contactPerson.email !== '') {
-       validData = {
+      validData = {
         name: name,
         accountNumber: accountNumber,
         email: contactPerson.email
       }
-    }else{
+    } else {
       validData = {
         name: name,
         accountNumber: accountNumber,
@@ -192,19 +193,19 @@ export class CrmInventoryVendor extends Component {
     }
     try {
       const { isValid, errors } = Validator(validData, VendorValidations, VendorValidationMessage);
-      if (!isValid || (url && !validUrlCheck(url)) ) {
+      if (!isValid || (url && !validUrlCheck(url))) {
         this.setState({
           errors: errors,
           isLoading: false
         });
-        
+
         return;
-      } 
+      }
       if (!isEditMode) {
         this.props.addVendor(data);
       }
       const vendorId = this.props.vendorData._id
-      this.props.updateVendor(vendorId,data);
+      this.props.updateVendor(vendorId, data);
 
     } catch (error) {
       console.log(error)
@@ -222,11 +223,7 @@ export class CrmInventoryVendor extends Component {
       errors,
       urlErros
     } = this.state;
-    const phoneOptions = PhoneOptions.map((item, index) => {
-      return <option key={index} value={item.key}>{item.text}</option>;
-    });
-
-    // console.log("contactPerson.phoneNumber.value",contactPerson.phoneNumber.value)
+    const phoneOptions = PhoneOptions.map((item, index) => <option key={index} value={item.key}>{item.text}</option>);
     return (
       <>
         <Modal
@@ -278,7 +275,7 @@ export class CrmInventoryVendor extends Component {
                         placeholder='http://google.com'
                         value={url}
                         id='name'
-                        invalid={urlErros}
+                        invalid={urlErros && url}
                       />
                       <FormFeedback>
                         {urlErros && url ? urlErros : null}
@@ -379,47 +376,35 @@ export class CrmInventoryVendor extends Component {
                 </Col>
                 <Col md='6'>
                   <FormGroup className={"phone-number-feild"}>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor='contactPhone' className='customer-modal-text-style'>
                       Phone Number
                     </Label>
                     <Input
-                      onChange={e =>
+                      onChange={e => {
                         this.handlePhoneNameChange(e)
-                      }
+                      }}
                       type="select"
                       name="phone"
                       value={contactPerson.phoneNumber.phone}
-                      id="name"
+                      id="contactPhone"
                     >
                       {phoneOptions}
                     </Input>
                     <div className={'input-block'}>
-                      {contactPerson.phoneNumber.phone === 'mobile' ?
-                      <MaskedInput 
-                        mask="(111) 111-111"
-                        placeholder="(555) 055-0555"
+                      <MaskedInput
+                        mask={contactPerson.phoneNumber.phone === "mobile" ? ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/] : ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+                        // "(111) 111-111 ext 1111"
+                        placeholder={contactPerson.phoneNumber.phone === "mobile" ? "(555) 055-0555" : "(555) 055-0555 ext 1234"}
                         name='value'
-                        onChange={(e) => this.handlePhoneNameChange(e)}
-                        value={contactPerson.phoneNumber.value}
+                        maxLength={contactPerson.phoneNumber.phone === "mobile" ? 13 : 22}
+                        guide={false}
+                        onChange={(e) => this.handlePhoneValueChange(e)}
+                        value={contactPerson.phoneNumber.value || null}
                         className={"form-control"}
                         size='20'
                         id='phoneNumber'
                       // invalid={errors.companyName}
                       />
-                        : 
-                        <MaskedInput
-                          mask="(111) 111-111 ext 1111"
-                          placeholder="(555) 055-0555 ext 1234"
-                          name='value'
-                          onChange={(e) => this.handlePhoneNameChange(e)}
-                          value={contactPerson.phoneNumber.value}
-                          className={"form-control"}
-                          size='20'
-                          id='phoneNumber'
-                        // invalid={errors.companyName}
-                        />
-                      
-                      }
                       <FormFeedback>
                         {errors.phoneNumber ? errors.phoneNumber : null}
                       </FormFeedback>
