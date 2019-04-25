@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getInventoryPartsList } from "../../../actions";
+import {
+  getInventoryPartsList,
+  deletePartFromInventory,
+  updatePartFromInventory
+} from "../../../actions";
 import {
   Row,
   Col,
@@ -11,7 +15,8 @@ import {
   Input,
   UncontrolledTooltip,
   Table,
-  Badge
+  Badge,
+  Button
 } from "reactstrap";
 import { Async } from "react-select";
 import * as qs from "query-string";
@@ -19,6 +24,8 @@ import Loader from "../../../containers/Loader/Loader";
 import { AppConfig } from "../../../config/AppConfig";
 import PaginationHelper from "../../../helpers/Pagination";
 import { logger } from "../../../helpers/Logger";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
+import CrmInventoryPart from "../../common/CrmInventoryPart";
 class Parts extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +36,10 @@ class Parts extends Component {
       sort: "",
       filterApplied: false,
       limit: AppConfig.ITEMS_PER_PAGE,
-      page: 1
+      page: 1,
+      vendorInput: "",
+      selectedParts: [],
+      part: {}
     };
   }
   componentDidMount() {
@@ -97,7 +107,8 @@ class Parts extends Component {
       search,
       status,
       sort,
-      vendorId: vendorId ? qs.stringify(vendorId) : undefined
+      vendorId: vendorId ? qs.stringify(vendorId) : undefined,
+      vendorInput: ""
     };
     this.setState({
       filterApplied: true,
@@ -117,11 +128,67 @@ class Parts extends Component {
     this.props.redirectTo(`${pathname}`);
   };
   loadOptions = (input, callback) => {
+    this.setState({ vendorInput: input.length > 1 ? input : null });
     this.props.getInventoryPartsVendors({ input, callback });
   };
+  onEdit = part => {
+    const { modelInfoReducer, modelOperate } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    logger(this.props);
+    const { partEditModalOpen } = modelDetails;
+    this.setState({ part }, () => {
+      modelOperate({
+        partEditModalOpen: !partEditModalOpen
+      });
+    });
+  };
+  onDelete = async isMultiple => {
+    const { value } = await ConfirmBox({
+      text: isMultiple
+        ? "Do you want to delete selected part(s)?"
+        : "Do you want to delete this parts?"
+    });
+    if (!value) {
+      this.setState({
+        selectedParts: []
+      });
+      return;
+    }
+    this.props.deletePart({
+      parts: this.state.selectedParts,
+      query: this.getQueryParams()
+    });
+  };
+  getQueryParams = () => {
+    let query = qs.parse(this.props.location.search);
+    if (query.vendorId) {
+      query.vendorId = qs.parse(query.vendorId).value;
+    }
+    return query;
+  };
+  updatePartDetails = data => {
+    const query = this.getQueryParams();
+    this.props.updateInventoryPart({ data, query });
+  };
   render() {
-    const { vendorId, search, status, sort, filterApplied, page } = this.state;
-    const { inventoryPartsData } = this.props;
+    const {
+      vendorId,
+      search,
+      status,
+      sort,
+      filterApplied,
+      page,
+      vendorInput,
+      part: partDetails
+    } = this.state;
+    const {
+      inventoryPartsData,
+      getInventoryPartsVendors,
+      modelInfoReducer
+    } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    logger(this.props);
+    const { partEditModalOpen } = modelDetails;
     const { isLoading, parts, totalParts } = inventoryPartsData;
     return (
       <>
@@ -132,7 +199,7 @@ class Parts extends Component {
                 <FormGroup className="mb-0">
                   <Label className="label">Search</Label>
                   <InputGroup className="mb-2">
-                    <input
+                    <Input
                       type="text"
                       name="search"
                       onChange={this.handleChange}
@@ -205,7 +272,10 @@ class Parts extends Component {
                             vendorId: e
                           });
                         }}
-                        clearable={true}
+                        isClearable={true}
+                        noOptionsMessage={() =>
+                          vendorInput ? "No vendor found" : "Type vendor name"
+                        }
                       />
                     </FormGroup>
                   </Col>
@@ -253,7 +323,7 @@ class Parts extends Component {
               <th>Part Description</th>
               <th>Note</th>
               <th>Part number</th>
-              <th className={"text-center"}>Vendor</th>
+              <th>Vendor</th>
               <th>Bin/Location</th>
               <th>Cost</th>
               <th>Retail Price</th>
@@ -286,7 +356,40 @@ class Parts extends Component {
                         <Badge color={"warning"}>Reorder</Badge>
                       ) : null}
                     </td>
-                    <td>Action</td>
+                    <td>
+                      <Button
+                        color={"primary"}
+                        size={"sm"}
+                        onClick={() => this.onEdit(part)}
+                        id={`edit-${part._id}`}
+                      >
+                        <i className={"fa fa-edit"} />
+                      </Button>{" "}
+                      <UncontrolledTooltip target={`edit-${part._id}`}>
+                        Edit details of {part.description}
+                      </UncontrolledTooltip>
+                      &nbsp;
+                      <Button
+                        color={"danger"}
+                        size={"sm"}
+                        onClick={() =>
+                          this.setState(
+                            {
+                              selectedParts: [part._id]
+                            },
+                            () => {
+                              this.onDelete();
+                            }
+                          )
+                        }
+                        id={`delete-${part._id}`}
+                      >
+                        <i className={"fa fa-trash"} />
+                      </Button>
+                      <UncontrolledTooltip target={`delete-${part._id}`}>
+                        Delete {part.description}
+                      </UncontrolledTooltip>
+                    </td>
                   </tr>
                 );
               })
@@ -315,6 +418,15 @@ class Parts extends Component {
             pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
+        <CrmInventoryPart
+          isOpen={partEditModalOpen}
+          toggle={() => this.onEdit({})}
+          inventoryPartsData={inventoryPartsData}
+          getInventoryPartsVendors={getInventoryPartsVendors}
+          updateInventoryPart={this.updatePartDetails}
+          partDetails={partDetails}
+          isEditMode={true}
+        />
       </>
     );
   }
@@ -325,6 +437,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getParts: params => {
     dispatch(getInventoryPartsList(params));
+  },
+  deletePart: data => {
+    dispatch(deletePartFromInventory(data));
+  },
+  updateInventoryPart: data => {
+    dispatch(updatePartFromInventory(data));
   }
 });
 export default connect(

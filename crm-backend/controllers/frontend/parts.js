@@ -92,12 +92,12 @@ const getList = async (req, res) => {
         break;
       case "rpltoh":
         sortBy = {
-          price: 1
+          retailPrice: 1
         };
         break;
       case "rphtol":
         sortBy = {
-          price: -1
+          retailPrice: -1
         };
         break;
       default:
@@ -199,7 +199,102 @@ const getList = async (req, res) => {
     });
   }
 };
+
+const deletePart = async (req, res) => {
+  try {
+    const { body } = req;
+    const data = await Parts.updateMany(
+      {
+        _id: { $in: body }
+      },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
+    res.status(200).json({
+      message:
+        body.length > 1
+          ? "Parts deleted successfully!"
+          : "Part deleted successfully!",
+      data
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
+const update = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const {
+      partDescription,
+      note,
+      priceMatrix,
+      vendorId,
+      location,
+      cost,
+      price,
+      markup,
+      margin,
+      criticalQuantity,
+      quantity,
+      quickBookItem,
+      partNumber,
+      partOptions
+    } = body;
+    let data = {
+      partNumber,
+      createdBy: currentUser.id,
+      parentId: currentUser.parentId,
+      description: partDescription,
+      note: note || "",
+      location: location || "",
+      cost: cost || 0,
+      retailPrice: price || 0,
+      markup: markup || 0,
+      margin: margin || 0,
+      quickBookItem: quickBookItem || "",
+      criticalQuantity: criticalQuantity || 0,
+      quantity: quantity || 0,
+      partOptions
+    };
+    if (priceMatrix) {
+      data.priceMatrix = priceMatrix;
+    }
+    if (vendorId) {
+      data.vendorId = vendorId;
+    }
+    const result = await Parts.updateOne(
+      {
+        _id: body.id
+      },
+      {
+        $set: data
+      }
+    );
+    res.status(200).json({
+      message: "Part details udpated successfully.",
+      result
+    });
+  } catch (error) {
+    console.log("====================================");
+    console.log(error);
+    console.log("====================================");
+    res.status(500).json({
+      message:
+        "We are having problem adding part details, please try again after some time."
+    });
+  }
+};
+
 module.exports = {
   add,
-  getList
+  getList,
+  deletePart,
+  update
 };

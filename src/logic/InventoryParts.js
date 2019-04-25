@@ -100,13 +100,89 @@ const getInventoryPartsListLogic = createLogic({
       done();
       return;
     }
-    dispatch(getInventoryPartsListSuccess(result.data));
+    if (action.payload.page > 1 && !result.data.parts.length) {
+      dispatch(
+        getInventoryPartsList({
+          ...action.payload,
+          page: action.payload.page - 1
+        })
+      );
+    } else {
+      dispatch(getInventoryPartsListSuccess(result.data));
+    }
     done();
   }
 });
 
+const deletePartFromInventoryLogic = createLogic({
+  type: inventoryPartsActions.DELETE_PART_FROM_INVENTORY,
+  async process({ action, getState }, dispatch, done) {
+    const { parts, totalParts } = getState().inventoryPartsReducers;
+    const { parts: partsToDelete, query } = action.payload;
+    dispatch(getInventoryPartsListStarted());
+    const api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/inventory",
+      "/part",
+      "DELETE",
+      true,
+      undefined,
+      partsToDelete
+    );
+    if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+      dispatch(getInventoryPartsListSuccess({ parts, totalParts }));
+      done();
+      return;
+    }
+    toast.success(result.messages[0]);
+    dispatch(getInventoryPartsList({ ...query }));
+    done();
+  }
+});
+
+const updatePartToInventoryLogic = createLogic({
+  type: inventoryPartsActions.UPDATE_PART_TO_INVENTORY,
+  async process({ action, getState }, dispatch, done) {
+    const { data, query } = action.payload;
+    dispatch(showLoader());
+    const api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/inventory",
+      "/part",
+      "PUT",
+      true,
+      undefined,
+      data
+    );
+    logger(result);
+    if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+      dispatch(hideLoader());
+      done();
+      return;
+    }
+    toast.success(result.messages[0]);
+    dispatch(
+      modelOpenRequest({
+        modelDetails: {
+          partEditModalOpen: false
+        }
+      })
+    );
+    dispatch(hideLoader());
+    dispatch(
+      getInventoryPartsList({
+        ...query
+      })
+    );
+    done();
+  }
+});
 export const InventoryPartsLogic = [
   getInventoryPartsVendorLogic,
   addPartToInventoryLogic,
-  getInventoryPartsListLogic
+  getInventoryPartsListLogic,
+  deletePartFromInventoryLogic,
+  updatePartToInventoryLogic
 ];

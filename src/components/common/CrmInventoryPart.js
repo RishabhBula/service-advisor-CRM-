@@ -55,16 +55,58 @@ class CrmInventoryPart extends Component {
         showNumberOnQuoteAndInvoice: false,
         showPriceOnQuoteAndInvoice: true,
         showNoteOnQuoteAndInvoice: true
-      }
+      },
+      vendorInput: ""
     });
   };
   componentDidMount() {
     this.setInitialState();
   }
   componentDidUpdate({ isOpen: isOpenOld }) {
-    const { isOpen } = this.props;
+    const { isOpen, partDetails, isEditMode } = this.props;
     if (!isOpen && isOpenOld !== isOpen) {
       this.setInitialState();
+    }
+    if (
+      isOpen &&
+      isEditMode &&
+      partDetails &&
+      partDetails._id &&
+      !this.state.partDescription
+    ) {
+      logger(partDetails);
+      const {
+        cost,
+        criticalQuantity,
+        description: partDescription,
+        location,
+        margin,
+        markup,
+        note,
+        partNumber,
+        quantity,
+        quickBookItem,
+        retailPrice,
+        partOptions,
+        vendorId
+      } = partDetails;
+      this.setState({
+        cost,
+        criticalQuantity,
+        partDescription,
+        location,
+        margin,
+        markup,
+        note,
+        partNumber,
+        quantity,
+        quickBookItem,
+        retailPrice,
+        partOptions: partOptions ? partOptions : {},
+        vendorId: vendorId
+          ? { label: vendorId.name, value: vendorId._id }
+          : null
+      });
     }
   }
   addPart = e => {
@@ -115,7 +157,12 @@ class CrmInventoryPart extends Component {
         return;
       }
       data.vendorId = vendorId ? vendorId.value : "";
-      this.props.addInventoryPart(data);
+      const { addInventoryPart, updateInventoryPart, partDetails } = this.props;
+      if (partDetails._id) {
+        updateInventoryPart({ ...data, id: partDetails._id });
+      } else {
+        addInventoryPart(data);
+      }
     } catch (error) {
       logger(error);
       toast.error(DefaultErrorMessage);
@@ -177,7 +224,12 @@ class CrmInventoryPart extends Component {
     });
   };
   loadOptions = (input, callback) => {
+    this.setState({ vendorInput: input.length > 1 ? input : null });
     this.props.getInventoryPartsVendors({ input, callback });
+  };
+  editPart = e => {
+    e.preventDefault();
+    logger(this.state);
   };
   render() {
     const {
@@ -194,12 +246,13 @@ class CrmInventoryPart extends Component {
       margin,
       vendorId,
       criticalQuantity,
-      quantity
+      quantity,
+      vendorInput
     } = this.state;
-    const { isOpen, toggle } = this.props;
+    const { isOpen, toggle, isEditMode } = this.props;
     const buttons = [
       {
-        text: "Add part",
+        text: isEditMode ? "Update Part" : "Add part",
         color: "primary",
         onClick: this.addPart,
         type: "submit"
@@ -215,7 +268,9 @@ class CrmInventoryPart extends Component {
         <CRMModal
           isOpen={isOpen}
           toggle={toggle}
-          headerText={"Add new part to inventory"}
+          headerText={
+            isEditMode ? "Update part details" : "Add new part to inventory"
+          }
           footerButtons={buttons}
           showfooterMsg
         >
@@ -301,6 +356,10 @@ class CrmInventoryPart extends Component {
                         vendorId: e
                       });
                     }}
+                    isClearable={true}
+                    noOptionsMessage={() =>
+                      vendorInput ? "No vendor found" : "Type vendor name"
+                    }
                   />
                   {errors.vendorId ? (
                     <FormFeedback>{errors.vendorId}</FormFeedback>
