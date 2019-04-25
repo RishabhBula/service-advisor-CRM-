@@ -98,6 +98,7 @@ class Customers extends Component {
   };
 
   onPageChange = page => {
+    
     const { location } = this.props;
     const { search, pathname } = location;
     const query = qs.parse(search);

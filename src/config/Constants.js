@@ -199,3 +199,15 @@ export const orderPermission =  {
   showNoteOnQuotesInvoices: true
 }
 
+export const LabourText = [
+  { key: "isShowHours", text: "Display hours on quote & invoice" },
+  {
+    key: "showNoteOnQuotesInvoices",
+    text: "Display note on quote & invoice",
+  },
+ ];
+
+export const LabourTextDefault = {
+  isShowHours: false,
+  showNoteOnQuotesInvoices: false,
+};

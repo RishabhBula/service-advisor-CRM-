@@ -7,6 +7,7 @@ import { usersReducer } from "./Users";
 import { profileInfoReducer } from "./ProfileInfo";
 import { matrixListReducer } from "./MatrixList";
 import { fleetReducer } from "./FleetList";
+import { labourReducer } from "./Labours";
 import { rateStandardListReducer } from "./RateStandard";
 import { customerInfoReducer, customerListReducer } from "./Customer";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
@@ -32,6 +33,7 @@ const AppReducer = combineReducers({
   profileInfoReducer,
   matrixListReducer,
   fleetReducer,
+  labourReducer,
   rateStandardListReducer,
   customerInfoReducer,
   modelInfoReducer,

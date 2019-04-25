@@ -9,6 +9,7 @@ import { CustomersLogic } from "./Customers";
 import { MatrixLogic } from "./Matrix";
 import { ProfileInfoLogic } from "./ProfileInfo";
 import { FleetLogic } from "./Fleet";
+import { LaboursLogic } from "./Labours";
 import { StandardRateLogic } from "./RateStandard";
 import { VehicleLogic } from "./Vehicles";
 
@@ -30,5 +31,6 @@ export default [
   ...StandardRateLogic,
   ...CustomersLogic,
   ...VehicleLogic,
+  ...LaboursLogic,
   redirectToLogic
 ];

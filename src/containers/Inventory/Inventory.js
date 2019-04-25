@@ -1,6 +1,7 @@
 import React, { Component, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import {
   Card,
   Row,
@@ -10,11 +11,18 @@ import {
   CardHeader,
   Button
 } from "reactstrap";
+import {
+  getRateStandardListRequest,
+  setRateStandardListStart,
+  labourAddRequest,
+} from '../../actions';
+
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
-
+import { CrmLabourModal } from "../../components/common/Labours/CrmLabourModal";  
+import { logger } from "../../helpers/Logger";
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
 );
@@ -32,7 +40,7 @@ export const InventoryRoutes = [
     component: Parts
   },
   {
-    path: AppRoutes.INVENTORY_TIRES.url,
+    path: AppRoutes.INVENTORY_TIRES.url, 
     name: AppRoutes.INVENTORY_TIRES.name,
     component: Tires
   },
@@ -73,6 +81,7 @@ class Inventory extends Component {
     };
   }
   componentDidMount() {
+    this.props.getStdList();
     const { location } = this.props;
     const index = InventoryTabs.findIndex(d => d.url === location.pathname);
     if (index > -1) {
@@ -94,12 +103,28 @@ class Inventory extends Component {
       }
     }
   }
+  onTypeHeadStdFun = data => {
+    this.props.getStdList(data); 
+  };
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  };
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
+  addLabour= data =>{
+    try {
+      this.props.addLabour(data);
+      this.setState({
+        typeAddModalOpen: !this.state.typeAddModalOpen,
+      });
+    } catch (error) {
+      logger(error)
+    }
+  }
   renderModals = () => {
     const { activeTab } = this.state;
-    const { modelInfoReducer, modelOperate } = this.props;
+    const { modelInfoReducer, modelOperate, rateStandardListReducer, profileInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { typeAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
@@ -117,7 +142,25 @@ class Inventory extends Component {
           />
         );
       case AppRoutes.INVENTORY_LABOURS.url:
-        return null;
+        return (
+          <>
+          <CrmLabourModal
+            profileInfoReducer={profileInfoReducer.profileInfo}
+            rateStandardListData={rateStandardListReducer}
+            tyreModalOpen={typeAddModalOpen}
+            onTypeHeadStdFun={this.onTypeHeadStdFun}
+            setDefaultRate={this.setDefaultRate}
+            getStdList={this.props.getStdList}
+            addLabour={this.addLabour}
+            handleLabourModal={() =>
+              modelOperate({
+                typeAddModalOpen: !typeAddModalOpen
+              })
+            }
+          />
+       
+          </>
+        );
       case AppRoutes.INVENTORY_VENDORS.url:
         return null;
       default:
@@ -136,7 +179,10 @@ class Inventory extends Component {
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
-        return null;
+          modelDetails = {
+            typeAddModalOpen: true
+          };
+          break;
       case AppRoutes.INVENTORY_VENDORS.url:
         return null;
       default:
@@ -164,6 +210,7 @@ class Inventory extends Component {
   };
   render() {
     const { activeTab } = this.state;
+   
     return (
       <div className="animated fadeIn">
         <Card>
@@ -217,9 +264,23 @@ class Inventory extends Component {
     );
   }
 }
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = state => ({
+  profileInfoReducer: state.profileInfoReducer,
+  rateStandardListReducer: state.rateStandardListReducer
+});
+const mapDispatchToProps = dispatch => ({
+  getStdList: () => {
+    dispatch(getRateStandardListRequest());
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
+  addLabour: data => {
+    dispatch(labourAddRequest(data));
+  }
+  
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Inventory);
+)(withRouter(Inventory));

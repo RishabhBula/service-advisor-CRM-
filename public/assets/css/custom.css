@@ -842,4 +842,36 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .child-row{
   margin: 0 -7.5px!important;
 }
+.discount-button{
+  margin: 0 0 0 8px;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+.discount-button li{
+  display: inline-block;
+}
+.discount-button li button{
+  color: #76838f;
+  background-color: transparent;
+  border-bottom-left-radius: .143rem;
+  padding: 6px 7px;
+  min-width: 36px;
+  font-weight: 300;
+  border-radius: 0;
+  border-right: none;
+  position: relative;
+  border-color: #e4eaec;
+}
+.discount-button li button.active{
+  color: #76838f!important;
+  border-color: #e4eaec!important;
+  background-color: rgba(118, 131, 143, .1)!important;
+}
+.rate-labour{
+  width:100%;
+}
+.sec-btn{
+  border-right: 1px solid #e4eaec; 
+}
 /* Tyre CSS */

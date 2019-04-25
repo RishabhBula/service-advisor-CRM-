@@ -10,6 +10,7 @@ export * from "./RateStandard";
 export * from "./Fleet";
 export * from "./ModelOperation";
 export * from "./Vehicles";
+export * from "./Labours";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //
