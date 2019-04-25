@@ -177,6 +177,20 @@ class Inventory extends Component {
   };
   render() {
     const { activeTab } = this.state;
+    const data = {
+      quantity: {
+        parts: 300,
+        tires: 150
+      },
+      cost: {
+        parts: 300,
+        tires: 50
+      },
+      value: {
+        parts: 300,
+        tires: 50
+      }
+    };
     return (
       <div className="animated fadeIn">
         <Card>
@@ -195,7 +209,7 @@ class Inventory extends Component {
           </CardHeader>
           <CardBody>
             <Suspense fallback={"Loading.."}>
-              <InventoryStats />
+              <InventoryStats isLoading={false} inventoryStats={data} />
             </Suspense>
             <Suspense fallback={"Loading.."}>
               <InventoryTab
