@@ -4,70 +4,75 @@ const PermissionObject = require("./commonPermission");
 const customerSchema = new Schema({
   firstName: {
     type: String,
-    default: null,
+    default: null
   },
   lastName: {
     type: String,
-    default: null,
+    default: null
   },
   phoneDetail: {
     type: [Object],
-    default: null,
+    default: null
   },
   email: {
     type: String,
-    default: null,
+    default: null
   },
   notes: {
     type: String,
-    default: null,
+    default: null
   },
   companyName: {
     type: String,
-    default: null,
+    default: null
   },
   referralSource: {
     type: String,
-    default: null,
+    default: null
   },
   fleet: {
     type: Schema.Types.ObjectId,
     ref: "Fleet",
-    default: null,
+    default: null
   },
   address1: {
     type: String,
-    default: null,
+    default: null
   },
   address2: {
     type: String,
-    default: null,
+    default: null
   },
   city: {
     type: String,
-    default: null,
+    default: null
   },
   state: {
     type: String,
-    default: null,
+    default: null
   },
   zipCode: {
     type: String,
-    default: null,
+    default: null
   },
   permission: {
     type: PermissionObject,
-    default: null,
+    default: null
   },
   parentId: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    default: null,
+    default: null
   },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    default: null,
+    default: null
+  },
+  vehicles: {
+    type: [Schema.Types.ObjectId],
+    ref: "vehicle",
+    default: []
   },
   status: {
     type: Boolean,
@@ -79,11 +84,11 @@ const customerSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   updatedAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   }
 });
 
