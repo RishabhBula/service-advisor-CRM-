@@ -15,6 +15,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
+import { getInventoryStats } from "../../actions";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -81,6 +82,7 @@ class Inventory extends Component {
         activeTab: index
       });
     }
+    this.props.getInventoryStats();
   }
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
@@ -245,7 +247,11 @@ class Inventory extends Component {
   }
 }
 const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getInventoryStats: () => {
+    dispatch(getInventoryStats());
+  }
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps

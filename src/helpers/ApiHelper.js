@@ -1,6 +1,6 @@
 import * as qs from "querystring";
 import { AppConfig } from "../config/AppConfig";
-import { ErrorHandlerHelper } from "./ErrorHandlerHelper ";
+import { ErrorHandlerHelper } from "./ErrorHandlerHelper";
 import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
 /**
  * ApiHelper Class - For making Api Requests
@@ -62,7 +62,7 @@ export class ApiHelper {
       if (response.ok === false || response.status !== 200) {
         let errorObject = {
           code: response.status,
-          responseObject,
+          responseObject
         };
 
         throw errorObject;

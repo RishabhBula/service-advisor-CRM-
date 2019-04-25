@@ -9,7 +9,7 @@ export class ErrorHandlerHelper {
     timestamp: Date.now(),
     error: "Unknown error",
     messages: [],
-    data: undefined,
+    data: undefined
   };
   constructor(err) {
     this.rawError = err;
