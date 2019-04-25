@@ -121,6 +121,9 @@ class Parts extends Component {
     this.setState({
       filterApplied: false,
       vendorId: "",
+      sort: "",
+      search: "",
+      status: "",
       page: 1
     });
     const { location } = this.props;
