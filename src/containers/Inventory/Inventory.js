@@ -21,8 +21,8 @@ import {
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
 
 import { addNewVendor } from "../../actions";
-
-
+import { getInventoryPartVendors, requestAddPart } from "../../actions";
+import * as qs from "query-string";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -107,11 +107,24 @@ class Inventory extends Component {
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
+  getQuerParams = () => {
+    return qs.parse(this.props.location.search);
+  };
+  addInventoryPart = data => {
+    const query = this.getQuerParams();
+    this.props.addInventoryPart({ data, query });
+  };
   renderModals = () => {
     const { activeTab } = this.state;
-    const { modelInfoReducer, modelOperate, addVendor } = this.props;
+    const {
+      modelInfoReducer,
+      modelOperate,
+      addVendor,
+      inventoryPartsData,
+      getInventoryPartsVendors
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen} = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -122,6 +135,9 @@ class Inventory extends Component {
                 partAddModalOpen: !partAddModalOpen
               })
             }
+            inventoryPartsData={inventoryPartsData}
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addInventoryPart={this.addInventoryPart}
           />
         );
       case AppRoutes.INVENTORY_TIRES.url:
@@ -139,14 +155,14 @@ class Inventory extends Component {
       case AppRoutes.INVENTORY_LABOURS.url:
         return null;
       case AppRoutes.INVENTORY_VENDORS.url:
-        return <CrmInventoryVendor 
-        addVendor={addVendor} 
+        return <CrmInventoryVendor
+          addVendor={addVendor}
           vendorAddModalOpen={vendorAddModalOpen}
-           handleVendorAddModal={() =>
-              modelOperate({
-                vendorAddModalOpen: !vendorAddModalOpen
-          })
-        }
+          handleVendorAddModal={() =>
+            modelOperate({
+              vendorAddModalOpen: !vendorAddModalOpen
+            })
+          }
         />;
       default:
         return null;
@@ -172,13 +188,13 @@ class Inventory extends Component {
         modelDetails = {
           vendorAddModalOpen: true
         };
-      break
+        break
       default:
         return null;
     }
     this.props.modelOperate(modelDetails);
   };
-  rednerAddNewButton = () => {
+  renderAddNewButton = () => {
     const { activeTab } = this.state;
     return (
       <>
@@ -210,7 +226,7 @@ class Inventory extends Component {
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
-                {this.rednerAddNewButton()}
+                {this.renderAddNewButton()}
               </Col>
             </Row>
           </CardHeader>
@@ -251,13 +267,21 @@ class Inventory extends Component {
     );
   }
 }
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  inventoryPartsData: state.inventoryPartsReducers
+});
 const mapDispatchToProps = dispatch => ({
-    addVendor: data => {
+  addVendor: data => {
     dispatch(addNewVendor(data));
   },
   addTier: data => {
     dispatch(addNewTier(data));
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  },
+  addInventoryPart: data => {
+    dispatch(requestAddPart(data));
   }
 });
 export default connect(

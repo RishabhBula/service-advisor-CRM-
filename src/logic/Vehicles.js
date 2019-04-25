@@ -19,6 +19,7 @@ import {
   vehicleEditSuccess,
   customerAddStarted
 } from "./../actions";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const vehicleAddLogic = createLogic({
   type: vehicleActions.VEHICLES_ADD_REQUEST,
@@ -146,7 +147,7 @@ const editCustomerLogic = createLogic({
       data
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -180,7 +181,7 @@ const deleteVehicleLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -213,7 +214,7 @@ const updateVehicleStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

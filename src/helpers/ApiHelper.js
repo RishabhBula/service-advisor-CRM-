@@ -1,7 +1,8 @@
-import * as qs from "querystring";
-import { AppConfig } from "../config/AppConfig";
-import { ErrorHandlerHelper } from "./ErrorHandlerHelper ";
+import { ErrorHandlerHelper } from "./ErrorHandlerHelper";
 import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
+import Axios from "axios";
+import { AppConfig } from "../config/AppConfig";
+
 /**
  * ApiHelper Class - For making Api Requests
  */
@@ -12,6 +13,8 @@ export class ApiHelper {
   constructor() {
     this._portalGateway = AppConfig.API_ENDPOINT;
     this._apiVersion = AppConfig.API_VERSION;
+    this.source = Axios.CancelToken.source();
+    this.cancelToken = this.source.token;
   }
   setHost = host => {
     this._portalGateway = host;
@@ -37,43 +40,46 @@ export class ApiHelper {
     queryOptions = undefined,
     body = undefined
   ) {
-    let options = { method: method };
     let url = this._portalGateway + this._apiVersion + service + endpoint;
-    options.headers = new Headers();
-    options.headers.append("Content-Type", "application/json");
+    let headers = { "Content-Type": "application/json" };
     if (authenticated) {
-      options.headers.append("Authorization", localStorage.getItem("token"));
+      const storageSession = localStorage.getItem("token");
+      headers.Authorization = storageSession;
     }
 
-    // html query for "GET", json body for others.
-    if (queryOptions && typeof queryOptions === "object") {
-      url += `?${qs.stringify(queryOptions)}`;
-    }
-    options.body = JSON.stringify(body);
     try {
-      let response = await fetch(url, options);
-      let responseObject;
+      method = method.toLowerCase();
+      let response = await Axios.request({
+        method,
+        url,
+        data: body,
+        headers: headers,
+        params: queryOptions,
+        cancelToken: this.cancelToken
+      });
 
-      try {
-        responseObject = await response.json();
-      } catch (error) {
-        responseObject = {};
-      }
       if (response.ok === false || response.status !== 200) {
         let errorObject = {
           code: response.status,
-          responseObject,
+          data: response.data
         };
 
         throw errorObject;
       }
-
-      const data = new SuccessHandlerHelper(responseObject);
-
+      const data = new SuccessHandlerHelper(response.data);
       return data.data;
     } catch (err) {
-      const errorHelper = new ErrorHandlerHelper(err);
+      if (Axios.isCancel(err)) {
+        console.log("%s Req Cancelled", err);
+      }
+      const errorHelper = new ErrorHandlerHelper(err.response);
       return errorHelper.error;
     }
   }
+  /**
+   * Cancels the last request.
+   */
+  cancelRequest = () => {
+    this.source.cancel("Operation canceled by the user.");
+  };
 }
