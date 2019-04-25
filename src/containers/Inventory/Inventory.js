@@ -149,6 +149,7 @@ class Inventory extends Component {
                 tireAddModalOpen: !tireAddModalOpen
               })
             }
+            getInventoryPartsVendors={getInventoryPartsVendors}
             addTier={this.props.addTier}
           />
         );

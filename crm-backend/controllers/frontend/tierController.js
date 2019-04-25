@@ -21,10 +21,10 @@ const createNewTier = async (req, res) => {
         const addNewTier = {
             brandName: body.brandName,
             modalName: body.modalName,
-            vendorId: body.vendor ? body.vendor : null,
+            vendorId: body.vendorId ? body.vendorId : null,
             seasonality: body.seasonality,
             tierSize: body.tierSize,
-            tierPermission: body.tierDefaultPermissions,
+            tierPermission: body.tierPermission,
             userId: currentUser.id,
             parentId: currentUser.parentId
         }
@@ -59,7 +59,6 @@ const updateTierdetails = async (req, res) => {
         });
     }
     try {
-
         const updateTierDetails = await tierModel.findByIdAndUpdate(
             mongoose.Types.ObjectId(body.id),
             {

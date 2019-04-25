@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { getTiersList, updateTierStatus, deleteTier, editTier } from '../../../actions'
+import {
+  getTiersList, updateTierStatus, deleteTier, editTier,
+  getInventoryPartVendors
+} from '../../../actions'
 import { connect } from "react-redux";
 import * as qs from "query-string";
 import { isEqual } from "../../../helpers/Object";
@@ -42,7 +45,14 @@ class Tires extends Component {
   componentDidMount() {
     const { location } = this.props;
     const query = qs.parse(location.search);
+    const lSearch = location.search;
+    const { page, search, sort } = qs.parse(lSearch);
     this.props.getTires({ ...query, page: query.page || 1 });
+    this.setState({
+      page: parseInt(page) || 1,
+      sort: sort || "",
+      search: search || ""
+    })
   }
 
   componentDidUpdate({ tireReducer, location }) {
@@ -454,16 +464,14 @@ class Tires extends Component {
                               <tr key={index}>
                                 <td width={"100"}>{size.baseInfo || "-"}</td>
                                 <td width={"70"}>{size.part || "-"}</td>
-                                <td width={"70"}>{size.cost || "-"}</td>
-                                <td width={"70"}>{size.retailPrice || "-"}</td>
+                                <td width={"70"}>{size.cost || "$0.00"}</td>
+                                <td width={"70"}>{size.retailPrice || "$0.00"}</td>
                                 <td width={"70"}>{size.quantity || "-"}</td>
                                 <td width={"70"}>{size.bin || "-"}</td>
                               </tr>
                             )
                           }) :
-                            <div className={"justify-content-center"}>
-                              No tire size added
-                          </div>
+                            " No tire size added"
                           }
                         </table>
                       </td>
@@ -585,6 +593,7 @@ class Tires extends Component {
           }
           tireData={tire}
           updateTire={this.onUpdate}
+          getInventoryPartsVendors={this.props.getInventoryPartsVendors}
           vendorList={this.props.vendorReducer}
         />
       </>
@@ -609,6 +618,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateTire: (id, data) => {
     dispatch(editTier({ id, data }));
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
   },
 });
 export default connect(

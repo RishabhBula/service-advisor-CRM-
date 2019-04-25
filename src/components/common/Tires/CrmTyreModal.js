@@ -13,7 +13,12 @@ import {
    Label,
    Input
 } from "reactstrap";
-import { tierPermission, tierPermissionText } from "../../../config/Constants"
+import {
+   tierPermission,
+   tierPermissionText,
+   MarkupChangeValues,
+   MarginChangeValues,
+} from "../../../config/Constants"
 import { AppSwitch } from "@coreui/react";
 import Validator from "js-object-validation";
 import {
@@ -22,6 +27,12 @@ import {
 } from "../../../validations";
 import MaskedInput from "react-maskedinput";
 import Async from "react-select/lib/Async";
+import {
+   CalculateMarkupPercent,
+   CalculateMarginPercent,
+   CalculateRetailPriceByMarkupPercent,
+   CalculateRetailPriceByMarginPercent
+} from "../../../helpers/Sales";
 
 export class CrmTyreModal extends Component {
    constructor(props) {
@@ -29,7 +40,7 @@ export class CrmTyreModal extends Component {
       this.state = {
          brandName: "",
          modalName: "",
-         vendor: "",
+         vendorId: "",
          seasonality: "",
          tierSize: [
             {
@@ -49,6 +60,10 @@ export class CrmTyreModal extends Component {
          tierPermission: tierPermission,
          errors: {},
          seasonBtnClass: "",
+         selectedVendor: {
+            label: "Type to select vendor",
+            value: ""
+         },
          isEditMode: false
       };
    }
@@ -65,7 +80,7 @@ export class CrmTyreModal extends Component {
          const {
             brandName,
             modalName,
-            vendor,
+            vendorId,
             seasonality,
             tierSize,
             tierPermission
@@ -74,10 +89,14 @@ export class CrmTyreModal extends Component {
             isEditMode: true,
             brandName,
             modalName,
-            vendor,
+            vendorId,
             seasonality,
             tierSize,
-            tierPermission
+            tierPermission,
+            selectedVendor: {
+               label: vendorId && vendorId.name ? vendorId.name: "Type to select vendor",
+               value: vendorId && vendorId._id? vendorId._id : '' 
+            }
          });
       }
    }
@@ -94,9 +113,9 @@ export class CrmTyreModal extends Component {
       const { name, value } = event.target;
       if (
          (name === 'quantity' ||
-          name === 'criticalQuantity' ||
-          name === 'cost' ||
-          name === 'retailPrice') &&
+            name === 'criticalQuantity' ||
+            name === 'cost' ||
+            name === 'retailPrice') &&
          isNaN(value)
       ) {
          return
@@ -149,6 +168,54 @@ export class CrmTyreModal extends Component {
          seasonBtnClass: "season-btn-active"
       })
    }
+
+   handleRetailsPriceChange = (index, e) => {
+      const { name, value } = e.target;
+      const tierSize = [...this.state.tierSize];
+      tierSize[index][name] = value;
+      this.setState({
+         tierSize
+      },
+         () => {
+            this.setState({
+               ...this.state.tierSize[index],
+               markup:
+                  parseFloat(tierSize[index].cost) && parseFloat(tierSize[index].price)
+                     ? CalculateMarkupPercent(tierSize[index].cost, tierSize[index].price).toFixed(2)
+                     : "",
+               margin:
+                  parseFloat(tierSize[index].cost) && parseFloat(tierSize[index].price)
+                     ? CalculateMarginPercent(tierSize[index].cost, tierSize[index].price).toFixed(2)
+                     : ""
+            });
+         }
+      );
+   };
+
+   setPriceByMarkup = (index, markupPercent) => {
+      const tierSize = [...this.state.tierSize];
+      tierSize[index].retailPrice = tierSize[index].cost && markupPercent
+         ? CalculateRetailPriceByMarkupPercent(tierSize[index].cost, markupPercent).toFixed(2)
+         : tierSize[index].retailPrice
+      this.setState({
+         tierSize,
+      });
+   };
+
+   setPriceByMargin = (index, marginPercent) => {
+      const tierSize = [...this.state.tierSize];
+      tierSize[index].retailPrice = tierSize[index].cost && marginPercent
+         ? CalculateRetailPriceByMarginPercent(tierSize[index].cost, marginPercent).toFixed(2)
+         : tierSize[index].cost.retailPrice
+      this.setState({
+         tierSize,
+      });
+   };
+
+   loadOptions = (input, callback) => {
+      this.props.getInventoryPartsVendors({ input, callback });
+   };
+
    handleChange = event => {
       const { name, value } = event.target;
       this.setState({
@@ -160,7 +227,7 @@ export class CrmTyreModal extends Component {
       const {
          brandName,
          modalName,
-         vendor,
+         vendorId,
          seasonality,
          tierSize,
          tierPermission
@@ -169,7 +236,7 @@ export class CrmTyreModal extends Component {
       const payload = {
          brandName,
          modalName,
-         vendor,
+         vendorId: vendorId.value,
          seasonality,
          tierSize,
          tierPermission
@@ -221,7 +288,7 @@ export class CrmTyreModal extends Component {
    }
 
    render() {
-      const { tyreModalOpen, handleTierModal, vendorList } = this.props;
+      const { tyreModalOpen, handleTierModal, tireData } = this.props;
       const {
          tierSize,
          tierPermission,
@@ -229,10 +296,10 @@ export class CrmTyreModal extends Component {
          modalName,
          seasonality,
          brandName,
+         vendorId,
          isEditMode,
+         selectedVendor,
          seasonBtnClass } = this.state;
-      console.log("*****Vendor List*****", vendorList);
-
       return (
          <>
             <Modal
@@ -269,7 +336,7 @@ export class CrmTyreModal extends Component {
                         <Col md="4">
                            <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                 Modal Name
+                                 Modal Name <span className={"asteric"}>*</span>
                               </Label>
                               <Input
                                  name="modalName"
@@ -277,7 +344,13 @@ export class CrmTyreModal extends Component {
                                  placeholder={"Road Grip"}
                                  onChange={this.handleChange}
                                  className={"form-control"}
-                                 type={"text"} />
+                                 type={"text"}
+                                 invalid={errors.modalName && !modalName} />
+                              <FormFeedback>
+                                 {errors && !modalName && errors.modalName
+                                    ? errors.modalName
+                                    : null}
+                              </FormFeedback>
                            </FormGroup>
                         </Col>
                         <Col md="4">
@@ -286,10 +359,16 @@ export class CrmTyreModal extends Component {
                                  Vendor
                               </Label>
                               <Async
-                                 // defaultOptions={}
-                                 className={"w-100 form-select"}
+                                 placeholder={"Type vendor name"}
                                  loadOptions={this.loadOptions}
-                                 onChange={this.handleStandardRate}
+                                 className={"w-100 form-select"}
+                                 value={tireData && selectedVendor.value !==''  ? selectedVendor : vendorId}
+                                 isClearable={true}
+                                 onChange={e => {
+                                    this.setState({
+                                       vendorId: e
+                                    });
+                                 }}
                               />
                            </FormGroup>
                         </Col>
@@ -328,7 +407,7 @@ export class CrmTyreModal extends Component {
                                        <h6>Base Info</h6>
                                        <FormGroup>
                                           <MaskedInput
-                                             mask="111/11R11 11T"
+                                             mask="111/11R11 11"
                                              type="text"
                                              className={"form-control"}
                                              name="baseInfo"
@@ -341,8 +420,7 @@ export class CrmTyreModal extends Component {
                                        <FormGroup>
                                           <Input
                                              type="textarea"
-                                             col={"2"}
-                                             row={"3"}
+                                             rows={"1"}
                                              value={tierSize[index].notes}
                                              name="notes"
                                              onChange={e => this.handleTireSizeStates(index, e)}
@@ -358,7 +436,7 @@ export class CrmTyreModal extends Component {
                                                       name="part"
                                                       value={tierSize[index].part}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175/70R13 82T"}
+                                                      placeholder={""}
                                                    />
                                                 </FormGroup>
                                              </Col>
@@ -370,7 +448,7 @@ export class CrmTyreModal extends Component {
                                                       name="bin"
                                                       value={tierSize[index].bin}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175/70R13 82T"}
+                                                      placeholder={"175abd"}
                                                    />
                                                 </FormGroup>
                                              </Col>
@@ -421,7 +499,7 @@ export class CrmTyreModal extends Component {
                                                       name="cost"
                                                       value={tierSize[index].cost}
                                                       onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175/70R13 82T"}
+                                                      placeholder={"$0.00"}
                                                    />
                                                 </FormGroup>
                                              </Col>
@@ -432,8 +510,8 @@ export class CrmTyreModal extends Component {
                                                       type="text"
                                                       name="retailPrice"
                                                       value={tierSize[index].retailPrice}
-                                                      onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175/70R13 82T"}
+                                                      onChange={e => this.handleRetailsPriceChange(index, e)}
+                                                      placeholder={"$0.00"}
                                                    />
                                                 </FormGroup>
                                              </Col>
@@ -442,21 +520,53 @@ export class CrmTyreModal extends Component {
                                        <h6>Markup</h6>
                                        <FormGroup>
                                           <ButtonGroup className="tyre-season">
-                                             <Button color="info">15%</Button>
-                                             <Button color="info">25%</Button>
-                                             <Button color="info">35%</Button>
-                                             <Button color="info">50%</Button>
-                                             <Input type={"text"} placeholder="Enter %" />
+                                             {MarkupChangeValues.map((mark, i) => {
+                                                return (
+                                                   <Button
+                                                      key={i}
+                                                      type={"button"}
+                                                      color={"primary"}
+                                                      size={"sm"}
+                                                      onClick={() => this.setPriceByMarkup(index, mark.value)}
+                                                   >
+                                                      {mark.key}
+                                                   </Button>
+                                                );
+                                             })}
+                                             <Button type={"button"} size={"sm"}>
+                                                <Input
+                                                   type={"text"}
+                                                   placeholder={"Markup"}
+                                                   defaultValue={tierSize[index].markup}
+                                                   onChange={e => this.setPriceByMarkup(index, e.target.value)}
+                                                />
+                                             </Button>
                                           </ButtonGroup>
                                        </FormGroup>
                                        <h6>Margin</h6>
                                        <FormGroup>
                                           <ButtonGroup className="tyre-season">
-                                             <Button color="info">15%</Button>
-                                             <Button color="info">25%</Button>
-                                             <Button color="info">35%</Button>
-                                             <Button color="info">50%</Button>
-                                             <Input type={"text"} placeholder="Enter %" />
+                                             {MarginChangeValues.map((mark, i) => {
+                                                return (
+                                                   <Button
+                                                      key={i}
+                                                      type={"button"}
+                                                      color={"primary"}
+                                                      size={"sm"}
+                                                      onClick={() => this.setPriceByMargin(index, mark.value)}
+                                                   >
+                                                      {mark.key}
+                                                   </Button>
+                                                );
+                                             })}
+                                             <Button type={"button"} size={"sm"}>
+                                                <Input
+                                                   type={"text"}
+                                                   placeholder={"Margin"}
+                                                   defaultValue={tierSize[index].margin}
+                                                   onChange={e => this.setPriceByMargin(index, e.target.value)}
+                                                />
+                                             </Button>
                                           </ButtonGroup>
                                        </FormGroup>
                                     </Col>
