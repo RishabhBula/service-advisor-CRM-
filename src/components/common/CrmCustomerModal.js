@@ -19,7 +19,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
-import { PhoneOptions } from "../../config/Constants";
+import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText 
@@ -130,7 +130,7 @@ export class CrmCustomerModal extends Component {
           ratedata
         );
         if (result.isError) {
-          toast.error(result.messages[0]);
+          toast.error(result.messages[0] || DefaultErrorMessage);
         } else {
           toast.success(result.messages[0]);
           this.setState({

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Table,
-  Badge,
   Button,
   Form,
   FormGroup,
@@ -14,7 +13,7 @@ import {
 } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
 import { connect } from "react-redux";
-import { labourEditRequest,labourListRequest,getRateStandardListRequest,
+import { labourEditRequest,labourListRequest,getRateStandardListRequest,deleteLabour,
   setRateStandardListStart, } from "../../../actions";
 import {CrmLabourModal }  from '../../common/Labours/CrmLabourModal' 
 import PaginationHelper from "../../../helpers/Pagination";
@@ -22,7 +21,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
 import { AppConfig } from "../../../config/AppConfig";
-import { toast } from 'react-toastify';
+import { isEqual } from "../../../helpers/Object";
 
 class Labours extends Component {
   constructor(props) {
@@ -32,28 +31,29 @@ class Labours extends Component {
       labourListdata: {},
       error: {},
       isLoading: false,
+      filterApplied: false,
       search: "",
       status: "",
       sort: "",
       type: "",
       page: 1,
+      labour:{},
       selectedLabours: []
     };
   }
 
   componentDidMount() {
     this.props.getStdList();
-    const query = qs.parse(this.props.location.search);
-  
+    const query = qs.parse(this.props.location.search);  
     this.props.getlabour({ ...query, page: query.page || 1 });
   }
 
-  componentDidUpdate({ openEdit }) {
-    // if (this.props.openEdit !== openEdit) {
-    //   this.setState({
-    //     openFleetModal: false
-    //   });
-    // }
+  componentDidUpdate({labourReducer, location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getlabour({ ...currQuery, page: currQuery.page || 1 });
+    }    
   }
 
   handleChange = e => {
@@ -61,142 +61,66 @@ class Labours extends Component {
       [e.target.name]: e.target.value
     });
   };
-
-  handleCheckAllCheckBox = e => {
-    // const { labourListData } = this.props;
-    // const { labourData } = labourListData;
-    // const { data } = labourData
-    // const { target } = e;
-    // const { checked } = target;
-    // if (!checked) {
-    //   this.setState({
-    //     selectedLabours: [],
-    //   });
-    //   return;
-    // }
-    // const selectedLabours = [];
-    // data.forEach(data => {
-    //   selectedLabours.push(data._id);
-    // });
-    // this.setState({ selectedLabours });
-  };
-
-  handleCheckboxChange = e => {
-    // const { target } = e;
-    // const { checked, value } = target;
-    // const { selectedLabours } = this.state;
-    // if (checked) {
-    //   selectedLabours.push(value);
-    //   this.setState({
-    //     selectedLabours,
-    //   });
-    //   return;
-    // }
-    // const index = selectedLabours.indexOf(value);
-    // selectedLabours.splice(index, 1);
-    // this.setState({
-    //   selectedLabours,
-    // });
-  };
-
-  handleActionChange = e => {
-    // const { selectedLabours } = this.state;
-    // const { target } = e;
-    // const { value } = target;
-    // if (!value) {
-    //   return;
-    // }
-    // if (!selectedLabours.length) {
-    //   toast.error('Please select at least one customer.');
-    //   return;
-    // }
-    // if (value === 'active') {
-    //   this.activateUsers(true);
-    // } else if (value === 'inactive') {
-    //   this.deactivateUsers(true);
-    // } else if (value === 'delete') {
-    //   this.onDelete(true);
-    // }
-  };
-  activateUsers = async (isMultiple = false) => {
-    const { value } = await ConfirmBox({
-      text: isMultiple
-        ? 'Do you want to active selected fleet(s)?'
-        : 'Do you want to active this fleet?',
-    });
-    if (!value) {
-      this.setState({
-        selectedLabours: [],
-      });
-      return;
-    }
-    this.props.onStatusUpdate({ status: true, labourId: this.state.selectedLabours });
-    this.setState({ selectedLabours: [] });
-  };
-
-  deactivateUsers = async (isMultiple = false) => {
-    const { value } = await ConfirmBox({
-      text: isMultiple
-        ? 'Do you want to inactive selected fleet(s)?'
-        : 'Do you want to inactive this fleet?',
-    });
-    if (!value) {
-      this.setState({
-        selectedLabours: [],
-      });
-      return;
-    }
-    this.props.onStatusUpdate({ status: false, labourId: this.state.selectedLabours });
-    this.setState({ selectedLabours: [] });
-
-  };
-
   onSearch = e => {
     e.preventDefault();
     this.setState({
       page: 1,
       selectedLabours: []
     });
-    const { search, sort, status } = this.state;
+    const { search, sort } = this.state;
     let param = {};
     param.page = 1;
+    let hasFilter = false;
     if (search) {
       param.search = search.trim(" ");
+      hasFilter = true;
     }
     if (sort) {
       param.sort = sort;
     }
-    if (status) {
-      param.status = status;
-    }
-    this.props.onSearch(param);
+    this.setState({ filterApplied: hasFilter });
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(param)].join("?"))   
   };
 
   onReset = e => {
     e.preventDefault();
+    this.onSearch(e);
     this.setState({
       page: 1,
       search: "",
       status: "",
       sort: "",
-      user: {}
+      type: "",
+      labour: {},
+      selectedLabours: [],
+      filterApplied: false
     });
-    this.props.onSearch({});
   };
-
+  editLabour = data => {
+    this.setState({ labour: data }, () => {
+      this.props.modelOperate({
+        tireEditModalOpen: true
+      });
+    });
+  };
+  
   updateLabour =  data =>{
-    console.log(data);
+    try {
+      this.props.updateLabour(data);
+      this.setState({
+        tireEditModalOpen: !this.state.tireEditModalOpen,
+      });
+    } catch (error) {
+      Loader(error)
+    }
   }
-
-  onUpdate = (id, data) => {
-    //this.props.onUpdate(id, data);
-  };
-
   onDelete = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
-        ? "Do you want to delete selected fleet(s)?"
-        : "Do you want to delete this fleet?"
+        ? "Do you want to delete selected labour(s)?"
+        : "Do you want to delete this labour?"
     });
     if (!value) {
       this.setState({
@@ -204,12 +128,20 @@ class Labours extends Component {
       });
       return;
     }
-    this.props.onDelete(this.state.selectedLabours);
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
+    const data = {
+      ...query,
+      labourId: this.state.selectedLabours,
+    };
+    this.props.deleteLabour(data);
     this.setState({ selectedLabours: [] });
   };
   onTypeHeadStdFun = data => {
     this.props.getStdList(data); 
   };
+
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   };
@@ -227,16 +159,12 @@ class Labours extends Component {
   render() {
     const {
       search,
-      status,
       sort,
-      page,
-      selectedLabours } = this.state
+      page } = this.state
     const { labourReducer,profileInfoReducer,rateStandardListReducer,modelInfoReducer, modelOperate } = this.props;
-    console.log('=======================');
-    // const { modelDetails } = modelInfoReducer;
-    // const { typeAddModalOpen } = modelDetails;
+    const { modelDetails } = modelInfoReducer;
+    const { tireEditModalOpen } = modelDetails;
     const { isLoading, labourData } = labourReducer;
-    console.log(labourData);
     return (
       <>
         <div className={"filter-block"}>
@@ -253,7 +181,7 @@ class Labours extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by company name and email"
+                      placeholder="Search by labour description and note"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -350,7 +278,7 @@ class Labours extends Component {
                         <Button
                           color={"primary"}
                           size={"sm"}
-                          onClick={() => this.editFleet(data)}
+                          onClick={() => this.editLabour(data)}
                         >
                           <i className={"fa fa-edit"} />
                         </Button>{" "}
@@ -391,7 +319,7 @@ class Labours extends Component {
             }
           </tbody>
         </Table>
-
+             
         {labourData.totalLabour && !isLoading ? (
           <PaginationHelper
             totalRecords={labourData.totalLabour}
@@ -402,7 +330,21 @@ class Labours extends Component {
             pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
- 
+        <CrmLabourModal
+            profileInfoReducer={profileInfoReducer.profileInfo}
+            rateStandardListData={rateStandardListReducer}
+            tyreModalOpen={tireEditModalOpen}
+            onTypeHeadStdFun={this.onTypeHeadStdFun}
+            setDefaultRate={this.setDefaultRate}
+            getStdList={this.props.getStdList}
+            dataLabour={this.state.labour}
+            updateLabour={this.updateLabour}
+            handleLabourModal={() =>
+              modelOperate({
+                tireEditModalOpen: !tireEditModalOpen
+              })
+            }
+          />
       </>
     );
   }
@@ -417,11 +359,20 @@ const mapDispatchToProps = dispatch => ({
   // updateFleet: (data) => {
   //   dispatch(labourEditRequest(data))
   // }
+  updateLabour:(data) =>{  
+    dispatch(labourEditRequest(data))
+  },
+  deleteLabour: data => {
+    dispatch(deleteLabour(data));
+  },
   getStdList: () => {
     dispatch(getRateStandardListRequest());
   },
   getlabour: data => {
     dispatch(labourListRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
   },
 });
 

@@ -23,7 +23,15 @@ import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import { CrmLabourModal } from "../../components/common/Labours/CrmLabourModal";  
 import { logger } from "../../helpers/Logger";
+import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
+import {
+  addNewTier,
+} from '../../actions'
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
+
+import { addNewVendor } from "../../actions";
+import { getInventoryPartVendors, requestAddPart } from "../../actions";
+import * as qs from "query-string";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -92,6 +100,7 @@ class Inventory extends Component {
       });
     }
   }
+
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
     if (location.pathname !== newLocation.pathname) {
@@ -124,11 +133,24 @@ class Inventory extends Component {
       logger(error)
     }
   }
+  getQuerParams = () => {
+    return qs.parse(this.props.location.search);
+  };
+  addInventoryPart = data => {
+    const query = this.getQuerParams();
+    this.props.addInventoryPart({ data, query });
+  };
   renderModals = () => {
     const { activeTab } = this.state;
-    const { modelInfoReducer, modelOperate, rateStandardListReducer, profileInfoReducer } = this.props;
+    const {
+      modelInfoReducer,
+      modelOperate,
+      addVendor,
+      inventoryPartsData,
+      getInventoryPartsVendors, rateStandardListReducer, profileInfoReducer
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { typeAddModalOpen, partAddModalOpen } = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -139,41 +161,51 @@ class Inventory extends Component {
                 partAddModalOpen: !partAddModalOpen
               })
             }
+            inventoryPartsData={inventoryPartsData}
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addInventoryPart={this.addInventoryPart}
           />
         );
       case AppRoutes.INVENTORY_TIRES.url:
         return (
           <CrmTyreModal
-            tyreModalOpen={typeAddModalOpen}
+            tyreModalOpen={tireAddModalOpen}
             handleTierModal={() =>
               modelOperate({
-                typeAddModalOpen: !typeAddModalOpen
+                tireAddModalOpen: !tireAddModalOpen
               })
             }
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addTier={this.props.addTier}
           />
         );
       case AppRoutes.INVENTORY_LABOURS.url:
         return (
-          <>
           <CrmLabourModal
             profileInfoReducer={profileInfoReducer.profileInfo}
             rateStandardListData={rateStandardListReducer}
-            tyreModalOpen={typeAddModalOpen}
+            tyreModalOpen={tireAddModalOpen}
             onTypeHeadStdFun={this.onTypeHeadStdFun}
             setDefaultRate={this.setDefaultRate}
             getStdList={this.props.getStdList}
             addLabour={this.addLabour}
             handleLabourModal={() =>
               modelOperate({
-                typeAddModalOpen: !typeAddModalOpen
+                tireAddModalOpen: !tireAddModalOpen
               })
             }
           />
-       
-          </>
         );
       case AppRoutes.INVENTORY_VENDORS.url:
-        return null;
+        return <CrmInventoryVendor
+          addVendor={addVendor}
+          vendorAddModalOpen={vendorAddModalOpen}
+          handleVendorAddModal={() =>
+            modelOperate({
+              vendorAddModalOpen: !vendorAddModalOpen
+            })
+          }
+        />;
       default:
         return null;
     }
@@ -189,22 +221,25 @@ class Inventory extends Component {
         break;
       case AppRoutes.INVENTORY_TIRES.url:
         modelDetails = {
-          typeAddModalOpen: true
+          tireAddModalOpen: true
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
           modelDetails = {
-            typeAddModalOpen: true
+            tireAddModalOpen: true
           };
           break;
       case AppRoutes.INVENTORY_VENDORS.url:
-        return null;
+        modelDetails = {
+          vendorAddModalOpen: true
+        };
+        break
       default:
         return null;
     }
     this.props.modelOperate(modelDetails);
   };
-  rednerAddNewButton = () => {
+  renderAddNewButton = () => {
     const { activeTab } = this.state;
     return (
       <>
@@ -237,7 +272,7 @@ class Inventory extends Component {
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
-                {this.rednerAddNewButton()}
+                {this.renderAddNewButton()}
               </Col>
             </Row>
           </CardHeader>
@@ -261,7 +296,7 @@ class Inventory extends Component {
                       path={route.path}
                       exact={route.exact}
                       name={route.name}
-                      render={props => <route.component {...props} />}
+                      render={props => <route.component {...props} {...this.props} />}
                     />
                   ) : null;
                 })}
@@ -279,10 +314,23 @@ class Inventory extends Component {
   }
 }
 const mapStateToProps = state => ({
+  inventoryPartsData: state.inventoryPartsReducers,
   profileInfoReducer: state.profileInfoReducer,
   rateStandardListReducer: state.rateStandardListReducer
 });
 const mapDispatchToProps = dispatch => ({
+  addVendor: data => {
+    dispatch(addNewVendor(data));
+  },
+  addTier: data => {
+    dispatch(addNewTier(data));
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  },
+  addInventoryPart: data => {
+    dispatch(requestAddPart(data));
+  },
   getStdList: () => {
     dispatch(getRateStandardListRequest());
   },
@@ -292,7 +340,6 @@ const mapDispatchToProps = dispatch => ({
   addLabour: data => {
     dispatch(labourAddRequest(data));
   }
-  
 });
 export default connect(
   mapStateToProps,

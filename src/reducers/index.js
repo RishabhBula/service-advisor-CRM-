@@ -4,6 +4,7 @@ import { combineReducers } from "redux";
 import { handleActions } from "redux-actions";
 
 import { usersReducer } from "./Users";
+import { tiresReducer } from "./Tires";
 import { profileInfoReducer } from "./ProfileInfo";
 import { matrixListReducer } from "./MatrixList";
 import { fleetReducer } from "./FleetList";
@@ -12,24 +13,26 @@ import { rateStandardListReducer } from "./RateStandard";
 import { customerInfoReducer, customerListReducer } from "./Customer";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { modelInfoReducer } from "./ModelOperation";
-
+import { vendorsReducer } from "./Vendors"
+import { inventoryPartsReducers } from "./InventoryParts";
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
-      showLoader: true,
+      showLoader: true
     }),
     HIDE_LOADER: (state, action) => ({
-      showLoader: false,
-    }),
+      showLoader: false
+    })
   },
   {
-    showLoader: false,
+    showLoader: false
   }
 );
 
 const AppReducer = combineReducers({
   mainReducer,
   usersReducer,
+  tiresReducer,
   profileInfoReducer,
   matrixListReducer,
   fleetReducer,
@@ -40,6 +43,8 @@ const AppReducer = combineReducers({
   customerListReducer,
   vehicleAddInfoReducer,
   vehicleListReducer,
+  vendorsReducer,
+  inventoryPartsReducers,
   routing: routerReducer,
 });
 

@@ -169,16 +169,12 @@ const createCustomerValidation = [
 ];
 const createNewLabourValidations = [
   body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
-  body("discription", "Discription should have atleast 20 wards and maximum 200 wards").isLength({ min: 20, max: 200 }).trim(),
   body("hours", "Hours should be numeric").isNumeric(),
-  body("discount", "Discount should be numeric").isNumeric()
 ];
 const updateLabourValidations = [
   body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
-  body("discription", "Discription should have atleast 20 wards and maximum 200 wards").isLength({ min: 20, max: 200 }).trim(),
   body("labourId").not().isEmpty().withMessage("Labour Id is required.").trim(),
   body("hours", "Hours should be numeric").isNumeric(),
-  body("discount", "Discount should be numeric").isNumeric()
 ];
 const createVendorValidations = [
   body("name").not().isEmpty().withMessage("Name is required.").trim(),
@@ -187,11 +183,39 @@ const createVendorValidations = [
   body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim()
 ];
 const updateVendorValidations = [
-  body("name").not().isEmpty().withMessage("Name is required.").trim(),
-  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
-  body("accountNumber", "Account Number should be a number").isNumeric(),
-  body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
-  body("vendorId").not().isEmpty().withMessage("Vendor Id is required.").trim(),
+  body("data.name").not().isEmpty().withMessage("Name is required.").trim(),
+  body("data.accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
+  body("data.accountNumber", "Account Number should be a number").isNumeric(),
+  body("data.accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
+  body("id").not().isEmpty().withMessage("Vendor Id is required.").trim(),
+];
+const createTierValidation = [
+  body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
+  body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim(),
+  body("tierSize").custom(tierSize => {
+    for (let index = 0; index < tierSize.length; index++) {
+      const element = tierSize[index];
+      const sizeInfo = element.baseInfo.split('R')
+      if (!sizeInfo[1]) {
+        throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
+      }
+    }
+    return true;
+  })
+];
+const updateTierValidation = [
+  body("data.brandName").not().isEmpty().withMessage("Brand name is required").trim(),
+  body("data.brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim(),
+  body("data.tierSize").custom(tierSize => {
+    for (let index = 0; index < tierSize.length; index++) {
+      const element = tierSize[index];
+      const sizeInfo = element.baseInfo.split('R')
+      if (!sizeInfo[1]) {
+        throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
+      }
+    }
+    return true;
+  })
 ];
 module.exports = {
   signupValidation,
@@ -209,5 +233,7 @@ module.exports = {
   createNewLabourValidations,
   updateLabourValidations,
   createVendorValidations,
-  updateVendorValidations
+  updateVendorValidations,
+  createTierValidation,
+  updateTierValidation
 };

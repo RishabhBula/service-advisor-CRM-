@@ -9,7 +9,6 @@ import {
   labourListActions,
   labourListStarted,
   labourListSuccess,
-  labourEditSuccess,
   labourEditAction,
   labourDeleteActions,
   labourListRequest,
@@ -47,9 +46,9 @@ const labourAddLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(
-        modelOpenRequest({modelDetails: {typeAddModalOpen: false}})
+        modelOpenRequest({modelDetails: {tireAddModalOpen: false}})
       );
-      dispatch(labourAddSuccess());
+      dispatch(labourAddSuccess( {labourData: result.data}));
       dispatch(
         labourListRequest({
           ...action.payload,
@@ -123,15 +122,16 @@ const editLabourLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(hideLoader())
-      dispatch(labourEditSuccess({
-        ...action.payload
-      }),
+      dispatch(
+        modelOpenRequest({modelDetails: {tireEditModalOpen: false}})
       );
       dispatch(
         labourListRequest({
           ...action.payload,
         })
       )
+    
+      
       done();
     }
   },
