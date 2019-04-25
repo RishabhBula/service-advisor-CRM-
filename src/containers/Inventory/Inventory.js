@@ -179,20 +179,9 @@ class Inventory extends Component {
   };
   render() {
     const { activeTab } = this.state;
-    const data = {
-      quantity: {
-        parts: 300,
-        tires: 150
-      },
-      cost: {
-        parts: 300,
-        tires: 50
-      },
-      value: {
-        parts: 300,
-        tires: 50
-      }
-    };
+    const { inventoryStatsReducer } = this.props;
+    const { data, isLoading } = inventoryStatsReducer;
+
     return (
       <div className="animated fadeIn">
         <Card>
@@ -211,7 +200,7 @@ class Inventory extends Component {
           </CardHeader>
           <CardBody>
             <Suspense fallback={"Loading.."}>
-              <InventoryStats isLoading={false} inventoryStats={data} />
+              <InventoryStats isLoading={isLoading} inventoryStats={data} />
             </Suspense>
             <Suspense fallback={"Loading.."}>
               <InventoryTab
@@ -246,7 +235,9 @@ class Inventory extends Component {
     );
   }
 }
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  inventoryStatsReducer: state.inventoryStatsReducer
+});
 const mapDispatchToProps = dispatch => ({
   getInventoryStats: () => {
     dispatch(getInventoryStats());

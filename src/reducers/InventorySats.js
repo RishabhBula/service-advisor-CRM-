@@ -4,22 +4,22 @@ import { inventoryStatsAction } from "../actions";
 const initialInventoryStatState = {
   data: {
     quantity: {
-      parts: 300,
-      tires: 150
+      parts: 0,
+      tires: 0
     },
     cost: {
-      parts: 300,
-      tires: 50
+      parts: 0,
+      tires: 0
     },
     value: {
-      parts: 300,
-      tires: 50
+      parts: 0,
+      tires: 0
     }
   },
   isLoading: true
 };
 
-export const matrixListReducer = handleActions(
+export const inventoryStatsReducer = handleActions(
   {
     [inventoryStatsAction.GET_INVENTORY_STATS_SUCCESS]: (state, action) => ({
       ...state,
