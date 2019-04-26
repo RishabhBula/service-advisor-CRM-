@@ -239,8 +239,7 @@ class Vendors extends Component {
               <th>Vendor Name</th>
               <th width={"300"}>URL</th>
               <th>Account Number</th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Contact Person</th>
               <th>Email</th>
               <th>Phone</th>
               <th>Action</th>
@@ -256,10 +255,8 @@ class Vendors extends Component {
                     <td>{vendor.url ? <a href={vendor.url} target={"_blank"}>{vendor.url}</a> : 'NA'}</td>
                       <td>{vendor.accountNumber ? vendor.accountNumber : 'NA'}</td>
                       <td className={"text-capitalize"}>
-                        {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : 'NA'}
-                      </td>
-                      <td className={"text-capitalize"}>
-                      {vendor.contactPerson.lastName ? vendor.contactPerson.lastName : 'NA'}
+                        {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : 'NA'} &nbsp;
+                        {vendor.contactPerson.firstName && vendor.contactPerson.lastName ? vendor.contactPerson.lastName : null}
                       </td>
                       <td>{vendor.contactPerson.email ? vendor.contactPerson.email : 'NA'}</td>
                       <td className={"text-capitalize"}>

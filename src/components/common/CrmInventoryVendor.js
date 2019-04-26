@@ -237,11 +237,12 @@ export class CrmInventoryVendor extends Component {
           </ModalHeader>
           <ModalBody>
             <div className=''>
+              <h5 className={"section-divid-head head-top"}>Vendor Details</h5>
               <Row className='justify-content-center'>
                 <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
-                      Name <span className={"asteric"}>*</span>
+                      Vendor Name <span className={"asteric"}>*</span>
                     </Label>
                     <div className={'input-block'}>
                       <Input
@@ -265,7 +266,7 @@ export class CrmInventoryVendor extends Component {
                 <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
-                      URL
+                     Vendor URL
                     </Label>
                     <div className={'input-block'}>
                       <Input
@@ -308,7 +309,7 @@ export class CrmInventoryVendor extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <h5>Contact Person</h5>
+              <h5 className={"section-divid-head"}>Contact Person</h5>
               <Row>
                 <Col md='6'>
                   <FormGroup>
@@ -413,7 +414,7 @@ export class CrmInventoryVendor extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <h5>Address</h5>
+              <h5 className={"section-divid-head"}>Address</h5>
               <Row>
                 <Col md='6'>
                   <FormGroup>

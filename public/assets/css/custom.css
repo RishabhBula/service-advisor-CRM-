@@ -630,6 +630,14 @@
 .custom-sidebar.sidebar .nav-link.active {
   background: #fff;
 }
+.section-divid-head{
+  border-top: 1px solid #e2e2e2;
+  padding: 10px 0 10px 160px;
+}
+.section-divid-head.head-top{
+  border-top: 0px;
+  padding-top: 0;
+}
 .fleet-block .css-vj8t7z,.fleet-block .css-2o5izw{
   min-height: unset;
 }
