@@ -141,7 +141,9 @@ class Vendors extends Component {
       vendors:{},
       filterApplied: false
     });
-    this.onSearch(e);
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(`$pathname`)].join("?"))
   };
 
   render() {
