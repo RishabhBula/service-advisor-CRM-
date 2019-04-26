@@ -177,23 +177,15 @@ export class CrmTyreModal extends Component {
       }
       const tierSize = [...this.state.tierSize];
       tierSize[index][name] = value;
+      tierSize[index].markup = parseFloat(tierSize[index].cost) && parseFloat(tierSize[index].retailPrice)
+         ? CalculateMarkupPercent(tierSize[index].cost, tierSize[index].retailPrice).toFixed(2)
+         : "";
+      tierSize[index].margin = parseFloat(tierSize[index].cost) && parseFloat(tierSize[index].retailPrice)
+         ? CalculateMarginPercent(tierSize[index].cost, tierSize[index].retailPrice).toFixed(2)
+         : ""
       this.setState({
          tierSize
-      },
-         () => {
-            this.setState({
-               ...this.state.tierSize[index],
-               markup:
-                  parseFloat(tierSize[index].cost) && parseFloat(tierSize[index].price)
-                     ? CalculateMarkupPercent(tierSize[index].cost, tierSize[index].price).toFixed(2)
-                     : "",
-               margin:
-                  parseFloat(tierSize[index].cost) && parseFloat(tierSize[index].price)
-                     ? CalculateMarginPercent(tierSize[index].cost, tierSize[index].price).toFixed(2)
-                     : ""
-            });
-         }
-      );
+      });
    };
 
    setPriceByMarkup = (index, markupPercent) => {

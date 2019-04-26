@@ -18,9 +18,10 @@ export const inventoryPartsReducers = handleActions(
       parts: [],
       isLoading: true
     }),
-    [inventoryPartsActions.GET_VENDORS_LIST_SUCCESS]: (state, action) => ({
+    [inventoryPartsActions.GET_PARTS_LIST_SUCCESS]: (state, action) => ({
       ...state,
-      parts: action.payload,
+      parts: action.payload.parts,
+      totalParts: action.payload.total,
       isLoading: false
     })
   },

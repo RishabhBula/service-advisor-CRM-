@@ -107,11 +107,15 @@ class Inventory extends Component {
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
-  getQuerParams = () => {
-    return qs.parse(this.props.location.search);
+  getQueryParams = () => {
+    let query = qs.parse(this.props.location.search);
+    if (query.vendorId) {
+      query.vendorId = qs.parse(query.vendorId).value;
+    }
+    return query;
   };
   addInventoryPart = data => {
-    const query = this.getQuerParams();
+    const query = this.getQueryParams();
     this.props.addInventoryPart({ data, query });
   };
   renderModals = () => {
@@ -251,7 +255,9 @@ class Inventory extends Component {
                       path={route.path}
                       exact={route.exact}
                       name={route.name}
-                      render={props => <route.component {...props} {...this.props} />}
+                      render={props => (
+                        <route.component {...props} {...this.props} />
+                      )}
                     />
                   ) : null;
                 })}

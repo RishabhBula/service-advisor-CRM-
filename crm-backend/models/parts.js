@@ -8,7 +8,7 @@ const partSchema = new Schema({
   note: {
     type: String
   },
-  partNumebr: {
+  partNumber: {
     type: String
   },
   vendorId: {
@@ -28,6 +28,12 @@ const partSchema = new Schema({
   retailPrice: {
     type: Number
   },
+  markup: {
+    type: Number
+  },
+  margin: {
+    type: Number
+  },
   quantity: {
     type: Number
   },
@@ -41,6 +47,14 @@ const partSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
     required: true
+  },
+  partOptions: {
+    type: new Schema({
+      isTaxed: Boolean,
+      showNoteOnQuoteAndInvoice: Boolean,
+      showNumberOnQuoteAndInvoice: Boolean,
+      showPriceOnQuoteAndInvoice: Boolean
+    })
   },
   isDeleted: {
     type: Boolean,
