@@ -296,8 +296,7 @@ export class CrmTyreModal extends Component {
          brandName,
          vendorId,
          isEditMode,
-         selectedVendor,
-         seasonBtnClass } = this.state;
+         selectedVendor } = this.state;
       return (
          <>
             <Modal
@@ -385,19 +384,19 @@ export class CrmTyreModal extends Component {
                            <ButtonGroup className="tyre-season">
                               <Button
                                  value={seasonality}
-                                 className={seasonality === 'summer' ? seasonBtnClass : "season-btn"}
+                                 className={seasonality === 'summer' ? "margin-markup-btn-active" : "season-btn"}
                                  onClick={() => this.handleButtonClick("summer")}
                               >
                                  Summer
                               </Button>
                               <Button
                                  value={seasonality}
-                                 className={seasonality === 'winter' ? seasonBtnClass : "season-btn"}
+                                 className={seasonality === 'winter' ? "margin-markup-btn-active" : "season-btn"}
                                  onClick={() => this.handleButtonClick("winter")}
                               >Winter</Button>
                               <Button
                                  value={seasonality}
-                                 className={seasonality === 'all seasons' ? seasonBtnClass : "season-btn"}
+                                 className={seasonality === 'all seasons' ? "margin-markup-btn-active" : "season-btn"}
                                  onClick={() => this.handleButtonClick("all seasons")}
                               >All Seasons</Button>
                            </ButtonGroup>

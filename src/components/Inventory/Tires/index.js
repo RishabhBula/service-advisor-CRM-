@@ -197,38 +197,6 @@ class Tires extends Component {
     this.setState({ selectedTires });
   };
 
-  activateTires = async (isMultiple = false) => {
-    const { value } = await ConfirmBox({
-      text: isMultiple
-        ? "Do you want to active selected tire(s)?"
-        : "Do you want to active this tire?"
-    });
-    if (!value) {
-      this.setState({
-        selectedTires: [],
-        bulkAction: ""
-      });
-      return;
-    }
-    this.props.onStatusUpdate({ status: true, tires: this.state.selectedTires });
-  };
-
-  deactivateTires = async (isMultiple = false) => {
-    const { value } = await ConfirmBox({
-      text: isMultiple
-        ? "Do you want to inactive selected tire(s)?"
-        : "Do you want to inactive this tire?"
-    });
-    if (!value) {
-      this.setState({
-        selectedTires: [],
-        bulkAction: ""
-      });
-      return;
-    }
-    this.props.onStatusUpdate({ status: false, tires: this.state.selectedTires });
-  };
-
   handleActionChange = e => {
     const { selectedTires } = this.state;
     const { target } = e;
@@ -294,26 +262,6 @@ class Tires extends Component {
                   </InputGroup>
                 </FormGroup>
               </Col>
-              {/* <Col lg={"2"} md={"2"} className="mb-0">
-                <FormGroup className="mb-0">
-                  <Label htmlFor="exampleSelect" className="label">
-                    Tire Status
-                  </Label>
-                  <Input
-                    type="select"
-                    name="status"
-                    id="exampleSelect"
-                    onChange={this.handleChange}
-                    value={status}
-                  >
-                    <option className="form-control" value={""}>
-                      -- Select --
-                    </option>
-                    <option value={1}>Active</option>
-                    <option value={0}>Inactive</option>
-                  </Input>
-                </FormGroup>
-              </Col> */}
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
                   <Label htmlFor="SortFilter" className="label">
@@ -393,7 +341,6 @@ class Tires extends Component {
                       <label></label>
                     </span>
                   }
-
                   {tires && tires.length ? (
                     <Input
                       className='commonstatus'
@@ -460,7 +407,7 @@ class Tires extends Component {
                           {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
                             return (
                               <tr key={index}>
-                                <td width={"100"}>{size.baseInfo.replace("_ __"|| "_" || "__", "") || "-"}</td>
+                                <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "__", "") || "-"}</td>
                                 <td width={"70"}>{size.part || "-"}</td>
                                 <td width={"70"}>{size.cost || "$0.00"}</td>
                                 <td width={"70"}>{size.retailPrice || "$0.00"}</td>
@@ -477,43 +424,6 @@ class Tires extends Component {
                       <td className={"season-td"}>
                         {tire.seasonality || "-"}
                       </td>
-                      {/* <td className={"text-center"}>
-                        {tire.status ? (
-                          <Badge
-                            className={"badge-button"}
-                            color="success"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedTires: [tire._id]
-                                },
-                                () => {
-                                  this.deactivateTires();
-                                }
-                              );
-                            }}
-                          >
-                            Active
-                          </Badge>
-                        ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedTires: [tire._id]
-                                  },
-                                  () => {
-                                    this.activateTires();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
-                          </Badge>
-                          )}
-                      </td> */}
                       <td className={"text-center action-td"}>
                         <Button
                           color={"primary"}
@@ -548,7 +458,6 @@ class Tires extends Component {
                           Delete {tire.brandName}
                         </UncontrolledTooltip>
                       </td>
-
                     </tr>
                   );
                 })
