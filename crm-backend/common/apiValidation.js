@@ -197,9 +197,11 @@ const createTierValidation = [
     for (let index = 0; index < tierSize.length; index++) {
       const element = tierSize[index];
       const sizeInfo = element.baseInfo.split('R')
-      const checkSize = sizeInfo[1].replace(/\D+/g, '')
-      if (!checkSize) {
-        throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
+      if (sizeInfo[1] && tierSize.length) {
+        const checkSize = sizeInfo[1].replace(/\D+/g, '')
+        if (!checkSize) {
+          throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
+        }
       }
     }
     return true;
@@ -212,8 +214,11 @@ const updateTierValidation = [
     for (let index = 0; index < tierSize.length; index++) {
       const element = tierSize[index];
       const sizeInfo = element.baseInfo.split('R')
-      if (!sizeInfo[1]) {
-        throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
+      if (sizeInfo[1] && tierSize.length) {
+        const checkSize = sizeInfo[1].replace(/\D+/g, '')
+        if (!checkSize) {
+          throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
+        }
       }
     }
     return true;

@@ -5,7 +5,6 @@ import {
 } from '../../../actions'
 import { connect } from "react-redux";
 import * as qs from "query-string";
-import { isEqual } from "../../../helpers/Object";
 import {
   Table,
   UncontrolledTooltip,
@@ -24,6 +23,8 @@ import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { toast } from "react-toastify";
 import { CrmTyreModal } from "../../common/Tires/CrmTyreModal"
+import { Async } from "react-select";
+
 class Tires extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +35,8 @@ class Tires extends Component {
       invitaionStatus: "",
       sort: "",
       type: "",
+      vendorId: "",
+      vendorInput: "",
       tire: {},
       openEditModal: false,
       selectedTires: [],
@@ -74,10 +77,20 @@ class Tires extends Component {
         this.props.getTires({ ...query, page: query.page || 1 });
       }
     }
-    const prevQuery = qs.parse(location.search);
-    const currQuery = qs.parse(this.props.location.search);
-    if (!isEqual(prevQuery, currQuery)) {
-      this.props.getTires({ ...currQuery, page: currQuery.page || 1 });
+    const { location: currentLocation } = this.props;
+    const { search } = location;
+    const { search: currentSearch } = currentLocation;
+    if (search !== currentSearch) {
+      let query = qs.parse(currentSearch);
+      this.setState({ ...query, page: query.page?parseInt(query.page): 1 });
+      if (query.vendorId) {
+        const vendorId = qs.parse(query.vendorId);
+        this.setState({
+          vendorId
+        });
+        query.vendorId = vendorId.value;
+      }
+      this.props.getTires(query)
     }
   }
 
@@ -93,36 +106,40 @@ class Tires extends Component {
       page: 1,
       selectedTires: []
     });
-    const { search, sort } = this.state;
-    let param = {};
-    param.page = 1;
-    let hasFilter = false;
-    if (search) {
-      param.search = search;
-      hasFilter = true;
-    }
-    if (sort) {
-      param.sort = sort;
-    }
-    this.setState({ filterApplied: hasFilter });
+    const { search, status, sort, vendorId } = this.state;
+    const query = {
+      page: 1,
+      search,
+      status,
+      sort,
+      vendorId: vendorId ? qs.stringify(vendorId) : undefined,
+      vendorInput: ""
+    };
+    this.setState({
+      filterApplied: true,
+      page: 1
+    });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify(param)].join("?"))
+    this.props.redirectTo([pathname, qs.stringify(query)].join("?"))
   };
 
   onReset = e => {
     e.preventDefault();
-    this.onSearch(e);
     this.setState({
       page: 1,
       search: "",
       status: "",
       sort: "",
       type: "",
+      vendorId: "",
       tire: {},
       selectedTires: [],
       filterApplied: false
     });
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo(`${pathname}`);
   };
 
   onDelete = async (isMultiple = false) => {
@@ -219,7 +236,10 @@ class Tires extends Component {
       this.onDelete(true);
     }
   };
-
+  loadOptions = (input, callback) => {
+    this.setState({ vendorInput: input.length > 1 ? input : null });
+    this.props.getInventoryPartsVendors({ input, callback });
+  };
   onPageChange = page => {
     const { location } = this.props;
     const { search, pathname } = location;
@@ -239,7 +259,10 @@ class Tires extends Component {
       search,
       sort,
       selectedTires,
-      tire
+      tire,
+      vendorId,
+      status,
+      vendorInput
     } = this.state;
     return (
       <>
@@ -264,6 +287,26 @@ class Tires extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
+                  <Label htmlFor="exampleSelect" className="label">
+                    Filter by
+                  </Label>
+                  <Input
+                    type="select"
+                    name="status"
+                    id="exampleSelect"
+                    onChange={this.handleChange}
+                    value={status}
+                  >
+                    <option className="form-control" value={""}>
+                      -- Select --
+                    </option>
+                    <option value={"critical"}>Critical Quantity</option>
+                    <option value={"ncritical"}>Non-Critical Quantity</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <FormGroup className="mb-0">
                   <Label htmlFor="SortFilter" className="label">
                     Sort By
                   </Label>
@@ -277,13 +320,39 @@ class Tires extends Component {
                     <option className="form-control" value={""}>
                       -- Select --
                     </option>
-                    <option value={"nasc"}>Name A-Z</option>
-                    <option value={"ndesc"}>Name Z-A</option>
+                    <option value={"qltoh"}>Quantity(Low to High)</option>
+                    <option value={"qhtol"}>Quantity(High to High)</option>
+                    <option value={"cltoh"}>Cost(Low to High)</option>
+                    <option value={"chtol"}>Cost(High to High)</option>
+                    <option value={"rpltoh"}>Retail Price(Low to High)</option>
+                    <option value={"rphtol"}>Retail Price(High to High)</option>
+                    <option value={"cdltoh"}>Last created</option>
                   </Input>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"5"} md={"5"} className="mb-0">
                 <Row>
+                  <Col md={"6"}>
+                    <FormGroup className="mb-0">
+                      <Label htmlFor="SortFilter" className="label">
+                        Vendor
+                      </Label>
+                      <Async
+                        placeholder={"Type vendor name"}
+                        loadOptions={this.loadOptions}
+                        value={vendorId}
+                        onChange={e => {
+                          this.setState({
+                            vendorId: e
+                          });
+                        }}
+                        isClearable={true}
+                        noOptionsMessage={() =>
+                          vendorInput ? "No vendor found" : "Type vendor name"
+                        }
+                      />
+                    </FormGroup>
+                  </Col>
                   <Col lg={"6"} md={"6"} className="mb-0">
                     <div className="filter-btn-wrap">
                       <Label className="height17 label" />
@@ -407,10 +476,10 @@ class Tires extends Component {
                           {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
                             return (
                               <tr key={index}>
-                                <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "__", "") || "-"}</td>
+                                <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
                                 <td width={"70"}>{size.part || "-"}</td>
-                                <td width={"70"}>{size.cost || "$0.00"}</td>
-                                <td width={"70"}>{size.retailPrice || "$0.00"}</td>
+                                <td width={"70"}>{size.cost || "-"}</td>
+                                <td width={"70"}>{size.retailPrice || "-"}</td>
                                 <td width={"70"}>{size.quantity || "-"}</td>
                                 <td width={"70"}>{size.bin || "-"}</td>
                               </tr>

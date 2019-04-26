@@ -48,7 +48,7 @@ export class CrmTyreModal extends Component {
                notes: "",
                part: "",
                bin: "",
-               quantity: "",
+               quantity: '',
                criticalQuantity: "",
                priceMatrix: "",
                cost: "",
@@ -121,8 +121,25 @@ export class CrmTyreModal extends Component {
       ) {
          return
       }
+      let t, r, e, q
+      if (name === 'quantity' && value) {
+         t = parseInt(value)
+      }
+      if (name === 'criticalQuantity' && value) {
+         r = parseInt(value)
+      }
+      if (name === 'cost' && value) {
+         e = parseInt(value)
+      }
+      if (name === 'retailPrice' && value) {
+         q = parseInt(value)
+      }
       const tierSize = [...this.state.tierSize];
       tierSize[index][name] = value;
+      tierSize[index].quantity = t;
+      tierSize[index].criticalQuantity = r;
+      tierSize[index].cost = e;
+      tierSize[index].retailPrice = q;
       this.setState({
          tierSize
       });
