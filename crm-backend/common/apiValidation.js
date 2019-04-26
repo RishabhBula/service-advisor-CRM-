@@ -193,10 +193,12 @@ const createTierValidation = [
   body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
   body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim(),
   body("tierSize").custom(tierSize => {
+
     for (let index = 0; index < tierSize.length; index++) {
       const element = tierSize[index];
       const sizeInfo = element.baseInfo.split('R')
-      if (!sizeInfo[1]) {
+      const checkSize = sizeInfo[1].replace(/\D+/g, '')
+      if (!checkSize) {
         throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
       }
     }

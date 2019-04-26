@@ -329,8 +329,6 @@ class Tires extends Component {
                     <option className="form-control" value={""}>
                       -- Select --
                     </option>
-                    <option value={"createddesc"}>Last Created</option>
-                    <option value={"loginasc"}>Last login</option>
                     <option value={"nasc"}>Name A-Z</option>
                     <option value={"ndesc"}>Name Z-A</option>
                   </Input>
@@ -462,7 +460,7 @@ class Tires extends Component {
                           {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
                             return (
                               <tr key={index}>
-                                <td width={"100"}>{size.baseInfo || "-"}</td>
+                                <td width={"100"}>{size.baseInfo.replace("_ __"|| "_" || "__", "") || "-"}</td>
                                 <td width={"70"}>{size.part || "-"}</td>
                                 <td width={"70"}>{size.cost || "$0.00"}</td>
                                 <td width={"70"}>{size.retailPrice || "$0.00"}</td>
