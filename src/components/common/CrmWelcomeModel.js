@@ -336,17 +336,19 @@ export class CrmWelcomeModel extends Component {
                       <Label htmlFor="name" className="font-text">
                         Website (optional)
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="http://google.com"
-                        onChange={this.handleInputChange}
-                        value={website}
-                        name="website"
-                        invalid={errors.website}
-                      />
-                      <FormFeedback>
-                        {errors.website ? errors.website : null}
-                      </FormFeedback>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          placeholder="http://google.com"
+                          onChange={this.handleInputChange}
+                          value={website}
+                          name="website"
+                          invalid={errors.website}
+                        />
+                        <FormFeedback>
+                          {errors.website ? errors.website : null}
+                        </FormFeedback>
+                      </div>
                     </FormGroup>
                   </Col>
                   <Col md="6">

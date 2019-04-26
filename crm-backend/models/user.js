@@ -121,6 +121,9 @@ const userSchema = new Schema({
     type: Number,
     default: null
   },
+  subdomain: {
+    type: String
+  },
   createdAt: {
     type: Date,
     default: Date.now

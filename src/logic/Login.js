@@ -31,7 +31,7 @@ const loginLogic = createLogic({
       dispatch(redirectTo({ path: "/dashboard" }));
       done();
     }
-  },
+  }
 });
 
 const logOutLogic = createLogic({
@@ -40,7 +40,7 @@ const logOutLogic = createLogic({
     localStorage.removeItem("token");
     dispatch(redirectTo({ path: "/login" }));
     done();
-  },
+  }
 });
 const forgetPasswordLogic = createLogic({
   type: loginActions.FORGET_PASSWORD_REQUEST,
@@ -67,7 +67,7 @@ const forgetPasswordLogic = createLogic({
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 const verifyResetTokenLogic = createLogic({
   type: loginActions.VALIDATE_RESET_REQUEST,
@@ -92,7 +92,7 @@ const verifyResetTokenLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 const resetPasswordLogic = createLogic({
   type: loginActions.RESET_PASSSWORD_REQUEST,
@@ -118,12 +118,12 @@ const resetPasswordLogic = createLogic({
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
   forgetPasswordLogic,
   verifyResetTokenLogic,
-  resetPasswordLogic,
+  resetPasswordLogic
 ];

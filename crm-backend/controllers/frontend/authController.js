@@ -418,7 +418,8 @@ const userCompanySetup = async (req, res) => {
       website: body.website,
       peopleWork: body.peopleWork,
       serviceOffer: body.serviceOffer,
-      vehicleService: body.vehicleService
+      vehicleService: body.vehicleService,
+      subdomain: commonSmtp.convertToSlug(body.companyName)
     };
     const companySetup = await userModel.findByIdAndUpdate(
       {
