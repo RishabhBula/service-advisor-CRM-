@@ -14,9 +14,16 @@ import {
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
+import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
+import {
+  addNewTier,
+} from '../../actions'
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
+
+import { addNewVendor } from "../../actions";
 import { getInventoryPartVendors, requestAddPart } from "../../actions";
 import * as qs from "query-string";
+
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
 );
@@ -83,6 +90,7 @@ class Inventory extends Component {
       });
     }
   }
+
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
     if (location.pathname !== newLocation.pathname) {
@@ -115,11 +123,12 @@ class Inventory extends Component {
     const {
       modelInfoReducer,
       modelOperate,
+      addVendor,
       inventoryPartsData,
       getInventoryPartsVendors
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { typeAddModalOpen, partAddModalOpen } = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -138,18 +147,28 @@ class Inventory extends Component {
       case AppRoutes.INVENTORY_TIRES.url:
         return (
           <CrmTyreModal
-            tyreModalOpen={typeAddModalOpen}
+            tyreModalOpen={tireAddModalOpen}
             handleTierModal={() =>
               modelOperate({
-                typeAddModalOpen: !typeAddModalOpen
+                tireAddModalOpen: !tireAddModalOpen
               })
             }
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addTier={this.props.addTier}
           />
         );
       case AppRoutes.INVENTORY_LABOURS.url:
         return null;
       case AppRoutes.INVENTORY_VENDORS.url:
-        return null;
+        return <CrmInventoryVendor
+          addVendor={addVendor}
+          vendorAddModalOpen={vendorAddModalOpen}
+          handleVendorAddModal={() =>
+            modelOperate({
+              vendorAddModalOpen: !vendorAddModalOpen
+            })
+          }
+        />;
       default:
         return null;
     }
@@ -165,13 +184,16 @@ class Inventory extends Component {
         break;
       case AppRoutes.INVENTORY_TIRES.url:
         modelDetails = {
-          typeAddModalOpen: true
+          tireAddModalOpen: true
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
         return null;
       case AppRoutes.INVENTORY_VENDORS.url:
-        return null;
+        modelDetails = {
+          vendorAddModalOpen: true
+        };
+        break
       default:
         return null;
     }
@@ -256,6 +278,12 @@ const mapStateToProps = state => ({
   inventoryPartsData: state.inventoryPartsReducers
 });
 const mapDispatchToProps = dispatch => ({
+  addVendor: data => {
+    dispatch(addNewVendor(data));
+  },
+  addTier: data => {
+    dispatch(addNewTier(data));
+  },
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
   },

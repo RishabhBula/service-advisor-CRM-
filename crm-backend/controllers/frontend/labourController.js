@@ -280,9 +280,10 @@ const getAllLabourList = async (req, res) => {
       condition["$and"].push({ status: status });
     }
     const getAllLabour = await labourModel
-      .find({
-        ...condition,
-      })
+      .find(
+        condition,
+      )
+      .populate("rate")
       .sort(sortBy)
       .skip(offset)
       .limit(limit);

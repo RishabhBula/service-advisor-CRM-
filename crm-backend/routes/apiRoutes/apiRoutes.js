@@ -11,6 +11,7 @@ const {
   labour,
   customer,
   vendor,
+  tier,
   inventory
 } = require("./index");
 
@@ -23,6 +24,7 @@ router.use("/matrix", matrix);
 router.use("/labour", labour);
 router.use("/customer", customer);
 router.use("/vendor", vendor);
+router.use("/tier", tier);
 router.use("/inventory", inventory);
 
 module.exports = router;
