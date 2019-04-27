@@ -499,7 +499,7 @@ export class CrmInventoryVendor extends Component {
               color='primary'
               onClick={this.handleAddVendor}
             >
-              {!isEditMode ? "Add New Vendor " : "Edit Vendor"}
+              {!isEditMode ? "Add New Vendor " : "Update Vendor"}
             </Button>{' '}
             <Button color='secondary' onClick={this.props.handleVendorAddModal}>
               Cancel

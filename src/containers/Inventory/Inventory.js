@@ -120,8 +120,8 @@ class Inventory extends Component {
     const {
       modelInfoReducer,
       modelOperate,
-      inventoryPartsData,
       addVendor,
+      inventoryPartsData,
       getInventoryPartsVendors
     } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -150,6 +150,7 @@ class Inventory extends Component {
                 tireAddModalOpen: !tireAddModalOpen
               })
             }
+            getInventoryPartsVendors={getInventoryPartsVendors}
             addTier={this.props.addTier}
           />
         );
@@ -274,18 +275,17 @@ const mapStateToProps = state => ({
   inventoryPartsData: state.inventoryPartsReducers
 });
 const mapDispatchToProps = dispatch => ({
-  getInventoryPartsVendors: data => {
-    dispatch(getInventoryPartVendors(data));
-  },
-  addInventoryPart: data => {
-    dispatch(requestAddPart(data));
-  },
   addVendor: data => {
     dispatch(addNewVendor(data));
   },
   addTier: data => {
     dispatch(addNewTier(data));
-
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  },
+  addInventoryPart: data => {
+    dispatch(requestAddPart(data));
   }
 });
 export default connect(

@@ -1,7 +1,19 @@
 const express = require("express");
 const router = express.Router();
 
-const { user, auth, role, vehicle, fleet, matrix, labour, customer, vendor, tier, inventory } = require("./index");
+const {
+  user,
+  auth,
+  role,
+  vehicle,
+  fleet,
+  matrix,
+  labour,
+  customer,
+  vendor,
+  tier,
+  inventory
+} = require("./index");
 
 router.use("/auth", auth);
 router.use("/user", user);

@@ -57,8 +57,8 @@ const updateVendordetails = async (req, res) => {
     });
   }
   try {
-    await vendorModel.findByIdAndUpdate(body.vendorId, {
-      $set: body
+    await vendorModel.findByIdAndUpdate(body.id, {
+      $set: body.data
     });
     return res.status(200).json({
       responsecode: 200,

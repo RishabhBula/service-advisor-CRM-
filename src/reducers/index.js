@@ -13,7 +13,6 @@ import { customerInfoReducer, customerListReducer } from "./Customer";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { modelInfoReducer } from "./ModelOperation";
 import { vendorsReducer } from "./Vendors"
-
 import { inventoryPartsReducers } from "./InventoryParts";
 export const mainReducer = handleActions(
   {
@@ -45,7 +44,6 @@ const AppReducer = combineReducers({
   vendorsReducer,
   inventoryPartsReducers,
   routing: routerReducer,
-
 });
 
 export default AppReducer;
