@@ -251,7 +251,7 @@ export class CrmInventoryVendor extends Component {
                         onChange={
                           (e) => this.handleChange('', e)
                         }
-                        placeholder='John'
+                        placeholder='Bosch'
                         value={name}
                         maxLength='50'
                         id='name'

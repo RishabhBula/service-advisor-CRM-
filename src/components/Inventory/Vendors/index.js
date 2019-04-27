@@ -240,7 +240,7 @@ class Vendors extends Component {
               <th width={"300"}>URL</th>
               <th>Account Number</th>
               <th>Contact Person</th>
-              <th>Email</th>
+              <th width={"250"}>Email</th>
               <th>Phone</th>
               <th>Action</th>
             </tr>
