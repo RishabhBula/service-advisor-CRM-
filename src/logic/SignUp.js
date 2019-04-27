@@ -7,6 +7,7 @@ import {
   hideLoader,
   redirectTo
 } from "./../actions";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const signUpLogic = createLogic({
   type: signUpActions.SIGNUP_REQUEST,
@@ -24,7 +25,7 @@ const signUpLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -51,7 +52,7 @@ const verifyAccountLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       dispatch(
         redirectTo({
@@ -111,7 +112,7 @@ const generatePasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       dispatch(
         redirectTo({
@@ -142,7 +143,7 @@ const resendConfiramtionLinkLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

@@ -17,6 +17,7 @@ import {
   customerEditSuccess,
   customerAddSuccess
 } from "./../actions";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
@@ -54,7 +55,7 @@ const addCustomerLogic = createLogic({
         })
       );
 
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
 
       dispatch(hideLoader());
       done();
@@ -145,7 +146,7 @@ const deleteCustomerLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -178,7 +179,7 @@ const editCustomerLogic = createLogic({
       { data: action.payload.data }
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -227,7 +228,7 @@ const updateCustomerStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

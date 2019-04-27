@@ -15,7 +15,8 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
-
+import { getInventoryPartVendors, requestAddPart } from "../../actions";
+import * as qs from "query-string";
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
 );
@@ -98,9 +99,25 @@ class Inventory extends Component {
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
+  getQueryParams = () => {
+    let query = qs.parse(this.props.location.search);
+    if (query.vendorId) {
+      query.vendorId = qs.parse(query.vendorId).value;
+    }
+    return query;
+  };
+  addInventoryPart = data => {
+    const query = this.getQueryParams();
+    this.props.addInventoryPart({ data, query });
+  };
   renderModals = () => {
     const { activeTab } = this.state;
-    const { modelInfoReducer, modelOperate } = this.props;
+    const {
+      modelInfoReducer,
+      modelOperate,
+      inventoryPartsData,
+      getInventoryPartsVendors
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { typeAddModalOpen, partAddModalOpen } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
@@ -113,6 +130,9 @@ class Inventory extends Component {
                 partAddModalOpen: !partAddModalOpen
               })
             }
+            inventoryPartsData={inventoryPartsData}
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addInventoryPart={this.addInventoryPart}
           />
         );
       case AppRoutes.INVENTORY_TIRES.url:
@@ -157,7 +177,7 @@ class Inventory extends Component {
     }
     this.props.modelOperate(modelDetails);
   };
-  rednerAddNewButton = () => {
+  renderAddNewButton = () => {
     const { activeTab } = this.state;
     return (
       <>
@@ -189,7 +209,7 @@ class Inventory extends Component {
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
-                {this.rednerAddNewButton()}
+                {this.renderAddNewButton()}
               </Col>
             </Row>
           </CardHeader>
@@ -213,7 +233,9 @@ class Inventory extends Component {
                       path={route.path}
                       exact={route.exact}
                       name={route.name}
-                      render={props => <route.component {...props} />}
+                      render={props => (
+                        <route.component {...props} {...this.props} />
+                      )}
                     />
                   ) : null;
                 })}
@@ -230,8 +252,17 @@ class Inventory extends Component {
     );
   }
 }
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = state => ({
+  inventoryPartsData: state.inventoryPartsReducers
+});
+const mapDispatchToProps = dispatch => ({
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  },
+  addInventoryPart: data => {
+    dispatch(requestAddPart(data));
+  }
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps

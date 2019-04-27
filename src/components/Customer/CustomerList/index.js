@@ -382,7 +382,11 @@ class CustomerList extends Component {
                         {user.address1 || ""} {user.city || ""}{" "}
                         {user.state || ""} {user.zipCode || ""}{" "}
                       </td> */}
-                      <td>0</td>
+                      <td>
+                        {user.vehicles && user.vehicles.length
+                          ? user.vehicles.length
+                          : 0}
+                      </td>
                       <td>0</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
