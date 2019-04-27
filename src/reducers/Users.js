@@ -4,7 +4,7 @@ import { usersActions } from "../actions";
 const initialState = {
   users: [],
   isLoading: true,
-  totalUsers: 100,
+  totalUsers: 0,
   userData: {
     isSuccess: false,
     isEditSuccess: false,

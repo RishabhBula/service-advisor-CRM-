@@ -17,7 +17,8 @@ const initialAuthState = {
     tireEditModalOpen: false,
     vendorAddModalOpen:false,
     vendorEditModalOpen: false,
-    partAddModalOpen: false
+    partAddModalOpen: false,
+    partEditModalOpen: false
   }
 };
 

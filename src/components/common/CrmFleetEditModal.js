@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import { AppSwitch } from "@coreui/react";
 import { AppConfig } from "../../config/AppConfig";
-import { PhoneOptions } from "../../config/Constants";
+import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import MaskedInput from "react-maskedinput";
 import {
   CustomerDefaultPermissions,
@@ -134,7 +134,7 @@ export class CrmFleetEditModal extends Component {
           ratedata
         );
         if (result.isError) {
-          toast.error(result.messages[0]);
+          toast.error(result.messages[0] || DefaultErrorMessage);
         } else {
           toast.success(result.messages[0]);
           this.setState({
@@ -211,7 +211,7 @@ export class CrmFleetEditModal extends Component {
         data
       );
       if (result.isError) {
-        toast.error(result.messages[0]);
+        toast.error(result.messages[0] || DefaultErrorMessage);
       } else {
         toast.success(result.messages[0]);
         this.setState({

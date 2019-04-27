@@ -231,3 +231,48 @@ export const CreatePartOptions = [
     text: "Display note on quote & invoice"
   }
 ];
+
+/*  */
+export const MarkupChangeValues = [
+  {
+    key: "15%",
+    value: 15
+  },
+  {
+    key: "25%",
+    value: 25
+  },
+  {
+    key: "35%",
+    value: 35
+  },
+  {
+    key: "50%",
+    value: 50
+  }
+];
+
+/*  */
+export const MarginChangeValues = [
+  {
+    key: "15%",
+    value: 15
+  },
+  {
+    key: "25%",
+    value: 25
+  },
+  {
+    key: "35%",
+    value: 35
+  },
+  {
+    key: "50%",
+    value: 50
+  }
+];
+
+export const DefaultErrorMessage =
+  "We are having some issues while completing your request. Please try after some time.";
+
+export const WildCardRoutes = ["/profile"];

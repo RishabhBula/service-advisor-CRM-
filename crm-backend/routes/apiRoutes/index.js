@@ -8,5 +8,6 @@ module.exports = {
     labour: require("./labourRoutes"),
     customer: require("./customerRoutes"),
     vendor: require("./vendorRoutes"),
-    tier: require("./tierRoutes")
+    tier: require("./tierRoutes"),
+  inventory: require("./inventory")
 } 
