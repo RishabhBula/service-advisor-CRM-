@@ -32,9 +32,7 @@ class Labours extends Component {
       isLoading: false,
       filterApplied: false,
       search: "",
-      status: "",
       sort: "",
-      type: "",
       page: 1,
       labour:{},
       selectedLabours: []
@@ -107,9 +105,7 @@ class Labours extends Component {
     this.setState({
       page: 1,
       search: "",
-      status: "",
       sort: "",
-      type: "",
       labour: {},
       selectedLabours: [],
       filterApplied: false
@@ -324,7 +320,8 @@ class Labours extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={8}>
-                      No labour records are available
+                      {(sort==='' && search==='') ? 'No labour record are available.' : 
+                    'Your search did not match any record.'}
                   </td>
                   </tr>
                 )
