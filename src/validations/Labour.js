@@ -6,9 +6,7 @@ export const CreateLabourValidations = {
     hours: {
         [ValidationTypes.NUMERIC]: true,
     },  
-    discount: {
-        [ValidationTypes.NUMERIC]: true,
-    } 
+  
 };
 export const CreateLabourValidMessaages = {
     discription: {
@@ -17,7 +15,5 @@ export const CreateLabourValidMessaages = {
     hours:{
         [ValidationTypes.NUMERIC]: "Please enter numeric value.",
     },
-    discount:{
-        [ValidationTypes.NUMERIC]: "Please enter numeric value.",
-    }
+  
 };

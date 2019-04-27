@@ -19,7 +19,6 @@ import {CrmLabourModal }  from '../../common/Labours/CrmLabourModal'
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
-import { withRouter } from "react-router-dom";
 import { AppConfig } from "../../../config/AppConfig";
 import { isEqual } from "../../../helpers/Object";
 
@@ -48,7 +47,25 @@ class Labours extends Component {
     this.props.getlabour({ ...query, page: query.page || 1 });
   }
 
-  componentDidUpdate({labourReducer, location }) {
+  componentDidUpdate({labourReducer, location }) {  
+    if (
+      this.props.labourReducer.labourData.isSuccess !==
+      labourReducer.labourData.isSuccess
+    ) {
+      if (this.props.labourReducer.labourData.isSuccess) {
+        const query = qs.parse(this.props.location.search);
+        this.props.getlabour({ ...query, page: query.page || 1 });
+      }
+    }
+    if (
+      this.props.labourReducer.labourData.isEditSuccess !==
+      labourReducer.labourData.isEditSuccess
+    ) {
+      if (this.props.labourReducer.labourData.isEditSuccess) {
+        const query = qs.parse(this.props.location.search);
+        this.props.getlabour({ ...query, page: query.page || 1 });
+      }
+    }
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
@@ -86,7 +103,7 @@ class Labours extends Component {
 
   onReset = e => {
     e.preventDefault();
-    this.onSearch(e);
+     
     this.setState({
       page: 1,
       search: "",
@@ -97,6 +114,9 @@ class Labours extends Component {
       selectedLabours: [],
       filterApplied: false
     });
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify('')].join("?"))  
   };
   editLabour = data => {
     this.setState({ labour: data }, () => {
@@ -155,7 +175,6 @@ class Labours extends Component {
       [pathname, qs.stringify({ ...query, page })].join("?")
     );
   }
-
   render() {
     const {
       search,
@@ -269,9 +288,9 @@ class Labours extends Component {
                       </td>
                       <td>{data.discription || "-"}</td>
                       <td>{data.notes || "-"}</td>
-                      <td>{data.rate.name || "-"}</td>
+                      <td>{(data.rate && data.rate.name) ? data.rate.name : "-"}</td>
                       <td>{data.hours || "-"}</td>
-                      <td>{'$'+data.rate.hourlyRate || "-"}</td>
+                      <td>{(data.rate && data.rate.hourlyRate) ? '$'+data.rate.hourlyRate : "-"}</td>
                       <td>{data.discount || "-"}</td>
                     
                       <td>
@@ -304,14 +323,14 @@ class Labours extends Component {
                 })
               ) : (
                   <tr>
-                    <td className={"text-center"} colSpan={10}>
-                      No labour are available
+                    <td className={"text-center"} colSpan={8}>
+                      No labour records are available
                   </td>
                   </tr>
                 )
             ) : (
                 <tr>
-                  <td className={"text-center"} colSpan={10}>
+                  <td className={"text-center"} colSpan={8}>
                     <Loader />
                   </td>
                 </tr>
@@ -356,9 +375,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // updateFleet: (data) => {
-  //   dispatch(labourEditRequest(data))
-  // }
   updateLabour:(data) =>{  
     dispatch(labourEditRequest(data))
   },
@@ -379,4 +395,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(Labours));
+)(Labours);

@@ -165,7 +165,7 @@ export class CrmLabourModal extends Component {
   }
   handleClickDiscountType = value => {
     this.setState({
-      discount: (this.state.discount !== '' && value === '%') ? this.state.discount.replace('%', '') + '%' : this.state.discount,
+      discount: (this.state.discount !== '' && value === '%') ? this.state.discount.replace('%', '') + '%' : this.state.discount.replace('%', ''),
       discountType: value,
     });
   }
@@ -176,11 +176,9 @@ export class CrmLabourModal extends Component {
           openStadardRateModel: !this.state.openStadardRateModel
         });
       } else {
-
         this.setState({
           selectedLabourRate: selectValue
         });
-        //this.props.setDefaultRate(selectValue);
       }
     } else {
       this.props.onTypeHeadStdFun({});
@@ -253,7 +251,7 @@ export class CrmLabourModal extends Component {
                     </Label>
                     <div className="input-block">
                     <Input className={"form-control"} type={"text"} id="discription" name=
-                      "discription" onChange={this.handleChange} value={discription}  invalid={errors.discription && !discription} />
+                      "discription" maxLength="100" onChange={this.handleChange} value={discription}  invalid={errors.discription && !discription} />
                     <FormFeedback>
                       {errors && !discription && errors.discription
                         ? errors.discription
@@ -292,7 +290,7 @@ export class CrmLabourModal extends Component {
                       Hours
                     </Label>
                     <div className="input-block">
-                    <Input className={"form-control"} name="hours" id="hours" type={"text"} onChange={this.handleChange} value={hours} invalid={errors.hours && !hours.isNumeric} />
+                    <Input className={"form-control"} name="hours" id="hours" type={"text"} onChange={this.handleChange} maxLength="5" value={hours} invalid={errors.hours && !hours.isNumeric} />
                     <FormFeedback>
                       { errors.hours
                         ? errors.hours
@@ -306,19 +304,16 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Discount
                     </Label>
-                    
-                    <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} value={discount} />
-                    <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
-                  
-                   
+                    <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} />
+                    <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />      
                   </FormGroup>
                 </Col>
-                <Col md="12">
+                <Col md="12"> 
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Note
                     </Label>
-                    <Input className={"form-control"} id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} />
+                    <Input className={"form-control"} maxLength="1000" id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} />
                   </FormGroup>
                 </Col>
 

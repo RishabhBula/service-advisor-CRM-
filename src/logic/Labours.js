@@ -1,16 +1,13 @@
 import { createLogic } from "redux-logic";
 import {
   labourAddStarted,
-  labourAddActions,
+  labourActions,
   labourAddSuccess,
   modelOpenRequest,
   hideLoader,
   showLoader,
-  labourListActions,
   labourListStarted,
   labourListSuccess,
-  labourEditAction,
-  labourDeleteActions,
   labourListRequest,
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
@@ -19,19 +16,18 @@ import { logger } from "../helpers/Logger";
 import { AppConfig } from "../config/AppConfig";
 
 const labourAddLogic = createLogic({
-  type: labourAddActions.LABOUR_ADD_REQUEST,
-  cancelType: labourAddActions.LABOUR_ADD_FAILED,
+  type: labourActions.LABOUR_ADD_REQUEST,
   async process({ action }, dispatch, done) {
     dispatch(
       labourAddStarted({
-        fleetData: []
+        labourData: []
       }),
       showLoader()
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/",
-      "labour/addlabour",
+      "/labour",
+      "/addlabour",
       "POST",
       true,
       undefined,
@@ -45,24 +41,18 @@ const labourAddLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(hideLoader());
-      dispatch(
-        modelOpenRequest({modelDetails: {tireAddModalOpen: false}})
-      );
+      dispatch(modelOpenRequest({modelDetails: {tireAddModalOpen: false}})); 
+      dispatch(labourListRequest({
+        ...action.payload,
+      }));
       dispatch(labourAddSuccess( {labourData: result.data}));
-      dispatch(
-        labourListRequest({
-          ...action.payload,
-        })
-      )
-     
       done();
     }
   }
 });
 
 const labourListLogic = createLogic({
-  type: labourListActions.LABOUR_LIST_REQUEST,
-  cancelType: labourListActions.LABOUR_LIST_FAILED,
+  type: labourActions.LABOUR_LIST_REQUEST,
   async process({ action }, dispatch, done) {
     dispatch(
       labourListStarted({
@@ -72,8 +62,8 @@ const labourListLogic = createLogic({
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/",
-      "labour/labourList",
+      "/labour",
+      "/labourList",
       "GET",
       true,
       {
@@ -101,14 +91,14 @@ const labourListLogic = createLogic({
 });
 
 const editLabourLogic = createLogic({
-  type: labourEditAction.EDIT_LABOUR_REQUESTED,
+  type: labourActions.EDIT_LABOUR_REQUESTED,
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/",
-      "labour/updateLabour",
+      "/labour",
+      "/updateLabour",
       "PUT",
       true,
       undefined,
@@ -121,31 +111,27 @@ const editLabourLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(hideLoader())
+      dispatch(hideLoader());
       dispatch(
-        modelOpenRequest({modelDetails: {tireEditModalOpen: false}})
-      );
-      dispatch(
-        labourListRequest({
-          ...action.payload,
-        })
-      )
-    
-      
+        modelOpenRequest({modelDetails: {tireEditModalOpen: false}})        
+      )    
+      dispatch(labourListRequest({
+        ...action.payload,
+      }));
       done();
     }
   },
 });
 
 const deleteLabourLogic = createLogic({
-  type: labourDeleteActions.DELETE_LABOUR,
+  type: labourActions.DELETE_LABOUR,
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/",
-      "labour/delete",
+      "/labour",
+      "/delete",
       "POST",
       true,
       undefined,
@@ -169,46 +155,9 @@ const deleteLabourLogic = createLogic({
     }
   },
 });
-
-// const updateLabourStatusLogic = createLogic({
-// //   type: labourUpdateStatusAction.UPDATE_LABOUR_STATUS,
-// //   async process({ action }, dispatch, done) {
-// //     dispatch(showLoader());
-// //     logger(action.payload);
-// //     let api = new ApiHelper();
-// //     let result = await api.FetchFromServer(
-// //       "/fleet",
-// //       "/updateStatus",
-// //       "POST",
-// //       true,
-// //       undefined,
-// //       action.payload
-// //     );
-// //     if (result.isError) {
-// //       toast.error(result.messages[0]);
-// //       dispatch(hideLoader());
-// //       done();
-// //       return;
-// //     } else {
-// //       toast.success(result.messages[0]);
-// //       dispatch(hideLoader());
-// //       delete action.payload.fleets;
-// //       delete action.payload.status;
-// //       dispatch(
-// //         labourListRequest({
-// //           ...action.payload
-// //         })
-// //       );
-// //       done();
-// //     }
-// //   }
-// });
-
-
 export const LaboursLogic = [
   labourAddLogic,
   labourListLogic,
   editLabourLogic,
-  deleteLabourLogic,
-
+  deleteLabourLogic
 ];

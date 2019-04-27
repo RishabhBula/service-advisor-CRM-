@@ -11,7 +11,7 @@ export const profileInfoActions = {
 };
 
 export const profileInfoRequest = createAction(
-  profileInfoActions.PROFILE_INFO_REQUEST 
+  profileInfoActions.PROFILE_INFO_REQUEST
 );
 export const profileInfoStarted = createAction(
   profileInfoActions.PROFILE_INFO_START
