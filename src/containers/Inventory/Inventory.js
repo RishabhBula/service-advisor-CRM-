@@ -227,9 +227,7 @@ class Inventory extends Component {
                   &nbsp;Inventory
                 </h4>
               </Col>
-              <Col sm={"6"} className={"text-right"}>
-                {this.renderAddNewButton()}
-              </Col>
+              
             </Row>
           </CardHeader>
           <CardBody>
@@ -243,6 +241,9 @@ class Inventory extends Component {
                 onTabChange={this.onTabChange}
               />
             </Suspense>
+            <Col sm={"6"} className={"text-right"}>
+              {this.renderAddNewButton()}
+            </Col>
             <Suspense fallback={<Loader />}>
               <Switch>
                 {InventoryRoutes.map((route, idx) => {

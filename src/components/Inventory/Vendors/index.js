@@ -232,16 +232,18 @@ class Vendors extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered >
+        <Table responsive  >
           <thead>
             <tr>
               <th className={"text-center"}>S No.</th>
-              <th>Vendor Name</th>
-              <th width={"300"}>URL</th>
-              <th>Account Number</th>
-              <th>Contact Person</th>
-              <th width={"250"}>Email</th>
-              <th>Phone</th>
+              <th width={"350"}>
+                <i className="icon-globe icons"></i> Vendor Details
+              </th>
+              {/* <th>Account Number</th> */}
+              <th width={"350"}><i className="icon-user icons"></i> Contact Person Details</th>
+              {/* <th width={"250"}>Email</th> */}
+              {/* <th>Phone</th> */}
+              <th><i className="icon-calendar icons"></i> Login Details</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -251,21 +253,26 @@ class Vendors extends Component {
                 return (
                   <tr key={index}>
                     <td className={"text-center"}>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.</td>
-                      <td>{vendor.name}</td>
-                    <td>{vendor.url ? <a href={vendor.url} target={"_blank"}>{vendor.url}</a> : 'NA'}</td>
-                      <td>{vendor.accountNumber ? vendor.accountNumber : 'NA'}</td>
-                      <td className={"text-capitalize"}>
-                        {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : 'NA'} &nbsp;
-                        {vendor.contactPerson.firstName && vendor.contactPerson.lastName ? vendor.contactPerson.lastName : null}
+                      <td>
+                       <div>{vendor.name}</div>
+                       <div>{vendor.url ? <a href={vendor.url} target={"_blank"}>{vendor.url}</a> : null}</div>
+                      <div>A/C : {vendor.accountNumber ? vendor.accountNumber : '-'}</div>
                       </td>
-                      <td>{vendor.contactPerson.email ? vendor.contactPerson.email : 'NA'}</td>
-                      <td className={"text-capitalize"}>
-                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone && vendor.contactPerson.phoneNumber.value !== '' ? vendor.contactPerson.phoneNumber.phone : 'NA'} 
-
+                      <td >
+                      <div className={"text-capitalize"}>
+                      {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : '-'} &nbsp;
+                      {vendor.contactPerson.firstName && vendor.contactPerson.lastName ? vendor.contactPerson.lastName : null}
+                      </div>
+                      {vendor.contactPerson.email ? vendor.contactPerson.email : '-'}
+                      <div>
+                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone && vendor.contactPerson.phoneNumber.value !== '' ? vendor.contactPerson.phoneNumber.phone : '-'}
                         {vendor.contactPerson.phoneNumber.value ? <span>&nbsp;<b>|</b>&nbsp;</span> : ''}
-
-                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.value ? vendor.contactPerson.phoneNumber.value : 'NA'}
-                      {console.log("vendor.contactPerson.phoneNumber check+++++++++",vendor.contactPerson.phoneNumber)}
+                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.value ? vendor.contactPerson.phoneNumber.value : '-'}
+                      </div>
+                      </td>
+                      <td>
+                        <div>{vendor.createdAt}</div>
+                        <div>{vendor.updatedAt}</div>
                       </td>
                       <td>
                         <Button
