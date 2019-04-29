@@ -948,5 +948,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #fff !important;
   border-color: #000;
 }
+.margin-markup-btn{
+  background-color: #fff !important;
+  color: #000;
+  border-color: #08080826;
+}
+.margin-markup-btn-active{
+  background-color: rgb(58, 180, 236) !important;
+  color:#fff !important;
+  border-color: #fff !important;
+}
 /* Tyre CSS END*/
 

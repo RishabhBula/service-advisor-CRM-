@@ -43,8 +43,7 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros:'',
-      isEditMode:false
+      urlErros:''
     }
   }
 

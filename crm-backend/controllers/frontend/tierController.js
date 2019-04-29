@@ -92,26 +92,42 @@ const getAllTierList = async (req, res) => {
         const searchValue = query.search;
         const sort = query.sort;
         const status = query.status;
+        const vendorId = query.vendorId;
         let sortBy = {};
         switch (sort) {
-            case "loginasc":
+            case "qltoh":
                 sortBy = {
-                    updatedAt: -1,
+                    "tierSize.quantity": 1
                 };
                 break;
-            case "nasc":
+            case "qhtol":
                 sortBy = {
-                    brandName: 1,
+                    "tierSize.quantity": -1
                 };
                 break;
-            case "ndesc":
+            case "cltoh":
                 sortBy = {
-                    brandName: -1,
+                    "tierSize.cost": 1
+                };
+                break;
+            case "chtol":
+                sortBy = {
+                    "tierSize.cost": -1
+                };
+                break;
+            case "rpltoh":
+                sortBy = {
+                    "tierSize.retailPrice": 1
+                };
+                break;
+            case "rphtol":
+                sortBy = {
+                    "tierSize.retailPrice": -1
                 };
                 break;
             default:
                 sortBy = {
-                    createdAt: -1,
+                    createdAt: -1
                 };
                 break;
         }
@@ -164,7 +180,24 @@ const getAllTierList = async (req, res) => {
             });
         }
         if (status) {
-            condition["$and"].push({ status: status });
+            if (status.toString() === "critical") {
+                condition["$and"].push({
+                    $expr: {
+                        $lte: ["$quantity", "$criticalQuantity"]
+                    }
+                });
+            } else if (status.toString() === "ncritical") {
+                condition["$and"].push({
+                    $expr: {
+                        $gt: ["$quantity", "$criticalQuantity"]
+                    }
+                });
+            }
+        }
+        if (vendorId) {
+            condition["$and"].push({
+                vendorId: mongoose.Types.ObjectId(vendorId)
+            });
         }
         const getAllTier = await tierModel
             .find(

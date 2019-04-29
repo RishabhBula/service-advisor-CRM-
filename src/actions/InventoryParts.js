@@ -6,7 +6,9 @@ export const inventoryPartsActions = {
   GET_PARTS_LIST: "Get inventory list for part!",
   GET_VENDORS_LIST_START: "Get inventory list for part started!",
   GET_PARTS_LIST_SUCCESS: "Get inventory list for part success!",
-  ADD_PART_TO_INVENTORY: "Add part to inventory started!"
+  ADD_PART_TO_INVENTORY: "Add part to inventory started!",
+  UPDATE_PART_TO_INVENTORY: "Update part to inventory started!",
+  DELETE_PART_FROM_INVENTORY: "Delete part from inventory started!"
 };
 
 export const getInventoryPartVendors = createAction(
@@ -28,4 +30,10 @@ export const getInventoryPartsListStarted = createAction(
 );
 export const getInventoryPartsListSuccess = createAction(
   inventoryPartsActions.GET_PARTS_LIST_SUCCESS
+);
+export const deletePartFromInventory = createAction(
+  inventoryPartsActions.DELETE_PART_FROM_INVENTORY
+);
+export const updatePartFromInventory = createAction(
+  inventoryPartsActions.UPDATE_PART_TO_INVENTORY
 );

@@ -18,7 +18,8 @@ const initialAuthState = {
     vendorAddModalOpen:false,
     vendorEditModalOpen: false,
     partAddModalOpen: false,
-    rateAddModalOpen: false
+    rateAddModalOpen: false,
+    partEditModalOpen: false
   }
 };
 

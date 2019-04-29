@@ -33,6 +33,7 @@ import { AppConfig } from "../../config/AppConfig";
 import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
+import { WildCardRoutes } from "../../config/Constants";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -62,18 +63,20 @@ class DefaultLayout extends Component {
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
       const currentPage = this.props.location.pathname;
-      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
-      logger(ind, currentPage);
-      if (ind > -1) {
-        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
-          logger("Allowed to use");
+      if (WildCardRoutes.indexOf(currentPage) === -1) {
+        const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
+        logger(ind, currentPage);
+        if (ind > -1) {
+          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+            logger("Allowed to use");
+          } else {
+            this.setState({
+              hasAccess: false
+            });
+          }
         } else {
-          this.setState({
-            hasAccess: false
-          });
+          this.signOut();
         }
-      } else {
-        this.signOut();
       }
     }
   }
