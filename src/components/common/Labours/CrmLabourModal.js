@@ -28,8 +28,6 @@ import {
 import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
 import { ApiHelper } from "../../../helpers/ApiHelper";
-import { logger } from "../../../helpers/Logger";
-import { toast } from "react-toastify";
 export class CrmLabourModal extends Component {
   constructor(props) {
     super(props);
@@ -43,15 +41,12 @@ export class CrmLabourModal extends Component {
       isEditMode: 0,
       discountType: '$',
       permission: LabourTextDefault,
-      selectedLabourRate: { value: "", label: "Select..." },
       discount: "",
       openStadardRateModel: false
     };
   }
   stdModelFun = () => {
-    this.setState({
-      openStadardRateModel: !this.state.openStadardRateModel
-    });
+    this.props.rateAddModalFun();
   };
   handleChange = event => {
     const { name, value } = event.target;
@@ -85,7 +80,7 @@ export class CrmLabourModal extends Component {
         labourId: this.props.dataLabour._id,
         discountType: this.props.dataLabour.discount!=='' && this.props.dataLabour.discount.includes("%")? '%':'$',
         permission: this.props.dataLabour.permission,
-        selectedLabourRate: { value: this.props.dataLabour.rate._id ? this.props.dataLabour.rate._id : '', label: this.props.dataLabour.rate.name ? this.props.dataLabour.rate.name : 'Select...' },
+        selectedLabourRate:  this.props.setDefaultRate({ value: this.props.dataLabour.rate &&  this.props.dataLabour.rate._id ? this.props.dataLabour.rate._id : '', label: this.props.dataLabour.rate && this.props.dataLabour.rate.name ? this.props.dataLabour.rate.name+' - '+this.props.dataLabour.rate.hourlyRate  : 'Select...' }),
         discount: this.props.dataLabour.discount,
         openStadardRateModel: false
       })
@@ -100,61 +95,33 @@ export class CrmLabourModal extends Component {
       errors: {},
       isEditMode: 0,
       discountType: '$',
-      permission: LabourTextDefault,
-      selectedLabourRate: { value: "", label: "Select..." },
+      permission: LabourTextDefault, 
+      selectedLabourRate:  this.props.setDefaultRate({value: '',label:'Select...' }),   
       discount: "",
       openStadardRateModel: false
     })
-
-
   }
-
   handleRateAdd = async data => {
     const profileData = this.props.profileInfoReducer;
-    let api = new ApiHelper();
-    try {
-      const { isValid, errors } = Validator(
-        data,
-        CreateRateValidations,
-        CreateRateValidMessaages
-      );
-      if (!isValid) {
-        this.setState({
-          errors: errors,
-          isLoading: false
-        });
-        return;
-      } else {
+    const { isValid, errors } = Validator(
+      data,
+      CreateRateValidations,
+      CreateRateValidMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors: errors,
+        isLoading: false
+      });
+      return;
+    } else {
         const ratedata = {
           data: data,
           userId: profileData._id,
           parentId: profileData.parentId
         };
-        let result = await api.FetchFromServer(
-          "/labour",
-          "/addRate",
-          "POST",
-          true,
-          undefined,
-          ratedata
-        );
-        if (result.isError) {
-          toast.error(result.messages[0]);
-        } else {
-          toast.success(result.messages[0]);
-          this.setState({
-            openStadardRateModel: !this.state.openStadardRateModel,
-            selectedLabourRate: {
-              value: result.data.data._id,
-              label: result.data.data.name + " - " + result.data.data.hourlyRate
-            }
-          });
-          this.props.getStdList();
-        }
-      }
-    } catch (error) {
-      logger(error);
-    }
+        this.props.addRate(ratedata); 
+    }  
   };
   handleClick(singleState, e) {
     const { permission } = this.state;
@@ -172,32 +139,24 @@ export class CrmLabourModal extends Component {
   handleStandardRate = selectValue => {
     if (selectValue) {
       if (selectValue.value === "") {
-        this.setState({
-          openStadardRateModel: !this.state.openStadardRateModel
-        });
+        this.props.rateAddModalFun();
       } else {
-        this.setState({
-          selectedLabourRate: selectValue
-        });
+        this.props.setDefaultRate(selectValue);
       }
     } else {
       this.props.onTypeHeadStdFun({});
-      this.setState({
-        selectedLabourRate: {
-          value: "",
-          label: "Select..."
-        }
-      });
     }
   };
   handleLabourAdd = () => {
-    
+    const { rateStandardListData} = this.props;
+    const { selectedOptions } = rateStandardListData;
     let data = {
       discription: this.state.discription,
       notes: this.state.note,
       hours: this.state.hours,
       permission: this.state.permission,
-      rateId: this.state.selectedLabourRate.value,
+      rateId: (selectedOptions && selectedOptions.defaultOptions &&
+      selectedOptions.defaultOptions.value) ? selectedOptions.defaultOptions.value : '',
       discount: this.state.discount,
     }
     const { isValid, errors } = Validator(
@@ -220,18 +179,19 @@ export class CrmLabourModal extends Component {
 
   }
   render() {
-    const { tyreModalOpen, handleLabourModal, rateStandardListData } = this.props;
+    const { tyreModalOpen, handleLabourModal, rateStandardListData, rateAddModalProp } = this.props;
     const { errors } = this.state;
     const {
       discription,
       note,
       hours,
       discountType,
-      selectedLabourRate,
       discount,
       isEditMode,
       permission,
     } = this.state;
+    const { selectedOptions } = rateStandardListData;
+  
     return (
       <>
         <Modal
@@ -274,12 +234,12 @@ export class CrmLabourModal extends Component {
                         }
                         loadOptions={this.loadOptions}
                         onChange={this.handleStandardRate}
-                        isClearable={
-                          selectedLabourRate.value !== ""
+                        isClearable={ selectedOptions && selectedOptions &&
+                          selectedOptions.value !== ""
                             ? true
                             : false
                         }
-                        value={selectedLabourRate}
+                        value={selectedOptions ? selectedOptions : ""}
                       />
                     </div>
                   </FormGroup>
@@ -351,7 +311,7 @@ export class CrmLabourModal extends Component {
                   : null}
               </Row>
               <CrmStandardModel
-                openStadardRateModel={this.state.openStadardRateModel}
+                openStadardRateModel={rateAddModalProp}
                 stdModelFun={this.stdModelFun}
                 errors={errors}
                 handleRateAdd={this.handleRateAdd}
@@ -372,3 +332,5 @@ export class CrmLabourModal extends Component {
     );
   }
 }
+
+

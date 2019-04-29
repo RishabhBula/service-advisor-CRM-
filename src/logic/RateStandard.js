@@ -1,11 +1,59 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
+import { toast } from "react-toastify";
 import {
   rateStandardListActions,
   getRateStandardListStart,
   getRateStandardListFail,
-  getRateStandardListSuccess
+  getRateStandardListSuccess,
+  rateAddStarted,
+  hideLoader,
+  showLoader,
+  rateAddSuccess,
+  modelOpenRequest,
+  setRateStandardListStart
 } from "./../actions";
+ 
+const rateAddLogic = createLogic({
+  type: rateStandardListActions.RATE_ADD_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(
+      rateAddStarted({
+        rateData: []
+      }),
+      showLoader()
+    );
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/labour",
+      "/addRate",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(modelOpenRequest({modelDetails: {rateAddModalOpen: false}})); 
+      
+      dispatch(
+        setRateStandardListStart({
+          value: result.data.data._id,
+          label: result.data.data.name + " - " + result.data.data.hourlyRate
+        })
+      );
+      dispatch(rateAddSuccess( {rateData: result.data}));
+      done();
+    }
+  }
+});
+
 
 const getStandardRateListLogic = createLogic({
   type: rateStandardListActions.GET_RATE_STANDARD_LIST_REQUEST,
@@ -47,7 +95,7 @@ const getStandardRateListLogic = createLogic({
           value: "",
           label: "Add New Labour Rate"
         }
-      ];
+      ];      
       let resultData = result.data.data;
       let dataNewArray = [];
       for (let i = 0; i < resultData.length; i++) {
@@ -83,5 +131,6 @@ const setStandardRateListLogic = createLogic({
 
 export const StandardRateLogic = [
   getStandardRateListLogic,
-  setStandardRateListLogic
+  setStandardRateListLogic,
+  rateAddLogic
 ];

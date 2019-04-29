@@ -22,7 +22,13 @@ export const rateStandardListReducer = handleActions(
         ...state,
         standardRateList: action.payload.standardRateList,
         selectedOptions:  action.payload.selectedOptions,
-    })
+    }),
+    [rateStandardListActions.RATE_ADD_SUCCESS]: (state, action) => ({
+        ...state,
+        rateData: action.payload.rateData,
+        selectedOptions: action.payload.selectedOptions,
+        isSuccess: true,
+    }),
     },
     initialAuthState
 );

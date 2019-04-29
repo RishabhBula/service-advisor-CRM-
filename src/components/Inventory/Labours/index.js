@@ -11,11 +11,12 @@ import {
   Input,
   UncontrolledTooltip,
 } from "reactstrap";
+
 import Loader from "../../../containers/Loader/Loader";
 import { connect } from "react-redux";
 import { labourEditRequest,labourListRequest,getRateStandardListRequest,deleteLabour,
-  setRateStandardListStart, } from "../../../actions";
-import {CrmLabourModal }  from '../../common/Labours/CrmLabourModal' 
+  setRateStandardListStart,rateAddRequest } from "../../../actions";
+import {CrmLabourModal}   from '../../common/Labours/CrmLabourModal' 
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
@@ -161,7 +162,13 @@ class Labours extends Component {
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   };
-
+  addRate = data => {
+    try {
+      this.props.addRate(data);
+    } catch (error) {
+      Loader(error)
+    }
+  }
   onPageChange = (page) => {
     this.setState({page});
     const { location } = this.props;
@@ -178,7 +185,7 @@ class Labours extends Component {
       page } = this.state
     const { labourReducer,profileInfoReducer,rateStandardListReducer,modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireEditModalOpen } = modelDetails;
+    const { tireEditModalOpen,rateAddModalOpen } = modelDetails;
     const { isLoading, labourData } = labourReducer;
     return (
       <>
@@ -354,12 +361,18 @@ class Labours extends Component {
             setDefaultRate={this.setDefaultRate}
             getStdList={this.props.getStdList}
             dataLabour={this.state.labour}
+            addRate={this.addRate}
             updateLabour={this.updateLabour}
             handleLabourModal={() =>
               modelOperate({
                 tireEditModalOpen: !tireEditModalOpen
               })
             }
+            rateAddModalProp={rateAddModalOpen}
+            rateAddModalFun={() =>
+              modelOperate({
+                rateAddModalOpen: !rateAddModalOpen
+              })}
           />
       </>
     );
@@ -386,6 +399,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
+  },
+  addRate:(data)=>{
+    dispatch(rateAddRequest(data));
   },
 });
 

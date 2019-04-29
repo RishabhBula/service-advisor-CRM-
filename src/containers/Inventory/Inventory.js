@@ -15,13 +15,14 @@ import {
   getRateStandardListRequest,
   setRateStandardListStart,
   labourAddRequest,
+  rateAddRequest,
 } from '../../actions';
 
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
-import { CrmLabourModal } from "../../components/common/Labours/CrmLabourModal";  
+import  {CrmLabourModal}  from "../../components/common/Labours/CrmLabourModal";  
 import { logger } from "../../helpers/Logger";
 import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
 import {
@@ -133,6 +134,14 @@ class Inventory extends Component {
       logger(error)
     }
   }
+  addRate = data => {
+    try {
+      this.props.addRate(data);
+    } catch (error) {
+      logger(error)
+    }
+  }
+
   getQuerParams = () => {
     return qs.parse(this.props.location.search);
   };
@@ -150,7 +159,7 @@ class Inventory extends Component {
       getInventoryPartsVendors, rateStandardListReducer, profileInfoReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen, rateAddModalOpen} = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -189,11 +198,17 @@ class Inventory extends Component {
             setDefaultRate={this.setDefaultRate}
             getStdList={this.props.getStdList}
             addLabour={this.addLabour}
+            addRate={this.addRate}
             handleLabourModal={() =>
               modelOperate({
                 tireAddModalOpen: !tireAddModalOpen
               })
             }
+            rateAddModalProp={rateAddModalOpen}
+            rateAddModalFun={() =>
+              modelOperate({
+                rateAddModalOpen: !rateAddModalOpen
+              })}
           />
         );
       case AppRoutes.INVENTORY_VENDORS.url:
@@ -333,6 +348,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getStdList: () => {
     dispatch(getRateStandardListRequest());
+  },
+  addRate:(data)=>{
+    dispatch(rateAddRequest(data));
   },
   setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
