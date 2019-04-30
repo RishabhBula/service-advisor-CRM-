@@ -224,6 +224,9 @@ const updateTierValidation = [
     return true;
   })
 ];
+const createNewMatrixValidation = [
+  body("matrixName").not().isEmpty().withMessage("Matrix name is required.").trim(),
+]
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -242,5 +245,6 @@ module.exports = {
   createVendorValidations,
   updateVendorValidations,
   createTierValidation,
-  updateTierValidation
+  updateTierValidation,
+  createNewMatrixValidation
 };

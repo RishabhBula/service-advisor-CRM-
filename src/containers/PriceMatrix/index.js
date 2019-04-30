@@ -13,7 +13,8 @@ import {
   DropdownMenu,
   DropdownItem
 } from 'reactstrap';
-import { logger } from "../../helpers/Logger";
+import { toast } from "react-toastify";
+
 class PriceMatrix extends Component {
   constructor(props) {
     super(props);
@@ -50,6 +51,13 @@ class PriceMatrix extends Component {
     const { name, value } = e.target
     if (name === 'costPrice1') {
       const matrixRange = [...this.state.matrixRange];
+      if (value >= matrixRange[index].upper) {
+
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error(`${value} is too high.Lower limit must be lesser than range's upper limit (${matrixRange[index].upper}).`);
+        }
+        return
+      }
       matrixRange[index].lower = value
       matrixRange[index - 1].upper = parseInt(value) - 0.01
       this.setState({
