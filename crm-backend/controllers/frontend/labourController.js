@@ -7,6 +7,8 @@ const { validationResult } = require("express-validator/check");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
+    console.log("**************", $data.searchValue);
+
     let condition = {
       name: new RegExp($data.searchValue, "i")
     }
@@ -126,10 +128,11 @@ const createNewLabour = async (req, res) => {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
       currentUser.parentId = currentUser.id
     }
+    console.log("**************This Rate id =>", body.rateId);
     const addNewLabour = {
       discription: body.discription,
       hours: body.hours,
-      rate: body.rateId,
+      rate: body.rate,
       discount: body.discount,
       notes: body.notes,
       permission: body.permission,
@@ -167,6 +170,7 @@ const updateLabourdetails = async (req, res) => {
     });
   }
   try {
+    console.log("##########body##########", body.rateId);
 
     const updateLabourDetails = await labourModel.findByIdAndUpdate(
       mongoose.Types.ObjectId(body.labourId),

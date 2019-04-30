@@ -39,8 +39,13 @@ export class CrmLabourModal extends Component {
       errors: {},
       isEditMode: 0,
       discountType: '$',
+      labourInput: "",
       permission: LabourTextDefault,
       discount: "",
+      selectedRateOptions: {
+        label: "",
+        value: ""
+      },
       openStadardRateModel: false
     };
   }
@@ -60,9 +65,18 @@ export class CrmLabourModal extends Component {
     }
 
   };
-  componentDidUpdate({ tyreModalOpen, dataLabour }) {
+  componentDidUpdate({ tyreModalOpen, dataLabour, rateStandardListData }) {
     if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.dataLabour) {
       this.removeAllState();
+    }
+    if (this.props.rateStandardListData.selectedOptions !== rateStandardListData.selectedOptions) {
+      const { selectedOptions } = this.props.rateStandardListData
+      this.setState({
+        selectedRateOptions: {
+          value: selectedOptions && selectedOptions.value ? selectedOptions.value : '',
+          label: selectedOptions && selectedOptions.label ? selectedOptions.label : ''
+        }
+      })
     }
     if (
       this.props.dataLabour &&
@@ -77,9 +91,9 @@ export class CrmLabourModal extends Component {
         isEditMode: 1,
         errors: {},
         labourId: this.props.dataLabour._id,
-        discountType: this.props.dataLabour.discount!=='' && this.props.dataLabour.discount.includes("%")? '%':'$',
+        discountType: this.props.dataLabour.discount !== '' && this.props.dataLabour.discount.includes("%") ? '%' : '$',
         permission: this.props.dataLabour.permission,
-        selectedLabourRate:  this.props.setDefaultRate({ value: this.props.dataLabour.rate &&  this.props.dataLabour.rate._id ? this.props.dataLabour.rate._id : '', label: this.props.dataLabour.rate && this.props.dataLabour.rate.name ? this.props.dataLabour.rate.name+' - '+this.props.dataLabour.rate.hourlyRate  : 'Select...' }),
+        selectedLabourRate: this.props.setDefaultRate({ value: this.props.dataLabour.rate && this.props.dataLabour.rate._id ? this.props.dataLabour.rate._id : '', label: this.props.dataLabour.rate && this.props.dataLabour.rate.name ? this.props.dataLabour.rate.name + ' - ' + this.props.dataLabour.rate.hourlyRate : 'Select...' }),
         discount: this.props.dataLabour.discount,
         openStadardRateModel: false
       })
@@ -94,8 +108,8 @@ export class CrmLabourModal extends Component {
       errors: {},
       isEditMode: 0,
       discountType: '$',
-      permission: LabourTextDefault, 
-      selectedLabourRate:  this.props.setDefaultRate({value: '',label:'Select...' }),   
+      permission: LabourTextDefault,
+      selectedLabourRate: this.props.setDefaultRate({ value: '', label: 'Select...' }),
       discount: "",
       openStadardRateModel: false
     })
@@ -114,13 +128,13 @@ export class CrmLabourModal extends Component {
       });
       return;
     } else {
-        const ratedata = {
-          data: data,
-          userId: profileData._id,
-          parentId: profileData.parentId
-        };
-        this.props.addRate(ratedata); 
-    }  
+      const ratedata = {
+        data: data,
+        userId: profileData._id,
+        parentId: profileData.parentId
+      };
+      this.props.addRate(ratedata);
+    }
   };
   handleClick(singleState, e) {
     const { permission } = this.state;
@@ -135,39 +149,48 @@ export class CrmLabourModal extends Component {
       discountType: value,
     });
   }
-  handleStandardRate = selectValue => {
-    if (selectValue) {
-      if (selectValue.value === "") {
+  handleStandardRate = e => {
+    if (e) {
+      if (e.value === "") {
         this.props.rateAddModalFun();
-      } else {
-        this.props.setDefaultRate(selectValue);
       }
+      this.setState({
+        selectedRateOptions: {
+          value: e.value,
+          label: e.label
+        }
+      })
     } else {
-      this.props.onTypeHeadStdFun({});
+      this.setState({
+        selectedRateOptions: {
+          value: "",
+          label: "Type to select"
+        }
+      })
     }
   };
+
   handleLabourAdd = () => {
-    const { rateStandardListData} = this.props;
-    const { selectedOptions } = rateStandardListData;
+    const { selectedRateOptions } = this.state;
     let data = {
       discription: this.state.discription,
       notes: this.state.note,
       hours: this.state.hours,
       permission: this.state.permission,
-      rateId: (selectedOptions  &&
-      selectedOptions.value) ? selectedOptions.value : '',
+      rate: (selectedRateOptions &&
+        selectedRateOptions.value) ? selectedRateOptions.value : null,
       discount: this.state.discount,
     }
     const { isValid, errors } = Validator(
       data,
       CreateLabourValidations,
       CreateLabourValidMessaages
-   );
-    if(!isValid){
+    );
+    if (!isValid) {
       this.setState({
-        errors:errors,
+        errors: errors,
       });
-      return ;
+      return;
     }
     if (this.state.isEditMode) {
       data.labourId = this.state.labourId;
@@ -178,11 +201,12 @@ export class CrmLabourModal extends Component {
 
   }
   loadOptions = (input, callback) => {
-    this.props.onTypeHeadStdFun({ input, callback });
- };
+    this.setState({ labourInput: input.length > 1 ? input : null });
+    this.props.getStdList({ input, callback });
+  };
   render() {
-    const { tyreModalOpen, handleLabourModal, rateStandardListData, rateAddModalProp } = this.props;
-    const { errors } = this.state;
+    const { tyreModalOpen, handleLabourModal, rateAddModalProp } = this.props;
+    const { errors, selectedRateOptions } = this.state;
     const {
       discription,
       note,
@@ -192,8 +216,6 @@ export class CrmLabourModal extends Component {
       isEditMode,
       permission,
     } = this.state;
-    const { selectedOptions } = rateStandardListData;
-  
     return (
       <>
         <Modal
@@ -202,7 +224,7 @@ export class CrmLabourModal extends Component {
           backdrop={"static"}
           className="customer-modal custom-form-modal custom-modal-lg"
         >
-          <ModalHeader toggle={handleLabourModal}>{isEditMode ? `Update labour detail`: 'Create New Labour'}</ModalHeader>
+          <ModalHeader toggle={handleLabourModal}>{isEditMode ? `Update labour detail` : 'Create New Labour'}</ModalHeader>
           <ModalBody>
             <div className="">
               <Row >
@@ -212,13 +234,13 @@ export class CrmLabourModal extends Component {
                       Labour Description <span className={"asteric"}>*</span>
                     </Label>
                     <div className="input-block">
-                    <Input className={"form-control"} type={"text"} id="discription" name=
-                      "discription" maxLength="100" onChange={this.handleChange} value={discription}  invalid={errors.discription && !discription} />
-                    <FormFeedback>
-                      {errors && !discription && errors.discription
-                        ? errors.discription
-                        : null}
-                    </FormFeedback>
+                      <Input className={"form-control"} type={"text"} id="discription" name=
+                        "discription" maxLength="100" onChange={this.handleChange} value={discription} invalid={errors.discription && !discription} />
+                      <FormFeedback>
+                        {errors && !discription && errors.discription
+                          ? errors.discription
+                          : null}
+                      </FormFeedback>
                     </div>
                   </FormGroup>
                 </Col>
@@ -233,16 +255,15 @@ export class CrmLabourModal extends Component {
                       <Async
                         placeholder={"Type rate"}
                         loadOptions={this.loadOptions}
-                        defaultOptions={
-                          rateStandardListData.standardRateList
-                        } 
-                        onChange={this.handleStandardRate}
-                        isClearable={ selectedOptions && selectedOptions &&
-                          selectedOptions.value !== ""
-                            ? true
-                            : false
+                        onChange={e => {
+                          this.handleStandardRate(e)
+                        }}
+                        isClearable={selectedRateOptions &&
+                          selectedRateOptions.value !== ""
+                          ? true
+                          : false
                         }
-                        value={selectedOptions ? selectedOptions : ""}
+                        value={selectedRateOptions ? selectedRateOptions : ""}
                       />
                     </div>
                   </FormGroup>
@@ -253,12 +274,12 @@ export class CrmLabourModal extends Component {
                       Hours
                     </Label>
                     <div className="input-block">
-                    <Input className={"form-control"} name="hours" id="hours" type={"text"} onChange={this.handleChange} maxLength="5" value={hours} invalid={errors.hours && !hours.isNumeric} />
-                    <FormFeedback>
-                      { errors.hours
-                        ? errors.hours
-                        : null}
-                    </FormFeedback>
+                      <Input className={"form-control"} name="hours" id="hours" type={"text"} onChange={this.handleChange} maxLength="5" value={hours} invalid={errors.hours && !hours.isNumeric} />
+                      <FormFeedback>
+                        {errors.hours
+                          ? errors.hours
+                          : null}
+                      </FormFeedback>
                     </div>
                   </FormGroup>
                 </Col>
@@ -268,10 +289,10 @@ export class CrmLabourModal extends Component {
                       Discount
                     </Label>
                     <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} />
-                    <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />      
+                    <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
                   </FormGroup>
                 </Col>
-                <Col md="12"> 
+                <Col md="12">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Note
@@ -285,30 +306,30 @@ export class CrmLabourModal extends Component {
                 {LabourText
                   ? LabourText.map((text, index) => {
                     return (
-                        <Col
-                          md="6"
-                          key={index}
-                        >
-                          <div className="d-flex" >
-                            <AppSwitch
-                              className={"mx-1"}
-                              checked={
-                                permission[text.key]
-                              }
-                              onClick={this.handleClick.bind(
-                                this,
-                                text.key
-                              )}
-                              variant={"3d"}
-                              color={"primary"}
-                              size={"sm"}
-                            />
-                            <p className="customer-modal-text-style">
-                              {text.text}
-                            </p>
-                          </div>
-                        </Col>
-                    
+                      <Col
+                        md="6"
+                        key={index}
+                      >
+                        <div className="d-flex" >
+                          <AppSwitch
+                            className={"mx-1"}
+                            checked={
+                              permission ? permission[text.key] : null
+                            }
+                            onClick={this.handleClick.bind(
+                              this,
+                              text.key
+                            )}
+                            variant={"3d"}
+                            color={"primary"}
+                            size={"sm"}
+                          />
+                          <p className="customer-modal-text-style">
+                            {text.text}
+                          </p>
+                        </div>
+                      </Col>
+
                     );
                   })
                   : null}
@@ -323,8 +344,8 @@ export class CrmLabourModal extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>
-            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update labour detail`: 'Add New Labour'}
-              
+            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update labour detail` : 'Add New Labour'}
+
             </Button>{" "}
             <Button color="secondary" onClick={handleLabourModal}>
               Cancel

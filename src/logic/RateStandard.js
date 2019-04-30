@@ -13,7 +13,8 @@ import {
   modelOpenRequest,
   setRateStandardListStart
 } from "./../actions";
- 
+import { logger } from "../helpers/Logger";
+
 const rateAddLogic = createLogic({
   type: rateStandardListActions.RATE_ADD_REQUEST,
   async process({ action }, dispatch, done) {
@@ -40,15 +41,15 @@ const rateAddLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(hideLoader());
-      dispatch(modelOpenRequest({modelDetails: {rateAddModalOpen: false}})); 
-      
+      dispatch(modelOpenRequest({ modelDetails: { rateAddModalOpen: false } }));
+      logger(result.data.data)
       dispatch(
         setRateStandardListStart({
           value: result.data.data._id,
           label: result.data.data.name + " - $" + result.data.data.hourlyRate
         })
       );
-      dispatch(rateAddSuccess( {rateData: result.data}));
+      dispatch(rateAddSuccess({ rateData: result.data }));
       done();
     }
   }
@@ -65,10 +66,6 @@ const getStandardRateListLogic = createLogic({
     if (profileStateData.profileInfo.parentId === null) {
       parentId = profileStateData.profileInfo._id;
     }
-    let data = {
-      parentId: parentId,
-      searchValue: action.payload
-    };
     dispatch(
       getRateStandardListStart({
         standardRateList: []
@@ -80,8 +77,7 @@ const getStandardRateListLogic = createLogic({
       "/getAllStdRate",
       "get",
       true,
-      data,
-      undefined
+      { parentId: parentId, searchValue: action.payload && action.payload.input ? action.payload.input : null }
     );
     if (result.isError) {
       dispatch(
@@ -95,19 +91,16 @@ const getStandardRateListLogic = createLogic({
           value: "",
           label: "Add New Labour Rate"
         }
-      ];      
+      ];
       let resultData = result.data.data;
-      let dataNewArray = [];
-      for (let i = 0; i < resultData.length; i++) {
-        dataNewArray.push({
-          value: resultData[i]._id,
-          label: resultData[i].name + " - $" + resultData[i].hourlyRate
-        });
-      }
-     
+      const options = resultData.map(labour => ({
+        label: labour.name + " - $" + labour.hourlyRate,
+        value: labour._id
+      }));
+      logger(action.payload ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(
         getRateStandardListSuccess({
-          standardRateList: defaultOptions.concat(dataNewArray)
+          standardRateList: defaultOptions.concat(options)
         })
       );
     }

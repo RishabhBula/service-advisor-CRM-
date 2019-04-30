@@ -391,8 +391,8 @@ const mapDispatchToProps = dispatch => ({
   deleteLabour: data => {
     dispatch(deleteLabour(data));
   },
-  getStdList: () => {
-    dispatch(getRateStandardListRequest());
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
   },
   getlabour: data => {
     dispatch(labourListRequest(data));

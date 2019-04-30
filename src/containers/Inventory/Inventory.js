@@ -117,7 +117,7 @@ class Inventory extends Component {
   }
   onTypeHeadStdFun = (data) => {
     const  input =(data.input) ? data.input : '';
-    this.props.getStdList(input); 
+    this.props.getStdList(data); 
   };
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
@@ -160,7 +160,8 @@ class Inventory extends Component {
       modelOperate,
       addVendor,
       inventoryPartsData,
-      getInventoryPartsVendors, rateStandardListReducer, profileInfoReducer
+      getInventoryPartsVendors, rateStandardListReducer, profileInfoReducer,
+      getStdList
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen, rateAddModalOpen} = modelDetails;
@@ -200,7 +201,7 @@ class Inventory extends Component {
             tyreModalOpen={tireAddModalOpen}
             onTypeHeadStdFun={this.onTypeHeadStdFun}
             setDefaultRate={this.setDefaultRate}
-            getStdList={this.props.getStdList}
+            getStdList={getStdList}
             addLabour={this.addLabour}
             addRate={this.addRate}
             handleLabourModal={() =>
@@ -352,7 +353,7 @@ const mapDispatchToProps = dispatch => ({
   addInventoryPart: data => {
     dispatch(requestAddPart(data));
   },
-  getStdList: (data) => {
+  getStdList: data => {
     dispatch(getRateStandardListRequest(data));
   },
   addRate:(data)=>{
