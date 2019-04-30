@@ -56,7 +56,7 @@ class Vendors extends Component {
       this.props.vendorReducer.vendorData.isSuccess !==
       vendorReducer.vendorData.isSuccess
     ) {
-      if (this.props.vendorReducer.vendorData.isSuccess) {
+      if (this.props.vendorReducer && this.props.vendorReducer.vendorData && this.props.vendorReducer.vendorData.isSuccess) {
         const query = qs.parse(this.props.location.search);
         this.props.getVendorsList({ ...query, page: query.page || 1 });
       }
@@ -82,7 +82,7 @@ class Vendors extends Component {
 
   deleteVendor = async ( vendorId) => {
     const { value } = await ConfirmBox({
-      text:"Do you want to delete this Vendor"
+      text:"You want to delete this Vendor"
     });
     if (!value) {
       return;
@@ -194,7 +194,7 @@ class Vendors extends Component {
                   <Col lg={"12"} md={"12"} className="mb-0">
                     <div className="filter-btn-wrap">
                       {/* <Label className="height17 label" /> */}
-                      <div className="form-group mb-0">
+                      
                         <span className="mr-2">
                           <Button
                             className="btn btn-theme-transparent"
@@ -218,7 +218,7 @@ class Vendors extends Component {
                             Reset all filters
                           </UncontrolledTooltip>
                         </span>
-                      </div>
+                      
                     </div>
                   </Col>
                 </Row>
@@ -252,7 +252,7 @@ class Vendors extends Component {
                       </td>
                       <td >
                         <div className={"text-capitalize font-weight-bold"}>
-                        {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : null}
+                        {vendor.contactPerson.firstName ? <span>{vendor.contactPerson.firstName} </span> : null}
                         {vendor.contactPerson.firstName && vendor.contactPerson.lastName ? vendor.contactPerson.lastName : null}
                         </div>
                         {vendor.contactPerson.email ? vendor.contactPerson.email : null}

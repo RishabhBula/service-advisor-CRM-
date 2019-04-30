@@ -44,13 +44,13 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErro: ''
+      urlError: ''
     }
   }
 
   componentDidUpdate = ({ vendorAddModalOpen, vendorData }) => {
     if (vendorAddModalOpen !== this.props.vendorAddModalOpen && !this.props.vendorData) {
-      this.removeAllState();
+      this.resetState();
     }
 
     if (
@@ -76,7 +76,7 @@ export class CrmInventoryVendor extends Component {
       })
     }
   }
-  async removeAllState() {
+  resetState = () => {
     this.setState({
       name: '',
       accountNumber: '',
@@ -97,7 +97,7 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErro: '',
+      urlError: '',
     });
   }
 
@@ -177,12 +177,12 @@ export class CrmInventoryVendor extends Component {
     }
     if (url && !isValidURL(url)) {
       this.setState({
-        urlErro: "Please enter Valid URL( http:// )"
+        urlError: "Please enter Valid URL( http:// )"
       })
     }
     else {
       this.setState({
-        urlErro: ""
+        urlError: ""
       })
     }
     const data = {
@@ -223,7 +223,7 @@ export class CrmInventoryVendor extends Component {
       contactPerson,
       address,
       errors,
-      urlErro
+      urlError
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => <option key={index} value={item.key}>{item.text}</option>);
     return (
@@ -278,10 +278,10 @@ export class CrmInventoryVendor extends Component {
                         placeholder='http://google.com'
                         value={url}
                         id='name'
-                        invalid={urlErro && url}
+                        invalid={urlError && url}
                       />
                       <FormFeedback>
-                        {urlErro && url ? urlErro : null}
+                        {urlError && url ? urlError : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -383,9 +383,7 @@ export class CrmInventoryVendor extends Component {
                       Phone Number
                     </Label>
                     <Input
-                      onChange={e => {
-                        this.handlePhoneNameChange(e)
-                      }}
+                      onChange={this.handlePhoneNameChange}
                       type="select"
                       name="phone"
                       value={contactPerson.phoneNumber.phone}
@@ -401,7 +399,7 @@ export class CrmInventoryVendor extends Component {
                         name='value'
                         maxLength={contactPerson.phoneNumber.phone === "mobile" ? 13 : 22}
                         guide={false}
-                        onChange={(e) => this.handlePhoneValueChange(e)}
+                        onChange={this.handlePhoneValueChange}
                         value={contactPerson.phoneNumber.value || null}
                         className={"form-control"}
                         size='20'

@@ -33,8 +33,7 @@ const getVendorLogic = createLogic({
        true, {
       ...action.payload,
       limit: AppConfig.ITEMS_PER_PAGE
-    },
-     undefined,);
+    });
     if (result.isError) {
       dispatch(
         getVendorsListSuccess({
