@@ -1,111 +1,172 @@
 import React, { Component } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Row,
-  Col,
-  Button,
-  Input,
-  UncontrolledTooltip,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import PriceMatrixComponent from "../../components/PriceMatrix/AddEdit";
+import PriMatrixList from "../../components/PriceMatrix/PriMatrixList";
 import { logger } from "../../helpers/Logger";
+import { InsertAtParticularIndex } from "../../helpers/Array";
 class PriceMatrix extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      matrixList: {},
-      isEditable: false,
       matrixRange: [
         {
           margin: "",
           markup: "",
-          lower: '0.00',
-          upper: 'beyond',
+          lower: "0.00",
+          upper: "beyond"
         }
       ],
-      martrixName: "",
-    }
+      martrixName: ""
+    };
   }
   handleAddMatrixRange = () => {
     const { matrixRange } = this.state;
     const upper = "beyond";
     const lower = parseFloat(matrixRange[matrixRange.length - 1].lower) + 100;
-    matrixRange[matrixRange.length - 1].upper = parseFloat(matrixRange[matrixRange.length - 1].lower) + 99;
+    matrixRange[matrixRange.length - 1].upper =
+      parseFloat(matrixRange[matrixRange.length - 1].lower) + 99.99;
     matrixRange.push({
       margin: "",
       markup: "",
       lower,
       upper
-    })
+    });
     this.setState({
       matrixRange
-    })
-  }
+    });
+  };
   handleCostChange = (index, e) => {
-    const { name, value } = e.target
-    if (name === 'costPrice1') {
+    const { name, value } = e.target;
+    if (name === "costPrice1") {
       const matrixRange = [...this.state.matrixRange];
-      matrixRange[index].lower = value
-      matrixRange[index - 1].upper = parseInt(value) - 0.01
+      matrixRange[index].lower = value;
+      matrixRange[index - 1].upper = parseFloat(value) - 0.01;
       this.setState({
         matrixRange
-      })
+      });
     } else {
       const matrixRange = [...this.state.matrixRange];
-      matrixRange[index].upper = value
-      matrixRange[index + 1].lower = parseInt(value) + 0.01
+      matrixRange[index].upper = value;
+      matrixRange[index + 1].lower = parseFloat(value) + 0.01;
       this.setState({
         matrixRange
-      })
-    }
-  }
-  handleRemoveMatrixRange = index => {
-    const { matrixRange } = this.state;
-    let t = [...matrixRange];
-    t[index - 1].upper =
-      t && t.length && (t[index].upper === 'beyond' ||
-        t[index].upper !== 'beyond') ? t[index + 1].lower - 1 : "beyond";
-    t.splice(index, 1);
-    if (matrixRange.length) {
-      this.setState({
-        matrixRange: t
       });
     }
   };
-  handleAddBelowMatrixRange = (index, name) => {
+  handleRemoveMatrixRange = index => {
+    logger(index);
     const { matrixRange } = this.state;
-    if (name === 'below') {
-      matrixRange.splice((parseInt(index) + 1), 0, {
-        margin: "",
-        markup: "",
-        lower: "",
-        upper: ""
-      })
+    const lastIndex = matrixRange.length - 1;
+    if (index === lastIndex) {
+      matrixRange[index - 1].upper = "beyond";
     } else {
-      matrixRange.splice((parseInt(index) - 1), 1, {
-        margin: "",
-        markup: "",
-        lower: "",
-        upper: ""
-      })
+      matrixRange[index + 1].lower =
+        parseFloat(matrixRange[index - 1].upper) + 0.01;
     }
+    matrixRange.splice(index, 1);
     this.setState({
       matrixRange
-    })
-  }
-
+    });
+  };
+  handleAddBelowMatrixRange = (index, name) => {
+    let { matrixRange } = this.state;
+    const lastIndex = matrixRange.length - 1;
+    if (index === lastIndex && name === "below") {
+      const upper = "beyond";
+      const lower = parseFloat(matrixRange[lastIndex].lower) + 100;
+      matrixRange[lastIndex].upper =
+        parseFloat(matrixRange[lastIndex].lower) + 99.99;
+      matrixRange.push({
+        margin: "",
+        markup: "",
+        lower,
+        upper
+      });
+      this.setState({
+        matrixRange
+      });
+    } else if (name === "below") {
+      const newMatrixRange = InsertAtParticularIndex(
+        Object.assign([], matrixRange),
+        index + 1,
+        {
+          margin: "",
+          markup: "",
+          upper: parseFloat(matrixRange[index].upper) + 100,
+          lower: parseFloat(matrixRange[index].upper) + 0.01
+        }
+      );
+      const nMatrixRange = [];
+      for (let ind = 0; ind < newMatrixRange.length; ind++) {
+        const mat = newMatrixRange[ind];
+        if (ind <= index + 1) {
+          nMatrixRange.push(mat);
+        } else if (ind === newMatrixRange.length - 1) {
+          nMatrixRange.push({
+            ...mat,
+            upper: "beyond",
+            lower: newMatrixRange[ind].lower + 100
+          });
+        } else {
+          nMatrixRange.push({
+            ...mat,
+            upper: newMatrixRange[ind].upper + 100,
+            lower: newMatrixRange[ind].lower + 100
+          });
+        }
+      }
+      nMatrixRange.sort((a, b) => parseFloat(a.lower) - parseFloat(b.lower));
+      this.setState({
+        matrixRange: nMatrixRange
+      });
+    } else if (name === "above") {
+      const newMatrixRange = InsertAtParticularIndex(
+        Object.assign([], matrixRange),
+        index - 1,
+        {
+          margin: "",
+          markup: "",
+          upper:
+            index === lastIndex
+              ? matrixRange[index].lower - 0.01
+              : parseFloat(matrixRange[index].upper) - 100,
+          lower: parseFloat(matrixRange[index].lower) - 100
+        }
+      );
+      const nMatrixRange = [];
+      for (let ind = 0; ind < newMatrixRange.length; ind++) {
+        const mat = newMatrixRange[ind];
+        if (ind < index) {
+          nMatrixRange.push(mat);
+        } else if (ind === newMatrixRange.length - 1) {
+          nMatrixRange.push({
+            ...mat,
+            upper: "beyond",
+            lower: newMatrixRange[ind].lower + 100
+          });
+        } else {
+          nMatrixRange.push({
+            ...mat,
+            upper: newMatrixRange[ind].upper + 100,
+            lower: newMatrixRange[ind].lower + 100
+          });
+        }
+        logger(mat);
+      }
+      nMatrixRange.sort((a, b) => parseFloat(a.lower) - parseFloat(b.lower));
+      this.setState({
+        matrixRange: nMatrixRange
+      });
+    }
+  };
   render() {
+    const { matrixList } = this.props;
     const { matrixRange } = this.state;
     return (
       <>
         <Card>
           <CardHeader>
-            <Col sm={'6'} className={'pull-left'}>
+            <Col sm={"6"} className={"pull-left"}>
               <h4>
                 <i className={"fas fa-hand-holding-usd"} /> Price Matrix
               </h4>
@@ -119,127 +180,20 @@ class PriceMatrix extends Component {
                 <h4>Matrix List</h4>
               </CardHeader>
               <CardBody>
-                Price Matrix Body
-                <Col sm={'12'} className={'text-center'}>
-                  <Button
-                    color='primary'
-                    id='add-user'
-                    className={"btn btn-round"}
-                  >
-                    New Matrix
-                    </Button>
-                  <UncontrolledTooltip target={'add-user'}>
-                    New Price Matrix
-                  </UncontrolledTooltip>
-                </Col>
+                <PriMatrixList matrixList={matrixList} />
               </CardBody>
             </Card>
           </Col>
           <Col md={"8"}>
             <Card>
               <CardBody>
-                <Row>
-                  <Col md={"12"} className={"mb-4"}>
-                    <div className={"matrix-input"}>
-                      <Input placeholder={"Example Matrix A"} />
-                      <div className={"matrix-action"}>
-                        <Button className={"btn btn-success"}>Export</Button>
-                        <Button className={"btn btn-danger"}><i className="fas fa-trash" /></Button>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-                <table className={"table"}>
-                  <thead>
-                    <tr>
-                      <th>Cost</th>
-                      <th className={"text-right"}>Markup</th>
-                      <th className={"text-right"}>Margin</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {matrixRange && matrixRange.length
-                      ? matrixRange.map((item, index) => {
-                        return (
-                          <React.Fragment key={index}>
-                            <tr key={index}>
-                              <td className={"justify-content-center"}>
-                                <div className={"d-flex align-items-center matrix-input-control"}>
-                                  <div className={"d-inline-block"}>
-                                    <Input
-                                      className={"form-control text-right pr-0"}
-                                      name={"costPrice1"}
-                                      value={item.lower}
-                                      onChange={(e) => this.handleCostChange(index, e)}
-                                      disabled={item.lower === '0.00'} />
-                                  </div>
-                                  <span className={"value-sprate"}><i className="far fa-window-minimize" /></span>
-                                  <div className={"d-inline-block"}>
-                                    <Input
-                                      className={"form-control text-right pr-0"}
-                                      onChange={(e) => this.handleCostChange(index, e)}
-                                      name={"costPrice2"}
-                                      value={item.upper}
-                                      placeholder={"$0.00"}
-                                      disabled={item.upper === 'beyond'} />
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <div className={"d-flex justify-content-end matrix-input-control"}>
-                                  <Input
-                                    className={"form-control text-right pr-0"}
-                                    placeholder={"$0.00"} />
-                                </div>
-                              </td>
-                              <td>
-                                <div className={"d-flex justify-content-end matrix-input-control"}>
-                                  <Input
-                                    className={"form-control text-right pr-0"}
-                                    placeholder={"$0.00"} />
-                                </div>
-                              </td>
-                              <td className={"text-center"}>
-                                <div className={"d-flex justify-content-center"}>
-                                  <span>
-                                    <UncontrolledDropdown>
-                                      <DropdownToggle caret>
-                                        <i className="fas fa-ellipsis-h" />
-                                      </DropdownToggle>
-                                      <DropdownMenu>
-                                        {
-                                          index >= 1 ?
-                                            <DropdownItem onClick={() => this.handleAddBelowMatrixRange(index, 'above')}>Add range above</DropdownItem> :
-                                            null
-                                        }
-                                        <DropdownItem onClick={() => this.handleAddBelowMatrixRange(index, 'below')}>Add range below</DropdownItem>
-                                        {
-                                          index >= 1 ?
-                                            <DropdownItem>
-                                              <span className={"btn btn-danger btn-round"} onClick={() => this.handleRemoveMatrixRange(index)}>
-                                                Delete &nbsp; <i className="fas fa-trash" />
-                                              </span>
-                                            </DropdownItem> :
-                                            null
-                                        }
-                                      </DropdownMenu>
-                                    </UncontrolledDropdown>
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                          </React.Fragment>
-                        )
-                      }) : null}
-                  </tbody>
-                </table>
-                <span
-                  onClick={this.handleAddMatrixRange}
-                  className="customer-add-phone customer-anchor-text customer-click-btn"
-                >
-                  Add Range
-                </span>
+                <PriceMatrixComponent
+                  matrixRange={matrixRange}
+                  handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
+                  handleCostChange={this.handleCostChange}
+                  handleRemoveMatrixRange={this.handleRemoveMatrixRange}
+                  handleAddMatrixRange={this.handleAddMatrixRange}
+                />
               </CardBody>
             </Card>
           </Col>
