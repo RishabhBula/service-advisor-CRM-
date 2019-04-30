@@ -229,7 +229,7 @@ class PriceMatrix extends Component {
                                 </div>
                               </td>
                             </tr>
-                          </React.Fragment>  
+                          </React.Fragment>
                         )
                       }) : null}
                   </tbody>
