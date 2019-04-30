@@ -27,7 +27,6 @@ import {
 } from "../../../validations";
 import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
-import { ApiHelper } from "../../../helpers/ApiHelper";
 export class CrmLabourModal extends Component {
   constructor(props) {
     super(props);
@@ -155,8 +154,8 @@ export class CrmLabourModal extends Component {
       notes: this.state.note,
       hours: this.state.hours,
       permission: this.state.permission,
-      rateId: (selectedOptions && selectedOptions.defaultOptions &&
-      selectedOptions.defaultOptions.value) ? selectedOptions.defaultOptions.value : '',
+      rateId: (selectedOptions  &&
+      selectedOptions.value) ? selectedOptions.value : '',
       discount: this.state.discount,
     }
     const { isValid, errors } = Validator(
@@ -178,6 +177,9 @@ export class CrmLabourModal extends Component {
     }
 
   }
+  loadOptions = (input, callback) => {
+    this.props.onTypeHeadStdFun({ input, callback });
+ };
   render() {
     const { tyreModalOpen, handleLabourModal, rateStandardListData, rateAddModalProp } = this.props;
     const { errors } = this.state;
@@ -229,10 +231,11 @@ export class CrmLabourModal extends Component {
                     <div md="12" className={"fleet-block rate-standard-list rate-labour"}
                     >
                       <Async
+                        placeholder={"Type rate"}
+                        loadOptions={this.loadOptions}
                         defaultOptions={
                           rateStandardListData.standardRateList
-                        }
-                        loadOptions={this.loadOptions}
+                        } 
                         onChange={this.handleStandardRate}
                         isClearable={ selectedOptions && selectedOptions &&
                           selectedOptions.value !== ""

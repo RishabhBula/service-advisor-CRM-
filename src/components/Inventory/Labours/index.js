@@ -292,7 +292,7 @@ class Labours extends Component {
                       <td>{data.discription || "-"}</td>
                       <td>{data.notes || "-"}</td>
                       <td>{(data.rate && data.rate.name) ? data.rate.name : "-"}</td>
-                      <td>{data.hours || "-"}</td>
+                      <td>{(data.hours) ? data.hours+' Hrs' : "-"}</td>
                       <td>{(data.rate && data.rate.hourlyRate) ? '$'+data.rate.hourlyRate : "-"}</td>
                       <td>{data.discount || "-"}</td>
                     

@@ -115,8 +115,9 @@ class Inventory extends Component {
       }
     }
   }
-  onTypeHeadStdFun = data => {
-    this.props.getStdList(data); 
+  onTypeHeadStdFun = (data) => {
+    const  input =(data.input) ? data.input : '';
+    this.props.getStdList(input); 
   };
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
@@ -351,8 +352,8 @@ const mapDispatchToProps = dispatch => ({
   addInventoryPart: data => {
     dispatch(requestAddPart(data));
   },
-  getStdList: () => {
-    dispatch(getRateStandardListRequest());
+  getStdList: (data) => {
+    dispatch(getRateStandardListRequest(data));
   },
   addRate:(data)=>{
     dispatch(rateAddRequest(data));

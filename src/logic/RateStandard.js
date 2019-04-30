@@ -45,7 +45,7 @@ const rateAddLogic = createLogic({
       dispatch(
         setRateStandardListStart({
           value: result.data.data._id,
-          label: result.data.data.name + " - " + result.data.data.hourlyRate
+          label: result.data.data.name + " - $" + result.data.data.hourlyRate
         })
       );
       dispatch(rateAddSuccess( {rateData: result.data}));
@@ -101,10 +101,10 @@ const getStandardRateListLogic = createLogic({
       for (let i = 0; i < resultData.length; i++) {
         dataNewArray.push({
           value: resultData[i]._id,
-          label: resultData[i].name + " - " + resultData[i].hourlyRate
+          label: resultData[i].name + " - $" + resultData[i].hourlyRate
         });
       }
-
+     
       dispatch(
         getRateStandardListSuccess({
           standardRateList: defaultOptions.concat(dataNewArray)
