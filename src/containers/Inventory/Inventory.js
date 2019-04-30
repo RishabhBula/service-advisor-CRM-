@@ -115,10 +115,6 @@ class Inventory extends Component {
       }
     }
   }
-  onTypeHeadStdFun = (data) => {
-    const  input =(data.input) ? data.input : '';
-    this.props.getStdList(data); 
-  };
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   };
@@ -199,7 +195,6 @@ class Inventory extends Component {
             profileInfoReducer={profileInfoReducer.profileInfo}
             rateStandardListData={rateStandardListReducer}
             tyreModalOpen={tireAddModalOpen}
-            onTypeHeadStdFun={this.onTypeHeadStdFun}
             setDefaultRate={this.setDefaultRate}
             getStdList={getStdList}
             addLabour={this.addLabour}
