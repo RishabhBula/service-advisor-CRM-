@@ -13,6 +13,7 @@ export * from "./Vehicles";
 export * from "./InventoryVendor"
 export * from "./Tier";
 export * from "./InventoryParts";
+export * from "./InventorySats";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

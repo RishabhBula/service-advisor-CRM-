@@ -15,12 +15,11 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
-import {
-  addNewTier,
-} from '../../actions'
+
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
-import { getInventoryPartVendors, requestAddPart, addNewVendor } from "../../actions";
+import { addNewTier, getInventoryPartVendors, requestAddPart, addNewVendor, getInventoryStats } from "../../actions";
 import * as qs from "query-string";
+
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
 );
@@ -86,6 +85,7 @@ class Inventory extends Component {
         activeTab: index
       });
     }
+    this.props.getInventoryStats();
   }
 
   componentDidUpdate({ location }) {
@@ -216,10 +216,13 @@ class Inventory extends Component {
   };
   render() {
     const { activeTab } = this.state;
+    const { inventoryStatsReducer } = this.props;
+    const { data, isLoading } = inventoryStatsReducer;
+
     return (
       <div className="animated fadeIn">
-        <Card>
-          <CardHeader>
+        <Card className="white-card">
+          {/* <CardHeader>
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
@@ -229,21 +232,23 @@ class Inventory extends Component {
               </Col>
               
             </Row>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody>
             <Suspense fallback={"Loading.."}>
-              <InventoryStats />
+              <InventoryStats isLoading={isLoading} inventoryStats={data} />
             </Suspense>
-            <Suspense fallback={"Loading.."}>
-              <InventoryTab
-                tabs={InventoryTabs}
-                activeTab={activeTab}
-                onTabChange={this.onTabChange}
-              />
-            </Suspense>
-            <Col sm={"6"} className={"text-right"}>
-              {this.renderAddNewButton()}
-            </Col>
+            <div className={"position-relative"}>
+              <Suspense fallback={"Loading.."}>
+                <InventoryTab
+                  tabs={InventoryTabs}
+                  activeTab={activeTab}
+                  onTabChange={this.onTabChange}
+                />
+              </Suspense>
+              <div className={"invt-add-btn-block"}>
+                {this.renderAddNewButton()}
+              </div>
+            </div>
             <Suspense fallback={<Loader />}>
               <Switch>
                 {InventoryRoutes.map((route, idx) => {
@@ -273,7 +278,8 @@ class Inventory extends Component {
   }
 }
 const mapStateToProps = state => ({
-  inventoryPartsData: state.inventoryPartsReducers
+  inventoryPartsData: state.inventoryPartsReducers,
+  inventoryStatsReducer: state.inventoryStatsReducer
 });
 const mapDispatchToProps = dispatch => ({
   addVendor: data => {
@@ -287,6 +293,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addInventoryPart: data => {
     dispatch(requestAddPart(data));
+  },
+  getInventoryStats: () => {
+    dispatch(getInventoryStats());
   }
 });
 export default connect(

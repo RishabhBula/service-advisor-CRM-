@@ -10,14 +10,15 @@ import {
   FormFeedback,
   FormGroup,
   Label,
+  Badge,
   Input,
 } from 'reactstrap';
 import Validator from "js-object-validation";
 import { VendorValidations, VendorValidationMessage } from "../../validations/inventoryVendor";
 import { PhoneOptions } from "../../config/Constants";
 import MaskedInput from "react-text-mask";
-import { validUrlCheck } from "../../helpers/Object"
-
+import { isValidURL } from "../../helpers/Object";
+import moment from 'moment';
 export class CrmInventoryVendor extends Component {
 
   constructor(props) {
@@ -43,7 +44,7 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros: ''
+      urlErro: ''
     }
   }
 
@@ -96,7 +97,7 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros: '',
+      urlErro: '',
     });
   }
 
@@ -174,14 +175,14 @@ export class CrmInventoryVendor extends Component {
         accountNumber: accountNumber,
       }
     }
-    if (url && !validUrlCheck(url)) {
+    if (url && !isValidURL(url)) {
       this.setState({
-        urlErros: "Please enter Valid URL( http:// )"
+        urlErro: "Please enter Valid URL( http:// )"
       })
     }
     else {
       this.setState({
-        urlErros: ""
+        urlErro: ""
       })
     }
     const data = {
@@ -193,7 +194,7 @@ export class CrmInventoryVendor extends Component {
     }
     try {
       const { isValid, errors } = Validator(validData, VendorValidations, VendorValidationMessage);
-      if (!isValid || (url && !validUrlCheck(url))) {
+      if (!isValid || (url && !isValidURL(url))) {
         this.setState({
           errors: errors,
           isLoading: false
@@ -213,6 +214,7 @@ export class CrmInventoryVendor extends Component {
   };
 
   render() {
+    const { vendorData } = this.props;
     const {
       isEditMode,
       name,
@@ -221,7 +223,7 @@ export class CrmInventoryVendor extends Component {
       contactPerson,
       address,
       errors,
-      urlErros
+      urlErro
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => <option key={index} value={item.key}>{item.text}</option>);
     return (
@@ -276,10 +278,10 @@ export class CrmInventoryVendor extends Component {
                         placeholder='http://google.com'
                         value={url}
                         id='name'
-                        invalid={urlErros && url}
+                        invalid={urlErro && url}
                       />
                       <FormFeedback>
-                        {urlErros && url ? urlErros : null}
+                        {urlErro && url ? urlErro : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -426,7 +428,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='address'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='Address'
+                        placeholder='19 High Noon,West Babylon'
                         value={address.address}
                         maxLength='250'
                         id='address'
@@ -482,7 +484,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='zip'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='Zip Code'
+                        placeholder='10009'
                         value={address.zip}
                         maxLength='5'
                         id='name'
@@ -494,7 +496,18 @@ export class CrmInventoryVendor extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <div className="required-fields">*Fields are Required.</div>
+            <div className={"flex-1"}>
+              <div className="required-fields">*Fields are Required.</div>
+              {isEditMode ?
+              <div className="">
+                <b>Last Updated -: &nbsp;
+                  <Badge color={"secondary"}>
+                      {vendorData && vendorData.updatedAt ? moment(vendorData.updatedAt).format("MMM Do YYYY, h:mm:ss A") :null}
+                  </Badge>
+                </b>
+              </div>
+              : null }
+            </div>
             <Button
               color='primary'
               onClick={this.handleAddVendor}

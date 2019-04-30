@@ -1,6 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700');
-@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700,900');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800');
+
 @font-face {
   font-family: "FrutigerNeueLTPro-Regular";
   src: url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.eot");
@@ -17,9 +16,19 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: "Acumin-Pro-Regular";
+  src: url("../fonts/acumin-pro/Acumin-RPro.woff"),
+      format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
 /*=========Pre Defined classes=============*/
-body{
-  font-family: 'Lato', sans-serif;
+.table tr th,.table tr td{
+  font-family: 'Open Sans', sans-serif;
+}
+.table tr td{
+  font-size: 14px !important;
 }
 .btn-theme {
   background-color: #f6b42a !important;
@@ -30,6 +39,20 @@ body{
 }
 .btn-theme:hover {
   background-color: #df9c0f !important;
+}
+.btn-secondary.btn-theme-transparent{
+  color: #453f54;
+  font-size: 18px;
+  padding: 5px 5px;
+  line-height: 1;
+  background-color: #dedede;
+  border-color: #c8ced300;
+}
+.btn-secondary.btn-theme-transparent .icons{
+  font-weight: 600;
+}
+.flex-1{
+  flex: 1;
 }
 .link {
   cursor: pointer;
@@ -98,6 +121,9 @@ body{
 .table thead th{
   border-bottom-width: 1px !important;
 }
+.card.white-card{
+  border: 0px;
+}
 
 /* workflow css */
 .page-title {
@@ -127,10 +153,11 @@ body{
 }
 /* end of workflow css */
 .main .container-fluid{
-  padding: 0 10px !important;
+  padding: 0 0px !important;
 }
 .main .breadcrumb{
   margin-bottom: 10px;
+  background: #f3f0f9;
 }
 /* header */
 .header-add-new-inner {
@@ -846,6 +873,55 @@ span.customer-anchor-text.customer-click-btn:hover::before {
     width: 90%;
   }
 }
+.link-elipsis{
+  display: inline-block;
+  max-width: 240px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.invt-add-btn-block{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.invt-add-btn-block .btn-primary{
+  min-width: 175px;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #b1acc2 !important;
+  background: #fff;
+  color: #433b6d;
+  position: relative;
+}
+.invt-add-btn-block .btn-primary:hover{
+  background-color: #8157ee;
+  border-color: #8157ee !important;
+}
+.inventory-nav.nav{
+  margin-bottom: 20px;
+}
+.inventory-nav li a{
+  color: #3a3646;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 700;
+  min-width: 180px;
+  text-align: center;
+  background: #f3f3f3;
+  border-radius: 0px !important;
+  border: 1px solid #c5c5c5;
+}
+.inventory-nav li a:hover{
+  background-color: #8157ee;
+  border-color: #8157ee;
+  color: #fff;
+}
+.inventory-nav li .nav-link.active{
+  background-color: #8157ee;
+  border-color: #8157ee;
+}
 .vehicles-select-color {
   border-radius: 10px;
   display: inline-block;
@@ -951,3 +1027,14 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 /* Tyre CSS END*/
 
+
+
+
+
+
+/* Media Query STRAT*/
+@media(max-width:1220px){
+  .table{
+    min-width: 1000px;
+  }
+}

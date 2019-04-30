@@ -14,6 +14,7 @@ import { VehicleLogic } from "./Vehicles";
 import { VendorLogic } from "./Vendor";
 import { TiersLogic } from "./Tier";
 import { InventoryPartsLogic } from "./InventoryParts";
+import { InventoryStatsLogic } from "./inventoryStat";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -36,5 +37,6 @@ export default [
   ...VendorLogic,
   ...TiersLogic,
   ...InventoryPartsLogic,
+  ...InventoryStatsLogic,
   redirectToLogic
 ];

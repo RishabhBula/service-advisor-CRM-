@@ -7,6 +7,7 @@ import CrmInventoryVendor from "../../../components/common/CrmInventoryVendor";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import PaginationHelper from "../../../helpers/Pagination";
 import { isEqual } from "../../../helpers/Object";
+import moment from 'moment';
 import {
   Table,
   Button,
@@ -131,7 +132,6 @@ class Vendors extends Component {
 
   onReset = e => {
     e.preventDefault();
-    console.log("check")
     this.setState({
       page: 1,
       search: "",
@@ -157,10 +157,9 @@ class Vendors extends Component {
         <div className={"filter-block"}>
           <Form onSubmit={this.onSearch}>
             <Row>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"5"} md={"5"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
-                  <InputGroup className="mb-2">
+                  <InputGroup>
                     <input
                       type="text"
                       name="search"
@@ -173,11 +172,8 @@ class Vendors extends Component {
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={"2"} md={"2"} className="mb-0">
+              <Col lg={"3"} md={"3"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="SortFilter" className="label">
-                    Sort By
-                  </Label>
                   <Input
                     type="select"
                     name="sort"
@@ -186,7 +182,7 @@ class Vendors extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      All Records
                     </option>
                     <option value={"nasc"}>Name A-Z</option>
                     <option value={"ndesc"}>Name Z-A</option>
@@ -195,31 +191,29 @@ class Vendors extends Component {
               </Col>
               <Col lg={"3"} md={"3"} className="mb-0">
                 <Row>
-                  <Col lg={"6"} md={"6"} className="mb-0">
+                  <Col lg={"12"} md={"12"} className="mb-0">
                     <div className="filter-btn-wrap">
-                      <Label className="height17 label" />
+                      {/* <Label className="height17 label" /> */}
                       <div className="form-group mb-0">
                         <span className="mr-2">
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
+                          <Button
+                            className="btn btn-theme-transparent"
                             id="Tooltip-1"
                           >
-                            <i className="fa fa-search" />
-                          </button>
+                            <i class="icons cui-magnifying-glass"></i>
+                          </Button>
                           <UncontrolledTooltip target="Tooltip-1">
                             Search
                           </UncontrolledTooltip>
                         </span>
                         <span className="">
-                          <button
-                            type="button"
-                            className="btn btn-danger"
+                          <Button
+                            className="btn btn-theme-transparent"
                             id="Tooltip-2"
                             onClick={this.onReset}
                           >
-                            <i className="fa fa-refresh" />
-                          </button>
+                            <i class="icon-refresh icons"></i>
+                          </Button>
                           <UncontrolledTooltip target={"Tooltip-2"}>
                             Reset all filters
                           </UncontrolledTooltip>
@@ -235,16 +229,14 @@ class Vendors extends Component {
         <Table responsive  >
           <thead>
             <tr>
-              <th className={"text-center"}>S No.</th>
+              <th width={"60"} className={"text-center"}>S No.</th>
               <th width={"350"}>
-                <i className="icon-globe icons"></i> Vendor Details
+                <i className="fa fa-globe"></i> Vendor Details
               </th>
-              {/* <th>Account Number</th> */}
-              <th width={"350"}><i className="icon-user icons"></i> Contact Person Details</th>
-              {/* <th width={"250"}>Email</th> */}
-              {/* <th>Phone</th> */}
-              <th><i className="icon-calendar icons"></i> Login Details</th>
-              <th>Action</th>
+              <th width={"300"}><i className="fa fa-user-circle-o "></i> Contact Person Details</th>
+              <th width="350"><i className="fa fa-address-card-o"></i> Address Details</th>
+              <th width="150"><i class="fa fa-clock-o"></i> Created At</th>
+              <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -254,46 +246,54 @@ class Vendors extends Component {
                   <tr key={index}>
                     <td className={"text-center"}>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.</td>
                       <td>
-                       <div>{vendor.name}</div>
-                       <div>{vendor.url ? <a href={vendor.url} target={"_blank"}>{vendor.url}</a> : null}</div>
-                      <div>A/C : {vendor.accountNumber ? vendor.accountNumber : '-'}</div>
+                      <div className={"font-weight-bold"}>{vendor.name}</div>
+                      <div>{vendor.url ? <a href={vendor.url} target={"_blank"} className="link-elipsis" >{vendor.url}</a> : null}</div>
+                      <div>A/C : {vendor.accountNumber ? vendor.accountNumber : null}</div>
                       </td>
                       <td >
-                      <div className={"text-capitalize"}>
-                      {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : '-'} &nbsp;
-                      {vendor.contactPerson.firstName && vendor.contactPerson.lastName ? vendor.contactPerson.lastName : null}
-                      </div>
-                      {vendor.contactPerson.email ? vendor.contactPerson.email : '-'}
-                      <div>
-                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone && vendor.contactPerson.phoneNumber.value !== '' ? vendor.contactPerson.phoneNumber.phone : '-'}
-                        {vendor.contactPerson.phoneNumber.value ? <span>&nbsp;<b>|</b>&nbsp;</span> : ''}
-                        {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.value ? vendor.contactPerson.phoneNumber.value : '-'}
-                      </div>
+                        <div className={"text-capitalize font-weight-bold"}>
+                        {vendor.contactPerson.firstName ? vendor.contactPerson.firstName : null}
+                        {vendor.contactPerson.firstName && vendor.contactPerson.lastName ? vendor.contactPerson.lastName : null}
+                        </div>
+                        {vendor.contactPerson.email ? vendor.contactPerson.email : null}
+                        <div className={"text-capitalize"}>
+                          {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.phone && vendor.contactPerson.phoneNumber.value !== '' ? vendor.contactPerson.phoneNumber.phone : null}
+                          {vendor.contactPerson.phoneNumber.value ? <span>&nbsp;<b>|</b>&nbsp;</span> : ''}
+                          {vendor.contactPerson.phoneNumber && vendor.contactPerson.phoneNumber.value ? vendor.contactPerson.phoneNumber.value : null}
+                        </div>
                       </td>
                       <td>
-                        <div>{vendor.createdAt}</div>
-                        <div>{vendor.updatedAt}</div>
+                        <div className="pr-3">
+                        {vendor.address.address}
+                        </div>
+                        <div className={"font-weight-bold pr-3"}>
+                          {vendor.address.state ? vendor.address.state : null}{vendor.address.city ? (', ' + vendor.address.city) : null}{vendor.address.zip ? (' - ' + vendor.address.zip) : null}
+                        </div>
                       </td>
                       <td>
+                      <div>{moment(vendor.createdAt).format("MMM Do YYYY")}</div>
+                      <div>{moment(vendor.createdAt).format("h:mm:ss a")}</div>
+                      </td>
+                      <td className={"text-center"}>
                         <Button
-                          color={"primary"}
                           size={"sm"}
                           onClick={() => this.editVendor(vendor)}
                           id={`edit-${vendor._id}`}
+                          className={"btn-theme-transparent"}
                         >
-                          <i className={"fa fa-edit"} />
+                        <i className={"icons cui-pencil"}></i>
                         </Button>
                         <UncontrolledTooltip target={`edit-${vendor._id}`}>
                           Edit details of {vendor.name}
                         </UncontrolledTooltip>
                         &nbsp;
                         <Button
-                          color={"danger"}
                           size={"sm"}
                           id={`delete-${vendor._id}`}
                           onClick={() => this.deleteVendor(vendor._id)}
+                        className={"btn-theme-transparent"}
                         >
-                          <i className={"fa fa-trash"} />
+                          <i className={"icons cui-trash"}></i>
                         </Button>
                         <UncontrolledTooltip target={`delete-${vendor._id}`}>
                           Delete {vendor.firstName}
@@ -305,7 +305,7 @@ class Vendors extends Component {
                 :
                 <tr>
                   <td colSpan={"9"} className={"text-center"}>
-                    No Vendor is available
+                    No Vendor is available.
                   </td>
                 </tr>
             ) : (

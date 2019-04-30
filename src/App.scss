@@ -25,6 +25,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fff !important;
 
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -64,9 +65,14 @@ body {
     }
   }
   .filter-block {
-    padding: 7px 0;
-    margin-bottom: 15px;
-    border-radius: 0.25rem;
+    padding: 7px 15px;
+    background: #f1f1f1;
+    border: 1px solid #eee;
+    .filter-btn-wrap {
+      height: 35px;
+      display: flex;
+      align-items: center;
+    }
   }
   .badge {
     text-transform: capitalize;

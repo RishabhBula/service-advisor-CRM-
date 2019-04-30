@@ -14,6 +14,7 @@ import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { modelInfoReducer } from "./ModelOperation";
 import { vendorsReducer } from "./Vendors"
 import { inventoryPartsReducers } from "./InventoryParts";
+import { inventoryStatsReducer } from "./InventorySats";
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -43,7 +44,8 @@ const AppReducer = combineReducers({
   vehicleListReducer,
   vendorsReducer,
   inventoryPartsReducers,
-  routing: routerReducer,
+  inventoryStatsReducer,
+  routing: routerReducer
 });
 
 export default AppReducer;

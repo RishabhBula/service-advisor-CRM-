@@ -12,7 +12,8 @@ const {
   customer,
   vendor,
   tier,
-  inventory
+  inventory,
+  inventoryStat
 } = require("./index");
 
 router.use("/auth", auth);
@@ -26,5 +27,6 @@ router.use("/customer", customer);
 router.use("/vendor", vendor);
 router.use("/tier", tier);
 router.use("/inventory", inventory);
+router.use("/inventoryStat", inventoryStat);
 
 module.exports = router;
