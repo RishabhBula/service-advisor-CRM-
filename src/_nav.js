@@ -43,6 +43,12 @@ export default {
       url: AppRoutes.FLEETS.url,
       icon: "fas fa-car",
       authKey: "isAllowedCompanySettings"
+    },
+    {
+      name: AppRoutes.PRICEMATRIX.name,
+      url: AppRoutes.PRICEMATRIX.url,
+      icon: "fas fa-hand-holding-usd",
+      authKey: "isAllowedCompanySettings"
     }
   ]
 };
@@ -94,6 +100,10 @@ export const ValidatedRoutes = [
   },
   {
     url: AppRoutes.FLEETS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
+    url: AppRoutes.PRICEMATRIX.url,
     authKey: "isAllowedCompanySettings"
   }
 ];

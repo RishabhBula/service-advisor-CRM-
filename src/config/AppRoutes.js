@@ -78,5 +78,10 @@ export const AppRoutes = {
     url: "/settings/customers",
     name: "Customers",
     exact: true
+  },
+  PRICEMATRIX: {
+    url: "/settings/pricematrix",
+    name: "Price Matrix",
+    exact: true
   }
 };
