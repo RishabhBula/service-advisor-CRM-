@@ -13,6 +13,16 @@ import {
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
+import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
+import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
+import {
+  addNewTier,
+} from '../../actions'
+import CrmInventoryPart from "../../components/common/CrmInventoryPart";
+
+import { addNewVendor } from "../../actions";
+import { getInventoryPartVendors, requestAddPart } from "../../actions";
+import * as qs from "query-string";
 
 const InventoryStats = React.lazy(() =>
   import("../../components/Inventory/InventoryStats")
@@ -80,6 +90,7 @@ class Inventory extends Component {
       });
     }
   }
+
   componentDidUpdate({ location }) {
     const { location: newLocation } = this.props;
     if (location.pathname !== newLocation.pathname) {
@@ -96,11 +107,103 @@ class Inventory extends Component {
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
-  rednerAddNewButton = () => {
+  getQueryParams = () => {
+    let query = qs.parse(this.props.location.search);
+    if (query.vendorId) {
+      query.vendorId = qs.parse(query.vendorId).value;
+    }
+    return query;
+  };
+  addInventoryPart = data => {
+    const query = this.getQueryParams();
+    this.props.addInventoryPart({ data, query });
+  };
+  renderModals = () => {
+    const { activeTab } = this.state;
+    const {
+      modelInfoReducer,
+      modelOperate,
+      addVendor,
+      inventoryPartsData,
+      getInventoryPartsVendors
+    } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
+    switch (InventoryTabs[activeTab].url) {
+      case AppRoutes.INVENTORY_PARTS.url:
+        return (
+          <CrmInventoryPart
+            isOpen={partAddModalOpen}
+            toggle={() =>
+              modelOperate({
+                partAddModalOpen: !partAddModalOpen
+              })
+            }
+            inventoryPartsData={inventoryPartsData}
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addInventoryPart={this.addInventoryPart}
+          />
+        );
+      case AppRoutes.INVENTORY_TIRES.url:
+        return (
+          <CrmTyreModal
+            tyreModalOpen={tireAddModalOpen}
+            handleTierModal={() =>
+              modelOperate({
+                tireAddModalOpen: !tireAddModalOpen
+              })
+            }
+            getInventoryPartsVendors={getInventoryPartsVendors}
+            addTier={this.props.addTier}
+          />
+        );
+      case AppRoutes.INVENTORY_LABOURS.url:
+        return null;
+      case AppRoutes.INVENTORY_VENDORS.url:
+        return <CrmInventoryVendor
+          addVendor={addVendor}
+          vendorAddModalOpen={vendorAddModalOpen}
+          handleVendorAddModal={() =>
+            modelOperate({
+              vendorAddModalOpen: !vendorAddModalOpen
+            })
+          }
+        />;
+      default:
+        return null;
+    }
+  };
+  onAddClick = () => {
+    const { activeTab } = this.state;
+    let modelDetails = {};
+    switch (InventoryTabs[activeTab].url) {
+      case AppRoutes.INVENTORY_PARTS.url:
+        modelDetails = {
+          partAddModalOpen: true
+        };
+        break;
+      case AppRoutes.INVENTORY_TIRES.url:
+        modelDetails = {
+          tireAddModalOpen: true
+        };
+        break;
+      case AppRoutes.INVENTORY_LABOURS.url:
+        return null;
+      case AppRoutes.INVENTORY_VENDORS.url:
+        modelDetails = {
+          vendorAddModalOpen: true
+        };
+        break
+      default:
+        return null;
+    }
+    this.props.modelOperate(modelDetails);
+  };
+  renderAddNewButton = () => {
     const { activeTab } = this.state;
     return (
       <>
-        <Button color="primary" id="add-user">
+        <Button color="primary" onClick={this.onAddClick} id="add-user">
           <i className={"fa fa-plus"} />
           &nbsp; Add New
         </Button>
@@ -128,7 +231,7 @@ class Inventory extends Component {
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
-                {this.rednerAddNewButton()}
+                {this.renderAddNewButton()}
               </Col>
             </Row>
           </CardHeader>
@@ -152,7 +255,9 @@ class Inventory extends Component {
                       path={route.path}
                       exact={route.exact}
                       name={route.name}
-                      render={props => <route.component {...props} />}
+                      render={props => (
+                        <route.component {...props} {...this.props} />
+                      )}
                     />
                   ) : null;
                 })}
@@ -164,12 +269,28 @@ class Inventory extends Component {
             </Suspense>
           </CardBody>
         </Card>
+        {this.renderModals()}
       </div>
     );
   }
 }
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = state => ({
+  inventoryPartsData: state.inventoryPartsReducers
+});
+const mapDispatchToProps = dispatch => ({
+  addVendor: data => {
+    dispatch(addNewVendor(data));
+  },
+  addTier: data => {
+    dispatch(addNewTier(data));
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  },
+  addInventoryPart: data => {
+    dispatch(requestAddPart(data));
+  }
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps

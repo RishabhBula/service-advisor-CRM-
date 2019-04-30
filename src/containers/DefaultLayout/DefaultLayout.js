@@ -32,6 +32,8 @@ import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVe
 import { AppConfig } from "../../config/AppConfig";
 import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
+import NoAccess from "../NoAccess";
+import { WildCardRoutes } from "../../config/Constants";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -39,7 +41,9 @@ const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
 class DefaultLayout extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      hasAccess: true
+    };
   }
 
   componentDidMount() {
@@ -59,16 +63,20 @@ class DefaultLayout extends Component {
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
       const currentPage = this.props.location.pathname;
-      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
-      logger(ind, currentPage);
-      if (ind > -1) {
-        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
-          logger("Allowed to use");
+      if (WildCardRoutes.indexOf(currentPage) === -1) {
+        const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
+        logger(ind, currentPage);
+        if (ind > -1) {
+          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+            logger("Allowed to use");
+          } else {
+            this.setState({
+              hasAccess: false
+            });
+          }
         } else {
           this.signOut();
         }
-      } else {
-        this.signOut();
       }
     }
   }
@@ -106,17 +114,17 @@ class DefaultLayout extends Component {
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
-      custAndVehicle: !modelDetails.custAndVehicle
+      custAndVehicle: !modelDetails.custAndVehicle,
+      custAndVehicleCustomer: !modelDetails.custAndVehicle
     };
     this.props.modelOperate(data);
   };
 
   customerAndVehicleModal = () => {
-    const { modelDetails } = this.props.modelInfoReducer;
     return (
       <CustAndVehicle
-        displayModal={modelDetails.custAndVehicle}
         toggleModal={this.toggleCustAndVehicleProps}
+        {...this.props}
       />
     );
   };
@@ -124,6 +132,7 @@ class DefaultLayout extends Component {
     const { profileInfoReducer } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions, shopLogo } = profileInfo;
+    const { hasAccess } = this.state;
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -159,28 +168,37 @@ class DefaultLayout extends Component {
           <main className="main">
             <AppBreadcrumb appRoutes={routes} />
             <Container fluid>
-              <Suspense fallback={<Loader />}>
-                <Switch>
-                  {routes.map((route, idx) => {
-                    return route.component ? (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={props => (
-                          <route.component
-                            {...props}
-                            {...this.props}
-                            permissions={permissions || {}}
+              {hasAccess ? (
+                <>
+                  <Suspense fallback={<Loader />}>
+                    <Switch>
+                      {routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component
+                                {...props}
+                                {...this.props}
+                                permissions={permissions || {}}
+                              />
+                            )}
                           />
-                        )}
+                        ) : null;
+                      })}
+                      <Redirect
+                        from={AppRoutes.HOME.url}
+                        to={AppRoutes.DASHBOARD.url}
                       />
-                    ) : null;
-                  })}
-                  <Redirect from="/" to="/dashboard" />
-                </Switch>
-              </Suspense>
+                    </Switch>
+                  </Suspense>
+                </>
+              ) : (
+                <NoAccess redirectTo={this.props.redirectTo} />
+              )}
             </Container>
           </main>
           <AppAside fixed>

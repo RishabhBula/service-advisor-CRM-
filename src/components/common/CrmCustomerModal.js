@@ -19,7 +19,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
-import { PhoneOptions } from "../../config/Constants";
+import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText
@@ -130,7 +130,7 @@ export class CrmCustomerModal extends Component {
           ratedata
         );
         if (result.isError) {
-          toast.error(result.messages[0]);
+          toast.error(result.messages[0] || DefaultErrorMessage);
         } else {
           toast.success(result.messages[0]);
           this.setState({
@@ -417,7 +417,11 @@ export class CrmCustomerModal extends Component {
       selectedLabourRate
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
-      return <option value={item.key}>{item.text}</option>;
+      return (
+        <option value={item.key} key={index}>
+          {item.text}
+        </option>
+      );
     });
 
     let customerDefaultPermissions = this.state.customerDefaultPermissions;
@@ -431,16 +435,17 @@ export class CrmCustomerModal extends Component {
       }
     }
     const options = [];
-    getCustomerFleetList.map((data, index) => {
-      options.push({ value: `${data._id}`, label: `${data.companyName}` });
-      return true;
-    });
+    getCustomerFleetList &&
+      getCustomerFleetList.map((data, index) => {
+        options.push({ value: `${data._id}`, label: `${data.companyName}` });
+        return true;
+      });
     return (
       <>
         <Modal
           isOpen={customerModalOpen}
           toggle={this.handleCustomerModal}
-          className="customer-modal custom-form-modal custom-modal-lg"
+          className={"customer-modal custom-form-modal custom-modal-lg"}
         >
           <ModalHeader toggle={this.handleCustomerModal}>
             {"Create New Customer"}
@@ -492,14 +497,11 @@ export class CrmCustomerModal extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-            </div>
-            <div className="">
               <Row className="">
-                {/* <Row className="justify-content-center"> */}
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
                       return (
-                        <>
+                        <React.Fragment key={index}>
                           {index < 1 ? (
                             <>
                               <Col md="6">
@@ -666,7 +668,7 @@ export class CrmCustomerModal extends Component {
                               </Col>
                             </>
                           )}
-                        </>
+                        </React.Fragment>
                       );
                     })
                   : null}
@@ -685,9 +687,6 @@ export class CrmCustomerModal extends Component {
                   </Col>
                 ) : null}
               </Row>
-            </div>
-
-            <div className="">
               <Row>
                 <Col md="6">
                   <FormGroup>
@@ -719,8 +718,6 @@ export class CrmCustomerModal extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-            </div>
-            <div className="">
               <Row className="justify-content-center">
                 <div>
                   {!expandForm ? (
@@ -739,120 +736,97 @@ export class CrmCustomerModal extends Component {
             </div>
             {expandForm ? (
               <>
-                <div className="">
-                  <Row className="justify-content-center">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Address
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Address"
-                          name="address1"
-                          onChange={this.handleInputChange}
-                          maxLength="200"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          City
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="New York"
-                          name="city"
-                          onChange={this.handleInputChange}
-                          maxLength="30"
-                        />
-                      </FormGroup>
-                    </Col>
-                    {/* <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Address 2
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Address"
-                          name="address2"
-                          onChange={this.handleInputChange}
-                        />
-                      </FormGroup>
-                    </Col> */}
-                  </Row>
-                </div>
-
-                <div className="">
-                  <Row className="">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          State
-                        </Label>
-                        <Input
-                          type="text"
-                          name="state"
-                          onChange={this.handleInputChange}
-                          placeholder="NY"
-                          maxLength="30"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6 ">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Zip Code
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Zip Code"
-                          name="zipCode"
-                          onChange={this.handleInputChange}
-                          maxLength="6"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-                <div className="">
-                  <Row>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Referral Source
-                        </Label>
-                        <Input
-                          type="text"
-                          placeholder="Referral"
-                          name="Refferal Source"
-                          onChange={this.handleInputChange}
-                          maxLength="100"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
+                <Row className="justify-content-center">
+                  <Col md="6">
+                    <FormGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        Address
+                      </Label>
+                      <Input
+                        type="text"
+                        placeholder="Address"
+                        name="address1"
+                        onChange={this.handleInputChange}
+                        maxLength="200"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        City
+                      </Label>
+                      <Input
+                        type="text"
+                        placeholder="New York"
+                        name="city"
+                        onChange={this.handleInputChange}
+                        maxLength="30"
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row className="">
+                  <Col md="6">
+                    <FormGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        State
+                      </Label>
+                      <Input
+                        type="text"
+                        name="state"
+                        onChange={this.handleInputChange}
+                        placeholder="NY"
+                        maxLength="30"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6 ">
+                    <FormGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        Zip Code
+                      </Label>
+                      <Input
+                        type="text"
+                        placeholder="Zip Code"
+                        name="zipCode"
+                        onChange={this.handleInputChange}
+                        maxLength="6"
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label
+                        htmlFor="name"
+                        className="customer-modal-text-style"
+                      >
+                        Referral Source
+                      </Label>
+                      <Input
+                        type="text"
+                        placeholder="Referral"
+                        name="Refferal Source"
+                        onChange={this.handleInputChange}
+                        maxLength="100"
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
                 <Row className="custom-label-padding ">
                   {CustomerPermissionsText
                     ? CustomerPermissionsText.map((permission, index) => {
@@ -881,7 +855,7 @@ export class CrmCustomerModal extends Component {
                         }
 
                         return (
-                          <>
+                          <React.Fragment key={index}>
                             <Col
                               md="6"
                               key={index}
@@ -986,7 +960,7 @@ export class CrmCustomerModal extends Component {
                                 </Col>
                               ) : null}
                             </Col>
-                          </>
+                          </React.Fragment>
                         );
                       })
                     : null}

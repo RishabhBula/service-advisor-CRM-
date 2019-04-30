@@ -19,7 +19,6 @@ import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
-import { CrmUserModal } from "../../common/CrmUserModal";
 import { toast } from "react-toastify";
 
 class CustomerList extends Component {
@@ -30,8 +29,6 @@ class CustomerList extends Component {
       search: "",
       status: "",
       sort: "",
-      user: {},
-      openEditModal: false,
       selectedCustomers: []
     };
   }
@@ -195,26 +192,6 @@ class CustomerList extends Component {
     this.props.onSearch({});
   };
 
-  // changeStatus = async (e, customerId) => {
-  //   const { value } = await ConfirmBox({
-  //     text: 'Do you want to update the status of this customer?',
-  //   });
-  //   if (!value) {
-  //     return;
-  //   }
-  //   this.props.changeStatus(e, customerId);
-  // };
-
-  // onDelete = async userId => {
-  //   const { value } = await ConfirmBox({
-  //     text: 'Do you want to delete this customer?',
-  //   });
-  //   if (!value) {
-  //     return;
-  //   }
-  //   this.props.onDelete(userId);
-  // };
-
   editUser = customer => {
     this.props.updateModel(customer);
   };
@@ -224,15 +201,7 @@ class CustomerList extends Component {
   render() {
     const { customerData } = this.props;
     const { customers, isLoading, totalCustomers } = customerData;
-    const {
-      page,
-      search,
-      sort,
-      status,
-      user,
-      openEditModal,
-      selectedCustomers
-    } = this.state;
+    const { page, search, sort, status, selectedCustomers } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -397,9 +366,9 @@ class CustomerList extends Component {
                       <td>{user.email || "-"}</td>
                       <td>
                         {user.phoneDetail
-                          ? user.phoneDetail.map((data, index) => {
+                          ? user.phoneDetail.map((data, ind) => {
                               return (
-                                <div className="text-capitalize">
+                                <div className="text-capitalize" key={ind}>
                                   {data.phone || "NA"}
                                   {" |"}
                                   {"  "}
@@ -413,7 +382,11 @@ class CustomerList extends Component {
                         {user.address1 || ""} {user.city || ""}{" "}
                         {user.state || ""} {user.zipCode || ""}{" "}
                       </td> */}
-                      <td>0</td>
+                      <td>
+                        {user.vehicles && user.vehicles.length
+                          ? user.vehicles.length
+                          : 0}
+                      </td>
                       <td>0</td>
                       <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
@@ -514,18 +487,6 @@ class CustomerList extends Component {
             pageLimit={AppConfig.ITEMS_PER_PAGE}
           />
         ) : null}
-
-        <CrmUserModal
-          userModalOpen={openEditModal}
-          handleUserModal={() => {
-            this.setState({
-              openEditModal: false,
-              user: {}
-            });
-          }}
-          userData={user}
-          updateUser={this.onUpdate}
-        />
       </>
     );
   }

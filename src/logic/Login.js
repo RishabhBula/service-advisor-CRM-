@@ -3,6 +3,7 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
 import { loginActions, redirectTo, showLoader, hideLoader } from "./../actions";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const loginLogic = createLogic({
   type: loginActions.LOGIN_REQUEST,
@@ -19,7 +20,7 @@ const loginLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -31,7 +32,7 @@ const loginLogic = createLogic({
       dispatch(redirectTo({ path: "/dashboard" }));
       done();
     }
-  },
+  }
 });
 
 const logOutLogic = createLogic({
@@ -40,7 +41,7 @@ const logOutLogic = createLogic({
     localStorage.removeItem("token");
     dispatch(redirectTo({ path: "/login" }));
     done();
-  },
+  }
 });
 const forgetPasswordLogic = createLogic({
   type: loginActions.FORGET_PASSWORD_REQUEST,
@@ -56,7 +57,7 @@ const forgetPasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -67,7 +68,7 @@ const forgetPasswordLogic = createLogic({
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 const verifyResetTokenLogic = createLogic({
   type: loginActions.VALIDATE_RESET_REQUEST,
@@ -83,7 +84,7 @@ const verifyResetTokenLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/404" }));
       done();
@@ -92,7 +93,7 @@ const verifyResetTokenLogic = createLogic({
       dispatch(hideLoader());
       done();
     }
-  },
+  }
 });
 const resetPasswordLogic = createLogic({
   type: loginActions.RESET_PASSSWORD_REQUEST,
@@ -108,7 +109,7 @@ const resetPasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -118,12 +119,12 @@ const resetPasswordLogic = createLogic({
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
-  },
+  }
 });
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
   forgetPasswordLogic,
   verifyResetTokenLogic,
-  resetPasswordLogic,
+  resetPasswordLogic
 ];
