@@ -925,5 +925,37 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   color:#fff !important;
   border-color: #fff !important;
 }
+.two-line-label{
+  margin-top: 0 !important;
+  line-height: 17px;
+  position: relative;
+  top: -3px;
+}
 /* Tyre CSS END*/
 
+/* Price Matrix */
+.matrix-input{
+  padding-right: 120px;
+}
+.matrix-action{
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 114px;
+}
+.matrix-input-control .form-control{
+  height: 50px;
+  max-width: 70px;
+  border: none
+}
+.matrix-input-control .form-control:disabled{
+  background-color: #fff;
+  opacity: 1;
+}
+.matrix-input-control .value-sprate{
+  padding: 0 10px;
+  display: block;
+}
+/* Price Matrix End */

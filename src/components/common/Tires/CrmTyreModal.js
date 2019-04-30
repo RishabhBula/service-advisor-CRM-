@@ -504,7 +504,7 @@ export class CrmTyreModal extends Component {
                                              </Col>
                                              <Col md="6">
                                                 <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
                                                       Critical Quantity
                                                    </Label>
                                                    <Input
@@ -522,7 +522,7 @@ export class CrmTyreModal extends Component {
                                     </Col>
                                     <Col md="6">
                                        <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                          <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
                                              Pricing Matrix
                                           </Label>
                                           <Input
