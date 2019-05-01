@@ -6,11 +6,23 @@ class PriMatrixList extends Component {
     this.state = {};
   }
   render() {
+    const { matrixList, handleUpdateMatrix, resetAll } = this.props;
     return (
       <>
-        Price Matrix Body
+        {
+          matrixList && matrixList.length ? matrixList.map((martix, index) => {
+            return (
+              <div key={index}>
+                <span onClick={() => handleUpdateMatrix(martix)}>
+                  {martix && martix.matrixName ? martix.matrixName : "New Matrix"}
+                </span>
+              </div>
+            )
+          }) :
+            null
+        }
         <Col sm={"12"} className={"text-center"}>
-          <Button color="primary" id="add-user" className={"btn btn-round"}>
+          <Button color="primary" id="add-user" onClick={() => resetAll()} className={"btn btn-round"}>
             New Matrix
           </Button>
           <UncontrolledTooltip target={"add-user"}>

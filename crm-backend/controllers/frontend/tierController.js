@@ -18,12 +18,29 @@ const createNewTier = async (req, res) => {
         if (currentUser.parentId === null || currentUser.parentId === "undefined") {
             currentUser.parentId = currentUser.id
         }
+        let tireSizeArray = []
+        for (let index = 0; index < body.tierSize.length; index++) {
+            const element = body.tierSize[index];
+            if (element.notes ||
+                element.part ||
+                element.bin ||
+                element.quantity ||
+                element.criticalQuantity ||
+                element.cost ||
+                element.priceMatrix ||
+                element.retailPrice ||
+                element.markup ||
+                element.margin ||
+                element.baseInfo) {
+                tireSizeArray.push(element)
+            }
+        }
         const addNewTier = {
             brandName: body.brandName,
             modalName: body.modalName,
             vendorId: body.vendorId ? body.vendorId : null,
             seasonality: body.seasonality,
-            tierSize: body.tierSize,
+            tierSize: tireSizeArray,
             tierPermission: body.tierPermission,
             userId: currentUser.id,
             parentId: currentUser.parentId
@@ -59,10 +76,28 @@ const updateTierdetails = async (req, res) => {
         });
     }
     try {
+        let tireSizeArray = []
+        for (let index = 0; index < body.data.tierSize.length; index++) {
+            const element = body.data.tierSize[index];
+            if (element.notes ||
+                element.part ||
+                element.bin ||
+                element.quantity ||
+                element.criticalQuantity ||
+                element.cost ||
+                element.priceMatrix ||
+                element.retailPrice ||
+                element.markup ||
+                element.margin ||
+                element.baseInfo) {
+                tireSizeArray.push(element)
+            }
+        }
         const updateTierDetails = await tierModel.findByIdAndUpdate(
             mongoose.Types.ObjectId(body.id),
             {
                 $set: body.data,
+                tierSize: tireSizeArray
             }
         );
         return res.status(200).json({

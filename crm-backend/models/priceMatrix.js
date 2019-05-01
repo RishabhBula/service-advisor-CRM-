@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const pricematrixSchema = new Schema({
-   martrixName: {
+   matrixName: {
       type: String,
       default: null
    },

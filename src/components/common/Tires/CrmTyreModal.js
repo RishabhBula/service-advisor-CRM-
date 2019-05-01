@@ -121,25 +121,27 @@ export class CrmTyreModal extends Component {
       ) {
          return
       }
+      const tierSize = [...this.state.tierSize];
       let t, r, e, q
       if (name === 'quantity' && value) {
          t = parseInt(value)
+         tierSize[index].quantity = t;
       }
-      if (name === 'criticalQuantity' && value) {
+      else if (name === 'criticalQuantity' && value) {
          r = parseInt(value)
+         tierSize[index].criticalQuantity = r;
       }
-      if (name === 'cost' && value) {
+      else if (name === 'cost' && value) {
          e = parseInt(value)
+         tierSize[index].cost = e;
       }
-      if (name === 'retailPrice' && value) {
+      else if (name === 'retailPrice' && value) {
          q = parseInt(value)
+         tierSize[index].retailPrice = q;
       }
-      const tierSize = [...this.state.tierSize];
-      tierSize[index][name] = value;
-      tierSize[index].quantity = t;
-      tierSize[index].criticalQuantity = r;
-      tierSize[index].cost = e;
-      tierSize[index].retailPrice = q;
+      else {
+         tierSize[index][name] = value;
+      }
       this.setState({
          tierSize
       });

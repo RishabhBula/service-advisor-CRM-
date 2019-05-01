@@ -935,15 +935,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 
 /* Price Matrix */
 .matrix-input{
-  padding-right: 120px;
+  padding-right: 29px;
 }
 .matrix-action{
   display: flex;
   justify-content: space-between;
   position: absolute;
   top: 0px;
-  right: 0px;
-  width: 114px;
+  right: 23px;
+  width: 0px;
 }
 .matrix-input-control .form-control{
   height: 50px;

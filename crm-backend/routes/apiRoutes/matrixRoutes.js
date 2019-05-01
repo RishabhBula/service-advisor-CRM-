@@ -8,6 +8,11 @@ const validation = require("../../common/apiValidation");
 router.get("/getAllMatrix", token.authorisedUser, matrixController.getAllMatrix);
 
 /*Add new matrix*/
-router.post("/addMatrix", token.authorisedUser,validation.createNewMatrixValidation , matrixController.createpriceMatrix);
+router.post("/addMatrix", token.authorisedUser, validation.createNewMatrixValidation, matrixController.createpriceMatrix);
 
+/*Update matrix details*/
+router.put("/updateMatrix", token.authorisedUser, validation.UpdateMatrixValidation, matrixController.updatepriceMatrix);
+
+/*Delete tier routes*/
+router.delete("/delete", token.authorisedUser, matrixController.deleteMatrix);
 module.exports = router;

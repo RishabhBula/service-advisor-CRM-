@@ -4,8 +4,15 @@ import {
   matrixActions,
   getMatrixListStart,
   getMatrixListFail,
-  getMatrixListSuccess
+  getMatrixListSuccess,
+  showLoader,
+  hideLoader,
+  addMatrixSuccess,
+  deleteMatrixSuccess,
+  getMatrixList
 } from "./../actions";
+import { logger } from "../helpers/Logger";
+import { toast } from "react-toastify";
 
 const getMatrixLogic = createLogic({
   type: matrixActions.GET_MATRIX_LIST,
@@ -29,29 +36,128 @@ const getMatrixLogic = createLogic({
     let result = await api.FetchFromServer(
       "/matrix",
       "/getAllMatrix",
-      "POST",
+      "GET",
       true,
       undefined,
       data
     );
-    if(result.isError) {
-        dispatch(
-          getMatrixListFail({
-            matrixList: []
-          })
-        );
+    if (result.isError) {
+      dispatch(
+        getMatrixListFail({
+          matrixList: []
+        })
+      );
     }
     else {
-        dispatch(
-          getMatrixListSuccess({
-            matrixList: result.data.data
-          })
-        );
+      dispatch(
+        getMatrixListSuccess({
+          matrixList: result.data.data
+        })
+      );
     }
     done();
-   
+
+  }
+});
+
+const addPriceMatrixLogic = createLogic({
+  type: matrixActions.ADD_MATRIX_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/matrix",
+      "/addMatrix",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(addMatrixSuccess());
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
+const updateMatrixLogic = createLogic({
+  type: matrixActions.UPDATE_MATRIX_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/matrix",
+      "/updateMatrix",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(
+        getMatrixList({
+          ...action.payload
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
+const deleteMatrixLogic = createLogic({
+  type: matrixActions.DELETE_MATRIX_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/matrix",
+      "/delete",
+      "DELETE",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(deleteMatrixSuccess())
+      delete action.payload.matrixId;
+      dispatch(
+        getMatrixList({
+          ...action.payload
+        })
+      );
+      done();
+    }
   }
 });
 
 
-export const MatrixLogic = [getMatrixLogic];
+export const MatrixLogic = [
+  getMatrixLogic,
+  addPriceMatrixLogic,
+  updateMatrixLogic,
+  deleteMatrixLogic,
+];

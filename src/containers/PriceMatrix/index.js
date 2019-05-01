@@ -4,20 +4,73 @@ import PriceMatrixComponent from "../../components/PriceMatrix/AddEdit";
 import PriMatrixList from "../../components/PriceMatrix/PriMatrixList";
 import { logger } from "../../helpers/Logger";
 import { InsertAtParticularIndex } from "../../helpers/Array";
+import { getMatrixList, addMatrixRequest, updateMatrixRequest, deleteMatrixRequest } from "../../actions"
+import { connect } from 'react-redux';
+import Validator from "js-object-validation";
+import {
+  CreatePriceMatrixValidations,
+  CreatePriceMatrixValidMessaages
+} from "../../validations";
+import { ConfirmBox } from "../../helpers/SweetAlert";
+
 class PriceMatrix extends Component {
   constructor(props) {
     super(props);
     this.state = {
       matrixRange: [
         {
-          margin: "",
-          markup: "",
+          margin: "50.00%",
+          markup: "100.00%",
           lower: "0.00",
           upper: "beyond"
         }
       ],
-      martrixName: ""
+      matrixName: "",
+      errors: {},
+      matrixId: ""
     };
+  }
+  componentDidMount = () => {
+    this.props.getMatrixList()
+  }
+  componentDidUpdate = ({ matrixListReducer }) => {
+    if (matrixListReducer.matrixData !== this.props.matrixListReducer.matrixData) {
+      this.props.getMatrixList()
+      this.resetAll()
+    }
+  }
+  resetAll = () => {
+    this.setState({
+      matrixRange: [
+        {
+          margin: "50.00%",
+          markup: "100.00%",
+          lower: "0.00",
+          upper: "beyond"
+        }
+      ],
+      matrixName: "",
+      errors: {},
+      matrixId: "",
+      isEditMatrix: false
+    })
+  }
+  handleChange = (index, e) => {
+    const { name, value } = e.target
+    if (name === 'matrixName') {
+      this.setState({
+        [name]: value
+      });
+    } else {
+      if ((name === "margin" || name === "markup") && value > 100) {
+        return
+      }
+      const matrixRange = [...this.state.matrixRange]
+      matrixRange[index][name] = value;
+      this.setState({
+        matrixRange
+      })
+    }
   }
   handleAddMatrixRange = () => {
     const { matrixRange } = this.state;
@@ -26,8 +79,8 @@ class PriceMatrix extends Component {
     matrixRange[matrixRange.length - 1].upper =
       parseFloat(matrixRange[matrixRange.length - 1].lower) + 99.99;
     matrixRange.push({
-      margin: "",
-      markup: "",
+      margin: "50.00%",
+      markup: "100.00%",
       lower,
       upper
     });
@@ -77,8 +130,8 @@ class PriceMatrix extends Component {
       matrixRange[lastIndex].upper =
         parseFloat(matrixRange[lastIndex].lower) + 99.99;
       matrixRange.push({
-        margin: "",
-        markup: "",
+        margin: "50%",
+        markup: "100%",
         lower,
         upper
       });
@@ -159,9 +212,58 @@ class PriceMatrix extends Component {
       });
     }
   };
+
+  handleMatrixDelete = async() => {
+    const { value } = await ConfirmBox({
+      text: "Do you want to delete this price matrix?"
+    });
+    if (!value) {
+      return;
+    }
+    const data = {
+      matrixId: this.state.matrixId
+    }
+    this.props.deletePriceMatrix(data)
+  }
+
+  handleUpdateMatrix = (matrixData) => {
+    const {
+      matrixName,
+      matrixRange,
+    } = matrixData
+    this.setState({
+      matrixName,
+      matrixRange,
+      matrixId: matrixData._id,
+      isEditMatrix: true
+    })
+  }
+  handleAddMatrix = () => {
+    const { isEditMatrix } = this.state
+    const paylod = { matrixRange: this.state.matrixRange, matrixName: this.state.matrixName }
+    const { isValid, errors } = Validator(
+      paylod,
+      CreatePriceMatrixValidations,
+      CreatePriceMatrixValidMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors,
+        isLoading: false
+      });
+      return;
+    } else {
+      if (isEditMatrix) {
+        const paylod = { matrixRange: this.state.matrixRange, matrixName: this.state.matrixName, id: this.state.matrixId }
+        this.props.updatePriceMatrix(paylod)
+      } else {
+        this.props.addPriceMatrix(paylod)
+      }
+    }
+  }
   render() {
-    const { matrixList } = this.props;
-    const { matrixRange } = this.state;
+    const { matrixListReducer } = this.props;
+    const { matrixRange, errors, matrixName, isEditMatrix } = this.state;
     return (
       <>
         <Card>
@@ -180,7 +282,11 @@ class PriceMatrix extends Component {
                 <h4>Matrix List</h4>
               </CardHeader>
               <CardBody>
-                <PriMatrixList matrixList={matrixList} />
+                <PriMatrixList
+                  matrixList={matrixListReducer.matrixList}
+                  handleUpdateMatrix={this.handleUpdateMatrix}
+                  resetAll={this.resetAll}
+                />
               </CardBody>
             </Card>
           </Col>
@@ -193,6 +299,12 @@ class PriceMatrix extends Component {
                   handleCostChange={this.handleCostChange}
                   handleRemoveMatrixRange={this.handleRemoveMatrixRange}
                   handleAddMatrixRange={this.handleAddMatrixRange}
+                  handleAddMatrix={this.handleAddMatrix}
+                  handleChange={this.handleChange}
+                  errors={errors}
+                  matrixName={matrixName}
+                  isEditMatrix={isEditMatrix}
+                  handleMatrixDelete={this.handleMatrixDelete}
                 />
               </CardBody>
             </Card>
@@ -202,4 +314,26 @@ class PriceMatrix extends Component {
     );
   }
 }
-export default PriceMatrix;
+const mapStateToProps = state => ({
+  matrixListReducer: state.matrixListReducer,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getMatrixList: () => {
+    dispatch(getMatrixList());
+  },
+  addPriceMatrix: (data) => {
+    dispatch(addMatrixRequest(data))
+  },
+  updatePriceMatrix: (data) => {
+    dispatch(updateMatrixRequest(data))
+  },
+  deletePriceMatrix: (data) => {
+    dispatch(deleteMatrixRequest(data))
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PriceMatrix);
