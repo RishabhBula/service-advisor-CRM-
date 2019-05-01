@@ -27,6 +27,9 @@ import {
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
+import CrmExportSampleButton, {
+  DemoSupportedSheets
+} from "../../components/common/CrmExportSampleButton";
 
 class Customers extends Component {
   constructor(props) {
@@ -174,6 +177,10 @@ class Customers extends Component {
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
+                <CrmExportSampleButton
+                  sheetType={DemoSupportedSheets.CUSTOMER}
+                />{" "}
+                &nbsp;
                 <Button
                   color="primary"
                   id="add-user"
