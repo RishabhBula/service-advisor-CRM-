@@ -33,7 +33,7 @@ class CrmExportSampleButton extends Component {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `Customers Sheet 1`);
     /* generate XLSX file and send to client */
-    XLSX.writeFile(wb, `customer_sample_${Date.now()}.xlsx`);
+    XLSX.writeFile(wb, `${sheetType || "sheet"}_sample_${Date.now()}.xlsx`);
   };
   render() {
     return (
