@@ -476,7 +476,7 @@ class Tires extends Component {
                           {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
                             return (
                               <tr key={index}>
-                                <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
+                                <td width={"100"}>{size.baseInfo.replace(/^[^_\s]*$/,'')}</td>
                                 <td width={"70"}>{size.part || "-"}</td>
                                 <td width={"70"}>{size.cost || "-"}</td>
                                 <td width={"70"}>{size.retailPrice || "-"}</td>
