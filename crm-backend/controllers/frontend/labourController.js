@@ -7,8 +7,6 @@ const { validationResult } = require("express-validator/check");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
-    console.log("**************", $data.searchValue);
-
     let condition = {
       name: new RegExp($data.searchValue, "i")
     }
@@ -128,7 +126,6 @@ const createNewLabour = async (req, res) => {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
       currentUser.parentId = currentUser.id
     }
-    console.log("**************This Rate id =>", body.rateId);
     const addNewLabour = {
       discription: body.discription,
       hours: body.hours,
@@ -170,10 +167,12 @@ const updateLabourdetails = async (req, res) => {
     });
   }
   try {
+    const today = new Date()
     const updateLabourDetails = await labourModel.findByIdAndUpdate(
       mongoose.Types.ObjectId(body.labourId),
       {
         $set: body,
+        updatedAt: today
       }
     );
     return res.status(200).json({
@@ -221,12 +220,12 @@ const getAllLabourList = async (req, res) => {
         break;
       case "pasc":
         sortBy = {
-          price: 1,
+          "rate.hourlyRate": 1,
         };
         break;
       case "pdesc":
         sortBy = {
-          price: -1,
+          "rate.hourlyRate": -1,
         };
         break;
       case "diasc":
@@ -305,8 +304,8 @@ const getAllLabourList = async (req, res) => {
       .find(
         condition,
       )
-      .populate("rate")
-      .collation({locale: "en_US", numericOrdering: true})
+      .populate('rate')
+      .collation({ locale: "en_US", numericOrdering: true })
       .sort(sortBy)
       .skip(offset)
       .limit(limit);

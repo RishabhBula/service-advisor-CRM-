@@ -269,12 +269,14 @@ const update = async (req, res) => {
     if (vendorId) {
       data.vendorId = vendorId;
     }
+    const today = new Date()
     const result = await Parts.updateOne(
       {
         _id: body.id
       },
       {
-        $set: data
+        $set: data,
+        updatedAt: today
       }
     );
     res.status(200).json({

@@ -59,10 +59,12 @@ const updateTierdetails = async (req, res) => {
         });
     }
     try {
+        const today = new Date()
         const updateTierDetails = await tierModel.findByIdAndUpdate(
             mongoose.Types.ObjectId(body.id),
             {
                 $set: body.data,
+                updatedAt: today
             }
         );
         return res.status(200).json({
@@ -183,13 +185,13 @@ const getAllTierList = async (req, res) => {
             if (status.toString() === "critical") {
                 condition["$and"].push({
                     $expr: {
-                        $lte: ["$quantity", "$criticalQuantity"]
+                        $lte: ["$tierSize.quantity", "$criticalQuantity"]
                     }
                 });
             } else if (status.toString() === "ncritical") {
                 condition["$and"].push({
                     $expr: {
-                        $gt: ["$quantity", "$criticalQuantity"]
+                        $gt: ["$tierSize.quantity", "$criticalQuantity"]
                     }
                 });
             }
