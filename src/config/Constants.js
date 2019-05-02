@@ -194,18 +194,18 @@ export const Drivetrain = [
   }
 ];
 
-export const labourPermission = {
+export const LabourPermission = {
   isShowHours: false,
   showNoteOnQuotesInvoices: false
 }
-export const labourPermissionText = {
+export const LabourPermissionText = {
   isShowHours: "Display hours on quote & invoice",
   showNoteOnQuotesInvoices: "Display note on quote & invoice" 
 }
- export const tierPermission = {
+ export const TierPermission = {
    showNoteOnQuotesInvoices: false
  }
-export const tierPermissionText = {
+export const TierPermissionText = {
   showNoteOnQuotesInvoices:"Display note on quote & invoice"
 }
 export const orderPermission = {
@@ -213,6 +213,18 @@ export const orderPermission = {
   showNoteOnQuotesInvoices: true
 };
 
+export const LabourText = [
+  { key: "isShowHours", text: "Display hours on quote & invoice" },
+  {
+    key: "showNoteOnQuotesInvoices",
+    text: "Display note on quote & invoice",
+  },
+ ];
+
+export const LabourTextDefault = {
+  isShowHours: false,
+  showNoteOnQuotesInvoices: false,
+};
 export const CreatePartOptions = [
   {
     key: "isTaxed",

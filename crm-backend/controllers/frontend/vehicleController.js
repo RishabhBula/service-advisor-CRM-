@@ -182,10 +182,12 @@ const updateVehicleDetails = async (req, res) => {
         success: false
       });
     } else {
+      const today = new Date()
       const updateVehicleDetails = await vehicleModal.findByIdAndUpdate(
         body.data.vehicleId,
         {
-          $set: body.data
+          $set: body.data,
+          updatedAt: today
         }
       );
       if (!updateVehicleDetails) {

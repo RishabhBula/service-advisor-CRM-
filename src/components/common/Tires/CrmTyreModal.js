@@ -14,8 +14,8 @@ import {
    Input
 } from "reactstrap";
 import {
-   tierPermission,
-   tierPermissionText,
+   TierPermission,
+   TierPermissionText,
    MarkupChangeValues,
    MarginChangeValues,
 } from "../../../config/Constants"
@@ -57,7 +57,7 @@ export class CrmTyreModal extends Component {
                margin: ""
             }
          ],
-         tierPermission: tierPermission,
+         TierPermission: TierPermission,
          errors: {},
          seasonBtnClass: "",
          selectedVendor: {
@@ -83,7 +83,7 @@ export class CrmTyreModal extends Component {
             vendorId,
             seasonality,
             tierSize,
-            tierPermission
+            TierPermission
          } = this.props.tireData;
          this.setState({
             isEditMode: true,
@@ -92,7 +92,7 @@ export class CrmTyreModal extends Component {
             vendorId,
             seasonality,
             tierSize,
-            tierPermission,
+            TierPermission,
             selectedVendor: {
                label: vendorId && vendorId.name ? vendorId.name : "Type to select vendor",
                value: vendorId && vendorId._id ? vendorId._id : ''
@@ -102,10 +102,10 @@ export class CrmTyreModal extends Component {
    }
 
    handleClick = (e) => {
-      let { tierPermission } = this.state;
-      tierPermission.showNoteOnQuotesInvoices = e.target.checked;
+      let { TierPermission } = this.state;
+      TierPermission.showNoteOnQuotesInvoices = e.target.checked;
       this.setState({
-         tierPermission
+         TierPermission
       });
    }
 
@@ -245,7 +245,7 @@ export class CrmTyreModal extends Component {
          vendorId,
          seasonality,
          tierSize,
-         tierPermission
+         TierPermission
       } = this.state
 
       const payload = {
@@ -254,7 +254,7 @@ export class CrmTyreModal extends Component {
          vendorId: vendorId && vendorId.value ? vendorId.value : null,
          seasonality,
          tierSize,
-         tierPermission
+         TierPermission
       }
       const { isValid, errors } = Validator(
          payload,
@@ -297,7 +297,7 @@ export class CrmTyreModal extends Component {
                margin: ""
             }
          ],
-         tierPermission: tierPermission,
+         TierPermission: TierPermission,
          errors: {}
       });
    }
@@ -306,7 +306,7 @@ export class CrmTyreModal extends Component {
       const { tyreModalOpen, handleTierModal, tireData } = this.props;
       const {
          tierSize,
-         tierPermission,
+         TierPermission,
          errors,
          modalName,
          seasonality,
@@ -643,20 +643,20 @@ export class CrmTyreModal extends Component {
                      <Col md="6">
                         <div className="d-flex">
                            <p className="customer-modal-text-style">
-                              {tierPermissionText.showNoteOnQuotesInvoices}
+                              {TierPermissionText.showNoteOnQuotesInvoices}
                            </p>
                            {
-                              (tierPermission.showNoteOnQuotesInvoices)
+                              (TierPermission.showNoteOnQuotesInvoices)
 
                            }
                            <AppSwitch
                               className={"mx-1"}
                               checked={
-                                 tierPermission.showNoteOnQuotesInvoices
+                                 TierPermission.showNoteOnQuotesInvoices
                               }
                               onClick={this.handleClick}
                               variant={"3d"}
-                              // value={tierPermission.showNoteOnQuotesInvoices}
+                              // value={TierPermission.showNoteOnQuotesInvoices}
                               color={"primary"}
                               size={"sm"}
                            />

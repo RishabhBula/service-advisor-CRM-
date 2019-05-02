@@ -32,7 +32,7 @@ const createCustomer = async (req, res) => {
       permission: body.permission,
       parentId: body.parentId,
       userId: body.userId,
-      status: true
+      status: true,
     };
 
     let result = await customerModel(cusomerData).save();
@@ -216,10 +216,12 @@ const updateCustomerdetails = async (req, res) => {
         success: false
       });
     } else {
+      const today = new Date();
       const updateCustomerDetails = await customerModel.findByIdAndUpdate(
         body.data.customerId,
         {
-          $set: body.data
+          $set: body.data,
+          updatedAt: today
         }
       );
       if (!updateCustomerDetails) {

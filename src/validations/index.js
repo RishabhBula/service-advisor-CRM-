@@ -7,3 +7,4 @@ export * from "./standardRate";
 export * from "./vehicle";
 export * from "./tier";
 export * from "./parts";
+export * from "./Labour";

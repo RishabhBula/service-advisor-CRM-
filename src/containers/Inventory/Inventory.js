@@ -1,16 +1,26 @@
 import React, { Component, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import {
   Card,
   UncontrolledTooltip,
   CardBody,
   Button
 } from "reactstrap";
+import {
+  getRateStandardListRequest,
+  setRateStandardListStart,
+  labourAddRequest,
+  rateAddRequest,
+} from '../../actions';
+
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
+import  {CrmLabourModal}  from "../../components/common/Labours/CrmLabourModal";  
+import { logger } from "../../helpers/Logger";
 import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
 
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
@@ -34,7 +44,7 @@ export const InventoryRoutes = [
     component: Parts
   },
   {
-    path: AppRoutes.INVENTORY_TIRES.url,
+    path: AppRoutes.INVENTORY_TIRES.url, 
     name: AppRoutes.INVENTORY_TIRES.name,
     component: Tires
   },
@@ -86,6 +96,7 @@ class Inventory extends Component {
     };
   }
   componentDidMount() {
+    this.props.getStdList();
     const { location } = this.props;
     const index = InventoryTabs.findIndex(d => d.url === location.pathname);
     if (index > -1) {
@@ -109,9 +120,29 @@ class Inventory extends Component {
       }
     }
   }
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  };
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
+  addLabour= data =>{
+    try {
+      this.props.addLabour(data);
+      this.setState({
+        typeAddModalOpen: !this.state.typeAddModalOpen,
+      });
+    } catch (error) {
+      logger(error)
+    }
+  }
+  addRate = data => {
+    try {
+      this.props.addRate(data);
+    } catch (error) {
+      logger(error)
+    }
+  }
   getQueryParams = () => {
     let query = qs.parse(this.props.location.search);
     if (query.vendorId) {
@@ -130,10 +161,11 @@ class Inventory extends Component {
       modelOperate,
       addVendor,
       inventoryPartsData,
-      getInventoryPartsVendors
+      getInventoryPartsVendors, rateStandardListReducer, profileInfoReducer,
+      getStdList
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
+    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen, rateAddModalOpen} = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -163,7 +195,27 @@ class Inventory extends Component {
           />
         );
       case AppRoutes.INVENTORY_LABOURS.url:
-        return null;
+        return (
+          <CrmLabourModal
+            profileInfoReducer={profileInfoReducer.profileInfo}
+            rateStandardListData={rateStandardListReducer}
+            tyreModalOpen={tireAddModalOpen}
+            setDefaultRate={this.setDefaultRate}
+            getStdList={getStdList}
+            addLabour={this.addLabour}
+            addRate={this.addRate}
+            handleLabourModal={() =>
+              modelOperate({
+                tireAddModalOpen: !tireAddModalOpen
+              })
+            }
+            rateAddModalProp={rateAddModalOpen}
+            rateAddModalFun={() =>
+              modelOperate({
+                rateAddModalOpen: !rateAddModalOpen
+              })}
+          />
+        );
       case AppRoutes.INVENTORY_VENDORS.url:
         return <CrmInventoryVendor
           addVendor={addVendor}
@@ -193,7 +245,10 @@ class Inventory extends Component {
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
-        return null;
+          modelDetails = {
+            tireAddModalOpen: true
+          };
+          break;
       case AppRoutes.INVENTORY_VENDORS.url:
         modelDetails = {
           vendorAddModalOpen: true
@@ -291,6 +346,8 @@ class Inventory extends Component {
 }
 const mapStateToProps = state => ({
   inventoryPartsData: state.inventoryPartsReducers,
+  profileInfoReducer: state.profileInfoReducer,
+  rateStandardListReducer: state.rateStandardListReducer,
   inventoryStatsReducer: state.inventoryStatsReducer
 });
 const mapDispatchToProps = dispatch => ({
@@ -306,11 +363,23 @@ const mapDispatchToProps = dispatch => ({
   addInventoryPart: data => {
     dispatch(requestAddPart(data));
   },
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  addRate:(data)=>{
+    dispatch(rateAddRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
+  addLabour: data => {
+    dispatch(labourAddRequest(data));
+  },
   getInventoryStats: () => {
-    dispatch(getInventoryStats());
+  dispatch(getInventoryStats());
   }
 });
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Inventory);
+)(withRouter(Inventory));

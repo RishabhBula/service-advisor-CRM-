@@ -13,4 +13,5 @@ data = {
   ITEMS_PER_PAGE: 5,
   IMAGE_ENDPOINT: process.env.REACT_APP_API_ENDPOINT
 };
+
 export const AppConfig = data;

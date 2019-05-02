@@ -22,7 +22,7 @@ import { CrmStandardModel } from "../common/CrmStandardModel";
 import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
-  CustomerPermissionsText
+  CustomerPermissionsText 
 } from "../../config/Constants";
 import { AppConfig } from "../../config/AppConfig";
 import {
