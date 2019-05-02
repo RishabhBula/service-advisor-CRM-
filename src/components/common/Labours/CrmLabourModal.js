@@ -210,7 +210,7 @@ export class CrmLabourModal extends Component {
     this.props.getStdList({ input, callback });
   };
   render() {
-    const { tyreModalOpen, handleLabourModal, rateAddModalProp,dataLabour } = this.props;
+    const { tyreModalOpen, handleLabourModal, rateAddModalProp } = this.props;
     const { errors, selectedRateOptions } = this.state;
     const {
       discription,
