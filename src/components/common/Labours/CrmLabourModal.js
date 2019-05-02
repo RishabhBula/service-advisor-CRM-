@@ -266,6 +266,7 @@ export class CrmLabourModal extends Component {
                         }}
                         isClearable={true}
                         value={selectedRateOptions && selectedRateOptions.value!=='' ? selectedRateOptions : ""}
+                        noOptionsMessage={() =>"Please type rate name to search"}
                       />
                     </div>
                   </FormGroup>
