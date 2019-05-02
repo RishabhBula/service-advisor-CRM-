@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import {
   Card,
-  CardHeader,
   CardBody,
-  Row,
-  Col,
   Button,
   UncontrolledTooltip,
 } from 'reactstrap';
@@ -166,30 +163,21 @@ class Fleet extends Component {
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={'6'} className={'pull-left'}>
-                <h4>
-                  <i className={"fas fa-car"} /> Fleet List
-                </h4>
-              </Col>
-              <Col sm={'6'} className={'text-right'}>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body position-relative"}>
+              <div className={"text-right invt-add-btn-block"}>
                 <Button
                   color='primary'
                   id='add-user'
                   onClick={this.toggleCreateModal}
                 >
                   <i className={'fa fa-plus'} />
-                  &nbsp; Add New
+                  &nbsp; Add New Fleet
                 </Button>
                 <UncontrolledTooltip target={'add-user'}>
                   Add New Fleet
                 </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+            </div>            
             <FleetList
               fleetListData={fleetReducer}
               handleEditFleet={this.handleEditFleet}

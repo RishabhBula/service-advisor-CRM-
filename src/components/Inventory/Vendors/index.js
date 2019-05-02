@@ -17,7 +17,6 @@ import {
   FormGroup,
   InputGroup,
   Input,
-  Label,
   UncontrolledTooltip,
 } from "reactstrap";
 import {
@@ -200,7 +199,7 @@ class Vendors extends Component {
                             className="btn btn-theme-transparent"
                             id="Tooltip-1"
                           >
-                            <i class="icons cui-magnifying-glass"></i>
+                          <i className="icons cui-magnifying-glass"></i>
                           </Button>
                           <UncontrolledTooltip target="Tooltip-1">
                             Search
@@ -212,7 +211,7 @@ class Vendors extends Component {
                             id="Tooltip-2"
                             onClick={this.onReset}
                           >
-                            <i class="icon-refresh icons"></i>
+                          <i className="icon-refresh icons"></i>
                           </Button>
                           <UncontrolledTooltip target={"Tooltip-2"}>
                             Reset all filters
@@ -231,11 +230,11 @@ class Vendors extends Component {
             <tr>
               <th width={"60"} className={"text-center"}>S No.</th>
               <th width={"350"}>
-                <i className="fa fa-globe"></i> Vendor Details
+                <i className="fa fa-id-badge"></i> Vendor Details
               </th>
               <th width={"300"}><i className="fa fa-user-circle-o "></i> Contact Person Details</th>
               <th width="350"><i className="fa fa-address-card-o"></i> Address Details</th>
-              <th width="150"><i class="fa fa-clock-o"></i> Created At</th>
+              <th width="150"><i className="fa fa-clock-o"></i> Created At</th>
               <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
@@ -272,7 +271,7 @@ class Vendors extends Component {
                       </td>
                       <td>
                       <div>{moment(vendor.createdAt).format("MMM Do YYYY")}</div>
-                      <div>{moment(vendor.createdAt).format("h:mm:ss a")}</div>
+                      <div>{moment(vendor.createdAt).format("h:mm a")}</div>
                       </td>
                       <td className={"text-center"}>
                         <Button

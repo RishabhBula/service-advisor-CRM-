@@ -500,7 +500,7 @@ export class CrmInventoryVendor extends Component {
               <div className="">
                 <b>Last Updated -: &nbsp;
                   <Badge color={"secondary"}>
-                      {vendorData && vendorData.updatedAt ? moment(vendorData.updatedAt).format("MMM Do YYYY, h:mm:ss A") :null}
+                      {vendorData && vendorData.updatedAt ? moment(vendorData.updatedAt).format("MMM Do YYYY, h:mm A") :null}
                   </Badge>
                 </b>
               </div>

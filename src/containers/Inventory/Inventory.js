@@ -3,11 +3,8 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   Card,
-  Row,
-  Col,
   UncontrolledTooltip,
   CardBody,
-  CardHeader,
   Button
 } from "reactstrap";
 
@@ -50,9 +47,19 @@ export const InventoryRoutes = [
     path: AppRoutes.INVENTORY_VENDORS.url,
     name: AppRoutes.INVENTORY_VENDORS.name,
     component: Vendors
+  },
+  {
+    path: AppRoutes.INVENTORY_STATATICS.url,
+    name: AppRoutes.INVENTORY_STATATICS.name,
+    component: InventoryStats
   }
+  
 ];
 const InventoryTabs = [
+  {
+    name: AppRoutes.INVENTORY_STATATICS.name,
+    url: AppRoutes.INVENTORY_STATATICS.url,
+  },
   {
     name: AppRoutes.INVENTORY_PARTS.name,
     url: AppRoutes.INVENTORY_PARTS.url
@@ -69,6 +76,7 @@ const InventoryTabs = [
     name: AppRoutes.INVENTORY_VENDORS.name,
     url: AppRoutes.INVENTORY_VENDORS.url
   }
+  
 ];
 class Inventory extends Component {
   constructor(props) {
@@ -198,21 +206,28 @@ class Inventory extends Component {
   };
   renderAddNewButton = () => {
     const { activeTab } = this.state;
-    return (
-      <>
-        <Button color="primary" onClick={this.onAddClick} id="add-user">
-          <i className={"fa fa-plus"} />
-          &nbsp; Add New
-        </Button>
-        <UncontrolledTooltip target={"add-user"}>
-          Add New{" "}
-          {InventoryTabs[activeTab].name.slice(
-            0,
-            InventoryTabs[activeTab].name.length - 1
-          )}
-        </UncontrolledTooltip>
-      </>
-    );
+    if (activeTab > 0) {
+      return (
+        <>
+          <Button color="primary" onClick={this.onAddClick} id="add-user">
+            <i className={"fa fa-plus"} />
+            &nbsp; Add New {" "}
+            {InventoryTabs[activeTab].name.slice(
+              0,
+              InventoryTabs[activeTab].name.length - 1
+            )}
+          </Button>
+          <UncontrolledTooltip target={"add-user"}>
+            Add New{" "}
+            {InventoryTabs[activeTab].name.slice(
+              0,
+              InventoryTabs[activeTab].name.length - 1
+            )}
+          </UncontrolledTooltip>
+        </>
+      );
+    }
+    return null
   };
   render() {
     const { activeTab } = this.state;
@@ -233,10 +248,7 @@ class Inventory extends Component {
               
             </Row>
           </CardHeader> */}
-          <CardBody>
-            <Suspense fallback={"Loading.."}>
-              <InventoryStats isLoading={isLoading} inventoryStats={data} />
-            </Suspense>
+          <CardBody className={"custom-card-body inventory-card"}>
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>
                 <InventoryTab
@@ -259,7 +271,7 @@ class Inventory extends Component {
                       exact={route.exact}
                       name={route.name}
                       render={props => (
-                        <route.component {...props} {...this.props} />
+                        <route.component {...props} {...this.props} isLoading={isLoading} inventoryStats={data} />
                       )}
                     />
                   ) : null;

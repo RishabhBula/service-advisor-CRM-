@@ -601,6 +601,7 @@ export class CrmEditVehicleModal extends Component {
                           placeholder="MM/YYYY"
                           onChange={this._onInputChange}
                           value={this.state.productionDate}
+                          className={"form-control"}
                         />
                         {!productionDate && errors.productionDate ? (
                           <p className="text-danger">{errors.productionDate}</p>

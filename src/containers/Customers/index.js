@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import * as qs from "query-string";
 import {
   Card,
-  CardHeader,
   CardBody,
-  Row,
-  Col,
   Button,
   UncontrolledTooltip
 } from "reactstrap";
@@ -165,30 +162,23 @@ class Customers extends Component {
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={"6"} className={"pull-left"}>
-                <h4>
-                  <i className={"fa fa-users"} /> Customer List
-                </h4>
-              </Col>
-              <Col sm={"6"} className={"text-right"}>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body"}>
+            <div className={"position-relative"}>
+              <div className={"text-right invt-add-btn-block"}>
                 <Button
                   color="primary"
                   id="add-user"
                   onClick={this.toggleCreateModal}
                 >
                   <i className={"fa fa-plus"} />
-                  &nbsp; Add New
+                  &nbsp; Add New Customer
                 </Button>
                 <UncontrolledTooltip target={"add-user"}>
                   Add New Customer
                 </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+              </div> 
+            </div>
             <CustomerList
               customerData={customerListReducer}
               onSearch={this.onSearch}

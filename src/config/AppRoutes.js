@@ -44,6 +44,11 @@ export const AppRoutes = {
     name: "Vendors",
     exact: true
   },
+  INVENTORY_STATATICS: {
+    url: "/inventory/statatics",
+    name: "Statatics",
+    exact: true
+  },
   TIMESHEETS: {
     url: "/timesheets",
     name: "Time Clocks",

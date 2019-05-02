@@ -20,6 +20,8 @@ import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { CrmCircleBackground } from "../../../components/common/Icon/CrmCircleBackground";
 import { toast } from "react-toastify";
+import { carsOptions} from '../../../config/Color';
+import { logger } from "../../../helpers/Logger";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -214,6 +216,17 @@ class VehiclesList extends Component {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
     const { page, search, sort, status, selectedVehicles } = this.state;
+    //  const carType = (type) => {
+    //    return carsOptions.map((item, index)=>{
+    //      if (item.value === type){
+    //        return (
+    //           <div key={index}>
+    //            <img src={Image} />
+    //           </div>
+    //         )
+    //       }
+    //  })}
+   
     return (
       <>
         <div className={"filter-block"}>
@@ -221,7 +234,7 @@ class VehiclesList extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -235,11 +248,11 @@ class VehiclesList extends Component {
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="exampleSelect" className="label">
+                  {/* <Label for="exampleSelect" className="label">
                     Status
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="status"
@@ -248,18 +261,18 @@ class VehiclesList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                     Status
                     </option>
                     <option value={1}>Active</option>
                     <option value={0}>Deactive</option>
                   </Input>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="SortFilter" className="label">
+                  {/* <Label for="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -268,7 +281,7 @@ class VehiclesList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                     Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>
@@ -281,26 +294,26 @@ class VehiclesList extends Component {
                   <Label className="height17 label" />
                   <div className="form-group mb-0">
                     <span className="mr-2">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="fa fa-search" />
-                      </button>
+                        <i className="icons cui-magnifying-glass"></i>
+                      </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
                       </UncontrolledTooltip>
                     </span>
                     <span className="">
-                      <button
+                      <Button
                         type="button"
-                        className="btn btn-danger"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="fa fa-refresh" />
-                      </button>
+                        <i className="icon-refresh icons"></i>
+                      </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
                       </UncontrolledTooltip>
@@ -311,7 +324,7 @@ class VehiclesList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive >
           <thead>
             <tr>
               <th width="90px">
@@ -360,17 +373,17 @@ class VehiclesList extends Component {
                   )}
                 </div>
               </th>
-              <th>Type</th>
-              <th>Color</th>
-              <th>Year</th>
-              <th>Make</th>
-              <th>Model</th>
-              <th>Miles</th>
-              <th style={{ maxWidth: 100 }}>Vin</th>
-              <th>License Plate</th>
-              <th>Unit</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th width={"150"}>Type</th>
+              <th width={"100"}>Color</th>
+              <th width={"90"}><i className={"fa fa-calendar"}/> Year</th>
+              <th width={"120"}><i className={"fa fa-industry"} /> Make</th>
+              <th width={"120"}><i className={"fa fa-automobile"} /> Model</th>
+              <th width={"100"}><i className={"fa fa-dashboard"} /> Miles</th>
+              <th width={"150"}> Vin</th>
+              <th width={"150"}><i className={"fa fa-address-card-o"} /> License Plate</th>
+              <th width={"90"} className={"text-center"}><i className={"fa fa-snowflake-o"} /> Unit</th>
+              {/* <th width={"90"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th> */}
+              <th width={"120"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -396,7 +409,10 @@ class VehiclesList extends Component {
                       {/* <td>
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
                       </td> */}
-                      <td>{vehicle.type ? vehicle.type.label : "N/A"}</td>
+                      <td>
+                        {vehicle.type ? vehicle.type.label : "N/A"}
+                        {/* {carType(vehicle.type.value)} */}
+                      </td>
                       <td>
                         {vehicle.color ? (
                           <span
@@ -417,8 +433,8 @@ class VehiclesList extends Component {
                         )}
                       </td>
                       <td>{vehicle.year}</td>
-                      <td>{vehicle.make}</td>
-                      <td>{vehicle.modal}</td>
+                      <td className={"text-capitalize"}>{vehicle.make}</td>
+                      <td className={"text-capitalize"}>{vehicle.modal}</td>
                       <td style={{ maxWidth: 100 }}>
                         {vehicle.miles ? vehicle.miles : "N/A"}
                       </td>
@@ -428,55 +444,25 @@ class VehiclesList extends Component {
                       <td>
                         {vehicle.licensePlate ? vehicle.licensePlate : "N/A"}
                       </td>
-                      <td>{vehicle.unit ? vehicle.unit : "N/A"}</td>
-                      <td>
-                        {vehicle.status ? (
-                          <Badge
-                            className={"badge-button"}
-                            color="success"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedVehicles: [vehicle._id]
-                                },
-                                () => {
-                                  this.deactivateVehicle();
-                                }
-                              );
-                            }}
-                          >
-                            Active
-                          </Badge>
-                        ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedVehicles: [vehicle._id]
-                                },
-                                () => {
-                                  this.activateVehicle();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
-                          </Badge>
-                        )}
-                      </td>
-                      <td>
+                      <td className={"text-center"}>{vehicle.unit ? vehicle.unit : "N/A"}</td>
+                      
+                      <td className={"text-center"}>
+                        <span className="mr-2">
                         <Button
-                          color={"primary"}
                           size={"sm"}
                           onClick={() => this.editUser(vehicle)}
+                          className={"btn-theme-transparent"}
+                          id={"Tooltip-3"}
                         >
-                          <i className={"fa fa-edit"} />
-                        </Button>{" "}
-                        &nbsp;
+                          <i className={"icons cui-pencil"}></i>
+                        </Button>
+                        <UncontrolledTooltip target="Tooltip-3">
+                          Edit
+                        </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
                         <Button
-                          color={"danger"}
+                          className={"btn-theme-transparent"}
                           size={"sm"}
                           onClick={() =>
                             this.setState(
@@ -490,8 +476,12 @@ class VehiclesList extends Component {
                           }
                           id={`delete-${vehicle._id}`}
                         >
-                          <i className={"fa fa-trash"} />
+                          <i className={"icons cui-trash"}></i>
                         </Button>
+                          <UncontrolledTooltip target={`delete-${vehicle._id}`}>
+                            Delete
+                        </UncontrolledTooltip>
+                        </span>
                       </td>
                     </tr>
                   );

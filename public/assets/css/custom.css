@@ -124,7 +124,9 @@
 .card.white-card{
   border: 0px;
 }
-
+.card-body.custom-card-body{
+  padding: 5px 8px;
+}
 /* workflow css */
 .page-title {
   display: flex;
@@ -880,10 +882,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .invt-add-btn-block{
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 8px;
+  top: -52px;
+}
+.inventory-card .invt-add-btn-block{
+  right: 8px;
+  top: -57px;
 }
 .invt-add-btn-block .btn-primary{
   min-width: 175px;
@@ -931,7 +938,20 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   width: 15px;
   border: 1px solid #eee;
 }
-
+.part-note{
+  font-size: 10px;
+  font-weight: 500;
+  color: #000;
+  line-height: 16px;
+  display: inline-block;
+  padding-right: 6px;
+  padding-left: 2px;
+  max-width: 185px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background: #eee;
+  margin-top: 2px;
+  border-left: 3px solid #b4b1bb;
+}
 .custom-form-modal .select-number-tile .text-danger {
   left: -70px;
 }
@@ -959,57 +979,33 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   right: -10px;
   position: absolute;
 }
-.tire-table tr td:nth-child(4){
-  padding: 0px;
+.s-no-th{
+  width: 90px;
+  min-width: 90px;
 }
-.tire-table tr td.action-td{
-  width: 75px;
-  max-width: 75px;
+.size-desc-table thead tr{
+  height: 35px !important;
 }
-.tire-table tr td.season-td{
-  width: 100px;
-  max-width: 100px;
+.size-desc-table thead tr th {
+  background-color: #d2d2d2 !important;
 }
-.tire-table tr th.tire-th{
-  width: 70px !important;
-  max-width: 70px;
-  text-align: center;
+.modal-info{
+  font-size: 12px;
+  color: #534d61;
+  padding-top: 4px;
+  font-weight: 600;
 }
-.tire-table tr th.tire-size-th{
-  width: 100px !important;
-  max-width: 100px !important;
-  text-align: center;
+.modal-info .badge{
+  font-size: 13px;
+  background: transparent;
+  color: #1d4a65;
+  padding-left: 0;
 }
-.tire-size-table{
-  margin-bottom: 0px !important;
-  display: flex;
-  flex-flow: wrap;
+.tire-table tr.inactive{
+  display: none;
 }
-.tire-size-table tr{
-  width: 100%;
-}
-.tire-size-table tr td{
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 0px;
-  border-right: 0; 
-  height: 100%;
-}
-.tire-size-table tr td:not(:nth-child(6)){
-  width: 70px !important;
-  max-width: 70px;
-}
-.tire-size-table tr td:nth-child(6) {
-  width: calc(100% - 380px) ;
-  max-width: calc(100% - 380px);
-}
-.tire-size-table tr td:first-child{
-  width: 100px !important;
-  max-width: 100px !important;
-}
-.tire-size-table tr:nth-child(1) td{
-  border-top: 0px;
+.tire-table tr.active{
+  display: table-row;
 }
 .season-btn{
   background-color: #fff !important;
@@ -1024,6 +1020,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: rgb(58, 180, 236) !important;
   color:#fff !important;
   border-color: #fff !important;
+}
+.size-desc-table{
+  background-color: #eee;
 }
 /* Tyre CSS END*/
 

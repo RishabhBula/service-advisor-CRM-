@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import * as qs from "query-string";
 import {
   Card,
-  CardHeader,
   CardBody,
-  Row,
-  Col,
   Button,
   UncontrolledTooltip
 } from "reactstrap";
@@ -124,30 +121,21 @@ class Vehicles extends Component {
     const { vehicleData } = this.state;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={"6"} className={"pull-left"}>
-                <h4>
-                  <i className={"fa fa-automobile"} /> Vehicles List
-                </h4>
-              </Col>
-              <Col sm={"6"} className={"text-right"}>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body position-relative"}>
+              <div className={"text-right invt-add-btn-block"}>
                 <Button
                   color="primary"
                   id="add-user"
                   onClick={this.toggleCreateVehicle}
                 >
                   <i className={"fa fa-plus"} />
-                  &nbsp; Add New
+                  &nbsp; Add New Vehicle
                 </Button>
                 <UncontrolledTooltip target={"add-user"}>
-                  Add New Vehicles
+                  Add New Vehicle
                 </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+              </div>
             <VehicleList
               vehicleData={vehicleListReducer}
               onSearch={this.onSearch}

@@ -26,6 +26,8 @@ import PaginationHelper from "../../../helpers/Pagination";
 import { logger } from "../../../helpers/Logger";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
+import moment from 'moment';
+
 class Parts extends Component {
   constructor(props) {
     super(props);
@@ -200,7 +202,6 @@ class Parts extends Component {
             <Row>
               <Col lg={"3"} md={"3"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
                   <InputGroup className="mb-2">
                     <Input
                       type="text"
@@ -216,9 +217,6 @@ class Parts extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="exampleSelect" className="label">
-                    Filter by
-                  </Label>
                   <Input
                     type="select"
                     name="status"
@@ -227,7 +225,7 @@ class Parts extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                     Filter by
                     </option>
                     <option value={"critical"}>Critical Quantity</option>
                     <option value={"ncritical"}>Non-Critical Quantity</option>
@@ -236,9 +234,6 @@ class Parts extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="SortFilter" className="label">
-                    Sort By
-                  </Label>
                   <Input
                     type="select"
                     name="sort"
@@ -247,7 +242,7 @@ class Parts extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                    Sort By 
                     </option>
                     <option value={"qltoh"}>Quantity(Low to High)</option>
                     <option value={"qhtol"}>Quantity(High to High)</option>
@@ -263,9 +258,6 @@ class Parts extends Component {
                 <Row>
                   <Col md={"6"}>
                     <FormGroup className="mb-0">
-                      <Label htmlFor="SortFilter" className="label">
-                        Vendor
-                      </Label>
                       <Async
                         placeholder={"Type vendor name"}
                         loadOptions={this.loadOptions}
@@ -287,26 +279,25 @@ class Parts extends Component {
                       <Label className="height17 label" />
                       <div className="form-group mb-0">
                         <span className="mr-2">
-                          <button
+                          <Button
                             type="submit"
-                            className="btn btn-primary"
+                            className="btn btn-theme-transparent"
                             id="Tooltip-1"
                           >
-                            <i className="fa fa-search" />
-                          </button>
+                            <i className="icons cui-magnifying-glass"></i>
+                          </Button>
                           <UncontrolledTooltip target="Tooltip-1">
                             Search
                           </UncontrolledTooltip>
                         </span>
                         <span className="">
-                          <button
-                            type="button"
-                            className="btn btn-danger"
+                          <Button
+                            className="btn btn-theme-transparent"
                             id="Tooltip-2"
                             onClick={this.onReset}
                           >
-                            <i className="fa fa-refresh" />
-                          </button>
+                            <i className="icon-refresh icons"></i>
+                          </Button>
                           <UncontrolledTooltip target={"Tooltip-2"}>
                             Reset all filters
                           </UncontrolledTooltip>
@@ -319,19 +310,20 @@ class Parts extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive >
           <thead>
             <tr>
-              <th width="90px">S.no</th>
-              <th>Part Description</th>
-              <th>Note</th>
-              <th>Part number</th>
-              <th>Vendor</th>
-              <th>Bin/Location</th>
-              <th>Cost</th>
-              <th>Retail Price</th>
-              <th className={"text-center"}>Quantity</th>
-              <th className={"text-center"}>Action</th>
+              <th width={"60px"}>S.No</th>
+              <th width={"200"}><i className="fa fa-gear"></i> Part Description</th>
+              {/* <th>Note</th>
+              <th>Part number</th> */}
+              <th width={"170"}><i className="fa fa-id-badge"></i> Vendor</th>
+              <th width={"150"}><i className="fa fa-bitbucket"></i> Bin/Location</th>
+              <th width={"200"}><i className="fa fa-dollar"></i> Cost / Retail Price</th>
+              {/* <th>Retail Price</th> */}
+              <th width={"120"}><i className="fa fa-shopping-basket"></i> Quantity</th>
+              <th width={"120"}><i className="fa fa-clock-o"></i> Created</th>
+              <th className={"text-center"} width={"140"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -346,13 +338,19 @@ class Parts extends Component {
                 return (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{part.description || "-"}</td>
-                    <td>{part.note || "-"}</td>
-                    <td>{part.partNumber || "-"}</td>
+                    <td className={"text-capitalize"}>
+                      <div className={"font-weight-bold"}>{part.description || "-"}</div>
+                      {part.partNumber ? <div className={"modal-info"}>Part No. : <Badge>{part.partNumber}</Badge></div> : null}
+                      <span className={"part-note"}>
+                        {part.note || "-"}
+                      </span>
+                    </td>
                     <td>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
                     <td>{part.location || "-"}</td>
-                    <td>{part.cost || "-"}</td>
-                    <td>{part.retailPrice || "-"}</td>
+                    <td>
+                      <div>${part.cost || " "}</div>
+                      <div>${part.retailPrice || " "}</div>
+                    </td>
                     <td>
                       {part.quantity || 0}&nbsp;
                       {part.quantity <= part.criticalQuantity ? (
@@ -360,20 +358,23 @@ class Parts extends Component {
                       ) : null}
                     </td>
                     <td>
+                      <div>{moment(part.createdAt).format("MMM Do YYYY")}</div>
+                      <div>{moment(part.createdAt).format("h:mm a")}</div>
+                    </td>
+                    <td className={"text-center"}>
                       <Button
-                        color={"primary"}
                         size={"sm"}
                         onClick={() => this.onEdit(part)}
                         id={`edit-${part._id}`}
+                        className={"btn-theme-transparent"}
                       >
-                        <i className={"fa fa-edit"} />
+                        <i className={"icons cui-pencil"}></i>
                       </Button>{" "}
                       <UncontrolledTooltip target={`edit-${part._id}`}>
                         Edit details of {part.description}
                       </UncontrolledTooltip>
                       &nbsp;
                       <Button
-                        color={"danger"}
                         size={"sm"}
                         onClick={() =>
                           this.setState(
@@ -386,8 +387,9 @@ class Parts extends Component {
                           )
                         }
                         id={`delete-${part._id}`}
+                        className={"btn-theme-transparent"}
                       >
-                        <i className={"fa fa-trash"} />
+                        <i className={"icons cui-trash"}></i>
                       </Button>
                       <UncontrolledTooltip target={`delete-${part._id}`}>
                         Delete {part.description}

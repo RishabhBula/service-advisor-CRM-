@@ -13,13 +13,13 @@ import {
   Button
 } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
-import { formateDate } from "../../../helpers/Date";
 import PaginationHelper from "../../../helpers/Pagination";
 import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { toast } from "react-toastify";
+import moment from 'moment';
 
 class CustomerList extends Component {
   constructor(props) {
@@ -209,7 +209,7 @@ class CustomerList extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -223,11 +223,11 @@ class CustomerList extends Component {
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="exampleSelect" className="label">
+                  {/* <Label for="exampleSelect" className="label">
                     Status
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="status"
@@ -236,18 +236,18 @@ class CustomerList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                      Status
                     </option>
                     <option value={1}>Active</option>
                     <option value={0}>Deactive</option>
                   </Input>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="SortFilter" className="label">
+                  {/* <Label for="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -256,7 +256,7 @@ class CustomerList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                     Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>
@@ -269,26 +269,26 @@ class CustomerList extends Component {
                   <Label className="height17 label" />
                   <div className="form-group mb-0">
                     <span className="mr-2">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="fa fa-search" />
-                      </button>
+                        <i className="icons cui-magnifying-glass"></i>
+                      </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
                       </UncontrolledTooltip>
                     </span>
                     <span className="">
-                      <button
+                      <Button
                         type="button"
-                        className="btn btn-danger"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="fa fa-refresh" />
-                      </button>
+                        <i className="icon-refresh icons"></i>
+                      </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
                       </UncontrolledTooltip>
@@ -299,7 +299,7 @@ class CustomerList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive >
           <thead>
             <tr>
               <th width="90px">
@@ -331,15 +331,14 @@ class CustomerList extends Component {
                   "Sno."
                 )}
               </th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone No.</th>
+              <th width={"300"}><i className={"fa fa-user"}/> Cutomer Details</th>
+              <th width={"280"}><i className={"fa fa-phone"} /> Phone No.</th>
               {/* <th>Address</th> */}
-              <th>Vehicle</th>
-              <th>Orders</th>
-              <th>Created</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th width={"130"}><i className={"fa fa-cab"} /> Vehicle</th>
+              <th width={"130"}><i className={"fa fa-list-ol"} /> Orders</th>
+              <th width={"130"}><i className={"fa fa-exclamation-circle"} /> Status</th>
+              <th width={"200"}><i className={"fa fa-clock-o"} /> Created</th>
+              <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -362,8 +361,10 @@ class CustomerList extends Component {
                           </label>
                         </div>
                       </td>
-                      <td>{user.firstName + " " + user.lastName || "-"}</td>
-                      <td>{user.email || "-"}</td>
+                      <td>
+                        <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || "-"}</div>
+                        <div>{user.email || "-"}</div>
+                      </td>
                       <td>
                         {user.phoneDetail
                           ? user.phoneDetail.map((data, ind) => {
@@ -388,10 +389,6 @@ class CustomerList extends Component {
                           : 0}
                       </td>
                       <td>0</td>
-                      <td>
-                        {user.createdAt ? formateDate(user.createdAt) : "-"}
-                      </td>
-
                       <td>
                         {user.status ? (
                           <Badge
@@ -429,18 +426,26 @@ class CustomerList extends Component {
                           </Badge>
                         )}
                       </td>
-
                       <td>
+                        {/* {user.createdAt ? formateDate(user.createdAt) : "-"} */}
+                        <div>{moment(user.createdAt).format("MMM Do YYYY")}</div>
+                        <div>{moment(user.createdAt).format("h:mm a")}</div>
+                      </td>
+                      <td className={"text-center"}>
+                        <span className={"mr-2"}>
                         <Button
-                          color={"primary"}
                           size={"sm"}
                           onClick={() => this.editUser(user)}
+                          className={"btn-theme-transparent"}
+                          id={"Tooltip-3"}
                         >
-                          <i className={"fa fa-edit"} />
-                        </Button>{" "}
-                        &nbsp;
+                          <i className={"icons cui-pencil"} />
+                        </Button>
+                        <UncontrolledTooltip target="Tooltip-3">
+                            Edit
+                        </UncontrolledTooltip>
+                        </span>
                         <Button
-                          color={"danger"}
                           size={"sm"}
                           onClick={() =>
                             this.setState(
@@ -453,9 +458,13 @@ class CustomerList extends Component {
                             )
                           }
                           id={`delete-${user._id}`}
+                          className={"btn-theme-transparent"}
                         >
-                          <i className={"fa fa-trash"} />
+                          <i className={"icons cui-trash"} />
                         </Button>
+                        <UncontrolledTooltip target={`delete-${user._id}`}>
+                          Delete
+                        </UncontrolledTooltip>
                       </td>
                     </tr>
                   );

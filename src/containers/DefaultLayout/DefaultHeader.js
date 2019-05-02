@@ -11,7 +11,7 @@ import {
   Nav,
   NavItem
 } from "reactstrap";
-import SearchBar from "../../components/common/SearchBar";
+// import SearchBar from "../../components/common/SearchBar";
 import { AppNavbarBrand } from "@coreui/react";
 
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
@@ -53,11 +53,11 @@ class DefaultHeader extends Component {
             className="custom-toggle-bar custom-toggle-ba d-md-down-none"
             display="lg"
           />
-          <Nav className="d-md-down-none search-input-wrap" navbar>
+          {/* <Nav className="d-md-down-none search-input-wrap" navbar>
             <NavItem className="px-3">
               <SearchBar />
             </NavItem>
-          </Nav>
+          </Nav> */}
           <Nav className="d-md-down-none" navbar>
             {permissions.isAllowedDashboard ? (
               <NavItem className="px-3">

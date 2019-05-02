@@ -27,14 +27,14 @@ export const ColorOptions = [
 
 
 export const carsOptions = [
-  { value: 'convertible', label: 'Convertible', color: '#00B8D9', isFixed: true },
-  { value: 'coupe', label: 'Coupe', color: '#0052CC', disabled: true },
-  { value: 'hatchback', label: 'HatchBack', color: '#5243AA' },
-  { value: 'suv', label: 'Suv', color: '#FF5630', isFixed: true },
-  { value: 'sedan', label: 'Sedan', color: '#FF8B00' },
-  { value: 'truck', label: 'Truck', color: '#FFC400' },
-  { value: 'van', label: 'Van', color: '#36B37E' },
-  { value: 'wagon', label: 'Wagon', color: '#00875A' },
+  { value: 'convertible', label: 'Convertible', color: '#00B8D9', isFixed: true, icons:'../assets/img/vehicles/convertible.svg' },
+  { value: 'coupe', label: 'Coupe', color: '#0052CC', disabled: true,icons:'convertible.svg'},
+  { value: 'hatchback', label: 'HatchBack', color: '#5243AA', icons:'hatchback.svg'},
+  { value: 'suv', label: 'Suv', color: '#FF5630', isFixed: true, icons:'suv.svg'},
+  { value: 'sedan', label: 'Sedan', color: '#FF8B00', icons:'sedan.svg'},
+  { value: 'truck', label: 'Truck', color: '#FFC400', icons:'truck.svg'},
+  { value: 'van', label: 'Van', color: '#36B37E', icons:'van.svg'},
+  { value: 'wagon', label: 'Wagon', color: '#00875A', icons:'wagon.svg'},
 ];
 
 export const otherCarsOptions = [
