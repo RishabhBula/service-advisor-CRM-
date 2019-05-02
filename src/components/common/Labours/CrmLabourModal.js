@@ -264,6 +264,7 @@ export class CrmLabourModal extends Component {
                           : false
                         }
                         value={selectedRateOptions ? selectedRateOptions : ""}
+                        noOptionsMessage={() =>"Please type rate name to search"}
                       />
                     </div>
                   </FormGroup>

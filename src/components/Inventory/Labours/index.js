@@ -14,9 +14,11 @@ import {
 
 import Loader from "../../../containers/Loader/Loader";
 import { connect } from "react-redux";
-import { labourEditRequest,labourListRequest,getRateStandardListRequest,deleteLabour,
-  setRateStandardListStart,rateAddRequest } from "../../../actions";
-import {CrmLabourModal}   from '../../common/Labours/CrmLabourModal' 
+import {
+  labourEditRequest, labourListRequest, getRateStandardListRequest, deleteLabour,
+  setRateStandardListStart, rateAddRequest
+} from "../../../actions";
+import { CrmLabourModal } from '../../common/Labours/CrmLabourModal'
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
@@ -35,18 +37,18 @@ class Labours extends Component {
       search: "",
       sort: "",
       page: 1,
-      labour:{},
+      labour: {},
       selectedLabours: []
     };
   }
 
   componentDidMount() {
     this.props.getStdList();
-    const query = qs.parse(this.props.location.search);  
+    const query = qs.parse(this.props.location.search);
     this.props.getlabour({ ...query, page: query.page || 1 });
   }
 
-  componentDidUpdate({labourReducer, location }) {  
+  componentDidUpdate({ labourReducer, location }) {
     if (
       this.props.labourReducer.labourData.isSuccess !==
       labourReducer.labourData.isSuccess
@@ -69,7 +71,7 @@ class Labours extends Component {
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
       this.props.getlabour({ ...currQuery, page: currQuery.page || 1 });
-    }    
+    }
   }
 
   handleChange = e => {
@@ -97,12 +99,12 @@ class Labours extends Component {
     this.setState({ filterApplied: hasFilter });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify(param)].join("?"))   
+    this.props.redirectTo([pathname, qs.stringify(param)].join("?"))
   };
 
   onReset = e => {
     e.preventDefault();
-     
+
     this.setState({
       page: 1,
       search: "",
@@ -113,7 +115,7 @@ class Labours extends Component {
     });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify('')].join("?"))  
+    this.props.redirectTo([pathname, qs.stringify('')].join("?"))
   };
   editLabour = data => {
     this.setState({ labour: data }, () => {
@@ -122,8 +124,8 @@ class Labours extends Component {
       });
     });
   };
-  
-  updateLabour =  data =>{
+
+  updateLabour = data => {
     try {
       this.props.updateLabour(data);
       this.setState({
@@ -156,7 +158,7 @@ class Labours extends Component {
     this.setState({ selectedLabours: [] });
   };
   onTypeHeadStdFun = data => {
-    this.props.getStdList(data); 
+    this.props.getStdList(data);
   };
 
   setDefaultRate = value => {
@@ -170,7 +172,7 @@ class Labours extends Component {
     }
   }
   onPageChange = (page) => {
-    this.setState({page});
+    this.setState({ page });
     const { location } = this.props;
     const { search, pathname } = location;
     const query = qs.parse(search);
@@ -183,9 +185,9 @@ class Labours extends Component {
       search,
       sort,
       page } = this.state
-    const { labourReducer,profileInfoReducer,rateStandardListReducer,modelInfoReducer, modelOperate } = this.props;
+    const { labourReducer, profileInfoReducer, rateStandardListReducer, modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireEditModalOpen,rateAddModalOpen } = modelDetails;
+    const { tireEditModalOpen, rateAddModalOpen } = modelDetails;
     const { isLoading, labourData } = labourReducer;
     return (
       <>
@@ -223,6 +225,10 @@ class Labours extends Component {
                     <option className="form-control" value={""}>
                       -- Select --
                     </option>
+                    <option value={"pasc"}>Price(Low to High)</option>
+                    <option value={"pdesc"}>Price(High to Low)</option>
+                    <option value={"diasc"}>Discount(Low to High)</option>
+                    <option value={"didesc"}>Discount(High to Low)</option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>
                     <option value={"ndesc"}>Name Z-A</option>
@@ -267,7 +273,7 @@ class Labours extends Component {
         <Table responsive bordered>
           <thead>
             <tr>
-              <th width='90px'>S.No.           
+              <th width='90px'>S.No.
               </th>
               <th>Labour Description</th>
               <th>Note</th>
@@ -286,16 +292,16 @@ class Labours extends Component {
                     <tr key={index}>
                       <td>
                         <label htmlFor={data._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </label>
                       </td>
                       <td>{data.discription || "-"}</td>
                       <td>{data.notes || "-"}</td>
                       <td>{(data.rate && data.rate.name) ? data.rate.name : "-"}</td>
-                      <td>{(data.hours) ? data.hours+' Hrs' : "-"}</td>
-                      <td>{(data.rate && data.rate.hourlyRate) ? '$'+data.rate.hourlyRate : "-"}</td>
+                      <td>{(data.hours) ? data.hours + ' Hrs' : "-"}</td>
+                      <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td>
                       <td>{data.discount || "-"}</td>
-                    
+
                       <td>
                         <Button
                           color={"primary"}
@@ -327,9 +333,9 @@ class Labours extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={8}>
-                      {(sort==='' && search==='') ? 'No labour record are available.' : 
-                    'Your search did not match any record.'}
-                  </td>
+                      {(sort === '' && search === '') ? 'No labour record are available.' :
+                        'Your search did not match any record.'}
+                    </td>
                   </tr>
                 )
             ) : (
@@ -342,7 +348,7 @@ class Labours extends Component {
             }
           </tbody>
         </Table>
-             
+
         {labourData.totalLabour && !isLoading ? (
           <PaginationHelper
             totalRecords={labourData.totalLabour}
@@ -354,26 +360,26 @@ class Labours extends Component {
           />
         ) : null}
         <CrmLabourModal
-            profileInfoReducer={profileInfoReducer.profileInfo}
-            rateStandardListData={rateStandardListReducer}
-            tyreModalOpen={tireEditModalOpen}
-            onTypeHeadStdFun={this.onTypeHeadStdFun}
-            setDefaultRate={this.setDefaultRate}
-            getStdList={this.props.getStdList}
-            dataLabour={this.state.labour}
-            addRate={this.addRate}
-            updateLabour={this.updateLabour}
-            handleLabourModal={() =>
-              modelOperate({
-                tireEditModalOpen: !tireEditModalOpen
-              })
-            }
-            rateAddModalProp={rateAddModalOpen}
-            rateAddModalFun={() =>
-              modelOperate({
-                rateAddModalOpen: !rateAddModalOpen
-              })}
-          />
+          profileInfoReducer={profileInfoReducer.profileInfo}
+          rateStandardListData={rateStandardListReducer}
+          tyreModalOpen={tireEditModalOpen}
+          onTypeHeadStdFun={this.onTypeHeadStdFun}
+          setDefaultRate={this.setDefaultRate}
+          getStdList={this.props.getStdList}
+          dataLabour={this.state.labour}
+          addRate={this.addRate}
+          updateLabour={this.updateLabour}
+          handleLabourModal={() =>
+            modelOperate({
+              tireEditModalOpen: !tireEditModalOpen
+            })
+          }
+          rateAddModalProp={rateAddModalOpen}
+          rateAddModalFun={() =>
+            modelOperate({
+              rateAddModalOpen: !rateAddModalOpen
+            })}
+        />
       </>
     );
   }
@@ -385,7 +391,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateLabour:(data) =>{  
+  updateLabour: (data) => {
     dispatch(labourEditRequest(data))
   },
   deleteLabour: data => {
@@ -400,7 +406,7 @@ const mapDispatchToProps = dispatch => ({
   setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
   },
-  addRate:(data)=>{
+  addRate: (data) => {
     dispatch(rateAddRequest(data));
   },
 });

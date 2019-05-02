@@ -170,8 +170,6 @@ const updateLabourdetails = async (req, res) => {
     });
   }
   try {
-    console.log("##########body##########", body.rateId);
-
     const updateLabourDetails = await labourModel.findByIdAndUpdate(
       mongoose.Types.ObjectId(body.labourId),
       {
@@ -219,6 +217,26 @@ const getAllLabourList = async (req, res) => {
       case "ndesc":
         sortBy = {
           discription: -1,
+        };
+        break;
+      case "pasc":
+        sortBy = {
+          price: 1,
+        };
+        break;
+      case "pdesc":
+        sortBy = {
+          price: -1,
+        };
+        break;
+      case "diasc":
+        sortBy = {
+          discount: 1,
+        };
+        break;
+      case "didesc":
+        sortBy = {
+          discount: -1,
         };
         break;
       default:
@@ -288,6 +306,7 @@ const getAllLabourList = async (req, res) => {
         condition,
       )
       .populate("rate")
+      .collation({locale: "en_US", numericOrdering: true})
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
