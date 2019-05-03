@@ -15,9 +15,8 @@ import CRMModal from "./Modal";
 import CrmDragDrop from "./CrmDragDrop";
 import { logger } from "../../helpers/Logger";
 import XLSX from "xlsx";
-import Loader from "../../containers/Loader/Loader";
 import { connect } from "react-redux";
-import { modelOpenRequest } from "../../actions";
+import { modelOpenRequest, showLoader, hideLoader } from "../../actions";
 
 class CrmImportExcel extends Component {
   constructor(props) {
@@ -46,6 +45,7 @@ class CrmImportExcel extends Component {
       this.setState({ fileError: "Please choose at least one file." });
       return;
     }
+    this.props.showLoader();
     this.setState({
       sheets: [],
       activeSheet: 0,
@@ -59,7 +59,6 @@ class CrmImportExcel extends Component {
         const XL_row_object = XLSX.utils.sheet_to_row_object_array(
           workbook.Sheets[sheetName]
         );
-
         let outputableHeader;
         for (let i = 0; i < XL_row_object.length; i++) {
           const element = XL_row_object[i];
@@ -86,16 +85,20 @@ class CrmImportExcel extends Component {
         sheets,
         isLoading: false
       });
+      this.props.hideLoader();
     };
     reader.readAsArrayBuffer(file);
   };
   onImportData = () => {
+    this.props.showLoader();
     const { sheets } = this.state;
     const { onImport } = this.props;
     let dataToImport = [];
     sheets.forEach(sheet => (dataToImport = dataToImport.concat(sheet.data)));
     if (onImport) {
       onImport(dataToImport);
+    } else {
+      this.props.hideLoader();
     }
   };
   modalOptions = () => {
@@ -143,10 +146,10 @@ class CrmImportExcel extends Component {
             {sheet.data &&
               sheet.data.map((data, index) => {
                 return (
-                  <tr index={Math.random()}>
+                  <tr key={index}>
                     {sheet.header
                       ? sheet.header.map((d, i) => {
-                          return <td key={index + i}>{data[d]}</td>;
+                          return <td key={i}>{data[d]}</td>;
                         })
                       : null}
                   </tr>
@@ -189,7 +192,7 @@ class CrmImportExcel extends Component {
               totalRecords =
                 totalRecords + (sheet.data ? sheet.data.length : 0);
               return (
-                <TabPane tabId={index}>
+                <TabPane key={index} tabId={index}>
                   <Row>
                     <Col sm="12">{this.renderTable(sheet)}</Col>
                   </Row>
@@ -203,7 +206,7 @@ class CrmImportExcel extends Component {
     );
   };
   render() {
-    const { buttonText, btnColor } = this.props;
+    const { buttonText, btnColor, children } = this.props;
     const { isLoading, fileError, sheets } = this.state;
     logger(isLoading);
     return (
@@ -212,6 +215,7 @@ class CrmImportExcel extends Component {
           {buttonText || "Import Excel"}
         </Button>
         <CRMModal {...this.modalOptions()}>
+          {children}
           <Row>
             <Col sm={{ size: 4, offset: 4 }}>
               <CrmDragDrop
@@ -223,13 +227,7 @@ class CrmImportExcel extends Component {
               {fileError ? <p className={"text-danger"}>{fileError}</p> : null}
             </Col>
             <Col sm={12}>
-              {isLoading ? (
-                <>
-                  <Loader />
-                </>
-              ) : sheets.length ? (
-                this.renderSheets()
-              ) : null}
+              {isLoading ? null : sheets.length ? this.renderSheets() : null}
             </Col>
           </Row>
         </CRMModal>
@@ -250,6 +248,12 @@ const mapDispatchToProps = dispatch => ({
         }
       })
     );
+  },
+  showLoader: () => {
+    dispatch(showLoader());
+  },
+  hideLoader: () => {
+    dispatch(hideLoader());
   }
 });
 

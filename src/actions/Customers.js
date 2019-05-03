@@ -13,7 +13,8 @@ export const customersAddActions = {
   UPDATE_CUSTOMER_STATUS: "Update customer status Requested!",
   EDIT_CUSTOMER_REQUESTED: "Edit CUSTOMER Requested!",
   EDIT_CUSTOMER_SUCCESS: "Edit CUSTOMER Success!",
-  IMPORT_CUSTOMER_REQUEST: "Request to import customers!"
+  IMPORT_CUSTOMER_REQUEST: "Request to import customers!",
+  IMPORT_CUSTOMER_REQ_UPDATE: "Update request to import customers!"
 };
 
 export const customerAddRequest = createAction(
@@ -57,4 +58,8 @@ export const customerEditSuccess = createAction(
 
 export const importCustomers = createAction(
   customersAddActions.IMPORT_CUSTOMER_REQUEST
+);
+
+export const updateImportCustomersReq = createAction(
+  customersAddActions.IMPORT_CUSTOMER_REQ_UPDATE
 );

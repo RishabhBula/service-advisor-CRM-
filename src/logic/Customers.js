@@ -16,7 +16,8 @@ import {
   customerGetRequest,
   customerEditSuccess,
   customerAddSuccess,
-  redirectTo
+  redirectTo,
+  updateImportCustomersReq
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
@@ -253,25 +254,36 @@ const importCustomerLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
+    if (!action.payload.length) {
+      toast.error(`No data found in sheet.`);
+      dispatch(hideLoader());
+      done();
+      return;
+    }
+    dispatch(
+      updateImportCustomersReq({
+        importError: null
+      })
+    );
     const profileStateData = getState().profileInfoReducer;
     logger(profileStateData);
     const errroredRows = [];
     let hasError = false;
-    const data = action.payload.map((element, index) => {
+    const data = action.payload.map(element => {
       if (!element["First Name"]) {
         hasError = true;
         errroredRows.push(
-          `First name not found on row ${element.rowNumber} of ${
+          `First name not found on row  <b>${element.rowNumber}</b> of <b>${
             element.sheetName
-          }`
+          }</b> sheet.`
         );
       }
       if (!element["Phone"]) {
         hasError = true;
         errroredRows.push(
-          `Phone number not found on row ${element.rowNumber} of ${
+          `Phone number not found on row  <b>${element.rowNumber}</b> of <b>${
             element.sheetName
-          }`
+          }</b> sheet.`
         );
       }
       return {
@@ -314,7 +326,11 @@ const importCustomerLogic = createLogic({
       };
     });
     if (hasError) {
-      toast.error(errroredRows.join(" | "));
+      dispatch(
+        updateImportCustomersReq({
+          importError: errroredRows.join(" <br /> ")
+        })
+      );
       dispatch(hideLoader());
       done();
       return;

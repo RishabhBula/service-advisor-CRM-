@@ -17,9 +17,12 @@ import {
   vehicleGetFailed,
   vehicleGetRequest,
   vehicleEditSuccess,
-  customerAddStarted
+  customerAddStarted,
+  redirectTo,
+  updateImportVehicleReq
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
+import { AppRoutes } from "../config/AppRoutes";
 
 const vehicleAddLogic = createLogic({
   type: vehicleActions.VEHICLES_ADD_REQUEST,
@@ -232,11 +235,140 @@ const updateVehicleStatusLogic = createLogic({
     }
   }
 });
-
+const importVehicleLogic = createLogic({
+  type: vehicleActions.IMPORT_VEHICLE_REQUEST,
+  async process({ action, getState }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    if (!action.payload.length) {
+      toast.error(`No data found in sheet.`);
+      dispatch(hideLoader());
+      done();
+      return;
+    }
+    dispatch(
+      updateImportVehicleReq({
+        importError: null
+      })
+    );
+    const profileStateData = getState().profileInfoReducer;
+    logger(profileStateData);
+    const errroredRows = [];
+    let hasError = false;
+    const data = action.payload.map(element => {
+      if (!element["Year"]) {
+        hasError = true;
+        errroredRows.push(
+          `Year not found on row <b>${element.rowNumber}</b> of <b>${
+            element.sheetName
+          }</b> sheet.`
+        );
+      } else if (
+        isNaN(parseInt(element["Year"])) ||
+        (element["Year"].length > 4 || element["Year"].length < 2)
+      ) {
+        hasError = true;
+        errroredRows.push(
+          `Invalid year value found on row <b>${element.rowNumber}</b> of <b>${
+            element.sheetName
+          }</b> sheet.`
+        );
+      }
+      if (!element["Make"]) {
+        hasError = true;
+        errroredRows.push(
+          `Make not found on row <b>${element.rowNumber}</b> of <b>${
+            element.sheetName
+          }</b> sheet.`
+        );
+      }
+      if (!element["Model"]) {
+        hasError = true;
+        errroredRows.push(
+          `Model number not found on row <b>${element.rowNumber}</b> of <b>${
+            element.sheetName
+          }</b> sheet.`
+        );
+      }
+      return {
+        year: parseInt(element["Year"]),
+        make: element["Make"],
+        modal: element["Model"],
+        type: {
+          value: element["Type"] ? element["Type"].toLowerCase() : null,
+          label: element["Type"],
+          color: "#00B8D9",
+          isFixed: true
+        },
+        notes: element["Notes"],
+        color: {
+          color: element["Color"],
+          label: element["Color"],
+          value: element["Color"] ? element["Color"].toLowerCase() : null
+        },
+        miles: element["Miles"],
+        licensePlate: element["Licence Plate"],
+        unit: element["Unit #"],
+        vin: element["VIN"],
+        engineSize: element["Engine Size"],
+        productionDate: element["Production Date"],
+        transmission: element["Transmission"]
+          ? element["Transmission"].toLowerCase()
+          : null,
+        subModal: element["Submodel"],
+        drivetrain: element["Drivetrain"],
+        parentId:
+          profileStateData.profileInfo.parentId ||
+          profileStateData.profileInfo._id,
+        userId: profileStateData.profileInfo._id,
+        status: true
+      };
+    });
+    if (hasError) {
+      dispatch(
+        updateImportVehicleReq({
+          importError: errroredRows.join(" <br /> ")
+        })
+      );
+      dispatch(hideLoader());
+      done();
+      return;
+    }
+    const api = new ApiHelper();
+    const result = await api.FetchFromServer(
+      "/vehicle",
+      "/bulk-add",
+      "POST",
+      true,
+      undefined,
+      data
+    );
+    if (!result.isError) {
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            showImportModal: false
+          }
+        })
+      );
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.VEHICLES.url}?page=1&reset=true`
+        })
+      );
+      toast.success(result.messages[0]);
+    } else {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+    }
+    dispatch(hideLoader());
+    done();
+  }
+});
 export const VehicleLogic = [
   vehicleAddLogic,
   getVehiclesLogic,
   editCustomerLogic,
   deleteVehicleLogic,
-  updateVehicleStatusLogic
+  updateVehicleStatusLogic,
+  importVehicleLogic
 ];

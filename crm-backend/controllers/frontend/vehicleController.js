@@ -282,11 +282,25 @@ const updateStatus = async ({ body }, res) => {
     });
   }
 };
-
+const bulkVehicleAdd = async (req, res) => {
+  const { body } = req;
+  var i,
+    j,
+    temparray,
+    chunk = 500;
+  for (i = 0, j = body.length; i < j; i += chunk) {
+    temparray = body.slice(i, i + chunk);
+    vehicleModal.insertMany(temparray);
+  }
+  res
+    .status(200)
+    .json({ message: `${body.length} records added successfully!` });
+};
 module.exports = {
   addNewVehicle,
   getAllVehicleList,
   updateVehicleDetails,
   deleteVehicle,
-  updateStatus
+  updateStatus,
+  bulkVehicleAdd
 };

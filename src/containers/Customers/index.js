@@ -7,7 +7,8 @@ import {
   Row,
   Col,
   Button,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  UncontrolledAlert
 } from "reactstrap";
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
@@ -159,7 +160,7 @@ class Customers extends Component {
     this.props.setLabourRateDefault(value);
   };
   onImport = data => {
-    this.props.importCusomer(data);
+    this.props.importCustomer(data);
   };
   render() {
     const { editMode, customer } = this.state;
@@ -192,7 +193,21 @@ class Customers extends Component {
                   modalHeaderText={"Import customer data"}
                   onImport={this.onImport}
                   buttonText={"Import Customers"}
-                />
+                >
+                  {customerListReducer.importError ? (
+                    <Row>
+                      <Col sm={{ size: 8, offset: 2 }}>
+                        <UncontrolledAlert color="danger">
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: customerListReducer.importError
+                            }}
+                          />
+                        </UncontrolledAlert>
+                      </Col>
+                    </Row>
+                  ) : null}
+                </CrmImportExcel>
                 &nbsp;&nbsp;
                 <Button
                   color="primary"
@@ -295,7 +310,7 @@ const mapDispatchToProps = dispatch => ({
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
   },
-  importCusomer: data => {
+  importCustomer: data => {
     dispatch(importCustomers(data));
   }
 });

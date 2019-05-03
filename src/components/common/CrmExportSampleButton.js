@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Button, UncontrolledTooltip } from "reactstrap";
 import XLSX from "xlsx";
-import { CustomerSheetData } from "../../config/DummySheetData";
+import {
+  CustomerSheetData,
+  VehicleSheetData
+} from "../../config/DummySheetData";
 
 export const DemoSupportedSheets = {
   CUSTOMER: "customer",
@@ -23,7 +26,10 @@ class CrmExportSampleButton extends Component {
         data = CustomerSheetData.data;
         header = CustomerSheetData.header;
         break;
-
+      case DemoSupportedSheets.VEHICLE:
+        data = VehicleSheetData.data;
+        header = VehicleSheetData.header;
+        break;
       default:
         break;
     }
@@ -31,7 +37,7 @@ class CrmExportSampleButton extends Component {
       header
     });
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, `Customers Sheet 1`);
+    XLSX.utils.book_append_sheet(wb, ws, `${sheetType || "sheet"} 1`);
     /* generate XLSX file and send to client */
     XLSX.writeFile(wb, `${sheetType || "sheet"}_sample_${Date.now()}.xlsx`);
   };
