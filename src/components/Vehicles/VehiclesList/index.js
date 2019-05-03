@@ -216,16 +216,16 @@ class VehiclesList extends Component {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
     const { page, search, sort, status, selectedVehicles } = this.state;
-    //  const carType = (type) => {
-    //    return carsOptions.map((item, index)=>{
-    //      if (item.value === type){
-    //        return (
-    //           <div key={index}>
-    //            <img src={Image} />
-    //           </div>
-    //         )
-    //       }
-    //  })}
+     const carType = (type) => {
+       return carsOptions.map((item, index)=>{
+         if (item.value === type){
+           return (
+              <div key={index}>
+               <img src={require(`../../../assets/img/vehicles/${item.icons}`)} alt={"type"} width={"80"}/>
+              </div>
+            )
+          }
+     })}
    
     return (
       <>
@@ -379,7 +379,7 @@ class VehiclesList extends Component {
               <th width={"120"}><i className={"fa fa-industry"} /> Make</th>
               <th width={"120"}><i className={"fa fa-automobile"} /> Model</th>
               <th width={"100"}><i className={"fa fa-dashboard"} /> Miles</th>
-              <th width={"150"}> Vin</th>
+              <th width={"150"}> VIN</th>
               <th width={"150"}><i className={"fa fa-address-card-o"} /> License Plate</th>
               <th width={"90"} className={"text-center"}><i className={"fa fa-snowflake-o"} /> Unit</th>
               {/* <th width={"90"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th> */}
@@ -410,8 +410,8 @@ class VehiclesList extends Component {
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
                       </td> */}
                       <td>
-                        {vehicle.type ? vehicle.type.label : "N/A"}
-                        {/* {carType(vehicle.type.value)} */}
+                        <div className={"vehicle-type-img"}>{carType(vehicle.type.value)}</div>
+                        {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
                       <td>
                         {vehicle.color ? (

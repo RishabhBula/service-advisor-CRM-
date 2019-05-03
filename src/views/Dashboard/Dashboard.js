@@ -28,13 +28,13 @@ class Dashboard extends Component {
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" sm="12" lg="12">
-            <Card>
-              <CardHeader>
+            <Card className={"white-card"}>
+              {/* <CardHeader>
                 <h4>
                   <i className="fa fa-dashboard" /> Dashboard
                 </h4>
-              </CardHeader>
-              <CardBody>
+              </CardHeader> */}
+              <CardBody className={"custom-card-body position-relative"}>
                 <h4 className={"text-center"}>Coming Soon</h4>
               </CardBody>
             </Card>

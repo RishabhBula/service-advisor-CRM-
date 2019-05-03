@@ -35,6 +35,8 @@ import {
   CreateFleetValidations,
   CreateFleetValidMessaages
 } from "../../validations";
+import LastUpdated from "../common/LastUpdated";
+
 export class CrmFleetEditModal extends Component {
   constructor(props) {
     super(props);
@@ -355,7 +357,8 @@ export class CrmFleetEditModal extends Component {
       fleetEditModalOpen,
       handleFleetModal,
       matrixListReducerData,
-      rateStandardListData
+      rateStandardListData,
+      fleetSingleData
     } = this.props;
     const {
       companyName,
@@ -411,6 +414,7 @@ export class CrmFleetEditModal extends Component {
         >
           <ModalHeader toggle={handleFleetModal}>
             Update Fleet details
+            <LastUpdated updatedAt={fleetSingleData.updatedAt} />
           </ModalHeader>
           <ModalBody>
             <div className="">

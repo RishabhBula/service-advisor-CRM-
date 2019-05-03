@@ -196,7 +196,7 @@ class Labours extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -212,9 +212,9 @@ class Labours extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="SortFilter" className="label">
+                  {/* <Label for="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -223,7 +223,7 @@ class Labours extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      Sort
                     </option>
                     <option value={"pasc"}>Price(Low to High)</option>
                     <option value={"pdesc"}>Price(High to Low)</option>
@@ -240,26 +240,26 @@ class Labours extends Component {
                   <Label className="height17 label" />
                   <div className="form-group mb-0">
                     <span className="mr-2">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="fa fa-search" />
-                      </button>
+                        <i className="icons cui-magnifying-glass" />
+                      </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
                       </UncontrolledTooltip>
                     </span>
                     <span className="">
-                      <button
+                      <Button
                         type="button"
-                        className="btn btn-danger"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="fa fa-refresh" />
-                      </button>
+                        <i className="icon-refresh icons"/>
+                      </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
                       </UncontrolledTooltip>
@@ -270,7 +270,7 @@ class Labours extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive >
           <thead>
             <tr>
               <th width='90px'>S.No.
@@ -279,9 +279,9 @@ class Labours extends Component {
               <th>Note</th>
               <th>Rate</th>
               <th>Hours</th>
-              <th>Price</th>
+              {/* <th>Price</th> */}
               <th>Discount</th>
-              <th>Action</th>
+              <th width={"90"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -297,22 +297,30 @@ class Labours extends Component {
                       </td>
                       <td>{data.discription || "-"}</td>
                       <td>{data.notes || "-"}</td>
-                      <td>{(data.rate && data.rate.name) ? data.rate.name : "-"}</td>
-                      <td>{(data.hours) ? data.hours + ' Hrs' : "-"}</td>
-                      <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td>
-                      <td>{data.discount || "-"}</td>
-
                       <td>
+                        <div>
+                          {(data.rate && data.rate.name) ? data.rate.name : "-"} - 
+                          {(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</div>
+                      </td>
+                      <td>{(data.hours) ? data.hours + ' Hrs' : "-"}</td>
+                      {/* <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td> */}
+                      <td>{data.discount || "-"}</td>
+                      <td className={"text-center"}>
+                        <span className="mr-2">
                         <Button
-                          color={"primary"}
                           size={"sm"}
                           onClick={() => this.editLabour(data)}
+                          className={"btn btn-theme-transparent"}
+                          id={"ToolTip-3"}
                         >
-                          <i className={"fa fa-edit"} />
-                        </Button>{" "}
-                        &nbsp;
+                          <i className={"icons cui-pencil"} />
+                        </Button>
+                        <UncontrolledTooltip target={"ToolTip-3"}>
+                          Edit
+                        </UncontrolledTooltip>
+                        </span>
+                        <span>
                         <Button
-                          color={"danger"}
                           size={"sm"}
                           onClick={() =>
                             this.setState(
@@ -323,9 +331,15 @@ class Labours extends Component {
                                 this.onDelete();
                               })
                           }
+                          className={"btn btn-theme-transparent"}
+                          id={"ToolTip-4"}
                         >
-                          <i className={"fa fa-trash"} />
+                          <i className={"icons cui-trash"}></i>
                         </Button>
+                        <UncontrolledTooltip target={"ToolTip-4"}>
+                          Delete 
+                        </UncontrolledTooltip>
+                        </span>
                       </td>
                     </tr>
                   );

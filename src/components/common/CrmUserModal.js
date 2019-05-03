@@ -30,6 +30,7 @@ import {
   RoleOptions
 } from "../../config/Constants";
 import CurrencyInput from "react-currency-input";
+import LastUpdated from "../common/LastUpdated";
 
 export class CrmUserModal extends Component {
   constructor(props) {
@@ -171,7 +172,7 @@ export class CrmUserModal extends Component {
     }
   };
   render() {
-    const { userModalOpen, handleUserModal } = this.props;
+    const { userModalOpen, handleUserModal, userData } = this.props;
     const {
       permissions,
       firstName,
@@ -193,6 +194,7 @@ export class CrmUserModal extends Component {
           >
             <ModalHeader toggle={handleUserModal}>
               {!isEditMode ? "Add New Member" : `Update member details`}
+              {isEditMode ? <LastUpdated updatedAt={userData.updatedAt} /> : null}
             </ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">

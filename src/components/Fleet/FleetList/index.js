@@ -372,7 +372,7 @@ class FleetList extends Component {
               {/* <th width={"250"}>Email</th> */}
               <th><i className={"fa fa-cab"} /> Vehicles</th>
               <th><i className={"fa fa-list-ol"} /> Orders</th>
-              <th><i className={"fa fa-bookmark"} /> Lables</th>
+              {/* <th><i className={"fa fa-bookmark"} /> Lables</th> */}
               <th><i className={"fa fa-exclamation-circle"} /> Status</th>
               <th><i className={"fa fa-clock-o"} /> Created</th>
               <th width={"140"} className={"text-center"}>Action</th>
@@ -414,9 +414,9 @@ class FleetList extends Component {
                       </td>
                       <td>0</td>
                       <td>0</td>
-                      <td >
+                      {/* <td >
                         <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
-                      </td>
+                      </td> */}
                       <td>
                         {data.status ? (
                           <Badge

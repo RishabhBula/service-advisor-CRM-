@@ -14,8 +14,8 @@ import {
    Input
 } from "reactstrap";
 import {
-   TierPermission,
-   TierPermissionText,
+   tierPermission,
+   tierPermissionText,
    MarkupChangeValues,
    MarginChangeValues,
 } from "../../../config/Constants"
@@ -33,6 +33,7 @@ import {
    CalculateRetailPriceByMarkupPercent,
    CalculateRetailPriceByMarginPercent
 } from "../../../helpers/Sales";
+import LastUpdated from "../../common/LastUpdated";
 
 export class CrmTyreModal extends Component {
    constructor(props) {
@@ -57,7 +58,7 @@ export class CrmTyreModal extends Component {
                margin: ""
             }
          ],
-         TierPermission: TierPermission,
+         tierPermission: tierPermission,
          errors: {},
          seasonBtnClass: "",
          selectedVendor: {
@@ -83,7 +84,7 @@ export class CrmTyreModal extends Component {
             vendorId,
             seasonality,
             tierSize,
-            TierPermission
+            tierPermission
          } = this.props.tireData;
          this.setState({
             isEditMode: true,
@@ -92,7 +93,7 @@ export class CrmTyreModal extends Component {
             vendorId,
             seasonality,
             tierSize,
-            TierPermission,
+            tierPermission,
             selectedVendor: {
                label: vendorId && vendorId.name ? vendorId.name : "Type to select vendor",
                value: vendorId && vendorId._id ? vendorId._id : ''
@@ -102,10 +103,10 @@ export class CrmTyreModal extends Component {
    }
 
    handleClick = (e) => {
-      let { TierPermission } = this.state;
-      TierPermission.showNoteOnQuotesInvoices = e.target.checked;
+      let { tierPermission } = this.state;
+      tierPermission.showNoteOnQuotesInvoices = e.target.checked;
       this.setState({
-         TierPermission
+         tierPermission
       });
    }
 
@@ -121,25 +122,27 @@ export class CrmTyreModal extends Component {
       ) {
          return
       }
+      const tierSize = [...this.state.tierSize];
       let t, r, e, q
       if (name === 'quantity' && value) {
          t = parseInt(value)
+         tierSize[index].quantity = t;
       }
-      if (name === 'criticalQuantity' && value) {
+      else if (name === 'criticalQuantity' && value) {
          r = parseInt(value)
+         tierSize[index].criticalQuantity = r;
       }
-      if (name === 'cost' && value) {
+      else if (name === 'cost' && value) {
          e = parseInt(value)
+         tierSize[index].cost = e;
       }
-      if (name === 'retailPrice' && value) {
+      else if (name === 'retailPrice' && value) {
          q = parseInt(value)
+         tierSize[index].retailPrice = q;
       }
-      const tierSize = [...this.state.tierSize];
-      tierSize[index][name] = value;
-      tierSize[index].quantity = t;
-      tierSize[index].criticalQuantity = r;
-      tierSize[index].cost = e;
-      tierSize[index].retailPrice = q;
+      else {
+         tierSize[index][name] = value;
+      }
       this.setState({
          tierSize
       });
@@ -245,7 +248,7 @@ export class CrmTyreModal extends Component {
          vendorId,
          seasonality,
          tierSize,
-         TierPermission
+         tierPermission
       } = this.state
 
       const payload = {
@@ -254,7 +257,7 @@ export class CrmTyreModal extends Component {
          vendorId: vendorId && vendorId.value ? vendorId.value : null,
          seasonality,
          tierSize,
-         TierPermission
+         tierPermission
       }
       const { isValid, errors } = Validator(
          payload,
@@ -297,7 +300,7 @@ export class CrmTyreModal extends Component {
                margin: ""
             }
          ],
-         TierPermission: TierPermission,
+         tierPermission: tierPermission,
          errors: {}
       });
    }
@@ -306,7 +309,7 @@ export class CrmTyreModal extends Component {
       const { tyreModalOpen, handleTierModal, tireData } = this.props;
       const {
          tierSize,
-         TierPermission,
+         tierPermission,
          errors,
          modalName,
          seasonality,
@@ -322,7 +325,7 @@ export class CrmTyreModal extends Component {
                backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
-               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}</ModalHeader>
+               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}{" "}{isEditMode ? <LastUpdated updatedAt={tireData.updatedAt} />: null}</ModalHeader>
                <ModalBody>
                   <div className="">
                      <Row className="justify-content-center">
@@ -377,7 +380,7 @@ export class CrmTyreModal extends Component {
                            <FormGroup className={"fleet-block"}>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Vendor
-                              </Label>
+ </Label>
                               <Async
                                  placeholder={"Type vendor name"}
                                  loadOptions={this.loadOptions}
@@ -397,7 +400,7 @@ export class CrmTyreModal extends Component {
                         <FormGroup>
                            <Label htmlFor="name" className="customer-modal-text-style tire-col">
                               Seasonality
-                           </Label>
+ </Label>
                            <ButtonGroup className="tyre-season">
                               <Button
                                  value={seasonality}
@@ -405,7 +408,7 @@ export class CrmTyreModal extends Component {
                                  onClick={() => this.handleButtonClick("summer")}
                               >
                                  Summer
-                              </Button>
+ </Button>
                               <Button
                                  value={seasonality}
                                  className={seasonality === 'winter' ? "margin-markup-btn-active" : "season-btn"}
@@ -429,7 +432,7 @@ export class CrmTyreModal extends Component {
                                        <FormGroup>
                                           <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                              Base Info
-                                          </Label>
+ </Label>
                                           <MaskedInput
                                              mask="111/11R11 11"
                                              type="text"
@@ -443,7 +446,7 @@ export class CrmTyreModal extends Component {
                                        <FormGroup>
                                           <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                              Note
-                                          </Label>
+ </Label>
                                           <Input
                                              type="textarea"
                                              rows={"1"}
@@ -459,7 +462,7 @@ export class CrmTyreModal extends Component {
                                                 <FormGroup>
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Part #
-                                                   </Label>
+ </Label>
                                                    <Input
                                                       type="text"
                                                       name="part"
@@ -474,7 +477,7 @@ export class CrmTyreModal extends Component {
                                                 <FormGroup>
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Bin
-                                                   </Label>
+ </Label>
                                                    <Input
                                                       type="text"
                                                       name="bin"
@@ -491,7 +494,7 @@ export class CrmTyreModal extends Component {
                                                 <FormGroup>
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Quantity
-                                                   </Label>
+ </Label>
                                                    <Input
                                                       type="text"
                                                       name="quantity"
@@ -504,9 +507,9 @@ export class CrmTyreModal extends Component {
                                              </Col>
                                              <Col md="6">
                                                 <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
                                                       Critical Quantity
-                                                   </Label>
+ </Label>
                                                    <Input
                                                       type="text"
                                                       name="criticalQuantity"
@@ -522,9 +525,9 @@ export class CrmTyreModal extends Component {
                                     </Col>
                                     <Col md="6">
                                        <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                          <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
                                              Pricing Matrix
-                                          </Label>
+ </Label>
                                           <Input
                                              type="text"
                                              placeholder={"Price Matrix"}
@@ -537,7 +540,7 @@ export class CrmTyreModal extends Component {
                                                 <FormGroup>
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Cost
-                                                   </Label>
+ </Label>
                                                    <Input
                                                       type="text"
                                                       name="cost"
@@ -551,7 +554,7 @@ export class CrmTyreModal extends Component {
                                                 <FormGroup>
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Retail Price
-                                                   </Label>
+ </Label>
                                                    <Input
                                                       type="text"
                                                       name="retailPrice"
@@ -566,7 +569,7 @@ export class CrmTyreModal extends Component {
                                        <FormGroup>
                                           <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                              Markup
-                                          </Label>
+ </Label>
                                           <ButtonGroup className="tyre-season">
                                              {MarkupChangeValues.map((mark, i) => {
                                                 return (
@@ -594,7 +597,7 @@ export class CrmTyreModal extends Component {
                                        <FormGroup>
                                           <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                              Margin
-                                          </Label>
+ </Label>
                                           <ButtonGroup className="tyre-season">
                                              {MarginChangeValues.map((mark, i) => {
                                                 return (
@@ -637,26 +640,26 @@ export class CrmTyreModal extends Component {
                            className="customer-add-phone customer-anchor-text customer-click-btn"
                         >
                            Add Tire Size
-                        </span>
+ </span>
                      ) : null}
 
                      <Col md="6">
                         <div className="d-flex">
                            <p className="customer-modal-text-style">
-                              {TierPermissionText.showNoteOnQuotesInvoices}
+                              {tierPermissionText.showNoteOnQuotesInvoices}
                            </p>
                            {
-                              (TierPermission.showNoteOnQuotesInvoices)
+                              (tierPermission.showNoteOnQuotesInvoices)
 
                            }
                            <AppSwitch
                               className={"mx-1"}
                               checked={
-                                 TierPermission.showNoteOnQuotesInvoices
+                                 tierPermission.showNoteOnQuotesInvoices
                               }
                               onClick={this.handleClick}
                               variant={"3d"}
-                              // value={TierPermission.showNoteOnQuotesInvoices}
+                              // value={tierPermission.showNoteOnQuotesInvoices}
                               color={"primary"}
                               size={"sm"}
                            />
@@ -671,7 +674,7 @@ export class CrmTyreModal extends Component {
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel
-                  </Button>
+ </Button>
                </ModalFooter>
             </Modal>
          </>

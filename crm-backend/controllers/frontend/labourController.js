@@ -7,6 +7,8 @@ const { validationResult } = require("express-validator/check");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
+    console.log("**************", $data.searchValue);
+
     let condition = {
       name: new RegExp($data.searchValue, "i")
     }
@@ -126,6 +128,7 @@ const createNewLabour = async (req, res) => {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
       currentUser.parentId = currentUser.id
     }
+    console.log("**************This Rate id =>", body.rateId);
     const addNewLabour = {
       discription: body.discription,
       hours: body.hours,

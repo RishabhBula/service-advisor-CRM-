@@ -51,6 +51,16 @@
 .btn-secondary.btn-theme-transparent .icons{
   font-weight: 600;
 }
+.btn.btn-theme-line{
+  min-width: 150px;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #b1acc2 !important;
+  background: #fff;
+  color: #433b6d;
+  position: relative;
+}
 .flex-1{
   flex: 1;
 }
@@ -1006,6 +1016,18 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .sec-btn{
   border-right: 1px solid #e4eaec; 
 }
+.last-updated-block{
+  font-size: 12px;
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  text-align: right;
+}
+.last-updated-block .badge-secondary{
+  background-color: transparent !important;
+  color: #fff;
+  padding-right: 0;
+}
 /* Tyre CSS */
 .remove-tire-btn{
   top: -19px;
@@ -1057,12 +1079,60 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .size-desc-table{
   background-color: #eee;
 }
+.two-line-label{
+  margin-top: 0 !important;
+  line-height: 17px;
+  position: relative;
+  top: -3px;
+}
+.vehicle-type-title{
+  font-size: 12px;
+  font-weight: 600;
+  color: #65626d;
+  padding-top: 4px;
+}
 /* Tyre CSS END*/
 
-
-
-
-
+/* Price Matrix */
+.matrix-list li{
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+.matrix-list li .icons{
+  font-weight: 600;
+  margin-right: 3px;
+  font-size: 11px;
+  padding: 2px 0;
+}
+.matrix-input{
+  padding-right: 29px;
+}
+.matrix-action{
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 0px;
+  right: 23px;
+  width: 0px;
+}
+.matrix-input-control .form-control{
+  height: 50px;
+  max-width: 70px;
+  border: none
+}
+.matrix-input-control .form-control:disabled{
+  background-color: #fff;
+  opacity: 1;
+}
+.matrix-input-control .value-sprate{
+  padding: 0 10px;
+  display: block;
+}
+/* Price Matrix End */
 
 /* Media Query STRAT*/
 @media(max-width:1220px){

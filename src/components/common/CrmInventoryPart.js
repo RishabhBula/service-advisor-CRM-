@@ -249,7 +249,7 @@ class CrmInventoryPart extends Component {
       quantity,
       vendorInput
     } = this.state;
-    const { isOpen, toggle, isEditMode } = this.props;
+    const { isOpen, toggle, isEditMode, partDetails } = this.props;
     const buttons = [
       {
         text: isEditMode ? "Update Part" : "Add part",
@@ -273,6 +273,7 @@ class CrmInventoryPart extends Component {
           }
           footerButtons={buttons}
           showfooterMsg
+          updatedAt={ isEditMode ? partDetails.updatedAt : null}
         >
           <Row className="justify-content-center">
             <Col md="6">

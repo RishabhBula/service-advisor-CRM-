@@ -19,6 +19,8 @@ import { PhoneOptions } from "../../config/Constants";
 import MaskedInput from "react-text-mask";
 import { isValidURL } from "../../helpers/Object";
 import moment from 'moment';
+import LastUpdated from "../common/LastUpdated";
+
 export class CrmInventoryVendor extends Component {
 
   constructor(props) {
@@ -235,7 +237,8 @@ export class CrmInventoryVendor extends Component {
           className='customer-modal custom-form-modal custom-modal-lg'
         >
           <ModalHeader toggle={this.props.handleVendorAddModal}>
-            {!isEditMode ? 'Create New Vendor' : `Update Vendor`}
+            {!isEditMode ? 'Create New Vendor' : `Update Vendor Details`}
+            {isEditMode ? <LastUpdated updatedAt={vendorData.updatedAt} /> : null}
           </ModalHeader>
           <ModalBody>
             <div className=''>
@@ -496,15 +499,6 @@ export class CrmInventoryVendor extends Component {
           <ModalFooter>
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
-              {isEditMode ?
-              <div className="">
-                <b>Last Updated -: &nbsp;
-                  <Badge color={"secondary"}>
-                      {vendorData && vendorData.updatedAt ? moment(vendorData.updatedAt).format("MMM Do YYYY, h:mm A") :null}
-                  </Badge>
-                </b>
-              </div>
-              : null }
             </div>
             <Button
               color='primary'

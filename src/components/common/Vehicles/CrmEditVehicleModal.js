@@ -22,6 +22,7 @@ import {
   VehicleValidationMessage
 } from "../../../validations";
 import Validator from "js-object-validation";
+import LastUpdated from "../../common/LastUpdated";
 
 class CustomOption extends Component {
   render() {
@@ -312,7 +313,7 @@ export class CrmEditVehicleModal extends Component {
   };
 
   render() {
-    const { vehicleEditModalOpen, handleEditVehicleModal } = this.props;
+    const { vehicleEditModalOpen, handleEditVehicleModal, vehicleData} = this.props;
     const {
       expandForm,
       transmissionSelected,
@@ -334,7 +335,8 @@ export class CrmEditVehicleModal extends Component {
           className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader toggle={handleEditVehicleModal}>
-            Update Vehicle
+            Update Vehicle 
+            <LastUpdated updatedAt={vehicleData.updatedAt}/>
           </ModalHeader>
           <ModalBody>
             <Row className="justify-content-center">

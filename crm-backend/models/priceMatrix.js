@@ -2,8 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const pricematrixSchema = new Schema({
-   name: {
+   matrixName: {
       type: String,
+      default: null
+   },
+   matrixRange: {
+      type: [Object],
       default: null
    },
    parentId: {
@@ -15,6 +19,14 @@ const pricematrixSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true
+   },
+   status: {
+      type: Boolean,
+      default: false
+   },
+   isDeleted: {
+      type: Boolean,
+      default: false
    },
    createdAt: {
       type: Date,

@@ -59,31 +59,31 @@ class DefaultHeader extends Component {
             </NavItem>
           </Nav> */}
           <Nav className="d-md-down-none" navbar>
-            {permissions.isAllowedDashboard ? (
+            {/* {permissions.isAllowedDashboard ? (
               <NavItem className="px-3">
                 <NavLink to="/dashboard" className="nav-link">
                   Dashboard
                 </NavLink>
               </NavItem>
-            ) : null}
+            ) : null} */}
             {permissions.isAllowedCalendar ? (
               <NavItem className="px-3">
                 <NavLink to="/calender" className="nav-link">
-                  Calender
+                  <i className={"icons icon-calendar"}/> Calender
                 </NavLink>
               </NavItem>
             ) : null}
             {permissions.isAllowedCompanySettings ? (
               <NavItem className="px-3">
                 <NavLink to="/settings/users" className="nav-link">
-                  Staff
+                  <i className={"icons icon-people"} /> Staff
                 </NavLink>
               </NavItem>
             ) : null}
 
             <NavItem className="px-3">
               <NavLink to="/profile" className="nav-link">
-                Profile
+                <i className={"icons icon-user"} /> Profile
               </NavLink>
             </NavItem>
             <NavItem className="px-3">
@@ -92,7 +92,7 @@ class DefaultHeader extends Component {
                 className="nav-link"
                 onClick={e => this.props.onLogout(e)}
               >
-                Logout
+                <i className={"icons icon-logout"} /> Logout
               </NavLink>
             </NavItem>
           </Nav>

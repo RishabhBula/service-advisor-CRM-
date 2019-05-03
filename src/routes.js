@@ -13,7 +13,7 @@ const Vehicles = React.lazy(() => import("./containers/Vehicles"));
 const Fleet = React.lazy(() => import("./containers/Fleet"));
 const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
-
+const PriceMatrix = React.lazy(() => import("./containers/PriceMatrix"));
 const routes = [
   {
     path: AppRoutes.HOME.url,
@@ -85,6 +85,12 @@ const routes = [
     exact: AppRoutes.CUSTOMERS.exact,
     name: AppRoutes.CUSTOMERS.name,
     component: Customers
+  },
+  {
+    path: AppRoutes.PRICEMATRIX.url,
+    exact: AppRoutes.PRICEMATRIX.exact,
+    name: AppRoutes.PRICEMATRIX.name,
+    component: PriceMatrix
   },
   { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];

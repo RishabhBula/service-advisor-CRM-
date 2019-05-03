@@ -35,6 +35,7 @@ import Validator from "js-object-validation";
 import Async from "react-select/lib/Async";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { toast } from "react-toastify";
+import LastUpdated from "../common/LastUpdated";
 
 export class CrmEditCustomerModal extends Component {
   constructor(props) {
@@ -472,7 +473,8 @@ export class CrmEditCustomerModal extends Component {
       customerModalOpen,
       matrixListReducerData,
       rateStandardListData,
-      getCustomerFleetList
+      getCustomerFleetList,
+      customer
     } = this.props;
     const {
       selectedOption,
@@ -517,6 +519,7 @@ export class CrmEditCustomerModal extends Component {
         >
           <ModalHeader toggle={this.handleCustomerModal}>
             {"Update Customer"}
+            <LastUpdated updatedAt={customer.updatedAt}/>
           </ModalHeader>
           <ModalBody>
             <div className="">

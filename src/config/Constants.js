@@ -202,10 +202,10 @@ export const LabourPermissionText = {
   isShowHours: "Display hours on quote & invoice",
   showNoteOnQuotesInvoices: "Display note on quote & invoice" 
 }
- export const TierPermission = {
+export const tierPermission = {
    showNoteOnQuotesInvoices: false
  }
-export const TierPermissionText = {
+export const tierPermissionText = {
   showNoteOnQuotesInvoices:"Display note on quote & invoice"
 }
 export const orderPermission = {

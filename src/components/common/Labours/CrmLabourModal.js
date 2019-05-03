@@ -28,7 +28,8 @@ import {
 } from "../../../validations";
 import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
-import moment from 'moment';
+import LastUpdated from "../../common/LastUpdated";
+
 export class CrmLabourModal extends Component {
   constructor(props) {
     super(props);
@@ -230,7 +231,10 @@ export class CrmLabourModal extends Component {
           backdrop={"static"}
           className="customer-modal custom-form-modal custom-modal-lg"
         >
-          <ModalHeader toggle={handleLabourModal}>{isEditMode ? `Update labour detail` : 'Create New Labour'}</ModalHeader>
+          <ModalHeader toggle={handleLabourModal}>
+            {isEditMode ? `Update Labour Details` : 'Create New Labour'}
+            {isEditMode ?<LastUpdated updatedAt={updatedAt}/> : null}
+          </ModalHeader>
           <ModalBody>
             <div className="">
               <Row >
@@ -256,7 +260,7 @@ export class CrmLabourModal extends Component {
                       Rate
                     </Label>
 
-                    <div md="12" className={"fleet-block rate-standard-list rate-labour"}
+                    <div md="12" className={"fleet-block rate-labour"}
                     >
                       <Async
                         placeholder={"Type to select"}
@@ -346,18 +350,9 @@ export class CrmLabourModal extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-          <div className={"flex-1"}>
+
             <div className="required-fields">*Fields are Required.</div>
-            {isEditMode ?
-              <div className="">
-                <b>Last Updated -: &nbsp;
-                  <Badge color={"secondary"}>
-                      { updatedAt ? moment(updatedAt).format("MMM Do YYYY, h:mm:ss A") :null}
-                  </Badge>
-                </b>
-              </div>
-              : null }
-            </div>  
+            
             <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update labour detail` : 'Add New Labour'}
 
             </Button>{" "}
