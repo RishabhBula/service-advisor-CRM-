@@ -324,7 +324,7 @@ export class CrmTyreModal extends Component {
                backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
-               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}</ModalHeader>
+               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}{"  "}{isEditMode ? <span className={"text-right"}>Last Updated:{tireData.updatedAt}</span> : null}</ModalHeader>
                <ModalBody>
                   <div className="">
                      <Row className="justify-content-center">

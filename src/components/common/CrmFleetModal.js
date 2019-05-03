@@ -329,11 +329,14 @@ export class CrmFleetModal extends Component {
     }
   };
 
+  matrixLoadOptions = (input, callback) => {
+    this.props.getPriceMatrix({ input, callback });
+  }
+
   render() {
     const {
       fleetModalOpen,
       handleFleetModal,
-      matrixListReducerData,
       rateStandardListData
     } = this.props;
     const {
@@ -788,14 +791,6 @@ export class CrmFleetModal extends Component {
                               </Label>
                             <FormGroup>
                               <Col md="4" className={"p-0"}>
-                                {/* <Cleave
-                                  placeholder="00.00%"
-                                  options={{
-                                    delimiter: '.',
-                                    blocks: [1, 2],
-                                    numeral: true
-                                  }}
-                                /> */}
                                 <MaskedInput
                                   mask="11\.11 \%"
                                   placeholder="00.00%"
@@ -837,34 +832,19 @@ export class CrmFleetModal extends Component {
                           ) : null}
                         {/* */}
                         {pricingMatrix ? (
-                          <Col md="12">
-                            <FormGroup>
-                              <Input
-                                type="select"
-                                className=""
-                                onChange={this.handleMatrixChange}
-                                name="matrixType"
-                                id="matrixId"
-                              >
-                                <option value={""}>Select</option>
-                                {matrixListReducerData &&
-                                  matrixListReducerData.matrixList &&
-                                  matrixListReducerData.matrixList.length
-                                  ? matrixListReducerData.matrixList.map(
-                                    (item, index) => {
-                                      return (
-                                        <option
-                                          value={item._id}
-                                          key={index}
-                                        >
-                                          {item.name}
-                                        </option>
-                                      );
-                                    }
-                                  )
-                                  : null}
-                              </Input>
-                            </FormGroup>
+                          <Col
+                            md=""
+                            className={"fleet-block rate-standard-list"}
+                          >
+                            <Async
+                              loadOptions={this.matrixLoadOptions}
+                              onChange={this.handlePriceMatrix}
+                              placeholder={"Type to select price matrix"}
+                              isClearable={true}
+                              noOptionsMessage={() => "Type price matrix name"
+                              }
+                              value={selectedLabourRate}
+                            />
                           </Col>
                         ) : null}
                       </Col>

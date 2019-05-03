@@ -22,6 +22,7 @@ import {
   modelOpenRequest,
   fleetEditRequest,
   updateFleetStatus,
+  getMatrixListStart
 } from '../../actions';
 import { logger } from '../../helpers/Logger';
 import * as qs from 'query-string';
@@ -162,6 +163,7 @@ class Fleet extends Component {
       profileInfoReducer,
       fleetReducer,
       rateStandardListReducer,
+      getPriceMatrix
     } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
@@ -213,6 +215,7 @@ class Fleet extends Component {
           rateStandardListData={rateStandardListReducer}
           profileInfoReducer={profileInfoReducer.profileInfo}
           matrixListReducerData={matrixListReducer}
+          getPriceMatrix={getPriceMatrix}
         />
         <CrmFleetEditModal
           onTypeHeadStdFun={this.onTypeHeadStdFun}
@@ -268,6 +271,9 @@ const mapDispatchToProps = dispatch => ({
   onStatusUpdate: data => {
     dispatch(updateFleetStatus(data));
   },
+  getPriceMatrix: (data) => {
+    dispatch(getMatrixListStart(data));
+  }
 });
 
 export default connect(
