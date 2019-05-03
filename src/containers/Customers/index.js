@@ -23,13 +23,15 @@ import {
   setRateStandardListStart,
   customerEditRequest,
   updateCustomerStatus,
-  getCustomerFleetListRequest
+  getCustomerFleetListRequest,
+  importCustomers
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
 import CrmExportSampleButton, {
   DemoSupportedSheets
 } from "../../components/common/CrmExportSampleButton";
+import CrmImportExcel from "../../components/common/CrmImportExcel";
 
 class Customers extends Component {
   constructor(props) {
@@ -156,7 +158,9 @@ class Customers extends Component {
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   };
-
+  onImport = data => {
+    this.props.importCusomer(data);
+  };
   render() {
     const { editMode, customer } = this.state;
     const {
@@ -173,7 +177,10 @@ class Customers extends Component {
             <Row>
               <Col sm={"6"} className={"pull-left"}>
                 <h4>
-                  <i className={"fa fa-users"} /> Customer List
+                  <i className={"fa fa-users"} /> Customer List{" "}
+                  {!customerListReducer.isLoading
+                    ? `(${customerListReducer.totalCustomers || 0})`
+                    : null}
                 </h4>
               </Col>
               <Col sm={"6"} className={"text-right"}>
@@ -181,6 +188,12 @@ class Customers extends Component {
                   sheetType={DemoSupportedSheets.CUSTOMER}
                 />{" "}
                 &nbsp;
+                <CrmImportExcel
+                  modalHeaderText={"Import customer data"}
+                  onImport={this.onImport}
+                  buttonText={"Import Customers"}
+                />
+                &nbsp;&nbsp;
                 <Button
                   color="primary"
                   id="add-user"
@@ -281,6 +294,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
+  },
+  importCusomer: data => {
+    dispatch(importCustomers(data));
   }
 });
 

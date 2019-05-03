@@ -1,38 +1,82 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
-import { logger } from "../../helpers/Logger";
-import XLSX from "xlsx";
+
+const CrmDragDropStyles = {
+  container: {
+    height: 250,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#fff",
+    borderRadius: "5",
+    padding: 20,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.16)",
+    cursor: "pointer"
+  }
+};
 
 class CrmDragDrop extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-  onFileDrop = files => {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
-      workbook.SheetNames.forEach(sheetName => {
-        const XL_row_object = XLSX.utils.sheet_to_row_object_array(
-          workbook.Sheets[sheetName]
-        );
-        logger(XL_row_object);
-      });
-      /* DO SOMETHING WITH workbook HERE */
+    this.state = {
+      files: [],
+      acceptedTypes: ["image/jpg", "image/jpeg", "image/png", "image/gif"]
     };
-    reader.readAsArrayBuffer(files[0]);
-  };
+  }
+
   render() {
+    const { files, acceptedTypes: defaultTypes } = this.state;
+    let {
+      accept: acceptedTypes,
+      acceptMessage,
+      onFileDrop,
+      isMultiple,
+      containerClass
+    } = this.props;
+    if (!acceptedTypes) {
+      acceptedTypes = defaultTypes;
+    }
+
     return (
-      <Dropzone onDrop={this.onFileDrop}>
+      <Dropzone
+        onDrop={files => {
+          this.setState({ files });
+          onFileDrop(isMultiple ? files : files[0]);
+        }}
+      >
         {({ getRootProps, getInputProps }) => (
-          <section>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              <p>Drag & drop some files here, or click to select files</p>
+          <div
+            {...getRootProps()}
+            className={containerClass}
+            style={CrmDragDropStyles.container}
+          >
+            <input
+              {...getInputProps()}
+              accept={acceptedTypes.join(", ")}
+              multiple={typeof isMultiple === undefined ? false : isMultiple}
+            />
+            <div className={"text-center"}>
+              {files && files.length ? (
+                <>
+                  {`${files.length} ${files.length > 1 ? "files" : "file"}
+                  selected`}
+                  {files.map((file, index) => {
+                    return <div key={index}>{file.name}</div>;
+                  })}
+                </>
+              ) : (
+                <>
+                  <p>Drag & drop some files here, or click to select files</p>
+                  <em>
+                    (
+                    {acceptMessage ||
+                      `Only ${acceptedTypes.join(", ")} will be accepted`}
+                    )
+                  </em>
+                </>
+              )}
             </div>
-          </section>
+          </div>
         )}
       </Dropzone>
     );

@@ -148,6 +148,7 @@ const getAllCustomerList = async (req, res) => {
         }
       ])
       .collation({ locale: "en" })
+      .allowDiskUse(true)
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
@@ -273,11 +274,25 @@ const updateStatus = async ({ body }, res) => {
     });
   }
 };
-
+const bulkCustomerAdd = async (req, res) => {
+  const { body } = req;
+  var i,
+    j,
+    temparray,
+    chunk = 500;
+  for (i = 0, j = body.length; i < j; i += chunk) {
+    temparray = body.slice(i, i + chunk);
+    customerModel.insertMany(temparray);
+  }
+  res
+    .status(200)
+    .json({ message: `${body.length} records added successfully!` });
+};
 module.exports = {
   createCustomer,
   getAllCustomerList,
   deleteCustomer,
   updateCustomerdetails,
-  updateStatus
+  updateStatus,
+  bulkCustomerAdd
 };

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Button, UncontrolledTooltip } from "reactstrap";
 import XLSX from "xlsx";
 import { CustomerSheetData } from "../../config/DummySheetData";
-import CrmDragDrop from "./CrmDragDrop";
 
 export const DemoSupportedSheets = {
   CUSTOMER: "customer",
@@ -39,7 +38,6 @@ class CrmExportSampleButton extends Component {
   render() {
     return (
       <>
-        <CrmDragDrop />
         <Button onClick={this.downloadSampleFile} id={"download-sample"}>
           Download Sample
         </Button>{" "}

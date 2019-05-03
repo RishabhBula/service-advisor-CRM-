@@ -15,9 +15,11 @@ import {
   customerGetFailed,
   customerGetRequest,
   customerEditSuccess,
-  customerAddSuccess
+  customerAddSuccess,
+  redirectTo
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
+import { AppRoutes } from "../config/AppRoutes";
 
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
@@ -246,11 +248,113 @@ const updateCustomerStatusLogic = createLogic({
     }
   }
 });
+const importCustomerLogic = createLogic({
+  type: customersAddActions.IMPORT_CUSTOMER_REQUEST,
+  async process({ action, getState }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    const profileStateData = getState().profileInfoReducer;
+    logger(profileStateData);
+    const errroredRows = [];
+    let hasError = false;
+    const data = action.payload.map((element, index) => {
+      if (!element["First Name"]) {
+        hasError = true;
+        errroredRows.push(
+          `First name not found on row ${element.rowNumber} of ${
+            element.sheetName
+          }`
+        );
+      }
+      if (!element["Phone"]) {
+        hasError = true;
+        errroredRows.push(
+          `Phone number not found on row ${element.rowNumber} of ${
+            element.sheetName
+          }`
+        );
+      }
+      return {
+        firstName: element["First Name"],
+        lastName: element["Last Name"],
+        phoneDetail: [
+          { phone: element["Phone Type"], value: element["Phone"] }
+        ],
+        email: element["Email"],
+        notes: element["Notes"],
+        companyName: element["Company"],
+        referralSource: element["Refral Source"],
+        address1: element["Address"],
+        city: element["City"],
+        state: element["State"],
+        zipCode: element["Zip Code"],
+        permission: {
+          isCorporateFleetTaxExempt: {
+            status: element["Is Tax Exempt"]
+              ? element["Is Tax Exempt"].toLowerCase() === "yes"
+                ? true
+                : false
+              : false
+          },
+          shouldReceiveDiscount: {
+            status: element["Is Receive A Discount?"]
+              ? element["Is Receive A Discount?"].toLowerCase() === "yes"
+                ? true
+                : false
+              : false
+          },
+          shouldLaborRateOverride: { status: false, laborRate: null },
+          shouldPricingMatrixOverride: { status: false, pricingMatrix: null }
+        },
+        parentId:
+          profileStateData.profileInfo.parentId ||
+          profileStateData.profileInfo._id,
+        userId: profileStateData.profileInfo._id,
+        status: true
+      };
+    });
+    if (hasError) {
+      toast.error(errroredRows.join(" | "));
+      dispatch(hideLoader());
+      done();
+      return;
+    }
+    const api = new ApiHelper();
+    const result = await api.FetchFromServer(
+      "/customer",
+      "/bulk-add",
+      "POST",
+      true,
+      undefined,
+      data
+    );
+    if (!result.isError) {
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            showImportModal: false
+          }
+        })
+      );
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.CUSTOMERS.url}?page=1&reset=true`
+        })
+      );
+      toast.success(result.messages[0]);
+    } else {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+    }
+    dispatch(hideLoader());
+    done();
+  }
+});
 
 export const CustomersLogic = [
   addCustomerLogic,
   getCustomersLogic,
   deleteCustomerLogic,
   editCustomerLogic,
-  updateCustomerStatusLogic
+  updateCustomerStatusLogic,
+  importCustomerLogic
 ];
