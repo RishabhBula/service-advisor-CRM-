@@ -4,8 +4,8 @@ import Axios from "axios";
 import { AppConfig } from "../config/AppConfig";
 
 /**
- * ApiHelper Class - For making Api Requests
- */
+* ApiHelper Class - For making Api Requests
+*/
 export class ApiHelper {
   _portalGateway;
   _apiVersion;
@@ -23,15 +23,15 @@ export class ApiHelper {
     this._apiVersion = version;
   };
   /**
-   * Fetches from the Gateway defined by the instantiated object. Accepts <T> as output object.
-   * @example <caption>"/Auth/UserAccount", "/GetCurrentUser", "GET", "JWT Content"</caption>
-   * @param {service} service - wanting to be access ex. "UserAuth/Auth"
-   * @param {endpoint} endpoint - you wish to call ex. "/Login"
-   * @param {method} mehotd - method (GET, UPDATE, DELETE, POST)
-   * @param {jwt} JWT - JSON Web Token (Optional)
-   * @param {queryOptions} Query - query options for "GET" methods (Optional)
-   * @param {body} body - JSON body for "UPDATE, DELETE and POST" methods (Optional)
-   */
+  * Fetches from the Gateway defined by the instantiated object. Accepts <T> as output object.
+  * @example <caption>"/Auth/UserAccount", "/GetCurrentUser", "GET", "JWT Content"</caption>
+  * @param {service} service - wanting to be access ex. "UserAuth/Auth"
+  * @param {endpoint} endpoint - you wish to call ex. "/Login"
+  * @param {method} mehotd - method (GET, UPDATE, DELETE, POST)
+  * @param {jwt} JWT - JSON Web Token (Optional)
+  * @param {queryOptions} Query - query options for "GET" methods (Optional)
+  * @param {body} body - JSON body for "UPDATE, DELETE and POST" methods (Optional)
+  */
   async FetchFromServer(
     service,
     endpoint,

@@ -4,9 +4,6 @@ import { connect } from "react-redux";
 import {
   Card,
   CardBody,
-  CardHeader,
-  Row,
-  Col,
   Button,
   UncontrolledTooltip,
 } from "reactstrap";

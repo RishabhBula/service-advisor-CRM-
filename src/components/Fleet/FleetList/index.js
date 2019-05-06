@@ -497,7 +497,7 @@ class FleetList extends Component {
                   <tr>
                     <td className={"text-center"} colSpan={10}>
                       No Fleets are available
-                  </td>
+                    </td>
                   </tr>
                 )
             ) : (

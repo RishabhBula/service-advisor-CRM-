@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, Col, Row, CardHeader } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 
 //Random Numbers
 function random(min, max) {

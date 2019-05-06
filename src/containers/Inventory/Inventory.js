@@ -326,7 +326,8 @@ class Inventory extends Component {
                       exact={route.exact}
                       name={route.name}
                       render={props => (
-                        <route.component {...props} {...this.props} isLoading={isLoading} inventoryStats={data} />
+                        <route.component {...props} {...this.props} isLoading={isLoading} inventoryStats={data}
+                          onAddClick={this.onAddClick} />
                       )}
                     />
                   ) : null;

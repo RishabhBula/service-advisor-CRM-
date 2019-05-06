@@ -48,6 +48,10 @@
   background-color: #dedede;
   border-color: #c8ced300;
 }
+.btn-secondary.btn-theme-transparent:focus{
+  outline: none;
+  box-shadow:none;
+}
 .btn-secondary.btn-theme-transparent .icons{
   font-weight: 600;
 }
@@ -127,7 +131,6 @@
   color: #f86c6b;
   font-weight: 500;
 }
-
 .table thead th{
   border-bottom-width: 1px !important;
 }
@@ -136,6 +139,47 @@
 }
 .card-body.custom-card-body{
   padding: 5px 8px;
+}
+.pagination .page-item .page-link{
+  padding: 7px 13px;
+  color: #8f9498;
+  font-weight: 600;
+}
+.pagination .page-item.active .page-link{
+  color: #444;
+  background-color: #dedede;
+  border-color: #dedede;
+}
+.pagination .page-item.active .page-link:focus{
+  box-shadow: none;
+}
+.no-data-found{
+  color: #292e32;
+  padding: 50px 20px;
+}
+.no-data-found .icons{
+  font-size: 38px;
+  font-weight: 600;
+  color: #989898;
+}
+.no-data-found h5{
+  margin-bottom: 0;
+  font-size: 20px;
+  padding-top: 10px;
+}
+.no-data-found p {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 0px;
+  color: #7c768a;
+}
+.no-found-list{
+  width: 255px;
+  text-align: left;
+  margin: 10px auto;
+  padding-left: 0;
+  position: relative;
+  left: 15px;
 }
 /* workflow css */
 .page-title {
@@ -169,7 +213,11 @@
 }
 .main .breadcrumb{
   margin-bottom: 10px;
-  background: #f3f0f9;
+  /* background: #f3f0f9; */
+  background: #ffffff;
+}
+.main .breadcrumb li a{
+  color: #290290;
 }
 /* header */
 .header-add-new-inner {
@@ -483,6 +531,9 @@
   font-size: 16px;
   text-transform: uppercase;
   font-weight: 700;
+}
+.complete-register-modal .section-head  .asteric{
+  top: -2px;
 }
 /* end of welcome modal */
 
@@ -931,9 +982,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border: 1px solid #c5c5c5;
 }
 .inventory-nav li a:hover{
-  background-color: #8157ee;
-  border-color: #8157ee;
-  color: #fff;
+  background-color: #dedede;
+  border-color: #bbb7b7;
+  color: #302c3a;
+  transition: all ease 0.4s;
 }
 .inventory-nav li .nav-link.active{
   background-color: #8157ee;
@@ -977,6 +1029,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border-radius: 4px;
   margin-bottom: 10px;
   position: relative;
+  background: #fff;
 }
 .child-row {
   margin: 0 -7.5px !important;

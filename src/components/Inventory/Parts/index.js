@@ -27,6 +27,7 @@ import { logger } from "../../../helpers/Logger";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
 import moment from 'moment';
+import NoDataFound from "../../common/NoFound";
 
 class Parts extends Component {
   constructor(props) {
@@ -51,13 +52,17 @@ class Parts extends Component {
     };
     const queryParams = qs.parse(this.props.location.search);
     const { page, search, status, sort, vendorId } = queryParams;
-    logger(page);
+    let filterApplied = false;
+    if (search || status || sort || vendorId) {
+      filterApplied = true;
+    }
     this.setState({
       page: page && page > 0 ? parseInt(page) : 1,
       search: search || "",
       status: status || "",
       sort: sort || "",
-      vendorId: vendorId ? qs.parse(vendorId) : ""
+      vendorId: vendorId ? qs.parse(vendorId) : "",
+      filterApplied
     });
     if (vendorId) {
       query.vendorId = qs.parse(vendorId).value;
@@ -189,7 +194,8 @@ class Parts extends Component {
     const {
       inventoryPartsData,
       getInventoryPartsVendors,
-      modelInfoReducer
+      modelInfoReducer,
+      onAddClick
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     logger(this.props);
@@ -313,13 +319,13 @@ class Parts extends Component {
         <Table responsive >
           <thead>
             <tr>
-              <th width={"60px"}>S.No</th>
+              <th width={"60px"}>S No.</th>
               <th width={"200"}><i className="fa fa-gear"></i> Part Description</th>
               {/* <th>Note</th>
               <th>Part number</th> */}
               <th width={"170"}><i className="fa fa-id-badge"></i> Vendor</th>
               <th width={"150"}><i className="fa fa-bitbucket"></i> Bin/Location</th>
-              <th width={"200"}><i className="fa fa-dollar"></i> Cost / Retail Price</th>
+              <th width={"200"}><i className="fa fa-dollar"></i> Price</th>
               {/* <th>Retail Price</th> */}
               <th width={"120"}><i className="fa fa-shopping-basket"></i> Quantity</th>
               <th width={"120"}><i className="fa fa-clock-o"></i> Created</th>
@@ -401,13 +407,9 @@ class Parts extends Component {
             ) : (
               <tr>
                 <td className={"text-center"} colSpan={12}>
-                  {filterApplied ? (
-                    <React.Fragment>
-                      No Parts found for your search
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>No Parts available</React.Fragment>
-                  )}
+                  {filterApplied ? <NoDataFound message={"No Part details found related to your search"} noResult /> :
+                    <NoDataFound showAddButton message={"Currently there are no Part details added."} onAddClick={onAddClick} />
+                  }
                 </td>
               </tr>
             )}

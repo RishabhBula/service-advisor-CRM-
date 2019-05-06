@@ -20,6 +20,7 @@ import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { toast } from "react-toastify";
 import moment from 'moment';
+import NoDataFound from "../../common/NoFound"
 
 class CustomerList extends Component {
   constructor(props) {
@@ -29,7 +30,8 @@ class CustomerList extends Component {
       search: "",
       status: "",
       sort: "",
-      selectedCustomers: []
+      selectedCustomers: [],
+      filterApplied: false
     };
   }
 
@@ -41,7 +43,8 @@ class CustomerList extends Component {
       page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
-      search: search || ""
+      search: search || "",
+      filterApplied: status || search || false
     });
   }
 
@@ -170,6 +173,9 @@ class CustomerList extends Component {
     param.page = 1;
     if (search) {
       param.search = search !== "" ? search.trim() : "";
+      this.setState({
+        filterApplied: true
+      })
     }
     if (sort) {
       param.sort = sort;
@@ -178,6 +184,7 @@ class CustomerList extends Component {
       param.status = status;
     }
     this.props.onSearch(param);
+   
   };
 
   onReset = e => {
@@ -190,6 +197,9 @@ class CustomerList extends Component {
       user: {}
     });
     this.props.onSearch({});
+    this.setState({
+      filterApplied: false
+    })
   };
 
   editUser = customer => {
@@ -198,10 +208,12 @@ class CustomerList extends Component {
   onUpdate = (id, data) => {
     this.props.onUpdate(id, data);
   };
+
+ 
   render() {
     const { customerData } = this.props;
     const { customers, isLoading, totalCustomers } = customerData;
-    const { page, search, sort, status, selectedCustomers } = this.state;
+    const { page, search, sort, status, selectedCustomers, filterApplied } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -472,7 +484,8 @@ class CustomerList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    No customer records are available
+                      {filterApplied ? <NoDataFound message={"No Customer details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Customer details added."} onAddClick={this.props.onAddClick}/>}
+                      
                   </td>
                 </tr>
               )

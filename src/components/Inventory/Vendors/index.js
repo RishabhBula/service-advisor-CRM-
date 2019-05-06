@@ -8,6 +8,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import PaginationHelper from "../../../helpers/Pagination";
 import { isEqual } from "../../../helpers/Object";
 import moment from 'moment';
+import NoDataFound from "../../common/NoFound"
 import {
   Table,
   Button,
@@ -24,6 +25,7 @@ import {
   editVendor,
   deleteVendor,
 } from "../../../actions";
+import { logger } from "../../../helpers/Logger";
 
 class Vendors extends Component {
   constructor(props) {
@@ -43,11 +45,21 @@ class Vendors extends Component {
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);   
     this.props.getVendorsList({ ...query, page: query.page || 1 });
-    this.setState({
-      page: parseInt(page) || 1,
-      sort: sort || "",
-      search: search || ""
-    });
+    if (location.search !== '') {
+      this.setState({
+        filterApplied: true,
+        page: parseInt(page) || 1,
+        sort: sort || "",
+        search: search || ""
+      })
+    }
+    else{
+      this.setState({
+        page: parseInt(page) || 1,
+        sort: sort || "",
+        search: search || ""
+      });
+    }
   }
 
   componentDidUpdate({ vendorReducer, location }) {
@@ -109,7 +121,8 @@ class Vendors extends Component {
     e.preventDefault();
     this.setState({
       page: 1,
-      vendor: {}
+      vendor: {},
+      filterApplied:true
     });
     const { search, sort } = this.state;
     let param = {};
@@ -142,12 +155,12 @@ class Vendors extends Component {
     });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify(`$pathname`)].join("?"))
+    this.props.redirectTo([pathname])
   };
 
   render() {
-    const { vendor, page, search, sort } = this.state;
-    const { vendorReducer, modelOperate, modelInfoReducer } = this.props;
+    const { vendor, page, search, sort, filterApplied } = this.state;
+    const { vendorReducer, modelOperate, modelInfoReducer, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { vendorEditModalOpen } = modelDetails;
     const { vendors, isLoading, totalVendors } = vendorReducer;
@@ -304,7 +317,9 @@ class Vendors extends Component {
                 :
                 <tr>
                   <td colSpan={"9"} className={"text-center"}>
-                    No Vendor is available.
+                    {filterApplied ? <NoDataFound  message={"No Vendor details found related to your search"} noResult/> :
+                      <NoDataFound showAddButton message={"Currently there are no Vendor details added."} onAddClick={onAddClick} />
+                    }
                   </td>
                 </tr>
             ) : (

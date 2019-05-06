@@ -353,7 +353,7 @@ export class CrmFleetModal extends Component {
       selectedLabourRate
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
-      return <option value={item.key}>{item.text}</option>;
+      return <option value={item.key} key={index}>{item.text}</option>;
     });
     let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
     if (!fleetDefaultPermissions) {

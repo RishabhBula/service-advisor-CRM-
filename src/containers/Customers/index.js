@@ -95,7 +95,7 @@ class Customers extends Component {
   };
 
   onPageChange = page => {
-    
+
     const { location } = this.props;
     const { search, pathname } = location;
     const query = qs.parse(search);
@@ -152,6 +152,14 @@ class Customers extends Component {
     this.props.setLabourRateDefault(value);
   };
 
+  onAddClick = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      customerModel: !modelDetails.customerModel,
+      customerEditModel: false
+    };
+    this.props.modelOperate(data);
+  }
   render() {
     const { editMode, customer } = this.state;
     const {
@@ -164,22 +172,22 @@ class Customers extends Component {
     return (
       <>
         <Card className={"white-card"}>
-          <CardBody className={"custom-card-body"}>
-            <div className={"position-relative"}>
-              <div className={"text-right invt-add-btn-block"}>
-                <Button
-                  color="primary"
-                  id="add-user"
-                  onClick={this.toggleCreateModal}
-                >
-                  <i className={"fa fa-plus"} />
-                  &nbsp; Add New Customer
+          <CardBody className={"custom-card-body position-relative"}>
+
+            <div className={"text-right invt-add-btn-block"}>
+              <Button
+                color="primary"
+                id="add-user"
+                onClick={this.toggleCreateModal}
+              >
+                <i className={"fa fa-plus"} />
+                &nbsp; Add New Customer
                 </Button>
-                <UncontrolledTooltip target={"add-user"}>
-                  Add New Customer
+              <UncontrolledTooltip target={"add-user"}>
+                Add New Customer
                 </UncontrolledTooltip>
-              </div> 
             </div>
+
             <CustomerList
               customerData={customerListReducer}
               onSearch={this.onSearch}
@@ -188,6 +196,8 @@ class Customers extends Component {
               changeStatus={this.changeCustomerStatus}
               onStatusUpdate={this.onStatusUpdate}
               updateModel={this.toggleUpdateModal}
+              onAddClick={this.onAddClick}
+              customerModalOpen={modelDetails.customerModel}
             />
           </CardBody>
         </Card>

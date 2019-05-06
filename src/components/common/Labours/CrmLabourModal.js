@@ -10,7 +10,6 @@ import {
   ModalHeader,
   Row,
   Col,
-  Badge,
   FormGroup,
   Label,
   Input,
@@ -232,7 +231,7 @@ export class CrmLabourModal extends Component {
           className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader toggle={handleLabourModal}>
-            {isEditMode ? `Update Labour Details` : 'Create New Labour'}
+            {isEditMode ? `Update Labor Details` : 'Create New Labor'}
             {isEditMode ?<LastUpdated updatedAt={updatedAt}/> : null}
           </ModalHeader>
           <ModalBody>
@@ -241,11 +240,11 @@ export class CrmLabourModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Labour Description <span className={"asteric"}>*</span>
+                      Labor Description <span className={"asteric"}>*</span>
                     </Label>
                     <div className="input-block">
                       <Input className={"form-control"} type={"text"} id="discription" name=
-                        "discription" maxLength="100" onChange={this.handleChange} value={discription} invalid={errors.discription && !discription} placeholder={"Labour Description"} />
+                        "discription" maxLength="100" onChange={this.handleChange} value={discription} invalid={errors.discription && !discription} placeholder={"Labor Description"} />
                       <FormFeedback>
                         {errors && !discription && errors.discription
                           ? errors.discription
@@ -353,7 +352,7 @@ export class CrmLabourModal extends Component {
 
             <div className="required-fields">*Fields are Required.</div>
             
-            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update labour detail` : 'Add New Labour'}
+            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add New Labor'}
 
             </Button>{" "}
             <Button color="secondary" onClick={handleLabourModal}>

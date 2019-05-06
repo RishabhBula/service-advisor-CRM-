@@ -10,7 +10,6 @@ import {
   FormFeedback,
   FormGroup,
   Label,
-  Badge,
   Input,
 } from 'reactstrap';
 import Validator from "js-object-validation";
@@ -18,7 +17,6 @@ import { VendorValidations, VendorValidationMessage } from "../../validations/in
 import { PhoneOptions } from "../../config/Constants";
 import MaskedInput from "react-text-mask";
 import { isValidURL } from "../../helpers/Object";
-import moment from 'moment';
 import LastUpdated from "../common/LastUpdated";
 
 export class CrmInventoryVendor extends Component {

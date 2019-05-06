@@ -14,6 +14,7 @@ import {
   vendorActions,
   deleteVendorSuccess
 } from "../actions"
+import { logger } from "../helpers/Logger";
 
 
 const getVendorLogic = createLogic({

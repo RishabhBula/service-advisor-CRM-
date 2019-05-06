@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Table,
-  Badge,
   UncontrolledTooltip,
   Form,
   FormGroup,
@@ -224,6 +223,9 @@ class VehiclesList extends Component {
                <img src={require(`../../../assets/img/vehicles/${item.icons}`)} alt={"type"} width={"80"}/>
               </div>
             )
+          }
+          else {
+            return true
           }
      })}
    

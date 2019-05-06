@@ -422,7 +422,7 @@ export class CrmTyreModal extends Component {
                            </ButtonGroup>
                         </FormGroup>
                      </div>
-                     <h6>Sizes</h6>
+                     <h5 className={"font-weight-bold"}>Sizes</h5>
                      {tierSize && tierSize.length
                         ? tierSize.map((item, index) => {
                            return (

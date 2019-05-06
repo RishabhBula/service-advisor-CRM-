@@ -23,6 +23,8 @@ import { CrmUserModal } from "../common/CrmUserModal";
 import { RoleOptions } from "../../config/Constants";
 import { toast } from "react-toastify";
 import { logger } from "../../helpers/Logger";
+import NoDataFound from "../common/NoFound"
+
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -219,6 +221,13 @@ class UserList extends Component {
       this.onDelete(true);
     }
   };
+
+  onAddClick =()=>{
+    this.props.modelOperate({
+      addUserModal: true
+    });
+  }
+
   render() {
     const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
@@ -421,7 +430,7 @@ class UserList extends Component {
               </th>
               <th width={"250"}><i className={"fa fa-users"} /> Member Details</th>
               {/* <th>Email</th> */}
-              <th width={"100"}><i className={"fa fa-dollar"} /> Rate/hour</th>
+              <th width={"100"}><i className={"fa fa-dollar"} /> Hourly Rate</th>
               <th width={"100"} className={"text-center"}><i className={"fa fa-user-circle"} /> Role</th>
               <th>Registered</th>
               <th><i className={"fa fa-sign-in"} /> Last Login Details</th>
@@ -554,13 +563,9 @@ class UserList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    {filterApplied ? (
-                      <React.Fragment>
-                        No staff member found for your search
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>No staff member available</React.Fragment>
-                    )}
+                      {filterApplied ? <NoDataFound message={"No Member details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Vendor details added."} onAddClick={this.onAddClick}/>
+                      }
                   </td>
                 </tr>
               )

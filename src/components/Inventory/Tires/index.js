@@ -26,6 +26,8 @@ import { toast } from "react-toastify";
 import { CrmTyreModal } from "../../common/Tires/CrmTyreModal"
 import { Async } from "react-select";
 import moment from 'moment';
+import NoDataFound from "../../common/NoFound"
+
 class Tires extends Component {
   constructor(props) {
     super(props);
@@ -52,11 +54,16 @@ class Tires extends Component {
     const query = qs.parse(location.search);
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search ||  sort ) {
+      filterApplied = true;
+    }
     this.props.getTires({ ...query, page: query.page || 1 });
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
-      search: search || ""
+      search: search || "",
+      filterApplied
     })
   }
 
@@ -259,7 +266,7 @@ class Tires extends Component {
 
   }
   render() {
-    const { tireReducer, modelInfoReducer, modelOperate } = this.props;
+    const { tireReducer, modelInfoReducer, modelOperate, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen } = modelDetails;
     const { tires, isLoading, totalTires } = tireReducer;
@@ -273,6 +280,7 @@ class Tires extends Component {
       status,
       vendorInput,
       isTireSizeOpen,
+      filterApplied
     } = this.state;
     return (
       <>
@@ -475,7 +483,8 @@ class Tires extends Component {
                         </td>
                         <td className={"text-capitalize"}>
                           <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
-                          <div className={"modal-info"}>Modal : <Badge>{tire.modalName || "-"}</Badge></div>
+                          {tire.modalName ? <div className={"modal-info"}>
+                            Modal : <Badge>{tire.modalName}</Badge></div> : " " }
                         </td>
                         {/* <td className={"text-capitalize"}>{tire.modalName || "-"}</td> */}
                         <td >
@@ -580,7 +589,7 @@ class Tires extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={12}>
-                      Tire Data Not Avilable
+                      {filterApplied ? <NoDataFound message={"No Tire details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Tire details added."} onAddClick={onAddClick} />}
                     </td>
                   </tr>
                 )

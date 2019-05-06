@@ -24,7 +24,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { isEqual } from "../../../helpers/Object";
-
+import NoDataFound from "../../common/NoFound"
 class Labours extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +45,25 @@ class Labours extends Component {
   componentDidMount() {
     this.props.getStdList();
     const query = qs.parse(this.props.location.search);
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page, search, sort } = qs.parse(lSearch);   
     this.props.getlabour({ ...query, page: query.page || 1 });
+    if (location.search !== '') {
+      this.setState({
+        filterApplied: true,
+        page: parseInt(page) || 1,
+        sort: sort || "",
+        search: search || ""
+      })
+    }
+    else {
+      this.setState({
+        page: parseInt(page) || 1,
+        sort: sort || "",
+        search: search || ""
+      });
+    }
   }
 
   componentDidUpdate({ labourReducer, location }) {
@@ -184,8 +202,9 @@ class Labours extends Component {
     const {
       search,
       sort,
-      page } = this.state
-    const { labourReducer, profileInfoReducer, rateStandardListReducer, modelInfoReducer, modelOperate } = this.props;
+      page,
+      filterApplied } = this.state;
+    const { labourReducer, profileInfoReducer, rateStandardListReducer, modelInfoReducer, modelOperate, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen, rateAddModalOpen } = modelDetails;
     const { isLoading, labourData } = labourReducer;
@@ -205,7 +224,7 @@ class Labours extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by labour description and note"
+                      placeholder="Search by labor description and note"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -273,7 +292,7 @@ class Labours extends Component {
         <Table responsive >
           <thead>
             <tr>
-              <th width='90px'>S.No.
+              <th width='90px'>S No.
               </th>
               <th>Labour Description</th>
               <th>Note</th>
@@ -347,8 +366,9 @@ class Labours extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={8}>
-                      {(sort === '' && search === '') ? 'No labour record are available.' :
-                        'Your search did not match any record.'}
+                      {filterApplied ? <NoDataFound message={"No Labor details found related to your search"} noResult={true} /> :
+                        <NoDataFound showAddButton message={"Currently there are no Labor details added."} onAddClick={onAddClick} noResult={false} />
+                      }
                     </td>
                   </tr>
                 )
