@@ -37,24 +37,43 @@ class PriceMatrix extends Component {
   componentDidUpdate = ({ matrixListReducer }) => {
     if (matrixListReducer.matrixData !== this.props.matrixListReducer.matrixData) {
       this.props.getMatrixList()
-      this.resetAll()
+      this.resetAll(false)
     }
   }
-  resetAll = () => {
-    this.setState({
-      matrixRange: [
-        {
-          margin: "50.00%",
-          markup: "100.00%",
-          lower: "0.00",
-          upper: "beyond"
-        }
-      ],
-      matrixName: "",
-      errors: {},
-      matrixId: "",
-      isEditMatrix: false
-    })
+  resetAll = (isNewMatrix) => {
+    if (isNewMatrix) {
+      this.setState({
+        matrixRange: [
+          {
+            margin: "50.00%",
+            markup: "100.00%",
+            lower: "0.00",
+            upper: "beyond"
+          }
+        ],
+        matrixName: "",
+        errors: {},
+        matrixId: "",
+        isEditMatrix: false,
+        addNewMatrix: true
+      })
+    } else {
+      this.setState({
+        matrixRange: [
+          {
+            margin: "50.00%",
+            markup: "100.00%",
+            lower: "0.00",
+            upper: "beyond"
+          }
+        ],
+        matrixName: "",
+        errors: {},
+        matrixId: "",
+        isEditMatrix: false,
+        addNewMatrix: false
+      })
+    }
   }
 
   handleChange = (index, e) => {
@@ -287,33 +306,25 @@ class PriceMatrix extends Component {
                 <PriMatrixList
                   matrixList={matrixListReducer.matrixList}
                   handleUpdateMatrix={this.handleUpdateMatrix}
-                  addNewMatrix={() => this.setState({
-                    addNewMatrix: true
-                  })}
+                  addNewMatrix={() => this.resetAll(true)}
                 />
               </CardBody>
             </Card>
           </Col>
-          <Col md={"8"}>
-            <Card>
-              <CardBody>
-                <PriceMatrixComponent
-                  matrixRange={matrixRange}
-                  handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
-                  handleCostChange={this.handleCostChange}
-                  handleRemoveMatrixRange={this.handleRemoveMatrixRange}
-                  handleAddMatrixRange={this.handleAddMatrixRange}
-                  handleAddMatrix={this.handleAddMatrix}
-                  handleChange={this.handleChange}
-                  errors={errors}
-                  matrixName={matrixName}
-                  isEditMatrix={isEditMatrix}
-                  addNewMatrix={addNewMatrix}
-                  handleMatrixDelete={this.handleMatrixDelete}
-                />
-              </CardBody>
-            </Card>
-          </Col>
+          <PriceMatrixComponent
+            matrixRange={matrixRange}
+            handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
+            handleCostChange={this.handleCostChange}
+            handleRemoveMatrixRange={this.handleRemoveMatrixRange}
+            handleAddMatrixRange={this.handleAddMatrixRange}
+            handleAddMatrix={this.handleAddMatrix}
+            handleChange={this.handleChange}
+            errors={errors}
+            matrixName={matrixName}
+            isEditMatrix={isEditMatrix}
+            addNewMatrix={addNewMatrix}
+            handleMatrixDelete={this.handleMatrixDelete}
+          />
         </Row>
       </>
     );
