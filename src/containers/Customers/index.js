@@ -166,7 +166,8 @@ class Customers extends Component {
       matrixListReducer,
       customerListReducer,
       rateStandardListReducer,
-      customerFleetReducer
+      customerFleetReducer,
+      getMatrix
     } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
@@ -212,6 +213,7 @@ class Customers extends Component {
           onStdAdd={this.onStdAdd}
           editMode={editMode}
           customer={customer}
+          getPriceMatrix={getMatrix}
           getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
           loadTypeRate={this.loadTypeRate}
@@ -221,12 +223,13 @@ class Customers extends Component {
           handleCustomerModalFun={this.toggleEditModal}
           addCustomerFun={this.updateCustomerForm}
           profileInfo={this.props.profileInfoReducer}
-          matrixListReducerData={matrixListReducer}
+          matrixListReducerData={matrixListReducer.matrixList}
           rateStandardListData={rateStandardListReducer}
           onTypeHeadStdFun={this.onTypeHeadStdFun}
           onStdAdd={this.onStdAdd}
           editMode={editMode}
           customer={customer}
+          getPriceMatrix={getMatrix}
           getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
           loadTypeRate={this.loadTypeRate}
@@ -249,8 +252,8 @@ const mapDispatchToProps = dispatch => ({
   addCustomer: data => {
     dispatch(customerAddRequest(data));
   },
-  getMatrix: () => {
-    dispatch(getMatrixList());
+  getMatrix: (data) => {
+    dispatch(getMatrixList(data));
   },
   modelOperate: data => {
     dispatch(modelOpenRequest({ modelDetails: data }));

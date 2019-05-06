@@ -52,19 +52,21 @@ export class CrmTyreModal extends Component {
                quantity: '',
                criticalQuantity: "",
                priceMatrix: "",
-               cost: "",
-               retailPrice: "",
+               cost: 0,
+               retailPrice: 0,
                markup: "",
                margin: ""
             }
          ],
          tierPermission: tierPermission,
          errors: {},
+         selectedPriceMatrix: { value: "", label: "Type to select" },
          seasonBtnClass: "",
          selectedVendor: {
             label: "Type to select vendor",
             value: ""
          },
+         selectedMatrix: [],
          isEditMode: false
       };
    }
@@ -99,6 +101,21 @@ export class CrmTyreModal extends Component {
                value: vendorId && vendorId._id ? vendorId._id : ''
             }
          });
+         if (this.props.tireData && this.props.tireData.tierSize && this.props.tireData.tierSize.length) {
+            this.props.tireData.tierSize.map((item, index) => {
+               if (item.priceMatrix) {
+                  const { matrixList } = this.props;
+                  const selectedMatrix = matrixList.filter(matrix => matrix._id === item.priceMatrix)
+                  this.setState({
+                     selectedPriceMatrix: {
+                        label: selectedMatrix[0].matrixName,
+                        value: selectedMatrix[0]._id
+                     }
+                  })
+               }
+               return true
+            })
+         }
       }
    }
 
@@ -108,6 +125,39 @@ export class CrmTyreModal extends Component {
       this.setState({
          tierPermission
       });
+   }
+   handleCostPricechange = (index, event) => {
+      const { name, value } = event.target;
+      const tierSize = [...this.state.tierSize]
+      if (isNaN(value)) {
+         return
+      }
+      else if (!tierSize[index].margin || !tierSize[index].markup) {
+         tierSize[index][name] = value
+         this.setState({
+            tierSize
+         })
+      }
+      else if (this.state.selectedMatrix && this.state.selectedMatrix.length) {
+         tierSize[index][name] = value;
+         this.setState({
+            tierSize
+         })
+         this.handleSelectedPriceMatrix(tierSize, index, value, this.state.selectedMatrix)
+         return true
+      }
+      else {
+         tierSize[index][name] = value;
+         tierSize[index].retailPrice = value && parseFloat(tierSize[index].markup)
+            ? CalculateRetailPriceByMarkupPercent(value, parseFloat(tierSize[index].markup)).toFixed(2)
+            : tierSize[index].retailPrice
+         tierSize[index].retailPrice = value && parseFloat(tierSize[index].margin)
+            ? CalculateRetailPriceByMarkupPercent(value, parseFloat(tierSize[index].margin)).toFixed(2)
+            : tierSize[index].retailPrice
+         this.setState({
+            tierSize
+         })
+      }
    }
 
    handleTireSizeStates = (index, event) => {
@@ -162,8 +212,8 @@ export class CrmTyreModal extends Component {
                      quantity: "",
                      criticalQuantity: "",
                      priceMatrix: "",
-                     cost: "",
-                     retailPrice: "",
+                     cost: 0,
+                     retailPrice: 0,
                      markup: "",
                      margin: ""
                   }
@@ -172,6 +222,33 @@ export class CrmTyreModal extends Component {
          });
       }
    };
+
+   handleSelectedPriceMatrix = (tierSize, index, cost, selectedMatrix) => {
+      tierSize[index].priceMatrix = selectedMatrix[0]._id
+      this.setState({
+         selectedMatrix: selectedMatrix,
+         tierSize
+      })
+      selectedMatrix[0].matrixRange.map((item, i) => {
+         if (parseFloat(item.lower) <= parseFloat(cost) && (parseFloat(cost) <= parseFloat(item.upper) || item.upper === 'beyond')) {
+            tierSize[index].margin = parseInt(item.margin);
+            tierSize[index].markup = parseInt(item.markup);
+            if (cost && parseInt(item.markup)) {
+               tierSize[index].retailPrice = CalculateRetailPriceByMarkupPercent(cost, parseInt(item.markup)).toFixed(2)
+            }
+            else if (cost && item.margin) {
+               tierSize[index].retailPrice = CalculateRetailPriceByMarginPercent(cost, parseInt(item.margin)).toFixed(2)
+            }
+            else {
+               tierSize[index].retailPrice = cost
+            }
+            this.setState({
+               tierSize
+            })
+         }
+         return true
+      })
+   }
 
    handleRemoveTierSize = index => {
       const { tierSize } = this.state;
@@ -294,15 +371,42 @@ export class CrmTyreModal extends Component {
                quantity: "",
                criticalQuantity: "",
                priceMatrix: "",
-               cost: "",
-               retailPrice: "",
+               cost: 0,
+               retailPrice: 0,
                markup: "",
                margin: ""
             }
          ],
          tierPermission: tierPermission,
+         selectedPriceMatrix: { value: "", label: "Type to select" },
          errors: {}
       });
+   }
+
+   matrixLoadOptions = (input, callback) => {
+      this.props.getPriceMatrix({ input, callback });
+   }
+   handlePriceMatrix = (e, index) => {
+      if (e && e.value) {
+         this.setState({
+            selectedPriceMatrix: {
+               value: e.value,
+               label: e.label
+            }
+         })
+         const { matrixList } = this.props;
+         const tierSize = [...this.state.tierSize];
+         const selectedMatrix = matrixList.filter(matrix => matrix._id === e.value)
+         this.handleSelectedPriceMatrix(tierSize, index, tierSize[index].cost, selectedMatrix)
+      } else {
+         this.setState({
+            selectedPriceMatrix: {
+               value: "",
+               label: "Type to select"
+            },
+            selectedMatrix: []
+         })
+      }
    }
 
    render() {
@@ -316,7 +420,8 @@ export class CrmTyreModal extends Component {
          brandName,
          vendorId,
          isEditMode,
-         selectedVendor } = this.state;
+         selectedVendor,
+         selectedPriceMatrix } = this.state;
       return (
          <>
             <Modal
@@ -523,15 +628,20 @@ export class CrmTyreModal extends Component {
                                           </Row>
                                        </div>
                                     </Col>
-                                    <Col md="6">
+                                    <Col md="6" className={"fleet-block"}>
                                        <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
+                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                              Pricing Matrix
- </Label>
-                                          <Input
-                                             type="text"
-                                             placeholder={"Price Matrix"}
-                                             onChange={e => this.handleTireSizeStates(index, e)}
+                                          </Label>
+                                          <Async
+                                             placeholder={"Type to select price matrix"}
+                                             loadOptions={this.matrixLoadOptions}
+                                             className={"w-100 form-select"}
+                                             onChange={(e) => this.handlePriceMatrix(e, index)}
+                                             isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
+                                             noOptionsMessage={() => "Type price matrix name"
+                                             }
+                                             value={selectedPriceMatrix}
                                           />
                                        </FormGroup>
                                        <div className="child-row">
@@ -545,7 +655,7 @@ export class CrmTyreModal extends Component {
                                                       type="text"
                                                       name="cost"
                                                       value={tierSize[index].cost}
-                                                      onChange={e => this.handleTireSizeStates(index, e)}
+                                                      onChange={e => this.handleCostPricechange(index, e)}
                                                       placeholder={"$0.00"}
                                                    />
                                                 </FormGroup>
@@ -589,6 +699,7 @@ export class CrmTyreModal extends Component {
                                                    type={"text"}
                                                    placeholder={"Markup"}
                                                    defaultValue={tierSize[index].markup}
+                                                   value={tierSize[index].markup}
                                                    onChange={e => this.setPriceByMarkup(index, e.target.value)}
                                                 />
                                              </Button>
@@ -616,6 +727,7 @@ export class CrmTyreModal extends Component {
                                                 <Input
                                                    type={"text"}
                                                    placeholder={"Margin"}
+                                                   value={tierSize[index].margin}
                                                    defaultValue={tierSize[index].margin}
                                                    onChange={e => this.setPriceByMargin(index, e.target.value)}
                                                 />
@@ -670,7 +782,7 @@ export class CrmTyreModal extends Component {
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleAddTire()}>
-                     {!isEditMode ? "Add New Tier" : `Update tire details`}
+                     {!isEditMode ? "Create New Tire" : `Update tire details`}
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel

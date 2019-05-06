@@ -76,12 +76,54 @@ const updatepriceMatrix = async (req, res) => {
 
 /*Get All Price Metrices*/
 const getAllMatrix = async (req, res) => {
-  const { currentUser } = req;
+  const { currentUser,query } = req;
   try {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
       currentUser.parentId = currentUser.id
     }
-    const matrices = await matrixModel.find({ parentId: currentUser.parentId, isDeleted: false });
+    const searchValue = query.search;
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
+    let condition = {};
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: mongoose.Types.ObjectId(parentId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
+            }
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      }
+    ];
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            matrixName: {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
+
+    const matrices = await matrixModel.find(
+      condition
+    );
     return res.status(200).json({
       responsecode: 200,
       success: true,

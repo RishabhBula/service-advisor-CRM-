@@ -27,7 +27,8 @@ class PriceMatrix extends Component {
       ],
       matrixName: "",
       errors: {},
-      matrixId: ""
+      matrixId: "",
+      addNewMatrix: false
     };
   }
   componentDidMount = () => {
@@ -36,25 +37,45 @@ class PriceMatrix extends Component {
   componentDidUpdate = ({ matrixListReducer }) => {
     if (matrixListReducer.matrixData !== this.props.matrixListReducer.matrixData) {
       this.props.getMatrixList()
-      this.resetAll()
+      this.resetAll(false)
     }
   }
-  resetAll = () => {
-    this.setState({
-      matrixRange: [
-        {
-          margin: "50.00%",
-          markup: "100.00%",
-          lower: "0.00",
-          upper: "beyond"
-        }
-      ],
-      matrixName: "",
-      errors: {},
-      matrixId: "",
-      isEditMatrix: false
-    })
+  resetAll = (isNewMatrix) => {
+    if (isNewMatrix) {
+      this.setState({
+        matrixRange: [
+          {
+            margin: "50.00%",
+            markup: "100.00%",
+            lower: "0.00",
+            upper: "beyond"
+          }
+        ],
+        matrixName: "",
+        errors: {},
+        matrixId: "",
+        isEditMatrix: false,
+        addNewMatrix: true
+      })
+    } else {
+      this.setState({
+        matrixRange: [
+          {
+            margin: "50.00%",
+            markup: "100.00%",
+            lower: "0.00",
+            upper: "beyond"
+          }
+        ],
+        matrixName: "",
+        errors: {},
+        matrixId: "",
+        isEditMatrix: false,
+        addNewMatrix: false
+      })
+    }
   }
+
   handleChange = (index, e) => {
     const { name, value } = e.target
     if (name === 'matrixName') {
@@ -213,7 +234,7 @@ class PriceMatrix extends Component {
     }
   };
 
-  handleMatrixDelete = async() => {
+  handleMatrixDelete = async () => {
     const { value } = await ConfirmBox({
       text: "Do you want to delete this price matrix?"
     });
@@ -263,7 +284,7 @@ class PriceMatrix extends Component {
   }
   render() {
     const { matrixListReducer } = this.props;
-    const { matrixRange, errors, matrixName, isEditMatrix } = this.state;
+    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix } = this.state;
     return (
       <>
         <Card className={"white-card"}>
@@ -285,30 +306,25 @@ class PriceMatrix extends Component {
                 <PriMatrixList
                   matrixList={matrixListReducer.matrixList}
                   handleUpdateMatrix={this.handleUpdateMatrix}
-                  resetAll={this.resetAll}
+                  addNewMatrix={() => this.resetAll(true)}
                 />
               </CardBody>
             </Card>
           </Col>
-          <Col md={"8"}>
-            <Card>
-              <CardBody>
-                <PriceMatrixComponent
-                  matrixRange={matrixRange}
-                  handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
-                  handleCostChange={this.handleCostChange}
-                  handleRemoveMatrixRange={this.handleRemoveMatrixRange}
-                  handleAddMatrixRange={this.handleAddMatrixRange}
-                  handleAddMatrix={this.handleAddMatrix}
-                  handleChange={this.handleChange}
-                  errors={errors}
-                  matrixName={matrixName}
-                  isEditMatrix={isEditMatrix}
-                  handleMatrixDelete={this.handleMatrixDelete}
-                />
-              </CardBody>
-            </Card>
-          </Col>
+          <PriceMatrixComponent
+            matrixRange={matrixRange}
+            handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
+            handleCostChange={this.handleCostChange}
+            handleRemoveMatrixRange={this.handleRemoveMatrixRange}
+            handleAddMatrixRange={this.handleAddMatrixRange}
+            handleAddMatrix={this.handleAddMatrix}
+            handleChange={this.handleChange}
+            errors={errors}
+            matrixName={matrixName}
+            isEditMatrix={isEditMatrix}
+            addNewMatrix={addNewMatrix}
+            handleMatrixDelete={this.handleMatrixDelete}
+          />
         </Row>
       </>
     );
