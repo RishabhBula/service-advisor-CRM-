@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import {
-  getTiersList, updateTierStatus, deleteTier, editTier,
-  getInventoryPartVendors
+  getTiersList,
+  updateTierStatus,
+  deleteTier,
+  editTier,
+  getInventoryPartVendors,
+  getMatrixList
 } from '../../../actions'
 import { connect } from "react-redux";
 import * as qs from "query-string";
@@ -47,6 +51,7 @@ class Tires extends Component {
 
   componentDidMount() {
     const { location } = this.props;
+    this.props.getPriceMatrix()
     const query = qs.parse(location.search);
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
@@ -82,7 +87,7 @@ class Tires extends Component {
     const { search: currentSearch } = currentLocation;
     if (search !== currentSearch) {
       let query = qs.parse(currentSearch);
-      this.setState({ ...query, page: query.page?parseInt(query.page): 1 });
+      this.setState({ ...query, page: query.page ? parseInt(query.page) : 1 });
       if (query.vendorId) {
         const vendorId = qs.parse(query.vendorId);
         this.setState({
@@ -250,7 +255,7 @@ class Tires extends Component {
   };
 
   render() {
-    const { tireReducer, modelInfoReducer, modelOperate } = this.props;
+    const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen } = modelDetails;
     const { tires, isLoading, totalTires } = tireReducer;
@@ -476,7 +481,7 @@ class Tires extends Component {
                           {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
                             return (
                               <tr key={index}>
-                                <td width={"100"}>{size.baseInfo.replace(/^[^_\s]*$/,'')}</td>
+                                <td width={"100"}>{size.baseInfo.replace(/^[^_\s]*$/, '')}</td>
                                 <td width={"70"}>{size.part || "-"}</td>
                                 <td width={"70"}>{size.cost || "-"}</td>
                                 <td width={"70"}>{size.retailPrice || "-"}</td>
@@ -569,6 +574,8 @@ class Tires extends Component {
           }
           tireData={tire}
           updateTire={this.onUpdate}
+          matrixList={matrixListReducer.matrixList}
+          getPriceMatrix={getPriceMatrix}
           getInventoryPartsVendors={this.props.getInventoryPartsVendors}
           vendorList={this.props.vendorReducer}
         />
@@ -580,7 +587,8 @@ class Tires extends Component {
 const mapStateToProps = state => ({
   tireReducer: state.tiresReducer,
   modelInfoReducer: state.modelInfoReducer,
-  vendorReducer: state.vendorsReducer
+  vendorReducer: state.vendorsReducer,
+  matrixListReducer: state.matrixListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getTires: data => {
@@ -598,6 +606,9 @@ const mapDispatchToProps = dispatch => ({
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
   },
+  getPriceMatrix: (data) => {
+    dispatch(getMatrixList(data))
+  }
 });
 export default connect(
   mapStateToProps,

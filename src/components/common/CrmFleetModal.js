@@ -65,6 +65,7 @@ export class CrmFleetModal extends Component {
       percentageDiscount: 0,
       defaultOptions: [{ value: "", label: "Add New Customer" }],
       selectedLabourRate: { value: "", label: "Select..." },
+      selectedPriceMatrix: { value: "", label: "Type to select" },
       vendorValue: "",
       openStadardRateModel: false
     };
@@ -332,7 +333,27 @@ export class CrmFleetModal extends Component {
   matrixLoadOptions = (input, callback) => {
     this.props.getPriceMatrix({ input, callback });
   }
-
+  handlePriceMatrix = (e) => {
+    if (e && e.value) {
+      const { fleetDefaultPermissions } = this.state;
+      fleetDefaultPermissions["shouldPricingMatrixOverride"].pricingMatrix =
+        e.value;
+      this.setState({
+        ...fleetDefaultPermissions,
+        selectedPriceMatrix: {
+          value: e.value,
+          label: e.label
+        }
+      })
+    } else {
+      this.setState({
+        selectedPriceMatrix: {
+          value: "",
+          label: "Type to select"
+        }
+      })
+    }
+  }
   render() {
     const {
       fleetModalOpen,
@@ -353,7 +374,8 @@ export class CrmFleetModal extends Component {
       percentageDiscount,
       isEditMode,
       fleetId,
-      selectedLabourRate
+      selectedLabourRate,
+      selectedPriceMatrix
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key}>{item.text}</option>;
@@ -483,7 +505,8 @@ export class CrmFleetModal extends Component {
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
                                           "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
+                                            this.state.phoneErrors[index] !== "" &&
+                                            !item.value
                                         })}
                                         size="20"
                                         value={item.value}
@@ -494,13 +517,6 @@ export class CrmFleetModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                       </FormFeedback>
-                                      {/* {
-                                      console.log(typeof this.state.phoneErrors[index], "adadadaada")
-
-                                    }
-                                    <p className='text-danger'>
-                                      {this.state.phoneErrors[index]}
-                                    </p> */}
                                     </div>
                                   ) : (
                                     <div className="input-block select-number-tile">
@@ -559,6 +575,7 @@ export class CrmFleetModal extends Component {
                                           className={classnames("form-control", {
                                             "is-invalid":
                                               this.state.phoneErrors[index] !== ""
+                                              && !item.value
                                           })}
                                           size="20"
                                           value={item.value}
@@ -581,6 +598,7 @@ export class CrmFleetModal extends Component {
                                           className={classnames("form-control", {
                                             "is-invalid":
                                               this.state.phoneErrors[index] !== ""
+                                              && !item.value
                                           })}
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
@@ -592,9 +610,6 @@ export class CrmFleetModal extends Component {
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
                                         </FormFeedback>
-                                        {/* <p className='text-danger'>
-                                          {this.state.phoneErrors[index]}
-                                        </p> */}
                                       </div>
                                     )}
                                 </FormGroup>
@@ -837,13 +852,13 @@ export class CrmFleetModal extends Component {
                             className={"fleet-block rate-standard-list"}
                           >
                             <Async
-                              loadOptions={this.matrixLoadOptions}
-                              onChange={this.handlePriceMatrix}
                               placeholder={"Type to select price matrix"}
-                              isClearable={true}
+                              loadOptions={this.matrixLoadOptions}
+                              onChange={(e) => this.handlePriceMatrix(e)}
+                              isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
                               noOptionsMessage={() => "Type price matrix name"
                               }
-                              value={selectedLabourRate}
+                              value={selectedPriceMatrix}
                             />
                           </Col>
                         ) : null}
@@ -861,7 +876,7 @@ export class CrmFleetModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <div class="required-fields">*Fields are Required.</div>
+            <div className="required-fields">*Fields are Required.</div>
             <Button
               color="primary"
               onClick={() =>

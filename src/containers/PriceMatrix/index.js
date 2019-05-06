@@ -27,7 +27,8 @@ class PriceMatrix extends Component {
       ],
       matrixName: "",
       errors: {},
-      matrixId: ""
+      matrixId: "",
+      addNewMatrix: false
     };
   }
   componentDidMount = () => {
@@ -55,6 +56,7 @@ class PriceMatrix extends Component {
       isEditMatrix: false
     })
   }
+
   handleChange = (index, e) => {
     const { name, value } = e.target
     if (name === 'matrixName') {
@@ -213,7 +215,7 @@ class PriceMatrix extends Component {
     }
   };
 
-  handleMatrixDelete = async() => {
+  handleMatrixDelete = async () => {
     const { value } = await ConfirmBox({
       text: "Do you want to delete this price matrix?"
     });
@@ -263,7 +265,7 @@ class PriceMatrix extends Component {
   }
   render() {
     const { matrixListReducer } = this.props;
-    const { matrixRange, errors, matrixName, isEditMatrix } = this.state;
+    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix } = this.state;
     return (
       <>
         <Card>
@@ -285,7 +287,9 @@ class PriceMatrix extends Component {
                 <PriMatrixList
                   matrixList={matrixListReducer.matrixList}
                   handleUpdateMatrix={this.handleUpdateMatrix}
-                  resetAll={this.resetAll}
+                  addNewMatrix={() => this.setState({
+                    addNewMatrix: true
+                  })}
                 />
               </CardBody>
             </Card>
@@ -304,6 +308,7 @@ class PriceMatrix extends Component {
                   errors={errors}
                   matrixName={matrixName}
                   isEditMatrix={isEditMatrix}
+                  addNewMatrix={addNewMatrix}
                   handleMatrixDelete={this.handleMatrixDelete}
                 />
               </CardBody>

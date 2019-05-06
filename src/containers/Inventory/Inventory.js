@@ -17,11 +17,12 @@ import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
 import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
 import {
   addNewTier,
+  addNewVendor,
+  getInventoryPartVendors,
+  requestAddPart,
+  getMatrixList
 } from '../../actions'
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
-
-import { addNewVendor } from "../../actions";
-import { getInventoryPartVendors, requestAddPart } from "../../actions";
 import * as qs from "query-string";
 
 const InventoryStats = React.lazy(() =>
@@ -125,7 +126,9 @@ class Inventory extends Component {
       modelOperate,
       addVendor,
       inventoryPartsData,
-      getInventoryPartsVendors
+      getInventoryPartsVendors,
+      getPriceMatrix,
+      matrixListReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen } = modelDetails;
@@ -139,6 +142,8 @@ class Inventory extends Component {
                 partAddModalOpen: !partAddModalOpen
               })
             }
+            getPriceMatrix={getPriceMatrix}
+            matrixList={matrixListReducer.matrixList}
             inventoryPartsData={inventoryPartsData}
             getInventoryPartsVendors={getInventoryPartsVendors}
             addInventoryPart={this.addInventoryPart}
@@ -153,6 +158,8 @@ class Inventory extends Component {
                 tireAddModalOpen: !tireAddModalOpen
               })
             }
+            getPriceMatrix={getPriceMatrix}
+            matrixList={matrixListReducer.matrixList}
             getInventoryPartsVendors={getInventoryPartsVendors}
             addTier={this.props.addTier}
           />
@@ -275,7 +282,8 @@ class Inventory extends Component {
   }
 }
 const mapStateToProps = state => ({
-  inventoryPartsData: state.inventoryPartsReducers
+  inventoryPartsData: state.inventoryPartsReducers,
+  matrixListReducer: state.matrixListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   addVendor: data => {
@@ -289,6 +297,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addInventoryPart: data => {
     dispatch(requestAddPart(data));
+  },
+  getPriceMatrix: (data) => {
+    dispatch(getMatrixList(data))
   }
 });
 export default connect(

@@ -18,15 +18,6 @@ const getMatrixLogic = createLogic({
   type: matrixActions.GET_MATRIX_LIST,
   cancelType: matrixActions.GET_MATRIX_LIST_FAILED,
   async process({ action, getState }, dispatch, done) {
-    const profileStateData = getState().profileInfoReducer;
-
-    let parentId = profileStateData.profileInfo.parentId;
-    if (profileStateData.profileInfo.parentId === null) {
-      parentId = profileStateData.profileInfo._id;
-    }
-    let data = {
-      parentId: parentId
-    };
     dispatch(
       getMatrixListStart({
         matrixList: []
@@ -38,9 +29,9 @@ const getMatrixLogic = createLogic({
       "/getAllMatrix",
       "GET",
       true,
-      undefined,
-      data
+      { search: action.payload ? action.payload.input : null }
     );
+    logger(result);
     if (result.isError) {
       dispatch(
         getMatrixListFail({
@@ -49,6 +40,11 @@ const getMatrixLogic = createLogic({
       );
     }
     else {
+      const options = result.data.data.map(matrix => ({
+        label: matrix.matrixName,
+        value: matrix._id
+      }));
+      logger(action.payload && action.payload.callback? action.payload.callback(options) : null)
       dispatch(
         getMatrixListSuccess({
           matrixList: result.data.data

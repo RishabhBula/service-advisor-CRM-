@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   getInventoryPartsList,
   deletePartFromInventory,
-  updatePartFromInventory
+  updatePartFromInventory,
+  getMatrixList
 } from "../../../actions";
 import {
   Row,
@@ -61,6 +62,7 @@ class Parts extends Component {
       query.vendorId = qs.parse(vendorId).value;
     }
     this.props.getParts({ ...queryParams, ...query });
+    this.props.getPriceMatrix()
   }
   componentDidUpdate({ location }) {
     const { location: currentLocation } = this.props;
@@ -187,7 +189,9 @@ class Parts extends Component {
     const {
       inventoryPartsData,
       getInventoryPartsVendors,
-      modelInfoReducer
+      modelInfoReducer,
+      getPriceMatrix,
+      matrixListReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     logger(this.props);
@@ -397,18 +401,18 @@ class Parts extends Component {
                 );
               })
             ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  {filterApplied ? (
-                    <React.Fragment>
-                      No Parts found for your search
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? (
+                        <React.Fragment>
+                          No Parts found for your search
                     </React.Fragment>
-                  ) : (
-                    <React.Fragment>No Parts available</React.Fragment>
-                  )}
-                </td>
-              </tr>
-            )}
+                      ) : (
+                          <React.Fragment>No Parts available</React.Fragment>
+                        )}
+                    </td>
+                  </tr>
+                )}
           </tbody>
         </Table>
         {totalParts && !isLoading ? (
@@ -428,6 +432,8 @@ class Parts extends Component {
           getInventoryPartsVendors={getInventoryPartsVendors}
           updateInventoryPart={this.updatePartDetails}
           partDetails={partDetails}
+          getPriceMatrix={getPriceMatrix}
+          matrixList={matrixListReducer.matrixList}
           isEditMode={true}
         />
       </>
@@ -435,7 +441,8 @@ class Parts extends Component {
   }
 }
 const mapStateToProps = state => ({
-  inventoryPartsData: state.inventoryPartsReducers
+  inventoryPartsData: state.inventoryPartsReducers,
+  matrixListReducer: state.matrixListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getParts: params => {
@@ -446,6 +453,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateInventoryPart: data => {
     dispatch(updatePartFromInventory(data));
+  },
+  getPriceMatrix: data => {
+    dispatch(getMatrixList(data))
   }
 });
 export default connect(

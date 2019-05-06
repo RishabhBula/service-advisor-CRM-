@@ -6,7 +6,7 @@ class PriMatrixList extends Component {
     this.state = {};
   }
   render() {
-    const { matrixList, handleUpdateMatrix, resetAll } = this.props;
+    const { matrixList, handleUpdateMatrix, addNewMatrix } = this.props;
     return (
       <>
         {
@@ -22,7 +22,7 @@ class PriMatrixList extends Component {
             null
         }
         <Col sm={"12"} className={"text-center"}>
-          <Button color="primary" id="add-user" onClick={() => resetAll()} className={"btn btn-round"}>
+          <Button color="primary" id="add-user" onClick={() => addNewMatrix()} className={"btn btn-round"}>
             New Matrix
           </Button>
           <UncontrolledTooltip target={"add-user"}>
