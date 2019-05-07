@@ -4,7 +4,10 @@ import {
   Card,
   CardBody,
   Button,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  UncontrolledAlert,
+  Row,
+  Col
 } from "reactstrap";
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
@@ -20,10 +23,16 @@ import {
   setRateStandardListStart,
   customerEditRequest,
   updateCustomerStatus,
-  getCustomerFleetListRequest
+  getCustomerFleetListRequest,
+  importCustomers,
+  exportCustomers
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
+import CrmExportSampleButton, {
+  DemoSupportedSheets
+} from "../../components/common/CrmExportSampleButton";
+import CrmImportExcel from "../../components/common/CrmImportExcel";
 
 class Customers extends Component {
   constructor(props) {
@@ -160,6 +169,13 @@ class Customers extends Component {
     };
     this.props.modelOperate(data);
   }
+  onImport = data => {
+    this.props.importCustomer(data);
+  };
+  exportCustomer = () => {
+    const query = qs.parse(this.props.location.search);
+    this.props.exportCustomer({ ...query, page: 1 });
+  };
   render() {
     const { editMode, customer } = this.state;
     const {
@@ -176,6 +192,39 @@ class Customers extends Component {
           <CardBody className={"custom-card-body position-relative"}>
 
             <div className={"text-right invt-add-btn-block"}>
+              <CrmExportSampleButton
+                sheetType={DemoSupportedSheets.CUSTOMER}
+              />{" "}
+              &nbsp;
+                <CrmImportExcel
+                modalHeaderText={"Import customer data"}
+                onImport={this.onImport}
+                buttonText={"Import Customers"}
+              >
+                {customerListReducer.importError ? (
+                  <Row>
+                    <Col sm={{ size: 8, offset: 2 }}>
+                      <UncontrolledAlert color="danger">
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: customerListReducer.importError
+                          }}
+                        />
+                      </UncontrolledAlert>
+                    </Col>
+                  </Row>
+                ) : null}
+              </CrmImportExcel>
+              &nbsp;&nbsp;
+                <Button
+                color="primary"
+                id="add-user"
+                onClick={this.exportCustomer}
+              >
+                <i className={"fa fa-upload"} />
+                &nbsp; Export Customers
+                </Button>
+                &nbsp;&nbsp;
               <Button
                 color="primary"
                 id="add-user"
@@ -278,6 +327,12 @@ const mapDispatchToProps = dispatch => ({
   },
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
+  },
+  importCustomer: data => {
+    dispatch(importCustomers(data));
+  },
+  exportCustomer: data => {
+    dispatch(exportCustomers(data));
   }
 });
 

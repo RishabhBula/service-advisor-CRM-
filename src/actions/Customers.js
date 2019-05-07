@@ -11,9 +11,11 @@ export const customersAddActions = {
   CUSTOMER_GET_FAILED: "Customer Get failed!",
   DELETE_CUSTOMER: "Delete customer Requested!",
   UPDATE_CUSTOMER_STATUS: "Update customer status Requested!",
-
   EDIT_CUSTOMER_REQUESTED: "Edit CUSTOMER Requested!",
   EDIT_CUSTOMER_SUCCESS: "Edit CUSTOMER Success!",
+  IMPORT_CUSTOMER_REQUEST: "Request to import customers!",
+  IMPORT_CUSTOMER_REQ_UPDATE: "Update request to import customers!",
+  EXPORT_CUSTOMERS: "Export customers!"
 };
 
 export const customerAddRequest = createAction(
@@ -40,12 +42,29 @@ export const customerGetSuccess = createAction(
 );
 export const customerGetFailed = createAction(
   customersAddActions.CUSTOMER_GET_FAILED
-); 
+);
 
 export const deleteCustomer = createAction(customersAddActions.DELETE_CUSTOMER);
 
-export const updateCustomerStatus = createAction(customersAddActions.UPDATE_CUSTOMER_STATUS);
+export const updateCustomerStatus = createAction(
+  customersAddActions.UPDATE_CUSTOMER_STATUS
+);
 
-export const customerEditRequest = createAction(customersAddActions.EDIT_CUSTOMER_REQUESTED)
-export const customerEditSuccess = createAction(customersAddActions.EDIT_CUSTOMER_SUCCESS)
+export const customerEditRequest = createAction(
+  customersAddActions.EDIT_CUSTOMER_REQUESTED
+);
+export const customerEditSuccess = createAction(
+  customersAddActions.EDIT_CUSTOMER_SUCCESS
+);
 
+export const importCustomers = createAction(
+  customersAddActions.IMPORT_CUSTOMER_REQUEST
+);
+
+export const updateImportCustomersReq = createAction(
+  customersAddActions.IMPORT_CUSTOMER_REQ_UPDATE
+);
+
+export const exportCustomers = createAction(
+  customersAddActions.EXPORT_CUSTOMERS
+);

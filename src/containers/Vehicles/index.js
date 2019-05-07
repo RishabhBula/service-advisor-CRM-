@@ -4,7 +4,10 @@ import {
   Card,
   CardBody,
   Button,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  UncontrolledAlert,
+  Row,
+  Col
 } from "reactstrap";
 import { connect } from "react-redux";
 import { CrmVehicleModal } from "../../components/common/Vehicles/CrmVehicleModal";
@@ -16,9 +19,16 @@ import {
   vehicleGetRequest,
   vehicleEditRequest,
   deleteVehicle,
-  updateVehicleStatus
+  updateVehicleStatus,
+  importVehicle,
+  exportVehicles
 } from "../../actions";
 import { isEqual } from "../../helpers/Object";
+import CrmImportExcel from "../../components/common/CrmImportExcel";
+import { logger } from "../../helpers/Logger";
+import CrmExportSampleButton, {
+  DemoSupportedSheets
+} from "../../components/common/CrmExportSampleButton";
 
 class Vehicles extends Component {
   constructor(props) {
@@ -52,6 +62,7 @@ class Vehicles extends Component {
   };
 
   submitCreateVehicle = data => {
+    logger(data);
     this.props.vehicleAddAction(data);
   };
 
@@ -123,6 +134,13 @@ class Vehicles extends Component {
     };
     this.props.modelOperate(data);
   }
+  onImport = data => {
+    this.props.importVehicles(data);
+  };
+  exportVehicles = () => {
+    const query = qs.parse(this.props.location.search);
+    this.props.exportVehicles({ ...query, page: 1 });
+  };
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
     const { vehicleListReducer } = this.props;
@@ -132,6 +150,40 @@ class Vehicles extends Component {
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
               <div className={"text-right invt-add-btn-block"}>
+              <CrmExportSampleButton
+                sheetType={DemoSupportedSheets.VEHICLE}
+              />{" "}
+              &nbsp;
+                <CrmImportExcel
+                modalHeaderText={"Import Vehicle data"}
+                onImport={this.onImport}
+                buttonText={"Import Vehicels"}
+              >
+                {vehicleListReducer.importError ? (
+                  <Row>
+                    <Col sm={{ size: 8, offset: 2 }}>
+                      <UncontrolledAlert color="danger">
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: vehicleListReducer.importError
+                          }}
+                        />
+                      </UncontrolledAlert>
+                    </Col>
+                  </Row>
+                ) : null}
+              </CrmImportExcel>
+              &nbsp;&nbsp;
+                <Button
+                color="primary"
+                id="add-user"
+                onClick={this.exportVehicles}
+              >
+                <i className={"fa fa-upload"} />
+                &nbsp; Export Vehicels
+                </Button>
+                 &nbsp;&nbsp;
+                 <span>
                 <Button
                   color="primary"
                   id="add-user"
@@ -143,6 +195,7 @@ class Vehicles extends Component {
                 <UncontrolledTooltip target={"add-user"}>
                   Add New Vehicle
                 </UncontrolledTooltip>
+              </span>
               </div>
             <VehicleList
               vehicleData={vehicleListReducer}
@@ -194,6 +247,12 @@ const mapDispatchToProps = dispatch => ({
   },
   onStatusUpdate: data => {
     dispatch(updateVehicleStatus(data));
+  },
+  importVehicles: data => {
+    dispatch(importVehicle(data));
+  },
+  exportVehicles: data => {
+    dispatch(exportVehicles(data));
   }
 });
 
