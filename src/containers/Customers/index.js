@@ -25,7 +25,8 @@ import {
   customerEditRequest,
   updateCustomerStatus,
   getCustomerFleetListRequest,
-  importCustomers
+  importCustomers,
+  exportCustomers
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
@@ -162,6 +163,10 @@ class Customers extends Component {
   onImport = data => {
     this.props.importCustomer(data);
   };
+  exportCustomer = () => {
+    const query = qs.parse(this.props.location.search);
+    this.props.exportCustomer({ ...query, page: 1 });
+  };
   render() {
     const { editMode, customer } = this.state;
     const {
@@ -208,6 +213,15 @@ class Customers extends Component {
                     </Row>
                   ) : null}
                 </CrmImportExcel>
+                &nbsp;&nbsp;
+                <Button
+                  color="primary"
+                  id="add-user"
+                  onClick={this.exportCustomer}
+                >
+                  <i className={"fa fa-upload"} />
+                  &nbsp; Export Customers
+                </Button>
                 &nbsp;&nbsp;
                 <Button
                   color="primary"
@@ -312,6 +326,9 @@ const mapDispatchToProps = dispatch => ({
   },
   importCustomer: data => {
     dispatch(importCustomers(data));
+  },
+  exportCustomer: data => {
+    dispatch(exportCustomers(data));
   }
 });
 

@@ -1,6 +1,6 @@
 const vehicleModal = require("../../models/vehicle");
 const customerModel = require("../../models/customer");
-
+const mongoose = require("mongoose");
 /* ------------Add New Vehicle------------ */
 const addNewVehicle = async (req, res) => {
   const { body } = req;
@@ -95,10 +95,12 @@ const getAllVehicleList = async (req, res) => {
       {
         $or: [
           {
-            parentId: currentUser.id
+            parentId: mongoose.Types.ObjectId(currentUser.id)
           },
           {
-            parentId: currentUser.parentId || currentUser.id
+            parentId: mongoose.Types.ObjectId(
+              currentUser.parentId || currentUser.id
+            )
           }
         ]
       },
@@ -115,7 +117,7 @@ const getAllVehicleList = async (req, res) => {
         ]
       },
       {
-        _id: { $ne: currentUser.id }
+        _id: { $ne: mongoose.Types.ObjectId(currentUser.id) }
       }
     ];
     if (searchValue) {
@@ -146,9 +148,13 @@ const getAllVehicleList = async (req, res) => {
       condition["$and"].push({ status: status });
     }
     const getAllVehicle = await vehicleModal
-      .find({
-        ...condition
-      })
+      .aggregate([
+        {
+          $match: { ...condition }
+        }
+      ])
+      .collation({ locale: "en" })
+      .allowDiskUse(true)
       .sort(sortBy)
       .skip(offset)
       .limit(limit);

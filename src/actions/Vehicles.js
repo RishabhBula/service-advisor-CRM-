@@ -17,7 +17,8 @@ export const vehicleActions = {
   EDIT_VEHICLE_REQUESTED: "Edit VEHICLE Requested!",
   EDIT_VEHICLE_SUCCESS: "Edit VEHICLE Success!",
   IMPORT_VEHICLE_REQUEST: "Request to import VEHICLE!",
-  IMPORT_VEHICLE_REQ_UPDATE: "Update request to import VEHICLE!"
+  IMPORT_VEHICLE_REQ_UPDATE: "Update request to import VEHICLE!",
+  EXPORT_VEHICLES: "Export Vehicles!"
 };
 
 export const vehicleAddRequest = createAction(
@@ -65,3 +66,5 @@ export const importVehicle = createAction(
 export const updateImportVehicleReq = createAction(
   vehicleActions.IMPORT_VEHICLE_REQ_UPDATE
 );
+
+export const exportVehicles = createAction(vehicleActions.EXPORT_VEHICLES);

@@ -21,6 +21,7 @@ import {
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
+import XLSX from "xlsx";
 
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
@@ -361,16 +362,107 @@ const importCustomerLogic = createLogic({
     } else {
       toast.error(result.messages[0] || DefaultErrorMessage);
     }
+    setTimeout(
+      () =>
+        dispatch(
+          updateImportCustomersReq({
+            importError: null
+          })
+        ),
+      8000
+    );
     dispatch(hideLoader());
     done();
   }
 });
 
+/**
+ *
+ */
+const getExportData = async (payload, data = []) => {
+  let api = new ApiHelper();
+  let result = await api.FetchFromServer(
+    "/customer",
+    "/getAllCustomerList",
+    "GET",
+    true,
+    {
+      ...payload,
+      limit: 5001
+    }
+  );
+
+  if (!result.isError) {
+    const d = result.data.data.map(res => {
+      return {
+        "First Name": res.firstName || "-",
+        "Last Name": res.lastName || "-",
+        Phone: res.phoneDetail[0]
+          ? res.phoneDetail.map(ph => ph.value).join(" | ")
+          : "-",
+        "Phone Type": res.phoneDetail[0]
+          ? res.phoneDetail.map(ph => ph.phone).join(" | ")
+          : "-",
+        Email: res.email || "-",
+        Company: res.companyName || "-",
+        Address: [res.address1 || "", res.address2].join(", ") || "-",
+        City: res.city || "-",
+        State: res.state || "-",
+        "Zip Code": res.zipCode || "-",
+        Notes: res.notes || "-",
+        "Refral Source": res.referralSource || "-",
+        "Is Tax Exempt":
+          res.permission &&
+          res.permission.isCorporateFleetTaxExempt &&
+          res.permission.isCorporateFleetTaxExempt.status
+            ? "yes"
+            : "no",
+        "Is Receive A Discount":
+          res.permission &&
+          res.permission.shouldReceiveDiscount &&
+          res.permission.shouldReceiveDiscount.status
+            ? "yes"
+            : "no",
+        Status: res.status ? "Active" : "Inactive"
+      };
+    });
+    if (d.length === 5000) d.pop();
+    data.push({
+      name: `Customer List ${payload.page}`,
+      data: d
+    });
+    if (result.data.data.length > 5000) {
+      return await getExportData({ ...payload, page: payload.page + 1 }, data);
+    }
+  }
+  return data;
+};
+/**
+ *
+ */
+const exportCustomerLogic = createLogic({
+  type: customersAddActions.EXPORT_CUSTOMERS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    const result = await getExportData({ ...action.payload, page: 1 });
+    logger(result);
+    const wb = XLSX.utils.book_new();
+    result.forEach(res => {
+      const ws = XLSX.utils.json_to_sheet(res.data);
+      XLSX.utils.book_append_sheet(wb, ws, `${res.name}`);
+      /* generate XLSX file and send to client */
+    });
+    XLSX.writeFile(wb, `customers_${Date.now()}.xlsx`);
+    dispatch(hideLoader());
+    done();
+  }
+});
 export const CustomersLogic = [
   addCustomerLogic,
   getCustomersLogic,
   deleteCustomerLogic,
   editCustomerLogic,
   updateCustomerStatusLogic,
-  importCustomerLogic
+  importCustomerLogic,
+  exportCustomerLogic
 ];

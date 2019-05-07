@@ -96,8 +96,8 @@ const getAllCustomerList = async (req, res) => {
     let condition = {};
     const id = currentUser.id;
     const parentId = currentUser.parentId || currentUser.id;
-    if (status) {
-      condition.status = status;
+    if (typeof status != "undefined") {
+      condition.status = parseInt(status) === 1 ? true : false;
     }
     condition["$and"] = [
       {

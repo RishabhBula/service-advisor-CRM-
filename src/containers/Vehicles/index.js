@@ -21,7 +21,8 @@ import {
   vehicleEditRequest,
   deleteVehicle,
   updateVehicleStatus,
-  importVehicle
+  importVehicle,
+  exportVehicles
 } from "../../actions";
 import { isEqual } from "../../helpers/Object";
 import CrmImportExcel from "../../components/common/CrmImportExcel";
@@ -128,6 +129,10 @@ class Vehicles extends Component {
   onImport = data => {
     this.props.importVehicles(data);
   };
+  exportVehicles = () => {
+    const query = qs.parse(this.props.location.search);
+    this.props.exportVehicles({ ...query, page: 1 });
+  };
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
     const { vehicleListReducer } = this.props;
@@ -166,6 +171,15 @@ class Vehicles extends Component {
                     </Row>
                   ) : null}
                 </CrmImportExcel>
+                &nbsp;&nbsp;
+                <Button
+                  color="primary"
+                  id="add-user"
+                  onClick={this.exportVehicles}
+                >
+                  <i className={"fa fa-upload"} />
+                  &nbsp; Export Vehicels
+                </Button>
                 &nbsp;&nbsp;
                 <Button
                   color="primary"
@@ -234,6 +248,9 @@ const mapDispatchToProps = dispatch => ({
   },
   importVehicles: data => {
     dispatch(importVehicle(data));
+  },
+  exportVehicles: data => {
+    dispatch(exportVehicles(data));
   }
 });
 
