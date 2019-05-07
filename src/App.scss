@@ -34,6 +34,14 @@ body {
   .row {
     width: 100%;
   }
+  .sidebar {
+    .nav-dropdown-items{
+      padding-left: 25px;
+     .nav-link{
+      padding: 7px;
+    }
+  }
+  }
   .brand-logo {
     display: inline-block;
     min-width: 190px;
