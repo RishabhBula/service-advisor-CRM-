@@ -363,7 +363,7 @@ class CrmInventoryPart extends Component {
     const { isOpen, toggle, isEditMode, partDetails } = this.props;
     const buttons = [
       {
-        text: isEditMode ? "Update Part" : "Add part",
+        text: isEditMode ? "Update Part" : "Add Part",
         color: "primary",
         onClick: this.addPart,
         type: "submit"
@@ -380,7 +380,7 @@ class CrmInventoryPart extends Component {
           isOpen={isOpen}
           toggle={toggle}
           headerText={
-            isEditMode ? "Update part details" : "Add new part to inventory"
+            isEditMode ? "Update Part Details" : "Add New Part To Inventory"
           }
           footerButtons={buttons}
           showfooterMsg
@@ -524,16 +524,23 @@ class CrmInventoryPart extends Component {
                   Cost
                 </Label>
                 <div className={"input-block"}>
+                 <InputGroup>
+                  <div className="input-group-prepend">
+                      <span className="input-group-text">
+                        <i className="fa fa-dollar"></i>
+                      </span>
+                  </div>
                   <Input
                     type="number"
                     className="customer-modal-text-style"
-                    placeholder="$"
+                    placeholder="0.00"
                     onChange={(e) => this.handleCostPricechange(e)}
                     maxLength="40"
                     name="cost"
                     invalid={errors.cost}
                     value={cost}
                   />
+                  </InputGroup>
                   {errors.cost ? (
                     <FormFeedback>{errors.cost}</FormFeedback>
                   ) : null}
@@ -546,16 +553,23 @@ class CrmInventoryPart extends Component {
                   Retail Price
                 </Label>
                 <div className={"input-block"}>
+                  <InputGroup>
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">
+                        <i className="fa fa-dollar"></i>
+                      </span>
+                    </div>
                   <Input
                     type="number"
                     className="customer-modal-text-style"
-                    placeholder="$"
+                      placeholder="0.00"
                     onChange={this.handleRetailsPriceChange}
                     maxLength="40"
                     name="price"
                     invalid={errors.price}
                     value={price}
                   />
+                  </InputGroup>
                   {errors.price ? (
                     <FormFeedback>{errors.price}</FormFeedback>
                   ) : null}
@@ -618,7 +632,8 @@ class CrmInventoryPart extends Component {
                         <Button
                           key={index}
                           type={"button"}
-                          color={"primary"}
+                          color={"secondary"}
+                          className={"margin-markup-btn"} 
                           size={"sm"}
                           onClick={() => this.setPriceByMarkup(mark.value)}
                         >
@@ -651,7 +666,8 @@ class CrmInventoryPart extends Component {
                         <Button
                           key={index}
                           type={"button"}
-                          color={"primary"}
+                          color={"secondary"}
+                          className={"margin-markup-btn"} 
                           size={"sm"}
                           onClick={() => this.setPriceByMargin(mark.value)}
                         >
@@ -673,25 +689,7 @@ class CrmInventoryPart extends Component {
               </FormGroup>
             </Col>
           </Row>
-          <Row>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Quickbooks Item Reference
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="Item reference"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="email"
-                  />
-                </div>
-              </FormGroup>
-            </Col>
-          </Row>
+  
           <Row>
             {CreatePartOptions.map((option, index) => {
               return (

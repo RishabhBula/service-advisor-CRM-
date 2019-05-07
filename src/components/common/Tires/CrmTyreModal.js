@@ -7,6 +7,7 @@ import {
    ModalHeader,
    Row,
    Col,
+   InputGroup,
    ButtonGroup,
    FormFeedback,
    FormGroup,
@@ -501,7 +502,8 @@ export class CrmTyreModal extends Component {
                            </FormGroup>
                         </Col>
                      </Row>
-                     <div className="">
+                     <Row>
+                        <Col md={"12"}>
                         <FormGroup>
                            <Label htmlFor="name" className="customer-modal-text-style tire-col">
                               Seasonality
@@ -526,7 +528,8 @@ export class CrmTyreModal extends Component {
                               >All Seasons</Button>
                            </ButtonGroup>
                         </FormGroup>
-                     </div>
+                        </Col>
+                     </Row>
                      <h5 className={"font-weight-bold"}>Sizes</h5>
                      {tierSize && tierSize.length
                         ? tierSize.map((item, index) => {
@@ -630,7 +633,7 @@ export class CrmTyreModal extends Component {
                                     </Col>
                                     <Col md="6" className={"fleet-block"}>
                                        <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                          <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
                                              Pricing Matrix
                                           </Label>
                                           <Async
@@ -651,27 +654,41 @@ export class CrmTyreModal extends Component {
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Cost
  </Label>
+                                                   <InputGroup>
+                                                      <div className="input-group-prepend">
+                                                         <span className="input-group-text">
+                                                            <i className="fa fa-dollar"></i>
+                                                         </span>
+                                                      </div>
                                                    <Input
                                                       type="text"
                                                       name="cost"
                                                       value={tierSize[index].cost}
                                                       onChange={e => this.handleCostPricechange(index, e)}
-                                                      placeholder={"$0.00"}
+                                                      placeholder={"0.00"}
                                                    />
+                                                   </InputGroup>
                                                 </FormGroup>
                                              </Col>
                                              <Col md="6">
                                                 <FormGroup>
                                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                                       Retail Price
- </Label>
+                                                   </Label> 
+                                                   <InputGroup>
+                                                      <div className="input-group-prepend">
+                                                         <span className="input-group-text">
+                                                            <i className="fa fa-dollar"></i>
+                                                         </span>
+                                                      </div>
                                                    <Input
                                                       type="text"
                                                       name="retailPrice"
                                                       value={tierSize[index].retailPrice}
                                                       onChange={e => this.handleRetailsPriceChange(index, e)}
-                                                      placeholder={"$0.00"}
+                                                      placeholder={"0.00"}
                                                    />
+                                                   </InputGroup>
                                                 </FormGroup>
                                              </Col>
                                           </Row>

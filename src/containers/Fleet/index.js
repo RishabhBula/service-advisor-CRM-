@@ -147,6 +147,11 @@ class Fleet extends Component {
     };
     this.props.deleteFleet(data);
   };
+  onAddClick = () =>{
+    this.setState({
+      openCreate: !this.state.openCreate,
+    });
+  }
   render() {
     const {
       openCreate,
@@ -188,6 +193,7 @@ class Fleet extends Component {
               onDelete={this.deleteFleet}
               onStatusUpdate={this.onStatusUpdate}
               openEdit={openEdit}
+              onAddClick={this.onAddClick}
             />
           </CardBody>
         </Card>

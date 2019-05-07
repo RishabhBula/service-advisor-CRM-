@@ -19,8 +19,8 @@ class PriceMatrix extends Component {
     this.state = {
       matrixRange: [
         {
-          margin: "50.00%",
-          markup: "100.00%",
+          margin: "50%",
+          markup: "100%",
           lower: "0.00",
           upper: "beyond"
         }
@@ -28,7 +28,8 @@ class PriceMatrix extends Component {
       matrixName: "",
       errors: {},
       matrixId: "",
-      addNewMatrix: false
+      addNewMatrix: false,
+      activeMatrix: ""
     };
   }
   componentDidMount = () => {
@@ -45,8 +46,8 @@ class PriceMatrix extends Component {
       this.setState({
         matrixRange: [
           {
-            margin: "50.00%",
-            markup: "100.00%",
+            margin: "50%",
+            markup: "100%",
             lower: "0.00",
             upper: "beyond"
           }
@@ -61,8 +62,8 @@ class PriceMatrix extends Component {
       this.setState({
         matrixRange: [
           {
-            margin: "50.00%",
-            markup: "100.00%",
+            margin: "50%",
+            markup: "100%",
             lower: "0.00",
             upper: "beyond"
           }
@@ -100,8 +101,8 @@ class PriceMatrix extends Component {
     matrixRange[matrixRange.length - 1].upper =
       parseFloat(matrixRange[matrixRange.length - 1].lower) + 99.99;
     matrixRange.push({
-      margin: "50.00%",
-      markup: "100.00%",
+      margin: "50%",
+      markup: "100%",
       lower,
       upper
     });
@@ -256,7 +257,7 @@ class PriceMatrix extends Component {
       matrixName,
       matrixRange,
       matrixId: matrixData._id,
-      isEditMatrix: true
+      isEditMatrix: true,
     })
   }
   handleAddMatrix = () => {
@@ -284,7 +285,7 @@ class PriceMatrix extends Component {
   }
   render() {
     const { matrixListReducer } = this.props;
-    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix } = this.state;
+    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix, matrixId } = this.state;
     return (
       <>
         <Card className={"white-card"}>
@@ -298,15 +299,16 @@ class PriceMatrix extends Component {
         </Card>
         <Row className={"m-0"}>
           <Col md={"4"}>
-            <Card>
+            <Card className={"matrix-list-card"}>
               <CardHeader>
                 <h4>Matrix List</h4>
               </CardHeader>
-              <CardBody>
+              <CardBody className={"matrix-list-body"}>
                 <PriMatrixList
                   matrixList={matrixListReducer.matrixList}
                   handleUpdateMatrix={this.handleUpdateMatrix}
                   addNewMatrix={() => this.resetAll(true)}
+                  activeMatrix={matrixId}
                 />
               </CardBody>
             </Card>

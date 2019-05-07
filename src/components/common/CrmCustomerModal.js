@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   FormGroup,
+  InputGroup,
   Label,
   Input,
   FormFeedback
@@ -924,16 +925,23 @@ export class CrmCustomerModal extends Component {
                                   Percent Discount
                                   </Label>
                                 <FormGroup className={"mb-2"}>
+                                  <InputGroup>
                                   <Col md="5" className={"p-0"}>
-                                    <MaskedInput
-                                      mask="11\.11 \%"
+                                    <Input
+                                      // mask="11\.11 \%"
                                       name="percentageDiscount"
-                                      size="20"
+                                      maxLength="5"
                                       onChange={this.handlePercentageChange}
                                       className="form-control"
-                                      placeholder="00.00%"
+                                      placeholder="00.00"
                                     />
                                   </Col>
+                                    <div className="input-group-append">
+                                      <span className="input-group-text">
+                                        <i className="fa fa-percent"></i>
+                                      </span>
+                                    </div>
+                                  </InputGroup>
                                 </FormGroup>
                               </div>
                             ) : null}

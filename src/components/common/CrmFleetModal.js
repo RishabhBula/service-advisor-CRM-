@@ -6,6 +6,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  InputGroup,
   Row,
   Col,
   FormFeedback,
@@ -805,12 +806,12 @@ export class CrmFleetModal extends Component {
                               Percent Discount
                               </Label>
                             <FormGroup>
+                              <InputGroup>
                               <Col md="4" className={"p-0"}>
-                                <MaskedInput
-                                  mask="11\.11 \%"
-                                  placeholder="00.00%"
+                                <Input
+                                  placeholder="00.00"
                                   name="percentageDiscount"
-                                  size="20"
+                                  maxLength="5"
                                   onChange={this.handlePercentageChange}
                                   className="form-control"
                                   value={
@@ -819,6 +820,12 @@ export class CrmFleetModal extends Component {
                                   }
                                 />
                               </Col>
+                                <div className="input-group-append">
+                                  <span className="input-group-text">
+                                    <i className="fa fa-percent"></i>
+                                  </span>
+                                </div>
+                              </InputGroup>
                             </FormGroup>
                           </div>
                         ) : null}

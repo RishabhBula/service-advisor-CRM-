@@ -292,10 +292,9 @@ class Labours extends Component {
         <Table responsive >
           <thead>
             <tr>
-              <th width='90px'>S No.
-              </th>
-              <th>Labour Description</th>
-              <th>Note</th>
+              <th width='90px'>S No.</th>
+              <th width={"250"}>Labour Description</th>
+              <th width={"250"}>Note</th>
               <th>Rate</th>
               <th>Hours</th>
               {/* <th>Price</th> */}
@@ -314,12 +313,16 @@ class Labours extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </label>
                       </td>
-                      <td>{data.discription || "-"}</td>
+                      <td><b>{data.discription || "-"}</b></td>
                       <td>{data.notes || "-"}</td>
                       <td>
-                        <div>
+                        <div className="modal-info">
                           {(data.rate && data.rate.name) ? data.rate.name : "-"} - 
-                          {(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</div>
+                          {(data.rate && data.rate.hourlyRate) ? <span className={"dollar-price"}>
+                            <i class="fa fa-dollar dollar-icon"></i>
+                            {data.rate.hourlyRate}
+                          </span> : "-"}
+                        </div>
                       </td>
                       <td>{(data.hours) ? data.hours + ' Hrs' : "-"}</td>
                       {/* <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td> */}

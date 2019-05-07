@@ -115,6 +115,14 @@ class Vehicles extends Component {
     );
   };
 
+  onAddClick = () =>{
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      vehicleModel: !modelDetails.vehicleModel,
+      vehicleEditModel: false
+    };
+    this.props.modelOperate(data);
+  }
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
     const { vehicleListReducer } = this.props;
@@ -142,7 +150,8 @@ class Vehicles extends Component {
               onPageChange={this.onPageChange}
               updateModel={this.toggleUpdateVehicle}
               onDelete={this.deleteVehicle}
-              onStatusUpdate={this.onStatusUpdate}
+              onStatusUpdate={this.onStatusUpdate} 
+              onAddClick={this.onAddClick}
             />
           </CardBody>
         </Card>

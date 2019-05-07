@@ -351,17 +351,27 @@ class Parts extends Component {
                     <td className={"text-capitalize"}>
                       <div className={"font-weight-bold"}>{part.description || "-"}</div>
                       {part.partNumber ? <div className={"modal-info"}>Part No. : <Badge>{part.partNumber}</Badge></div> : null}
-                      <span className={"part-note"}>
-                        {part.note || "-"}
-                      </span>
+                      {part.note ? <span className={"part-note"}>part.note</span> : " "}
                     </td>
-                    <td>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
+                    <td className={"font-weight-bold"}>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
                     <td>{part.location || "-"}</td>
                     <td>
-                      <div>${part.cost || " "}</div>
-                      <div>${part.retailPrice || " "}</div>
+                      {part.cost ? 
+                        <div className="modal-info">Cost - <span className={"dollar-price"}>
+                        <i class="fa fa-dollar dollar-icon"></i>
+                        {part.cost || " "}
+                        </span>
+                        </div> 
+                      : null }
+                      {part.retailPrice ?
+                        <div className="modal-info">Retail - <span className={"dollar-price"}>
+                          <i class="fa fa-dollar dollar-icon"></i>
+                          {part.retailPrice || " "}
+                          </span>
+                        </div>
+                      : null}
                     </td>
-                    <td>
+                    <td className={"pl-4"}>
                       {part.quantity || 0}&nbsp;
                       {part.quantity <= part.criticalQuantity ? (
                         <Badge color={"warning"}>Reorder</Badge>

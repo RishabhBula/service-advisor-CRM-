@@ -64,6 +64,7 @@
   background: #fff;
   color: #433b6d;
   position: relative;
+  cursor: pointer;
 }
 .flex-1{
   flex: 1;
@@ -180,6 +181,13 @@
   padding-left: 0;
   position: relative;
   left: 15px;
+}
+.dollar-price {
+  font-size: 14px;
+  font-weight: 600;
+}
+.fa.dollar-icon{
+  font-size: 13px;
 }
 /* workflow css */
 .page-title {
@@ -1025,7 +1033,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   display: flex;
   align-items: flex-start;
   border: 1px solid #e4eaec;
-  padding: 16px;
+  padding: 16px 0;
   border-radius: 4px;
   margin-bottom: 10px;
   position: relative;
@@ -1095,11 +1103,11 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   height: 35px !important;
 }
 .size-desc-table thead tr th {
-  background-color: #d2d2d2 !important;
+  background-color:#e0dfdf !important;
 }
 .modal-info{
   font-size: 12px;
-  color: #534d61;
+  color: #322d3c;
   padding-top: 4px;
   font-weight: 600;
 }
@@ -1147,6 +1155,18 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 /* Tyre CSS END*/
 
 /* Price Matrix */
+.form-control.matrix-input:focus{
+  box-shadow: none;
+  outline: 0;
+  border-color:#e4e7ea; 
+}
+.form-control.blink-input{
+  color: #5c6873;
+  background-color: #e8e8e8;
+  border-color: #e8e8e8;
+  outline: 0;
+  box-shadow: 0 0 0 0.1rem rgba(119, 78, 230, 0.78);
+}
 .matrix-list li{
   list-style: none;
   cursor: pointer;
@@ -1154,6 +1174,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   display: flex;
   align-items: center;
   font-size: 16px;
+  padding: 2px;
+}
+.matrix-list li.active{
+  background-color: #ddd;
 }
 .matrix-list li .icons{
   font-weight: 600;
@@ -1172,6 +1196,11 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   right: 23px;
   width: 0px;
 }
+.matrix-action .btn-secondary.btn-theme-transparent{
+  height: 36px;
+  width: 42px;
+  padding: 5px 8px;
+}
 .matrix-input-control .form-control{
   height: 50px;
   max-width: 70px;
@@ -1181,9 +1210,73 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #fff;
   opacity: 1;
 }
+.matrix-input-control .form-control:focus{
+  box-shadow: none;
+}
 .matrix-input-control .value-sprate{
   padding: 0 10px;
   display: block;
+  position: relative;
+  top: -4px;
+}
+.matrix-btn-block{
+  padding-top: 10px;
+  position: relative;
+}
+.matrix-btn-block:before{
+  content: "";
+  display: block;
+  width: calc(100% + 40px);
+  border-top: 1px solid #ddd;
+  position: absolute;
+  left: -20px;
+  top: 0;
+}
+.matrix-list-card .card-header{
+  padding: 10px 20px;
+}
+.matrix-list-card .card-header h4{
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'open sans';
+}
+.matrix-list-card .card-body{
+  padding: 10px 20px;
+}
+.matrix-drop-down .btn.btn-secondary{
+  background-color: transparent !important;
+  border-color:transparent;
+}
+.matrix-drop-down .btn.btn-secondary:focus{
+  box-shadow: none !important;
+}
+.matrix-drop-down .dropdown-menu{
+  transform: translate3d(-60px, 40px, 0px) !important;
+}
+.matrix-drop-down .dropdown-menu:before{
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  display: inline-block;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #c8ced3;
+  border-left: 9px solid transparent;
+  content: '';
+  transform: translateX(-50%);
+  left: 50%;
+}
+.matrix-drop-down .dropdown-menu:after{
+  position: absolute;
+  top: -9px;
+  left: 20px;
+  display: inline-block;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #fff;
+  border-left: 9px solid transparent;
+  content: '';
+  transform: translateX(-50%);
+  left: 50%;
 }
 /* Price Matrix End */
 

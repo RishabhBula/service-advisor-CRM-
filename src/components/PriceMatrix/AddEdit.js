@@ -40,39 +40,55 @@ class PriceMatrixComponent extends Component {
           <>
             <Col md={"8"}>
               <Card>
-                <CardBody>
+                <CardBody className={"matrix-list-body"}>
                   <Row>
                     <Col md={"12"} className={"mb-4"}>
-                      <div className={"matrix-input"}>
-                        <Input
-                          name="matrixName"
-                          value={matrixName}
-                          onChange={(e) => handleChange(0, e)}
-                          placeholder={"Example Matrix A"}
-                          invalid={errors.matrixName && !matrixName} />
-                        <FormFeedback>
+                      <div className={"matrix-input form-group"}>
+                        <Row>
+                          <Col md={"9"} >
+                          <Input
+                            name="matrixName"
+                            value={matrixName}
+                            onChange={(e) => handleChange(0, e)}
+                            placeholder={"Example Matrix A"}
+                              className={addNewMatrix && !matrixName  ? "blink-input" : "matrix-input"}
+                            invalid={errors.matrixName && !matrixName}
+                            />
+                          <FormFeedback>
+                            {
+                              errors && errors.matrixName && !matrixName ?
+                                errors.matrixName :
+                                null
+                            }
+                          </FormFeedback>
+                        </Col>
+                        <Col md={"3"}>
+                        <span
+                          onClick={() => handleAddMatrix()}
+                          className="btn btn-theme-line"
+                        >
                           {
-                            errors && errors.matrixName && !matrixName ?
-                              errors.matrixName :
-                              null
+                            isEditMatrix ? "Update" : "Save"
                           }
-                        </FormFeedback>
+                        </span>
                         {
                           isEditMatrix ?
                             <div className={"matrix-action"}>
-                              <Button onClick={handleMatrixDelete} className={"btn btn-danger"}>
-                                <i className="fas fa-trash" />
+                              <Button onClick={handleMatrixDelete} className={"btn btn-secondary btn-theme-transparent"}>
+                              <i class="icons cui-trash"></i>
                               </Button>
                             </div> :
                             null
                         }
+                          </Col>
+                        </Row>
                       </div>
                     </Col>
                   </Row>
                   <table className={"table"}>
                     <thead>
                       <tr>
-                        <th>Cost</th>
+                        <th width={"180"} className={"text-center"}>Cost</th>
                         <th className={"text-right"}>Markup</th>
                         <th className={"text-right"}>Margin</th>
                         <th />
@@ -90,7 +106,7 @@ class PriceMatrixComponent extends Component {
                                       "d-flex align-items-center matrix-input-control"
                                     }
                                   >
-                                    <div className={"d-inline-block"}>
+                                    <div className={"d-inline-block mr-2"}>
                                       <Input
                                         className={"form-control text-right pr-0"}
                                         name={"costPrice1"}
@@ -148,9 +164,9 @@ class PriceMatrixComponent extends Component {
                                 </td>
                                 <td className={"text-center"}>
                                   <div className={"d-flex justify-content-center"}>
-                                    <span>
+                                    <span className={"matrix-drop-down"}>
                                       <UncontrolledDropdown>
-                                        <DropdownToggle caret>
+                                        <DropdownToggle className={""}>
                                           <i className="fas fa-ellipsis-h" />
                                         </DropdownToggle>
                                         <DropdownMenu>
@@ -164,7 +180,7 @@ class PriceMatrixComponent extends Component {
                                               }
                                             >
                                               Add range above
-                                    </DropdownItem>
+                                            </DropdownItem>
                                           ) : null}
                                           <DropdownItem
                                             onClick={() =>
@@ -172,7 +188,7 @@ class PriceMatrixComponent extends Component {
                                             }
                                           >
                                             Add range below
-                                  </DropdownItem>
+                                          </DropdownItem>
                                           {index >= 1 ? (
                                             <DropdownItem>
                                               <span
@@ -205,17 +221,10 @@ class PriceMatrixComponent extends Component {
                         className="customer-add-phone customer-anchor-text customer-click-btn"
                       >
                         Add Range
-            </span>
+                      </span>
                     </Col>
                     <Col md={"6"}>
-                      <span
-                        onClick={() => handleAddMatrix()}
-                        className="btn btn-success"
-                      >
-                        {
-                          isEditMatrix ? "Update" : "Save"
-                        }
-                      </span>
+                      
                     </Col>
                   </Row>
                 </CardBody>

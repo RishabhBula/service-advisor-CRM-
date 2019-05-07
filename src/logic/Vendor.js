@@ -106,6 +106,7 @@ const editVendorsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
+      logger(result, "result")
       toast.error(result.messages[0]);
       dispatch(hideLoader());
       done();

@@ -274,7 +274,7 @@ export class CrmUserModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Phone (optional)
+                      Phone
                     </Label>
                     <div className={"input-block"}>
                       <MaskedInput
@@ -327,9 +327,15 @@ export class CrmUserModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Rate/hour (optional)
+                      Rate/hour
                     </Label>
                     <div className={"input-block"}>
+                      <InputGroup>
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-dollar"></i>
+                          </span>
+                        </div>
                       <CurrencyInput
                         value={rate}
                         name={"rate"}
@@ -339,6 +345,7 @@ export class CrmUserModal extends Component {
                           "is-invalid": errors.rate
                         })}
                       />
+                      </InputGroup>
                       <FormFeedback>
                         {errors.rate ? errors.rate : null}
                       </FormFeedback>

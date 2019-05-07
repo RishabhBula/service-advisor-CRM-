@@ -22,6 +22,7 @@ import { withRouter } from "react-router-dom";
 import { AppConfig } from "../../../config/AppConfig";
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import NoDataFound from "../../common/NoFound";
 
 class FleetList extends Component {
   constructor(props) {
@@ -36,7 +37,8 @@ class FleetList extends Component {
       sort: "",
       type: "",
       page: 1,
-      selectedFleets: []
+      selectedFleets: [],
+      filterApplied:false
     };
   }
 
@@ -44,12 +46,17 @@ class FleetList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status, type } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search || sort) {
+      filterApplied = true;
+    }
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
       search: search || "",
-      type: type || ""
+      type: type || "",
+      filterApplied
     });
   }
 
@@ -175,6 +182,9 @@ class FleetList extends Component {
       param.status = status;
     }
     this.props.onSearch(param);
+    this.setState({
+      filterApplied:true
+    })
   };
 
   onReset = e => {
@@ -187,6 +197,9 @@ class FleetList extends Component {
       user: {}
     });
     this.props.onSearch({});
+    this.setState({
+      filterApplied:false
+    })
   };
 
   editFleet = fleetData => {
@@ -219,7 +232,9 @@ class FleetList extends Component {
       status,
       sort,
       page,
-      selectedFleets } = this.state
+      selectedFleets,
+      filterApplied
+    } = this.state
     const { fleetListData } = this.props;
     const { isLoading, fleetData } = fleetListData;
     return (
@@ -496,7 +511,9 @@ class FleetList extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={10}>
-                      No Fleets are available
+                      {filterApplied ? <NoDataFound message={"No Fleet details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Fleet details added."} onAddClick={this.props.onAddClick} />
+                      }
                     </td>
                   </tr>
                 )

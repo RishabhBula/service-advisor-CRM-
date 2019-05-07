@@ -375,7 +375,7 @@ class CustomerList extends Component {
                       </td>
                       <td>
                         <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || "-"}</div>
-                        <div>{user.email || "-"}</div>
+                        <div>{user.email || null}</div>
                       </td>
                       <td>
                         {user.phoneDetail

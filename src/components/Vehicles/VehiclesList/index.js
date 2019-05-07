@@ -21,6 +21,7 @@ import { CrmCircleBackground } from "../../../components/common/Icon/CrmCircleBa
 import { toast } from "react-toastify";
 import { carsOptions} from '../../../config/Color';
 import { logger } from "../../../helpers/Logger";
+import NoDataFound from "../../common/NoFound";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -32,7 +33,8 @@ class VehiclesList extends Component {
       sort: "",
       user: {},
       openEditModal: false,
-      selectedVehicles: []
+      selectedVehicles: [],
+      filterApplied:false
     };
   }
 
@@ -40,11 +42,16 @@ class VehiclesList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search || sort) {
+      filterApplied = true;
+    }
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
-      search: search || ""
+      search: search || "",
+       filterApplied 
     });
   }
 
@@ -78,6 +85,9 @@ class VehiclesList extends Component {
       param.status = status;
     }
     this.props.onSearch(param);
+    this.setState({
+      filterApplied:true
+    })
   };
 
   onReset = e => {
@@ -88,7 +98,8 @@ class VehiclesList extends Component {
       status: "",
       sort: "",
       user: {},
-      selectedVehicles: []
+      selectedVehicles: [],
+      filterApplied: false
     });
     this.props.onSearch({});
   };
@@ -214,7 +225,7 @@ class VehiclesList extends Component {
   render() {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
-    const { page, search, sort, status, selectedVehicles } = this.state;
+    const { page, search, sort, status, selectedVehicles, filterApplied } = this.state;
      const carType = (type) => {
        return carsOptions.map((item, index)=>{
          if (item.value === type){
@@ -491,7 +502,9 @@ class VehiclesList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    No Vehicle records are available
+                      {filterApplied ? <NoDataFound message={"No Vehicle details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Vehicle details added."} onAddClick={this.props.onAddClick} />
+                      }
                   </td>
                 </tr>
               )
