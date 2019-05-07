@@ -21,11 +21,11 @@ export class ErrorHandlerHelper {
     this.error.timestamp = Date.now();
     this.error.messages = [];
     if (
-      this.rawError.responseObject &&
-      typeof this.rawError.responseObject === "object" &&
-      this.rawError.responseObject.message
+      this.rawError.data &&
+      typeof this.rawError.data === "object" &&
+      this.rawError.data.message
     ) {
-      this.error.messages.push(this.rawError.responseObject.message);
+      this.error.messages.push(this.rawError.data.message);
     }
     if (!this.error.messages.length) {
       this.error.error = "Unknown";

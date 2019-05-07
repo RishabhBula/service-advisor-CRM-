@@ -19,9 +19,9 @@ import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { CrmCircleBackground } from "../../../components/common/Icon/CrmCircleBackground";
 import { toast } from "react-toastify";
-import { carsOptions} from '../../../config/Color';
-import { logger } from "../../../helpers/Logger";
+import { carsOptions } from "../../../config/Color";
 import NoDataFound from "../../common/NoFound";
+import { logger } from "../../../helpers/Logger";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class VehiclesList extends Component {
       user: {},
       openEditModal: false,
       selectedVehicles: [],
-      filterApplied:false
+      filterApplied: false
     };
   }
 
@@ -51,7 +51,7 @@ class VehiclesList extends Component {
       sort: sort || "",
       status: status || "",
       search: search || "",
-       filterApplied 
+      filterApplied
     });
   }
 
@@ -86,8 +86,8 @@ class VehiclesList extends Component {
     }
     this.props.onSearch(param);
     this.setState({
-      filterApplied:true
-    })
+      filterApplied: true
+    });
   };
 
   onReset = e => {
@@ -221,25 +221,31 @@ class VehiclesList extends Component {
     });
     this.setState({ selectedVehicles: [] });
   };
-
+  carType = type => {
+    const ind = carsOptions.findIndex(d => d.value === type);
+    if (ind > -1) {
+      let src = null;
+      try {
+        src = require(`../../../assets/img/vehicles/${carsOptions[ind].icons}`);
+      } catch (error) {
+        logger(error);
+      }
+      return <img src={src} alt={"type"} width={"80"} />;
+    }
+    return null;
+  };
   render() {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
-    const { page, search, sort, status, selectedVehicles, filterApplied } = this.state;
-     const carType = (type) => {
-       return carsOptions.map((item, index)=>{
-         if (item.value === type){
-           return (
-              <div key={index}>
-               <img src={require(`../../../assets/img/vehicles/${item.icons}`)} alt={"type"} width={"80"}/>
-              </div>
-            )
-          }
-          else {
-            return true
-          }
-     })}
-   
+    const {
+      page,
+      search,
+      sort,
+      status,
+      selectedVehicles,
+      filterApplied
+    } = this.state;
+
     return (
       <>
         <div className={"filter-block"}>
@@ -274,7 +280,7 @@ class VehiclesList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                     Status
+                      Status
                     </option>
                     <option value={1}>Active</option>
                     <option value={0}>Deactive</option>
@@ -294,7 +300,7 @@ class VehiclesList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                     Sort By
+                      Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>
@@ -312,7 +318,7 @@ class VehiclesList extends Component {
                         className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="icons cui-magnifying-glass"></i>
+                        <i className="icons cui-magnifying-glass" />
                       </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
@@ -325,7 +331,7 @@ class VehiclesList extends Component {
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="icon-refresh icons"></i>
+                        <i className="icon-refresh icons" />
                       </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
@@ -337,7 +343,7 @@ class VehiclesList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive >
+        <Table responsive>
           <thead>
             <tr>
               <th width="90px">
@@ -388,15 +394,29 @@ class VehiclesList extends Component {
               </th>
               <th width={"150"}>Type</th>
               <th width={"100"}>Color</th>
-              <th width={"90"}><i className={"fa fa-calendar"}/> Year</th>
-              <th width={"120"}><i className={"fa fa-industry"} /> Make</th>
-              <th width={"120"}><i className={"fa fa-automobile"} /> Model</th>
-              <th width={"100"}><i className={"fa fa-dashboard"} /> Miles</th>
+              <th width={"90"}>
+                <i className={"fa fa-calendar"} /> Year
+              </th>
+              <th width={"120"}>
+                <i className={"fa fa-industry"} /> Make
+              </th>
+              <th width={"120"}>
+                <i className={"fa fa-automobile"} /> Model
+              </th>
+              <th width={"100"}>
+                <i className={"fa fa-dashboard"} /> Miles
+              </th>
               <th width={"150"}> VIN</th>
-              <th width={"150"}><i className={"fa fa-address-card-o"} /> License Plate</th>
-              <th width={"90"} className={"text-center"}><i className={"fa fa-snowflake-o"} /> Unit</th>
+              <th width={"150"}>
+                <i className={"fa fa-address-card-o"} /> License Plate
+              </th>
+              <th width={"90"} className={"text-center"}>
+                <i className={"fa fa-snowflake-o"} /> Unit
+              </th>
               {/* <th width={"90"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th> */}
-              <th width={"120"} className={"text-center"}>Action</th>
+              <th width={"120"} className={"text-center"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -423,7 +443,9 @@ class VehiclesList extends Component {
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
                       </td> */}
                       <td>
-                        <div className={"vehicle-type-img"}>{carType(vehicle.type.value)}</div>
+                        <div className={"vehicle-type-img"}>
+                          {this.carType(vehicle.type.value)}
+                        </div>
                         {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
                       <td>
@@ -457,43 +479,45 @@ class VehiclesList extends Component {
                       <td>
                         {vehicle.licensePlate ? vehicle.licensePlate : "N/A"}
                       </td>
-                      <td className={"text-center"}>{vehicle.unit ? vehicle.unit : "N/A"}</td>
-                      
+                      <td className={"text-center"}>
+                        {vehicle.unit ? vehicle.unit : "N/A"}
+                      </td>
+
                       <td className={"text-center"}>
                         <span className="mr-2">
-                        <Button
-                          size={"sm"}
-                          onClick={() => this.editUser(vehicle)}
-                          className={"btn-theme-transparent"}
-                          id={"Tooltip-3"}
-                        >
-                          <i className={"icons cui-pencil"}></i>
-                        </Button>
-                        <UncontrolledTooltip target="Tooltip-3">
-                          Edit
-                        </UncontrolledTooltip>
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editUser(vehicle)}
+                            className={"btn-theme-transparent"}
+                            id={"Tooltip-3"}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip target="Tooltip-3">
+                            Edit
+                          </UncontrolledTooltip>
                         </span>
                         <span className="mr-2">
-                        <Button
-                          className={"btn-theme-transparent"}
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedVehicles: [vehicle._id]
-                              },
-                              () => {
-                                this.onDelete();
-                              }
-                            )
-                          }
-                          id={`delete-${vehicle._id}`}
-                        >
-                          <i className={"icons cui-trash"}></i>
-                        </Button>
+                          <Button
+                            className={"btn-theme-transparent"}
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedVehicles: [vehicle._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                }
+                              )
+                            }
+                            id={`delete-${vehicle._id}`}
+                          >
+                            <i className={"icons cui-trash"} />
+                          </Button>
                           <UncontrolledTooltip target={`delete-${vehicle._id}`}>
                             Delete
-                        </UncontrolledTooltip>
+                          </UncontrolledTooltip>
                         </span>
                       </td>
                     </tr>
@@ -502,9 +526,22 @@ class VehiclesList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                      {filterApplied ? <NoDataFound message={"No Vehicle details found related to your search"} noResult /> :
-                        <NoDataFound showAddButton message={"Currently there are no Vehicle details added."} onAddClick={this.props.onAddClick} />
-                      }
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={
+                          "No Vehicle details found related to your search"
+                        }
+                        noResult
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={
+                          "Currently there are no Vehicle details added."
+                        }
+                        onAddClick={this.props.onAddClick}
+                      />
+                    )}
                   </td>
                 </tr>
               )

@@ -59,23 +59,18 @@ export const AppRoutes = {
     name: "Reports",
     exact: true
   },
-  SETTINGS: {
-    url: "/settings",
-    name: "Settings",
-    exact: true
-  },
   STAFF_MEMBERS: {
-    url: "/settings/users",
+    url: "/staff-members",
     name: "Staff Members",
     exact: true
   },
   VEHICLES: {
-    url: "/settings/vehicles",
+    url: "/vehicles",
     name: "Vehicles",
     exact: true
   },
   FLEETS: {
-    url: "/settings/fleets",
+    url: "/fleets",
     name: "Fleets",
     exact: true
   },

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Pie } from "react-chartjs-2";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
+import NoDataFound from "../common/NoFound";
 
 class InventoryStats extends Component {
   renderValueChart = () => {
@@ -17,7 +18,8 @@ class InventoryStats extends Component {
         }
       ]
     };
-    return (
+    const total = value.parts + value.tires;
+    return total ? (
       <Pie
         data={valueChart}
         options={{
@@ -31,11 +33,13 @@ class InventoryStats extends Component {
           },
           title: {
             display: true,
-            text: `Total Value(${value.parts + value.tires})`,
+            text: `Total Value(${total})`,
             position: "top"
           }
         }}
       />
+    ) : (
+      <NoDataFound />
     );
   };
   renderCostChart = () => {
@@ -51,7 +55,8 @@ class InventoryStats extends Component {
         }
       ]
     };
-    return (
+    const total = cost.parts + cost.tires;
+    return total ? (
       <Pie
         data={costChart}
         options={{
@@ -65,11 +70,13 @@ class InventoryStats extends Component {
           },
           title: {
             display: true,
-            text: `Total Cost(${cost.parts + cost.tires})`,
+            text: `Total Cost(${total})`,
             position: "top"
           }
         }}
       />
+    ) : (
+      <NoDataFound />
     );
   };
   renderQuantityChart = () => {
@@ -85,7 +92,8 @@ class InventoryStats extends Component {
         }
       ]
     };
-    return (
+    const total = quantity.parts + quantity.tires;
+    return total ? (
       <Pie
         data={quantityChart}
         options={{
@@ -99,11 +107,13 @@ class InventoryStats extends Component {
           },
           title: {
             display: true,
-            text: `Total Quantity(${quantity.parts + quantity.tires})`,
+            text: `Total Quantity(${total})`,
             position: "top"
           }
         }}
       />
+    ) : (
+      <NoDataFound />
     );
   };
   render() {

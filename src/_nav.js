@@ -24,35 +24,35 @@ export default {
           name: AppRoutes.INVENTORY_STATATICS.name,
           url: AppRoutes.INVENTORY_STATATICS.url,
           authKey: "isAllowedInventory",
-          icon: "icons icon-chart",
+          icon: "icons icon-chart"
         },
         {
           name: AppRoutes.INVENTORY_PARTS.name,
           url: AppRoutes.INVENTORY_PARTS.url,
           authKey: "isAllowedInventory",
-          icon: "icons icon-puzzle",
+          icon: "icons icon-puzzle"
         },
         {
           name: AppRoutes.INVENTORY_TIRES.name,
           url: AppRoutes.INVENTORY_TIRES.url,
           authKey: "isAllowedInventory",
-          icon: "icons icon-support",
+          icon: "icons icon-support"
         },
         {
           name: AppRoutes.INVENTORY_LABOURS.name,
           url: AppRoutes.INVENTORY_LABOURS.url,
           authKey: "isAllowedInventory",
-          icon: "icons icon-user",
+          icon: "icons icon-user"
         },
         {
           name: AppRoutes.INVENTORY_VENDORS.name,
           url: AppRoutes.INVENTORY_VENDORS.url,
           authKey: "isAllowedInventory",
-          icon: "fa fa-handshake-o",
+          icon: "fa fa-handshake-o"
         }
       ]
     },
-    
+
     {
       name: AppRoutes.STAFF_MEMBERS.name,
       url: AppRoutes.STAFF_MEMBERS.url,
@@ -114,10 +114,6 @@ export const ValidatedRoutes = [
   {
     url: AppRoutes.INVENTORY_VENDORS.url,
     authKey: "isAllowedInventory"
-  },
-  {
-    url: AppRoutes.SETTINGS.url,
-    authKey: "isAllowedCompanySettings"
   },
   {
     url: AppRoutes.STAFF_MEMBERS.url,
