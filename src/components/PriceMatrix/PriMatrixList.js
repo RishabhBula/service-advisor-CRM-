@@ -3,7 +3,6 @@ import { Col, Button, UncontrolledTooltip, Label, InputGroup, Table, Form, Row, 
 import { AppConfig } from "../../config/AppConfig";
 import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
-import { logger } from "../../helpers/Logger";
 
 class PriMatrixList extends Component {
   constructor(props) {
@@ -19,7 +18,6 @@ class PriMatrixList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search } = qs.parse(lSearch);
-    logger(search, "!!!!!!!!!!!!!!!!!!")
     this.setState({
       page: parseInt(page) || 1,
       search: search || "",

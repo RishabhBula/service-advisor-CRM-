@@ -60,7 +60,7 @@ class Tires extends Component {
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
     let filterApplied = false;
-    if (search ||  sort ) {
+    if (search || sort) {
       filterApplied = true;
     }
     this.props.getTires({ ...query, page: query.page || 1 });
@@ -262,7 +262,7 @@ class Tires extends Component {
       [pathname, qs.stringify({ ...query, page })].join('?')
     );
   };
-  handleSize =  (id, index) => {
+  handleSize = (id, index) => {
     this.setState({
       toggle: !this.state.toggle,
       isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
@@ -271,7 +271,7 @@ class Tires extends Component {
 
   }
   render() {
-    const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix,onAddClick  } = this.props;
+    const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen } = modelDetails;
     const { tires, isLoading, totalTires } = tireReducer;
@@ -489,20 +489,20 @@ class Tires extends Component {
                         <td className={"text-capitalize"}>
                           <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
                           {tire.modalName ? <div className={"modal-info"}>
-                            Modal : <Badge>{tire.modalName}</Badge></div> : " " }
+                            Modal : <Badge>{tire.modalName}</Badge></div> : " "}
                         </td>
                         {/* <td className={"text-capitalize"}>{tire.modalName || "-"}</td> */}
                         <td >
 
                           {tire.tierSize && tire.tierSize.length ?
-                              <Button
-                                size={"sm"}
-                                className={"btn-square btn-light second"}
-                                onClick={() => this.handleSize(tire._id, index)}
-                              >
-                                <b>Size Details</b>
-                                {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
-                              </Button> : null
+                            <Button
+                              size={"sm"}
+                              className={"btn-square btn-light second"}
+                              onClick={() => this.handleSize(tire._id, index)}
+                            >
+                              <b>Size Details</b>
+                              {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
+                            </Button> : null
                           }
                         </td>
                         <td>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
@@ -550,42 +550,45 @@ class Tires extends Component {
                       </tr>
                       {/* {isTireSizeOpen && tire.tierSize && tireSizeid === tire._id && tire.tierSize.length ? */}
 
-                      {tire.tierSize && tire.tierSize.length ? <tr className={isTireSizeOpen ===index ? 'active' : 'inactive'}>
-                      <td colSpan={"7"} key={index} className={"p-0"}>
-                        <Table className={"size-desc-table"}>
-                          <thead>
-                            <tr>
-                              <th width={"90"} className={"s-no-th"}></th>
-                              <th className={"tire-th"} width={"280"}>Size</th>
-                              <th className={"tire-th"} width={"200"}>Part</th>
-                              <th className={"tire-th"} width={"280"}>Cost</th>
-                              <th className={"tire-th"} width={"280"}>Retails Price</th>
-                              <th className={"tire-th"} width={"280"}>Quatity</th>
-                              <th className={"tire-bin-th"} width={"130"}>BIN/Location</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {tire.tierSize.length ? tire.tierSize.map((size, index) => {
-                              return (
-                                <tr key={index}>
-                                  <td></td>
-                                  <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
-                                  <td>{size.part}</td>
-                                  <td width={"70"}>{size.cost || "-"}</td>
-                                  <td width={"70"}>{size.retailPrice || "-"}</td>
-                                  <td width={"70"}>{size.quantity || "-"}</td>
-                                  <td width={"70"}>{size.bin || "-"}</td>
-                                </tr>
-                              )
+                      {tire.tierSize && tire.tierSize.length ? <tr className={isTireSizeOpen === index ? 'active' : 'inactive'}>
+                        <td colSpan={"7"} key={index} className={"p-0"}>
+                          <Table className={"size-desc-table"}>
+                            <thead>
+                              <tr>
+                                <th width={"90"} className={"s-no-th"}></th>
+                                <th className={"tire-th"} width={"280"}>Size</th>
+                                <th className={"tire-th"} width={"200"}>Part</th>
+                                <th className={"tire-th"} width={"280"}>Cost</th>
+                                <th className={"tire-th"} width={"280"}>Retails Price</th>
+                                <th className={"tire-th"} width={"280"}>Quatity</th>
+                                <th className={"tire-bin-th"} width={"130"}>BIN/Location</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {tire.tierSize.length ? tire.tierSize.map((size, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td></td>
+                                    <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
+                                    <td>{size.part}</td>
+                                    <td width={"70"}>{size.cost || "-"}</td>
+                                    <td width={"70"}>{size.retailPrice || "-"}</td>
+                                    <td width={"70"}>{size.quantity || 0}&nbsp;
+                                      {size.quantity <= size.criticalQuantity ? (
+                                        <Badge color={"warning"}>Reorder</Badge>
+                                      ) : null}</td>
+                                    <td width={"70"}>{size.bin || "-"}</td>
+                                  </tr>
+                                )
 
-                            }) :
-                              null
-                            }
-                          </tbody>
-                        </Table>
-                       </td>
+                              }) :
+                                null
+                              }
+                            </tbody>
+                          </Table>
+                        </td>
                       </tr> : null}
-                      
+
                     </>
                   );
                 }

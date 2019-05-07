@@ -224,7 +224,7 @@ class Labours extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by labor description and note"
+                      placeholder="Search by Labor description"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -249,8 +249,8 @@ class Labours extends Component {
                     <option value={"diasc"}>Discount(Low to High)</option>
                     <option value={"didesc"}>Discount(High to Low)</option>
                     <option value={"createddesc"}>Last Created</option>
-                    <option value={"nasc"}>Name A-Z</option>
-                    <option value={"ndesc"}>Name Z-A</option>
+                    <option value={"nasc"}>Labor discription A-Z</option>
+                    <option value={"ndesc"}>Labor discription Z-A</option>
                   </Input>
                 </FormGroup>
               </Col>
