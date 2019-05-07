@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { carsOptions } from "../../../config/Color";
 import NoDataFound from "../../common/NoFound";
 import { logger } from "../../../helpers/Logger";
+import VehicleIcons from "../../../containers/Icons/Vehicles";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -444,7 +445,11 @@ class VehiclesList extends Component {
                       </td> */}
                       <td>
                         <div className={"vehicle-type-img"}>
-                          {this.carType(vehicle.type.value)}
+                          <VehicleIcons
+                            type={vehicle.type.value}
+                            color={vehicle.type.color}
+                          />
+                          {/* {this.carType(vehicle.type.value)} */}
                         </div>
                         {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>

@@ -1,3 +1,5 @@
+import { DefaultErrorMessage } from "../config/Constants";
+
 /**
  * ErrorHandlerHelper Class - For managing errors
  */
@@ -29,7 +31,7 @@ export class ErrorHandlerHelper {
     }
     if (!this.error.messages.length) {
       this.error.error = "Unknown";
-      this.error.messages = ["An unexpected error occured."];
+      this.error.messages = [DefaultErrorMessage];
     }
   };
 }
