@@ -27,8 +27,8 @@ export const ColorOptions = [
 
 
 export const carsOptions = [
-  { value: 'convertible', label: 'Convertible', color: '#00B8D9', isFixed: true, icons:'../assets/img/vehicles/convertible.svg' },
-  { value: 'coupe', label: 'Coupe', color: '#0052CC', disabled: true,icons:'convertible.svg'},
+  { value: 'convertible', label: 'Convertible', color: '#00B8D9', isFixed: true, icons:'convertible.svg' },
+  { value: 'coupe', label: 'Coupe', color: '#0052CC', disabled: true, icons:'coupe.svg'},
   { value: 'hatchback', label: 'HatchBack', color: '#5243AA', icons:'hatchback.svg'},
   { value: 'suv', label: 'Suv', color: '#FF5630', isFixed: true, icons:'suv.svg'},
   { value: 'sedan', label: 'Sedan', color: '#FF8B00', icons:'sedan.svg'},

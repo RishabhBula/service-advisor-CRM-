@@ -1186,7 +1186,16 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 2px 0;
 }
 .matrix-input{
-  padding-right: 29px;
+  max-width: 400px;
+  margin: 0 auto 0 0;
+  position: relative;
+}
+.matrix-table{
+  max-width: 800px;
+  margin: 0 auto;
+}
+.matrix-table thead tr{
+  height: 35px !important;
 }
 .matrix-action{
   display: flex;
@@ -1203,12 +1212,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .matrix-input-control .form-control{
   height: 50px;
-  max-width: 70px;
-  border: none
+  max-width: 90px;
+  /* border: none */
 }
 .matrix-input-control .form-control:disabled{
-  background-color: #fff;
-  opacity: 1;
+  /* background-color: #fff;
+  opacity: 1; */
 }
 .matrix-input-control .form-control:focus{
   box-shadow: none;

@@ -7,6 +7,7 @@ import {
   getMatrixListSuccess,
   showLoader,
   hideLoader,
+  modelOpenRequest,
   addMatrixSuccess,
   deleteMatrixSuccess,
   getMatrixList
@@ -29,7 +30,7 @@ const getMatrixLogic = createLogic({
       "/getAllMatrix",
       "GET",
       true,
-      { search: action.payload ? action.payload.input : null }
+      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null }
     );
     logger(result);
     if (result.isError) {
@@ -44,7 +45,7 @@ const getMatrixLogic = createLogic({
         label: matrix.matrixName,
         value: matrix._id
       }));
-      logger(action.payload && action.payload.callback? action.payload.callback(options) : null)
+      logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(
         getMatrixListSuccess({
           matrixList: result.data.data
@@ -78,6 +79,13 @@ const addPriceMatrixLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(addMatrixSuccess());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            matrixAddModalOpen: false
+          }
+        })
+      );
       dispatch(hideLoader());
       done();
     }
@@ -108,6 +116,13 @@ const updateMatrixLogic = createLogic({
       dispatch(
         getMatrixList({
           ...action.payload
+        })
+      );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            matrixAddModalOpen: false
+          }
         })
       );
       dispatch(hideLoader());
