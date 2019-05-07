@@ -10,7 +10,8 @@ class PriMatrixList extends Component {
     super(props);
     this.state = {
       page: 1,
-      search: ""
+      search: "",
+      isTireSizeOpen: -1,
     };
   }
 
@@ -66,9 +67,18 @@ class PriMatrixList extends Component {
     this.props.onSearch({});
   };
 
+  handleSize =  (id, index) => {
+    this.setState({
+      toggle: !this.state.toggle,
+      isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
+      tireSizeid: id
+    })
+
+  }
+
   render() {
     const { matrixList, handleUpdateMatrix, handleMatrixDelete } = this.props;
-    const { page, search } = this.state
+    const { page, search, isTireSizeOpen } = this.state
     return (
       <>
         <div className={"filter-block"}>
@@ -124,7 +134,7 @@ class PriMatrixList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive>
+        <Table responsive className={"price-matrix-table"}>
           <thead>
             <tr>
               <th width="60" class="text-center">S No.</th>
@@ -138,57 +148,94 @@ class PriMatrixList extends Component {
             {
               matrixList && matrixList.length ? matrixList.map((matrix, index) => {
                 return (
-                  <tr key={index}>
-                    <td>
-                      <div className='checkbox-custom checkbox-default coloum-checkbox'>
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                  <>
+                    <tr key={index}>
+                      <td>
+                        <div className='checkbox-custom checkbox-default coloum-checkbox'>
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </div>
-                    </td>
-                    <td>{matrix.matrixName || "-"}</td>
-                    <td>
-                      {
-                        matrix.matrixRange && matrix.matrixRange.length ? matrix.matrixRange.map((range, i) => {
-                          return (
-                            <React.Fragment key={i}>
-                              <span>{range.lower}</span>{"-"}<span>{range.upper}</span> {"  "} <span>{range.margin}</span>
-                              <div>{range.markup}</div>
-                            </React.Fragment>
-                          )
-                        }) :
-                          null
-                      }
-                    </td>
-                    <td>{matrix.createdAt}</td>
-                    <td>
-                      <span className="mr-2">
-                      <Button
-                        color={"secondary"}
-                        size={"sm"}
-                        onClick={() => handleUpdateMatrix(matrix)}
-                        className={"btn-theme-transparent"}
-                        id={`Tooltip-1${matrix._id}`}
-                      >
-                        <i className={"icons cui-pencil"} />
-                      </Button>
-                        <UncontrolledTooltip target={`Tooltip-1${matrix._id}`}>
-                        Edit
-                      </UncontrolledTooltip>
-                      </span>
-                        <Button
-                        color={"secondary"}
-                        size={"sm"}
-                        className={"btn-theme-transparent"} 
-                        onClick={() => handleMatrixDelete(matrix._id)
+                      </td>
+                      <td>{matrix.matrixName || "-"}</td>
+                      <td>
+                        {matrix.matrixRange && matrix.matrixRange.length ?
+                          <Button
+                            size={"sm"}
+                            className={"btn-square btn-light second"}
+                            onClick={() => this.handleSize(matrix._id, index)}
+                          >
+                            <b>Size Details</b>
+                            {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
+                          </Button> : null
                         }
-                        id={`Tooltip-${matrix._id}`}
-                      >
-                        <i className={"icons cui-trash"} />
-                      </Button>
-                      <UncontrolledTooltip target={`Tooltip-${matrix._id}`}>
-                        Delete
+                      </td>
+                      <td>{matrix.createdAt}</td>
+                      <td>
+                        <span className="mr-2">
+                          <Button
+                            color={"secondary"}
+                            size={"sm"}
+                            onClick={() => handleUpdateMatrix(matrix)}
+                            className={"btn-theme-transparent"}
+                            id={`Tooltip-1${matrix._id}`}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip target={`Tooltip-1${matrix._id}`}>
+                            Edit
                       </UncontrolledTooltip>
-                    </td>
-                  </tr>
+                        </span>
+                        <Button
+                          color={"secondary"}
+                          size={"sm"}
+                          className={"btn-theme-transparent"}
+                          onClick={() => handleMatrixDelete(matrix._id)
+                          }
+                          id={`Tooltip-${matrix._id}`}
+                        >
+                          <i className={"icons cui-trash"} />
+                        </Button>
+                        <UncontrolledTooltip target={`Tooltip-${matrix._id}`}>
+                          Delete
+                      </UncontrolledTooltip>
+                      </td>
+                    </tr>
+                    {matrix.matrixRange && matrix.matrixRange.length ? 
+                    <tr className={isTireSizeOpen === index ? 'active' : 'inactive'}>
+                      <td colSpan={"6"} className={"p-0"}>
+  
+                          <Table>
+                            <thead>
+                              <tr>
+                                <th width="60" class="text-center"></th>
+                                <th width={"200"}>Cost Range</th>
+                                <th width={"200"}>Margin</th>
+                                <th width={"200"}>Markup</th>
+                                <th width="400" class="text-center"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              
+                            {
+                              matrix.matrixRange && matrix.matrixRange.length ? matrix.matrixRange.map((range, i) => {
+                                return (
+                                  <tr key={i}>
+                                    <td></td>
+                                    <td>{range.lower} - {range.upper}</td>
+                                    <td>{range.margin}</td>
+                                    <td>{range.markup}</td>
+                                    <td></td>
+                                  </tr>
+                                )
+                              }) :
+                                null
+                            }
+                              
+                            </tbody>
+                          </Table>
+                      </td>
+                    </tr>
+                    : null }
+                  </>
                 )
               }) :
                 null

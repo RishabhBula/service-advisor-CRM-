@@ -1197,6 +1197,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .matrix-table thead tr{
   height: 35px !important;
 }
+.vehicle-type-img svg {
+  width: 100px;
+}
 .matrix-action{
   display: flex;
   justify-content: space-between;
@@ -1286,6 +1289,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   content: '';
   transform: translateX(-50%);
   left: 50%;
+}
+.price-matrix-table tr.active {
+  display: table-row;
+}
+.price-matrix-table tr.inactive {
+  display: none;
 }
 /* Price Matrix End */
 

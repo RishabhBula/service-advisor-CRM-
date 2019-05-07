@@ -60,7 +60,7 @@ const getAllVehicleList = async (req, res) => {
   const { query, currentUser } = req;
   try {
     const limit = parseInt(query.limit || 10);
-    const page = parseInt(query.page);
+    const page = parseInt(query.page) || 1;
     const offset = page < 1 ? 0 : (page - 1) * limit;
     const searchValue = query.search;
     const sort = query.sort;
@@ -188,7 +188,7 @@ const updateVehicleDetails = async (req, res) => {
         success: false
       });
     } else {
-      const today = new Date()
+      const today = new Date();
       const updateVehicleDetails = await vehicleModal.findByIdAndUpdate(
         body.data.vehicleId,
         {

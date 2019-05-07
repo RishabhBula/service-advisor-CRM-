@@ -2,24 +2,18 @@ import React, { Component, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import {
-  Card,
-  UncontrolledTooltip,
-  CardBody,
-  Button
-} from "reactstrap";
+import { Card, UncontrolledTooltip, CardBody, Button } from "reactstrap";
 import {
   getRateStandardListRequest,
   setRateStandardListStart,
   labourAddRequest,
-  rateAddRequest,
-} from '../../actions';
-
+  rateAddRequest
+} from "../../actions";
 
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import { CrmTyreModal } from "../../components/common/Tires/CrmTyreModal";
-import  {CrmLabourModal}  from "../../components/common/Labours/CrmLabourModal";  
+import { CrmLabourModal } from "../../components/common/Labours/CrmLabourModal";
 import { logger } from "../../helpers/Logger";
 import CrmInventoryVendor from "../../components/common/CrmInventoryVendor";
 import {
@@ -29,7 +23,7 @@ import {
   requestAddPart,
   getMatrixList,
   getInventoryStats
-} from '../../actions'
+} from "../../actions";
 import CrmInventoryPart from "../../components/common/CrmInventoryPart";
 import * as qs from "query-string";
 
@@ -50,7 +44,7 @@ export const InventoryRoutes = [
     component: Parts
   },
   {
-    path: AppRoutes.INVENTORY_TIRES.url, 
+    path: AppRoutes.INVENTORY_TIRES.url,
     name: AppRoutes.INVENTORY_TIRES.name,
     component: Tires
   },
@@ -69,12 +63,11 @@ export const InventoryRoutes = [
     name: AppRoutes.INVENTORY_STATATICS.name,
     component: InventoryStats
   }
-  
 ];
 const InventoryTabs = [
   {
     name: AppRoutes.INVENTORY_STATATICS.name,
-    url: AppRoutes.INVENTORY_STATATICS.url,
+    url: AppRoutes.INVENTORY_STATATICS.url
   },
   {
     name: AppRoutes.INVENTORY_PARTS.name,
@@ -92,7 +85,6 @@ const InventoryTabs = [
     name: AppRoutes.INVENTORY_VENDORS.name,
     url: AppRoutes.INVENTORY_VENDORS.url
   }
-  
 ];
 class Inventory extends Component {
   constructor(props) {
@@ -132,23 +124,23 @@ class Inventory extends Component {
   onTabChange = activeTab => {
     this.props.redirectTo(InventoryTabs[activeTab].url);
   };
-  addLabour= data =>{
+  addLabour = data => {
     try {
       this.props.addLabour(data);
       this.setState({
-        typeAddModalOpen: !this.state.typeAddModalOpen,
+        typeAddModalOpen: !this.state.typeAddModalOpen
       });
     } catch (error) {
-      logger(error)
+      logger(error);
     }
-  }
+  };
   addRate = data => {
     try {
       this.props.addRate(data);
     } catch (error) {
-      logger(error)
+      logger(error);
     }
-  }
+  };
   getQueryParams = () => {
     let query = qs.parse(this.props.location.search);
     if (query.vendorId) {
@@ -175,7 +167,12 @@ class Inventory extends Component {
       matrixListReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireAddModalOpen, vendorAddModalOpen, partAddModalOpen, rateAddModalOpen} = modelDetails;
+    const {
+      tireAddModalOpen,
+      vendorAddModalOpen,
+      partAddModalOpen,
+      rateAddModalOpen
+    } = modelDetails;
     switch (InventoryTabs[activeTab].url) {
       case AppRoutes.INVENTORY_PARTS.url:
         return (
@@ -227,19 +224,22 @@ class Inventory extends Component {
             rateAddModalFun={() =>
               modelOperate({
                 rateAddModalOpen: !rateAddModalOpen
-              })}
+              })
+            }
           />
         );
       case AppRoutes.INVENTORY_VENDORS.url:
-        return <CrmInventoryVendor
-          addVendor={addVendor}
-          vendorAddModalOpen={vendorAddModalOpen}
-          handleVendorAddModal={() =>
-            modelOperate({
-              vendorAddModalOpen: !vendorAddModalOpen
-            })
-          }
-        />;
+        return (
+          <CrmInventoryVendor
+            addVendor={addVendor}
+            vendorAddModalOpen={vendorAddModalOpen}
+            handleVendorAddModal={() =>
+              modelOperate({
+                vendorAddModalOpen: !vendorAddModalOpen
+              })
+            }
+          />
+        );
       default:
         return null;
     }
@@ -259,15 +259,15 @@ class Inventory extends Component {
         };
         break;
       case AppRoutes.INVENTORY_LABOURS.url:
-          modelDetails = {
-            tireAddModalOpen: true
-          };
-          break;
+        modelDetails = {
+          tireAddModalOpen: true
+        };
+        break;
       case AppRoutes.INVENTORY_VENDORS.url:
         modelDetails = {
           vendorAddModalOpen: true
         };
-        break
+        break;
       default:
         return null;
     }
@@ -280,7 +280,7 @@ class Inventory extends Component {
         <>
           <Button color="primary" onClick={this.onAddClick} id="add-user">
             <i className={"fa fa-plus"} />
-            &nbsp; Add New {" "}
+            &nbsp; Add New{" "}
             {InventoryTabs[activeTab].name.slice(
               0,
               InventoryTabs[activeTab].name.length - 1
@@ -296,7 +296,7 @@ class Inventory extends Component {
         </>
       );
     }
-    return null
+    return null;
   };
   render() {
     const { activeTab } = this.state;
@@ -306,17 +306,6 @@ class Inventory extends Component {
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
-          {/* <CardHeader>
-            <Row>
-              <Col sm={"6"} className={"pull-left"}>
-                <h4>
-                  <i className={"fa fa-database"} />
-                  &nbsp;Inventory
-                </h4>
-              </Col>
-              
-            </Row>
-          </CardHeader> */}
           <CardBody className={"custom-card-body inventory-card"}>
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>
@@ -340,15 +329,20 @@ class Inventory extends Component {
                       exact={route.exact}
                       name={route.name}
                       render={props => (
-                        <route.component {...props} {...this.props} isLoading={isLoading} inventoryStats={data}
-                          onAddClick={this.onAddClick} />
+                        <route.component
+                          {...props}
+                          {...this.props}
+                          isLoading={isLoading}
+                          inventoryStats={data}
+                          onAddClick={this.onAddClick}
+                        />
                       )}
                     />
                   ) : null;
                 })}
                 <Redirect
                   from={AppRoutes.INVENTORY.url}
-                  to={AppRoutes.INVENTORY_PARTS.url}
+                  to={AppRoutes.INVENTORY_STATATICS.url}
                 />
               </Switch>
             </Suspense>
@@ -364,7 +358,7 @@ const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
   rateStandardListReducer: state.rateStandardListReducer,
   inventoryStatsReducer: state.inventoryStatsReducer,
-  matrixListReducer: state.matrixListReducer,
+  matrixListReducer: state.matrixListReducer
 });
 const mapDispatchToProps = dispatch => ({
   addVendor: data => {
@@ -382,7 +376,7 @@ const mapDispatchToProps = dispatch => ({
   getStdList: data => {
     dispatch(getRateStandardListRequest(data));
   },
-  addRate:(data)=>{
+  addRate: data => {
     dispatch(rateAddRequest(data));
   },
   setLabourRateDefault: data => {
@@ -392,10 +386,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(labourAddRequest(data));
   },
   getInventoryStats: () => {
-  dispatch(getInventoryStats());
+    dispatch(getInventoryStats());
   },
-  getPriceMatrix: (data) => {
-    dispatch(getMatrixList(data))
+  getPriceMatrix: data => {
+    dispatch(getMatrixList(data));
   }
 });
 export default connect(

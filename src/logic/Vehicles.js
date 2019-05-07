@@ -354,7 +354,7 @@ const importVehicleLogic = createLogic({
       );
       dispatch(
         redirectTo({
-          path: `${AppRoutes.VEHICLES.url}?page=1&reset=true`
+          path: `${AppRoutes.VEHICLES.url}?page=1&reset=${Date().now()}`
         })
       );
       toast.success(result.messages[0]);
