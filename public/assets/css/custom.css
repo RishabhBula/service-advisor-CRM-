@@ -1275,8 +1275,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 10px 20px;
 }
 .matrix-drop-down .btn.btn-secondary{
-  background-color: transparent !important;
-  border-color:transparent;
+  /* background-color: transparent !important;
+  border-color:transparent; */
 }
 .matrix-drop-down .btn.btn-secondary:focus{
   box-shadow: none !important;
@@ -1309,6 +1309,17 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   transform: translateX(-50%);
   left: 50%;
 }
+.matrix-drop-down .icon{
+  font-size: 21px;
+  display: inline-block;
+  margin: 0 10px;
+  padding: 2px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  line-height: 1;
+  color: #636363;
+}
 .matrix-range-th span{
   width: 33.33%;
 }
@@ -1317,6 +1328,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .price-matrix-table tr.inactive {
   display: none;
+}
+.matrix-name-input{
+  margin-left:-70px; 
 }
 /* Price Matrix End */
 
