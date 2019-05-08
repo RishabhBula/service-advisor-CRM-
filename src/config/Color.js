@@ -51,20 +51,9 @@ export const carsOptions = [
   { value: "wagon", label: "Wagon", color: "#00875A", icons: "wagon.svg" }
 ];
 
-export const otherCarsOptions = [
-  { value: "vanilla", label: "Vanilla", rating: "safe" },
-  { value: "chocolate", label: "Chocolate", rating: "good" },
-  { value: "strawberry", label: "Strawberry", rating: "wild" },
-  { value: "salted-caramel", label: "Salted Caramel", rating: "crazy" }
-];
-
 export const groupedOptions = [
   {
     label: "Cars",
     options: carsOptions
-  },
-  {
-    label: "Other",
-    options: otherCarsOptions
   }
 ];
