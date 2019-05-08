@@ -963,17 +963,20 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .invt-add-btn-block .btn-primary{
   min-width: 175px;
-  border-radius: 0;
+  border-radius: 4px;
   font-size: 15px;
   font-weight: 600;
   border: 1px solid #b1acc2 !important;
   background: #fff;
+  background: linear-gradient(to bottom, rgba(226,226,226,1) 0%,rgb(241, 240, 240) 50%,rgb(224, 224, 224) 51%,rgba(254,254,254,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 );
   color: #433b6d;
   position: relative;
 }
 .invt-add-btn-block .btn-primary:hover{
   background-color: #8157ee;
   border-color: #8157ee !important;
+  color: #000;
 }
 .inventory-nav.nav{
   margin-bottom: 20px;
@@ -1186,7 +1189,22 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 2px 0;
 }
 .matrix-input{
-  padding-right: 29px;
+  max-width: 400px;
+  margin: 0 auto 0 0;
+  position: relative;
+}
+.matrix-table tr td,.matrix-table th td{
+  vertical-align: top !important;
+}
+.matrix-table .active {
+  display: block;
+}
+.matrix-table .inactive {
+  display: none;
+}
+.vehicle-type-img svg {
+  width: 100px;
+  height: 50px;
 }
 .matrix-action{
   display: flex;
@@ -1203,12 +1221,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .matrix-input-control .form-control{
   height: 50px;
-  max-width: 70px;
-  border: none
-}
-.matrix-input-control .form-control:disabled{
-  background-color: #fff;
-  opacity: 1;
+  max-width: 90px;
+  /* border: none */
 }
 .matrix-input-control .form-control:focus{
   box-shadow: none;
@@ -1277,6 +1291,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   content: '';
   transform: translateX(-50%);
   left: 50%;
+}
+.matrix-range-th span{
+  width: 33.33%;
+}
+.price-matrix-table tr.active {
+  display: table-row;
+}
+.price-matrix-table tr.inactive {
+  display: none;
 }
 /* Price Matrix End */
 

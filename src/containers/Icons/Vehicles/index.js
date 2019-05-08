@@ -15,25 +15,25 @@ class VehicleIcons extends Component {
     const { type, color } = this.props;
     switch (type) {
       case "bicycle":
-        return <Bicycle color={color} />;
+        return <Bicycle color={color || '#000'} />;
       case "sedan":
-        return <Sedan color={color} />;
+        return <Sedan color={color || '#000'} />;
       case "truck":
-        return <Truck color={color} />;
+        return <Truck color={color || '#000'} />;
       case "trailer":
-        return <Trailer color={color} />;
+        return <Trailer color={color || '#000'} />;
       case "convertible":
-        return <Convertible color={color} />;
+        return <Convertible color={color || '#000'} />;
       case "coupe":
-        return <Coupe color={color} />;
+        return <Coupe color={color || '#000'} />;
       case "hatchback":
-        return <Hatchback color={color} />;
+        return <Hatchback color={color || '#000'} />;
       case "suv":
-        return <SUV color={color} />;
+        return <SUV color={color || '#000'} />;
       case "van":
-        return <Van color={color} />;
+        return <Van color={color || '#000'} />;
       case "wagon":
-        return <Wagon color={color} />;
+        return <Wagon color={color || '#000'} />;
       default:
         return <>-</>;
     }

@@ -447,7 +447,7 @@ class VehiclesList extends Component {
                         <div className={"vehicle-type-img"}>
                           <VehicleIcons
                             type={vehicle.type.value}
-                            color={vehicle.type.color}
+                            color={vehicle.color.color}
                           />
                           {/* {this.carType(vehicle.type.value)} */}
                         </div>

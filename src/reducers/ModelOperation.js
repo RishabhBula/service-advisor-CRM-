@@ -20,7 +20,9 @@ const initialAuthState = {
     partAddModalOpen: false,
     rateAddModalOpen: false,
     partEditModalOpen: false,
-    showImportModal: false
+    showImportModal: false,
+    matrixAddModalOpen:false,
+    matrixEditModalOpen: false
   }
 };
 

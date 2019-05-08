@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import { Card, CardHeader, CardBody, Row, Col, Button, UncontrolledTooltip } from "reactstrap";
 import PriceMatrixComponent from "../../components/PriceMatrix/AddEdit";
 import PriMatrixList from "../../components/PriceMatrix/PriMatrixList";
 import { logger } from "../../helpers/Logger";
@@ -12,6 +12,8 @@ import {
   CreatePriceMatrixValidMessaages
 } from "../../validations";
 import { ConfirmBox } from "../../helpers/SweetAlert";
+import * as qs from 'query-string';
+import { isEqual } from '../../helpers/Object';
 
 class PriceMatrix extends Component {
   constructor(props) {
@@ -33,12 +35,22 @@ class PriceMatrix extends Component {
     };
   }
   componentDidMount = () => {
-    this.props.getMatrixList()
+    const query = qs.parse(this.props.location.search);
+    this.props.getMatrixList({ ...query, page: query.page || 1 })
   }
-  componentDidUpdate = ({ matrixListReducer }) => {
+  componentDidUpdate = ({ matrixListReducer, location }) => {
     if (matrixListReducer.matrixData !== this.props.matrixListReducer.matrixData) {
       this.props.getMatrixList()
       this.resetAll(false)
+    }
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      const data = {
+        ...currQuery,
+        page: currQuery.page || 1,
+      };
+      this.props.getMatrixList(data);
     }
   }
   resetAll = (isNewMatrix) => {
@@ -235,7 +247,13 @@ class PriceMatrix extends Component {
     }
   };
 
-  handleMatrixDelete = async () => {
+  onSearch = data => {
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(data)].join('?'));
+  };
+
+  handleMatrixDelete = async (matrixId) => {
     const { value } = await ConfirmBox({
       text: "Do you want to delete this price matrix?"
     });
@@ -243,7 +261,7 @@ class PriceMatrix extends Component {
       return;
     }
     const data = {
-      matrixId: this.state.matrixId
+      matrixId: matrixId
     }
     this.props.deletePriceMatrix(data)
   }
@@ -259,6 +277,11 @@ class PriceMatrix extends Component {
       matrixId: matrixData._id,
       isEditMatrix: true,
     })
+    const { modelDetails } = this.props.modelInfoReducer;
+    let modaldata = {
+      matrixAddModalOpen: !modelDetails.matrixAddModalOpen,
+    };
+    this.props.modelOperate(modaldata);
   }
   handleAddMatrix = () => {
     const { isEditMatrix } = this.state
@@ -283,62 +306,78 @@ class PriceMatrix extends Component {
       }
     }
   }
+  toggleMatrixModal = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    this.setState({
+      addNewMatrix: true
+    })
+    let modaldata = {
+      matrixAddModalOpen: !modelDetails.matrixAddModalOpen,
+    };
+    this.props.modelOperate(modaldata);
+  }
   render() {
-    const { matrixListReducer } = this.props;
-    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix, matrixId } = this.state;
+    const { matrixListReducer, modelInfoReducer, modelOperate } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { matrixAddModalOpen } = modelDetails;
+    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix } = this.state;
     return (
       <>
         <Card className={"white-card"}>
-          {/* <CardHeader>
-            <Col sm={"6"} className={"pull-left"}>
-              <h4>
-                <i className={"fas fa-hand-holding-usd"} /> Price Matrix
-              </h4>
-            </Col>
-          </CardHeader> */}
+     
+          <CardBody className={"custom-card-body position-relative"}>
+            <div className={"text-right invt-add-btn-block"}>
+              <Button
+                color='primary'
+                id='add-user'
+                onClick={this.toggleMatrixModal}
+              >
+                <i className={'fa fa-plus'} />
+                &nbsp; Add New
+                </Button>
+              <UncontrolledTooltip target={'add-user'}>
+                Add New price matrix
+                </UncontrolledTooltip>
+            </div>
+            <PriMatrixList
+              matrixList={matrixListReducer.matrixList}
+              handleUpdateMatrix={this.handleUpdateMatrix}
+              addNewMatrix={() => this.resetAll(true)}
+              handleMatrixDelete={this.handleMatrixDelete}
+              onSearch={this.onSearch}
+            />
+          </CardBody>
         </Card>
-        <Row className={"m-0"}>
-          <Col md={"4"}>
-            <Card className={"matrix-list-card"}>
-              <CardHeader>
-                <h4>Matrix List</h4>
-              </CardHeader>
-              <CardBody className={"matrix-list-body"}>
-                <PriMatrixList
-                  matrixList={matrixListReducer.matrixList}
-                  handleUpdateMatrix={this.handleUpdateMatrix}
-                  addNewMatrix={() => this.resetAll(true)}
-                  activeMatrix={matrixId}
-                />
-              </CardBody>
-            </Card>
-          </Col>
-          <PriceMatrixComponent
-            matrixRange={matrixRange}
-            handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
-            handleCostChange={this.handleCostChange}
-            handleRemoveMatrixRange={this.handleRemoveMatrixRange}
-            handleAddMatrixRange={this.handleAddMatrixRange}
-            handleAddMatrix={this.handleAddMatrix}
-            handleChange={this.handleChange}
-            errors={errors}
-            matrixName={matrixName}
-            isEditMatrix={isEditMatrix}
-            addNewMatrix={addNewMatrix}
-            handleMatrixDelete={this.handleMatrixDelete}
-          />
-        </Row>
+        <PriceMatrixComponent
+          matrixRange={matrixRange}
+          handleAddBelowMatrixRange={this.handleAddBelowMatrixRange}
+          handleCostChange={this.handleCostChange}
+          handleRemoveMatrixRange={this.handleRemoveMatrixRange}
+          handleAddMatrixRange={this.handleAddMatrixRange}
+          handleAddMatrix={this.handleAddMatrix}
+          handleChange={this.handleChange}
+          errors={errors}
+          matrixName={matrixName}
+          isEditMatrix={isEditMatrix}
+          matrixModalOpen={matrixAddModalOpen}
+          handleMatrixModal={() =>
+            modelOperate({
+              matrixAddModalOpen: !matrixAddModalOpen
+            })}
+          addNewMatrix={addNewMatrix}
+        />
       </>
     );
   }
 }
 const mapStateToProps = state => ({
   matrixListReducer: state.matrixListReducer,
+  modelInfoReducer: state.modelInfoReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getMatrixList: () => {
-    dispatch(getMatrixList());
+  getMatrixList: (data) => {
+    dispatch(getMatrixList(data));
   },
   addPriceMatrix: (data) => {
     dispatch(addMatrixRequest(data))
