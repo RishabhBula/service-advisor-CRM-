@@ -399,6 +399,7 @@ export class CrmVehicleModal extends Component {
                       options={groupedOptions}
                       formatGroupLabel={formatGroupLabel}
                       className="w-100 form-select"
+                      classNamePrefix={"form-select-theme"}
                       onChange={this.handleType}
                     />
                     {!type && errors.type ? (
@@ -440,6 +441,7 @@ export class CrmVehicleModal extends Component {
                       onChange={this.handleColor}
                       options={this.state.colorOptions}
                       className="w-100 form-select"
+                      classNamePrefix={"form-select-theme"}
                       placeholder={"Pick a color"}
                       isClearable={true}
                       components={{ Option: CustomOption }}

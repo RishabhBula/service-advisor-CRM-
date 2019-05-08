@@ -581,7 +581,7 @@ class CrmInventoryPart extends Component {
             <Col md="6">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
-                  Quantity in hand
+                  Quantity in hand <span className={"asteric"}>*</span>
                 </Label>
                 <div className={"input-block"}>
                   <Input
@@ -643,7 +643,7 @@ class CrmInventoryPart extends Component {
                         </Button>
                       );
                     })}
-                    <Button type={"button"} size={"sm"}>
+                    <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                       <Input
                         type={"text"}
                         placeholder={"Markup"}
@@ -677,7 +677,7 @@ class CrmInventoryPart extends Component {
                         </Button>
                       );
                     })}
-                    <Button type={"button"} size={"sm"}>
+                    <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                       <Input
                         type={"text"}
                         placeholder={"Margin"}

@@ -294,7 +294,7 @@ class Labours extends Component {
             <tr>
               <th width='90px'>S No.</th>
               <th width={"250"}>Labor Description</th>
-              <th width={"250"}>Note</th>
+              <th width={"350"}>Note</th>
               <th>Rate</th>
               <th>Hours</th>
               {/* <th>Price</th> */}
@@ -314,7 +314,7 @@ class Labours extends Component {
                         </label>
                       </td>
                       <td><b>{data.discription || "-"}</b></td>
-                      <td>{data.notes || "-"}</td>
+                      <td className={"pr-3"}> {data.notes.substring(0, 100)}</td>
                       <td>
                         <div className="modal-info">
                           {(data.rate && data.rate.name) ? data.rate.name : "-"} - 

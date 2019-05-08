@@ -385,4 +385,14 @@ body {
       background-color: #7852ea;
       border-color: #7853eb;
     }
+    .btn-with-input{
+      background-color: transparent;
+      padding: 0px;
+      .form-control {
+          height: 35px;
+          border-color: #fff !important;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+    }
 }

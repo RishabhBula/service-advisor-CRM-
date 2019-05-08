@@ -134,15 +134,15 @@ class PriMatrixList extends Component {
           <thead>
             <tr>
               <th className={"text-center"} width={"60"}>S No.</th>
-              <th width={"320"}>Matrix Name</th>
+              <th width={"320"}><i className={"fas fa-hand-holding-usd"}></i> Matrix Name</th>
               <th width={"550"} colSpan={"3"} >
               <div className={"d-flex matrix-range-th"}>
-                <span>Cost Range</span>
-                <span>Margin</span>
-                <span>Markup</span>
+                <span><i className={"fa fa-dollar"}></i> Cost Range</span>
+                <span><i className={"fa fa-line-chart"}></i> Margin</span>
+                  <span><i className={"fa fa-money"}></i> Markup</span>
                 </div>
               </th>
-              <th width={"200"}>Created At</th>
+              <th width={"200"}><i class="fa fa-clock-o"></i> Created At</th>
               {/*<th width={"200"}>Markup</th> */}
               {/* <th width={"200"}>Creted At</th> */}
               <th width={"140"} className={"text-center"}>Action</th>
@@ -155,7 +155,7 @@ class PriMatrixList extends Component {
                   <tr key={index}>
                     <td>
                       <div className='checkbox-custom checkbox-default coloum-checkbox'>
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
                       </div>
                     </td>
                     <td>{matrix.matrixName || "-"}</td>

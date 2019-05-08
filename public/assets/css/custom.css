@@ -1172,6 +1172,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 /* Tyre CSS END*/
 
 /* Price Matrix */
+.btn-input{
+  background-color: transparent;
+}
 .form-control.matrix-input:focus{
   box-shadow: none;
   outline: 0;
