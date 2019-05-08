@@ -293,7 +293,7 @@ class Labours extends Component {
           <thead>
             <tr>
               <th width='90px'>S No.</th>
-              <th width={"250"}>Labour Description</th>
+              <th width={"250"}>Labor Description</th>
               <th width={"250"}>Note</th>
               <th>Rate</th>
               <th>Hours</th>

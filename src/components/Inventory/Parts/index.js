@@ -182,6 +182,10 @@ class Parts extends Component {
     const query = this.getQueryParams();
     this.props.updateInventoryPart({ data, query });
   };
+  setVendorSearch = (vendorData) => {
+    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
+  }
+
   render() {
     const {
       vendorId,
@@ -235,7 +239,7 @@ class Parts extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                     Filter by
+                      Filter by
                     </option>
                     <option value={"critical"}>Critical Quantity</option>
                     <option value={"ncritical"}>Non-Critical Quantity</option>
@@ -252,7 +256,7 @@ class Parts extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                    Sort By 
+                      Sort By
                     </option>
                     <option value={"qltoh"}>Quantity(Low to High)</option>
                     <option value={"qhtol"}>Quantity(High to High)</option>
@@ -353,23 +357,23 @@ class Parts extends Component {
                       {part.partNumber ? <div className={"modal-info"}>Part No. : <Badge>{part.partNumber}</Badge></div> : null}
                       {part.note ? <span className={"part-note"}>part.note</span> : " "}
                     </td>
-                    <td className={"font-weight-bold"}>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
+                    <td className={"font-weight-bold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
                     <td>{part.location || "-"}</td>
                     <td>
-                      {part.cost ? 
+                      {part.cost ?
                         <div className="modal-info">Cost - <span className={"dollar-price"}>
-                        <i class="fa fa-dollar dollar-icon"></i>
-                        {part.cost || " "}
+                          <i class="fa fa-dollar dollar-icon"></i>
+                          {part.cost || " "}
                         </span>
-                        </div> 
-                      : null }
+                        </div>
+                        : null}
                       {part.retailPrice ?
                         <div className="modal-info">Retail - <span className={"dollar-price"}>
                           <i class="fa fa-dollar dollar-icon"></i>
                           {part.retailPrice || " "}
-                          </span>
+                        </span>
                         </div>
-                      : null}
+                        : null}
                     </td>
                     <td className={"pl-4"}>
                       {part.quantity || 0}&nbsp;
@@ -419,14 +423,14 @@ class Parts extends Component {
                 );
               })
             ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  {filterApplied ? <NoDataFound message={"No Part details found related to your search"} noResult /> :
-                    <NoDataFound showAddButton message={"Currently there are no Part details added."} onAddClick={onAddClick} />
-                  }
-                </td>
-              </tr>
-            )}
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? <NoDataFound message={"No Part details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Part details added."} onAddClick={onAddClick} />
+                      }
+                    </td>
+                  </tr>
+                )}
           </tbody>
         </Table>
         {totalParts && !isLoading ? (

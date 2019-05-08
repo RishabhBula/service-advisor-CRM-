@@ -35,7 +35,6 @@ class PriceMatrixComponent extends Component {
       handleChange,
       errors,
       isEditMatrix,
-      handleMatrixDelete,
       addNewMatrix,
       matrixModalOpen,
       handleMatrixModal

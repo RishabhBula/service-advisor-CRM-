@@ -26,7 +26,6 @@ import {
    CreateTierValidations,
    CreateTierValidMessaages
 } from "../../../validations";
-import MaskedInput from "react-maskedinput";
 import Async from "react-select/lib/Async";
 import {
    CalculateMarkupPercent,
@@ -99,8 +98,8 @@ export class CrmTyreModal extends Component {
             tierSize,
             tierPermission,
             selectedVendor: {
-               label: vendorId && vendorId.name ? vendorId.name : "Type to select vendor",
-               value: vendorId && vendorId._id ? vendorId._id : ''
+               label: vendorId ? vendorId.name : "Type to select vendor",
+               value: vendorId ? vendorId._id : ''
             }
          });
          if (this.props.tireData && this.props.tireData.tierSize && this.props.tireData.tierSize.length) {
@@ -109,13 +108,15 @@ export class CrmTyreModal extends Component {
                   const { matrixList } = this.props;
                   const selectedMatrix = matrixList.filter(matrix => matrix._id === item.priceMatrix)
                   const tierSize = [...this.state.tierSize];
-                  tierSize[index].priceMatrix = {
-                     label: selectedMatrix[0].matrixName,
-                     value: selectedMatrix[0]._id
+                  if (selectedMatrix[0]) {
+                     tierSize[index].priceMatrix = {
+                        label: selectedMatrix[0].matrixName,
+                        value: selectedMatrix[0]._id
+                     }
+                     this.setState({
+                        tierSize,
+                     })
                   }
-                  this.setState({
-                     tierSize,
-                  })
                }
                return true
             })
@@ -333,7 +334,7 @@ export class CrmTyreModal extends Component {
       const payload = {
          brandName,
          modalName,
-         vendorId: vendorId && vendorId.value ? vendorId.value : null,
+         vendorId: vendorId ? vendorId.value : null,
          seasonality,
          tierSize,
          tierPermission
@@ -427,6 +428,7 @@ export class CrmTyreModal extends Component {
          isEditMode,
          selectedVendor,
       } = this.state;
+      logger(tireData, "@@@@@@@@@@@@@@@@@@@@@")
       return (
          <>
             <Modal
@@ -439,7 +441,7 @@ export class CrmTyreModal extends Component {
                <ModalBody>
                   <div className="">
                      <Row className="justify-content-center">
-                        <Col md="4">
+                        <Col md="6">
                            <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Brand Name <span className={"asteric"}>*</span>
@@ -463,7 +465,7 @@ export class CrmTyreModal extends Component {
                               </div>
                            </FormGroup>
                         </Col>
-                        <Col md="4">
+                        <Col md="6">
                            <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Modal Name <span className={"asteric"}>*</span>
@@ -486,7 +488,9 @@ export class CrmTyreModal extends Component {
                               </div>
                            </FormGroup>
                         </Col>
-                        <Col md="4">
+                     </Row>
+                     <Row>
+                        <Col md="6">
                            <FormGroup className={"fleet-block"}>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Vendor
@@ -505,9 +509,7 @@ export class CrmTyreModal extends Component {
                               />
                            </FormGroup>
                         </Col>
-                     </Row>
-                     <Row>
-                        <Col md={"12"}>
+                        <Col md={"6"}>
                            <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                  Seasonality
@@ -545,8 +547,7 @@ export class CrmTyreModal extends Component {
                                           <Label htmlFor="name" className="customer-modal-text-style tire-col">
                                              Base Info
                                           </Label>
-                                          <MaskedInput
-                                             mask="111/11R11 11"
+                                          <Input
                                              type="text"
                                              className={"form-control"}
                                              name="baseInfo"
@@ -640,9 +641,6 @@ export class CrmTyreModal extends Component {
                                           <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
                                              Pricing Matrix
                                           </Label>
-                                          {
-                                             logger(tierSize[index].priceMatrix, "################")
-                                          }
                                           <Async
                                              placeholder={"Type to select price matrix"}
                                              loadOptions={this.matrixLoadOptions}
@@ -781,13 +779,6 @@ export class CrmTyreModal extends Component {
 
                      <Col md="6">
                         <div className="d-flex">
-                           <p className="customer-modal-text-style">
-                              {tierPermissionText.showNoteOnQuotesInvoices}
-                           </p>
-                           {
-                              (tierPermission.showNoteOnQuotesInvoices)
-
-                           }
                            <AppSwitch
                               className={"mx-1"}
                               checked={
@@ -799,6 +790,13 @@ export class CrmTyreModal extends Component {
                               color={"primary"}
                               size={"sm"}
                            />
+                           <p className="customer-modal-text-style">
+                              {tierPermissionText.showNoteOnQuotesInvoices}
+                           </p>
+                           {
+                              (tierPermission.showNoteOnQuotesInvoices)
+
+                           }
                         </div>
                      </Col>
                   </div>

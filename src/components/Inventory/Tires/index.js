@@ -31,6 +31,7 @@ import { CrmTyreModal } from "../../common/Tires/CrmTyreModal"
 import { Async } from "react-select";
 import moment from 'moment';
 import NoDataFound from "../../common/NoFound"
+import { logger } from "../../../helpers/Logger";
 
 class Tires extends Component {
   constructor(props) {
@@ -180,6 +181,7 @@ class Tires extends Component {
   };
 
   editTire = tier => {
+    logger(tier,"!!!!!!!!!!!!!!!!!!!!!")
     this.setState({ tire: tier }, () => {
       this.props.modelOperate({
         tireEditModalOpen: true
@@ -270,6 +272,10 @@ class Tires extends Component {
     })
 
   }
+
+  setVendorSearch = (vendorData) => {
+    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
+  }
   render() {
     const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -279,7 +285,6 @@ class Tires extends Component {
       page,
       search,
       sort,
-      selectedTires,
       tire,
       vendorId,
       status,
@@ -417,7 +422,7 @@ class Tires extends Component {
           <thead>
             <tr>
               <th width="90px" className={"s-no-th"}>
-                <div className="table-checkbox-wrap">
+                {/* <div className="table-checkbox-wrap">
                   {tires && tires.length ?
                     <span className='checkboxli checkbox-custom checkbox-default' >
                       <Input
@@ -454,10 +459,10 @@ class Tires extends Component {
                       <option value={''}>Select</option>
                       <option value={'delete'}>Delete</option>
                     </Input>}
-                </div>
+                </div> */}
+                Sno.
               </th>
               <th width={"280"}><i className="fa fa-cube"></i> Brand Info</th>
-              {/* <th width={"280"}><i className="fa fa-star-half-empty"></i> Modal Name</th> */}
               <th width={"200"}><i className="fa fa-life-saver"></i> Size</th>
               <th width={"280"}><i className="fa fa-id-badge"></i> Vendor</th>
               <th width={"280"}><i className="fa fa-cloud"></i> Seasonality</th>
@@ -473,7 +478,7 @@ class Tires extends Component {
                     <>
                       <tr key={index}>
                         <td>
-                          <div className="checkbox-custom checkbox-default coloum-checkbox">
+                          {/* <div className="checkbox-custom checkbox-default coloum-checkbox">
                             <Input
                               type="checkbox"
                               value={tire._id}
@@ -482,9 +487,9 @@ class Tires extends Component {
                               onChange={this.handleCheckboxChnage}
                             />
                             <label htmlFor={tire._id}>
-                              {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
-                          </label>
-                          </div>
+                            </label>
+                          </div> */}
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td className={"text-capitalize"}>
                           <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
@@ -505,7 +510,7 @@ class Tires extends Component {
                             </Button> : null
                           }
                         </td>
-                        <td>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
+                        <td onClick={tire.vendorId ? () => this.setVendorSearch(tire.vendorId) : null}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
                         <td className={"season-td text-capitalize"}>
                           {tire.seasonality || "-"}
                         </td>
@@ -523,7 +528,7 @@ class Tires extends Component {
                             <i className={"icons cui-pencil"}></i>
                           </Button>{" "}
                           <UncontrolledTooltip target={`edit-${tire._id}`}>
-                            Edit details of {tire.brandName}
+                            Edit
                           </UncontrolledTooltip>
                           &nbsp;
                         <Button
@@ -544,7 +549,7 @@ class Tires extends Component {
                             <i className={"icons cui-trash"}></i>
                           </Button>
                           <UncontrolledTooltip target={`delete-${tire._id}`}>
-                            Delete {tire.brandName}
+                            Delete 
                           </UncontrolledTooltip>
                         </td>
                       </tr>
