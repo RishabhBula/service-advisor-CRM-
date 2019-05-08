@@ -72,7 +72,7 @@ export class CrmVehicleModal extends Component {
       year: "",
       make: "",
       modal: "",
-      typeSelected: "",
+      typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
       licensePlate: "",
@@ -101,7 +101,7 @@ export class CrmVehicleModal extends Component {
       year: yeardata,
       make: this.state.make,
       modal: this.state.modal,
-      type: this.state.typeSelected,
+      type: this.state.typeSelected ? this.state.typeSelected : { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       color: this.state.colorSelected,
       miles: this.state.miles,
       licensePlate: this.state.licensePlate,
@@ -218,7 +218,7 @@ export class CrmVehicleModal extends Component {
       year: "",
       make: "",
       modal: "",
-      typeSelected: "",
+      typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
       licensePlate: "",
@@ -518,8 +518,8 @@ export class CrmVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                ""
-              )}
+                  ""
+                )}
             </Row>
             {/* <Row className="justify-content-center">
               <Col md="12 text-center">
@@ -537,167 +537,167 @@ export class CrmVehicleModal extends Component {
             </Row> */}
             {/* {expandForm ? (
               <> */}
-                <Row className="justify-content-center">
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Engine Size
+            <Row className="justify-content-center">
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Engine Size
                       </Label>
-                      <div className={"input-block"}>
-                        <Input
-                          type="text"
-                          name="engineSize"
-                          onChange={this._onInputChange}
-                          placeholder="Engine Size"
-                          id="rate"
-                        />
-                        {!engineSize && errors.engineSize ? (
-                          <p className="text-danger">{errors.engineSize}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Production Date
+                  <div className={"input-block"}>
+                    <Input
+                      type="text"
+                      name="engineSize"
+                      onChange={this._onInputChange}
+                      placeholder="Engine Size"
+                      id="rate"
+                    />
+                    {!engineSize && errors.engineSize ? (
+                      <p className="text-danger">{errors.engineSize}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Production Date
                       </Label>
-                      <div className={"input-block"}>
-                        <MaskedInput
-                          name="productionDate"
-                          mask="11/1111"
-                          placeholder="MM/YYYY"
-                          onChange={this._onInputChange}
-                          className={"form-control"}
-                        />
-                        {!productionDate && errors.productionDate ? (
-                          <p className="text-danger">{errors.productionDate}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Transmission
+                  <div className={"input-block"}>
+                    <MaskedInput
+                      name="productionDate"
+                      mask="11/1111"
+                      placeholder="MM/YYYY"
+                      onChange={this._onInputChange}
+                      className={"form-control"}
+                    />
+                    {!productionDate && errors.productionDate ? (
+                      <p className="text-danger">{errors.productionDate}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Transmission
                       </Label>
-                      <div className={"input-block"}>
-                        <Input
-                          type="select"
-                          className=""
-                          onChange={this.handleSelectedChange}
-                          name="transmission"
-                          id="matrixId"
-                        >
-                          <option value={""}>Select</option>
-                          {Transmission.length
-                            ? Transmission.map((item, index) => {
-                                return (
-                                  <option
-                                    selected={item.key === transmissionSelected}
-                                    value={item.key}
-                                    key={index}
-                                  >
-                                    {item.text}
-                                  </option>
-                                );
-                              })
-                            : null}
-                        </Input>
-                        {!transmission && errors.transmission ? (
-                          <p className="text-danger">{errors.transmission}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Drivetrain
+                  <div className={"input-block"}>
+                    <Input
+                      type="select"
+                      className=""
+                      onChange={this.handleSelectedChange}
+                      name="transmission"
+                      id="matrixId"
+                    >
+                      <option value={""}>Select</option>
+                      {Transmission.length
+                        ? Transmission.map((item, index) => {
+                          return (
+                            <option
+                              selected={item.key === transmissionSelected}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
+                        : null}
+                    </Input>
+                    {!transmission && errors.transmission ? (
+                      <p className="text-danger">{errors.transmission}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Drivetrain
                       </Label>
-                      <div className={"input-block"}>
-                        <Input
-                          type="select"
-                          className=""
-                          onChange={this.handleSelectedChange}
-                          name="drivetrain"
-                          id="matrixId"
-                        >
-                          <option value={""}>Select</option>
-                          {Drivetrain.length
-                            ? Drivetrain.map((item, index) => {
-                                return (
-                                  <option
-                                    selected={item.key === drivetrainSelected}
-                                    value={item.key}
-                                    key={index}
-                                  >
-                                    {item.text}
-                                  </option>
-                                );
-                              })
-                            : null}
-                        </Input>
-                        {!drivetrain && errors.drivetrain ? (
-                          <p className="text-danger">{errors.drivetrain}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col md="12">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Notes
+                  <div className={"input-block"}>
+                    <Input
+                      type="select"
+                      className=""
+                      onChange={this.handleSelectedChange}
+                      name="drivetrain"
+                      id="matrixId"
+                    >
+                      <option value={""}>Select</option>
+                      {Drivetrain.length
+                        ? Drivetrain.map((item, index) => {
+                          return (
+                            <option
+                              selected={item.key === drivetrainSelected}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
+                        : null}
+                    </Input>
+                    {!drivetrain && errors.drivetrain ? (
+                      <p className="text-danger">{errors.drivetrain}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col md="12">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Notes
                       </Label>
-                      <div className={"input-block"}>
-                        <Input
-                          name="notes"
-                          type="textarea"
-                          placeholder="Enter a note..."
-                          id="name"
-                          onChange={this._onInputChange}
-                        />
-                        {!notes && errors.notes ? (
-                          <p className="text-danger">{errors.notes}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col md="12 text-center">
-                    {expandForm ? (
-                      <span
-                        onClick={this.handleExpandForm}
-                        className="customer-anchor-text customer-click-btn"
-                      >
-                        Show Less
+                  <div className={"input-block"}>
+                    <Input
+                      name="notes"
+                      type="textarea"
+                      placeholder="Enter a note..."
+                      id="name"
+                      onChange={this._onInputChange}
+                    />
+                    {!notes && errors.notes ? (
+                      <p className="text-danger">{errors.notes}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col md="12 text-center">
+                {expandForm ? (
+                  <span
+                    onClick={this.handleExpandForm}
+                    className="customer-anchor-text customer-click-btn"
+                  >
+                    Show Less
                       </span>
-                    ) : (
-                      ""
-                    )}
-                  </Col>
-                </Row>
-              {/* </>
+                ) : (
+                    ""
+                  )}
+              </Col>
+            </Row>
+            {/* </>
             ) : (
               ""
             )} */}

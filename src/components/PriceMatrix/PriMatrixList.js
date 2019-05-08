@@ -3,7 +3,6 @@ import { Col, Button, UncontrolledTooltip, Label, InputGroup, Table, Form, Row, 
 import { AppConfig } from "../../config/AppConfig";
 import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
-import { logger } from "../../helpers/Logger";
 import moment from 'moment';
 
 class PriMatrixList extends Component {

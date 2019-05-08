@@ -17,7 +17,6 @@ import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
-import { CrmCircleBackground } from "../../../components/common/Icon/CrmCircleBackground";
 import { toast } from "react-toastify";
 import { carsOptions } from "../../../config/Color";
 import NoDataFound from "../../common/NoFound";

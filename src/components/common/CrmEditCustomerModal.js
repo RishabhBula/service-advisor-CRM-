@@ -526,7 +526,6 @@ export class CrmEditCustomerModal extends Component {
     } = this.props;
     const {
       selectedOption,
-      expandForm,
       fleetModalOpen,
       phoneDetail,
       errors,
