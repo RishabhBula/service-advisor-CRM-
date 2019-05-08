@@ -3,6 +3,7 @@ import { matrixActions } from "./../actions";
 
 const initialAuthState = {
     matrixList: [],
+    isLoading: false,
     matrixData: {
         isSuccess: false,
         isEditSuccess: false,
@@ -14,15 +15,18 @@ export const matrixListReducer = handleActions(
     {
         [matrixActions.GET_MATRIX_LIST_START]: (state, action) => ({
             ...state,
-            matrixList: action.payload.matrixList
+            matrixList: action.payload.matrixList,
+            isLoading: false
         }),
         [matrixActions.GET_MATRIX_LIST_SUCCESS]: (state, action) => ({
             ...state,
-            matrixList: action.payload.matrixList
+            matrixList: action.payload.matrixList,
+            isLoading: false
         }),
         [matrixActions.GET_MATRIX_LIST_FAILED]: (state, action) => ({
             ...state,
-            matrixList: action.payload.matrixList
+            matrixList: action.payload.matrixList,
+            isLoading: false
         }),
         [matrixActions.ADD_MATRIX_REQUEST]: (state, action) => ({
             ...state,

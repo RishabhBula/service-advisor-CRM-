@@ -21,7 +21,8 @@ const getMatrixLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     dispatch(
       getMatrixListStart({
-        matrixList: []
+        matrixList: [],
+        isLoading: true
       })
     );
     let api = new ApiHelper();
@@ -36,7 +37,8 @@ const getMatrixLogic = createLogic({
     if (result.isError) {
       dispatch(
         getMatrixListFail({
-          matrixList: []
+          matrixList: [],
+          isLoading: false
         })
       );
     }
@@ -48,7 +50,8 @@ const getMatrixLogic = createLogic({
       logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(
         getMatrixListSuccess({
-          matrixList: result.data.data
+          matrixList: result.data.data,
+          isLoading:false
         })
       );
     }

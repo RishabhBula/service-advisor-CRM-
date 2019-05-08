@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody,Button, UncontrolledTooltip } from "reactstrap";
+import { Card, CardBody, Button, UncontrolledTooltip } from "reactstrap";
 import PriceMatrixComponent from "../../components/PriceMatrix/AddEdit";
 import PriMatrixList from "../../components/PriceMatrix/PriMatrixList";
 import { logger } from "../../helpers/Logger";
@@ -88,6 +88,30 @@ class PriceMatrix extends Component {
         addNewMatrix: false
       })
     }
+  }
+  handleMatrixModal = () => {
+    const { modelInfoReducer, modelOperate } = this.props
+    const { modelDetails } = modelInfoReducer;
+    const { matrixAddModalOpen } = modelDetails;
+    this.setState({
+      matrixRange: [
+        {
+          margin: "50%",
+          markup: "100%",
+          lower: "0.00",
+          upper: "beyond"
+        }
+      ],
+      matrixName: "",
+      errors: {},
+      matrixId: "",
+      isEditMatrix: false,
+      addNewMatrix: true
+    }, () => {
+      modelOperate({
+        matrixAddModalOpen: !matrixAddModalOpen
+      })
+    })
   }
 
   handleChange = (index, e) => {
@@ -309,38 +333,28 @@ class PriceMatrix extends Component {
       }
     }
   }
-  toggleMatrixModal = () => {
-    const { modelDetails } = this.props.modelInfoReducer;
-    this.setState({
-      addNewMatrix: true
-    })
-    let modaldata = {
-      matrixAddModalOpen: !modelDetails.matrixAddModalOpen,
-    };
-    this.props.modelOperate(modaldata);
-  }
   render() {
-    const { matrixListReducer, modelInfoReducer, modelOperate } = this.props;
+    const { matrixListReducer, modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { matrixAddModalOpen } = modelDetails;
     const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix, updatedAt } = this.state;
     return (
       <>
         <Card className={"white-card"}>
-     
+
           <CardBody className={"custom-card-body position-relative"}>
             <div className={"text-right invt-add-btn-block"}>
               <Button
                 color='primary'
                 id='add-user'
-                onClick={this.toggleMatrixModal}
+                onClick={this.handleMatrixModal}
               >
                 <i className={'fa fa-plus'} />
                 &nbsp; Add New
                 </Button>
               <UncontrolledTooltip target={'add-user'}>
                 Add New price matrix
-                </UncontrolledTooltip>
+              </UncontrolledTooltip>
             </div>
             <PriMatrixList
               matrixList={matrixListReducer.matrixList}
@@ -363,10 +377,7 @@ class PriceMatrix extends Component {
           matrixName={matrixName}
           isEditMatrix={isEditMatrix}
           matrixModalOpen={matrixAddModalOpen}
-          handleMatrixModal={() =>
-            modelOperate({
-              matrixAddModalOpen: !matrixAddModalOpen
-            })}
+          handleMatrixModal={this.handleMatrixModal}
           addNewMatrix={addNewMatrix}
           updateDate={updatedAt}
         />
