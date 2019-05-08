@@ -196,10 +196,11 @@ class Customers extends Component {
                 sheetType={DemoSupportedSheets.CUSTOMER}
               />{" "}
               &nbsp;
-                <CrmImportExcel
+              <CrmImportExcel
                 modalHeaderText={"Import customer data"}
                 onImport={this.onImport}
                 buttonText={"Import Customers"}
+                buttonIcon={"fa fa-download"}
               >
                 {customerListReducer.importError ? (
                   <Row>
@@ -218,13 +219,13 @@ class Customers extends Component {
               &nbsp;&nbsp;
                 <Button
                 color="primary"
-                id="add-user"
+                id="export-customer"
                 onClick={this.exportCustomer}
               >
                 <i className={"fa fa-upload"} />
                 &nbsp; Export Customers
                 </Button>
-                &nbsp;&nbsp;
+              &nbsp;&nbsp;
               <Button
                 color="primary"
                 id="add-user"

@@ -24,6 +24,12 @@
   font-style: normal;
 }
 /*=========Pre Defined classes=============*/
+.btn-secondary.btn-download{
+  background: #e5efe7;
+  font-weight: 600;
+  border-color: #96b39b;
+  min-width: 150px;
+}
 .table tr th,.table tr td{
   font-family: 'Open Sans', sans-serif;
 }
@@ -1321,6 +1327,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 /* Price Matrix End */
 .word-break{
   word-break: break-all;
+}
+.read-more-text{
+  font-size: 10px;
+  cursor: pointer;
 }
 /* Media Query STRAT*/
 @media(max-width:1220px){

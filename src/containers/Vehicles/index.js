@@ -158,6 +158,7 @@ class Vehicles extends Component {
                 modalHeaderText={"Import Vehicle data"}
                 onImport={this.onImport}
                 buttonText={"Import Vehicels"}
+                buttonIcon={"fa fa-download"}
               >
                 {vehicleListReducer.importError ? (
                   <Row>
@@ -176,7 +177,7 @@ class Vehicles extends Component {
               &nbsp;&nbsp;
                 <Button
                 color="primary"
-                id="add-user"
+                id="export-vehicle"
                 onClick={this.exportVehicles}
               >
                 <i className={"fa fa-upload"} />

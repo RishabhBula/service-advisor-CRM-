@@ -10,6 +10,7 @@ import {
   InputGroup,
   Input,
   UncontrolledTooltip,
+  Badge
 } from "reactstrap";
 
 import Loader from "../../../containers/Loader/Loader";
@@ -318,20 +319,28 @@ class Labours extends Component {
                       <td><b>{data.discription || "-"}</b></td>
                       {
                         !expandText ?
-                          <td className={"pr-3"}>
+                          <td className={"pr-4"}>
                             <div className={"word-break"}>
                               {data.notes ? data.notes.substring(0, 50) : "-"}{" "}
-                              <span className={"read-more-text  "} onClick={() => this.setState({
+                              <span className={"read-more-text"} onClick={() => this.setState({
                                 expandText: true
-                              })}>{data.notes && data.notes.length >= 20 ? "read more...." : null}</span>
+                              })}>
+                                <Badge color={"warning"}>
+                                  {data.notes && data.notes.length >= 20 ? "read more...." : null}
+                                </Badge>
+                              </span>
                             </div>
                           </td> :
-                          <td className={"pr-3"}>
+                          <td className={"pr-4"}>
                             <div className={"word-break"}>
                               {data.notes ? data.notes : "-"}{" "}
-                              <span className={"read-more-text  "} onClick={() => this.setState({
+                              <span className={"read-more-text"} onClick={() => this.setState({
                                 expandText: false
-                              })}>{data.notes && data.notes.length >= 20 ? "show less" : null}</span>
+                              })}>
+                                <Badge color={"warning"}>
+                                  {data.notes && data.notes.length >= 20 ? "show less" : null}
+                                </Badge>
+                              </span>
                             </div>
                           </td>
                       }

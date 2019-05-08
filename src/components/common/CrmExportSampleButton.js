@@ -44,7 +44,7 @@ class CrmExportSampleButton extends Component {
   render() {
     return (
       <>
-        <Button onClick={this.downloadSampleFile} id={"download-sample"}>
+        <Button className={"btn-download"} onClick={this.downloadSampleFile} id={"download-sample"}>
           Download Sample
         </Button>{" "}
         <UncontrolledTooltip target={"download-sample"}>
