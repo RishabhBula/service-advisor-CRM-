@@ -321,31 +321,32 @@ class Labours extends Component {
                         !expandText ?
                           <td className={"pr-4"}>
                             <div className={"word-break"}>
-                              {data.notes ? data.notes.substring(0, 50) : "-"}{" "}
+                              {data.notes ? data.notes.substring(0, 70) : "-"}{" "}
                               <span className={"read-more-text"} onClick={() => this.setState({
                                 expandText: true
                               })}>
                                 <Badge color={"warning"}>
-                                  {data.notes && data.notes.length >= 20 ? "read more...." : null}
+                                  {data.notes && data.notes.length >= 70 ? "read more...." : null}
                                 </Badge>
                               </span>
                             </div>
                           </td> :
                           <td className={"pr-4"}>
+                            
                             <div className={"word-break"}>
                               {data.notes ? data.notes : "-"}{" "}
                               <span className={"read-more-text"} onClick={() => this.setState({
                                 expandText: false
                               })}>
                                 <Badge color={"warning"}>
-                                  {data.notes && data.notes.length >= 20 ? "show less" : null}
+                                  {data.notes && data.notes.length >= 70 ? "show less" : null}
                                 </Badge>
                               </span>
                             </div>
                           </td>
                       }
                       <td>
-                        <div className="modal-info">
+                        <div className="">
                           {(data.rate && data.rate.name) ? data.rate.name : "-"} -
                           {(data.rate && data.rate.hourlyRate) ? <span className={"dollar-price"}>
                             <i class="fa fa-dollar dollar-icon"></i>
