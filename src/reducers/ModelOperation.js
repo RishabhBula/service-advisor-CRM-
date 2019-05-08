@@ -15,10 +15,14 @@ const initialAuthState = {
     editUserModal: false,
     tireAddModalOpen: false,
     tireEditModalOpen: false,
-    vendorAddModalOpen:false,
+    vendorAddModalOpen: false,
     vendorEditModalOpen: false,
     partAddModalOpen: false,
-    partEditModalOpen: false
+    rateAddModalOpen: false,
+    partEditModalOpen: false,
+    showImportModal: false,
+    matrixAddModalOpen:false,
+    matrixEditModalOpen: false
   }
 };
 

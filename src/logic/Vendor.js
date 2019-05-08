@@ -12,7 +12,9 @@ import {
   hideLoader,
   modelOpenRequest,
   vendorActions,
+  deleteVendorSuccess
 } from "../actions"
+import { logger } from "../helpers/Logger";
 
 
 const getVendorLogic = createLogic({
@@ -25,7 +27,11 @@ const getVendorLogic = createLogic({
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer("/vendor", "/vendorList", "GET", true, {
+    let result = await api.FetchFromServer(
+      "/vendor",
+       "/vendorList",
+        "GET",
+       true, {
       ...action.payload,
       limit: AppConfig.ITEMS_PER_PAGE
     });
@@ -100,6 +106,7 @@ const editVendorsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
+      logger(result, "result")
       toast.error(result.messages[0]);
       dispatch(hideLoader());
       done();
@@ -125,8 +132,41 @@ const editVendorsLogic = createLogic({
   }
 });
 
+const deleteVendorLogic = createLogic({
+  type: vendorActions.DELETE_VENDOR,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/vendor",
+      "/delete",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(deleteVendorSuccess());
+      dispatch(
+        getVendorsList({
+          ...action.payload
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
 export const VendorLogic = [
   addVendorsLogic,
   getVendorLogic,
-  editVendorsLogic
+  editVendorsLogic,
+  deleteVendorLogic
 ];

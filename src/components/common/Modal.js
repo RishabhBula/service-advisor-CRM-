@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import * as classNames from "classnames";
+import LastUpdated from "../common/LastUpdated";
+
 const CRMModal = props => (
   <Modal
     isOpen={props.isOpen}
@@ -14,6 +16,7 @@ const CRMModal = props => (
   >
     <ModalHeader toggle={props.toggle}>
       {props.headerText || "Modal Header"}
+      {props.updatedAt ? <LastUpdated updatedAt={props.updatedAt}/> : null}
     </ModalHeader>
     <ModalBody>{props.children}</ModalBody>
     <ModalFooter>

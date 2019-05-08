@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const add = async (req, res) => {
   try {
     const { body, currentUser } = req;
+    if (currentUser.parentId === null || currentUser.parentId === "undefined") {
+      currentUser.parentId = currentUser.id
+    }
     const {
       partDescription,
       note,
@@ -231,6 +234,9 @@ const deletePart = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { body, currentUser } = req;
+    if (currentUser.parentId === null || currentUser.parentId === "undefined") {
+      currentUser.parentId = currentUser.id
+    }
     const {
       partDescription,
       note,
@@ -269,12 +275,14 @@ const update = async (req, res) => {
     if (vendorId) {
       data.vendorId = vendorId;
     }
+    const today = new Date()
     const result = await Parts.updateOne(
       {
         _id: body.id
       },
       {
-        $set: data
+        $set: data,
+        updatedAt: today
       }
     );
     res.status(200).json({

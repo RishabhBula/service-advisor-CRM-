@@ -8,12 +8,14 @@ import { tiresReducer } from "./Tires";
 import { profileInfoReducer } from "./ProfileInfo";
 import { matrixListReducer } from "./MatrixList";
 import { fleetReducer } from "./FleetList";
+import { labourReducer } from "./Labours";
 import { rateStandardListReducer } from "./RateStandard";
 import { customerInfoReducer, customerListReducer } from "./Customer";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { modelInfoReducer } from "./ModelOperation";
 import { vendorsReducer } from "./Vendors"
 import { inventoryPartsReducers } from "./InventoryParts";
+import { inventoryStatsReducer } from "./InventorySats";
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -35,6 +37,7 @@ const AppReducer = combineReducers({
   profileInfoReducer,
   matrixListReducer,
   fleetReducer,
+  labourReducer,
   rateStandardListReducer,
   customerInfoReducer,
   modelInfoReducer,
@@ -43,7 +46,8 @@ const AppReducer = combineReducers({
   vehicleListReducer,
   vendorsReducer,
   inventoryPartsReducers,
-  routing: routerReducer,
+  inventoryStatsReducer,
+  routing: routerReducer
 });
 
 export default AppReducer;

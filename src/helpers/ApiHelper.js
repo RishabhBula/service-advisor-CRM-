@@ -2,6 +2,7 @@ import { ErrorHandlerHelper } from "./ErrorHandlerHelper";
 import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
 import Axios from "axios";
 import { AppConfig } from "../config/AppConfig";
+import { logger } from "./Logger";
 
 /**
  * ApiHelper Class - For making Api Requests
@@ -71,9 +72,16 @@ export class ApiHelper {
     } catch (err) {
       if (Axios.isCancel(err)) {
         console.log("%s Req Cancelled", err);
+        return {
+          isError: true,
+          error: "Request cancelled",
+          messages: ["Request cancelled"]
+        };
+      } else {
+        const errorHelper = new ErrorHandlerHelper(err.response);
+        logger(err.response);
+        return errorHelper.error;
       }
-      const errorHelper = new ErrorHandlerHelper(err.response);
-      return errorHelper.error;
     }
   }
   /**

@@ -1,6 +1,6 @@
 const vehicleModal = require("../../models/vehicle");
 const customerModel = require("../../models/customer");
-
+const mongoose = require("mongoose");
 /* ------------Add New Vehicle------------ */
 const addNewVehicle = async (req, res) => {
   const { body } = req;
@@ -60,7 +60,7 @@ const getAllVehicleList = async (req, res) => {
   const { query, currentUser } = req;
   try {
     const limit = parseInt(query.limit || 10);
-    const page = parseInt(query.page);
+    const page = parseInt(query.page) || 1;
     const offset = page < 1 ? 0 : (page - 1) * limit;
     const searchValue = query.search;
     const sort = query.sort;
@@ -95,10 +95,12 @@ const getAllVehicleList = async (req, res) => {
       {
         $or: [
           {
-            parentId: currentUser.id
+            parentId: mongoose.Types.ObjectId(currentUser.id)
           },
           {
-            parentId: currentUser.parentId || currentUser.id
+            parentId: mongoose.Types.ObjectId(
+              currentUser.parentId || currentUser.id
+            )
           }
         ]
       },
@@ -115,7 +117,7 @@ const getAllVehicleList = async (req, res) => {
         ]
       },
       {
-        _id: { $ne: currentUser.id }
+        _id: { $ne: mongoose.Types.ObjectId(currentUser.id) }
       }
     ];
     if (searchValue) {
@@ -146,9 +148,13 @@ const getAllVehicleList = async (req, res) => {
       condition["$and"].push({ status: status });
     }
     const getAllVehicle = await vehicleModal
-      .find({
-        ...condition
-      })
+      .aggregate([
+        {
+          $match: { ...condition }
+        }
+      ])
+      .collation({ locale: "en" })
+      .allowDiskUse(true)
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
@@ -182,10 +188,12 @@ const updateVehicleDetails = async (req, res) => {
         success: false
       });
     } else {
+      const today = new Date();
       const updateVehicleDetails = await vehicleModal.findByIdAndUpdate(
         body.data.vehicleId,
         {
-          $set: body.data
+          $set: body.data,
+          updatedAt: today
         }
       );
       if (!updateVehicleDetails) {
@@ -282,11 +290,25 @@ const updateStatus = async ({ body }, res) => {
     });
   }
 };
-
+const bulkVehicleAdd = async (req, res) => {
+  const { body } = req;
+  var i,
+    j,
+    temparray,
+    chunk = 500;
+  for (i = 0, j = body.length; i < j; i += chunk) {
+    temparray = body.slice(i, i + chunk);
+    vehicleModal.insertMany(temparray);
+  }
+  res
+    .status(200)
+    .json({ message: `${body.length} records added successfully!` });
+};
 module.exports = {
   addNewVehicle,
   getAllVehicleList,
   updateVehicleDetails,
   deleteVehicle,
-  updateStatus
+  updateStatus,
+  bulkVehicleAdd
 };

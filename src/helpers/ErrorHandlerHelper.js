@@ -1,5 +1,8 @@
 import { DefaultErrorMessage } from "../config/Constants";
 
+/**
+ * ErrorHandlerHelper Class - For managing errors
+ */
 export class ErrorHandlerHelper {
   rawError;
   error = {
@@ -16,23 +19,19 @@ export class ErrorHandlerHelper {
   }
 
   setError = () => {
-    if (!this.rawError) {
+    this.error.code = this.rawError.code ? this.rawError.code : this.error.code;
+    this.error.timestamp = Date.now();
+    this.error.messages = [];
+    if (
+      this.rawError.data &&
+      typeof this.rawError.data === "object" &&
+      this.rawError.data.message
+    ) {
+      this.error.messages.push(this.rawError.data.message);
+    }
+    if (!this.error.messages.length) {
+      this.error.error = "Unknown";
       this.error.messages = [DefaultErrorMessage];
-    } else {
-      this.error.code = this.rawError.status
-        ? this.rawError.status
-        : this.error.code;
-      this.error.timestamp = Date.now();
-      this.error.messages = [];
-      if (this.rawError.data && typeof this.rawError.data === "object") {
-        this.error.messages.push(this.rawError.data.message);
-      } else {
-        this.error.error = "Unknown";
-        this.error.messages = [DefaultErrorMessage];
-      }
-      if (!this.error.messages.length) {
-        this.error.messages = [DefaultErrorMessage];
-      }
     }
   };
 }

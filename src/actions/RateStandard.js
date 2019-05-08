@@ -6,9 +6,16 @@ export const rateStandardListActions = {
   GET_RATE_STANDARD_LIST_FAILED: 'Rate Standard list failed!',
   GET_RATE_STANDARD_LIST_START: 'Rate Standard list Started!',
   SET_SELECTED_STANDARD_LIST_REQUEST: 'SET Standard list SELECTED Started!',
-  SET_SELECTED_STANDARD_LIST_SUCCESS: 'SET Standard list success!'
+  SET_SELECTED_STANDARD_LIST_SUCCESS: 'SET Standard list success!',
+  RATE_ADD_REQUEST: 'RateAdd Requested!',
+  RATE_ADD_SUCCESS: 'RateAdd successfully!',
+  RATE_ADD_FAILED: 'RateAdd failed!',
+  RATE_ADD_START: 'RateAdd Started!'
 };
-
+export const rateAddRequest = createAction(rateStandardListActions.RATE_ADD_REQUEST);
+export const rateAddStarted = createAction(rateStandardListActions.RATE_ADD_START);
+export const rateAddSuccess = createAction(rateStandardListActions.RATE_ADD_SUCCESS);
+export const rateAddFailed = createAction(rateStandardListActions.RATE_ADD_FAILED);
 export const getRateStandardListRequest = createAction(
   rateStandardListActions.GET_RATE_STANDARD_LIST_REQUEST
 );

@@ -30,6 +30,7 @@ import {
   RoleOptions
 } from "../../config/Constants";
 import CurrencyInput from "react-currency-input";
+import LastUpdated from "../common/LastUpdated";
 
 export class CrmUserModal extends Component {
   constructor(props) {
@@ -171,7 +172,7 @@ export class CrmUserModal extends Component {
     }
   };
   render() {
-    const { userModalOpen, handleUserModal } = this.props;
+    const { userModalOpen, handleUserModal, userData } = this.props;
     const {
       permissions,
       firstName,
@@ -193,6 +194,7 @@ export class CrmUserModal extends Component {
           >
             <ModalHeader toggle={handleUserModal}>
               {!isEditMode ? "Add New Member" : `Update member details`}
+              {isEditMode ? <LastUpdated updatedAt={userData.updatedAt} /> : null}
             </ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">
@@ -272,7 +274,7 @@ export class CrmUserModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Phone (optional)
+                      Phone
                     </Label>
                     <div className={"input-block"}>
                       <MaskedInput
@@ -325,9 +327,15 @@ export class CrmUserModal extends Component {
                 <Col md="6">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Rate/hour (optional)
+                      Rate/hour
                     </Label>
                     <div className={"input-block"}>
+                      <InputGroup>
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-dollar"></i>
+                          </span>
+                        </div>
                       <CurrencyInput
                         value={rate}
                         name={"rate"}
@@ -337,6 +345,7 @@ export class CrmUserModal extends Component {
                           "is-invalid": errors.rate
                         })}
                       />
+                      </InputGroup>
                       <FormFeedback>
                         {errors.rate ? errors.rate : null}
                       </FormFeedback>

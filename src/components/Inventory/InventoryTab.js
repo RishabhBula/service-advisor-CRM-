@@ -3,7 +3,7 @@ import { Nav, NavItem, NavLink } from "reactstrap";
 
 const InventoryTab = props => {
   return (
-    <Nav pills>
+    <Nav pills className={"inventory-nav"}>
       {props.tabs
         ? props.tabs.map((tab, index) => {
             return (

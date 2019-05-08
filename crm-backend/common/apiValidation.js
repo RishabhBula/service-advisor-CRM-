@@ -169,12 +169,11 @@ const createCustomerValidation = [
 ];
 const createNewLabourValidations = [
   body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
-  body("hours", "Hours should be numeric").isNumeric(),
+
 ];
 const updateLabourValidations = [
   body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
   body("labourId").not().isEmpty().withMessage("Labour Id is required.").trim(),
-  body("hours", "Hours should be numeric").isNumeric(),
 ];
 const createVendorValidations = [
   body("name").not().isEmpty().withMessage("Name is required.").trim(),
@@ -224,6 +223,13 @@ const updateTierValidation = [
     return true;
   })
 ];
+const createNewMatrixValidation = [
+  body("matrixName").not().isEmpty().withMessage("Matrix name is required.").trim(),
+];
+const UpdateMatrixValidation = [
+  body("matrixName").not().isEmpty().withMessage("Matrix name is required.").trim(),
+  body("id").not().isEmpty().withMessage("Matrix id is required.")
+]
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -242,5 +248,7 @@ module.exports = {
   createVendorValidations,
   updateVendorValidations,
   createTierValidation,
-  updateTierValidation
+  updateTierValidation,
+  createNewMatrixValidation,
+  UpdateMatrixValidation
 };

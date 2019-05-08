@@ -44,6 +44,11 @@ export const AppRoutes = {
     name: "Vendors",
     exact: true
   },
+  INVENTORY_STATATICS: {
+    url: "/inventory/statatics",
+    name: "Statatics",
+    exact: true
+  },
   TIMESHEETS: {
     url: "/timesheets",
     name: "Time Clocks",
@@ -54,29 +59,29 @@ export const AppRoutes = {
     name: "Reports",
     exact: true
   },
-  SETTINGS: {
-    url: "/settings",
-    name: "Settings",
-    exact: true
-  },
   STAFF_MEMBERS: {
-    url: "/settings/users",
+    url: "/staff-members",
     name: "Staff Members",
     exact: true
   },
   VEHICLES: {
-    url: "/settings/vehicles",
+    url: "/vehicles",
     name: "Vehicles",
     exact: true
   },
   FLEETS: {
-    url: "/settings/fleets",
+    url: "/fleets",
     name: "Fleets",
     exact: true
   },
   CUSTOMERS: {
     url: "/settings/customers",
     name: "Customers",
+    exact: true
+  },
+  PRICEMATRIX: {
+    url: "/settings/pricematrix",
+    name: "Price Matrix",
     exact: true
   }
 };

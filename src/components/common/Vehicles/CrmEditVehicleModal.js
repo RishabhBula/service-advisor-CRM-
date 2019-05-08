@@ -22,6 +22,7 @@ import {
   VehicleValidationMessage
 } from "../../../validations";
 import Validator from "js-object-validation";
+import LastUpdated from "../../common/LastUpdated";
 
 class CustomOption extends Component {
   render() {
@@ -72,7 +73,7 @@ export class CrmEditVehicleModal extends Component {
       year: "",
       make: "",
       modal: "",
-      typeSelected: "",
+      typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
       licensePlate: "",
@@ -119,7 +120,7 @@ export class CrmEditVehicleModal extends Component {
         year: this.props.vehicleData.year,
         make: this.props.vehicleData.make,
         modal: this.props.vehicleData.modal,
-        typeSelected: this.props.vehicleData.type,
+        typeSelected: this.props.vehicleData.type ? this.props.vehicleData.type : { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
         colorSelected: this.props.vehicleData.color,
         miles: this.props.vehicleData.miles,
         licensePlate: this.props.vehicleData.licensePlate,
@@ -225,7 +226,7 @@ export class CrmEditVehicleModal extends Component {
       year: "",
       make: "",
       modal: "",
-      typeSelected: "",
+      typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
       licensePlate: "",
@@ -246,7 +247,7 @@ export class CrmEditVehicleModal extends Component {
       year: this.state.year,
       make: this.state.make,
       modal: this.state.modal,
-      type: this.state.typeSelected,
+      type: this.state.typeSelected ? this.state.typeSelected : { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       color: this.state.colorSelected,
       miles: this.state.miles,
       licensePlate: this.state.licensePlate,
@@ -312,7 +313,7 @@ export class CrmEditVehicleModal extends Component {
   };
 
   render() {
-    const { vehicleEditModalOpen, handleEditVehicleModal } = this.props;
+    const { vehicleEditModalOpen, handleEditVehicleModal, vehicleData } = this.props;
     const {
       expandForm,
       transmissionSelected,
@@ -335,6 +336,7 @@ export class CrmEditVehicleModal extends Component {
         >
           <ModalHeader toggle={handleEditVehicleModal}>
             Update Vehicle
+            <LastUpdated updatedAt={vehicleData.updatedAt} />
           </ModalHeader>
           <ModalBody>
             <Row className="justify-content-center">
@@ -424,6 +426,7 @@ export class CrmEditVehicleModal extends Component {
                     className="w-100 form-select"
                     onChange={this.handleType}
                     value={typeSelected}
+                    classNamePrefix={"form-select-theme"}
                   />
                   {!typeSelected && errors.type ? (
                     <p className="text-danger">{errors.type}</p>
@@ -462,6 +465,7 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this.handleColor}
                     options={this.state.colorOptions}
                     className="w-100 form-select"
+                    classNamePrefix={"form-select-theme"}
                     placeholder={"Pick a color"}
                     isClearable={true}
                     components={{ Option: CustomOption }}
@@ -543,10 +547,10 @@ export class CrmEditVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                ""
-              )}
+                  ""
+                )}
             </Row>
-            <Row className="justify-content-center">
+            {/* <Row className="justify-content-center">
               <Col md="12 text-center">
                 {!expandForm ? (
                   <span
@@ -559,152 +563,153 @@ export class CrmEditVehicleModal extends Component {
                   ""
                 )}
               </Col>
+            </Row> */}
+            {/* {expandForm ? (
+              <> */}
+            <Row className="justify-content-center">
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Engine Size
+                      </Label>
+                  <div className={"input-block"}>
+                    <Input
+                      type="text"
+                      name="engineSize"
+                      onChange={this._onInputChange}
+                      placeholder="Engine Size"
+                      id="rate"
+                      value={this.state.engineSize}
+                    />
+                    {!engineSize && errors.engineSize ? (
+                      <p className="text-danger">{errors.engineSize}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Production Date
+                      </Label>
+                  <div className={"input-block"}>
+                    <MaskedInput
+                      name="productionDate"
+                      mask="11/1111"
+                      placeholder="MM/YYYY"
+                      onChange={this._onInputChange}
+                      value={this.state.productionDate}
+                      className={"form-control"}
+                    />
+                    {!productionDate && errors.productionDate ? (
+                      <p className="text-danger">{errors.productionDate}</p>
+                    ) : null}
+                  </div>
+                </FormGroup>
+              </Col>
             </Row>
-            {expandForm ? (
-              <>
-                <Row className="justify-content-center">
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Engine Size
+            <Row className="justify-content-center">
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Transmission
                       </Label>
-                      <div className={"input-block"}>
-                        <Input
-                          type="text"
-                          name="engineSize"
-                          onChange={this._onInputChange}
-                          placeholder="Engine Size"
-                          id="rate"
-                          value={this.state.engineSize}
-                        />
-                        {!engineSize && errors.engineSize ? (
-                          <p className="text-danger">{errors.engineSize}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Production Date
+                  <Input
+                    type="select"
+                    className=""
+                    onChange={this.handleSelectedChange}
+                    name="transmission"
+                    id="matrixId"
+                  >
+                    <option value={""}>Select</option>
+                    {Transmission.length
+                      ? Transmission.map((item, index) => {
+                        return (
+                          <option
+                            selected={item.key === transmissionSelected}
+                            value={item.key}
+                            key={index}
+                          >
+                            {item.text}
+                          </option>
+                        );
+                      })
+                      : null}
+                  </Input>
+                  {!transmissionSelected && errors.transmission ? (
+                    <p className="text-danger">{errors.transmission}</p>
+                  ) : null}
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Drivetrain
                       </Label>
-                      <div className={"input-block"}>
-                        <MaskedInput
-                          name="productionDate"
-                          mask="11/1111"
-                          placeholder="MM/YYYY"
-                          onChange={this._onInputChange}
-                          value={this.state.productionDate}
-                        />
-                        {!productionDate && errors.productionDate ? (
-                          <p className="text-danger">{errors.productionDate}</p>
-                        ) : null}
-                      </div>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Transmission
+                  <Input
+                    type="select"
+                    className=""
+                    onChange={this.handleSelectedChange}
+                    name="drivetrain"
+                    id="matrixId"
+                  >
+                    <option value={""}>Select</option>
+                    {Drivetrain.length
+                      ? Drivetrain.map((item, index) => {
+                        return (
+                          <option
+                            selected={item.key === drivetrainSelected}
+                            value={item.key}
+                            key={index}
+                          >
+                            {item.text}
+                          </option>
+                        );
+                      })
+                      : null}
+                  </Input>
+                  {!drivetrainSelected && errors.drivetrain ? (
+                    <p className="text-danger">{errors.drivetrain}</p>
+                  ) : null}
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col md="12">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Notes
                       </Label>
-                      <Input
-                        type="select"
-                        className=""
-                        onChange={this.handleSelectedChange}
-                        name="transmission"
-                        id="matrixId"
-                      >
-                        <option value={""}>Select</option>
-                        {Transmission.length
-                          ? Transmission.map((item, index) => {
-                              return (
-                                <option
-                                  selected={item.key === transmissionSelected}
-                                  value={item.key}
-                                  key={index}
-                                >
-                                  {item.text}
-                                </option>
-                              );
-                            })
-                          : null}
-                      </Input>
-                      {!transmissionSelected && errors.transmission ? (
-                        <p className="text-danger">{errors.transmission}</p>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Drivetrain
-                      </Label>
-                      <Input
-                        type="select"
-                        className=""
-                        onChange={this.handleSelectedChange}
-                        name="drivetrain"
-                        id="matrixId"
-                      >
-                        <option value={""}>Select</option>
-                        {Drivetrain.length
-                          ? Drivetrain.map((item, index) => {
-                              return (
-                                <option
-                                  selected={item.key === drivetrainSelected}
-                                  value={item.key}
-                                  key={index}
-                                >
-                                  {item.text}
-                                </option>
-                              );
-                            })
-                          : null}
-                      </Input>
-                      {!drivetrainSelected && errors.drivetrain ? (
-                        <p className="text-danger">{errors.drivetrain}</p>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col md="12">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Notes
-                      </Label>
-                      <Input
-                        name="notes"
-                        type="textarea"
-                        placeholder="Enter a note..."
-                        id="name"
-                        value={this.state.notes}
-                        onChange={this._onInputChange}
-                      />
-                      {!notes && errors.notes ? (
-                        <p className="text-danger">{errors.notes}</p>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
+                  <Input
+                    name="notes"
+                    type="textarea"
+                    placeholder="Enter a note..."
+                    id="name"
+                    value={this.state.notes}
+                    onChange={this._onInputChange}
+                  />
+                  {!notes && errors.notes ? (
+                    <p className="text-danger">{errors.notes}</p>
+                  ) : null}
+                </FormGroup>
+              </Col>
+            </Row>
+            {/* <Row className="justify-content-center">
                   <Col md="12 text-center">
                     {expandForm ? (
                       <span
@@ -717,11 +722,11 @@ export class CrmEditVehicleModal extends Component {
                       ""
                     )}
                   </Col>
-                </Row>
-              </>
+                </Row> */}
+            {/* </>
             ) : (
               ""
-            )}
+            )} */}
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>

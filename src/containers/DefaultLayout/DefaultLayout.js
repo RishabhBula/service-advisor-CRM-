@@ -12,7 +12,7 @@ import {
   modelOpenRequest
 } from "../../actions";
 // routes config
-import routes from "../../routes";
+import routes, { BreadCrumbRoutes } from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
 import Loader from "./../Loader/Loader";
 import {
@@ -166,7 +166,7 @@ class DefaultLayout extends Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           <main className="main">
-            <AppBreadcrumb appRoutes={routes} />
+            <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
             <Container fluid>
               {hasAccess ? (
                 <>

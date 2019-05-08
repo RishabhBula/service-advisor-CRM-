@@ -44,7 +44,7 @@ class CrmInventoryPart extends Component {
       vendorId: "",
       location: "",
       priceMatrix: "",
-      cost: "",
+      cost: 0,
       price: "",
       markup: "",
       margin: "",
@@ -56,7 +56,9 @@ class CrmInventoryPart extends Component {
         showPriceOnQuoteAndInvoice: true,
         showNoteOnQuoteAndInvoice: true
       },
-      vendorInput: ""
+      vendorInput: "",
+      selectedPriceMatrix: { value: "", label: "Type to select" },
+      selectedMatrix: []
     });
   };
   componentDidMount() {
@@ -86,10 +88,28 @@ class CrmInventoryPart extends Component {
         partNumber,
         quantity,
         quickBookItem,
-        retailPrice,
         partOptions,
         vendorId
       } = partDetails;
+      if (partDetails && partDetails.priceMatrix) {
+        const { matrixList } = this.props
+        const pricingMatrixValue = partDetails.priceMatrix;
+        const selectedMatrix = matrixList.filter(matrix => matrix._id === pricingMatrixValue)
+        logger(matrixList, "@@@@@@@@@@@@@@@@@")
+        this.setState({
+          selectedPriceMatrix: {
+            value: selectedMatrix[0] && selectedMatrix[0]._id ? selectedMatrix[0]._id : "",
+            label: selectedMatrix[0] && selectedMatrix[0].matrixName ? selectedMatrix[0].matrixName : "Type to select"
+          }
+        })
+      } else {
+        this.setState({
+          selectedPriceMatrix: {
+            value: "",
+            label: "Type to select"
+          }
+        })
+      }
       this.setState({
         cost,
         criticalQuantity,
@@ -101,7 +121,7 @@ class CrmInventoryPart extends Component {
         partNumber,
         quantity,
         quickBookItem,
-        retailPrice,
+        price: partDetails && partDetails.retailPrice ? partDetails.retailPrice : "",
         partOptions: partOptions ? partOptions : {},
         vendorId: vendorId
           ? { label: vendorId.name, value: vendorId._id }
@@ -211,7 +231,8 @@ class CrmInventoryPart extends Component {
       price:
         cost && markupPercent
           ? CalculateRetailPriceByMarkupPercent(cost, markupPercent).toFixed(2)
-          : this.state.price
+          : this.state.price,
+      markup: markupPercent
     });
   };
   setPriceByMargin = marginPercent => {
@@ -220,7 +241,8 @@ class CrmInventoryPart extends Component {
       price:
         cost && marginPercent
           ? CalculateRetailPriceByMarginPercent(cost, marginPercent).toFixed(2)
-          : this.state.price
+          : this.state.price,
+      margin: marginPercent
     });
   };
   loadOptions = (input, callback) => {
@@ -231,6 +253,97 @@ class CrmInventoryPart extends Component {
     e.preventDefault();
     logger(this.state);
   };
+
+  handleCostPricechange = (event) => {
+    const { value } = event.target;
+    if (isNaN(value)) {
+      return
+    }
+    else if (!this.state.margin || !this.state.markup) {
+      this.setState({
+        cost: value
+      })
+    }
+    else if (this.state.selectedMatrix && this.state.selectedMatrix.length) {
+      this.setState({
+        cost: value
+      })
+      this.handleSelectedPriceMatrix(value, this.state.selectedMatrix)
+      return true
+    }
+    else {
+      this.setState({
+        cost: value
+      })
+      if (value && parseFloat(this.state.markup)) {
+        this.setState({
+          price: CalculateRetailPriceByMarkupPercent(value, parseFloat(this.state.markup)).toFixed(2)
+        })
+      }
+      else if (value && parseFloat(this.state.margin)) {
+        this.setState({
+          price: CalculateRetailPriceByMarkupPercent(value, parseFloat(this.state.margin)).toFixed(2)
+        })
+      }
+    }
+  }
+
+  handleSelectedPriceMatrix = (cost, selectedMatrix) => {
+    this.setState({
+      selectedMatrix: selectedMatrix,
+      priceMatrix: selectedMatrix[0]._id
+    })
+    selectedMatrix[0].matrixRange.map((item, i) => {
+      if (parseFloat(item.lower) <= parseFloat(cost) && (parseFloat(cost) <= parseFloat(item.upper) || item.upper === 'beyond')) {
+        if (cost && item.markup) {
+          this.setState({
+            price: CalculateRetailPriceByMarkupPercent(cost, parseInt(item.markup)).toFixed(2)
+          })
+        }
+        else if (cost && item.margin) {
+          this.setState({
+            price: CalculateRetailPriceByMarginPercent(cost, parseInt(item.margin)).toFixed(2)
+          })
+        }
+        else {
+          this.setState({
+            price: 0
+          })
+        }
+        this.setState({
+          margin: parseInt(item.margin),
+          markup: parseInt(item.markup),
+        })
+      }
+      return true
+    })
+  }
+
+  matrixLoadOptions = (input, callback) => {
+    this.props.getPriceMatrix({ input, callback });
+  }
+  handlePriceMatrix = (e) => {
+    if (e && e.value) {
+      this.setState({
+        selectedPriceMatrix: {
+          value: e.value,
+          label: e.label
+        }
+      })
+      const { matrixList } = this.props;
+      const { cost } = this.state;
+      const selectedMatrix = matrixList.filter(matrix => matrix._id === e.value)
+      this.handleSelectedPriceMatrix(cost, selectedMatrix)
+    } else {
+      this.setState({
+        selectedPriceMatrix: {
+          value: "",
+          label: "Type to select"
+        }
+      })
+    }
+  }
+
   render() {
     const {
       errors,
@@ -238,7 +351,6 @@ class CrmInventoryPart extends Component {
       note,
       partNumber,
       location,
-      priceMatrix,
       cost,
       price,
       markup,
@@ -247,12 +359,13 @@ class CrmInventoryPart extends Component {
       vendorId,
       criticalQuantity,
       quantity,
-      vendorInput
+      vendorInput,
+      selectedPriceMatrix
     } = this.state;
-    const { isOpen, toggle, isEditMode } = this.props;
+    const { isOpen, toggle, isEditMode, partDetails } = this.props;
     const buttons = [
       {
-        text: isEditMode ? "Update Part" : "Add part",
+        text: isEditMode ? "Update Part" : "Add Part",
         color: "primary",
         onClick: this.addPart,
         type: "submit"
@@ -269,10 +382,11 @@ class CrmInventoryPart extends Component {
           isOpen={isOpen}
           toggle={toggle}
           headerText={
-            isEditMode ? "Update part details" : "Add new part to inventory"
+            isEditMode ? "Update Part Details" : "Add New Part To Inventory"
           }
           footerButtons={buttons}
           showfooterMsg
+          updatedAt={isEditMode ? partDetails.updatedAt : null}
         >
           <Row className="justify-content-center">
             <Col md="6">
@@ -394,21 +508,16 @@ class CrmInventoryPart extends Component {
                 <Label htmlFor="name" className="customer-modal-text-style">
                   Pricing Matrix
                 </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="Price metrix"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="priceMatrix"
-                    value={priceMatrix}
-                    invalid={errors.priceMatrix}
-                  />
-                  {errors.priceMatrix ? (
-                    <FormFeedback>{errors.priceMatrix}</FormFeedback>
-                  ) : null}
-                </div>
+                <Async
+                  placeholder={"Type to select price matrix"}
+                  loadOptions={this.matrixLoadOptions}
+                  className={"w-100 form-select"}
+                  onChange={(e) => this.handlePriceMatrix(e)}
+                  isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
+                  noOptionsMessage={() => "Type price matrix name"
+                  }
+                  value={selectedPriceMatrix}
+                />
               </FormGroup>
             </Col>
             <Col md="6">
@@ -417,16 +526,23 @@ class CrmInventoryPart extends Component {
                   Cost
                 </Label>
                 <div className={"input-block"}>
-                  <Input
-                    type="number"
-                    className="customer-modal-text-style"
-                    placeholder="$"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="cost"
-                    invalid={errors.cost}
-                    value={cost}
-                  />
+                  <InputGroup>
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">
+                        <i className="fa fa-dollar"></i>
+                      </span>
+                    </div>
+                    <Input
+                      type="number"
+                      className="customer-modal-text-style"
+                      placeholder="0.00"
+                      onChange={(e) => this.handleCostPricechange(e)}
+                      maxLength="40"
+                      name="cost"
+                      invalid={errors.cost}
+                      value={cost}
+                    />
+                  </InputGroup>
                   {errors.cost ? (
                     <FormFeedback>{errors.cost}</FormFeedback>
                   ) : null}
@@ -439,16 +555,23 @@ class CrmInventoryPart extends Component {
                   Retail Price
                 </Label>
                 <div className={"input-block"}>
-                  <Input
-                    type="number"
-                    className="customer-modal-text-style"
-                    placeholder="$"
-                    onChange={this.handleRetailsPriceChange}
-                    maxLength="40"
-                    name="price"
-                    invalid={errors.price}
-                    value={price}
-                  />
+                  <InputGroup>
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">
+                        <i className="fa fa-dollar"></i>
+                      </span>
+                    </div>
+                    <Input
+                      type="number"
+                      className="customer-modal-text-style"
+                      placeholder="0.00"
+                      onChange={this.handleRetailsPriceChange}
+                      maxLength="40"
+                      name="price"
+                      invalid={errors.price}
+                      value={price}
+                    />
+                  </InputGroup>
                   {errors.price ? (
                     <FormFeedback>{errors.price}</FormFeedback>
                   ) : null}
@@ -458,7 +581,7 @@ class CrmInventoryPart extends Component {
             <Col md="6">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
-                  Quantity in hand
+                  Quantity in hand <span className={"asteric"}>*</span>
                 </Label>
                 <div className={"input-block"}>
                   <Input
@@ -511,7 +634,8 @@ class CrmInventoryPart extends Component {
                         <Button
                           key={index}
                           type={"button"}
-                          color={"primary"}
+                          color={"secondary"}
+                          className={markup === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
                           size={"sm"}
                           onClick={() => this.setPriceByMarkup(mark.value)}
                         >
@@ -519,11 +643,12 @@ class CrmInventoryPart extends Component {
                         </Button>
                       );
                     })}
-                    <Button type={"button"} size={"sm"}>
+                    <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                       <Input
                         type={"text"}
                         placeholder={"Markup"}
                         defaultValue={markup}
+                        value={markup}
                         onChange={e => this.setPriceByMarkup(e.target.value)}
                       />
                     </Button>
@@ -543,7 +668,8 @@ class CrmInventoryPart extends Component {
                         <Button
                           key={index}
                           type={"button"}
-                          color={"primary"}
+                          color={"secondary"}
+                          className={margin === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
                           size={"sm"}
                           onClick={() => this.setPriceByMargin(mark.value)}
                         >
@@ -551,11 +677,12 @@ class CrmInventoryPart extends Component {
                         </Button>
                       );
                     })}
-                    <Button type={"button"} size={"sm"}>
+                    <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                       <Input
                         type={"text"}
                         placeholder={"Margin"}
                         defaultValue={margin}
+                        value={margin}
                         onChange={e => this.setPriceByMargin(e.target.value)}
                       />
                     </Button>
@@ -564,25 +691,7 @@ class CrmInventoryPart extends Component {
               </FormGroup>
             </Col>
           </Row>
-          <Row>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Quickbooks Item Reference
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="Item reference"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="email"
-                  />
-                </div>
-              </FormGroup>
-            </Col>
-          </Row>
+
           <Row>
             {CreatePartOptions.map((option, index) => {
               return (

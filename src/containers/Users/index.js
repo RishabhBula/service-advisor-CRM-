@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
-  Row,
-  Col,
   Button,
   UncontrolledTooltip
 } from "reactstrap";
@@ -94,15 +91,9 @@ class Users extends Component {
     const { addUserModal, editUserModal } = modelDetails;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={"6"} className={"pull-left"}>
-                <h4>
-                  <i className={"fa fa-users"} /> Staff Members
-                </h4>
-              </Col>
-              <Col sm={"6"} className={"text-right"}>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body position-relative"}>
+              <div className={"text-right invt-add-btn-block"}>
                 <Button
                   color="primary"
                   id="add-user"
@@ -110,14 +101,11 @@ class Users extends Component {
                 >
                   <i className={"fa fa-plus"} />
                   &nbsp; Add New
-                </Button>
+                  </Button>
                 <UncontrolledTooltip target={"add-user"}>
                   Add New Staff Member
-                </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+                  </UncontrolledTooltip>
+              </div>            
             <UsersList
               userData={userReducer}
               onPageChange={this.onPageChange}

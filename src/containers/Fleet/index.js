@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import {
   Card,
-  CardHeader,
   CardBody,
-  Row,
-  Col,
   Button,
   UncontrolledTooltip,
 } from 'reactstrap';
@@ -21,7 +18,7 @@ import {
   deleteFleet,
   modelOpenRequest,
   fleetEditRequest,
-  updateFleetStatus,
+  updateFleetStatus
 } from '../../actions';
 import { logger } from '../../helpers/Logger';
 import * as qs from 'query-string';
@@ -150,6 +147,11 @@ class Fleet extends Component {
     };
     this.props.deleteFleet(data);
   };
+  onAddClick = () =>{
+    this.setState({
+      openCreate: !this.state.openCreate,
+    });
+  }
   render() {
     const {
       openCreate,
@@ -162,34 +164,26 @@ class Fleet extends Component {
       profileInfoReducer,
       fleetReducer,
       rateStandardListReducer,
+      getMatrix
     } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={'6'} className={'pull-left'}>
-                <h4>
-                  <i className={"fas fa-car"} /> Fleet List
-                </h4>
-              </Col>
-              <Col sm={'6'} className={'text-right'}>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body position-relative"}>
+              <div className={"text-right invt-add-btn-block"}>
                 <Button
                   color='primary'
                   id='add-user'
                   onClick={this.toggleCreateModal}
                 >
                   <i className={'fa fa-plus'} />
-                  &nbsp; Add New
+                  &nbsp; Add New Fleet
                 </Button>
                 <UncontrolledTooltip target={'add-user'}>
                   Add New Fleet
                 </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+            </div>            
             <FleetList
               fleetListData={fleetReducer}
               handleEditFleet={this.handleEditFleet}
@@ -199,6 +193,7 @@ class Fleet extends Component {
               onDelete={this.deleteFleet}
               onStatusUpdate={this.onStatusUpdate}
               openEdit={openEdit}
+              onAddClick={this.onAddClick}
             />
           </CardBody>
         </Card>
@@ -213,6 +208,7 @@ class Fleet extends Component {
           rateStandardListData={rateStandardListReducer}
           profileInfoReducer={profileInfoReducer.profileInfo}
           matrixListReducerData={matrixListReducer}
+          getPriceMatrix={getMatrix}
         />
         <CrmFleetEditModal
           onTypeHeadStdFun={this.onTypeHeadStdFun}
@@ -220,11 +216,12 @@ class Fleet extends Component {
           handleEditFleet={this.handleEditFleet}
           rateStandardListData={rateStandardListReducer}
           profileInfoReducer={profileInfoReducer.profileInfo}
-          matrixListReducerData={matrixListReducer}
+          matrixListReducerData={matrixListReducer.matrixList}
           updateFleetModel={this.updateFleetModel}
           fleetSingleData={fleetSingleData}
           updateFleet={this.handleEditFleet}
           handleFleetModal={this.toggleEditModal}
+          getPriceMatrix={getMatrix}
           fleetEditModalOpen={modelDetails.fleetEditModel}
         />
       </>
@@ -247,8 +244,8 @@ const mapDispatchToProps = dispatch => ({
   addFleet: data => {
     dispatch(fleetAddRequest(data));
   },
-  getMatrix: () => {
-    dispatch(getMatrixList());
+  getMatrix: (data) => {
+    dispatch(getMatrixList(data));
   },
   getStdList: () => {
     dispatch(getRateStandardListRequest());
@@ -267,7 +264,7 @@ const mapDispatchToProps = dispatch => ({
   },
   onStatusUpdate: data => {
     dispatch(updateFleetStatus(data));
-  },
+  }
 });
 
 export default connect(

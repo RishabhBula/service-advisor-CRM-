@@ -46,7 +46,7 @@ const vendorSchema = new Schema({
     },
     updatedAt: {
         type: Date,
-        default: Date.now,
+        default: null,
     },
 });
 

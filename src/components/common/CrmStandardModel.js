@@ -55,6 +55,7 @@ export class CrmStandardModel extends Component {
     this.props.handleRateAdd(data);
   }
   render() {
+    
     const { name, hourRate } = this.state
     const { openStadardRateModel, errors } = this.props
     return (

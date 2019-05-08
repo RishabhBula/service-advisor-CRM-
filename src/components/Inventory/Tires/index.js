@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import {
-  getTiersList, updateTierStatus, deleteTier, editTier,
-  getInventoryPartVendors
+  getTiersList,
+  updateTierStatus,
+  deleteTier,
+  editTier,
+  getInventoryPartVendors,
+  getMatrixList
 } from '../../../actions'
 import { connect } from "react-redux";
 import * as qs from "query-string";
@@ -15,7 +19,8 @@ import {
   Label,
   InputGroup,
   Input,
-  Button
+  Button,
+  Badge
 } from "reactstrap";
 import { AppConfig } from "../../../config/AppConfig";
 import Loader from "../../../containers/Loader/Loader";
@@ -24,6 +29,9 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { toast } from "react-toastify";
 import { CrmTyreModal } from "../../common/Tires/CrmTyreModal"
 import { Async } from "react-select";
+import moment from 'moment';
+import NoDataFound from "../../common/NoFound"
+import { logger } from "../../../helpers/Logger";
 
 class Tires extends Component {
   constructor(props) {
@@ -41,20 +49,27 @@ class Tires extends Component {
       openEditModal: false,
       selectedTires: [],
       filterApplied: false,
-      bulkAction: ""
+      bulkAction: "",
+      isTireSizeOpen: -1,
     };
   }
 
   componentDidMount() {
     const { location } = this.props;
+    this.props.getPriceMatrix()
     const query = qs.parse(location.search);
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search || sort) {
+      filterApplied = true;
+    }
     this.props.getTires({ ...query, page: query.page || 1 });
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
-      search: search || ""
+      search: search || "",
+      filterApplied
     })
   }
 
@@ -82,7 +97,7 @@ class Tires extends Component {
     const { search: currentSearch } = currentLocation;
     if (search !== currentSearch) {
       let query = qs.parse(currentSearch);
-      this.setState({ ...query, page: query.page?parseInt(query.page): 1 });
+      this.setState({ ...query, page: query.page ? parseInt(query.page) : 1 });
       if (query.vendorId) {
         const vendorId = qs.parse(query.vendorId);
         this.setState({
@@ -166,6 +181,7 @@ class Tires extends Component {
   };
 
   editTire = tier => {
+    logger(tier,"!!!!!!!!!!!!!!!!!!!!!")
     this.setState({ tire: tier }, () => {
       this.props.modelOperate({
         tireEditModalOpen: true
@@ -248,9 +264,20 @@ class Tires extends Component {
       [pathname, qs.stringify({ ...query, page })].join('?')
     );
   };
+  handleSize = (id, index) => {
+    this.setState({
+      toggle: !this.state.toggle,
+      isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
+      tireSizeid: id
+    })
 
+  }
+
+  setVendorSearch = (vendorData) => {
+    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
+  }
   render() {
-    const { tireReducer, modelInfoReducer, modelOperate } = this.props;
+    const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen } = modelDetails;
     const { tires, isLoading, totalTires } = tireReducer;
@@ -258,11 +285,12 @@ class Tires extends Component {
       page,
       search,
       sort,
-      selectedTires,
       tire,
       vendorId,
       status,
-      vendorInput
+      vendorInput,
+      isTireSizeOpen,
+      filterApplied
     } = this.state;
     return (
       <>
@@ -271,7 +299,7 @@ class Tires extends Component {
             <Row>
               <Col lg={"3"} md={"3"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -287,9 +315,9 @@ class Tires extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="exampleSelect" className="label">
+                  {/* <Label htmlFor="exampleSelect" className="label">
                     Filter by
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="status"
@@ -298,7 +326,7 @@ class Tires extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      Filter by
                     </option>
                     <option value={"critical"}>Critical Quantity</option>
                     <option value={"ncritical"}>Non-Critical Quantity</option>
@@ -307,9 +335,9 @@ class Tires extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="SortFilter" className="label">
+                  {/* <Label htmlFor="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -318,7 +346,7 @@ class Tires extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      Sort By
                     </option>
                     <option value={"qltoh"}>Quantity(Low to High)</option>
                     <option value={"qhtol"}>Quantity(High to High)</option>
@@ -334,9 +362,9 @@ class Tires extends Component {
                 <Row>
                   <Col md={"6"}>
                     <FormGroup className="mb-0">
-                      <Label htmlFor="SortFilter" className="label">
+                      {/* <Label htmlFor="SortFilter" className="label">
                         Vendor
-                      </Label>
+                      </Label> */}
                       <Async
                         placeholder={"Type vendor name"}
                         loadOptions={this.loadOptions}
@@ -360,10 +388,10 @@ class Tires extends Component {
                         <span className="mr-2">
                           <button
                             type="submit"
-                            className="btn btn-primary"
+                            className="btn btn-theme-transparent btn-secondary"
                             id="Tooltip-1"
                           >
-                            <i className="fa fa-search" />
+                            <i className="icons cui-magnifying-glass" />
                           </button>
                           <UncontrolledTooltip target="Tooltip-1">
                             Search
@@ -372,11 +400,11 @@ class Tires extends Component {
                         <span className="">
                           <button
                             type="button"
-                            className="btn btn-danger"
+                            className="btn btn-theme-transparent btn-secondary"
                             id="Tooltip-2"
                             onClick={this.onReset}
                           >
-                            <i className="fa fa-refresh" />
+                            <i className="icon-refresh icons" />
                           </button>
                           <UncontrolledTooltip target={"Tooltip-2"}>
                             Reset all filters
@@ -390,11 +418,11 @@ class Tires extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered className={"tire-table"}>
+        <Table responsive className={"tire-table"}>
           <thead>
             <tr>
-              <th width="90px">
-                <div className="table-checkbox-wrap">
+              <th width="90px" className={"s-no-th"}>
+                {/* <div className="table-checkbox-wrap">
                   {tires && tires.length ?
                     <span className='checkboxli checkbox-custom checkbox-default' >
                       <Input
@@ -431,20 +459,15 @@ class Tires extends Component {
                       <option value={''}>Select</option>
                       <option value={'delete'}>Delete</option>
                     </Input>}
-                </div>
+                </div> */}
+                S No.
               </th>
-              <th>Brand Name</th>
-              <th>Modal Name</th>
-              <th className={"tire-size-th"} width={"100"}>Size</th>
-              <th className={"tire-th"} width={"70"}>Part Number</th>
-              <th className={"tire-th"} width={"70"}>Cost</th>
-              <th className={"tire-th"} width={"70"}>Retails Price</th>
-              <th className={"tire-th"} width={"70"}>Quatity</th>
-              <th className={"tire-bin-th"} width={"70"}>BIN/Location</th>
-              <th>Vendor</th>
-              <th>Seasonality</th>
-              {/* <th className={"text-center"}>Tire Status</th> */}
-              <th className={"text-center action-td"}>Action</th>
+              <th width={"280"}><i className="fa fa-cube"></i> Brand Info</th>
+              <th width={"200"}><i className="fa fa-life-saver"></i> Size</th>
+              <th width={"280"}><i className="fa fa-id-badge"></i> Vendor</th>
+              <th width={"280"}><i className="fa fa-cloud"></i> Seasonality</th>
+              <th width={"280"}><i className="fa fa-clock-o"></i> Created</th>
+              <th width={"130"} className={"text-center action-td"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -452,88 +475,134 @@ class Tires extends Component {
               tires.length ? (
                 tires.map((tire, index) => {
                   return (
-                    <tr key={index}>
-                      <td>
-                        <div className="checkbox-custom checkbox-default coloum-checkbox">
-                          <Input
-                            type="checkbox"
-                            value={tire._id}
-                            checked={selectedTires.indexOf(tire._id) > -1}
-                            name="checkbox"
-                            onChange={this.handleCheckboxChnage}
-                          />
-                          <label htmlFor={tire._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
-                          </label>
-                        </div>
-                      </td>
-                      <td>
-                        {tire.brandName || "-"}
-                      </td>
-                      <td>{tire.modalName || "-"}</td>
-                      <td colSpan={"6"}>
-                        <table className={"table tire-size-table justify-content-center"}>
-                          {tire.tierSize && tire.tierSize.length ? tire.tierSize.map((size, index) => {
-                            return (
-                              <tr key={index}>
-                                <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
-                                <td width={"70"}>{size.part || "-"}</td>
-                                <td width={"70"}>{size.cost || "-"}</td>
-                                <td width={"70"}>{size.retailPrice || "-"}</td>
-                                <td width={"70"}>{size.quantity || "-"}</td>
-                                <td width={"70"}>{size.bin || "-"}</td>
+                    <>
+                      <tr key={index}>
+                        <td>
+                          {/* <div className="checkbox-custom checkbox-default coloum-checkbox">
+                            <Input
+                              type="checkbox"
+                              value={tire._id}
+                              checked={selectedTires.indexOf(tire._id) > -1}
+                              name="checkbox"
+                              onChange={this.handleCheckboxChnage}
+                            />
+                            <label htmlFor={tire._id}>
+                            </label>
+                          </div> */}
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                        </td>
+                        <td className={"text-capitalize"}>
+                          <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
+                          {tire.modalName ? <div className={"modal-info"}>
+                            Modal : <Badge>{tire.modalName}</Badge></div> : " "}
+                        </td>
+                        {/* <td className={"text-capitalize"}>{tire.modalName || "-"}</td> */}
+                        <td >
+
+                          {tire.tierSize && tire.tierSize.length ?
+                            <Button
+                              size={"sm"}
+                              className={"btn-square btn-light second"}
+                              onClick={() => this.handleSize(tire._id, index)}
+                            >
+                              <b>Size Details</b>
+                              {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
+                            </Button> : null
+                          }
+                        </td>
+                        <td onClick={tire.vendorId ? () => this.setVendorSearch(tire.vendorId) : null}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
+                        <td className={"season-td text-capitalize"}>
+                          {tire.seasonality || "-"}
+                        </td>
+                        <td>
+                          <div>{moment(tire.createdAt).format("MMM Do YYYY")}</div>
+                          <div>{moment(tire.createdAt).format("h:mm a")}</div>
+                        </td>
+                        <td className={"text-center action-td"}>
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editTire(tire)}
+                            id={`edit-${tire._id}`}
+                            className={"btn-theme-transparent"}
+                          >
+                            <i className={"icons cui-pencil"}></i>
+                          </Button>{" "}
+                          <UncontrolledTooltip target={`edit-${tire._id}`}>
+                            Edit
+                          </UncontrolledTooltip>
+                          &nbsp;
+                        <Button
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedTires: [tire._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                }
+                              )
+                            }
+                            id={`delete-${tire._id}`}
+                            className={"btn-theme-transparent"}
+                          >
+                            <i className={"icons cui-trash"}></i>
+                          </Button>
+                          <UncontrolledTooltip target={`delete-${tire._id}`}>
+                            Delete 
+                          </UncontrolledTooltip>
+                        </td>
+                      </tr>
+                      {/* {isTireSizeOpen && tire.tierSize && tireSizeid === tire._id && tire.tierSize.length ? */}
+
+                      {tire.tierSize && tire.tierSize.length ? <tr className={isTireSizeOpen === index ? 'active' : 'inactive'}>
+                        <td colSpan={"7"} key={index} className={"p-0"}>
+                          <Table className={"size-desc-table"}>
+                            <thead>
+                              <tr>
+                                <th width={"90"} className={"s-no-th"}></th>
+                                <th className={"tire-th"} width={"280"}>Size</th>
+                                <th className={"tire-th"} width={"200"}>Part</th>
+                                <th className={"tire-th"} width={"280"}>Cost</th>
+                                <th className={"tire-th"} width={"280"}>Retails Price</th>
+                                <th className={"tire-th"} width={"280"}>Quatity</th>
+                                <th className={"tire-bin-th"} width={"130"}>BIN/Location</th>
                               </tr>
-                            )
-                          }) :
-                            " No tire size added"
-                          }
-                        </table>
-                      </td>
-                      <td>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
-                      <td className={"season-td"}>
-                        {tire.seasonality || "-"}
-                      </td>
-                      <td className={"text-center action-td"}>
-                        <Button
-                          color={"primary"}
-                          size={"sm"}
-                          onClick={() => this.editTire(tire)}
-                          id={`edit-${tire._id}`}
-                        >
-                          <i className={"fa fa-edit"} />
-                        </Button>{" "}
-                        <UncontrolledTooltip target={`edit-${tire._id}`}>
-                          Edit details of {tire.brandName}
-                        </UncontrolledTooltip>
-                        &nbsp;
-                        <Button
-                          color={"danger"}
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedTires: [tire._id]
-                              },
-                              () => {
-                                this.onDelete();
+                            </thead>
+                            <tbody>
+                              {tire.tierSize.length ? tire.tierSize.map((size, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td></td>
+                                    <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
+                                    <td>{size.part}</td>
+                                    <td width={"70"}>{size.cost || "-"}</td>
+                                    <td width={"70"}>{size.retailPrice || "-"}</td>
+                                    <td width={"70"}>{size.quantity || 0}&nbsp;
+                                      {size.quantity <= size.criticalQuantity ? (
+                                        <Badge color={"warning"}>Reorder</Badge>
+                                      ) : null}</td>
+                                    <td width={"70"}>{size.bin || "-"}</td>
+                                  </tr>
+                                )
+
+                              }) :
+                                null
                               }
-                            )
-                          }
-                          id={`delete-${tire._id}`}
-                        >
-                          <i className={"fa fa-trash"} />
-                        </Button>
-                        <UncontrolledTooltip target={`delete-${tire._id}`}>
-                          Delete {tire.brandName}
-                        </UncontrolledTooltip>
-                      </td>
-                    </tr>
+                            </tbody>
+                          </Table>
+                        </td>
+                      </tr> : null}
+
+                    </>
                   );
-                })
+                }
+                )
+
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={12}>
-                      Tire Data Not Avilable
+                      {filterApplied ? <NoDataFound message={"No Tire details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Tire details added."} onAddClick={onAddClick} />}
                     </td>
                   </tr>
                 )
@@ -544,6 +613,7 @@ class Tires extends Component {
                   </td>
                 </tr>
               )}
+
           </tbody>
         </Table>
         {totalTires && !isLoading ? (
@@ -569,6 +639,8 @@ class Tires extends Component {
           }
           tireData={tire}
           updateTire={this.onUpdate}
+          matrixList={matrixListReducer.matrixList}
+          getPriceMatrix={getPriceMatrix}
           getInventoryPartsVendors={this.props.getInventoryPartsVendors}
           vendorList={this.props.vendorReducer}
         />
@@ -580,7 +652,8 @@ class Tires extends Component {
 const mapStateToProps = state => ({
   tireReducer: state.tiresReducer,
   modelInfoReducer: state.modelInfoReducer,
-  vendorReducer: state.vendorsReducer
+  vendorReducer: state.vendorsReducer,
+  matrixListReducer: state.matrixListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getTires: data => {
@@ -598,6 +671,9 @@ const mapDispatchToProps = dispatch => ({
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
   },
+  getPriceMatrix: (data) => {
+    dispatch(getMatrixList(data))
+  }
 });
 export default connect(
   mapStateToProps,

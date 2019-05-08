@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import * as qs from "query-string";
 import {
   Card,
-  CardHeader,
   CardBody,
-  Row,
-  Col,
   Button,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  UncontrolledAlert,
+  Row,
+  Col
 } from "reactstrap";
 import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 import { CrmEditCustomerModal } from "../../components/common/CrmEditCustomerModal";
@@ -23,10 +23,16 @@ import {
   setRateStandardListStart,
   customerEditRequest,
   updateCustomerStatus,
-  getCustomerFleetListRequest
+  getCustomerFleetListRequest,
+  importCustomers,
+  exportCustomers
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
+import CrmExportSampleButton, {
+  DemoSupportedSheets
+} from "../../components/common/CrmExportSampleButton";
+import CrmImportExcel from "../../components/common/CrmImportExcel";
 
 class Customers extends Component {
   constructor(props) {
@@ -98,6 +104,7 @@ class Customers extends Component {
   };
 
   onPageChange = page => {
+
     const { location } = this.props;
     const { search, pathname } = location;
     const query = qs.parse(search);
@@ -154,41 +161,84 @@ class Customers extends Component {
     this.props.setLabourRateDefault(value);
   };
 
+  onAddClick = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      customerModel: !modelDetails.customerModel,
+      customerEditModel: false
+    };
+    this.props.modelOperate(data);
+  }
+  onImport = data => {
+    this.props.importCustomer(data);
+  };
+  exportCustomer = () => {
+    const query = qs.parse(this.props.location.search);
+    this.props.exportCustomer({ ...query, page: 1 });
+  };
   render() {
     const { editMode, customer } = this.state;
     const {
       matrixListReducer,
       customerListReducer,
       rateStandardListReducer,
-      customerFleetReducer
+      customerFleetReducer,
+      getMatrix
     } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={"6"} className={"pull-left"}>
-                <h4>
-                  <i className={"fa fa-users"} /> Customer List
-                </h4>
-              </Col>
-              <Col sm={"6"} className={"text-right"}>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body position-relative"}>
+
+            <div className={"text-right invt-add-btn-block"}>
+              <CrmExportSampleButton
+                sheetType={DemoSupportedSheets.CUSTOMER}
+              />{" "}
+              &nbsp;
+              <CrmImportExcel
+                modalHeaderText={"Import customer data"}
+                onImport={this.onImport}
+                buttonText={"Import Customers"}
+                buttonIcon={"fa fa-download"}
+              >
+                {customerListReducer.importError ? (
+                  <Row>
+                    <Col sm={{ size: 8, offset: 2 }}>
+                      <UncontrolledAlert color="danger">
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: customerListReducer.importError
+                          }}
+                        />
+                      </UncontrolledAlert>
+                    </Col>
+                  </Row>
+                ) : null}
+              </CrmImportExcel>
+              &nbsp;&nbsp;
                 <Button
-                  color="primary"
-                  id="add-user"
-                  onClick={this.toggleCreateModal}
-                >
-                  <i className={"fa fa-plus"} />
-                  &nbsp; Add New
+                color="primary"
+                id="export-customer"
+                onClick={this.exportCustomer}
+              >
+                <i className={"fa fa-upload"} />
+                &nbsp; Export Customers
                 </Button>
-                <UncontrolledTooltip target={"add-user"}>
-                  Add New Customer
+              &nbsp;&nbsp;
+              <Button
+                color="primary"
+                id="add-user"
+                onClick={this.toggleCreateModal}
+              >
+                <i className={"fa fa-plus"} />
+                &nbsp; Add New Customer
+                </Button>
+              <UncontrolledTooltip target={"add-user"}>
+                Add New Customer
                 </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+            </div>
+
             <CustomerList
               customerData={customerListReducer}
               onSearch={this.onSearch}
@@ -197,6 +247,8 @@ class Customers extends Component {
               changeStatus={this.changeCustomerStatus}
               onStatusUpdate={this.onStatusUpdate}
               updateModel={this.toggleUpdateModal}
+              onAddClick={this.onAddClick}
+              customerModalOpen={modelDetails.customerModel}
             />
           </CardBody>
         </Card>
@@ -211,6 +263,7 @@ class Customers extends Component {
           onStdAdd={this.onStdAdd}
           editMode={editMode}
           customer={customer}
+          getPriceMatrix={getMatrix}
           getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
           loadTypeRate={this.loadTypeRate}
@@ -220,12 +273,13 @@ class Customers extends Component {
           handleCustomerModalFun={this.toggleEditModal}
           addCustomerFun={this.updateCustomerForm}
           profileInfo={this.props.profileInfoReducer}
-          matrixListReducerData={matrixListReducer}
+          matrixListReducerData={matrixListReducer.matrixList}
           rateStandardListData={rateStandardListReducer}
           onTypeHeadStdFun={this.onTypeHeadStdFun}
           onStdAdd={this.onStdAdd}
           editMode={editMode}
           customer={customer}
+          getPriceMatrix={getMatrix}
           getCustomerFleetList={customerFleetReducer.customerFleetData}
           setDefaultRate={this.setDefaultRate}
           loadTypeRate={this.loadTypeRate}
@@ -248,8 +302,8 @@ const mapDispatchToProps = dispatch => ({
   addCustomer: data => {
     dispatch(customerAddRequest(data));
   },
-  getMatrix: () => {
-    dispatch(getMatrixList());
+  getMatrix: (data) => {
+    dispatch(getMatrixList(data));
   },
   modelOperate: data => {
     dispatch(modelOpenRequest({ modelDetails: data }));
@@ -274,6 +328,12 @@ const mapDispatchToProps = dispatch => ({
   },
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
+  },
+  importCustomer: data => {
+    dispatch(importCustomers(data));
+  },
+  exportCustomer: data => {
+    dispatch(exportCustomers(data));
   }
 });
 

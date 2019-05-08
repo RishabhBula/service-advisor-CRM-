@@ -9,5 +9,6 @@ module.exports = {
   customer: require("./customerRoutes"),
   vendor: require("./vendorRoutes"),
   tier: require("./tierRoutes"),
-  inventory: require("./inventory")
+  inventory: require("./inventory"),
+  inventoryStat: require("./inventoryStats")
 };

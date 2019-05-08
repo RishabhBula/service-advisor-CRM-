@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Table,
-  Badge,
   UncontrolledTooltip,
   Form,
   FormGroup,
@@ -18,8 +17,11 @@ import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
-import { CrmCircleBackground } from "../../../components/common/Icon/CrmCircleBackground";
 import { toast } from "react-toastify";
+import { carsOptions } from "../../../config/Color";
+import NoDataFound from "../../common/NoFound";
+import { logger } from "../../../helpers/Logger";
+import VehicleIcons from "../../../containers/Icons/Vehicles";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -31,7 +33,8 @@ class VehiclesList extends Component {
       sort: "",
       user: {},
       openEditModal: false,
-      selectedVehicles: []
+      selectedVehicles: [],
+      filterApplied: false
     };
   }
 
@@ -39,11 +42,16 @@ class VehiclesList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search || sort) {
+      filterApplied = true;
+    }
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
-      search: search || ""
+      search: search || "",
+      filterApplied
     });
   }
 
@@ -77,6 +85,9 @@ class VehiclesList extends Component {
       param.status = status;
     }
     this.props.onSearch(param);
+    this.setState({
+      filterApplied: true
+    });
   };
 
   onReset = e => {
@@ -87,7 +98,8 @@ class VehiclesList extends Component {
       status: "",
       sort: "",
       user: {},
-      selectedVehicles: []
+      selectedVehicles: [],
+      filterApplied: false
     });
     this.props.onSearch({});
   };
@@ -209,11 +221,29 @@ class VehiclesList extends Component {
     });
     this.setState({ selectedVehicles: [] });
   };
-
+  carType = type => {
+    const ind = carsOptions.findIndex(d => d.value === type);
+    if (ind > -1) {
+      let src = null;
+      try {
+        src = require(`../../../assets/img/vehicles/${carsOptions[ind].icons}`);
+      } catch (error) {
+        logger(error);
+      }
+      return <img src={src} alt={"type"} width={"80"} />;
+    }
+    return null;
+  };
   render() {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
-    const { page, search, sort, status, selectedVehicles } = this.state;
+    const {
+      page,
+      search,
+      sort,
+      filterApplied
+    } = this.state;
+
     return (
       <>
         <div className={"filter-block"}>
@@ -221,7 +251,7 @@ class VehiclesList extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -235,31 +265,11 @@ class VehiclesList extends Component {
                   </InputGroup>
                 </FormGroup>
               </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="exampleSelect" className="label">
-                    Status
-                  </Label>
-                  <Input
-                    type="select"
-                    name="status"
-                    id="exampleSelect"
-                    onChange={this.handleChange}
-                    value={status}
-                  >
-                    <option className="form-control" value={""}>
-                      -- Select Status --
-                    </option>
-                    <option value={1}>Active</option>
-                    <option value={0}>Deactive</option>
-                  </Input>
-                </FormGroup>
-              </Col>
-              <Col lg={"3"} md={"3"} className="mb-0">
-                <FormGroup className="mb-0">
-                  <Label for="SortFilter" className="label">
+                  {/* <Label for="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -268,11 +278,11 @@ class VehiclesList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select Status --
+                      Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
-                    <option value={"nasc"}>Name A-Z</option>
-                    <option value={"ndesc"}>Name Z-A</option>
+                    <option value={"nasc"}>Make A-Z</option>
+                    <option value={"ndesc"}>Make Z-A</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -281,26 +291,26 @@ class VehiclesList extends Component {
                   <Label className="height17 label" />
                   <div className="form-group mb-0">
                     <span className="mr-2">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="fa fa-search" />
-                      </button>
+                        <i className="icons cui-magnifying-glass" />
+                      </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
                       </UncontrolledTooltip>
                     </span>
                     <span className="">
-                      <button
+                      <Button
                         type="button"
-                        className="btn btn-danger"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="fa fa-refresh" />
-                      </button>
+                        <i className="icon-refresh icons" />
+                      </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
                       </UncontrolledTooltip>
@@ -311,11 +321,11 @@ class VehiclesList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive>
           <thead>
             <tr>
-              <th width="90px">
-                <div className="table-checkbox-wrap">
+              <th width="60px">
+                {/* <div className="table-checkbox-wrap">
                   {vehicleList && vehicleList.length ? (
                     <span className="checkboxli checkbox-custom checkbox-default">
                       <Input
@@ -328,10 +338,10 @@ class VehiclesList extends Component {
                       <label className="" htmlFor="checkAll" />
                     </span>
                   ) : (
-                    <span className="checkboxli checkbox-custom checkbox-default">
-                      <label />
-                    </span>
-                  )}
+                      <span className="checkboxli checkbox-custom checkbox-default">
+                        <label />
+                      </span>
+                    )}
                   {vehicleList && vehicleList.length ? (
                     <Input
                       className="commonstatus"
@@ -345,32 +355,47 @@ class VehiclesList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   ) : (
-                    <Input
-                      className="commonstatus"
-                      type="select"
-                      id="exampleSelect"
-                      disabled
-                      onChange={this.handleActionChange}
-                    >
-                      <option value={""}>Select</option>
-                      <option value={"active"}>Active</option>
-                      <option value={"inactive"}>Inactive</option>
-                      <option value={"delete"}>Delete</option>
-                    </Input>
-                  )}
-                </div>
+                      <Input
+                        className="commonstatus"
+                        type="select"
+                        id="exampleSelect"
+                        disabled
+                        onChange={this.handleActionChange}
+                      >
+                        <option value={""}>Select</option>
+                        <option value={"active"}>Active</option>
+                        <option value={"inactive"}>Inactive</option>
+                        <option value={"delete"}>Delete</option>
+                      </Input>
+                    )}
+                </div> */}
+                S.No
               </th>
-              <th>Type</th>
-              <th>Color</th>
-              <th>Year</th>
-              <th>Make</th>
-              <th>Model</th>
-              <th>Miles</th>
-              <th style={{ maxWidth: 100 }}>Vin</th>
-              <th>License Plate</th>
-              <th>Unit</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th width={"150"}>Type</th>
+              {/* <th width={"100"}>Color</th> */}
+              <th width={"90"}>
+                <i className={"fa fa-calendar"} /> Year
+              </th>
+              <th width={"120"}>
+                <i className={"fa fa-industry"} /> Make
+              </th>
+              <th width={"120"}>
+                <i className={"fa fa-automobile"} /> Model
+              </th>
+              <th width={"100"}>
+                <i className={"fa fa-dashboard"} /> Miles
+              </th>
+              <th width={"150"}> VIN</th>
+              <th width={"150"}>
+                <i className={"fa fa-address-card-o"} /> License Plate
+              </th>
+              <th width={"90"} className={"text-center"}>
+                <i className={"fa fa-snowflake-o"} /> Unit
+              </th>
+              {/* <th width={"90"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th> */}
+              <th width={"120"} className={"text-center"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -379,8 +404,8 @@ class VehiclesList extends Component {
                 vehicleList.map((vehicle, index) => {
                   return (
                     <tr key={index}>
-                      <td>
-                        <div className="checkbox-custom checkbox-default coloum-checkbox">
+                      <td >
+                        {/* <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
                             type="checkbox"
                             value={vehicle._id}
@@ -389,15 +414,21 @@ class VehiclesList extends Component {
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={vehicle._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                           </label>
+                        </div> */}
+                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                      </td>
+                      <td>
+                        <div className={"vehicle-type-img"}>
+                          <VehicleIcons
+                            type={vehicle.type.value}
+                            color={vehicle.color.color}
+                          />
+                          {/* {this.carType(vehicle.type.value)} */}
                         </div>
+                        {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
                       {/* <td>
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
-                      </td> */}
-                      <td>{vehicle.type ? vehicle.type.label : "N/A"}</td>
-                      <td>
                         {vehicle.color ? (
                           <span
                             style={{
@@ -415,10 +446,10 @@ class VehiclesList extends Component {
                         ) : (
                           "None"
                         )}
-                      </td>
+                      </td> */}
                       <td>{vehicle.year}</td>
-                      <td>{vehicle.make}</td>
-                      <td>{vehicle.modal}</td>
+                      <td className={"text-capitalize"}>{vehicle.make}</td>
+                      <td className={"text-capitalize"}>{vehicle.modal}</td>
                       <td style={{ maxWidth: 100 }}>
                         {vehicle.miles ? vehicle.miles : "N/A"}
                       </td>
@@ -428,88 +459,79 @@ class VehiclesList extends Component {
                       <td>
                         {vehicle.licensePlate ? vehicle.licensePlate : "N/A"}
                       </td>
-                      <td>{vehicle.unit ? vehicle.unit : "N/A"}</td>
-                      <td>
-                        {vehicle.status ? (
-                          <Badge
-                            className={"badge-button"}
-                            color="success"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedVehicles: [vehicle._id]
-                                },
-                                () => {
-                                  this.deactivateVehicle();
-                                }
-                              );
-                            }}
-                          >
-                            Active
-                          </Badge>
-                        ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedVehicles: [vehicle._id]
-                                },
-                                () => {
-                                  this.activateVehicle();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
-                          </Badge>
-                        )}
+                      <td className={"text-center"}>
+                        {vehicle.unit ? vehicle.unit : "N/A"}
                       </td>
-                      <td>
-                        <Button
-                          color={"primary"}
-                          size={"sm"}
-                          onClick={() => this.editUser(vehicle)}
-                        >
-                          <i className={"fa fa-edit"} />
-                        </Button>{" "}
-                        &nbsp;
-                        <Button
-                          color={"danger"}
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedVehicles: [vehicle._id]
-                              },
-                              () => {
-                                this.onDelete();
-                              }
-                            )
-                          }
-                          id={`delete-${vehicle._id}`}
-                        >
-                          <i className={"fa fa-trash"} />
-                        </Button>
+
+                      <td className={"text-center"}>
+                        <span className="mr-2">
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editUser(vehicle)}
+                            className={"btn-theme-transparent"}
+                            id={"Tooltip-3"}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip target="Tooltip-3">
+                            Edit
+                          </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
+                          <Button
+                            className={"btn-theme-transparent"}
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedVehicles: [vehicle._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                }
+                              )
+                            }
+                            id={`delete-${vehicle._id}`}
+                          >
+                            <i className={"icons cui-trash"} />
+                          </Button>
+                          <UncontrolledTooltip target={`delete-${vehicle._id}`}>
+                            Delete
+                          </UncontrolledTooltip>
+                        </span>
                       </td>
                     </tr>
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Vehicle details found related to your search"
+                          }
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={
+                              "Currently there are no Vehicle details added."
+                            }
+                            onAddClick={this.props.onAddClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    No Vehicle records are available
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {totalVehicles && !isLoading ? (

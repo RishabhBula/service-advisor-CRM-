@@ -194,25 +194,37 @@ export const Drivetrain = [
   }
 ];
 
-export const labourPermission = {
+export const LabourPermission = {
   isShowHours: false,
   showNoteOnQuotesInvoices: false
 }
-export const labourPermissionText = {
+export const LabourPermissionText = {
   isShowHours: "Display hours on quote & invoice",
   showNoteOnQuotesInvoices: "Display note on quote & invoice" 
 }
- export const tierPermission = {
+export const tierPermission = {
    showNoteOnQuotesInvoices: false
  }
 export const tierPermissionText = {
-  showNoteOnQuotesInvoices:"Display note on quote & invoice"
-}
+  showNoteOnQuotesInvoices: "Display note on quote & invoice"
+};
 export const orderPermission = {
   isShowHours: true,
   showNoteOnQuotesInvoices: true
 };
 
+export const LabourText = [
+  { key: "isShowHours", text: "Display hours on quote & invoice" },
+  {
+    key: "showNoteOnQuotesInvoices",
+    text: "Display note on quote & invoice",
+  },
+ ];
+
+export const LabourTextDefault = {
+  isShowHours: false,
+  showNoteOnQuotesInvoices: false,
+};
 export const CreatePartOptions = [
   {
     key: "isTaxed",
@@ -276,3 +288,18 @@ export const DefaultErrorMessage =
   "We are having some issues while completing your request. Please try after some time.";
 
 export const WildCardRoutes = ["/profile"];
+
+export const CustomerSheetHeaderToJSONKey = {
+  "First Name": "firstName",
+  "Last Name": "lastName",
+  Phone: "value",
+  "Phone Type": "phone",
+  Email: "email",
+  Company: "company",
+  Address: "address",
+  City: "city",
+  State: "state",
+  "Zip Code": "zipCode",
+  "Is Tax Exempt": "isCorporateFleetTaxExempt",
+  "Is Receive A Discount?": "shouldReceiveDiscount"
+};

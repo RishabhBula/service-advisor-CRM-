@@ -315,7 +315,7 @@ export class CrmWelcomeModel extends Component {
                   <Col md="6">
                     <FormGroup>
                       <Label htmlFor="name" className="font-text">
-                        Company Name
+                        Company Name <span className="asteric">*</span> 
                       </Label>
                       <div className={"input-block"}>
                         <Input
@@ -327,7 +327,7 @@ export class CrmWelcomeModel extends Component {
                           invalid={errors.companyName}
                         />
                         {!companyName && errors.companyName ? (
-                          <p className="text-danger">{errors.companyName}</p>
+                          <FormFeedback>{errors.companyName}</FormFeedback>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -336,6 +336,7 @@ export class CrmWelcomeModel extends Component {
                       <Label htmlFor="name" className="font-text">
                         Website (optional)
                       </Label>
+                      <div className={"input-block"}>
                       <Input
                         type="text"
                         placeholder="http://google.com"
@@ -347,6 +348,7 @@ export class CrmWelcomeModel extends Component {
                       <FormFeedback>
                         {errors.website ? errors.website : null}
                       </FormFeedback>
+                      </div>
                     </FormGroup>
                   </Col>
                   <Col md="6">
@@ -449,8 +451,8 @@ export class CrmWelcomeModel extends Component {
                 </Row>
               </div>
               <div className="pb-3">
-                <h4 className="pb-2 section-head">
-                  2. How many people work in your shop?
+                <h4 className="pb-2 section-head position-relative">
+                  2. How many people work in your shop? <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -467,7 +469,7 @@ export class CrmWelcomeModel extends Component {
                         >
                           <div className="welcome-service-text">{item}</div>
                           <span className="check-icon">
-                            <i class="fa fa-check-circle" />
+                            <i className="fa fa-check-circle" />
                           </span>
                         </div>
                       );
@@ -479,8 +481,8 @@ export class CrmWelcomeModel extends Component {
                 </div>
               </div>
               <div className="pb-3">
-                <h4 className="pb-2 section-head">
-                  3. What kinds of services do you offer?
+                <h4 className="pb-2 section-head position-relative">
+                  3. What kinds of services do you offer? <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -509,7 +511,7 @@ export class CrmWelcomeModel extends Component {
                             </div>
                           </div>
                           <span className="check-icon">
-                            <i class="fa fa-check-circle" />
+                            <i className="fa fa-check-circle" />
                           </span>
                         </div>
                       );
@@ -521,8 +523,8 @@ export class CrmWelcomeModel extends Component {
                 </div>
               </div>
               <div className="pb-3">
-                <h4 className="pb-2 section-head">
-                  4. What types of vehicles do you service?
+                <h4 className="pb-2 section-head position-relative">
+                  4. What types of vehicles do you service? <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -547,7 +549,7 @@ export class CrmWelcomeModel extends Component {
                               </div>
                             </div>
                             <span className="check-icon">
-                              <i class="fa fa-check-circle" />
+                              <i className="fa fa-check-circle" />
                             </span>
                           </div>
                         );

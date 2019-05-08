@@ -31,6 +31,13 @@ export const vendorsReducer = handleActions(
         data: {}
       }
     }),
+    [vendorActions.DELETE_VENDOR]: (state, action) => ({
+      ...state,
+      vendorData: {
+        isSuccess: true,
+        data: {}
+      }
+    }),
   },
   initialState
 )

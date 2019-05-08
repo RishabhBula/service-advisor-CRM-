@@ -15,8 +15,9 @@ import {
 import Validator from "js-object-validation";
 import { VendorValidations, VendorValidationMessage } from "../../validations/inventoryVendor";
 import { PhoneOptions } from "../../config/Constants";
-import MaskedInput from "react-maskedinput";
-import { isValidURL } from "../../helpers/Object"
+import MaskedInput from "react-text-mask";
+import { isValidURL } from "../../helpers/Object";
+import LastUpdated from "../common/LastUpdated";
 
 export class CrmInventoryVendor extends Component {
 
@@ -43,16 +44,20 @@ export class CrmInventoryVendor extends Component {
         zip: ''
       },
       errors: {},
-      urlErros:''
+      urlError: ''
     }
   }
 
   componentDidUpdate = ({ vendorAddModalOpen, vendorData }) => {
+    if (vendorAddModalOpen !== this.props.vendorAddModalOpen && !this.props.vendorData) {
+      this.resetState();
+    }
+
     if (
       this.props.vendorData && this.props.vendorData._id &&
       (vendorData._id !== this.props.vendorData._id)
-    ){
-      
+    ) {
+
       const {
         name,
         accountNumber,
@@ -62,7 +67,7 @@ export class CrmInventoryVendor extends Component {
       } = this.props.vendorData
 
       this.setState({
-        isEditMode :true,
+        isEditMode: true,
         name,
         accountNumber,
         url,
@@ -71,10 +76,34 @@ export class CrmInventoryVendor extends Component {
       })
     }
   }
+  resetState = () => {
+    this.setState({
+      name: '',
+      accountNumber: '',
+      url: '',
+      contactPerson: {
+        firstName: '',
+        email: '',
+        lastName: '',
+        phoneNumber: {
+          phone: 'mobile',
+          value: ''
+        }
+      },
+      address: {
+        address: '',
+        city: '',
+        state: '',
+        zip: ''
+      },
+      errors: {},
+      urlError: '',
+    });
+  }
 
   handleChange = (label, event) => {
     const { name, value } = event.target;
-    if ((name === "accountNumber" && isNaN(value)) || (name === "zip" && isNaN(value)) ){
+    if ((name === "accountNumber" && isNaN(value)) || (name === "zip" && isNaN(value))) {
       return
     }
     if (label !== '') {
@@ -98,14 +127,26 @@ export class CrmInventoryVendor extends Component {
     }
 
   }
-  handlePhoneNameChange = (event) => {
-    const { name, value } = event.target;
+  handlePhoneValueChange = (event) => {
+    const { value } = event.target;
     this.setState({
       contactPerson: {
         ...this.state.contactPerson,
         phoneNumber: {
-          ...this.state.contactPerson.phoneNumber,      
-          [name]: value
+          ...this.state.contactPerson.phoneNumber,
+          value: value
+        }
+      }
+    })
+  }
+  handlePhoneNameChange = (event) => {
+    const { value } = event.target;
+    this.setState({
+      contactPerson: {
+        ...this.state.contactPerson,
+        phoneNumber: {
+          value: "",
+          phone: value
         }
       }
     })
@@ -123,12 +164,12 @@ export class CrmInventoryVendor extends Component {
     } = this.state;
     let validData
     if (contactPerson.email !== '') {
-       validData = {
+      validData = {
         name: name,
         accountNumber: accountNumber,
         email: contactPerson.email
       }
-    }else{
+    } else {
       validData = {
         name: name,
         accountNumber: accountNumber,
@@ -136,12 +177,12 @@ export class CrmInventoryVendor extends Component {
     }
     if (url && !isValidURL(url)) {
       this.setState({
-        urlErros: "invalid URL"
+        urlError: "Please enter Valid URL( http:// )"
       })
     }
     else {
       this.setState({
-        urlErros: ""
+        urlError: ""
       })
     }
     const data = {
@@ -153,19 +194,19 @@ export class CrmInventoryVendor extends Component {
     }
     try {
       const { isValid, errors } = Validator(validData, VendorValidations, VendorValidationMessage);
-      if (!isValid ) {
+      if (!isValid || (url && !isValidURL(url))) {
         this.setState({
           errors: errors,
           isLoading: false
         });
-        console.log(errors)
+
         return;
-      } 
+      }
       if (!isEditMode) {
         this.props.addVendor(data);
       }
       const vendorId = this.props.vendorData._id
-      this.props.updateVendor(vendorId,data);
+      this.props.updateVendor(vendorId, data);
 
     } catch (error) {
       console.log(error)
@@ -173,6 +214,7 @@ export class CrmInventoryVendor extends Component {
   };
 
   render() {
+    const { vendorData } = this.props;
     const {
       isEditMode,
       name,
@@ -181,12 +223,9 @@ export class CrmInventoryVendor extends Component {
       contactPerson,
       address,
       errors,
-      urlErros
+      urlError
     } = this.state;
-    const phoneOptions = PhoneOptions.map((item, index) => {
-      return <option key={index} value={item.key}>{item.text}</option>;
-    });
-    
+    const phoneOptions = PhoneOptions.map((item, index) => <option key={index} value={item.key}>{item.text}</option>);
     return (
       <>
         <Modal
@@ -196,15 +235,17 @@ export class CrmInventoryVendor extends Component {
           className='customer-modal custom-form-modal custom-modal-lg'
         >
           <ModalHeader toggle={this.props.handleVendorAddModal}>
-            {!isEditMode ? 'Create New Vendor' : `Update Vendor`}
+            {!isEditMode ? 'Create New Vendor' : `Update Vendor Details`}
+            {isEditMode ? <LastUpdated updatedAt={vendorData.updatedAt} /> : null}
           </ModalHeader>
           <ModalBody>
             <div className=''>
+              <h5 className={"section-divid-head head-top"}>Vendor Details</h5>
               <Row className='justify-content-center'>
                 <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
-                      Name <span className={"asteric"}>*</span>
+                      Vendor Name <span className={"asteric"}>*</span>
                     </Label>
                     <div className={'input-block'}>
                       <Input
@@ -213,7 +254,7 @@ export class CrmInventoryVendor extends Component {
                         onChange={
                           (e) => this.handleChange('', e)
                         }
-                        placeholder='Vendor Name'
+                        placeholder='Bosch'
                         value={name}
                         maxLength='50'
                         id='name'
@@ -228,7 +269,7 @@ export class CrmInventoryVendor extends Component {
                 <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
-                      URL
+                     Vendor URL
                     </Label>
                     <div className={'input-block'}>
                       <Input
@@ -238,10 +279,10 @@ export class CrmInventoryVendor extends Component {
                         placeholder='http://google.com'
                         value={url}
                         id='name'
-                        invalid={urlErros}
+                        invalid={urlError && url}
                       />
                       <FormFeedback>
-                        {urlErros && url ? urlErros : null}
+                        {urlError && url ? urlError : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -258,7 +299,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='accountNumber'
                         onChange={(e) => this.handleChange('', e)}
-                        placeholder='Accoutn Number'
+                        placeholder='898989898998'
                         value={accountNumber}
                         maxLength='20'
                         id='accountNumber'
@@ -271,7 +312,7 @@ export class CrmInventoryVendor extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <h5>Contact Person</h5>
+              <h5 className={"section-divid-head"}>Contact Person</h5>
               <Row>
                 <Col md='6'>
                   <FormGroup>
@@ -283,7 +324,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='firstName'
                         onChange={(e) => this.handleChange('contactPerson', e)}
-                        placeholder='First Name'
+                        placeholder='John'
                         value={contactPerson.firstName}
                         maxLength='35'
                         id='name'
@@ -302,7 +343,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='lastName'
                         onChange={(e) => this.handleChange('contactPerson', e)}
-                        placeholder='Last Name'
+                        placeholder='Deo'
                         value={contactPerson.lastName}
                         maxLength='35'
                         id='name'
@@ -326,7 +367,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='email'
                         onChange={(e) => this.handleChange('contactPerson', e)}
-                        placeholder='Email'
+                        placeholder='john@gmail.com'
                         value={contactPerson.email}
                         id='email'
                         invalid={errors.email}
@@ -339,27 +380,28 @@ export class CrmInventoryVendor extends Component {
                 </Col>
                 <Col md='6'>
                   <FormGroup className={"phone-number-feild"}>
-                    <Label htmlFor='name' className='customer-modal-text-style'>
+                    <Label htmlFor='contactPhone' className='customer-modal-text-style'>
                       Phone Number
                     </Label>
                     <Input
-                      onChange={e =>
-                        this.handlePhoneNameChange(e)
-                      }
+                      onChange={this.handlePhoneNameChange}
                       type="select"
                       name="phone"
                       value={contactPerson.phoneNumber.phone}
-                      id="name"
+                      id="contactPhone"
                     >
                       {phoneOptions}
                     </Input>
                     <div className={'input-block'}>
                       <MaskedInput
-                        mask="(111) 111-111"
+                        mask={contactPerson.phoneNumber.phone === "mobile" ? ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/] : ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+                        // "(111) 111-111 ext 1111"
+                        placeholder={contactPerson.phoneNumber.phone === "mobile" ? "(555) 055-0555" : "(555) 055-0555 ext 1234"}
                         name='value'
-                        onChange={(e) => this.handlePhoneNameChange(e)}
-                        placeholder="(555) 055-0555"
-                        value={contactPerson.phoneNumber.value}
+                        maxLength={contactPerson.phoneNumber.phone === "mobile" ? 13 : 22}
+                        guide={false}
+                        onChange={this.handlePhoneValueChange}
+                        value={contactPerson.phoneNumber.value || null}
                         className={"form-control"}
                         size='20'
                         id='phoneNumber'
@@ -373,7 +415,7 @@ export class CrmInventoryVendor extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <h5>Address</h5>
+              <h5 className={"section-divid-head"}>Address</h5>
               <Row>
                 <Col md='6'>
                   <FormGroup>
@@ -385,7 +427,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='address'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='Address'
+                        placeholder='19 High Noon,West Babylon'
                         value={address.address}
                         maxLength='250'
                         id='address'
@@ -403,7 +445,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='city'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='City'
+                        placeholder='New York'
                         value={address.city}
                         maxLength='35'
                         id='city'
@@ -423,7 +465,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='state'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='State'
+                        placeholder='NY'
                         value={address.state}
                         maxLength='35'
                         id='name'
@@ -441,7 +483,7 @@ export class CrmInventoryVendor extends Component {
                         type='text'
                         name='zip'
                         onChange={(e) => this.handleChange('address', e)}
-                        placeholder='Zip'
+                        placeholder='10009'
                         value={address.zip}
                         maxLength='5'
                         id='name'
@@ -453,14 +495,16 @@ export class CrmInventoryVendor extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <div className="required-fields">*Fields are Required.</div>
+            <div className={"flex-1"}>
+              <div className="required-fields">*Fields are Required.</div>
+            </div>
             <Button
               color='primary'
               onClick={this.handleAddVendor}
             >
-              {!isEditMode ? "Add New Vendor " : "Edit Vendor"}
+              {!isEditMode ? "Add New Vendor " : "Update Vendor"}
             </Button>{' '}
-            <Button color='secondary' >
+            <Button color='secondary' onClick={this.props.handleVendorAddModal}>
               Cancel
             </Button>
           </ModalFooter>

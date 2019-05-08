@@ -32,7 +32,7 @@ const createCustomer = async (req, res) => {
       permission: body.permission,
       parentId: body.parentId,
       userId: body.userId,
-      status: true
+      status: true,
     };
 
     let result = await customerModel(cusomerData).save();
@@ -96,8 +96,8 @@ const getAllCustomerList = async (req, res) => {
     let condition = {};
     const id = currentUser.id;
     const parentId = currentUser.parentId || currentUser.id;
-    if (status) {
-      condition.status = status;
+    if (typeof status != "undefined") {
+      condition.status = parseInt(status) === 1 ? true : false;
     }
     condition["$and"] = [
       {
@@ -148,6 +148,7 @@ const getAllCustomerList = async (req, res) => {
         }
       ])
       .collation({ locale: "en" })
+      .allowDiskUse(true)
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
@@ -216,10 +217,12 @@ const updateCustomerdetails = async (req, res) => {
         success: false
       });
     } else {
+      const today = new Date();
       const updateCustomerDetails = await customerModel.findByIdAndUpdate(
         body.data.customerId,
         {
-          $set: body.data
+          $set: body.data,
+          updatedAt: today
         }
       );
       if (!updateCustomerDetails) {
@@ -273,11 +276,25 @@ const updateStatus = async ({ body }, res) => {
     });
   }
 };
-
+const bulkCustomerAdd = async (req, res) => {
+  const { body } = req;
+  var i,
+    j,
+    temparray,
+    chunk = 500;
+  for (i = 0, j = body.length; i < j; i += chunk) {
+    temparray = body.slice(i, i + chunk);
+    customerModel.insertMany(temparray);
+  }
+  res
+    .status(200)
+    .json({ message: `${body.length} records added successfully!` });
+};
 module.exports = {
   createCustomer,
   getAllCustomerList,
   deleteCustomer,
   updateCustomerdetails,
-  updateStatus
+  updateStatus,
+  bulkCustomerAdd
 };
