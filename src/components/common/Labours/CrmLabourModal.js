@@ -303,7 +303,7 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Note
                     </Label>
-                    <Input className={"form-control"} maxLength="1000" id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} placeholder={"Note"} />
+                    <Input className={"form-control"} maxLength="200" id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} placeholder={"Note"} />
                   </FormGroup>
                 </Col>
 

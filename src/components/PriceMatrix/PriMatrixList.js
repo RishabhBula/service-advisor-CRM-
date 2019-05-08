@@ -20,7 +20,6 @@ class PriMatrixList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search } = qs.parse(lSearch);
-    logger(search, "!!!!!!!!!!!!!!!!!!")
     this.setState({
       page: parseInt(page) || 1,
       search: search || "",
@@ -134,7 +133,7 @@ class PriMatrixList extends Component {
         <Table responsive className={"matrix-table"}>
           <thead>
             <tr>
-              <th className={"text-center"}>S No.</th>
+              <th className={"text-center"} width={"60"}>S No.</th>
               <th width={"320"}>Matrix Name</th>
               <th width={"550"} colSpan={"3"} >
               <div className={"d-flex matrix-range-th"}>

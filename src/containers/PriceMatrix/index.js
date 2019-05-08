@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardHeader, CardBody, Row, Col, Button, UncontrolledTooltip } from "reactstrap";
+import { Card, CardBody,Button, UncontrolledTooltip } from "reactstrap";
 import PriceMatrixComponent from "../../components/PriceMatrix/AddEdit";
 import PriMatrixList from "../../components/PriceMatrix/PriMatrixList";
 import { logger } from "../../helpers/Logger";

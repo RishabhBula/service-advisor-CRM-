@@ -1,17 +1,17 @@
 export const ColorOptions = [
-  { color: "#FFFFFF", label: "White", value: "white" },
+  { color: "#F2F2F2", label: "White", value: "white" },
   { color: "#EFEFEF", label: "Silver", value: "silver" },
   { color: "#7E7E7E", label: "Gray", value: "gray" },
   { color: "#000000", label: "Black", value: "black" },
   { color: "#006090", label: "Blue", value: "blue" },
   { color: "#EB0018", label: "Red", value: "red" },
   { color: "#513911", label: "Brown", value: "brown" },
-  { color: "#840026", label: "Burgundy", value: "burgundy" },
+  { color: "#8E062D", label: "Burgundy", value: "burgundy" },
   { color: "#FFF6E6", label: "Tan", value: "tan" },
   { color: "#FCF0BF", label: "Gold", value: "gold" },
   { color: "#007520", label: "Green", value: "green" },
   { color: "#FFC63B", label: "Yellow", value: "yellow" },
-  { color: "#FFC63B", label: "Orange", value: "orange" },
+  { color: "#FF8E3B", label: "Orange", value: "orange" },
   { color: "#FC629B", label: "Pink", value: "pink" },
   { color: "#3D1D8E", label: "Purpule", value: "purple" },
   { color: "#E2E9EB", label: "Other", value: "other" }
@@ -51,20 +51,9 @@ export const carsOptions = [
   { value: "wagon", label: "Wagon", color: "#00875A", icons: "wagon.svg" }
 ];
 
-export const otherCarsOptions = [
-  { value: "vanilla", label: "Vanilla", rating: "safe" },
-  { value: "chocolate", label: "Chocolate", rating: "good" },
-  { value: "strawberry", label: "Strawberry", rating: "wild" },
-  { value: "salted-caramel", label: "Salted Caramel", rating: "crazy" }
-];
-
 export const groupedOptions = [
   {
     label: "Cars",
     options: carsOptions
-  },
-  {
-    label: "Other",
-    options: otherCarsOptions
   }
 ];

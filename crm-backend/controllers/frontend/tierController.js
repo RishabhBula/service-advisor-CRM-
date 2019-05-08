@@ -33,6 +33,11 @@ const createNewTier = async (req, res) => {
         element.margin ||
         element.baseInfo
       ) {
+        try {
+          element.priceMatrix = mongoose.Types.ObjectId(element.priceMatrix);
+        } catch (error) {
+          delete element.priceMatrix;
+        }
         tireSizeArray.push(element);
       }
     }
@@ -97,9 +102,11 @@ const updateTierdetails = async (req, res) => {
       }
     }
     await tierModel.findByIdAndUpdate(mongoose.Types.ObjectId(body.id), {
-      $set: body.data,
-      updatedAt: today,
-      tierSize: tireSizeArray
+      $set: {
+        ...body.data,
+        updatedAt: today,
+        tierSize: tireSizeArray
+      }
     });
     return res.status(200).json({
       responsecode: 200,

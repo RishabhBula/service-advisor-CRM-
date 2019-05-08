@@ -3,8 +3,12 @@ import { Pie } from "react-chartjs-2";
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
+import { ConvertToShortenNumber } from "../../helpers/Currency";
 
 class InventoryStats extends Component {
+  componentDidMount() {
+    this.props.getInventoryStats();
+  }
   renderValueChart = () => {
     const { inventoryStats } = this.props;
     const { value } = inventoryStats;
@@ -33,7 +37,7 @@ class InventoryStats extends Component {
           },
           title: {
             display: true,
-            text: `Total Value(${total})`,
+            text: `Total Value(${ConvertToShortenNumber(total)})`,
             position: "top"
           }
         }}
@@ -46,7 +50,10 @@ class InventoryStats extends Component {
     const { inventoryStats } = this.props;
     const { cost } = inventoryStats;
     const costChart = {
-      labels: [`Parts (${cost.parts})`, `Tires (${cost.tires})`],
+      labels: [
+        `Parts (${ConvertToShortenNumber(cost.parts)})`,
+        `Tires (${ConvertToShortenNumber(cost.tires)})`
+      ],
       datasets: [
         {
           data: [cost.parts, cost.tires],
@@ -70,7 +77,7 @@ class InventoryStats extends Component {
           },
           title: {
             display: true,
-            text: `Total Cost(${total})`,
+            text: `Total Cost(${ConvertToShortenNumber(total)})`,
             position: "top"
           }
         }}
@@ -83,7 +90,10 @@ class InventoryStats extends Component {
     const { inventoryStats } = this.props;
     const { quantity } = inventoryStats;
     const quantityChart = {
-      labels: [`Parts (${quantity.parts})`, `Tires (${quantity.tires})`],
+      labels: [
+        `Parts (${ConvertToShortenNumber(quantity.parts)})`,
+        `Tires (${ConvertToShortenNumber(quantity.tires)})`
+      ],
       datasets: [
         {
           data: [quantity.parts, quantity.tires],
@@ -107,7 +117,7 @@ class InventoryStats extends Component {
           },
           title: {
             display: true,
-            text: `Total Quantity(${total})`,
+            text: `Total Quantity(${ConvertToShortenNumber(total)})`,
             position: "top"
           }
         }}

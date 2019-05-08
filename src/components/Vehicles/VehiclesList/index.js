@@ -242,8 +242,6 @@ class VehiclesList extends Component {
       page,
       search,
       sort,
-      status,
-      selectedVehicles,
       filterApplied
     } = this.state;
 
@@ -270,26 +268,6 @@ class VehiclesList extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  {/* <Label for="exampleSelect" className="label">
-                    Status
-                  </Label> */}
-                  <Input
-                    type="select"
-                    name="status"
-                    id="exampleSelect"
-                    onChange={this.handleChange}
-                    value={status}
-                  >
-                    <option className="form-control" value={""}>
-                      Status
-                    </option>
-                    <option value={1}>Active</option>
-                    <option value={0}>Deactive</option>
-                  </Input>
-                </FormGroup>
-              </Col>
-              <Col lg={"2"} md={"2"} className="mb-0">
-                <FormGroup className="mb-0">
                   {/* <Label for="SortFilter" className="label">
                     Sort By
                   </Label> */}
@@ -304,8 +282,8 @@ class VehiclesList extends Component {
                       Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
-                    <option value={"nasc"}>Name A-Z</option>
-                    <option value={"ndesc"}>Name Z-A</option>
+                    <option value={"nasc"}>Make A-Z</option>
+                    <option value={"ndesc"}>Make Z-A</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -347,8 +325,8 @@ class VehiclesList extends Component {
         <Table responsive>
           <thead>
             <tr>
-              <th width="90px">
-                <div className="table-checkbox-wrap">
+              <th width="60px">
+                {/* <div className="table-checkbox-wrap">
                   {vehicleList && vehicleList.length ? (
                     <span className="checkboxli checkbox-custom checkbox-default">
                       <Input
@@ -361,10 +339,10 @@ class VehiclesList extends Component {
                       <label className="" htmlFor="checkAll" />
                     </span>
                   ) : (
-                    <span className="checkboxli checkbox-custom checkbox-default">
-                      <label />
-                    </span>
-                  )}
+                      <span className="checkboxli checkbox-custom checkbox-default">
+                        <label />
+                      </span>
+                    )}
                   {vehicleList && vehicleList.length ? (
                     <Input
                       className="commonstatus"
@@ -378,20 +356,21 @@ class VehiclesList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   ) : (
-                    <Input
-                      className="commonstatus"
-                      type="select"
-                      id="exampleSelect"
-                      disabled
-                      onChange={this.handleActionChange}
-                    >
-                      <option value={""}>Select</option>
-                      <option value={"active"}>Active</option>
-                      <option value={"inactive"}>Inactive</option>
-                      <option value={"delete"}>Delete</option>
-                    </Input>
-                  )}
-                </div>
+                      <Input
+                        className="commonstatus"
+                        type="select"
+                        id="exampleSelect"
+                        disabled
+                        onChange={this.handleActionChange}
+                      >
+                        <option value={""}>Select</option>
+                        <option value={"active"}>Active</option>
+                        <option value={"inactive"}>Inactive</option>
+                        <option value={"delete"}>Delete</option>
+                      </Input>
+                    )}
+                </div> */}
+                S.No
               </th>
               <th width={"150"}>Type</th>
               {/* <th width={"100"}>Color</th> */}
@@ -426,8 +405,8 @@ class VehiclesList extends Component {
                 vehicleList.map((vehicle, index) => {
                   return (
                     <tr key={index}>
-                      <td>
-                        <div className="checkbox-custom checkbox-default coloum-checkbox">
+                      <td >
+                        {/* <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
                             type="checkbox"
                             value={vehicle._id}
@@ -436,13 +415,10 @@ class VehiclesList extends Component {
                             onChange={this.handleCheckboxChnage}
                           />
                           <label htmlFor={vehicle._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                           </label>
-                        </div>
+                        </div> */}
+                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
-                      {/* <td>
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
-                      </td> */}
                       <td>
                         <div className={"vehicle-type-img"}>
                           <VehicleIcons
@@ -529,34 +505,34 @@ class VehiclesList extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Vehicle details found related to your search"
+                          }
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={
+                              "Currently there are no Vehicle details added."
+                            }
+                            onAddClick={this.props.onAddClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    {filterApplied ? (
-                      <NoDataFound
-                        message={
-                          "No Vehicle details found related to your search"
-                        }
-                        noResult
-                      />
-                    ) : (
-                      <NoDataFound
-                        showAddButton
-                        message={
-                          "Currently there are no Vehicle details added."
-                        }
-                        onAddClick={this.props.onAddClick}
-                      />
-                    )}
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {totalVehicles && !isLoading ? (
