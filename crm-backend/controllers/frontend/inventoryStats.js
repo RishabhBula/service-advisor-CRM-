@@ -34,6 +34,65 @@ const getStats = async (req, res) => {
     ]
   };
   try {
+    const tireCostSum = await Tires.aggregate([
+      { $match: condition },
+      {
+        $unwind: "$tierSize"
+      },
+      {
+        $group: {
+          _id: "tempId",
+          totalValue: {
+            $sum: "$tierSize.cost"
+          }
+        }
+      }
+    ]);
+    const tireRetailSum = await Tires.aggregate([
+      { $match: condition },
+      {
+        $unwind: "$tierSize"
+      },
+      {
+        $group: {
+          _id: "tempId",
+          totalValue: {
+            $sum: "$tierSize.retailPrice"
+          }
+        }
+      }
+    ]);
+    const partCostSum = await Parts.aggregate([
+      { $match: condition },
+      {
+        $unwind: "$cost"
+      },
+      {
+        $group: {
+          _id: "tempId",
+          totalValue: {
+            $sum: "$cost"
+          }
+        }
+      }
+    ]);
+    const partRetailSum = await Parts.aggregate([
+      { $match: condition },
+      {
+        $unwind: "$retailPrice"
+      },
+      {
+        $group: {
+          _id: "tempId",
+          totalValue: {
+            $sum: "$retailPrice"
+          }
+        }
+      }
+    ]);
+    console.log("====================================");
+    console.log(partCostSum);
+    console.log("====================================");
     return res.json({
       data: {
         quantity: {
@@ -41,18 +100,12 @@ const getStats = async (req, res) => {
           tires: await Tires.countDocuments(condition)
         },
         cost: {
-          parts: await Parts.aggregate([
-            { $match: condition },
-            { $project: { $sum: "cost" } }
-          ]),
-          tires: await Tires.countDocuments([
-            { $match: condition },
-            { $project: { $sum: "tierSize.cost" } }
-          ])
+          parts: partCostSum[0] ? partCostSum[0].totalValue : 0,
+          tires: tireCostSum[0] ? tireCostSum[0].totalValue : 0
         },
         value: {
-          parts: await Parts.countDocuments(condition),
-          tires: await Tires.countDocuments(condition)
+          parts: partRetailSum[0] ? partRetailSum[0].totalValue : 0,
+          tires: tireRetailSum[0] ? tireRetailSum[0].totalValue : 0
         }
       }
     });

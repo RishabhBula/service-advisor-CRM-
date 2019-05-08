@@ -14,7 +14,5 @@ export const ConvertToShortenNumber = (inputNumber, currencyIcon) => {
   const scale = Math.pow(10, tier * 3);
   const scaled = inputNumber / scale;
 
-  return (
-    sign + (currencyIcon ? currencyIcon : "") + Math.round(scaled) + suffix
-  );
+  return sign + (currencyIcon ? currencyIcon : "") + scaled.toFixed(2) + suffix;
 };

@@ -27,7 +27,7 @@ import PaginationHelper from "../../../helpers/Pagination";
 import { logger } from "../../../helpers/Logger";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
-import moment from 'moment';
+import moment from "moment";
 import NoDataFound from "../../common/NoFound";
 
 class Parts extends Component {
@@ -69,7 +69,7 @@ class Parts extends Component {
       query.vendorId = qs.parse(vendorId).value;
     }
     this.props.getParts({ ...queryParams, ...query });
-    this.props.getPriceMatrix()
+    this.props.getPriceMatrix();
   }
   componentDidUpdate({ location }) {
     const { location: currentLocation } = this.props;
@@ -235,7 +235,7 @@ class Parts extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                     Filter by
+                      Filter by
                     </option>
                     <option value={"critical"}>Critical Quantity</option>
                     <option value={"ncritical"}>Non-Critical Quantity</option>
@@ -252,7 +252,7 @@ class Parts extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                    Sort By 
+                      Sort By
                     </option>
                     <option value={"qltoh"}>Quantity(Low to High)</option>
                     <option value={"qhtol"}>Quantity(High to High)</option>
@@ -294,7 +294,7 @@ class Parts extends Component {
                             className="btn btn-theme-transparent"
                             id="Tooltip-1"
                           >
-                            <i className="icons cui-magnifying-glass"></i>
+                            <i className="icons cui-magnifying-glass" />
                           </Button>
                           <UncontrolledTooltip target="Tooltip-1">
                             Search
@@ -306,7 +306,7 @@ class Parts extends Component {
                             id="Tooltip-2"
                             onClick={this.onReset}
                           >
-                            <i className="icon-refresh icons"></i>
+                            <i className="icon-refresh icons" />
                           </Button>
                           <UncontrolledTooltip target={"Tooltip-2"}>
                             Reset all filters
@@ -320,20 +320,34 @@ class Parts extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive >
+        <Table responsive>
           <thead>
             <tr>
               <th width={"60px"}>S No.</th>
-              <th width={"200"}><i className="fa fa-gear"></i> Part Description</th>
+              <th width={"200"}>
+                <i className="fa fa-gear" /> Part Description
+              </th>
               {/* <th>Note</th>
               <th>Part number</th> */}
-              <th width={"170"}><i className="fa fa-id-badge"></i> Vendor</th>
-              <th width={"150"}><i className="fa fa-bitbucket"></i> Bin/Location</th>
-              <th width={"200"}><i className="fa fa-dollar"></i> Price</th>
+              <th width={"170"}>
+                <i className="fa fa-id-badge" /> Vendor
+              </th>
+              <th width={"150"}>
+                <i className="fa fa-bitbucket" /> Bin/Location
+              </th>
+              <th width={"200"}>
+                <i className="fa fa-dollar" /> Price
+              </th>
               {/* <th>Retail Price</th> */}
-              <th width={"120"}><i className="fa fa-shopping-basket"></i> Quantity</th>
-              <th width={"120"}><i className="fa fa-clock-o"></i> Created</th>
-              <th className={"text-center"} width={"140"}>Action</th>
+              <th width={"120"}>
+                <i className="fa fa-shopping-basket" /> Quantity
+              </th>
+              <th width={"120"}>
+                <i className="fa fa-clock-o" /> Created
+              </th>
+              <th className={"text-center"} width={"140"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -349,27 +363,43 @@ class Parts extends Component {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td className={"text-capitalize"}>
-                      <div className={"font-weight-bold"}>{part.description || "-"}</div>
-                      {part.partNumber ? <div className={"modal-info"}>Part No. : <Badge>{part.partNumber}</Badge></div> : null}
-                      {part.note ? <span className={"part-note"}>part.note</span> : " "}
+                      <div className={"font-weight-bold"}>
+                        {part.description || "-"}
+                      </div>
+                      {part.partNumber ? (
+                        <div className={"modal-info"}>
+                          Part No. : <Badge>{part.partNumber}</Badge>
+                        </div>
+                      ) : null}
+                      {part.note ? (
+                        <span className={"part-note"}>part.note</span>
+                      ) : (
+                        " "
+                      )}
                     </td>
-                    <td className={"font-weight-bold"}>{part.vendorId ? part.vendorId.name || "-" : "-"}</td>
+                    <td className={"font-weight-bold"}>
+                      {part.vendorId ? part.vendorId.name || "-" : "-"}
+                    </td>
                     <td>{part.location || "-"}</td>
                     <td>
-                      {part.cost ? 
-                        <div className="modal-info">Cost - <span className={"dollar-price"}>
-                        <i class="fa fa-dollar dollar-icon"></i>
-                        {part.cost || " "}
-                        </span>
-                        </div> 
-                      : null }
-                      {part.retailPrice ?
-                        <div className="modal-info">Retail - <span className={"dollar-price"}>
-                          <i class="fa fa-dollar dollar-icon"></i>
-                          {part.retailPrice || " "}
+                      {part.cost ? (
+                        <div className="modal-info">
+                          Cost -{" "}
+                          <span className={"dollar-price"}>
+                            <i className="fa fa-dollar dollar-icon" />
+                            {part.cost || " "}
                           </span>
                         </div>
-                      : null}
+                      ) : null}
+                      {part.retailPrice ? (
+                        <div className="modal-info">
+                          Retail -{" "}
+                          <span className={"dollar-price"}>
+                            <i className="fa fa-dollar dollar-icon" />
+                            {part.retailPrice || " "}
+                          </span>
+                        </div>
+                      ) : null}
                     </td>
                     <td className={"pl-4"}>
                       {part.quantity || 0}&nbsp;
@@ -388,7 +418,7 @@ class Parts extends Component {
                         id={`edit-${part._id}`}
                         className={"btn-theme-transparent"}
                       >
-                        <i className={"icons cui-pencil"}></i>
+                        <i className={"icons cui-pencil"} />
                       </Button>{" "}
                       <UncontrolledTooltip target={`edit-${part._id}`}>
                         Edit details of {part.description}
@@ -409,7 +439,7 @@ class Parts extends Component {
                         id={`delete-${part._id}`}
                         className={"btn-theme-transparent"}
                       >
-                        <i className={"icons cui-trash"}></i>
+                        <i className={"icons cui-trash"} />
                       </Button>
                       <UncontrolledTooltip target={`delete-${part._id}`}>
                         Delete {part.description}
@@ -421,9 +451,18 @@ class Parts extends Component {
             ) : (
               <tr>
                 <td className={"text-center"} colSpan={12}>
-                  {filterApplied ? <NoDataFound message={"No Part details found related to your search"} noResult /> :
-                    <NoDataFound showAddButton message={"Currently there are no Part details added."} onAddClick={onAddClick} />
-                  }
+                  {filterApplied ? (
+                    <NoDataFound
+                      message={"No Part details found related to your search"}
+                      noResult
+                    />
+                  ) : (
+                    <NoDataFound
+                      showAddButton
+                      message={"Currently there are no Part details added."}
+                      onAddClick={onAddClick}
+                    />
+                  )}
                 </td>
               </tr>
             )}
@@ -456,7 +495,7 @@ class Parts extends Component {
 }
 const mapStateToProps = state => ({
   inventoryPartsData: state.inventoryPartsReducers,
-  matrixListReducer: state.matrixListReducer,
+  matrixListReducer: state.matrixListReducer
 });
 const mapDispatchToProps = dispatch => ({
   getParts: params => {
@@ -469,7 +508,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updatePartFromInventory(data));
   },
   getPriceMatrix: data => {
-    dispatch(getMatrixList(data))
+    dispatch(getMatrixList(data));
   }
 });
 export default connect(
