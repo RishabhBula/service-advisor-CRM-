@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   FormGroup,
+  InputGroup,
   Label,
   Input,
   FormFeedback
@@ -294,8 +295,12 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Discount
                     </Label>
-                    <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} placeholder={"Discount"} />
-                    <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
+                    <InputGroup className={"labor-discount"}>
+                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} placeholder={"Discount"} />
+                      <div class="input-group-append">
+                        <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
+                      </div>
+                    </InputGroup>
                   </FormGroup>
                 </Col>
                 <Col md="12">

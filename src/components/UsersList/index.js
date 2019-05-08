@@ -432,7 +432,7 @@ class UserList extends Component {
               {/* <th>Email</th> */}
               <th width={"100"}><i className={"fa fa-dollar"} /> Hourly Rate</th>
               <th width={"100"} className={"text-center"}><i className={"fa fa-user-circle"} /> Role</th>
-              <th>Registered</th>
+              <th><i class="fa fa-clock-o"></i> Created</th>
               <th><i className={"fa fa-sign-in"} /> Last Login Details</th>
               {/* <th>Last Login IP</th> */}
               <th className={"text-center"}><i className={"fa fa-share-alt"} /> Invitation Status</th>

@@ -4,7 +4,7 @@ import {
   Col,
   Input,
   Button,
-  UncontrolledDropdown,
+  UncontrolledTooltip,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
@@ -61,7 +61,7 @@ class PriceMatrixComponent extends Component {
                 <Row>
                   <Col md={"12"} >
                     <div className={"matrix-input"}>
-                    <FormGroup>
+                      <FormGroup className={"matrix-name-input"}>
                         <Label>Matrix Name<span class="asteric">*</span> </Label>
                         <div className={"input-block"}>
                       <Input
@@ -97,7 +97,7 @@ class PriceMatrixComponent extends Component {
                       <th width="250" className={"text-center"}>Cost</th>
                       <th width="250" className={"text-center"}>Markup</th>
                       <th width="250" className={"text-center"}>Margin</th>
-                      <th />
+                      <th className={"text-center"}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -171,12 +171,64 @@ class PriceMatrixComponent extends Component {
                               <td className={"text-center"}>
                                 <div className={"d-flex justify-content-center"}>
                                   <span className={"matrix-drop-down"}>
+                                    {index >= 1 ? (
+                                      <span
+                                        onClick={() =>
+                                          handleAddBelowMatrixRange(
+                                            index,
+                                            "above"
+                                          )
+                                        }
+                                        id={`tooltip-1-${index}`}
+                                      >
+                                      <span className={"icon"}>
+                                        <i className={"fa fa-angle-double-up"}></i>
+                                          <UncontrolledTooltip target={`tooltip-1-${index}`}>
+                                          Add range above
+                                        </UncontrolledTooltip>
+                                      </span>
+                                    </span>
+                                    ) : null}
+
+                                    <span
+                                      onClick={() =>
+                                        handleAddBelowMatrixRange(index, "below")
+                                      }
+                                      id={`tooltip-2-${index+1}`}
+                                    >
+                                      <span className={"icon"}>
+                                      <i className={"fa fa-angle-double-down"}></i> 
+                                        <UncontrolledTooltip target={`tooltip-2-${index+1}`}>
+                                          Add range below
+                                        </UncontrolledTooltip>
+                                      </span>
+                                    </span>
+                                    {index >= 1 ? (
+                                      <span className={"icon"} >
+                                            <span
+                                          className={"btn btn-theme-transparent btn-secondary"}
+                                              size={"sm"}
+                                              onClick={() =>
+                                                handleRemoveMatrixRange(index)
+                                              }
+                                          id={`tooltip-3-${index+1}`}
+                                            >
+                                          <i className="icons cui-trash" />
+                                            </span>
+                                        <UncontrolledTooltip target={`tooltip-3-${index + 1}`}>
+                                          Delete
+                                        </UncontrolledTooltip>
+                                          </span>
+                                        ) : 
+                                    null}
+
+{/* 
                                     <UncontrolledDropdown>
-                                      <DropdownToggle >
+                                       <DropdownToggle >
                                         <i className="fas fa-ellipsis-h" />
-                                      </DropdownToggle>
+                                      </DropdownToggle> 
                                       <DropdownMenu>
-                                        {index >= 1 ? (
+                                         {index >= 1 ? (
                                           <DropdownItem
                                             onClick={() =>
                                               handleAddBelowMatrixRange(
@@ -187,7 +239,7 @@ class PriceMatrixComponent extends Component {
                                           >
                                             Add range above
                                           </DropdownItem>
-                                        ) : null}
+                                        ) : null} 
                                         <DropdownItem
                                           onClick={() =>
                                             handleAddBelowMatrixRange(index, "below")
@@ -209,7 +261,7 @@ class PriceMatrixComponent extends Component {
                                           </DropdownItem>
                                         ) : null}
                                       </DropdownMenu>
-                                    </UncontrolledDropdown>
+                                    </UncontrolledDropdown> */}
                                   </span>
                                 </div>
                               </td>
@@ -221,7 +273,7 @@ class PriceMatrixComponent extends Component {
                       <tr>
                         <td colSpan="5">
                         <Row>
-                          <Col md="6">
+                          <Col md="6" className={"mt-2"}>
                             <span
                               onClick={handleAddMatrixRange}
                               className="customer-add-phone customer-anchor-text customer-click-btn"

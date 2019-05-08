@@ -350,7 +350,7 @@ class PriceMatrix extends Component {
                 onClick={this.handleMatrixModal}
               >
                 <i className={'fa fa-plus'} />
-                &nbsp; Add New
+                &nbsp; Add New Matrix
                 </Button>
               <UncontrolledTooltip target={'add-user'}>
                 Add New price matrix
@@ -362,6 +362,7 @@ class PriceMatrix extends Component {
               addNewMatrix={() => this.resetAll(true)}
               handleMatrixDelete={this.handleMatrixDelete}
               onSearch={this.onSearch}
+              onClick={this.toggleMatrixModal}
             />
           </CardBody>
         </Card>

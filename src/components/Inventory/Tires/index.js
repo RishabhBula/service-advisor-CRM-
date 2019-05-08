@@ -460,7 +460,7 @@ class Tires extends Component {
                       <option value={'delete'}>Delete</option>
                     </Input>}
                 </div> */}
-                Sno.
+                S No.
               </th>
               <th width={"280"}><i className="fa fa-cube"></i> Brand Info</th>
               <th width={"200"}><i className="fa fa-life-saver"></i> Size</th>
