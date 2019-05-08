@@ -242,8 +242,6 @@ class VehiclesList extends Component {
       page,
       search,
       sort,
-      status,
-      selectedVehicles,
       filterApplied
     } = this.state;
 
