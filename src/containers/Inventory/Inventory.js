@@ -102,7 +102,6 @@ class Inventory extends Component {
         activeTab: index
       });
     }
-    this.props.getInventoryStats();
   }
 
   componentDidUpdate({ location }) {
