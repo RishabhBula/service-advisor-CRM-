@@ -394,7 +394,7 @@ class VehiclesList extends Component {
                 </div>
               </th>
               <th width={"150"}>Type</th>
-              <th width={"100"}>Color</th>
+              {/* <th width={"100"}>Color</th> */}
               <th width={"90"}>
                 <i className={"fa fa-calendar"} /> Year
               </th>
@@ -453,7 +453,7 @@ class VehiclesList extends Component {
                         </div>
                         {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
-                      <td>
+                      {/* <td>
                         {vehicle.color ? (
                           <span
                             style={{
@@ -471,7 +471,7 @@ class VehiclesList extends Component {
                         ) : (
                           "None"
                         )}
-                      </td>
+                      </td> */}
                       <td>{vehicle.year}</td>
                       <td className={"text-capitalize"}>{vehicle.make}</td>
                       <td className={"text-capitalize"}>{vehicle.modal}</td>

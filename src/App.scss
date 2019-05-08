@@ -360,4 +360,29 @@ body {
   .dropzone-error {
     border: 1px solid red;
   }
+
+  /*==============Form Select=============*/
+
+    .form-select-theme__control--is-focused{
+      border-color: #a6a7a7 !important;
+      box-shadow: none;
+    }
+    .form-select-theme__value-container{
+      height: 29px;
+    }
+    .form-select-theme__indicators{
+      height: 29px;
+    }
+    .form-select-theme__dropdown-indicator{
+      padding: 4px;
+    }
+    .form-select-theme__menu{
+      top: 25px !important;
+    }
+
+    /*===========Swith css==============*/
+    .switch-primary .switch-input:checked + .switch-slider{
+      background-color: #7852ea;
+      border-color: #7853eb;
+    }
 }

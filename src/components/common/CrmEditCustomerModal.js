@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   FormGroup,
+  InputGroup,
   Label,
   Input,
   FormFeedback
@@ -280,11 +281,11 @@ export class CrmEditCustomerModal extends Component {
     }
   };
 
-  handleExpandForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm
-    });
-  };
+  // handleExpandForm = () => {
+  //   this.setState({
+  //     expandForm: !this.state.expandForm
+  //   });
+  // };
 
   handleInputChange = e => {
     const { target } = e;
@@ -844,7 +845,8 @@ export class CrmEditCustomerModal extends Component {
                       defaultValue={{ label: "Select..", value: "" }}
                       value={selectedOption}
                       onChange={this.handleChange}
-                      className="w-100 form-select"
+                      className={"w-100 form-select"}
+                      classNamePrefix={"form-select-theme"} 
                       isClearable={selectedOption.value !== "" ? true : false}
                       options={options}
                     />
@@ -852,7 +854,7 @@ export class CrmEditCustomerModal extends Component {
                 </Col>
               </Row>
             </div>
-            <div className="">
+            {/* <div className="">
               <Row className="justify-content-center">
                 <div>
                   {!expandForm ? (
@@ -868,9 +870,9 @@ export class CrmEditCustomerModal extends Component {
                     )}
                 </div>
               </Row>
-            </div>
-            {expandForm ? (
-              <>
+            </div> */}
+            {/* {expandForm ? (
+              <> */}
                 <div className="">
                   <Row className="">
                     <Col md="6">
@@ -1040,11 +1042,12 @@ export class CrmEditCustomerModal extends Component {
                                   Percent Discount
                                   </Label>
                                 <FormGroup className={"mb-2"}>
+                                  <InputGroup>
                                   <Col md="5" className={"p-0"}>
-                                    <MaskedInput
-                                      mask="11\.11 \%"
+                                    <Input
+                                      // mask="11\.11 \%"
                                       name="percentageDiscount"
-                                      size="20"
+                                        maxLength="5"
                                       onChange={this.handlePercentageChange}
                                       className="form-control"
                                       value={
@@ -1055,6 +1058,12 @@ export class CrmEditCustomerModal extends Component {
                                       placeholder="00.00%"
                                     />
                                   </Col>
+                                    <div className="input-group-append">
+                                      <span className="input-group-text">
+                                        <i className="fa fa-percent"></i>
+                                      </span>
+                                    </div>
+                                  </InputGroup>
                                 </FormGroup>
                               </div>
                             ) : null}
@@ -1102,7 +1111,7 @@ export class CrmEditCustomerModal extends Component {
                     })
                     : null}
 
-                  {expandForm ? (
+                  {/* {expandForm ? (
                     <Col md="12 text-center">
                       <span
                         onClick={this.handleExpandForm}
@@ -1112,12 +1121,12 @@ export class CrmEditCustomerModal extends Component {
                         Show Less{" "}
                       </span>
                     </Col>
-                  ) : null}
+                  ) : null} */}
                 </Row>
-              </>
+              {/* </>
             ) : (
                 ""
-              )}
+              )} */}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}

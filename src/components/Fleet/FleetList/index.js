@@ -415,20 +415,20 @@ class FleetList extends Component {
                       </td>
                       <td>
                         <div className={"text-capitalize font-weight-bold"}>{data.companyName || "-"}</div>
-                        <div>{data.email || null}</div>
+                        <div>{data.email ? <a href={`mailto:${data.email}`} className={"text-body"}>{data.email}</a> : null}</div>
                       </td>
                       <td>
                       <div>
                         {data.phoneDetail ?
                         data.phoneDetail.map((data, index) => {
                           return (
-                            <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value || "-"}</div>
+                            <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : null}</div>
                           )
                         }) : "-"}
                         </div>
                       </td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td className={"pl-4"}><span className={"qty-value"}>0</span></td>
+                      <td className={"pl-4 qty-value"}><span className={"qty-value"}>0</span></td>
                       {/* <td >
                         <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
                       </td> */}

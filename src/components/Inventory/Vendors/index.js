@@ -301,9 +301,9 @@ class Vendors extends Component {
                             : null}
                         </div>
                         {vendor.contactPerson.email
-                          ? vendor.contactPerson.email
+                          ? <a href={`mailto:${vendor.contactPerson.email}`} className={"text-body"}> {vendor.contactPerson.email}</a>
                           : null}
-                        <div className={"text-capitalize"}>
+                        <div className={"text-capitalize dfsd"}>
                           {vendor.contactPerson.phoneNumber &&
                           vendor.contactPerson.phoneNumber.phone &&
                           vendor.contactPerson.phoneNumber.value !== ""
@@ -318,7 +318,7 @@ class Vendors extends Component {
                           )}
                           {vendor.contactPerson.phoneNumber &&
                           vendor.contactPerson.phoneNumber.value
-                            ? vendor.contactPerson.phoneNumber.value
+                            ? <a href={`tel:${vendor.contactPerson.phoneNumber.value}`} className={"text-body"}>{vendor.contactPerson.phoneNumber.value}</a>
                             : null}
                         </div>
                       </td>
@@ -350,7 +350,7 @@ class Vendors extends Component {
                           <i className={"icons cui-pencil"} />
                         </Button>
                         <UncontrolledTooltip target={`edit-${vendor._id}`}>
-                          Edit details of {vendor.name}
+                          Edit
                         </UncontrolledTooltip>
                         &nbsp;
                         <Button
@@ -362,7 +362,7 @@ class Vendors extends Component {
                           <i className={"icons cui-trash"} />
                         </Button>
                         <UncontrolledTooltip target={`delete-${vendor._id}`}>
-                          Delete {vendor.firstName}
+                          Delete
                         </UncontrolledTooltip>
                       </td>
                     </tr>

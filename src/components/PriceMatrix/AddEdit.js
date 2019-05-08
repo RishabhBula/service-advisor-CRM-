@@ -16,6 +16,8 @@ import {
   ModalHeader,
   ModalFooter
 } from "reactstrap";
+import LastUpdated from "../common/LastUpdated";
+
 class PriceMatrixComponent extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,7 @@ class PriceMatrixComponent extends Component {
       matrixName,
       handleChange,
       errors,
+      updateDate,
       isEditMatrix,
       handleMatrixDelete,
       addNewMatrix,
@@ -50,7 +53,10 @@ class PriceMatrixComponent extends Component {
               backdrop={"static"}
               className="customer-modal custom-form-modal custom-modal-lg"
             >
-              <ModalHeader toggle={handleMatrixModal}>{!isEditMatrix ? "Add New Pricing Matrix": "Update Pricing Matrix"}</ModalHeader>
+              <ModalHeader toggle={handleMatrixModal}>
+                {!isEditMatrix ? "Add New Pricing Matrix": "Update Pricing Matrix"}
+                {isEditMatrix ? <LastUpdated updatedAt={updateDate} /> : null}
+              </ModalHeader>
               <ModalBody>
 
                 <Row>

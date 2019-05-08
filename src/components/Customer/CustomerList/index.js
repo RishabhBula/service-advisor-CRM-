@@ -375,7 +375,8 @@ class CustomerList extends Component {
                       </td>
                       <td>
                         <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || "-"}</div>
-                        <div>{user.email || null}</div>
+                        <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> :  null}</div>
+                        {/* {user.email || null} */}
                       </td>
                       <td>
                         {user.phoneDetail
@@ -385,7 +386,7 @@ class CustomerList extends Component {
                                   {data.phone || "NA"}
                                   {" |"}
                                   {"  "}
-                                  {data.value || "NA"}
+                                  {data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : "NA"}
                                 </div>
                               );
                             })
@@ -395,12 +396,12 @@ class CustomerList extends Component {
                         {user.address1 || ""} {user.city || ""}{" "}
                         {user.state || ""} {user.zipCode || ""}{" "}
                       </td> */}
-                      <td>
+                      <td className={"pl-4"}>
                         {user.vehicles && user.vehicles.length
-                          ? user.vehicles.length
-                          : 0}
+                          ? <span className={"qty-value"}>{user.vehicles.length}</span>
+                          : <span className={"qty-value"}>0</span>}
                       </td>
-                      <td>0</td>
+                      <td className={"pl-4"}><span className={"qty-value"}>0</span></td>
                       <td>
                         {user.status ? (
                           <Badge

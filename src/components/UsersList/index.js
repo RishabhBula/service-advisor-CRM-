@@ -464,10 +464,10 @@ class UserList extends Component {
                         <div className={"text-capitalize font-weight-bold"}>
                           {[user.firstName, user.lastName].join(" ").trim()}
                         </div>
-                        <div>{user.email || "-"}</div>
+                        <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : "-"} </div>
                       </td>
                       <td>
-                        {user.rate ? ["$", user.rate.toFixed(2)].join("") : "-"}
+                        {user.rate ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
                       </td>
                       <td className={"text-center text-capitalize"}>
                         {user.roleType ? user.roleType.userType : "-"}
@@ -477,7 +477,7 @@ class UserList extends Component {
                       </td>
                       <td>
                         <div>{user.loggedInAt ? formateDate(user.loggedInAt) : "-"}</div>
-                        <div>{user.loggedInIp || "-"}</div>
+                        <div>{user.loggedInIp || " "}</div>
                       </td>
                       <td className={"text-center"}>
                         {user.userSideActivation ? (
@@ -533,7 +533,7 @@ class UserList extends Component {
                           <i className={"icons cui-pencil"} />
                         </Button>{" "}
                         <UncontrolledTooltip target={`edit-${user._id}`}>
-                          Edit details of {user.firstName}
+                          Edit
                         </UncontrolledTooltip>
                         &nbsp;
                         <Button
@@ -554,7 +554,7 @@ class UserList extends Component {
                           <i className={"icons cui-trash"} />
                         </Button>
                         <UncontrolledTooltip target={`delete-${user._id}`}>
-                          Delete {user.firstName}
+                          Delete 
                         </UncontrolledTooltip>
                       </td>
                     </tr>

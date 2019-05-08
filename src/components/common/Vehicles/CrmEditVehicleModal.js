@@ -426,6 +426,7 @@ export class CrmEditVehicleModal extends Component {
                     className="w-100 form-select"
                     onChange={this.handleType}
                     value={typeSelected}
+                    classNamePrefix={"form-select-theme"}
                   />
                   {!typeSelected && errors.type ? (
                     <p className="text-danger">{errors.type}</p>
@@ -464,6 +465,7 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this.handleColor}
                     options={this.state.colorOptions}
                     className="w-100 form-select"
+                    classNamePrefix={"form-select-theme"}
                     placeholder={"Pick a color"}
                     isClearable={true}
                     components={{ Option: CustomOption }}
@@ -548,7 +550,7 @@ export class CrmEditVehicleModal extends Component {
                 ""
               )}
             </Row>
-            <Row className="justify-content-center">
+            {/* <Row className="justify-content-center">
               <Col md="12 text-center">
                 {!expandForm ? (
                   <span
@@ -561,9 +563,9 @@ export class CrmEditVehicleModal extends Component {
                   ""
                 )}
               </Col>
-            </Row>
-            {expandForm ? (
-              <>
+            </Row> */}
+            {/* {expandForm ? (
+              <> */}
                 <Row className="justify-content-center">
                   <Col md="6">
                     <FormGroup>
@@ -707,7 +709,7 @@ export class CrmEditVehicleModal extends Component {
                     </FormGroup>
                   </Col>
                 </Row>
-                <Row className="justify-content-center">
+                {/* <Row className="justify-content-center">
                   <Col md="12 text-center">
                     {expandForm ? (
                       <span
@@ -720,11 +722,11 @@ export class CrmEditVehicleModal extends Component {
                       ""
                     )}
                   </Col>
-                </Row>
-              </>
+                </Row> */}
+              {/* </>
             ) : (
               ""
-            )}
+            )} */}
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>

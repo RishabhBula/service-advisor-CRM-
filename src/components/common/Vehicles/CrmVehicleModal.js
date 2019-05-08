@@ -521,7 +521,7 @@ export class CrmVehicleModal extends Component {
                 ""
               )}
             </Row>
-            <Row className="justify-content-center">
+            {/* <Row className="justify-content-center">
               <Col md="12 text-center">
                 {!expandForm ? (
                   <span
@@ -534,9 +534,9 @@ export class CrmVehicleModal extends Component {
                   ""
                 )}
               </Col>
-            </Row>
-            {expandForm ? (
-              <>
+            </Row> */}
+            {/* {expandForm ? (
+              <> */}
                 <Row className="justify-content-center">
                   <Col md="6">
                     <FormGroup>
@@ -697,10 +697,10 @@ export class CrmVehicleModal extends Component {
                     )}
                   </Col>
                 </Row>
-              </>
+              {/* </>
             ) : (
               ""
-            )}
+            )} */}
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>

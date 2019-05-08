@@ -633,6 +633,9 @@
 .cursor_pointer {
   cursor: pointer;
 }
+.decoration-none:hover{
+  text-decoration: none;
+}
 .error-block-contain {
   position: relative;
 }
@@ -1025,6 +1028,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-top: 2px;
   border-left: 3px solid #b4b1bb;
 }
+.qty-value{
+  font-size: 16px;
+}
 .custom-form-modal .select-number-tile .text-danger {
   left: -70px;
 }
@@ -1135,10 +1141,18 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   color: #000;
   border-color: #08080826;
 }
-.margin-markup-btn-active{
-  background-color: rgb(58, 180, 236) !important;
+.btn-secondary.margin-markup-btn-active{
   color:#fff !important;
-  border-color: #fff !important;
+  background-color: #7852ea;
+  border-color: #7853eb;
+}
+.btn-secondary.margin-markup-btn:hover{
+  color:#444 !important;
+  background-color: #cccccc !important;
+  border-color: #cccccc;
+}
+.margin-markup-btn-active:focus{
+  box-shadow: none !important;
 }
 .size-desc-table{
   background-color: #eee;

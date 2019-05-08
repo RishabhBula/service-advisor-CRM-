@@ -4,6 +4,7 @@ import { AppConfig } from "../../config/AppConfig";
 import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
 import { logger } from "../../helpers/Logger";
+import moment from 'moment';
 
 class PriMatrixList extends Component {
   constructor(props) {
@@ -142,8 +143,8 @@ class PriMatrixList extends Component {
                 <span>Markup</span>
                 </div>
               </th>
-              {/* <th width={"200"}>Margin</th>
-              <th width={"200"}>Markup</th> */}
+              <th width={"200"}>Created At</th>
+              {/*<th width={"200"}>Markup</th> */}
               {/* <th width={"200"}>Creted At</th> */}
               <th width={"140"} className={"text-center"}>Action</th>
             </tr>
@@ -203,7 +204,11 @@ class PriMatrixList extends Component {
                       }
                     </td>
                   
-                    {/* <td>{matrix.createdAt}</td> */}
+                     <td>
+                      <div>{moment(matrix.createdAt).format("MMM Do YYYY")}</div>
+                      <div>{moment(matrix.createdAt).format("h:mm a")}</div>
+                     </td> 
+
                     <td width={"140"} className={"text-center"}>
                       <span className="mr-2">
                         <Button

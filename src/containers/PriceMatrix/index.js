@@ -31,7 +31,8 @@ class PriceMatrix extends Component {
       errors: {},
       matrixId: "",
       addNewMatrix: false,
-      activeMatrix: ""
+      activeMatrix: "",
+      updatedAt: "",
     };
   }
   componentDidMount = () => {
@@ -270,10 +271,12 @@ class PriceMatrix extends Component {
     const {
       matrixName,
       matrixRange,
+      updatedAt
     } = matrixData
     this.setState({
       matrixName,
       matrixRange,
+      updatedAt,
       matrixId: matrixData._id,
       isEditMatrix: true,
     })
@@ -320,7 +323,7 @@ class PriceMatrix extends Component {
     const { matrixListReducer, modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { matrixAddModalOpen } = modelDetails;
-    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix } = this.state;
+    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix, updatedAt } = this.state;
     return (
       <>
         <Card className={"white-card"}>
@@ -365,6 +368,7 @@ class PriceMatrix extends Component {
               matrixAddModalOpen: !matrixAddModalOpen
             })}
           addNewMatrix={addNewMatrix}
+          updateDate={updatedAt}
         />
       </>
     );

@@ -747,7 +747,7 @@ export class CrmCustomerModal extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <Row className="justify-content-center">
+              {/* <Row className="justify-content-center">
                 <div>
                   {!expandForm ? (
                     <span
@@ -761,10 +761,10 @@ export class CrmCustomerModal extends Component {
                       ""
                     )}
                 </div>
-              </Row>
+              </Row> */}
             </div>
-            {expandForm ? (
-              <>
+            {/* {expandForm ? (
+              <> */}
                 <Row className="justify-content-center">
                   <Col md="6">
                     <FormGroup>
@@ -999,10 +999,10 @@ export class CrmCustomerModal extends Component {
                     </span>
                   </Col>
                 ) : null}
-              </>
+              {/* </>
             ) : (
                 ""
-              )}
+              )} */}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}

@@ -231,7 +231,8 @@ class CrmInventoryPart extends Component {
       price:
         cost && markupPercent
           ? CalculateRetailPriceByMarkupPercent(cost, markupPercent).toFixed(2)
-          : this.state.price
+          : this.state.price,
+      markup: markupPercent
     });
   };
   setPriceByMargin = marginPercent => {
@@ -240,7 +241,8 @@ class CrmInventoryPart extends Component {
       price:
         cost && marginPercent
           ? CalculateRetailPriceByMarginPercent(cost, marginPercent).toFixed(2)
-          : this.state.price
+          : this.state.price,
+      margin: marginPercent
     });
   };
   loadOptions = (input, callback) => {
@@ -384,7 +386,7 @@ class CrmInventoryPart extends Component {
           }
           footerButtons={buttons}
           showfooterMsg
-          updatedAt={ isEditMode ? partDetails.updatedAt : null}
+          updatedAt={isEditMode ? partDetails.updatedAt : null}
         >
           <Row className="justify-content-center">
             <Col md="6">
@@ -524,22 +526,22 @@ class CrmInventoryPart extends Component {
                   Cost
                 </Label>
                 <div className={"input-block"}>
-                 <InputGroup>
-                  <div className="input-group-prepend">
+                  <InputGroup>
+                    <div className="input-group-prepend">
                       <span className="input-group-text">
                         <i className="fa fa-dollar"></i>
                       </span>
-                  </div>
-                  <Input
-                    type="number"
-                    className="customer-modal-text-style"
-                    placeholder="0.00"
-                    onChange={(e) => this.handleCostPricechange(e)}
-                    maxLength="40"
-                    name="cost"
-                    invalid={errors.cost}
-                    value={cost}
-                  />
+                    </div>
+                    <Input
+                      type="number"
+                      className="customer-modal-text-style"
+                      placeholder="0.00"
+                      onChange={(e) => this.handleCostPricechange(e)}
+                      maxLength="40"
+                      name="cost"
+                      invalid={errors.cost}
+                      value={cost}
+                    />
                   </InputGroup>
                   {errors.cost ? (
                     <FormFeedback>{errors.cost}</FormFeedback>
@@ -559,16 +561,16 @@ class CrmInventoryPart extends Component {
                         <i className="fa fa-dollar"></i>
                       </span>
                     </div>
-                  <Input
-                    type="number"
-                    className="customer-modal-text-style"
+                    <Input
+                      type="number"
+                      className="customer-modal-text-style"
                       placeholder="0.00"
-                    onChange={this.handleRetailsPriceChange}
-                    maxLength="40"
-                    name="price"
-                    invalid={errors.price}
-                    value={price}
-                  />
+                      onChange={this.handleRetailsPriceChange}
+                      maxLength="40"
+                      name="price"
+                      invalid={errors.price}
+                      value={price}
+                    />
                   </InputGroup>
                   {errors.price ? (
                     <FormFeedback>{errors.price}</FormFeedback>
@@ -633,7 +635,7 @@ class CrmInventoryPart extends Component {
                           key={index}
                           type={"button"}
                           color={"secondary"}
-                          className={"margin-markup-btn"} 
+                          className={markup === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
                           size={"sm"}
                           onClick={() => this.setPriceByMarkup(mark.value)}
                         >
@@ -667,7 +669,7 @@ class CrmInventoryPart extends Component {
                           key={index}
                           type={"button"}
                           color={"secondary"}
-                          className={"margin-markup-btn"} 
+                          className={margin === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
                           size={"sm"}
                           onClick={() => this.setPriceByMargin(mark.value)}
                         >
@@ -689,7 +691,7 @@ class CrmInventoryPart extends Component {
               </FormGroup>
             </Col>
           </Row>
-  
+
           <Row>
             {CreatePartOptions.map((option, index) => {
               return (

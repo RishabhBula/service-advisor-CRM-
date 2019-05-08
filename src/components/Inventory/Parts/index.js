@@ -328,8 +328,8 @@ class Parts extends Component {
               {/* <th>Note</th>
               <th>Part number</th> */}
               <th width={"170"}><i className="fa fa-id-badge"></i> Vendor</th>
-              <th width={"150"}><i className="fa fa-bitbucket"></i> Bin/Location</th>
-              <th width={"200"}><i className="fa fa-dollar"></i> Price</th>
+              <th width={"200"}><i className="fa fa-bitbucket"></i> Bin/Location</th>
+              <th width={"180"}><i className="fa fa-dollar"></i> Price</th>
               {/* <th>Retail Price</th> */}
               <th width={"120"}><i className="fa fa-shopping-basket"></i> Quantity</th>
               <th width={"120"}><i className="fa fa-clock-o"></i> Created</th>
@@ -357,25 +357,26 @@ class Parts extends Component {
                     <td>{part.location || "-"}</td>
                     <td>
                       {part.cost ? 
-                        <div className="modal-info">Cost - <span className={"dollar-price"}>
+                        <div className="modal-info">Cost &nbsp;&nbsp;: <span className={"dollar-price"}>
                         <i class="fa fa-dollar dollar-icon"></i>
                         {part.cost || " "}
                         </span>
                         </div> 
                       : null }
                       {part.retailPrice ?
-                        <div className="modal-info">Retail - <span className={"dollar-price"}>
+                        <div className="modal-info">Retail : <span className={"dollar-price"}>
                           <i class="fa fa-dollar dollar-icon"></i>
                           {part.retailPrice || " "}
                           </span>
                         </div>
                       : null}
                     </td>
-                    <td className={"pl-4"}>
-                      {part.quantity || 0}&nbsp;
+                    <td className={part.quantity > part.criticalQuantity ? "pl-4" :null}>
+                      <span className={"qty-value"}>{part.quantity || 0}&nbsp;</span>
                       {part.quantity <= part.criticalQuantity ? (
                         <Badge color={"warning"}>Reorder</Badge>
                       ) : null}
+                      
                     </td>
                     <td>
                       <div>{moment(part.createdAt).format("MMM Do YYYY")}</div>
@@ -391,7 +392,7 @@ class Parts extends Component {
                         <i className={"icons cui-pencil"}></i>
                       </Button>{" "}
                       <UncontrolledTooltip target={`edit-${part._id}`}>
-                        Edit details of {part.description}
+                        Edit 
                       </UncontrolledTooltip>
                       &nbsp;
                       <Button
@@ -412,7 +413,7 @@ class Parts extends Component {
                         <i className={"icons cui-trash"}></i>
                       </Button>
                       <UncontrolledTooltip target={`delete-${part._id}`}>
-                        Delete {part.description}
+                        Delete
                       </UncontrolledTooltip>
                     </td>
                   </tr>
