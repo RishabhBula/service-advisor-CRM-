@@ -16,12 +16,12 @@ export const matrixListReducer = handleActions(
         [matrixActions.GET_MATRIX_LIST_START]: (state, action) => ({
             ...state,
             matrixList: action.payload.matrixList,
-            isLoading: false
+            isLoading: action.payload.isLoading
         }),
         [matrixActions.GET_MATRIX_LIST_SUCCESS]: (state, action) => ({
             ...state,
             matrixList: action.payload.matrixList,
-            isLoading: false
+            isLoading: action.payload.isLoading
         }),
         [matrixActions.GET_MATRIX_LIST_FAILED]: (state, action) => ({
             ...state,

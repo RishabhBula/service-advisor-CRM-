@@ -358,6 +358,7 @@ class PriceMatrix extends Component {
             </div>
             <PriMatrixList
               matrixList={matrixListReducer.matrixList}
+              isLoading={matrixListReducer.isLoading}
               handleUpdateMatrix={this.handleUpdateMatrix}
               addNewMatrix={() => this.resetAll(true)}
               handleMatrixDelete={this.handleMatrixDelete}
