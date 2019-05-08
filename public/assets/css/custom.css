@@ -1319,7 +1319,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   display: none;
 }
 /* Price Matrix End */
-
+.word-break{
+  word-break: break-all;
+}
 /* Media Query STRAT*/
 @media(max-width:1220px){
   .table{
