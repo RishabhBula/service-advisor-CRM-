@@ -149,8 +149,8 @@ class CrmImportExcel extends Component {
                   <tr key={index}>
                     {sheet.header
                       ? sheet.header.map((d, i) => {
-                          return <td key={i}>{data[d]}</td>;
-                        })
+                        return <td key={i}>{data[d]}</td>;
+                      })
                       : null}
                   </tr>
                 );
@@ -206,12 +206,14 @@ class CrmImportExcel extends Component {
     );
   };
   render() {
-    const { buttonText, btnColor, children } = this.props;
+    const { buttonText, btnColor, children, buttonIcon } = this.props;
     const { isLoading, fileError, sheets } = this.state;
     logger(isLoading);
     return (
       <>
         <Button color={btnColor || "primary"} onClick={this.toggleImportModal}>
+          <i className={buttonIcon} />
+          &nbsp;
           {buttonText || "Import Excel"}
         </Button>
         <CRMModal {...this.modalOptions()}>

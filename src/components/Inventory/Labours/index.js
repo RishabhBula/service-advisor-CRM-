@@ -10,6 +10,7 @@ import {
   InputGroup,
   Input,
   UncontrolledTooltip,
+  Badge
 } from "reactstrap";
 
 import Loader from "../../../containers/Loader/Loader";
@@ -38,6 +39,7 @@ class Labours extends Component {
       sort: "",
       page: 1,
       labour: {},
+      expandText: false,
       selectedLabours: []
     };
   }
@@ -47,7 +49,7 @@ class Labours extends Component {
     const query = qs.parse(this.props.location.search);
     const { location } = this.props;
     const lSearch = location.search;
-    const { page, search, sort } = qs.parse(lSearch);   
+    const { page, search, sort } = qs.parse(lSearch);
     this.props.getlabour({ ...query, page: query.page || 1 });
     if (location.search !== '') {
       this.setState({
@@ -203,7 +205,8 @@ class Labours extends Component {
       search,
       sort,
       page,
-      filterApplied } = this.state;
+      filterApplied,
+      expandText } = this.state;
     const { labourReducer, profileInfoReducer, rateStandardListReducer, modelInfoReducer, modelOperate, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen, rateAddModalOpen } = modelDetails;
@@ -277,7 +280,7 @@ class Labours extends Component {
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="icon-refresh icons"/>
+                        <i className="icon-refresh icons" />
                       </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
@@ -314,10 +317,36 @@ class Labours extends Component {
                         </label>
                       </td>
                       <td><b>{data.discription || "-"}</b></td>
-                      <td className={"pr-3"}> {data.notes.substring(0, 100)}</td>
+                      {
+                        !expandText ?
+                          <td className={"pr-4"}>
+                            <div className={"word-break"}>
+                              {data.notes ? data.notes.substring(0, 50) : "-"}{" "}
+                              <span className={"read-more-text"} onClick={() => this.setState({
+                                expandText: true
+                              })}>
+                                <Badge color={"warning"}>
+                                  {data.notes && data.notes.length >= 20 ? "read more...." : null}
+                                </Badge>
+                              </span>
+                            </div>
+                          </td> :
+                          <td className={"pr-4"}>
+                            <div className={"word-break"}>
+                              {data.notes ? data.notes : "-"}{" "}
+                              <span className={"read-more-text"} onClick={() => this.setState({
+                                expandText: false
+                              })}>
+                                <Badge color={"warning"}>
+                                  {data.notes && data.notes.length >= 20 ? "show less" : null}
+                                </Badge>
+                              </span>
+                            </div>
+                          </td>
+                      }
                       <td>
                         <div className="modal-info">
-                          {(data.rate && data.rate.name) ? data.rate.name : "-"} - 
+                          {(data.rate && data.rate.name) ? data.rate.name : "-"} -
                           {(data.rate && data.rate.hourlyRate) ? <span className={"dollar-price"}>
                             <i class="fa fa-dollar dollar-icon"></i>
                             {data.rate.hourlyRate}
@@ -329,37 +358,37 @@ class Labours extends Component {
                       <td>{data.discount || "-"}</td>
                       <td className={"text-center"}>
                         <span className="mr-2">
-                        <Button
-                          size={"sm"}
-                          onClick={() => this.editLabour(data)}
-                          className={"btn btn-theme-transparent"}
-                          id={"ToolTip-3"}
-                        >
-                          <i className={"icons cui-pencil"} />
-                        </Button>
-                        <UncontrolledTooltip target={"ToolTip-3"}>
-                          Edit
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editLabour(data)}
+                            className={"btn btn-theme-transparent"}
+                            id={"ToolTip-3"}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip target={"ToolTip-3"}>
+                            Edit
                         </UncontrolledTooltip>
                         </span>
                         <span>
-                        <Button
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedLabours: [data._id]
-                              },
-                              () => {
-                                this.onDelete();
-                              })
-                          }
-                          className={"btn btn-theme-transparent"}
-                          id={"ToolTip-4"}
-                        >
-                          <i className={"icons cui-trash"}></i>
-                        </Button>
-                        <UncontrolledTooltip target={"ToolTip-4"}>
-                          Delete 
+                          <Button
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedLabours: [data._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                })
+                            }
+                            className={"btn btn-theme-transparent"}
+                            id={"ToolTip-4"}
+                          >
+                            <i className={"icons cui-trash"}></i>
+                          </Button>
+                          <UncontrolledTooltip target={"ToolTip-4"}>
+                            Delete
                         </UncontrolledTooltip>
                         </span>
                       </td>
