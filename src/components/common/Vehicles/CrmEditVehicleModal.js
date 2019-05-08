@@ -28,10 +28,10 @@ class CustomOption extends Component {
   render() {
     const { data, innerProps } = this.props;
     let style = {
-      backgroundColor: data.value
+      backgroundColor: data.color
     };
     return (
-      <div {...innerProps} className="cursor_pointer">
+      <div {...innerProps} className="cursor_pointer vehicles-select-color-block">
         <span style={style} className="vehicles-select-color" />
         {data.label}
       </div>
@@ -469,6 +469,7 @@ export class CrmEditVehicleModal extends Component {
                     placeholder={"Pick a color"}
                     isClearable={true}
                     components={{ Option: CustomOption }}
+                    
                   />
                 </FormGroup>
               </Col>

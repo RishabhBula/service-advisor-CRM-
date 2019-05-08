@@ -1018,7 +1018,13 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-left: 5px;
   height: 15px;
   width: 15px;
-  border: 1px solid #eee;
+  border: 1px solid #c5c5c5
+}
+.vehicles-select-color-block{
+  display: flex;
+  align-items: center;
+  padding: 3px 5px;
+  font-size: 14px;
 }
 .part-note{
   font-size: 10px;
@@ -1176,7 +1182,20 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding-top: 4px;
 }
 /* Tyre CSS END*/
-
+/* Labor */
+.labor-discount .btn.btn-secondary{
+  height: 30px;
+  width: 30px;
+  background-color: #e4e5e6;
+}
+.labor-discount .btn.btn-secondary:focus{
+  box-shadow: none !important;
+}
+.labor-discount .btn.btn-secondary.active{
+  color: #ffffff !important;
+  background-color: #7f6cb8 !important;
+  border-color: #7f6cb8 !important;
+}
 /* Price Matrix */
 .btn-input{
   background-color: transparent;
@@ -1245,7 +1264,6 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .matrix-input-control .form-control{
   height: 50px;
   max-width: 90px;
-  /* border: none */
 }
 .matrix-input-control .form-control:focus{
   box-shadow: none;
@@ -1279,10 +1297,6 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .matrix-list-card .card-body{
   padding: 10px 20px;
-}
-.matrix-drop-down .btn.btn-secondary{
-  /* background-color: transparent !important;
-  border-color:transparent; */
 }
 .matrix-drop-down .btn.btn-secondary:focus{
   box-shadow: none !important;

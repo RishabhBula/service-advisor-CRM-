@@ -355,7 +355,7 @@ const importCustomerLogic = createLogic({
       );
       dispatch(
         redirectTo({
-          path: `${AppRoutes.CUSTOMERS.url}?page=1&reset=${Date().now()}`
+          path: `${AppRoutes.CUSTOMERS.url}?page=1&reset=${Date.now()}`
         })
       );
       toast.success(result.messages[0]);

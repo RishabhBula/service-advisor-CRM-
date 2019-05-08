@@ -40,6 +40,7 @@ class Labours extends Component {
       page: 1,
       labour: {},
       expandText: false,
+      isReadMore: -1,
       selectedLabours: []
     };
   }
@@ -206,7 +207,9 @@ class Labours extends Component {
       sort,
       page,
       filterApplied,
-      expandText } = this.state;
+      expandText,
+      isReadMore
+    } = this.state;
     const { labourReducer, profileInfoReducer, rateStandardListReducer, modelInfoReducer, modelOperate, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen, rateAddModalOpen } = modelDetails;
@@ -318,28 +321,30 @@ class Labours extends Component {
                       </td>
                       <td><b>{data.discription || "-"}</b></td>
                       {
-                        !expandText ?
+                        expandText && isReadMore === index ?
                           <td className={"pr-4"}>
+
                             <div className={"word-break"}>
-                              {data.notes ? data.notes.substring(0, 70) : "-"}{" "}
+                              {data.notes ? data.notes : "-"}{" "}
                               <span className={"read-more-text"} onClick={() => this.setState({
-                                expandText: true
+                                expandText: false,
+                                isReadMore: this.state.isReadMore === index ? -1 : index
                               })}>
                                 <Badge color={"warning"}>
-                                  {data.notes && data.notes.length >= 70 ? "read more...." : null}
+                                  {data.notes && data.notes.length >= 70 ? "show less" : null}
                                 </Badge>
                               </span>
                             </div>
                           </td> :
                           <td className={"pr-4"}>
-                            
                             <div className={"word-break"}>
-                              {data.notes ? data.notes : "-"}{" "}
+                              {data.notes ? data.notes.substring(0, 70) : "-"}{" "}
                               <span className={"read-more-text"} onClick={() => this.setState({
-                                expandText: false
+                                expandText: true,
+                                isReadMore: this.state.isReadMore === index ? -1 : index
                               })}>
                                 <Badge color={"warning"}>
-                                  {data.notes && data.notes.length >= 70 ? "show less" : null}
+                                  {data.notes && data.notes.length >= 70 ? "read more...." : null}
                                 </Badge>
                               </span>
                             </div>

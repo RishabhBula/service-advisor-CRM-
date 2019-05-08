@@ -4,6 +4,7 @@ import { AppConfig } from "../../config/AppConfig";
 import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
 import moment from 'moment';
+import NoDataFound from "../common/NoFound";
 
 class PriMatrixList extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class PriMatrixList extends Component {
     this.state = {
       page: 1,
       search: "",
-      isTireSizeOpen:-1
+      isTireSizeOpen:-1,
+      filterApplied:false
     };
   }
 
@@ -19,9 +21,14 @@ class PriMatrixList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search) {
+      filterApplied = true;
+    }
     this.setState({
       page: parseInt(page) || 1,
       search: search || "",
+      filterApplied
     });
   }
 
@@ -47,6 +54,7 @@ class PriMatrixList extends Component {
     e.preventDefault();
     this.setState({
       page: 1,
+      filterApplied:true
     });
     const { search } = this.state;
     let param = {};
@@ -62,6 +70,7 @@ class PriMatrixList extends Component {
     this.setState({
       page: 1,
       search: "",
+      filterApplied: false
     });
     this.props.onSearch({});
   };
@@ -72,7 +81,7 @@ class PriMatrixList extends Component {
   }
   render() {
     const { matrixList, handleUpdateMatrix, handleMatrixDelete } = this.props;
-    const { page, search, isTireSizeOpen } = this.state
+    const { page, search, isTireSizeOpen, filterApplied } = this.state
     return (
       <>
         <div className={"filter-block"}>
@@ -239,8 +248,13 @@ class PriMatrixList extends Component {
                   </tr>
                 )
               }) :
-                null
+                <tr>
+                  <td className={"text-center"} colSpan={12}>
+                    {filterApplied ? <NoDataFound message={"No Matrix details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Matrix details added."} onAddClick={this.props.onClick} /> }
+                  </td>
+                </tr>
             }
+           
           </tbody>
         </Table>
       </>
