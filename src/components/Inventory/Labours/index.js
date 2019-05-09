@@ -374,7 +374,7 @@ class Labours extends Component {
                             <>
                               {data.discount || notExist}
                             </> :
-                            <>
+                            <><i class="fa fa-dollar dollar-icon"></i>
                               {`${data.discount} Flat` || notExist}
                             </>
                         }

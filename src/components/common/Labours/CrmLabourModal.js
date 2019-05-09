@@ -150,11 +150,10 @@ export class CrmLabourModal extends Component {
       ...permission
     });
   }
+
   handleClickDiscountType = value => {
-    logger(this.state.discount.search("$"), this.state.discount, "@@@@@@@@@@@@@@@@@@@@@@@@")
     this.setState({
-      discount: (this.state.discount !== '' && value === '%' && value !== '$') ? this.state.discount.replace('%', '') + '%' :
-        (this.state.discount !== '' && this.state.discount.search("%") < 0 && value === '$' && value !== '%') ? '$' + this.state.discount.replace('$', '') : this.state.discount.replace('$' || '%', ''),
+      discount: (this.state.discount !== '' && value === '%') ? this.state.discount.replace('%', '') + '%' : this.state.discount.replace('%', ''),
       discountType: value,
     });
   }
