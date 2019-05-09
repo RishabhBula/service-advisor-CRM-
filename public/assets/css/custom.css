@@ -1170,7 +1170,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .season-btn{
   background-color: #fff !important;
-  border-color: #000;
+  border-color: #a6a7a7 !important;
 }
 .margin-markup-btn{
   background-color: #fff !important;
@@ -1363,6 +1363,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border-radius: 50%;
   line-height: 1;
   color: #636363;
+}
+.matrix-drop-down .icon img {
+  opacity: 0.6;
 }
 .matrix-range-th span{
   width: 33.33%;
