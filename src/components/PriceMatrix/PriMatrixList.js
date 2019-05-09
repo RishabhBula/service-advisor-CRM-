@@ -5,6 +5,7 @@ import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
 import moment from 'moment';
 import NoDataFound from "../common/NoFound";
+import Loader from "../../containers/Loader/Loader";
 
 class PriMatrixList extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ class PriMatrixList extends Component {
     this.state = {
       page: 1,
       search: "",
-      isTireSizeOpen:-1,
-      filterApplied:false
+      isTireSizeOpen: -1,
+      filterApplied: false
     };
   }
 
@@ -54,7 +55,7 @@ class PriMatrixList extends Component {
     e.preventDefault();
     this.setState({
       page: 1,
-      filterApplied:true
+      filterApplied: true
     });
     const { search } = this.state;
     let param = {};
@@ -74,13 +75,14 @@ class PriMatrixList extends Component {
     });
     this.props.onSearch({});
   };
-  handleMatrixOpen = (index) =>{
+  handleMatrixOpen = (index) => {
     this.setState({
       isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
     })
   }
   render() {
-    const { matrixList, handleUpdateMatrix, handleMatrixDelete } = this.props;
+    const { matrixList, handleUpdateMatrix, handleMatrixDelete,
+      isLoading } = this.props;
     const { page, search, isTireSizeOpen, filterApplied } = this.state
     return (
       <>
@@ -89,7 +91,7 @@ class PriMatrixList extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-              
+
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -144,9 +146,9 @@ class PriMatrixList extends Component {
               <th className={"text-center"} width={"60"}>S No.</th>
               <th width={"320"}><i className={"fas fa-hand-holding-usd"}></i> Matrix Name</th>
               <th width={"550"} colSpan={"3"} >
-              <div className={"d-flex matrix-range-th"}>
-                <span><i className={"fa fa-dollar"}></i> Cost Range</span>
-                <span><i className={"fa fa-line-chart"}></i> Margin</span>
+                <div className={"d-flex matrix-range-th"}>
+                  <span><i className={"fa fa-dollar"}></i> Cost Range</span>
+                  <span><i className={"fa fa-line-chart"}></i> Margin</span>
                   <span><i className={"fa fa-money"}></i> Markup</span>
                 </div>
               </th>
@@ -157,8 +159,8 @@ class PriMatrixList extends Component {
             </tr>
           </thead>
           <tbody>
-            {
-              matrixList && matrixList.length ? matrixList.map((matrix, index) => {
+            {!isLoading ?
+              (matrixList && matrixList.length ? matrixList.map((matrix, index) => {
                 return (
                   <tr key={index}>
                     <td>
@@ -169,52 +171,52 @@ class PriMatrixList extends Component {
                     <td>{matrix.matrixName || "-"}</td>
                     <td colSpan={"3"}>
                       {matrix.matrixRange && matrix.matrixRange.length ? <div>
-                      <div className={"d-flex matrix-range-th"}>
+                        <div className={"d-flex matrix-range-th"}>
                           <span className={"p-1"}>
                             <span class="dollar-price">
                               <i class="fa fa-dollar dollar-icon"></i>
-                              {matrix.matrixRange[0].lower}</span> &nbsp;-&nbsp; 
+                              {matrix.matrixRange[0].lower}</span> &nbsp;-&nbsp;
                               <span class="dollar-price">
                               {matrix.matrixRange[0].upper !== 'beyond' ? <i class="fa fa-dollar dollar-icon"></i> : null}
-                                {matrix.matrixRange[0].upper}
-                              </span>
+                              {matrix.matrixRange[0].upper}
+                            </span>
                           </span>
-                        <span className={"p-1"}>{matrix.matrixRange[0].margin}</span>
-                        <span className={"p-1"}>{matrix.matrixRange[0].markup}</span>
-                      </div>
-                      <div className={isTireSizeOpen === index ? 'active' : 'inactive'}>
-                      {
-                        matrix.matrixRange && matrix.matrixRange.length ? matrix.matrixRange.map((range, i) => {
-                          return (i=== 0 ? null :
-                            <div key={i} className={"d-flex matrix-range-th "}>
-                              <span className={"p-1"}>
-                                <span class="dollar-price">
-                                  <i class="fa fa-dollar dollar-icon"></i>{range.lower}
-                                </span> &nbsp;-&nbsp;
-                              <span class="dollar-price">{range.upper !== 'beyond' ? <i class="fa fa-dollar dollar-icon"></i> : null }{range.upper}
-                              </span>
-                              </span>
-                              <span className={"p-1"}>{range.margin}</span>
-                              <span className={"p-1"}>{range.markup}</span>
-                            </div>
-                          )
-                        }) :
-                          null
-                      }
-                      </div>
-                        {matrix.matrixRange && matrix.matrixRange.length && matrix.matrixRange[1]  ?
-                      <span className={"m-1 d-block"}>
-                        <Badge onClick={(() => this.handleMatrixOpen(index))} className={"cursor_pointer"}>
-                          {isTireSizeOpen === index ? 'View Less' : 'View More'}</Badge>
-                      </span> : null}
+                          <span className={"p-1"}>{matrix.matrixRange[0].margin}</span>
+                          <span className={"p-1"}>{matrix.matrixRange[0].markup}</span>
+                        </div>
+                        <div className={isTireSizeOpen === index ? 'active' : 'inactive'}>
+                          {
+                            matrix.matrixRange && matrix.matrixRange.length ? matrix.matrixRange.map((range, i) => {
+                              return (i === 0 ? null :
+                                <div key={i} className={"d-flex matrix-range-th "}>
+                                  <span className={"p-1"}>
+                                    <span class="dollar-price">
+                                      <i class="fa fa-dollar dollar-icon"></i>{range.lower}
+                                    </span> &nbsp;-&nbsp;
+                              <span class="dollar-price">{range.upper !== 'beyond' ? <i class="fa fa-dollar dollar-icon"></i> : null}{range.upper}
+                                    </span>
+                                  </span>
+                                  <span className={"p-1"}>{range.margin}</span>
+                                  <span className={"p-1"}>{range.markup}</span>
+                                </div>
+                              )
+                            }) :
+                              null
+                          }
+                        </div>
+                        {matrix.matrixRange && matrix.matrixRange.length && matrix.matrixRange[1] ?
+                          <span className={"m-1 d-block"}>
+                            <Badge onClick={(() => this.handleMatrixOpen(index))} className={"cursor_pointer"}>
+                              {isTireSizeOpen === index ? 'View Less' : 'View More'}</Badge>
+                          </span> : null}
                       </div> : null
                       }
                     </td>
-                  
-                     <td>
+
+                    <td>
                       <div>{moment(matrix.createdAt).format("MMM Do YYYY")}</div>
                       <div>{moment(matrix.createdAt).format("h:mm a")}</div>
-                     </td> 
+                    </td>
 
                     <td width={"140"} className={"text-center"}>
                       <span className="mr-2">
@@ -248,13 +250,22 @@ class PriMatrixList extends Component {
                   </tr>
                 )
               }) :
+                (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? <NoDataFound message={"No Matrix details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Matrix details added."} onAddClick={this.props.onClick} />}
+                    </td>
+                  </tr>
+                )
+              ) :
+              (
                 <tr>
-                  <td className={"text-center"} colSpan={12}>
-                    {filterApplied ? <NoDataFound message={"No Matrix details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Matrix details added."} onAddClick={this.props.onClick} /> }
+                  <td className={"text-center"} colSpan={10}>
+                    <Loader />
                   </td>
                 </tr>
+              )
             }
-           
           </tbody>
         </Table>
       </>

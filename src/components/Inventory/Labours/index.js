@@ -26,6 +26,8 @@ import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { isEqual } from "../../../helpers/Object";
 import NoDataFound from "../../common/NoFound"
+import { notExist } from "../../../config/Constants";
+
 class Labours extends Component {
   constructor(props) {
     super(props);
@@ -319,13 +321,13 @@ class Labours extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </label>
                       </td>
-                      <td><b>{data.discription || "-"}</b></td>
+                      <td><b>{data.discription || notExist}</b></td>
                       {
                         expandText && isReadMore === index ?
                           <td className={"pr-4"}>
 
                             <div className={"word-break"}>
-                              {data.notes ? data.notes : "-"}{" "}
+                              {data.notes ? data.notes : notExist}{" "}
                               <span className={"read-more-text"} onClick={() => this.setState({
                                 expandText: false,
                                 isReadMore: this.state.isReadMore === index ? -1 : index
@@ -338,7 +340,7 @@ class Labours extends Component {
                           </td> :
                           <td className={"pr-4"}>
                             <div className={"word-break"}>
-                              {data.notes ? data.notes.substring(0, 70) : "-"}{" "}
+                              {data.notes ? data.notes.substring(0, 70) : notExist}{" "}
                               <span className={"read-more-text"} onClick={() => this.setState({
                                 expandText: true,
                                 isReadMore: this.state.isReadMore === index ? -1 : index
@@ -352,16 +354,31 @@ class Labours extends Component {
                       }
                       <td>
                         <div className="">
-                          {(data.rate && data.rate.name) ? data.rate.name : "-"} -
-                          {(data.rate && data.rate.hourlyRate) ? <span className={"dollar-price"}>
-                            <i class="fa fa-dollar dollar-icon"></i>
-                            {data.rate.hourlyRate}
-                          </span> : "-"}
+                          {
+                            data.rate ?
+                              <>
+                                {(data.rate && data.rate.name) ? data.rate.name : notExist}{(data.rate && data.rate.name) ? ":" : null}&nbsp;
+                                {(data.rate && data.rate.hourlyRate) ? <span className={"dollar-price"}>
+                                  <i class="fa fa-dollar dollar-icon"></i>
+                                  {data.rate.hourlyRate}
+                                </span> : notExist}
+                              </> : notExist
+                          }
                         </div>
                       </td>
-                      <td>{(data.hours) ? data.hours + ' Hrs' : "-"}</td>
+                      <td>{(data.hours) ? data.hours + ' Hrs' : notExist}</td>
                       {/* <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td> */}
-                      <td>{data.discount || "-"}</td>
+                      <td>
+                        {
+                          data.discount && data.discount.search("%") >= 0 ?
+                            <>
+                              {data.discount || notExist}
+                            </> :
+                            <>
+                              {`${data.discount} Flat` || notExist}
+                            </>
+                        }
+                      </td>
                       <td className={"text-center"}>
                         <span className="mr-2">
                           <Button

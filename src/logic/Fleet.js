@@ -68,6 +68,7 @@ const fleetListLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(
       fleetListStarted({
+        isLoading: true,
         fleetData: []
       }),
       showLoader()
@@ -93,7 +94,8 @@ const fleetListLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(
         fleetListSuccess({
-          fleetData: result.data
+          fleetData: result.data,
+          isLoading:false
         }),
         hideLoader()
       );
