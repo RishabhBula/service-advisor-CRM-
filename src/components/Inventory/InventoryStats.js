@@ -135,7 +135,7 @@ class InventoryStats extends Component {
             <CardHeader>
               <h5>Total Quantity</h5>
             </CardHeader>
-            <CardBody>
+            <CardBody className={"text-center"}>
               {isLoading ? <Loader /> : this.renderQuantityChart()}
             </CardBody>
           </Card>
@@ -145,7 +145,7 @@ class InventoryStats extends Component {
             <CardHeader>
               <h5>Total Cost</h5>
             </CardHeader>
-            <CardBody>
+            <CardBody className={"text-center"}>
               {isLoading ? <Loader /> : this.renderCostChart()}
             </CardBody>
           </Card>
@@ -155,7 +155,7 @@ class InventoryStats extends Component {
             <CardHeader>
               <h5>Total Value</h5>
             </CardHeader>
-            <CardBody>
+            <CardBody className={"text-center"}>
               {isLoading ? <Loader /> : this.renderValueChart()}
             </CardBody>
           </Card>

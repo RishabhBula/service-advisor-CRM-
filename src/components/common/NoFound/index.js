@@ -10,7 +10,7 @@ const NoDataFound = (props) => {
       <div>
       <div><i className={"icons cui-ban"} /></div>
       <h5>{props.message || "No records available"}</h5>
-        <p>Please click below button to add new.</p>
+          {props.showAddButton || typeof props.showAddButton === undefined ?<p>Please click below button to add new.</p> : null}
         <div className={"pt-3"}>
           {
             props.showAddButton || typeof props.showAddButton === undefined ?

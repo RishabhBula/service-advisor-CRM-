@@ -369,7 +369,7 @@ class VehiclesList extends Component {
                       </Input>
                     )}
                 </div> */}
-                S.No
+                S No.
               </th>
               <th width={"150"}>Type</th>
               {/* <th width={"100"}>Color</th> */}

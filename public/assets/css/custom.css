@@ -791,6 +791,16 @@
 .custom-sidebar.sidebar .nav-link .nav-icon {
   color: #fff;
 }
+.custom-sidebar.sidebar .nav-link .nav-icon.icon-mouse{
+  /* background-image: url("../img/vehical-line-icon.svg");
+  width: 15px;
+  height: 15px;
+  background-size: cover; */
+}
+.custom-sidebar.sidebar .nav-link .nav-icon.icon-mouse:before{
+  /* display: none; */
+}
+
 .custom-sidebar.sidebar .sidebar-minimizer {
   background-color: transparent;
 }
@@ -1094,6 +1104,17 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .rate-labour{
   width:100%;
+  position: relative;
+  z-index: 10;
+}
+.rate-labour .css-15k3avv{
+  top: 25px !important;
+}
+.rate-labour .css-2o5izw{
+  border:1px solid #a6a7a7;
+}
+.rate-labour .css-2o5izw:hover{
+  border-color:#a6a7a7; 
 }
 .sec-btn{
   border-right: 1px solid #e4eaec; 
@@ -1112,9 +1133,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 /* Tyre CSS */
 .remove-tire-btn{
-  top: -19px;
-  right: -10px;
+  top: -5px;
+  right: -11px;
   position: absolute;
+  width: 20px;
+  height: 20px;
+  padding: 0px !important;
 }
 .s-no-th{
   width: 90px;
