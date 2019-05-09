@@ -22,6 +22,7 @@ import { carsOptions } from "../../../config/Color";
 import NoDataFound from "../../common/NoFound";
 import { logger } from "../../../helpers/Logger";
 import VehicleIcons from "../../../containers/Icons/Vehicles";
+import { notExist } from "../../../config/Constants";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -369,9 +370,9 @@ class VehiclesList extends Component {
                       </Input>
                     )}
                 </div> */}
-                S.No
+                S No.
               </th>
-              <th width={"150"}>Type</th>
+              <th width={"150"}><i className={"fa fa-car"} /> Type</th>
               {/* <th width={"100"}>Color</th> */}
               <th width={"90"}>
                 <i className={"fa fa-calendar"} /> Year
@@ -451,16 +452,16 @@ class VehiclesList extends Component {
                       <td className={"text-capitalize"}>{vehicle.make}</td>
                       <td className={"text-capitalize"}>{vehicle.modal}</td>
                       <td style={{ maxWidth: 100 }}>
-                        {vehicle.miles ? vehicle.miles : "N/A"}
+                        {vehicle.miles ? vehicle.miles : notExist}
                       </td>
                       <td style={{ maxWidth: 100 }}>
-                        {vehicle.vin ? vehicle.vin : "N/A"}
+                        {vehicle.vin ? vehicle.vin : notExist}
                       </td>
                       <td>
-                        {vehicle.licensePlate ? vehicle.licensePlate : "N/A"}
+                        {vehicle.licensePlate ? vehicle.licensePlate : notExist}
                       </td>
                       <td className={"text-center"}>
-                        {vehicle.unit ? vehicle.unit : "N/A"}
+                        {vehicle.unit ? vehicle.unit : notExist}
                       </td>
 
                       <td className={"text-center"}>

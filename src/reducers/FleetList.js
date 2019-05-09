@@ -15,14 +15,17 @@ export const fleetReducer = handleActions((
         [fleetListActions.FLEET_LIST_START]: (state, action) => ({
             ...state,
             fleetData: action.payload.fleetData,
+            isLoading:action.payload.isLoading
         }),
         [fleetListActions.FLEET_LIST_SUCCESS]: (state, action) => ({
             ...state,
             fleetData: action.payload.fleetData,
+            isLoading:action.payload.isLoading
         }),
         [fleetListActions.FLEET_LIST_FAILED]: (state, action) => ({
             ...state,
             fleetData: action.payload.fleetData,
+            isLoading:false
         }),
         [fleetAddActions.FLEET_ADD_SUCCESS]: (state, action) => ({
             ...state,

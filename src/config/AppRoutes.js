@@ -35,8 +35,8 @@ export const AppRoutes = {
     exact: true
   },
   INVENTORY_LABOURS: {
-    url: "/inventory/labours",
-    name: "Labours",
+    url: "/inventory/labor",
+    name: "Labor",
     exact: true
   },
   INVENTORY_VENDORS: {

@@ -485,7 +485,7 @@ export class CrmInventoryVendor extends Component {
                         onChange={(e) => this.handleChange('address', e)}
                         placeholder='10009'
                         value={address.zip}
-                        maxLength='5'
+                        maxLength='7'
                         id='name'
                       />
                     </div>

@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   FormGroup,
+  InputGroup,
   Label,
   Input,
   FormFeedback
@@ -28,6 +29,7 @@ import {
 import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
 import LastUpdated from "../../common/LastUpdated";
+import { logger } from "../../../helpers/Logger";
 
 export class CrmLabourModal extends Component {
   constructor(props) {
@@ -40,11 +42,11 @@ export class CrmLabourModal extends Component {
       labourId: '',
       errors: {},
       isEditMode: 0,
-      discountType: '$',
+      discountType: '',
       labourInput: "",
       permission: LabourTextDefault,
-      discount: "",
-      updatedAt:"",
+      discount: "$",
+      updatedAt: "",
       selectedRateOptions: {
         label: "",
         value: ""
@@ -93,7 +95,7 @@ export class CrmLabourModal extends Component {
         hours: this.props.dataLabour.hours,
         isEditMode: 1,
         errors: {},
-        updatedAt:this.props.dataLabour.updatedAt,
+        updatedAt: this.props.dataLabour.updatedAt,
         labourId: this.props.dataLabour._id,
         discountType: this.props.dataLabour.discount !== '' && this.props.dataLabour.discount.includes("%") ? '%' : '$',
         permission: this.props.dataLabour.permission,
@@ -112,9 +114,9 @@ export class CrmLabourModal extends Component {
       errors: {},
       isEditMode: 0,
       discountType: '$',
-      updatedAt:'',
+      updatedAt: '',
       permission: LabourTextDefault,
-      selectedLabourRate:'',
+      selectedLabourRate: '',
       discount: "",
       openStadardRateModel: false
     })
@@ -148,6 +150,7 @@ export class CrmLabourModal extends Component {
       ...permission
     });
   }
+
   handleClickDiscountType = value => {
     this.setState({
       discount: (this.state.discount !== '' && value === '%') ? this.state.discount.replace('%', '') + '%' : this.state.discount.replace('%', ''),
@@ -232,7 +235,7 @@ export class CrmLabourModal extends Component {
         >
           <ModalHeader toggle={handleLabourModal}>
             {isEditMode ? `Update Labor Details` : 'Create New Labor'}
-            {isEditMode ?<LastUpdated updatedAt={updatedAt}/> : null}
+            {isEditMode ? <LastUpdated updatedAt={updatedAt} /> : null}
           </ModalHeader>
           <ModalBody>
             <div className="">
@@ -268,8 +271,8 @@ export class CrmLabourModal extends Component {
                           this.handleStandardRate(e)
                         }}
                         isClearable={true}
-                        value={selectedRateOptions && selectedRateOptions.value!=='' ? selectedRateOptions : ""}
-                        noOptionsMessage={() =>"Please type rate name to search"}
+                        value={selectedRateOptions && selectedRateOptions.value !== '' ? selectedRateOptions : ""}
+                        noOptionsMessage={() => "Please type rate name to search"}
                       />
                     </div>
                   </FormGroup>
@@ -280,7 +283,7 @@ export class CrmLabourModal extends Component {
                       Hours
                     </Label>
                     <div className="input-block">
-                      <Input className={"form-control"} name="hours" id="hours" type={"text"} onChange={this.handleChange}  placeholder={"Hours"} maxLength="5" value={hours} invalid={errors.hours && !hours.isNumeric} />
+                      <Input className={"form-control"} name="hours" id="hours" type={"text"} onChange={this.handleChange} placeholder={"Hours"} maxLength="5" value={hours} invalid={errors.hours && !hours.isNumeric} />
                       <FormFeedback>
                         {errors.hours
                           ? errors.hours
@@ -294,8 +297,12 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Discount
                     </Label>
-                    <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} placeholder={"Discount"} />
-                    <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
+                    <InputGroup className={"labor-discount"}>
+                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} placeholder={"Discount"} />
+                      <div class="input-group-append">
+                        <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
+                      </div>
+                    </InputGroup>
                   </FormGroup>
                 </Col>
                 <Col md="12">
@@ -351,7 +358,7 @@ export class CrmLabourModal extends Component {
           <ModalFooter>
 
             <div className="required-fields">*Fields are Required.</div>
-            
+
             <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add New Labor'}
 
             </Button>{" "}

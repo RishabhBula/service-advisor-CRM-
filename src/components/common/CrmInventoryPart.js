@@ -474,6 +474,8 @@ class CrmInventoryPart extends Component {
                     noOptionsMessage={() =>
                       vendorInput ? "No vendor found" : "Type vendor name"
                     }
+                    className={"w-100 form-select"}
+                    classNamePrefix={"form-select-theme"}
                   />
                   {errors.vendorId ? (
                     <FormFeedback>{errors.vendorId}</FormFeedback>
@@ -504,7 +506,7 @@ class CrmInventoryPart extends Component {
               </FormGroup>
             </Col>
             <Col md="6">
-              <FormGroup>
+              <FormGroup classname={"fleet-block"}>
                 <Label htmlFor="name" className="customer-modal-text-style">
                   Pricing Matrix
                 </Label>
@@ -512,6 +514,7 @@ class CrmInventoryPart extends Component {
                   placeholder={"Type to select price matrix"}
                   loadOptions={this.matrixLoadOptions}
                   className={"w-100 form-select"}
+                  classNamePrefix={"form-select-theme"}
                   onChange={(e) => this.handlePriceMatrix(e)}
                   isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
                   noOptionsMessage={() => "Type price matrix name"

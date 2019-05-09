@@ -66,12 +66,12 @@ export class CrmStandardModel extends Component {
           className='customer-modal custom-form-modal '
           backdrop={"static"}
         >
-          <ModalHeader toggle={this.toggle}>Create New Labour Rate</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Create New Labor Rate</ModalHeader>
           <ModalBody>
             <Col md="12">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
-                  Name
+                  Name <span class="asteric">*</span>
                   </Label>
                 <div className={"input-block"}>
                   <Input
@@ -94,7 +94,7 @@ export class CrmStandardModel extends Component {
             <Col md="12">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
-                  Hour Rate
+                  Hour Rate <span class="asteric">*</span>
                   </Label>
                 <div className={"input-block"}>
                   <Input
@@ -117,7 +117,7 @@ export class CrmStandardModel extends Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.handleSubmit}>
-              Add Labour Rate
+              Add Labor Rate
             </Button>{" "}
             <Button color="secondary" onClick={this.toggle}>
               Cancel

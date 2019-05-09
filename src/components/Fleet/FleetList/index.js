@@ -23,6 +23,7 @@ import { AppConfig } from "../../../config/AppConfig";
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import NoDataFound from "../../common/NoFound";
+import { notExist } from "../../../config/Constants";
 
 class FleetList extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class FleetList extends Component {
       type: "",
       page: 1,
       selectedFleets: [],
-      filterApplied:false
+      filterApplied: false
     };
   }
 
@@ -183,7 +184,7 @@ class FleetList extends Component {
     }
     this.props.onSearch(param);
     this.setState({
-      filterApplied:true
+      filterApplied: true
     })
   };
 
@@ -198,7 +199,7 @@ class FleetList extends Component {
     });
     this.props.onSearch({});
     this.setState({
-      filterApplied:false
+      filterApplied: false
     })
   };
 
@@ -414,17 +415,17 @@ class FleetList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"text-capitalize font-weight-bold"}>{data.companyName || "-"}</div>
+                        <div className={"text-capitalize font-weight-bold"}>{data.companyName || notExist}</div>
                         <div>{data.email ? <a href={`mailto:${data.email}`} className={"text-body"}>{data.email}</a> : null}</div>
                       </td>
                       <td>
-                      <div>
-                        {data.phoneDetail ?
-                        data.phoneDetail.map((data, index) => {
-                          return (
-                            <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : null}</div>
-                          )
-                        }) : "-"}
+                        <div>
+                          {data.phoneDetail ?
+                            data.phoneDetail.map((data, index) => {
+                              return (
+                                <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : null}</div>
+                              )
+                            }) : "-"}
                         </div>
                       </td>
                       <td className={"pl-4"}><span className={"qty-value"}>0</span></td>

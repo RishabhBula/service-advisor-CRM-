@@ -157,7 +157,7 @@ class Vehicles extends Component {
                 <CrmImportExcel
                 modalHeaderText={"Import Vehicle data"}
                 onImport={this.onImport}
-                buttonText={"Import Vehicels"}
+                buttonText={"Import Vehicles"}
                 buttonIcon={"fa fa-download"}
               >
                 {vehicleListReducer.importError ? (
@@ -181,7 +181,7 @@ class Vehicles extends Component {
                 onClick={this.exportVehicles}
               >
                 <i className={"fa fa-upload"} />
-                &nbsp; Export Vehicels
+                &nbsp; Export Vehicles
                 </Button>
                  &nbsp;&nbsp;
                  <span>

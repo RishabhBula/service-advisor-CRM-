@@ -304,7 +304,7 @@ export class CrmTyreModal extends Component {
       tierSize[index].margin = marginPercent;
       tierSize[index].retailPrice = tierSize[index].cost && marginPercent
          ? CalculateRetailPriceByMarginPercent(tierSize[index].cost, marginPercent).toFixed(2)
-         : tierSize[index].cost.retailPrice
+         : tierSize[index].retailPrice
       this.setState({
          tierSize,
       });
@@ -716,7 +716,7 @@ export class CrmTyreModal extends Component {
                                                    </Button>
                                                 );
                                              })}
-                                             <Button type={"button"} size={"sm"}>
+                                             <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                                                 <Input
                                                    type={"text"}
                                                    placeholder={"Markup"}
@@ -745,7 +745,7 @@ export class CrmTyreModal extends Component {
                                                    </Button>
                                                 );
                                              })}
-                                             <Button type={"button"} size={"sm"}>
+                                             <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                                                 <Input
                                                    type={"text"}
                                                    placeholder={"Margin"}
