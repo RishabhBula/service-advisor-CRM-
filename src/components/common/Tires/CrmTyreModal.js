@@ -304,7 +304,7 @@ export class CrmTyreModal extends Component {
       tierSize[index].margin = marginPercent;
       tierSize[index].retailPrice = tierSize[index].cost && marginPercent
          ? CalculateRetailPriceByMarginPercent(tierSize[index].cost, marginPercent).toFixed(2)
-         : tierSize[index].cost.retailPrice
+         : tierSize[index].retailPrice
       this.setState({
          tierSize,
       });
