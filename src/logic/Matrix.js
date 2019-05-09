@@ -14,6 +14,7 @@ import {
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const getMatrixLogic = createLogic({
   type: matrixActions.GET_MATRIX_LIST,
@@ -35,6 +36,7 @@ const getMatrixLogic = createLogic({
     );
     logger(result);
     if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(
         getMatrixListFail({
           matrixList: [],
@@ -51,7 +53,7 @@ const getMatrixLogic = createLogic({
       dispatch(
         getMatrixListSuccess({
           matrixList: result.data.data,
-          isLoading:false
+          isLoading: false
         })
       );
     }

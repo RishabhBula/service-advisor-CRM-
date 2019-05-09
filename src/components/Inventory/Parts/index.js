@@ -29,6 +29,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
 import moment from "moment";
 import NoDataFound from "../../common/NoFound";
+import { notExist } from "../../../config/Constants";
 
 class Parts extends Component {
   constructor(props) {
@@ -368,7 +369,7 @@ class Parts extends Component {
                     <td>{index + 1}</td>
                     <td className={"text-capitalize"}>
                       <div className={"font-weight-bold"}>
-                        {part.description || "-"}
+                        {part.description || notExist}
                       </div>
                       {part.partNumber ? (
                         <div className={"modal-info"}>
@@ -378,39 +379,64 @@ class Parts extends Component {
                       {part.note ? (
                         <span className={"part-note"}>part.note</span>
                       ) : (
-                        " "
-                      )}
+                          " "
+                        )}
                     </td>
                     <td className={"font-weight-bold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>
-                      {part.vendorId ? part.vendorId.name || "-" : "-"}
+                      {part.vendorId ? part.vendorId.name || notExist : notExist}
                     </td>
-                    <td>{part.location || "-"}</td>
+                    <td>{part.location || notExist}</td>
                     <td>
-                      {part.cost ? (
-                        <div className="modal-info">
-                          Cost -{" "}
-                          <span className={"dollar-price"}>
-                            <i className="fa fa-dollar dollar-icon" />
-                            {part.cost || " "}
-                          </span>
-                        </div>
-                      ) : null}
-                      {part.retailPrice ? (
-                        <div className="modal-info">
-                          Retail -{" "}
-                          <span className={"dollar-price"}>
-                            <i className="fa fa-dollar dollar-icon" />
-                            {part.retailPrice || " "}
-                          </span>
-                        </div>
-                      ) : null}
+                      {
+                        !part.cost && !part.retailPrice ?
+                          notExist :
+                          <>
+                            {part.cost ? (
+                              <div className="modal-info">
+                                Cost -{" "}
+                                <span className={"dollar-price"}>
+                                  <i className="fa fa-dollar dollar-icon" />
+                                  {part.cost || " "}
+                                </span>
+                              </div>
+                            ) :
+                              <>
+                                <div className="modal-info">
+                                  Cost -{" "}
+                                  <span className={"dollar-price"}>
+                                    <i className="fa fa-dollar dollar-icon" />
+                                    {0}
+                                  </span>
+                                </div>
+                              </>}
+                            {part.retailPrice ? (
+                              <div className="modal-info">
+                                Retail -{" "}
+                                <span className={"dollar-price"}>
+                                  <i className="fa fa-dollar dollar-icon" />
+                                  {part.retailPrice || " "}
+                                </span>
+                              </div>
+                            ) :
+                              <>
+                                <div className="modal-info">
+                                  Retail -{" "}
+                                  <span className={"dollar-price"}>
+                                    <i className="fa fa-dollar dollar-icon" />
+                                    {0}
+                                  </span>
+                                </div>
+                              </>
+                            }
+                          </>
+                      }
                     </td>
-                    <td className={part.quantity > part.criticalQuantity ? "pl-4" :null}>
+                    <td className={part.quantity > part.criticalQuantity ? "pl-4" : null}>
                       <span className={"qty-value"}>{part.quantity || 0}&nbsp;</span>
                       {part.quantity <= part.criticalQuantity ? (
                         <Badge color={"warning"}>Reorder</Badge>
                       ) : null}
-                      
+
                     </td>
                     <td>
                       <div>{moment(part.createdAt).format("MMM Do YYYY")}</div>
@@ -426,7 +452,7 @@ class Parts extends Component {
                         <i className={"icons cui-pencil"} />
                       </Button>{" "}
                       <UncontrolledTooltip target={`edit-${part._id}`}>
-                        Edit 
+                        Edit
                       </UncontrolledTooltip>
                       &nbsp;
                       <Button
@@ -454,23 +480,23 @@ class Parts extends Component {
                 );
               })
             ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  {filterApplied ? (
-                    <NoDataFound
-                      message={"No Part details found related to your search"}
-                      noResult
-                    />
-                  ) : (
-                    <NoDataFound
-                      showAddButton
-                      message={"Currently there are no Part details added."}
-                      onAddClick={onAddClick}
-                    />
-                  )}
-                </td>
-              </tr>
-            )}
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={"No Part details found related to your search"}
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={"Currently there are no Part details added."}
+                            onAddClick={onAddClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )}
           </tbody>
         </Table>
         {totalParts && !isLoading ? (

@@ -23,6 +23,7 @@ import { AppConfig } from "../../../config/AppConfig";
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import NoDataFound from "../../common/NoFound";
+import { notExist } from "../../../config/Constants";
 
 class FleetList extends Component {
   constructor(props) {
@@ -414,7 +415,7 @@ class FleetList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"text-capitalize font-weight-bold"}>{data.companyName || "-"}</div>
+                        <div className={"text-capitalize font-weight-bold"}>{data.companyName || notExist}</div>
                         <div>{data.email ? <a href={`mailto:${data.email}`} className={"text-body"}>{data.email}</a> : null}</div>
                       </td>
                       <td>

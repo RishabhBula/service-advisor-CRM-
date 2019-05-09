@@ -266,8 +266,6 @@ class PriMatrixList extends Component {
                 </tr>
               )
             }
-    
-    
           </tbody>
         </Table>
       </>

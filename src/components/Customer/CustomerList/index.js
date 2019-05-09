@@ -21,6 +21,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { toast } from "react-toastify";
 import moment from 'moment';
 import NoDataFound from "../../common/NoFound"
+import { notExist } from "../../../config/Constants";
 
 class CustomerList extends Component {
   constructor(props) {
@@ -184,7 +185,7 @@ class CustomerList extends Component {
       param.status = status;
     }
     this.props.onSearch(param);
-   
+
   };
 
   onReset = e => {
@@ -209,7 +210,7 @@ class CustomerList extends Component {
     this.props.onUpdate(id, data);
   };
 
- 
+
   render() {
     const { customerData } = this.props;
     const { customers, isLoading, totalCustomers } = customerData;
@@ -268,7 +269,7 @@ class CustomerList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                     Sort By
+                      Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>
@@ -340,10 +341,10 @@ class CustomerList extends Component {
                     </Input>
                   </div>
                 ) : (
-                  "Sno."
-                )}
+                    "Sno."
+                  )}
               </th>
-              <th width={"300"}><i className={"fa fa-user"}/> Cutomer Details</th>
+              <th width={"300"}><i className={"fa fa-user"} /> Cutomer Details</th>
               <th width={"280"}><i className={"fa fa-phone"} /> Phone No.</th>
               {/* <th>Address</th> */}
               <th width={"130"}><i className={"fa fa-cab"} /> Vehicle</th>
@@ -374,23 +375,23 @@ class CustomerList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || "-"}</div>
-                        <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> :  null}</div>
+                        <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
+                        <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : null}</div>
                         {/* {user.email || null} */}
                       </td>
                       <td>
                         {user.phoneDetail
                           ? user.phoneDetail.map((data, ind) => {
-                              return (
-                                <div className="text-capitalize" key={ind}>
-                                  {data.phone || "NA"}
-                                  {" |"}
-                                  {"  "}
-                                  {data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : "NA"}
-                                </div>
-                              );
-                            })
-                          : "-"}
+                            return (
+                              <div className="text-capitalize" key={ind}>
+                                {data.phone || notExist}
+                                {" |"}
+                                {"  "}
+                                {data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : notExist}
+                              </div>
+                            );
+                          })
+                          : notExist}
                       </td>
                       {/* <td>
                         {user.address1 || ""} {user.city || ""}{" "}
@@ -421,23 +422,23 @@ class CustomerList extends Component {
                             Active
                           </Badge>
                         ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedCustomers: [user._id]
-                                },
-                                () => {
-                                  this.activateCustomers();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedCustomers: [user._id]
+                                  },
+                                  () => {
+                                    this.activateCustomers();
+                                  }
+                                );
+                              }}
+                            >
+                              Inactive
                           </Badge>
-                        )}
+                          )}
                       </td>
                       <td>
                         {/* {user.createdAt ? formateDate(user.createdAt) : "-"} */}
@@ -446,15 +447,15 @@ class CustomerList extends Component {
                       </td>
                       <td className={"text-center"}>
                         <span className={"mr-2"}>
-                        <Button
-                          size={"sm"}
-                          onClick={() => this.editUser(user)}
-                          className={"btn-theme-transparent"}
-                          id={"Tooltip-3"}
-                        >
-                          <i className={"icons cui-pencil"} />
-                        </Button>
-                        <UncontrolledTooltip target="Tooltip-3">
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editUser(user)}
+                            className={"btn-theme-transparent"}
+                            id={"Tooltip-3"}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip target="Tooltip-3">
                             Edit
                         </UncontrolledTooltip>
                         </span>
@@ -483,20 +484,20 @@ class CustomerList extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={10}>
+                      {filterApplied ? <NoDataFound message={"No Customer details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Customer details added."} onAddClick={this.props.onAddClick} />}
+
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                      {filterApplied ? <NoDataFound message={"No Customer details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Customer details added."} onAddClick={this.props.onAddClick}/>}
-                      
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={10}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {totalCustomers && !isLoading ? (
