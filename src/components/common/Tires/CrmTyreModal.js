@@ -716,7 +716,7 @@ export class CrmTyreModal extends Component {
                                                    </Button>
                                                 );
                                              })}
-                                             <Button type={"button"} size={"sm"}>
+                                             <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                                                 <Input
                                                    type={"text"}
                                                    placeholder={"Markup"}
@@ -745,7 +745,7 @@ export class CrmTyreModal extends Component {
                                                    </Button>
                                                 );
                                              })}
-                                             <Button type={"button"} size={"sm"}>
+                                             <Button type={"button"} size={"sm"} className={"btn-with-input"}>
                                                 <Input
                                                    type={"text"}
                                                    placeholder={"Margin"}

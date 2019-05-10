@@ -32,6 +32,7 @@ import { Async } from "react-select";
 import moment from 'moment';
 import NoDataFound from "../../common/NoFound"
 import { logger } from "../../../helpers/Logger";
+import { notExist } from "../../../config/Constants";
 
 class Tires extends Component {
   constructor(props) {
@@ -575,14 +576,14 @@ class Tires extends Component {
                                   <tr key={index}>
                                     <td></td>
                                     <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
-                                    <td>{size.part}</td>
-                                    <td width={"70"}>{size.cost || "-"}</td>
-                                    <td width={"70"}>{size.retailPrice || "-"}</td>
+                                    <td>{size.part || notExist}</td>
+                                    <td width={"70"}>{size.cost || notExist}</td>
+                                    <td width={"70"}>{size.retailPrice || notExist}</td>
                                     <td width={"70"}>{size.quantity || 0}&nbsp;
                                       {size.quantity <= size.criticalQuantity ? (
                                         <Badge color={"warning"}>Reorder</Badge>
                                       ) : null}</td>
-                                    <td width={"70"}>{size.bin || "-"}</td>
+                                    <td width={"70"}>{size.bin || notExist}</td>
                                   </tr>
                                 )
 

@@ -341,8 +341,8 @@ class CustomerList extends Component {
                     </Input>
                   </div>
                 ) : (
-                    "Sno."
-                  )}
+                  "S No."
+                )}
               </th>
               <th width={"300"}><i className={"fa fa-user"} /> Cutomer Details</th>
               <th width={"280"}><i className={"fa fa-phone"} /> Phone No.</th>

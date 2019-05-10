@@ -17,6 +17,8 @@ import {
   ModalFooter
 } from "reactstrap";
 import LastUpdated from "../common/LastUpdated";
+import shortUp from "../../assets/img/short-up.svg";
+import shortDown from "../../assets/img/short-down.svg"
 
 class PriceMatrixComponent extends Component {
   constructor(props) {
@@ -182,7 +184,7 @@ class PriceMatrixComponent extends Component {
                                         id={`tooltip-1-${index}`}
                                       >
                                       <span className={"icon"}>
-                                        <i className={"fa fa-angle-double-up"}></i>
+                                          <img src={shortUp} width={"20"} alt={"shortUp"}/>
                                           <UncontrolledTooltip target={`tooltip-1-${index}`}>
                                           Add range above
                                         </UncontrolledTooltip>
@@ -197,7 +199,7 @@ class PriceMatrixComponent extends Component {
                                       id={`tooltip-2-${index+1}`}
                                     >
                                       <span className={"icon"}>
-                                      <i className={"fa fa-angle-double-down"}></i> 
+                                        <img src={shortDown} width={"20"} alt={"shortUp"} />
                                         <UncontrolledTooltip target={`tooltip-2-${index+1}`}>
                                           Add range below
                                         </UncontrolledTooltip>

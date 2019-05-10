@@ -252,8 +252,8 @@ class Labours extends Component {
                     <option className="form-control" value={""}>
                       Sort
                     </option>
-                    <option value={"pasc"}>Price(Low to High)</option>
-                    <option value={"pdesc"}>Price(High to Low)</option>
+                    {/* <option value={"pasc"}>Price(Low to High)</option>
+                    <option value={"pdesc"}>Price(High to Low)</option> */}
                     <option value={"diasc"}>Discount(Low to High)</option>
                     <option value={"didesc"}>Discount(High to Low)</option>
                     <option value={"createddesc"}>Last Created</option>

@@ -564,7 +564,7 @@ class UserList extends Component {
                 <tr>
                   <td className={"text-center"} colSpan={12}>
                       {filterApplied ? <NoDataFound message={"No Member details found related to your search"} noResult /> :
-                        <NoDataFound showAddButton message={"Currently there are no Vendor details added."} onAddClick={this.onAddClick}/>
+                        <NoDataFound showAddButton message={"Currently there are no Staff Member details added."} onAddClick={this.onAddClick}/>
                       }
                   </td>
                 </tr>

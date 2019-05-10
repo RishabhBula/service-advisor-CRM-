@@ -100,7 +100,7 @@ class Users extends Component {
                   onClick={this.toggleCreateModal}
                 >
                   <i className={"fa fa-plus"} />
-                  &nbsp; Add New
+                  &nbsp; Add New Staff Member
                   </Button>
                 <UncontrolledTooltip target={"add-user"}>
                   Add New Staff Member

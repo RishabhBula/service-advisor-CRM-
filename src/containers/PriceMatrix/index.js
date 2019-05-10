@@ -363,7 +363,7 @@ class PriceMatrix extends Component {
               addNewMatrix={() => this.resetAll(true)}
               handleMatrixDelete={this.handleMatrixDelete}
               onSearch={this.onSearch}
-              onClick={this.toggleMatrixModal}
+              onClick={this.handleMatrixModal}
             />
           </CardBody>
         </Card>

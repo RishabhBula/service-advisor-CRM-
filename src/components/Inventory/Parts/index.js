@@ -393,16 +393,16 @@ class Parts extends Component {
                           <>
                             {part.cost ? (
                               <div className="modal-info">
-                                Cost -{" "}
+                                Cost :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.cost || " "}
+                                  {part.cost || notExist}
                                 </span>
                               </div>
                             ) :
                               <>
                                 <div className="modal-info">
-                                  Cost -{" "}
+                                  Cost :{" "}
                                   <span className={"dollar-price"}>
                                     <i className="fa fa-dollar dollar-icon" />
                                     {0}
@@ -411,16 +411,16 @@ class Parts extends Component {
                               </>}
                             {part.retailPrice ? (
                               <div className="modal-info">
-                                Retail -{" "}
+                                Retail :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.retailPrice || " "}
+                                  {part.retailPrice || "notExist"}
                                 </span>
                               </div>
                             ) :
                               <>
                                 <div className="modal-info">
-                                  Retail -{" "}
+                                  Retail :{" "}
                                   <span className={"dollar-price"}>
                                     <i className="fa fa-dollar dollar-icon" />
                                     {0}
@@ -435,7 +435,7 @@ class Parts extends Component {
                       <span className={"qty-value"}>{part.quantity || 0}&nbsp;</span>
                       {part.quantity <= part.criticalQuantity ? (
                         <Badge color={"warning"}>Reorder</Badge>
-                      ) : null}
+                      ) : " "}
 
                     </td>
                     <td>
