@@ -30,6 +30,7 @@ import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
 import LastUpdated from "../../common/LastUpdated";
 import { toast } from "react-toastify";
+import { logger } from "../../../helpers/Logger";
 
 export class CrmLabourModal extends Component {
   constructor(props) {
@@ -45,7 +46,10 @@ export class CrmLabourModal extends Component {
       discountType: '',
       labourInput: "",
       permission: LabourTextDefault,
-      discount: "$",
+      discount: {
+        value: "",
+        type: "$"
+      },
       updatedAt: "",
       selectedRateOptions: {
         label: "",
@@ -59,14 +63,20 @@ export class CrmLabourModal extends Component {
   };
   handleChange = event => {
     const { name, value } = event.target;
-    if (name === 'discount' && value !== '') {
-      this.setState({
-        [name]: value
-      });
+    if (name === 'discount') {
+      if (isNaN(value)) {
+        return
+      } else {
+        this.setState({
+          discount: {
+            ...this.state.discount,
+            value: value,
+          }
+        });
+      }
     } else {
       this.setState({
-        [name]: value,
-        discountType: "$"
+        [name]: value
       })
     }
   };
@@ -97,7 +107,6 @@ export class CrmLabourModal extends Component {
         errors: {},
         updatedAt: this.props.dataLabour.updatedAt,
         labourId: this.props.dataLabour._id,
-        discountType: this.props.dataLabour.discount !== '' && this.props.dataLabour.discount.includes("%") ? '%' : '$',
         permission: this.props.dataLabour.permission,
         selectedLabourRate: this.props.setDefaultRate({ value: this.props.dataLabour.rate && this.props.dataLabour.rate._id ? this.props.dataLabour.rate._id : '', label: this.props.dataLabour.rate && this.props.dataLabour.rate.name ? this.props.dataLabour.rate.name + ' - $' + this.props.dataLabour.rate.hourlyRate : 'Type to select' }),
         discount: this.props.dataLabour.discount,
@@ -117,7 +126,10 @@ export class CrmLabourModal extends Component {
       updatedAt: '',
       permission: LabourTextDefault,
       selectedLabourRate: '',
-      discount: "",
+      discount: {
+        value: "",
+        type: "$"
+      },
       openStadardRateModel: false
     })
   }
@@ -152,62 +164,32 @@ export class CrmLabourModal extends Component {
   }
 
   handleClickDiscountType = value => {
-    if (value === "%" && this.state.discount !== '') {
-      const splitedDiscDoller = this.state.discount.split("$")
-      const splitDiscPercent = this.state.discount.split("%")
-      if (splitDiscPercent[1] === '') {
+    if (value === "%" && this.state.discount.value !== '') {
+      if (parseInt(this.state.discount.value) < 100) {
         this.setState({
-          discount: this.state.discount,
-          discountType: value
-        });
-      }
-      else if (splitedDiscDoller[0] !== '') {
-        if (parseFloat(splitDiscPercent[0]) < 100) {
-          this.setState({
-            discount: this.state.discount + '%',
-            discountType: value
-          });
-        } else {
-          if (!toast.isActive(this.toastId)) {
-            this.toastId = toast.error("Enter percentage less than 100");
+          discount: {
+            ...this.state.discount,
+            type: value
           }
-        }
+        })
       } else {
-        if (parseFloat(splitedDiscDoller[1]) < 100) {
-          this.setState({
-            discount: this.state.discount.replace('$', '') + '%',
-            discountType: value
-          })
-        } else {
-          if (!toast.isActive(this.toastId)) {
-            this.toastId = toast.error("Enter percentage less than 100");
-          }
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Enter percentage less than 100");
         }
       }
     } else if (value === "$" && this.state.discount !== '') {
-      const splitedDiscPercent = this.state.discount.split("%")
-      const splitDiscDoller = this.state.discount.split("$")
-      if (splitDiscDoller[0] === '') {
-        this.setState({
-          discount: this.state.discount,
-          discountType: value
-        });
-      }
-      else if (splitedDiscPercent[1] !== '') {
-        this.setState({
-          discount: '$' + this.state.discount,
-          discountType: value
-        });
-      } else {
-        this.setState({
-          discount: '$' + this.state.discount.replace('%', ''),
-          discountType: value
-        });
-      }
+      this.setState({
+        discount: {
+          ...this.state.discount,
+          type: value
+        }
+      });
     } else {
       this.setState({
-        discount: this.state.discount,
-        discountType: '$'
+        discount: {
+          ...this.state.discount,
+          type: '$'
+        }
       });
     }
   }
@@ -243,24 +225,8 @@ export class CrmLabourModal extends Component {
         selectedRateOptions.value) ? selectedRateOptions.value : null,
       discount: this.state.discount,
     }
-    let validationData = {}
-    const splitDisDoller = this.state.discount.split("$")
-    const splitDisPercent = this.state.discount.split("%")
-    if (splitDisDoller[0] === '') {
-      validationData = {
-        discription: this.state.discription,
-        hours: this.state.hours,
-        discount: splitDisDoller[1],
-      }
-    } else if (splitDisPercent[1] === '') {
-      validationData = {
-        discription: this.state.discription,
-        hours: this.state.hours,
-        discount: splitDisPercent[0],
-      }
-    }
     const { isValid, errors } = Validator(
-      validationData,
+      data,
       CreateLabourValidations,
       CreateLabourValidMessaages
     );
@@ -289,7 +255,6 @@ export class CrmLabourModal extends Component {
       discription,
       note,
       hours,
-      discountType,
       discount,
       isEditMode,
       permission,
@@ -367,14 +332,10 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Discount
                     </Label>
-                    {
-                      console.log(errors.discount, errors, "###########")
-
-                    }
                     <InputGroup className={"labor-discount"}>
-                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" invalid={errors.discount && !discount.isNumeric} value={discount} placeholder={"Discount"} />
+                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" invalid={errors.discount && !discount.isNumeric} value={discount.value} placeholder={"Discount"} />
                       <div class="input-group-append">
-                        <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
+                        <DiscountBtn discountType={discount.type} handleClickDiscountType={this.handleClickDiscountType} />
                       </div>
                       <FormFeedback>
                         {errors && !discount.isNumeric && errors.discount
