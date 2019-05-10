@@ -29,7 +29,7 @@ import {
 import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
 import LastUpdated from "../../common/LastUpdated";
-import { logger } from "../../../helpers/Logger";
+import { toast } from "react-toastify";
 
 export class CrmLabourModal extends Component {
   constructor(props) {
@@ -45,7 +45,10 @@ export class CrmLabourModal extends Component {
       discountType: '',
       labourInput: "",
       permission: LabourTextDefault,
-      discount: "$",
+      discount: {
+        value: "",
+        type: "$"
+      },
       updatedAt: "",
       selectedRateOptions: {
         label: "",
@@ -60,15 +63,21 @@ export class CrmLabourModal extends Component {
   handleChange = event => {
     const { name, value } = event.target;
     if (name === 'discount') {
-      this.setState({
-        [name]: (this.state.discountType === '%' && value === '') ? value.replace('%', '') + '%' : value
-      });
+      if (isNaN(value)) {
+        return
+      } else {
+        this.setState({
+          discount: {
+            ...this.state.discount,
+            value: value,
+          }
+        });
+      }
     } else {
       this.setState({
         [name]: value
-      });
+      })
     }
-
   };
   componentDidUpdate({ tyreModalOpen, dataLabour, rateStandardListData }) {
     if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.dataLabour) {
@@ -97,7 +106,6 @@ export class CrmLabourModal extends Component {
         errors: {},
         updatedAt: this.props.dataLabour.updatedAt,
         labourId: this.props.dataLabour._id,
-        discountType: this.props.dataLabour.discount !== '' && this.props.dataLabour.discount.includes("%") ? '%' : '$',
         permission: this.props.dataLabour.permission,
         selectedLabourRate: this.props.setDefaultRate({ value: this.props.dataLabour.rate && this.props.dataLabour.rate._id ? this.props.dataLabour.rate._id : '', label: this.props.dataLabour.rate && this.props.dataLabour.rate.name ? this.props.dataLabour.rate.name + ' - $' + this.props.dataLabour.rate.hourlyRate : 'Type to select' }),
         discount: this.props.dataLabour.discount,
@@ -117,7 +125,10 @@ export class CrmLabourModal extends Component {
       updatedAt: '',
       permission: LabourTextDefault,
       selectedLabourRate: '',
-      discount: "",
+      discount: {
+        value: "",
+        type: "$"
+      },
       openStadardRateModel: false
     })
   }
@@ -152,10 +163,34 @@ export class CrmLabourModal extends Component {
   }
 
   handleClickDiscountType = value => {
-    this.setState({
-      discount: (this.state.discount !== '' && value === '%') ? this.state.discount.replace('%', '') + '%' : this.state.discount.replace('%', ''),
-      discountType: value,
-    });
+    if (value === "%" && this.state.discount.value !== '') {
+      if (parseInt(this.state.discount.value) < 100) {
+        this.setState({
+          discount: {
+            ...this.state.discount,
+            type: value
+          }
+        })
+      } else {
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Enter percentage less than 100");
+        }
+      }
+    } else if (value === "$" && this.state.discount !== '') {
+      this.setState({
+        discount: {
+          ...this.state.discount,
+          type: value
+        }
+      });
+    } else {
+      this.setState({
+        discount: {
+          ...this.state.discount,
+          type: '$'
+        }
+      });
+    }
   }
   handleStandardRate = e => {
     if (e) {
@@ -219,7 +254,6 @@ export class CrmLabourModal extends Component {
       discription,
       note,
       hours,
-      discountType,
       discount,
       isEditMode,
       permission,
@@ -298,10 +332,15 @@ export class CrmLabourModal extends Component {
                       Discount
                     </Label>
                     <InputGroup className={"labor-discount"}>
-                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} placeholder={"Discount"} />
+                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" invalid={errors.discount && !discount.isNumeric} value={discount.value} placeholder={"Discount"} />
                       <div class="input-group-append">
-                        <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
+                        <DiscountBtn discountType={discount.type} handleClickDiscountType={this.handleClickDiscountType} />
                       </div>
+                      <FormFeedback>
+                        {errors && !discount.isNumeric && errors.discount
+                          ? errors.discount
+                          : null}
+                      </FormFeedback>
                     </InputGroup>
                   </FormGroup>
                 </Col>

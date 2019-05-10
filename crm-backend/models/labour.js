@@ -17,7 +17,7 @@ const labourSchema = new Schema({
         default: null,
     },
     discount: {
-        type: String,
+        type: Object,
         default: null
     },
     notes: {
