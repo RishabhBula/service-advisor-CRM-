@@ -1022,19 +1022,22 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border-color: #8157ee;
 }
 .vehicles-select-color {
-  border-radius: 10px;
   display: inline-block;
-  margin-right: 8px;
+  margin-right: 6px;
   margin-left: 5px;
-  height: 15px;
-  width: 15px;
-  border: 1px solid #c5c5c5
+  height: 20px;
+  width: 20px;
+  border: 1px solid #c5c5c5;
 }
 .vehicles-select-color-block{
   display: flex;
   align-items: center;
-  padding: 3px 5px;
-  font-size: 14px;
+  padding: 4px 5px;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+}
+.vehicles-select-color-block:hover{
+  background-color: #ddd;
 }
 .part-note{
   font-size: 10px;
