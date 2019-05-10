@@ -30,7 +30,6 @@ import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
 import LastUpdated from "../../common/LastUpdated";
 import { toast } from "react-toastify";
-import { logger } from "../../../helpers/Logger";
 
 export class CrmLabourModal extends Component {
   constructor(props) {
