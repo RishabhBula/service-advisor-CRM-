@@ -29,7 +29,7 @@ import {
 import { CrmStandardModel } from "../../common/CrmStandardModel";
 import Async from "react-select/lib/Async";
 import LastUpdated from "../../common/LastUpdated";
-import { logger } from "../../../helpers/Logger";
+import { toast } from "react-toastify";
 
 export class CrmLabourModal extends Component {
   constructor(props) {
@@ -59,16 +59,16 @@ export class CrmLabourModal extends Component {
   };
   handleChange = event => {
     const { name, value } = event.target;
-    if (name === 'discount') {
-      this.setState({
-        [name]: (this.state.discountType === '%' && value === '') ? value.replace('%', '') + '%' : value
-      });
-    } else {
+    if (name === 'discount' && value !== '') {
       this.setState({
         [name]: value
       });
+    } else {
+      this.setState({
+        [name]: value,
+        discountType: "$"
+      })
     }
-
   };
   componentDidUpdate({ tyreModalOpen, dataLabour, rateStandardListData }) {
     if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.dataLabour) {
@@ -152,10 +152,64 @@ export class CrmLabourModal extends Component {
   }
 
   handleClickDiscountType = value => {
-    this.setState({
-      discount: (this.state.discount !== '' && value === '%') ? this.state.discount.replace('%', '') + '%' : this.state.discount.replace('%', ''),
-      discountType: value,
-    });
+    if (value === "%" && this.state.discount !== '') {
+      const splitedDiscDoller = this.state.discount.split("$")
+      const splitDiscPercent = this.state.discount.split("%")
+      if (splitDiscPercent[1] === '') {
+        this.setState({
+          discount: this.state.discount,
+          discountType: value
+        });
+      }
+      else if (splitedDiscDoller[0] !== '') {
+        if (parseFloat(splitDiscPercent[0]) < 100) {
+          this.setState({
+            discount: this.state.discount + '%',
+            discountType: value
+          });
+        } else {
+          if (!toast.isActive(this.toastId)) {
+            this.toastId = toast.error("Enter percentage less than 100");
+          }
+        }
+      } else {
+        if (parseFloat(splitedDiscDoller[1]) < 100) {
+          this.setState({
+            discount: this.state.discount.replace('$', '') + '%',
+            discountType: value
+          })
+        } else {
+          if (!toast.isActive(this.toastId)) {
+            this.toastId = toast.error("Enter percentage less than 100");
+          }
+        }
+      }
+    } else if (value === "$" && this.state.discount !== '') {
+      const splitedDiscPercent = this.state.discount.split("%")
+      const splitDiscDoller = this.state.discount.split("$")
+      if (splitDiscDoller[0] === '') {
+        this.setState({
+          discount: this.state.discount,
+          discountType: value
+        });
+      }
+      else if (splitedDiscPercent[1] !== '') {
+        this.setState({
+          discount: '$' + this.state.discount,
+          discountType: value
+        });
+      } else {
+        this.setState({
+          discount: '$' + this.state.discount.replace('%', ''),
+          discountType: value
+        });
+      }
+    } else {
+      this.setState({
+        discount: this.state.discount,
+        discountType: '$'
+      });
+    }
   }
   handleStandardRate = e => {
     if (e) {
@@ -189,8 +243,24 @@ export class CrmLabourModal extends Component {
         selectedRateOptions.value) ? selectedRateOptions.value : null,
       discount: this.state.discount,
     }
+    let validationData = {}
+    const splitDisDoller = this.state.discount.split("$")
+    const splitDisPercent = this.state.discount.split("%")
+    if (splitDisDoller[0] === '') {
+      validationData = {
+        discription: this.state.discription,
+        hours: this.state.hours,
+        discount: splitDisDoller[1],
+      }
+    } else if (splitDisPercent[1] === '') {
+      validationData = {
+        discription: this.state.discription,
+        hours: this.state.hours,
+        discount: splitDisPercent[0],
+      }
+    }
     const { isValid, errors } = Validator(
-      data,
+      validationData,
       CreateLabourValidations,
       CreateLabourValidMessaages
     );
@@ -297,11 +367,20 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Discount
                     </Label>
+                    {
+                      console.log(errors.discount, errors, "###########")
+
+                    }
                     <InputGroup className={"labor-discount"}>
-                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" value={discount} placeholder={"Discount"} />
+                      <Input className={"form-control"} id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" invalid={errors.discount && !discount.isNumeric} value={discount} placeholder={"Discount"} />
                       <div class="input-group-append">
                         <DiscountBtn discountType={discountType} handleClickDiscountType={this.handleClickDiscountType} />
                       </div>
+                      <FormFeedback>
+                        {errors && !discount.isNumeric && errors.discount
+                          ? errors.discount
+                          : null}
+                      </FormFeedback>
                     </InputGroup>
                   </FormGroup>
                 </Col>
