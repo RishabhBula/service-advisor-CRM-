@@ -983,7 +983,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .invt-add-btn-block .btn-primary{
   min-width: 175px;
   border-radius: 4px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   border: 1px solid #b1acc2 !important;
   background: #fff;
@@ -1033,11 +1033,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   display: flex;
   align-items: center;
   padding: 4px 5px;
-  font-size: 15px;
+  font-size: 14px;
   border-bottom: 1px solid #eee;
 }
 .vehicles-select-color-block:hover{
   background-color: #ddd;
+  transition: all ease 0.4s;
 }
 .part-note{
   font-size: 10px;
