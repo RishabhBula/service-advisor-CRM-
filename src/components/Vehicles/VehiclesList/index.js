@@ -420,34 +420,17 @@ class VehiclesList extends Component {
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
                       <td>
-                        <div className={"vehicle-type-img"}>
+                        <div className={"vehicle-type-img d-inline-block"} id={`type${index}`}>
                           <VehicleIcons
                             type={vehicle.type.value}
                             color={vehicle.color.color}
                           />
-                          {/* {this.carType(vehicle.type.value)} */}
                         </div>
+                          <UncontrolledTooltip target={`type${index}`}>
+                            {vehicle.type.value}
+                          </UncontrolledTooltip> 
                         {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
-                      {/* <td>
-                        {vehicle.color ? (
-                          <span
-                            style={{
-                              display: "flex",
-                              alignItems: "center"
-                            }}
-                          >
-                            <CrmCircleBackground
-                              width={"15px"}
-                              height={"15px"}
-                              backColor={vehicle.color.color}
-                            />
-                            {vehicle.color.label}
-                          </span>
-                        ) : (
-                          "None"
-                        )}
-                      </td> */}
                       <td>{vehicle.year}</td>
                       <td className={"text-capitalize"}>{vehicle.make}</td>
                       <td className={"text-capitalize"}>{vehicle.modal}</td>

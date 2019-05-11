@@ -416,10 +416,18 @@
 .auth-page .input-group-prepend {
   border: 1px solid #858391;
   background: #fff;
+  margin-left: 1px;
+  border-right: 0;
 }
 .auth-page .input-group-text {
   background: #fff;
-  border-color: #fff;
+  border: 0px;
+  height: calc(100% - 4px);
+  width: calc(100% - 5px);
+  top: 2px;
+  position: relative;
+  left: 0px;
+  border-radius: 0;
 }
 /* end of auth page */
 
@@ -1080,32 +1088,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .tire-col {
   min-width: 80px !important;
 }
-.discount-button{
-  margin: 0 0 0 8px;
-  padding: 0;
-  list-style: none;
-  white-space: nowrap;
-}
-.discount-button li{
-  display: inline-block;
-}
-.discount-button li button{
-  color: #76838f;
-  background-color: transparent;
-  border-bottom-left-radius: .143rem;
-  padding: 6px 7px;
-  min-width: 36px;
-  font-weight: 300;
-  border-radius: 0;
-  border-right: none;
-  position: relative;
-  border-color: #e4eaec;
-}
-.discount-button li button.active{
-  color: #76838f!important;
-  border-color: #e4eaec!important;
-  background-color: rgba(118, 131, 143, .1)!important;
-}
+
 .rate-labour{
   width:100%;
   position: relative;
@@ -1211,10 +1194,26 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 /* Tyre CSS END*/
 /* Labor */
-.labor-discount .btn.btn-secondary{
+.labor-discount{
+  position: relative;
+  display: flex;
+  flex-flow: row;
+}
+.labor-discount .input-group{
+  max-width: 120px;
+  margin-right: 30px;
+}
+.labor-discount .form-control{
+  width: 150px;
+}
+.labor-discount .btn{
   height: 30px;
   width: 30px;
-  background-color: #e4e5e6;
+}
+.labor-discount .btn.btn-primary{
+  background-color: transparent;
+  border-color: #a6a7a7;
+  color: #222;
 }
 .labor-discount .btn.btn-secondary:focus{
   box-shadow: none !important;
@@ -1224,6 +1223,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #7f6cb8 !important;
   border-color: #7f6cb8 !important;
 }
+.discount-button .btn:first-child{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.discount-button .btn:last-child{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
 /* Price Matrix */
 .btn-input{
   background-color: transparent;

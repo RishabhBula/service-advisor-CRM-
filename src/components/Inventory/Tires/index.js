@@ -493,7 +493,7 @@ class Tires extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td className={"text-capitalize"}>
-                          <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
+                          <div className={"font-weight-semibold"}>{tire.brandName || "-"}</div>
                           {tire.modalName ? <div className={"modal-info"}>
                             Modal : <Badge>{tire.modalName}</Badge></div> : " "}
                         </td>

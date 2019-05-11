@@ -436,7 +436,7 @@ class UserList extends Component {
               {/* <th>Last Login IP</th> */}
               <th width={"150"} className={"text-center"}><i className={"fa fa-share-alt"} /> Invitation Status</th>
               <th width={"150"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th>
-              <th width={"200"}><i className={"fa fa-sign-in"} /> Last Login Details</th>
+              <th width={"200"}><i className={"fa fa-sign-in"} /> Created /  Login Details</th>
               <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
@@ -520,8 +520,18 @@ class UserList extends Component {
                         )}
                       </td>
                       <td>
-                        <div>{user.loggedInAt ? formateDate(user.loggedInAt) : "-"}</div>
-                        <div>{user.loggedInIp || " "}</div>
+                        <div id={`create${index}`}>
+                          {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
+                          {user.loggedInAt ? <UncontrolledTooltip target={`create${index}`}>
+                            Created At
+                          </UncontrolledTooltip> :null}
+                        </div>
+                        <div id={`loginip-${index}`}>
+                          {user.loggedInIp || " "}
+                          {user.loggedInIp ? <UncontrolledTooltip target={`loginip-${index}`}>
+                            Last Login Ip Address
+                          </UncontrolledTooltip> :null }
+                        </div>
                       </td>
                       <td className={"text-center"}>
                         <Button
