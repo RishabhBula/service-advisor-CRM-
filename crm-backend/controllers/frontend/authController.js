@@ -37,9 +37,10 @@ const signUp = async (req, res) => {
         success: false
       });
     } else {
-      var roleType = await roleModel.findOne({ userType: "admin" });
+      var roleType = await roleModel.findOne({ userType: "sub-admin" });
       var $data = req.body;
       $data.roleType = roleType._id;
+      
       $data.permissions =
         typeof roleType.permissionObject[0] === "object"
           ? roleType.permissionObject[0]

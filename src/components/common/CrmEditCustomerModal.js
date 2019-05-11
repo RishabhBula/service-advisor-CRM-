@@ -75,11 +75,14 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(prevProps,"############################");
+    console.log(this.props.customer,"!!!!!!!!!!!!!!!!!!!!!!");    
     if (
       this.props.customer &&
       this.props.customer._id &&
       (prevProps.customer._id !== this.props.customer._id)
     ) {
+      console.log(this.props.customer,"$$$$$$$$$$$$$$$$$$$$");        
       const { customer } = this.props;
       this.setState({
         address1: customer.address1,
@@ -110,7 +113,7 @@ export class CrmEditCustomerModal extends Component {
         this.props.customer.customerDefaultPermissions.shouldPricingMatrixOverride
           .pricingMatrix !== "objectId"
       ) {
-        const { matrixListReducerData,customer } = this.props
+        const { matrixListReducerData, customer } = this.props
         const pricingMatrixValue = customer.customerDefaultPermissions.shouldPricingMatrixOverride.pricingMatrix
         const selectedMatrix = matrixListReducerData.filter(matrix => matrix._id === pricingMatrixValue)
         this.setState({
@@ -522,7 +525,8 @@ export class CrmEditCustomerModal extends Component {
       customerModalOpen,
       rateStandardListData,
       getCustomerFleetList,
-      customer
+      customer,
+      isCustVehiclemodal
     } = this.props;
     const {
       selectedOption,
@@ -567,7 +571,17 @@ export class CrmEditCustomerModal extends Component {
         >
           <ModalHeader toggle={this.handleCustomerModal}>
             {"Update Customer"}
-            <LastUpdated updatedAt={customer.updatedAt}/>
+            {customer.updatedAt ?
+              <LastUpdated updatedAt={customer.updatedAt} /> :
+              null
+            }
+            {
+              isCustVehiclemodal ?
+                <div className={"step-align"}>
+                  Step 1/2
+                </div>
+                : null
+            }
           </ModalHeader>
           <ModalBody>
             <div className="">
@@ -845,7 +859,7 @@ export class CrmEditCustomerModal extends Component {
                       value={selectedOption}
                       onChange={this.handleChange}
                       className={"w-100 form-select"}
-                      classNamePrefix={"form-select-theme"} 
+                      classNamePrefix={"form-select-theme"}
                       isClearable={selectedOption.value !== "" ? true : false}
                       options={options}
                     />
@@ -872,245 +886,245 @@ export class CrmEditCustomerModal extends Component {
             </div> */}
             {/* {expandForm ? (
               <> */}
-                <div className="">
-                  <Row className="">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Address
+            <div className="">
+              <Row className="">
+                <Col md="6">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      Address
                         </Label>
-                        <Input
-                          type="text"
-                          placeholder="Address"
-                          name="address1"
-                          value={this.state.address1}
-                          onChange={this.handleInputChange}
-                          maxLength="200"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          City
+                    <Input
+                      type="text"
+                      placeholder="Address"
+                      name="address1"
+                      value={this.state.address1}
+                      onChange={this.handleInputChange}
+                      maxLength="200"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      City
                         </Label>
-                        <Input
-                          type="text"
-                          placeholder="New York"
-                          name="city"
-                          onChange={this.handleInputChange}
-                          value={this.state.city}
-                          maxLength="30"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-                <div className="">
-                  <Row className="">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          State
+                    <Input
+                      type="text"
+                      placeholder="New York"
+                      name="city"
+                      onChange={this.handleInputChange}
+                      value={this.state.city}
+                      maxLength="30"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+            </div>
+            <div className="">
+              <Row className="">
+                <Col md="6">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      State
                         </Label>
-                        <Input
-                          type="text"
-                          name="state"
-                          value={this.state.state}
-                          onChange={this.handleInputChange}
-                          placeholder="NY"
-                          maxLength="30"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6 ">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Zip Code
+                    <Input
+                      type="text"
+                      name="state"
+                      value={this.state.state}
+                      onChange={this.handleInputChange}
+                      placeholder="NY"
+                      maxLength="30"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md="6 ">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      Zip Code
                         </Label>
-                        <Input
-                          type="text"
-                          placeholder="Zip Code"
-                          name="zipCode"
-                          onChange={this.handleInputChange}
-                          value={this.state.zipCode}
-                          maxLength="6"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-                <div className="">
-                  <Row className="">
-                    <Col md="6">
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Referral Source
+                    <Input
+                      type="text"
+                      placeholder="Zip Code"
+                      name="zipCode"
+                      onChange={this.handleInputChange}
+                      value={this.state.zipCode}
+                      maxLength="6"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+            </div>
+            <div className="">
+              <Row className="">
+                <Col md="6">
+                  <FormGroup>
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
+                      Referral Source
                         </Label>
-                        <Input
-                          type="text"
-                          placeholder="Referral"
-                          name="referralSource"
-                          onChange={this.handleInputChange}
-                          maxLength="100"
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </div>
-                <Row className="custom-label-padding ">
-                  {CustomerPermissionsText
-                    ? CustomerPermissionsText.map((permission, index) => {
-                      let discountShow = false;
-                      let labourRate = false;
-                      let pricingMatrix = false;
-                      if (
-                        permission.key === "shouldReceiveDiscount" &&
-                        customerDefaultPermissions[permission.key].status
-                      ) {
-                        discountShow = true;
-                      }
+                    <Input
+                      type="text"
+                      placeholder="Referral"
+                      name="referralSource"
+                      onChange={this.handleInputChange}
+                      maxLength="100"
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+            </div>
+            <Row className="custom-label-padding ">
+              {CustomerPermissionsText
+                ? CustomerPermissionsText.map((permission, index) => {
+                  let discountShow = false;
+                  let labourRate = false;
+                  let pricingMatrix = false;
+                  if (
+                    permission.key === "shouldReceiveDiscount" &&
+                    customerDefaultPermissions[permission.key].status
+                  ) {
+                    discountShow = true;
+                  }
 
-                      if (
-                        permission.key === "shouldLaborRateOverride" &&
-                        customerDefaultPermissions[permission.key].status
-                      ) {
-                        labourRate = true;
-                      }
+                  if (
+                    permission.key === "shouldLaborRateOverride" &&
+                    customerDefaultPermissions[permission.key].status
+                  ) {
+                    labourRate = true;
+                  }
 
-                      if (
-                        permission.key === "shouldPricingMatrixOverride" &&
-                        customerDefaultPermissions[permission.key].status
-                      ) {
-                        pricingMatrix = true;
-                      }
-                      return (
-                        <React.Fragment key={index}>
-                          <Col
-                            md="6"
-                            key={index}
-                            className={
-                              permission.key === "shouldPricingMatrixOverride"
-                                ? "price-matrix"
-                                : null
+                  if (
+                    permission.key === "shouldPricingMatrixOverride" &&
+                    customerDefaultPermissions[permission.key].status
+                  ) {
+                    pricingMatrix = true;
+                  }
+                  return (
+                    <React.Fragment key={index}>
+                      <Col
+                        md="6"
+                        key={index}
+                        className={
+                          permission.key === "shouldPricingMatrixOverride"
+                            ? "price-matrix"
+                            : null
+                        }
+                      >
+                        <div className="d-flex">
+                          <AppSwitch
+                            className={"mx-1"}
+                            checked={
+                              customerDefaultPermissions[permission.key]
+                                .status
                             }
+                            onClick={this.handleClick.bind(
+                              this,
+                              permission.key
+                            )}
+                            variant={"3d"}
+                            color={"primary"}
+                            size={"sm"}
+                          />
+                          <p className="customer-modal-text-style">
+                            {permission.text}
+                          </p>
+                        </div>
+                        {discountShow ? (
+                          <div
+                            className="custom-label  d-flex col-12"
+                            key={index}
                           >
-                            <div className="d-flex">
-                              <AppSwitch
-                                className={"mx-1"}
-                                checked={
-                                  customerDefaultPermissions[permission.key]
-                                    .status
-                                }
-                                onClick={this.handleClick.bind(
-                                  this,
-                                  permission.key
-                                )}
-                                variant={"3d"}
-                                color={"primary"}
-                                size={"sm"}
-                              />
-                              <p className="customer-modal-text-style">
-                                {permission.text}
-                              </p>
-                            </div>
-                            {discountShow ? (
-                              <div
-                                className="custom-label  d-flex col-12"
-                                key={index}
-                              >
-                                <Label
-                                  htmlFor="name"
-                                  className="customer-modal-text-style mr-2"
-                                >
-                                  Percent Discount
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style mr-2"
+                            >
+                              Percent Discount
                                   </Label>
-                                <FormGroup className={"mb-2"}>
-                                  <InputGroup>
-                                  <Col md="5" className={"p-0"}>
-                                    <Input
-                                      // mask="11\.11 \%"
-                                      name="percentageDiscount"
-                                        maxLength="5"
-                                      onChange={this.handlePercentageChange}
-                                      className="form-control"
-                                      value={
-                                        customerDefaultPermissions[
-                                          permission.key
-                                        ].percentageDiscount
-                                      }
-                                      placeholder="00.00%"
-                                    />
-                                  </Col>
-                                    <div className="input-group-append">
-                                      <span className="input-group-text">
-                                        <i className="fa fa-percent"></i>
-                                      </span>
-                                    </div>
-                                  </InputGroup>
-                                </FormGroup>
-                              </div>
-                            ) : null}
-                            {labourRate ? (
-                              <Col
-                                md=""
-                                className={"fleet-block rate-standard-list"}
-                              >
-                                <Async
-                                  defaultOptions={
-                                    rateStandardListData.standardRateList
-                                  }
-                                  loadOptions={this.loadOptions}
-                                  onChange={this.handleStandardRate}
-                                  isClearable={
-                                    selectedLabourRate &&
-                                      selectedLabourRate.value !== ""
-                                      ? true
-                                      : false
-                                  }
-                                  value={selectedLabourRate}
-                                />
-                              </Col>
-                            ) : null}
-                            {/* */}
-                            {pricingMatrix ? (
-                              <Col
-                                md=""
-                                className={"fleet-block rate-standard-list"}
-                              >
-                                <Async
-                                  placeholder={"Type to select price matrix"}
-                                  loadOptions={this.matrixLoadOptions}
-                                  onChange={(e) => this.handlePriceMatrix(e)}
-                                  isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
-                                  value={selectedPriceMatrix}
-                                  noOptionsMessage={() => "Type price matrix name"
-                                  }
-                                />
-                              </Col>
-                            ) : null}
+                            <FormGroup className={"mb-2"}>
+                              <InputGroup>
+                                <Col md="5" className={"p-0"}>
+                                  <Input
+                                    // mask="11\.11 \%"
+                                    name="percentageDiscount"
+                                    maxLength="5"
+                                    onChange={this.handlePercentageChange}
+                                    className="form-control"
+                                    value={
+                                      customerDefaultPermissions[
+                                        permission.key
+                                      ].percentageDiscount
+                                    }
+                                    placeholder="00.00%"
+                                  />
+                                </Col>
+                                <div className="input-group-append">
+                                  <span className="input-group-text">
+                                    <i className="fa fa-percent"></i>
+                                  </span>
+                                </div>
+                              </InputGroup>
+                            </FormGroup>
+                          </div>
+                        ) : null}
+                        {labourRate ? (
+                          <Col
+                            md=""
+                            className={"fleet-block rate-standard-list"}
+                          >
+                            <Async
+                              defaultOptions={
+                                rateStandardListData.standardRateList
+                              }
+                              loadOptions={this.loadOptions}
+                              onChange={this.handleStandardRate}
+                              isClearable={
+                                selectedLabourRate &&
+                                  selectedLabourRate.value !== ""
+                                  ? true
+                                  : false
+                              }
+                              value={selectedLabourRate}
+                            />
                           </Col>
-                        </React.Fragment>
-                      );
-                    })
-                    : null}
+                        ) : null}
+                        {/* */}
+                        {pricingMatrix ? (
+                          <Col
+                            md=""
+                            className={"fleet-block rate-standard-list"}
+                          >
+                            <Async
+                              placeholder={"Type to select price matrix"}
+                              loadOptions={this.matrixLoadOptions}
+                              onChange={(e) => this.handlePriceMatrix(e)}
+                              isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
+                              value={selectedPriceMatrix}
+                              noOptionsMessage={() => "Type price matrix name"
+                              }
+                            />
+                          </Col>
+                        ) : null}
+                      </Col>
+                    </React.Fragment>
+                  );
+                })
+                : null}
 
-                  {/* {expandForm ? (
+              {/* {expandForm ? (
                     <Col md="12 text-center">
                       <span
                         onClick={this.handleExpandForm}
@@ -1121,8 +1135,8 @@ export class CrmEditCustomerModal extends Component {
                       </span>
                     </Col>
                   ) : null} */}
-                </Row>
-              {/* </>
+            </Row>
+            {/* </>
             ) : (
                 ""
               )} */}
@@ -1136,12 +1150,17 @@ export class CrmEditCustomerModal extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>
-            <Button color="primary" onClick={this.updateNewCustomer}>
-              {"Update Customer"}
-            </Button>{" "}
-            <Button color="secondary" onClick={this.handleCustomerModal}>
-              Cancel
+            <div className={isCustVehiclemodal ? "btn-reverse" : "btn-forward"}>
+              <Button color="primary" onClick={this.updateNewCustomer}>
+                {
+                  isCustVehiclemodal ? "Update Customer and Continue >" :
+                    "Update Customer"
+                }
+              </Button>{" "}
+              <Button color="secondary" onClick={this.handleCustomerModal}>
+                Cancel
             </Button>
+            </div>
           </ModalFooter>
         </Modal>
       </>

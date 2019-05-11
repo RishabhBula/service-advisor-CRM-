@@ -78,7 +78,8 @@ class CustAndVehicle extends Component {
       addCustomer,
       profileInfoReducer,
       modelInfoReducer,
-      customerInfoReducer
+      customerInfoReducer,
+      isCustVehiclemodal
     } = this.props;
     const { customerAddInfo } = customerInfoReducer;
     const { modelDetails } = modelInfoReducer;
@@ -100,25 +101,28 @@ class CustAndVehicle extends Component {
             getCustomerFleetList={customerFleetReducer.customerFleetData}
             setDefaultRate={this.setDefaultRate}
             loadTypeRate={this.loadTypeRate}
+            isCustVehiclemodal={isCustVehiclemodal}
           />
         ) : (
-          <CrmCustomerModal
-            customerModalOpen={custAndVehicleCustomer}
-            handleCustomerModalFun={this.toggleModal}
-            addCustomerFun={addCustomer}
-            profileInfo={profileInfoReducer}
-            matrixListReducerData={matrixListReducer}
-            rateStandardListData={rateStandardListReducer}
-            onTypeHeadStdFun={this.onTypeHeadStdFun}
-            onStdAdd={this.onStdAdd}
-            getCustomerFleetList={customerFleetReducer.customerFleetData}
-            setDefaultRate={this.setDefaultRate}
-            loadTypeRate={this.loadTypeRate}
-          />
-        )}
+            <CrmCustomerModal
+              customerModalOpen={custAndVehicleCustomer}
+              handleCustomerModalFun={this.toggleModal}
+              addCustomerFun={addCustomer}
+              profileInfo={profileInfoReducer}
+              matrixListReducerData={matrixListReducer}
+              rateStandardListData={rateStandardListReducer}
+              onTypeHeadStdFun={this.onTypeHeadStdFun}
+              onStdAdd={this.onStdAdd}
+              getCustomerFleetList={customerFleetReducer.customerFleetData}
+              setDefaultRate={this.setDefaultRate}
+              loadTypeRate={this.loadTypeRate}
+              isCustVehiclemodal={isCustVehiclemodal}
+            />
+          )}
         <CrmVehicleModal
           vehicleModalOpen={custAndVehicleVehicle}
           handleVehicleModal={this.openCustomerForm}
+          isCustVehiclemodal={isCustVehiclemodal}
           submitCreateVehicleFun={this.submitCreateVehicleFun}
         />
       </>

@@ -128,7 +128,6 @@ const createNewLabour = async (req, res) => {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
       currentUser.parentId = currentUser.id
     }
-    console.log("**************This Rate id =>", body.rateId);
     const addNewLabour = {
       discription: body.discription,
       hours: body.hours,
@@ -144,7 +143,7 @@ const createNewLabour = async (req, res) => {
 
     return res.status(200).json({
       responsecode: 200,
-      message: "Labour added successfully!",
+      message: "Labor added successfully!",
       success: true,
     });
 
@@ -180,7 +179,7 @@ const updateLabourdetails = async (req, res) => {
     );
     return res.status(200).json({
       responsecode: 200,
-      message: "labour details updated successfully!",
+      message: "Labor details updated successfully!",
       success: true,
     });
   } catch (error) {
@@ -346,7 +345,7 @@ const deleteLabour = async ({ body }, res) => {
       }
     );
     return res.status(200).json({
-      message: "labour deleted successfully!",
+      message: "labor deleted successfully!",
       data
     });
   } catch (error) {
