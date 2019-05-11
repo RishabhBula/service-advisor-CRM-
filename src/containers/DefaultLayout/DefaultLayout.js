@@ -42,7 +42,8 @@ class DefaultLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasAccess: true
+      hasAccess: true,
+      isCustVehiclemodal:false
     };
   }
 
@@ -113,6 +114,9 @@ class DefaultLayout extends Component {
 
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
+    this.setState({
+      isCustVehiclemodal:true
+    })
     let data = {
       custAndVehicle: !modelDetails.custAndVehicle,
       custAndVehicleCustomer: !modelDetails.custAndVehicle
@@ -124,6 +128,7 @@ class DefaultLayout extends Component {
     return (
       <CustAndVehicle
         toggleModal={this.toggleCustAndVehicleProps}
+        isCustVehiclemodal={this.state.isCustVehiclemodal}
         {...this.props}
       />
     );

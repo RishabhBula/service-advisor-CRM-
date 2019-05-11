@@ -493,7 +493,7 @@ class Tires extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td className={"text-capitalize"}>
-                          <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
+                          <div className={"font-weight-semibold"}>{tire.brandName || "-"}</div>
                           {tire.modalName ? <div className={"modal-info"}>
                             Modal : <Badge>{tire.modalName}</Badge></div> : " "}
                         </td>
@@ -577,8 +577,8 @@ class Tires extends Component {
                                     <td></td>
                                     <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
                                     <td>{size.part || notExist}</td>
-                                    <td width={"70"}>{size.cost || notExist}</td>
-                                    <td width={"70"}>{size.retailPrice || notExist}</td>
+                                    <td width={"70"}>{size.cost ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.cost}</span> : notExist}</td>
+                                    <td width={"70"}>{size.retailPrice ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.retailPrice}</span> : notExist}</td>
                                     <td width={"70"}>{size.quantity || 0}&nbsp;
                                       {size.quantity <= size.criticalQuantity ? (
                                         <Badge color={"warning"}>Reorder</Badge>

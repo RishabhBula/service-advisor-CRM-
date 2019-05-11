@@ -451,13 +451,13 @@ class CustomerList extends Component {
                             size={"sm"}
                             onClick={() => this.editUser(user)}
                             className={"btn-theme-transparent"}
-                            id={"Tooltip-3"}
+                            id={`edit-${user._id}`}
                           >
                             <i className={"icons cui-pencil"} />
                           </Button>
-                          <UncontrolledTooltip target="Tooltip-3">
+                          <UncontrolledTooltip target={`edit-${user._id}`}>
                             Edit
-                        </UncontrolledTooltip>
+                          </UncontrolledTooltip>
                         </span>
                         <Button
                           size={"sm"}

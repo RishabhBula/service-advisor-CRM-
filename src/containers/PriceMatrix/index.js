@@ -14,6 +14,7 @@ import {
 import { ConfirmBox } from "../../helpers/SweetAlert";
 import * as qs from 'query-string';
 import { isEqual } from '../../helpers/Object';
+import { toast } from "react-toastify";
 
 class PriceMatrix extends Component {
   constructor(props) {
@@ -151,18 +152,49 @@ class PriceMatrix extends Component {
     const { name, value } = e.target;
     if (name === "costPrice1") {
       const matrixRange = [...this.state.matrixRange];
-      matrixRange[index].lower = value;
-      matrixRange[index - 1].upper = parseFloat(value) - 0.01;
-      this.setState({
-        matrixRange
-      });
+      if (parseFloat(value) >= parseFloat(matrixRange[index].upper)) {
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Lower price range cannot be higher or equal to upper price.");
+        }
+        return
+      } else if (isNaN(parseFloat(value)) || parseFloat(value) < 1) {
+
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Minimum price should not be less than 1");
+        }
+        return
+      } else if (parseFloat(value) <= parseFloat(matrixRange[index-1].lower)) {
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Lower price range cannot be lower or equal to previous lower price.");
+        }
+        return
+      }
+      else {
+        matrixRange[index].lower = value;
+        matrixRange[index - 1].upper = parseFloat(value) - 0.01;
+        this.setState({
+          matrixRange
+        });
+      }
     } else {
       const matrixRange = [...this.state.matrixRange];
-      matrixRange[index].upper = value;
-      matrixRange[index + 1].lower = parseFloat(value) + 0.01;
-      this.setState({
-        matrixRange
-      });
+      if (parseFloat(value) <= parseFloat(matrixRange[index].lower)) {
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Upper price range cannot be lower or equal to lower price.");
+        }
+        return
+      } else if (parseFloat(value) >= parseFloat(matrixRange[index + 1].upper)) {
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Upper price range cannot be higher than or equal to next upper price.");
+        }
+        return
+      } else {
+        matrixRange[index].upper = value;
+        matrixRange[index + 1].lower = parseFloat(value) + 0.01;
+        this.setState({
+          matrixRange
+        });
+      }
     }
   };
   handleRemoveMatrixRange = index => {

@@ -17,6 +17,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
+import { logger } from "../../helpers/Logger";
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -48,8 +49,8 @@ class Users extends Component {
       }
     }
     if (
-      this.props.userReducer.userData.isEditSuccess !==
-      userReducer.userData.isEditSuccess
+      userReducer.userData.isEditSuccess !==
+      this.props.userReducer.userData.isEditSuccess
     ) {
       if (this.props.userReducer.userData.isEditSuccess) {
         const query = qs.parse(this.props.location.search);
@@ -93,19 +94,19 @@ class Users extends Component {
       <>
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
-              <div className={"text-right invt-add-btn-block"}>
-                <Button
-                  color="primary"
-                  id="add-user"
-                  onClick={this.toggleCreateModal}
-                >
-                  <i className={"fa fa-plus"} />
-                  &nbsp; Add New Staff Member
+            <div className={"text-right invt-add-btn-block"}>
+              <Button
+                color="primary"
+                id="add-user"
+                onClick={this.toggleCreateModal}
+              >
+                <i className={"fa fa-plus"} />
+                &nbsp; Add New Staff Member
                   </Button>
-                <UncontrolledTooltip target={"add-user"}>
-                  Add New Staff Member
+              <UncontrolledTooltip target={"add-user"}>
+                Add New Staff Member
                   </UncontrolledTooltip>
-              </div>            
+            </div>
             <UsersList
               userData={userReducer}
               onPageChange={this.onPageChange}

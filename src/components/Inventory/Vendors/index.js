@@ -275,7 +275,7 @@ class Vendors extends Component {
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
                       <td>
-                        <div className={"font-weight-bold"}>{vendor.name}</div>
+                        <div className={"font-weight-semibold"}>{vendor.name}</div>
                         <div>
                           {vendor.url ? (
                             <a
@@ -293,7 +293,9 @@ class Vendors extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"text-capitalize font-weight-bold"}>
+                      {!vendor.contactPerson.firstName && !vendor.contactPerson.lastName && !vendor.contactPerson.phoneNumber.value && !vendor.contactPerson.email ? notExist :
+                      <>
+                        <div className={"text-capitalize font-weight-semibold"}>
                           {vendor.contactPerson.firstName ? (
                             <span>{vendor.contactPerson.firstName} </span>
                           ) : " "}
@@ -321,22 +323,25 @@ class Vendors extends Component {
                           {vendor.contactPerson.phoneNumber &&
                           vendor.contactPerson.phoneNumber.value
                             ? <a href={`tel:${vendor.contactPerson.phoneNumber.value}`} className={"text-body"}>{vendor.contactPerson.phoneNumber.value}</a>
-                            : null}
+                           : null}
                         </div>
-                        {!vendor.contactPerson.firstName && !vendor.contactPerson.lastName && !vendor.contactPerson.phoneNumber.value && !vendor.contactPerson.email ? notExist : null}
+                         </>  }
                       </td>
                       <td>
-                        <div className="pr-3">{vendor.address.address || null}</div>
-                        <div className={"font-weight-bold pr-3"}>
-                          {vendor.address.state ? vendor.address.state : null}
-                          {vendor.address.city
-                            ? ", " + vendor.address.city
-                            : null}
-                          {vendor.address.zip
-                            ? " - " + vendor.address.zip
-                            : null}
-                        </div>
-                        {!vendor.address.address && !vendor.address.state && !vendor.address.city && !vendor.address.zip ? notExist : null}
+                        
+                        {!vendor.address.address && !vendor.address.state && !vendor.address.city && !vendor.address.zip ? notExist : <>
+                          <div className="pr-3">{vendor.address.address || null}</div>
+                          <div className={"font-weight-semibold pr-3"}>
+                            {vendor.address.state ? vendor.address.state : null}
+                            {vendor.address.city
+                              ? ", " + vendor.address.city
+                              : null}
+                            {vendor.address.zip
+                              ? " - " + vendor.address.zip
+                              : null}
+                          </div>
+                          </>
+                        }
                       </td>
                       <td>
                         <div>

@@ -370,12 +370,12 @@ class Labours extends Component {
                       {/* <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td> */}
                       <td>
                         {
-                          data.discount && data.discount.search("%") >= 0 ?
+                          data.discount && data.discount.value && data.discount.type === "%"?
                             <>
-                              {data.discount || notExist}
+                              {data.discount.value || notExist}&nbsp;{data.discount.type}
                             </> :
                             <><i class="fa fa-dollar dollar-icon"></i>
-                              {`${data.discount} Flat` || notExist}
+                              {`${data.discount.value} Flat` || notExist}
                             </>
                         }
                       </td>

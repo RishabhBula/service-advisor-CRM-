@@ -10,7 +10,8 @@ import {
   getUsersListSuccess,
   getUsersList,
   modelOpenRequest,
-  addUserSuccess
+  addUserSuccess,
+  editUserSuccess
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 
@@ -115,6 +116,7 @@ const editUsersLogic = createLogic({
         })
       );
       dispatch(hideLoader());
+      dispatch(editUserSuccess())
       done();
     }
   }

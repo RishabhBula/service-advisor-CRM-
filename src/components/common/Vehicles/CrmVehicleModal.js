@@ -287,7 +287,7 @@ export class CrmVehicleModal extends Component {
       drivetrain,
       notes
     } = this.state;
-    const { vehicleModalOpen, handleVehicleModal } = this.props;
+    const { vehicleModalOpen, handleVehicleModal, isCustVehiclemodal } = this.props;
     const {
       expandForm,
       transmissionSelected,
@@ -304,6 +304,13 @@ export class CrmVehicleModal extends Component {
         >
           <ModalHeader toggle={handleVehicleModal}>
             Create New Vehicle
+            {
+              isCustVehiclemodal ?
+                <div className={"step-align"}>
+                  Step 2/2
+                </div> :
+                null
+            }
           </ModalHeader>
           <ModalBody>
             <Row className="justify-content-center">
@@ -706,12 +713,22 @@ export class CrmVehicleModal extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>
-            <Button color="primary" onClick={this.createVehicleFun}>
-              Save Vehicle
-            </Button>{" "}
-            <Button color="secondary" onClick={handleVehicleModal}>
-              Cancel
-            </Button>
+            <div className={isCustVehiclemodal ? "btn-reverse" : "btn-forward"}>
+              <Button color="primary" onClick={this.createVehicleFun}>
+                {
+                  isCustVehiclemodal ?
+                    "Add Vehicle and Finish" :
+                    "Add Vehicle"
+                }
+              </Button>{" "}
+              <Button color="secondary" onClick={handleVehicleModal}>
+                {
+                  isCustVehiclemodal ?
+                    "< Back To Previous" :
+                    "Cancel"
+                }
+              </Button>
+            </div>
           </ModalFooter>
         </Modal>
       </>

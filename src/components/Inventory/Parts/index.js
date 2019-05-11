@@ -275,6 +275,8 @@ class Parts extends Component {
                     <FormGroup className="mb-0">
                       <Async
                         placeholder={"Type vendor name"}
+                        className={"form-select"}
+                        classNamePrefix={"form-select-theme"}
                         loadOptions={this.loadOptions}
                         value={vendorId}
                         onChange={e => {
@@ -368,7 +370,7 @@ class Parts extends Component {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td className={"text-capitalize"}>
-                      <div className={"font-weight-bold"}>
+                      <div className={"font-weight-semibold"}>
                         {part.description || notExist}
                       </div>
                       {part.partNumber ? (
@@ -376,13 +378,13 @@ class Parts extends Component {
                           Part No. : <Badge>{part.partNumber}</Badge>
                         </div>
                       ) : null}
-                      {part.note ? (
-                        <span className={"part-note"}>part.note</span>
+                      {/* {part.note ? (
+                        <span className={"part-note"}>{part.note}</span>
                       ) : (
                           " "
-                        )}
+                        )} */}
                     </td>
-                    <td className={"font-weight-bold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>
+                    <td className={"font-weight-semibold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>
                       {part.vendorId ? part.vendorId.name || notExist : notExist}
                     </td>
                     <td>{part.location || notExist}</td>

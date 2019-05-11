@@ -76,7 +76,6 @@ class CrmInventoryPart extends Component {
       partDetails._id &&
       !this.state.partDescription
     ) {
-      logger(partDetails);
       const {
         cost,
         criticalQuantity,
@@ -95,7 +94,6 @@ class CrmInventoryPart extends Component {
         const { matrixList } = this.props
         const pricingMatrixValue = partDetails.priceMatrix;
         const selectedMatrix = matrixList.filter(matrix => matrix._id === pricingMatrixValue)
-        logger(matrixList, "@@@@@@@@@@@@@@@@@")
         this.setState({
           selectedPriceMatrix: {
             value: selectedMatrix[0] && selectedMatrix[0]._id ? selectedMatrix[0]._id : "",
@@ -233,7 +231,16 @@ class CrmInventoryPart extends Component {
           ? CalculateRetailPriceByMarkupPercent(cost, markupPercent).toFixed(2)
           : this.state.price,
       markup: markupPercent
-    });
+    },
+      () => {
+        this.setState({
+          margin:
+            parseFloat(cost) && parseFloat(this.state.price)
+              ? CalculateMarginPercent(cost, this.state.price).toFixed(2)
+              : ""
+        })
+      }
+    );
   };
   setPriceByMargin = marginPercent => {
     const { cost } = this.state;
@@ -243,7 +250,16 @@ class CrmInventoryPart extends Component {
           ? CalculateRetailPriceByMarginPercent(cost, marginPercent).toFixed(2)
           : this.state.price,
       margin: marginPercent
-    });
+    },
+      () => {
+        this.setState({
+          markup:
+            parseFloat(cost) && parseFloat(this.state.price)
+              ? CalculateMarkupPercent(cost, this.state.price).toFixed(2)
+              : ""
+        })
+      }
+    );
   };
   loadOptions = (input, callback) => {
     this.setState({ vendorInput: input.length > 1 ? input : null });
@@ -362,6 +378,7 @@ class CrmInventoryPart extends Component {
       vendorInput,
       selectedPriceMatrix
     } = this.state;
+    logger(price, margin, "!!!!!!!!!!!!!!!!!")
     const { isOpen, toggle, isEditMode, partDetails } = this.props;
     const buttons = [
       {

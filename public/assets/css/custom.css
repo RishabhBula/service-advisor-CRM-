@@ -416,10 +416,18 @@
 .auth-page .input-group-prepend {
   border: 1px solid #858391;
   background: #fff;
+  margin-left: 1px;
+  border-right: 0;
 }
 .auth-page .input-group-text {
   background: #fff;
-  border-color: #fff;
+  border: 0px;
+  height: calc(100% - 4px);
+  width: calc(100% - 5px);
+  top: 2px;
+  position: relative;
+  left: 0px;
+  border-radius: 0;
 }
 /* end of auth page */
 
@@ -641,6 +649,11 @@
 }
 .decoration-none:hover{
   text-decoration: none;
+}
+.text-danger.error-msg {
+  font-style: italic;
+  font-size: 83%;
+  color: #f86c6b !important;
 }
 .error-block-contain {
   position: relative;
@@ -983,7 +996,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .invt-add-btn-block .btn-primary{
   min-width: 175px;
   border-radius: 4px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   border: 1px solid #b1acc2 !important;
   background: #fff;
@@ -1022,19 +1035,23 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border-color: #8157ee;
 }
 .vehicles-select-color {
-  border-radius: 10px;
   display: inline-block;
-  margin-right: 8px;
+  margin-right: 6px;
   margin-left: 5px;
-  height: 15px;
-  width: 15px;
-  border: 1px solid #c5c5c5
+  height: 20px;
+  width: 20px;
+  border: 1px solid #c5c5c5;
 }
 .vehicles-select-color-block{
   display: flex;
   align-items: center;
-  padding: 3px 5px;
+  padding: 4px 5px;
   font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+.vehicles-select-color-block:hover{
+  background-color: #ddd;
+  transition: all ease 0.4s;
 }
 .part-note{
   font-size: 10px;
@@ -1076,32 +1093,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .tire-col {
   min-width: 80px !important;
 }
-.discount-button{
-  margin: 0 0 0 8px;
-  padding: 0;
-  list-style: none;
-  white-space: nowrap;
-}
-.discount-button li{
-  display: inline-block;
-}
-.discount-button li button{
-  color: #76838f;
-  background-color: transparent;
-  border-bottom-left-radius: .143rem;
-  padding: 6px 7px;
-  min-width: 36px;
-  font-weight: 300;
-  border-radius: 0;
-  border-right: none;
-  position: relative;
-  border-color: #e4eaec;
-}
-.discount-button li button.active{
-  color: #76838f!important;
-  border-color: #e4eaec!important;
-  background-color: rgba(118, 131, 143, .1)!important;
-}
+
 .rate-labour{
   width:100%;
   position: relative;
@@ -1207,10 +1199,26 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 /* Tyre CSS END*/
 /* Labor */
-.labor-discount .btn.btn-secondary{
+.labor-discount{
+  position: relative;
+  display: flex;
+  flex-flow: row;
+}
+.labor-discount .input-group{
+  max-width: 120px;
+  margin-right: 30px;
+}
+.labor-discount .form-control{
+  width: 150px;
+}
+.labor-discount .btn{
   height: 30px;
   width: 30px;
-  background-color: #e4e5e6;
+}
+.labor-discount .btn.btn-primary{
+  background-color: transparent;
+  border-color: #a6a7a7;
+  color: #222;
 }
 .labor-discount .btn.btn-secondary:focus{
   box-shadow: none !important;
@@ -1220,6 +1228,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #7f6cb8 !important;
   border-color: #7f6cb8 !important;
 }
+.discount-button .btn:first-child{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.discount-button .btn:last-child{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
 /* Price Matrix */
 .btn-input{
   background-color: transparent;
@@ -1388,6 +1405,24 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   cursor: pointer;
 }
 /* Media Query STRAT*/
+.btn-reverse{
+  display: flex;
+  flex-direction: row-reverse;
+}
+.btn-reverse .btn.btn-secondary{
+  margin: 0 15px;
+}
+.btn-forward{
+  display: flex;
+  justify-content: space-between;
+  min-width: 221px;
+  flex-direction: row;
+}
+.step-align{
+  position: absolute;
+  top: 13px;
+  right: 30px;
+}
 @media(max-width:1220px){
   .table{
     min-width: 1000px;
