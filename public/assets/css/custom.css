@@ -1388,6 +1388,23 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   cursor: pointer;
 }
 /* Media Query STRAT*/
+.btn-reverse{
+  display: flex;
+  justify-content: space-between;
+  min-width: 350px;
+  flex-direction: row-reverse;
+}
+.btn-forward{
+  display: flex;
+  justify-content: space-between;
+  min-width: 221px;
+  flex-direction: row;
+}
+.step-align{
+  position: absolute;
+  top: 13px;
+  right: 30px;
+}
 @media(max-width:1220px){
   .table{
     min-width: 1000px;
