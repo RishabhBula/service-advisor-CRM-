@@ -48,7 +48,6 @@ export class CrmUserModal extends Component {
     };
   }
   componentDidUpdate({ userModalOpen, userData }) {
-    logger(userData, "@@@@@@@@@@@User Data@@@@@@@@@@@@@@")
     if (
       this.props.userModalOpen !== userModalOpen &&
       !this.props.userModalOpen
@@ -64,13 +63,11 @@ export class CrmUserModal extends Component {
         errors: {}
       });
     }
-    if (
+    else if (
       this.props.userData &&
       this.props.userData._id &&
-      (userData._id !== this.props.userData._id || !this.state.email)
+      (userData._id !== this.props.userData._id || !this.state.email) && this.props.userModalOpen
     ) {
-      logger('in if')
-      logger(this.props.userData)
       const {
         firstName,
         lastName,

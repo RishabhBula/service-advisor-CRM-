@@ -378,11 +378,11 @@ class Parts extends Component {
                           Part No. : <Badge>{part.partNumber}</Badge>
                         </div>
                       ) : null}
-                      {part.note ? (
+                      {/* {part.note ? (
                         <span className={"part-note"}>{part.note}</span>
                       ) : (
                           " "
-                        )}
+                        )} */}
                     </td>
                     <td className={"font-weight-semibold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>
                       {part.vendorId ? part.vendorId.name || notExist : notExist}
