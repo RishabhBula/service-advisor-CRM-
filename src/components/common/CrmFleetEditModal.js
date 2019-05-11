@@ -190,12 +190,14 @@ export class CrmFleetEditModal extends Component {
         const { matrixListReducerData } = this.props
         const pricingMatrixValue = fleetSingleData.fleetDefaultPermissions.shouldPricingMatrixOverride.pricingMatrix
         const selectedMatrix = matrixListReducerData.filter(matrix => matrix._id === pricingMatrixValue)
-        this.setState({
-          selectedPriceMatrix: {
-            value: selectedMatrix[0]._id,
-            label: selectedMatrix[0].matrixName
-          }
-        })
+        if (selectedMatrix && selectedMatrix[0]) {
+          this.setState({
+            selectedPriceMatrix: {
+              value: selectedMatrix[0]._id,
+              label: selectedMatrix[0].matrixName
+            }
+          })
+        }
       } else {
         this.setState({
           selectedPriceMatrix: {

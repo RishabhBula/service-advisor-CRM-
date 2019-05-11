@@ -370,7 +370,6 @@ class PriceMatrix extends Component {
     const { modelDetails } = modelInfoReducer;
     const { matrixAddModalOpen } = modelDetails;
     const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix, updatedAt } = this.state;
-    logger(matrixRange, "@@###############@@@@")
     return (
       <>
         <Card className={"white-card"}>
