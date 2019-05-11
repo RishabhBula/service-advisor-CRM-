@@ -183,7 +183,7 @@ class PriceMatrixComponent extends Component {
                                         }
                                         id={`tooltip-1-${index}`}
                                       >
-                                      <span className={"icon"}>
+                                        <span className={"icon cursor_pointer"}>
                                           <img src={shortUp} width={"20"} alt={"shortUp"}/>
                                           <UncontrolledTooltip target={`tooltip-1-${index}`}>
                                           Add range above
@@ -198,7 +198,7 @@ class PriceMatrixComponent extends Component {
                                       }
                                       id={`tooltip-2-${index+1}`}
                                     >
-                                      <span className={"icon"}>
+                                      <span className={"icon cursor_pointer"}>
                                         <img src={shortDown} width={"20"} alt={"shortUp"} />
                                         <UncontrolledTooltip target={`tooltip-2-${index+1}`}>
                                           Add range below
@@ -206,7 +206,7 @@ class PriceMatrixComponent extends Component {
                                       </span>
                                     </span>
                                     {index >= 1 ? (
-                                      <span className={"icon"} >
+                                      <span className={"icon cursor_pointer"} >
                                             <span
                                           className={"btn btn-theme-transparent btn-secondary"}
                                               size={"sm"}

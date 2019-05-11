@@ -650,6 +650,11 @@
 .decoration-none:hover{
   text-decoration: none;
 }
+.text-danger.error-msg {
+  font-style: italic;
+  font-size: 83%;
+  color: #f86c6b !important;
+}
 .error-block-contain {
   position: relative;
 }
