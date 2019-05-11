@@ -34,7 +34,7 @@ const createNewTier = async (req, res) => {
         element.baseInfo
       ) {
         try {
-          element.priceMatrix = mongoose.Types.ObjectId(element.priceMatrix);
+          element.priceMatrix = element.priceMatrix ? mongoose.Types.ObjectId(element.priceMatrix) : null;
         } catch (error) {
           delete element.priceMatrix;
         }
@@ -98,6 +98,11 @@ const updateTierdetails = async (req, res) => {
         element.margin ||
         element.baseInfo
       ) {
+        try {
+          element.priceMatrix = element.priceMatrix ? mongoose.Types.ObjectId(element.priceMatrix) : null;
+        } catch (error) {
+          delete element.priceMatrix;
+        }
         tireSizeArray.push(element);
       }
     }
