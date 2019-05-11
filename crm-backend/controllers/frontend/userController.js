@@ -6,7 +6,7 @@ const getAllUserList = async (req, res) => {
   const { query, currentUser } = req;
   try {
     const limit = parseInt(query.limit || 10);
-    const page = parseInt(query.page);
+    const page = parseInt(query.page || 1);
     const offset = page < 1 ? 0 : (page - 1) * limit;
     const searchValue = query.search;
     const sort = query.sort;
@@ -86,7 +86,11 @@ const getAllUserList = async (req, res) => {
     }
 
     if (typeof status !== "undefined") {
-      condition["$and"].push({ status: status });
+      if (status === '1') {
+        condition["$and"].push({ status: true });
+      } else {
+        condition["$and"].push({ status: false });
+      }
     }
     if (typeof invitaionStatus !== "undefined") {
       condition["$and"].push({ userSideActivation: invitaionStatus });
