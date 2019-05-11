@@ -296,7 +296,16 @@ export class CrmTyreModal extends Component {
          : tierSize[index].retailPrice
       this.setState({
          tierSize,
-      });
+      },
+         () => {
+            tierSize[index].margin = parseFloat(tierSize[index].cost) && parseFloat(this.state.tierSize[index].retailPrice)
+               ? CalculateMarginPercent(tierSize[index].cost, this.state.tierSize[index].retailPrice).toFixed(2)
+               : ""
+            this.setState({
+               tierSize
+            })
+         }
+      );
    };
 
    setPriceByMargin = (index, marginPercent) => {
@@ -307,7 +316,16 @@ export class CrmTyreModal extends Component {
          : tierSize[index].retailPrice
       this.setState({
          tierSize,
-      });
+      },
+         () => {
+            tierSize[index].markup = parseFloat(tierSize[index].cost) && parseFloat(this.state.tierSize[index].retailPrice)
+               ? CalculateMarkupPercent(tierSize[index].cost, this.state.tierSize[index].retailPrice).toFixed(2)
+               : ""
+            this.setState({
+               tierSize
+            })
+         }
+      );
    };
 
    loadOptions = (input, callback) => {
