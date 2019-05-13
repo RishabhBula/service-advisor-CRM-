@@ -75,14 +75,14 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps,"############################");
-    console.log(this.props.customer,"!!!!!!!!!!!!!!!!!!!!!!");    
+    console.log(prevProps, "############################");
+    console.log(this.props.customer, "!!!!!!!!!!!!!!!!!!!!!!");
     if (
       this.props.customer &&
       this.props.customer._id &&
       (prevProps.customer._id !== this.props.customer._id)
     ) {
-      console.log(this.props.customer,"$$$$$$$$$$$$$$$$$$$$");        
+      console.log(this.props.customer, "$$$$$$$$$$$$$$$$$$$$");
       const { customer } = this.props;
       this.setState({
         address1: customer.address1,
@@ -284,12 +284,6 @@ export class CrmEditCustomerModal extends Component {
     }
   };
 
-  // handleExpandForm = () => {
-  //   this.setState({
-  //     expandForm: !this.state.expandForm
-  //   });
-  // };
-
   handleInputChange = e => {
     const { target } = e;
     const { name, value } = target;
@@ -481,7 +475,8 @@ export class CrmEditCustomerModal extends Component {
       zipCode: "",
       fleet: "",
       errors: {},
-      phoneErrors: [""]
+      phoneErrors: [""],
+      customerDefaultPermissions: CustomerDefaultPermissions,
     });
   }
 
@@ -981,6 +976,7 @@ export class CrmEditCustomerModal extends Component {
                       placeholder="Referral"
                       name="referralSource"
                       onChange={this.handleInputChange}
+                      value={this.state.referralSource}
                       maxLength="100"
                     />
                   </FormGroup>
@@ -1123,23 +1119,7 @@ export class CrmEditCustomerModal extends Component {
                   );
                 })
                 : null}
-
-              {/* {expandForm ? (
-                    <Col md="12 text-center">
-                      <span
-                        onClick={this.handleExpandForm}
-                        className="customer-anchor-text customer-click-btn"
-                      >
-                        {" "}
-                        Show Less{" "}
-                      </span>
-                    </Col>
-                  ) : null} */}
             </Row>
-            {/* </>
-            ) : (
-                ""
-              )} */}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}

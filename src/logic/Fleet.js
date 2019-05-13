@@ -3,7 +3,6 @@ import {
   fleetAddStarted,
   fleetAddActions,
   fleetAddSuccess,
-  redirectTo,
   hideLoader,
   showLoader,
   fleetListActions,
@@ -56,7 +55,6 @@ const fleetAddLogic = createLogic({
           ...action.payload
         })
       );
-      dispatch(redirectTo({ path: "/settings/fleets" }));
       done();
     }
   }

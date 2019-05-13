@@ -15,6 +15,10 @@ import { ConfirmBox } from "../../helpers/SweetAlert";
 import * as qs from 'query-string';
 import { isEqual } from '../../helpers/Object';
 import { toast } from "react-toastify";
+import {
+  CaluculateMarkupByMargin,
+  CaluculateMarginByMarkup
+} from "../../helpers/Sales";
 
 class PriceMatrix extends Component {
   constructor(props) {
@@ -22,8 +26,8 @@ class PriceMatrix extends Component {
     this.state = {
       matrixRange: [
         {
-          margin: "50%",
-          markup: "100%",
+          margin: "50",
+          markup: "100",
           lower: "0.00",
           upper: "beyond"
         }
@@ -60,8 +64,8 @@ class PriceMatrix extends Component {
       this.setState({
         matrixRange: [
           {
-            margin: "50%",
-            markup: "100%",
+            margin: "50",
+            markup: "100",
             lower: "0.00",
             upper: "beyond"
           }
@@ -76,8 +80,8 @@ class PriceMatrix extends Component {
       this.setState({
         matrixRange: [
           {
-            margin: "50%",
-            markup: "100%",
+            margin: "50",
+            markup: "100",
             lower: "0.00",
             upper: "beyond"
           }
@@ -97,8 +101,8 @@ class PriceMatrix extends Component {
     this.setState({
       matrixRange: [
         {
-          margin: "50%",
-          markup: "100%",
+          margin: "50",
+          markup: "100",
           lower: "0.00",
           upper: "beyond"
         }
@@ -122,11 +126,42 @@ class PriceMatrix extends Component {
         [name]: value
       });
     } else {
-      if ((name === "margin" || name === "markup") && value > 100) {
+      console.log("!!!!!!!!!!!!!!!!!", value, parseFloat(value) > 100);
+      if ((name === "margin" || name === "markup") && parseFloat(value) > 100) {
         return
       }
       const matrixRange = [...this.state.matrixRange]
-      matrixRange[index][name] = value;
+      if (name === "margin") {
+        if (!value) {
+          matrixRange[index].markup = CaluculateMarkupByMargin(parseFloat(0.99)).toFixed(2);
+          matrixRange[index].margin = 0.99
+        }
+        else if (parseFloat(value) < 0.99 || isNaN(this.state.matrixRange[index].markup)) {
+          if (!toast.isActive(this.toastId)) {
+            this.toastId = toast.error("Margin value should not be less than 0.99.");
+          }
+          return
+        }
+        else {
+          matrixRange[index].markup = CaluculateMarkupByMargin(parseFloat(value)).toFixed(2);
+          matrixRange[index].margin = value
+        }
+      } if (name === "markup") {
+        if (!value) {
+          matrixRange[index].margin = CaluculateMarginByMarkup(parseFloat(1)).toFixed(2);
+          matrixRange[index].markup = 1
+        }
+        else if (parseFloat(value) < 1 || isNaN(this.state.matrixRange[index].margin) || !value) {
+          if (!toast.isActive(this.toastId)) {
+            this.toastId = toast.error("Markup value should not be less than 1.");
+          }
+          return
+        }
+        else {
+          matrixRange[index].margin = CaluculateMarginByMarkup(parseInt(value)).toFixed(2);
+          matrixRange[index].markup = value
+        }
+      }
       this.setState({
         matrixRange
       })
@@ -139,8 +174,8 @@ class PriceMatrix extends Component {
     matrixRange[matrixRange.length - 1].upper =
       parseFloat(matrixRange[matrixRange.length - 1].lower) + 99.99;
     matrixRange.push({
-      margin: "50%",
-      markup: "100%",
+      margin: "50",
+      markup: "100",
       lower,
       upper
     });
@@ -158,12 +193,15 @@ class PriceMatrix extends Component {
         }
         return
       } else if (isNaN(parseFloat(value)) || parseFloat(value) < 1) {
-
         if (!toast.isActive(this.toastId)) {
           this.toastId = toast.error("Minimum price should not be less than 1");
         }
-        return
-      } else if (parseFloat(value) <= parseFloat(matrixRange[index-1].lower)) {
+        matrixRange[index].lower = 1;
+        matrixRange[index - 1].upper = parseFloat(1) - 0.01;
+        this.setState({
+          matrixRange
+        });
+      } else if (parseFloat(value) <= parseFloat(matrixRange[index - 1].lower)) {
         if (!toast.isActive(this.toastId)) {
           this.toastId = toast.error("Lower price range cannot be lower or equal to previous lower price.");
         }
@@ -183,7 +221,18 @@ class PriceMatrix extends Component {
           this.toastId = toast.error("Upper price range cannot be lower or equal to lower price.");
         }
         return
-      } else if (parseFloat(value) >= parseFloat(matrixRange[index + 1].upper)) {
+      }
+      else if (isNaN(parseFloat(value)) || parseFloat(value) < 1) {
+        if (!toast.isActive(this.toastId)) {
+          this.toastId = toast.error("Minimum price should not be less than 0.99");
+        }
+        matrixRange[index].upper = 0.99;
+        matrixRange[index + 1].lower = parseFloat(0.99) + 0.01;
+        this.setState({
+          matrixRange
+        });
+      }
+      else if (parseFloat(value) >= parseFloat(matrixRange[index + 1].upper)) {
         if (!toast.isActive(this.toastId)) {
           this.toastId = toast.error("Upper price range cannot be higher than or equal to next upper price.");
         }
@@ -221,8 +270,8 @@ class PriceMatrix extends Component {
       matrixRange[lastIndex].upper =
         parseFloat(matrixRange[lastIndex].lower) + 99.99;
       matrixRange.push({
-        margin: "50%",
-        markup: "100%",
+        margin: "50",
+        markup: "100",
         lower,
         upper
       });

@@ -382,7 +382,7 @@ class CustomerList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
+                        <div className={"font-weight-semibold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
                         <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : null}</div>
                         {/* {user.email || null} */}
                       </td>

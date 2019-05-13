@@ -686,7 +686,7 @@
   border: 1px solid #a6a7a7;
 }
 .custom-form-modal .form-group .form-control,
-.custom-form-modal .form-group .form-select > div {
+.custom-form-modal .form-group .form-select > div,.markup-input .form-control,.cost-input.form-control{
   color: #0c0d1c;
   border: 1px solid #a6a7a7;
 }
@@ -1284,6 +1284,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .matrix-table .inactive {
   display: none;
+}
+.markup-input{
+  max-width: 130px;
+  margin: 0 auto;
 }
 .vehicle-type-img svg {
   width: 100px;
