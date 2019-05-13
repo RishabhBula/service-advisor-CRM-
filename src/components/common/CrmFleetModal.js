@@ -806,8 +806,8 @@ export class CrmFleetModal extends Component {
                               Percent Discount
                               </Label>
                             <FormGroup>
+                              <Col md="5" className={"p-0"}>
                               <InputGroup>
-                              <Col md="4" className={"p-0"}>
                                 <Input
                                   placeholder="00.00"
                                   name="percentageDiscount"
@@ -819,13 +819,13 @@ export class CrmFleetModal extends Component {
                                       .percentageDiscount
                                   }
                                 />
-                              </Col>
                                 <div className="input-group-append">
                                   <span className="input-group-text">
                                     <i className="fa fa-percent"></i>
                                   </span>
                                 </div>
                               </InputGroup>
+                              </Col>
                             </FormGroup>
                           </div>
                         ) : null}

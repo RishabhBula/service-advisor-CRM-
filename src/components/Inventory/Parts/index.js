@@ -29,7 +29,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
 import moment from "moment";
 import NoDataFound from "../../common/NoFound";
-import { notExist } from "../../../config/Constants";
+import { notExist, currencyFormatter} from "../../../config/Constants";
 
 class Parts extends Component {
   constructor(props) {
@@ -398,7 +398,8 @@ class Parts extends Component {
                                 Cost :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.cost || notExist}
+                                  {/* {part.cost || notExist} */}
+                                  {part.cost ? currencyFormatter.format(part.cost) : notExist}
                                 </span>
                               </div>
                             ) :
@@ -416,7 +417,8 @@ class Parts extends Component {
                                 Retail :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.retailPrice || "notExist"}
+                                  {part.retailPrice ? currencyFormatter.format(part.retailPrice)  : "notExist"}
+                                  
                                 </span>
                               </div>
                             ) :

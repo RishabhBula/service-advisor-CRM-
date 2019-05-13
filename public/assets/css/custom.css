@@ -1418,6 +1418,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   min-width: 221px;
   flex-direction: row;
 }
+.btn-forward .btn.btn-secondary{
+  margin: 0 15px;
+}
 .step-align{
   position: absolute;
   top: 13px;

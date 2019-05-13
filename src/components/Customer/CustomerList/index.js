@@ -172,18 +172,25 @@ class CustomerList extends Component {
     const { search, sort, status } = this.state;
     let param = {};
     param.page = 1;
+    let hasFilter = false;
     if (search) {
       param.search = search !== "" ? search.trim() : "";
-      this.setState({
-        filterApplied: true
-      })
+      // this.setState({
+      //   filterApplied: true
+      // })
+      hasFilter = true;
     }
     if (sort) {
       param.sort = sort;
+      hasFilter = true;
     }
     if (status) {
       param.status = status;
+      hasFilter = true;
     }
+    this.setState({
+      filterApplied: hasFilter
+    })
     this.props.onSearch(param);
 
   };

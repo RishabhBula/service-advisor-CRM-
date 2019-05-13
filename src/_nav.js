@@ -23,7 +23,7 @@ export default {
     {
       name: AppRoutes.VEHICLES.name,
       url: AppRoutes.VEHICLES.url,
-      icon: "icons icon-mouse",
+      icon: "fas fa-truck",
       authKey: "isAllowedCompanySettings"
     },
     {
