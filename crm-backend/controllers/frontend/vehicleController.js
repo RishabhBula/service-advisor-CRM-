@@ -74,14 +74,12 @@ const getAllVehicleList = async (req, res) => {
         break;
       case "nasc":
         sortBy = {
-          firstName: 1,
-          lastName: 1
+          make: 1
         };
         break;
       case "ndesc":
         sortBy = {
-          firstName: -1,
-          lastName: 1
+          make: -1
         };
         break;
       default:
