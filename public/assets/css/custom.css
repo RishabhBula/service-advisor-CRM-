@@ -364,7 +364,22 @@
 .search-output {
   text-align: left;
 }
-
+body .navbar-nav .nav-link.active{
+  position: relative;
+}
+body .navbar-nav .nav-link.active:after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+}
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.active:hover, .navbar-nav .nav-link.active:focus {
+  color: #fff !important;
+}
 /* end of header */
 
 /* logo image */

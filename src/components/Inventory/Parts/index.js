@@ -183,9 +183,9 @@ class Parts extends Component {
     const query = this.getQueryParams();
     this.props.updateInventoryPart({ data, query });
   };
-  setVendorSearch = (vendorData) => {
-    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
-  }
+  // setVendorSearch = (vendorData) => {
+  //   this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
+  // }
 
   render() {
     const {
@@ -384,8 +384,8 @@ class Parts extends Component {
                           " "
                         )} */}
                     </td>
-                    <td className={"font-weight-semibold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>
-                      {part.vendorId ? part.vendorId.name || notExist : notExist}
+                    <td >
+                      {part.vendorId && part.vendorId.name ? <a href={`/inventory/vendors?page=1&search=${part.vendorId.name}`} target={"_blank"} className={"text-body"}>{part.vendorId ? part.vendorId.name || notExist : notExist}</a> :  part.vendorId ? part.vendorId.name || notExist : notExist }
                     </td>
                     <td>{part.location || notExist}</td>
                     <td>

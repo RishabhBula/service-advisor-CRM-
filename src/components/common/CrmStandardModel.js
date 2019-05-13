@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Col, FormGroup, Input, Label } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Col, FormGroup, Input, Label, InputGroup } from "reactstrap";
 
 export class CrmStandardModel extends Component {
   constructor(props) {
@@ -97,6 +97,12 @@ export class CrmStandardModel extends Component {
                   Hour Rate <span class="asteric">*</span>
                   </Label>
                 <div className={"input-block"}>
+                  <InputGroup> 
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="fa fa-dollar"></i>
+                      </span>
+                    </div>
                   <Input
                     type="text"
                     name="hourRate"
@@ -106,6 +112,8 @@ export class CrmStandardModel extends Component {
                     id="make"
                     maxLength='3'
                   />
+                   
+                  </InputGroup>
                   {
                     errors && !hourRate && errors.hourRate ?
                       <p className="text-danger">Hour rate is required</p> :

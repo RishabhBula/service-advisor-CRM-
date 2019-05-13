@@ -322,7 +322,7 @@ class Labours extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </label>
                       </td>
-                      <td><b>{data.discription || notExist}</b></td>
+                      <td className={"font-weight-semibold"}>{data.discription || notExist}</td>
                       {
                         expandText && isReadMore === index ?
                           <td className={"pr-4"}>

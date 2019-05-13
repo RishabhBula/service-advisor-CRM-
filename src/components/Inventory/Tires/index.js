@@ -182,7 +182,7 @@ class Tires extends Component {
   };
 
   editTire = tier => {
-    logger(tier,"!!!!!!!!!!!!!!!!!!!!!")
+    logger(tier, "!!!!!!!!!!!!!!!!!!!!!")
     this.setState({ tire: tier }, () => {
       this.props.modelOperate({
         tireEditModalOpen: true
@@ -274,9 +274,6 @@ class Tires extends Component {
 
   }
 
-  setVendorSearch = (vendorData) => {
-    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
-  }
   render() {
     const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -508,10 +505,14 @@ class Tires extends Component {
                             >
                               <b>Size Details</b>
                               {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
-                            </Button> : null
+                            </Button> : notExist
                           }
                         </td>
-                        <td onClick={tire.vendorId ? () => this.setVendorSearch(tire.vendorId) : null}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
+                        <td>
+                          {tire.vendorId && tire.vendorId.name ?
+                            <a href={`/inventory/vendors?page=1&search=${tire.vendorId && tire.vendorId.name ? tire.vendorId.name : null}`} target="_blank" className={"text-body"}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</a> :
+                            tire.vendorId && tire.vendorId.name ? tire.vendorId.name : notExist}
+                        </td>
                         <td className={"season-td text-capitalize"}>
                           {tire.seasonality || "-"}
                         </td>
@@ -550,7 +551,7 @@ class Tires extends Component {
                             <i className={"icons cui-trash"}></i>
                           </Button>
                           <UncontrolledTooltip target={`delete-${tire._id}`}>
-                            Delete 
+                            Delete
                           </UncontrolledTooltip>
                         </td>
                       </tr>
