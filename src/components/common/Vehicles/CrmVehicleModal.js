@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as classnames from "classnames";
 import {
   Button,
   Modal,
@@ -85,6 +86,8 @@ export class CrmVehicleModal extends Component {
       drivetrainSelected: "2x4",
       notes: "",
       errors: {},
+      prodYearError: "",
+      prodMonthError: "",
       isLoading: false
     };
   }
@@ -142,11 +145,10 @@ export class CrmVehicleModal extends Component {
       VehicleValidations,
       VehicleValidationMessage
     );
-
     try {
       const yearValidation = await this.yearValidation(this.state.year);
 
-      if (!isValid || !yearValidation) {
+      if (!isValid || !yearValidation || this.state.prodMonthError || this.state.prodYearError) {
         this.setState(
           {
             errors: errors,
@@ -173,12 +175,30 @@ export class CrmVehicleModal extends Component {
     if ((name === "year" || name === "miles") && isNaN(value)) {
       return;
     }
-    this.setState({
-      [name]: value,
-      errors: {
-        ...this.state.errors,
-        [name]: null
+    if (name === "productionDate") {
+      const splitedDate = value.split("/")
+      var d = new Date();
+      var n = d.getFullYear();
+      if (parseInt(splitedDate[0]) > 12 && splitedDate[0]) {
+        this.setState({
+          prodMonthError: "Enter valid month."
+        })
       }
+      else if (parseInt(splitedDate[1]) >= n && splitedDate[1]) {
+        this.setState({
+          prodYearError: "Production year should be less than current year",
+          prodMonthError: null
+        })
+      }
+      else {
+        this.setState({
+          prodYearError: null,
+          prodMonthError: null
+        })
+      }
+    }
+    this.setState({
+      [name]: value
     });
   };
 
@@ -230,6 +250,8 @@ export class CrmVehicleModal extends Component {
       transmissionSelected: "automatic",
       drivetrainSelected: "2x4",
       notes: "",
+      prodMonthError: "",
+      prodYearError: "",
       errors: {}
     });
   }
@@ -253,9 +275,9 @@ export class CrmVehicleModal extends Component {
         }
 
         const current_year = new Date().getFullYear();
-        if (year < current_year - 101 || year >= current_year) {
+        if (year <= current_year - 101 || year > current_year) {
           errors["year"] = `Year should be in range ${current_year -
-            101} to ${new Date().getFullYear() - 1}`;
+            101} to ${new Date().getFullYear()}`;
           this.setState({ errors });
           return false;
         }
@@ -285,7 +307,9 @@ export class CrmVehicleModal extends Component {
       productionDate,
       transmission,
       drivetrain,
-      notes
+      notes,
+      prodMonthError,
+      prodYearError
     } = this.state;
     const { vehicleModalOpen, handleVehicleModal, isCustVehiclemodal } = this.props;
     const {
@@ -583,11 +607,18 @@ export class CrmVehicleModal extends Component {
                       mask="11/1111"
                       placeholder="MM/YYYY"
                       onChange={this._onInputChange}
-                      className={"form-control"}
+                      className={classnames("form-control", {
+                        "is-invalid":
+                          (prodMonthError || prodYearError) &&
+                          productionDate
+                      })}
                     />
-                    {!productionDate && errors.productionDate ? (
-                      <p className="text-danger">{errors.productionDate}</p>
-                    ) : null}
+                    <FormFeedback>
+                      {prodYearError ? prodYearError : null}
+                    </FormFeedback>
+                    <FormFeedback>
+                      {prodMonthError ? prodMonthError : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>

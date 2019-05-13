@@ -79,3 +79,23 @@ export const CalculateRetailPriceByMarginPercent = (cost, marginPercentage) => {
   const retailPrice = cost / (1 - marginPercentage / 100);
   return retailPrice;
 };
+/**
+ *  Calculates markup for given margin
+ *  @param {margin} cost
+ *  @returns {markup}
+ */
+export const CaluculateMarkupByMargin = (margin) => {
+  const marginPercent = margin / 100
+  const markupPercentage = marginPercent / (1 - marginPercent) * 100
+  return markupPercentage
+};
+/**
+ *  Calculates margin for given markup
+ *  @param {margin} cost
+ *  @returns {markup}
+ */
+export const CaluculateMarginByMarkup = (markup) => {
+  const markupPercent = markup / 100
+  const marginPercentage = markupPercent / (1 + markupPercent) * 100
+  return marginPercentage
+}

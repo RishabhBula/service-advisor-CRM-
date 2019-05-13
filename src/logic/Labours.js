@@ -56,7 +56,8 @@ const labourListLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(
       labourListStarted({
-        labourData: []
+        labourData: [],
+        isLoading: true
       }),
       showLoader()
     );
@@ -81,7 +82,8 @@ const labourListLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(
         labourListSuccess({
-          labourData: result.data
+          labourData: result.data,
+          isLoading: false
         }),
         hideLoader(),
       );

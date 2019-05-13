@@ -161,8 +161,8 @@ class Labours extends Component {
   onDelete = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
-        ? "Do you want to delete selected labour(s)?"
-        : "Do you want to delete this labour?"
+        ? "you want to delete selected labor(s)?"
+        : "you want to delete this labor?"
     });
     if (!value) {
       this.setState({

@@ -5,9 +5,6 @@ import {
   Input,
   Button,
   UncontrolledTooltip,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   FormFeedback,
   FormGroup,
   Label,
@@ -70,6 +67,7 @@ class PriceMatrixComponent extends Component {
                         name="matrixName"
                         value={matrixName}
                         onChange={(e) => handleChange(0, e)}
+                        maxLength={"40"}
                         placeholder={"Example Matrix A"}
                         invalid={errors.matrixName && !matrixName} />
                       <FormFeedback>
@@ -165,6 +163,7 @@ class PriceMatrixComponent extends Component {
                                     className={"form-control text-center"}
                                     value={item.margin}
                                     name="margin"
+                                    maxLength={"6"}
                                     onChange={(e) => handleChange(index, e)}
                                     placeholder={"$0.00"}
                                   />

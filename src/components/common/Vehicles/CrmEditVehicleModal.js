@@ -23,6 +23,7 @@ import {
 } from "../../../validations";
 import Validator from "js-object-validation";
 import LastUpdated from "../../common/LastUpdated";
+import * as classnames from "classnames";
 
 class CustomOption extends Component {
   render() {
@@ -86,35 +87,14 @@ export class CrmEditVehicleModal extends Component {
       drivetrainSelected: "2x4",
       notes: "",
       errors: {},
+      prodMonthError: "",
+      prodYearError: "",
       isLoading: false
     };
   }
 
   componentDidUpdate(prevProps) {
     const { vehicleData } = this.props;
-    // if (
-    //   prevProps.vehicleEditModalOpen !== this.props.vehicleEditModalOpen &&
-    //   !this.props.vehicleEditModalOpen
-    // ) {
-    //   this.setState({
-    //     year: '',
-    //     make: '',
-    //     modal: '',
-    //     typeSelected: null,
-    //     colorSelected: null,
-    //     miles: '',
-    //     licensePlate: '',
-    //     unit: '',
-    //     vin: '',
-    //     subModal: '',
-    //     engineSize: '',
-    //     productionDate: '',
-    //     transmissionSelected: 'automatic',
-    //     drivetrainSelected: '2x4',
-    //     notes: '',
-    //     errors: {}
-    //   });
-    // }
     if (prevProps.vehicleData._id !== vehicleData._id) {
       this.setState({
         year: this.props.vehicleData.year,
@@ -142,7 +122,28 @@ export class CrmEditVehicleModal extends Component {
     if ((name === "year" || name === "miles") && isNaN(value)) {
       return;
     }
-
+    if (name === "productionDate") {
+      const splitedDate = value.split("/")
+      var d = new Date();
+      var n = d.getFullYear();
+      if (parseInt(splitedDate[0]) > 12 && splitedDate[0]) {
+        this.setState({
+          prodMonthError: "Enter valid month."
+        })
+      }
+      else if (parseInt(splitedDate[1]) >= n && splitedDate[1]) {
+        this.setState({
+          prodYearError: "Production year should be less than current year",
+          prodMonthError: null
+        })
+      }
+      else {
+        this.setState({
+          prodYearError: null,
+          prodMonthError: null
+        })
+      }
+    }
     this.setState({
       [name]: value,
       errors: {
@@ -197,9 +198,9 @@ export class CrmEditVehicleModal extends Component {
         }
 
         const current_year = new Date().getFullYear();
-        if (year < current_year - 101 || year >= current_year) {
+        if (year <= current_year - 101 || year > current_year) {
           errors["year"] = `Year should be in range ${current_year -
-            101} to ${new Date().getFullYear() - 1}`;
+            101} to ${new Date().getFullYear()}`;
           this.setState({ errors });
           return false;
         }
@@ -265,18 +266,6 @@ export class CrmEditVehicleModal extends Component {
       year: this.state.year,
       make: this.state.make,
       modal: this.state.modal
-      // type: this.state.typeSelected,
-      // color: this.state.colorSelected,
-      // miles: this.state.miles,
-      // licensePlate: this.state.licensePlate,
-      // unit: this.state.unit,
-      // vin: this.state.vin,
-      // subModal: this.state.subModal,
-      // engineSize: this.state.engineSize,
-      // productionDate: this.state.productionDate,
-      // transmission: this.state.transmissionSelected,
-      // drivetrain: this.state.drivetrainSelected,
-      // notes: this.state.year,
     };
 
     if (this.state.miles !== "") {
@@ -292,7 +281,7 @@ export class CrmEditVehicleModal extends Component {
     try {
       const yearValidation = await this.yearValidation(this.state.year);
 
-      if (!isValid || !yearValidation) {
+      if (!isValid || !yearValidation || this.state.prodMonthError || this.state.prodYearError) {
         this.setState(
           {
             errors: errors,
@@ -325,8 +314,11 @@ export class CrmEditVehicleModal extends Component {
       subModal,
       engineSize,
       productionDate,
+      prodMonthError,
+      prodYearError,
       notes
     } = this.state;
+    console.log("##################", drivetrainSelected);
     return (
       <>
         <Modal
@@ -469,7 +461,7 @@ export class CrmEditVehicleModal extends Component {
                     placeholder={"Pick a color"}
                     isClearable={true}
                     components={{ Option: CustomOption }}
-                    
+
                   />
                 </FormGroup>
               </Col>
@@ -606,11 +598,18 @@ export class CrmEditVehicleModal extends Component {
                       placeholder="MM/YYYY"
                       onChange={this._onInputChange}
                       value={this.state.productionDate}
-                      className={"form-control"}
+                      className={classnames("form-control", {
+                        "is-invalid":
+                          (prodMonthError || prodYearError) &&
+                          productionDate
+                      })}
                     />
-                    {!productionDate && errors.productionDate ? (
-                      <p className="text-danger">{errors.productionDate}</p>
-                    ) : null}
+                    <FormFeedback>
+                      {prodYearError ? prodYearError : null}
+                    </FormFeedback>
+                    <FormFeedback>
+                      {prodMonthError ? prodMonthError : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
@@ -663,7 +662,7 @@ export class CrmEditVehicleModal extends Component {
                     type="select"
                     className=""
                     onChange={this.handleSelectedChange}
-                    name="drivetrain"
+                    name="drivetrainSelected"
                     id="matrixId"
                   >
                     <option value={""}>Select</option>
