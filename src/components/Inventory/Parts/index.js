@@ -29,7 +29,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
 import moment from "moment";
 import NoDataFound from "../../common/NoFound";
-import { notExist } from "../../../config/Constants";
+import { notExist, currencyFormatter} from "../../../config/Constants";
 
 class Parts extends Component {
   constructor(props) {
@@ -183,9 +183,9 @@ class Parts extends Component {
     const query = this.getQueryParams();
     this.props.updateInventoryPart({ data, query });
   };
-  setVendorSearch = (vendorData) => {
-    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
-  }
+  // setVendorSearch = (vendorData) => {
+  //   this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
+  // }
 
   render() {
     const {
@@ -384,8 +384,8 @@ class Parts extends Component {
                           " "
                         )} */}
                     </td>
-                    <td className={"font-weight-semibold"} onClick={part.vendorId ? () => this.setVendorSearch(part.vendorId) : null}>
-                      {part.vendorId ? part.vendorId.name || notExist : notExist}
+                    <td >
+                      {part.vendorId && part.vendorId.name ? <a href={`/inventory/vendors?page=1&search=${part.vendorId.name}`} target={"_blank"} className={"text-body"}>{part.vendorId ? part.vendorId.name || notExist : notExist}</a> :  part.vendorId ? part.vendorId.name || notExist : notExist }
                     </td>
                     <td>{part.location || notExist}</td>
                     <td>
@@ -398,7 +398,8 @@ class Parts extends Component {
                                 Cost :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.cost || notExist}
+                                  {/* {part.cost || notExist} */}
+                                  {part.cost ? currencyFormatter.format(part.cost) : notExist}
                                 </span>
                               </div>
                             ) :
@@ -416,7 +417,8 @@ class Parts extends Component {
                                 Retail :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.retailPrice || "notExist"}
+                                  {part.retailPrice ? currencyFormatter.format(part.retailPrice)  : "notExist"}
+                                  
                                 </span>
                               </div>
                             ) :

@@ -364,7 +364,22 @@
 .search-output {
   text-align: left;
 }
-
+body .navbar-nav .nav-link.active{
+  position: relative;
+}
+body .navbar-nav .nav-link.active:after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+}
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.active:hover, .navbar-nav .nav-link.active:focus {
+  color: #fff !important;
+}
 /* end of header */
 
 /* logo image */
@@ -686,7 +701,7 @@
   border: 1px solid #a6a7a7;
 }
 .custom-form-modal .form-group .form-control,
-.custom-form-modal .form-group .form-select > div {
+.custom-form-modal .form-group .form-select > div,.markup-input .form-control,.cost-input.form-control{
   color: #0c0d1c;
   border: 1px solid #a6a7a7;
 }
@@ -1285,6 +1300,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .matrix-table .inactive {
   display: none;
 }
+.markup-input{
+  max-width: 130px;
+  margin: 0 auto;
+}
 .vehicle-type-img svg {
   width: 100px;
   height: 50px;
@@ -1417,6 +1436,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   justify-content: space-between;
   min-width: 221px;
   flex-direction: row;
+}
+.btn-forward .btn.btn-secondary{
+  margin: 0 15px;
 }
 .step-align{
   position: absolute;

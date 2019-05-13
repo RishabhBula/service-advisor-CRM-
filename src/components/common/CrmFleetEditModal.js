@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   FormGroup,
+  InputGroup,
   FormFeedback,
   Label,
   Input
@@ -468,7 +469,7 @@ export class CrmFleetEditModal extends Component {
           className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader toggle={handleFleetModal}>
-            Update Fleet details
+            Update Fleet Details
             <LastUpdated updatedAt={fleetSingleData.updatedAt} />
           </ModalHeader>
           <ModalBody>
@@ -853,15 +854,16 @@ export class CrmFleetEditModal extends Component {
                           </p>
                         </div>
                         {discountShow ? (
-                          <div className="custom-label col-12" key={index}>
+                          <div className="custom-label col-12 d-flex" key={index}>
                             <Label
                               htmlFor="name"
-                              className="customer-modal-text-style"
+                              className="customer-modal-text-style mr-2"
                             >
                               Percent Discount
                               </Label>
                             <FormGroup>
-                              <Col md="4" className={"p-0"}>
+                              <Col md="5" className={"p-0"}>
+                              <InputGroup>
                                 <Input
                                   placeholder="00.00%"
                                   name="percentageDiscount"
@@ -873,12 +875,13 @@ export class CrmFleetEditModal extends Component {
                                       .percentageDiscount
                                   }
                                 />
-                              </Col>
                               <div className="input-group-append">
                                 <span className="input-group-text">
                                   <i className="fa fa-percent"></i>
                                 </span>
                               </div>
+                              </InputGroup>
+                              </Col>
                             </FormGroup>
                           </div>
                         ) : null}

@@ -172,18 +172,25 @@ class CustomerList extends Component {
     const { search, sort, status } = this.state;
     let param = {};
     param.page = 1;
+    let hasFilter = false;
     if (search) {
       param.search = search !== "" ? search.trim() : "";
-      this.setState({
-        filterApplied: true
-      })
+      // this.setState({
+      //   filterApplied: true
+      // })
+      hasFilter = true;
     }
     if (sort) {
       param.sort = sort;
+      hasFilter = true;
     }
     if (status) {
       param.status = status;
+      hasFilter = true;
     }
+    this.setState({
+      filterApplied: hasFilter
+    })
     this.props.onSearch(param);
 
   };
@@ -375,7 +382,7 @@ class CustomerList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"font-weight-bold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
+                        <div className={"font-weight-semibold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
                         <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : null}</div>
                         {/* {user.email || null} */}
                       </td>

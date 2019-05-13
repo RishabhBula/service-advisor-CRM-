@@ -37,7 +37,6 @@ import Validator from "js-object-validation";
 import Async from "react-select/lib/Async";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { toast } from "react-toastify";
-import { reverse } from "dns";
 
 export class CrmCustomerModal extends Component {
   constructor(props) {
@@ -873,7 +872,7 @@ export class CrmCustomerModal extends Component {
                     permission.key === "shouldReceiveDiscount" &&
                     customerDefaultPermissions[permission.key].status
                   ) {
-                    discountShow = true;
+                    discountShow = this.props.customerModalOpen ? false : true;
                   }
 
                   if (

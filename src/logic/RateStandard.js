@@ -97,7 +97,7 @@ const getStandardRateListLogic = createLogic({
         label: labour.name + " - $" + labour.hourlyRate,
         value: labour._id
       }));
-      logger(action.payload ? action.payload.callback(defaultOptions.concat(options)) : null)
+      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(
         getRateStandardListSuccess({
           standardRateList: defaultOptions.concat(options)

@@ -14,10 +14,12 @@ export const labourReducer = handleActions((
         [labourActions.LABOUR_LIST_START]: (state, action) => ({
             ...state,
             labourData: action.payload.labourData,
+            isLoading: action.payload.isLoading
         }),
         [labourActions.LABOUR_LIST_SUCCESS]: (state, action) => ({
             ...state,
             labourData: action.payload.labourData,
+            isLoading: action.payload.isLoading
         }),
         [labourActions.LABOUR_LIST_FAILED]: (state, action) => ({
             ...state,

@@ -304,3 +304,8 @@ export const CustomerSheetHeaderToJSONKey = {
   "Is Tax Exempt": "isCorporateFleetTaxExempt",
   "Is Receive A Discount?": "shouldReceiveDiscount"
 };
+
+
+export const currencyFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2
+})

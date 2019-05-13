@@ -53,7 +53,7 @@ export const carsOptions = [
 
 export const groupedOptions = [
   {
-    label: "Cars",
+    label: "Vehicle Types",
     options: carsOptions
   }
 ];
