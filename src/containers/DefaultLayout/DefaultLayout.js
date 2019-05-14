@@ -44,7 +44,8 @@ class DefaultLayout extends Component {
     super(props);
     this.state = {
       hasAccess: true,
-      isCustVehiclemodal: false
+      isCustVehiclemodal: false,
+      isURLChecked: false
     };
   }
 
@@ -58,30 +59,41 @@ class DefaultLayout extends Component {
   componentDidUpdate({ location }) {
     const { profileInfoReducer, location: newLocation } = this.props;
     const { profileInfo } = profileInfoReducer;
+    const { isURLChecked } = this.state;
     if (
-      location.pathname !== newLocation.pathname &&
+      (location.pathname !== newLocation.pathname || !isURLChecked) &&
       profileInfo &&
       profileInfo.permissions &&
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
-      const currentPage = this.props.location.pathname;
-      if (WildCardRoutes.indexOf(currentPage) === -1) {
-        const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
-        logger(ind, currentPage);
-        if (ind > -1) {
-          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
-            logger("Allowed to use");
-          } else {
-            this.setState({
-              hasAccess: false
-            });
-          }
-        } else {
-          this.signOut();
-        }
-      }
+      this.validateRoute();
     }
   }
+  validateRoute = () => {
+    const { profileInfoReducer, location } = this.props;
+    const currentPage = location.pathname;
+    const { profileInfo } = profileInfoReducer;
+
+    logger(currentPage);
+    if (WildCardRoutes.indexOf(currentPage) === -1) {
+      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
+      if (ind > -1) {
+        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+          logger("Allowed to use");
+          this.setState({
+            hasAccess: true
+          });
+        } else {
+          this.setState({
+            hasAccess: false
+          });
+        }
+      } else {
+        this.signOut();
+      }
+    }
+    this.setState({ isURLChecked: true });
+  };
   signOut() {
     this.props.logoutUser();
   }

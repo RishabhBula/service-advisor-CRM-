@@ -621,7 +621,8 @@ const createUser = async (req, res) => {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
-      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)
+      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2),
+      subdomain: req.currentUser.subdomain
     };
     let result = await userModel(inserList).save();
     const emailVar = new Email(req);
