@@ -41,6 +41,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  normalizedEmail: {
+    type: String,
+    required: true
+  },
   password: {
     type: String,
     default: null

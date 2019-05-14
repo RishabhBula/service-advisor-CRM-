@@ -1,6 +1,7 @@
 const { body } = require("express-validator/check");
 const { validationMessage } = require("./validationMessage");
 const userModel = require("../models/user");
+const normalizeEmail = require("normalize-email");
 
 const signupValidation = [
   body("firstName")
@@ -16,7 +17,20 @@ const signupValidation = [
     .trim()
     .isEmail()
     .withMessage(validationMessage.emailInvalid)
-    .normalizeEmail(),
+    .custom(async (email, { req }) => {
+      const normalizedEmail = normalizeEmail(email);
+      const result = await userModel.findOne({
+        $and: [
+          { normalizedEmail },
+          { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
+        ]
+      });
+      if (result) {
+        throw new Error(validationMessage.emailAlreadyExist);
+      }
+      req.body.normalizedEmail = normalizedEmail;
+      return true;
+    }),
   body("password")
     .not()
     .isEmpty()
@@ -74,6 +88,7 @@ const forgotPasswordValidation = [
     .isEmail()
     .withMessage("Email must be a valid.")
     .trim()
+    .normalizeEmail()
 ];
 const verifyLinkValidation = [
   body("user")
@@ -114,11 +129,18 @@ const createUserValidation = [
     .trim()
     .isEmail()
     .withMessage(validationMessage.emailInvalid)
-    .custom(async value => {
-      const userFind = await userModel.find({ email: value, isDeleted: false });
-      if (userFind.length) {
+    .custom(async (email, { req }) => {
+      const normalizedEmail = normalizeEmail(email);
+      const result = await userModel.findOne({
+        $and: [
+          { normalizedEmail },
+          { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
+        ]
+      });
+      if (result) {
         throw new Error(validationMessage.emailAlreadyExist);
       }
+      req.body.normalizedEmail = normalizedEmail;
       return true;
     }),
   body("roleType")
@@ -140,7 +162,8 @@ const updateUserValidation = [
   body("email", validationMessage.emailValidation)
     .trim()
     .isEmail()
-    .withMessage(validationMessage.emailInvalid),
+    .withMessage(validationMessage.emailInvalid)
+    .normalizeEmail(),
   body("roleType")
     .not()
     .isEmpty()
