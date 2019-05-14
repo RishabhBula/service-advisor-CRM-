@@ -1,8 +1,8 @@
-import React, { Component, Suspense } from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch } from "react-router-dom";
-
 import { Container } from "reactstrap";
+import { Redirect, Route, Switch } from "react-router-dom";
+import React, { Component, Suspense } from "react";
+
 // sidebar nav config
 import navigation, { ValidatedRoutes } from "../../_nav";
 import {
@@ -43,7 +43,7 @@ class DefaultLayout extends Component {
     super(props);
     this.state = {
       hasAccess: true,
-      isCustVehiclemodal:false
+      isCustVehiclemodal: false
     };
   }
 
@@ -86,8 +86,8 @@ class DefaultLayout extends Component {
     this.props.redirectTo("/login");
   }
   renderCompanyDetailsPopup = profileInfo => {
-    const { companyName, parentId, firstName } = profileInfo;
-    if (!companyName && !parentId) {
+    const { firstTimeUser, parentId, firstName } = profileInfo;
+    if (firstTimeUser && !parentId) {
       return (
         <CrmWelcomeModel
           modalOpen={true}
@@ -115,8 +115,8 @@ class DefaultLayout extends Component {
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     this.setState({
-      isCustVehiclemodal:true
-    })
+      isCustVehiclemodal: true
+    });
     let data = {
       custAndVehicle: !modelDetails.custAndVehicle,
       custAndVehicleCustomer: !modelDetails.custAndVehicle

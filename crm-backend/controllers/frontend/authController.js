@@ -37,10 +37,12 @@ const signUp = async (req, res) => {
         success: false
       });
     } else {
-      var roleType = await roleModel.findOne({ userType: "sub-admin" });
+      var roleType = await roleModel.findOne({
+        userType: new RegExp("sub-admin", "i")
+      });
       var $data = req.body;
       $data.roleType = roleType._id;
-      
+
       $data.permissions =
         typeof roleType.permissionObject[0] === "object"
           ? roleType.permissionObject[0]
@@ -51,6 +53,9 @@ const signUp = async (req, res) => {
       $data.salt = salt;
       $data.password = commonCrypto.hashPassword($data.password, salt);
       $data.userSideActivationValue = confirmationNumber;
+      $data.subdomain = $data.workspace;
+      $data.shopLogo = $data.companyLogo;
+      $data.website = $data.companyWebsite;
       let result = await userModel($data).save();
       const emailVar = new Email(req);
       await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
@@ -420,7 +425,7 @@ const userCompanySetup = async (req, res) => {
       peopleWork: body.peopleWork,
       serviceOffer: body.serviceOffer,
       vehicleService: body.vehicleService,
-      subdomain: commonSmtp.convertToSlug(body.companyName)
+      firstTimeUser: false
     };
     const companySetup = await userModel.findByIdAndUpdate(
       {

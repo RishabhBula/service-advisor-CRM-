@@ -65,24 +65,31 @@ export default {
       ]
     },
     {
-      name: AppRoutes.STAFF_MEMBERS.name,
-      url: AppRoutes.STAFF_MEMBERS.url,
-      icon: "icons icon-people",
-      authKey: "isAllowedCompanySettings"
-    },
-    {
-      name: AppRoutes.FLEETS.name,
-      url: AppRoutes.FLEETS.url,
-      icon: "fas fa-car",
-      authKey: "isAllowedCompanySettings"
-    },
-    {
-      name: AppRoutes.PRICEMATRIX.name,
-      url: AppRoutes.PRICEMATRIX.url,
-      icon: "fas fa-hand-holding-usd",
-      authKey: "isAllowedCompanySettings"
-    },
-    
+      name: AppRoutes.SETTINGS.name,
+      url: AppRoutes.SETTINGS.url,
+      icon: "icon-settings",
+      authKey: "isAllowedCompanySettings",
+      children: [
+        {
+          name: AppRoutes.STAFF_MEMBERS.name,
+          url: AppRoutes.STAFF_MEMBERS.url,
+          icon: "icons icon-people",
+          authKey: "isAllowedCompanySettings"
+        },
+        {
+          name: AppRoutes.FLEETS.name,
+          url: AppRoutes.FLEETS.url,
+          icon: "fas fa-car",
+          authKey: "isAllowedCompanySettings"
+        },
+        {
+          name: AppRoutes.PRICEMATRIX.name,
+          url: AppRoutes.PRICEMATRIX.url,
+          icon: "fas fa-hand-holding-usd",
+          authKey: "isAllowedCompanySettings"
+        }
+      ]
+    }
   ]
 };
 
@@ -117,6 +124,10 @@ export const ValidatedRoutes = [
   },
   {
     url: AppRoutes.STAFF_MEMBERS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
+    url: AppRoutes.SETTINGS.url,
     authKey: "isAllowedCompanySettings"
   },
   {

@@ -60,6 +60,10 @@ class RegisterPage extends Component {
       email: "",
       password: "",
       confirmPassword: "",
+      companyName: "",
+      workspace: "",
+      companyWebsite: "",
+      companyLogo: "",
       errors: {},
       isLoading: false,
       showResendPage: false
@@ -101,8 +105,26 @@ class RegisterPage extends Component {
         });
         return;
       }
-      const { firstName, lastName, email, password } = this.state;
-      this.props.onSignup({ firstName, lastName, email, password });
+      const {
+        firstName,
+        lastName,
+        email,
+        password,
+        companyLogo,
+        companyName,
+        companyWebsite,
+        workspace
+      } = this.state;
+      this.props.onSignup({
+        firstName,
+        lastName,
+        email,
+        password,
+        companyLogo,
+        companyName,
+        companyWebsite,
+        workspace
+      });
     } catch (error) {
       logger(error);
     }
@@ -122,7 +144,10 @@ class RegisterPage extends Component {
       lastName,
       password,
       confirmPassword,
-      showResendPage
+      showResendPage,
+      companyName,
+      workspace,
+      companyWebsite
     } = this.state;
     return (
       <div className="app flex-row align-items-center auth-page pt-3 pb-3">
@@ -227,7 +252,7 @@ class RegisterPage extends Component {
                         </InputGroup>
                       </FormGroup>
                       <FormGroup>
-                        <InputGroup className="mb-4">
+                        <InputGroup>
                           <InputGroupAddon addonType="prepend">
                             <InputGroupText>
                               <i className="icon-lock" />
@@ -245,6 +270,71 @@ class RegisterPage extends Component {
                           <FormFeedback>
                             {errors.confirmPassword
                               ? errors.confirmPassword
+                              : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup>
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="Company Name"
+                            autoComplete="company-name"
+                            onChange={this.eventHandler}
+                            name="companyName"
+                            value={companyName}
+                            invalid={errors.companyName}
+                          />
+                          <FormFeedback>
+                            {errors.companyName ? errors.companyName : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup>
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="Workspace"
+                            autoComplete="new-workspace"
+                            onChange={this.eventHandler}
+                            name="workspace"
+                            value={workspace}
+                            invalid={errors.workspace}
+                          />
+                          <FormFeedback>
+                            {errors.workspace ? errors.workspace : null}
+                          </FormFeedback>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <InputGroup className="mb-4">
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <i className="icon-lock" />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            type="text"
+                            placeholder="Company Website"
+                            autoComplete="new-company-website"
+                            onChange={this.eventHandler}
+                            name="companyWebsite"
+                            value={companyWebsite}
+                            invalid={errors.companyWebsite}
+                          />
+                          <FormFeedback>
+                            {errors.companyWebsite
+                              ? errors.companyWebsite
                               : null}
                           </FormFeedback>
                         </InputGroup>
