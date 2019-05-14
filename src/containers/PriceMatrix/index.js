@@ -4,16 +4,21 @@ import PriceMatrixComponent from "../../components/PriceMatrix/AddEdit";
 import PriMatrixList from "../../components/PriceMatrix/PriMatrixList";
 import { logger } from "../../helpers/Logger";
 import { InsertAtParticularIndex } from "../../helpers/Array";
-import { getMatrixList, addMatrixRequest, updateMatrixRequest, deleteMatrixRequest } from "../../actions"
-import { connect } from 'react-redux';
+import {
+  getMatrixList,
+  addMatrixRequest,
+  updateMatrixRequest,
+  deleteMatrixRequest
+} from "../../actions";
+import { connect } from "react-redux";
 import Validator from "js-object-validation";
 import {
   CreatePriceMatrixValidations,
   CreatePriceMatrixValidMessaages
 } from "../../validations";
 import { ConfirmBox } from "../../helpers/SweetAlert";
-import * as qs from 'query-string';
-import { isEqual } from '../../helpers/Object';
+import * as qs from "query-string";
+import { isEqual } from "../../helpers/Object";
 import { toast } from "react-toastify";
 import {
   CaluculateMarkupByMargin,
@@ -37,29 +42,31 @@ class PriceMatrix extends Component {
       matrixId: "",
       addNewMatrix: false,
       activeMatrix: "",
-      updatedAt: "",
+      updatedAt: ""
     };
   }
   componentDidMount = () => {
     const query = qs.parse(this.props.location.search);
-    this.props.getMatrixList({ ...query, page: query.page || 1 })
-  }
+    this.props.getMatrixList({ ...query, page: query.page || 1 });
+  };
   componentDidUpdate = ({ matrixListReducer, location }) => {
-    if (matrixListReducer.matrixData !== this.props.matrixListReducer.matrixData) {
-      this.props.getMatrixList()
-      this.resetAll(false)
+    if (
+      matrixListReducer.matrixData !== this.props.matrixListReducer.matrixData
+    ) {
+      this.props.getMatrixList();
+      this.resetAll(false);
     }
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
       const data = {
         ...currQuery,
-        page: currQuery.page || 1,
+        page: currQuery.page || 1
       };
       this.props.getMatrixList(data);
     }
-  }
-  resetAll = (isNewMatrix) => {
+  };
+  resetAll = isNewMatrix => {
     if (isNewMatrix) {
       this.setState({
         matrixRange: [
@@ -75,7 +82,7 @@ class PriceMatrix extends Component {
         matrixId: "",
         isEditMatrix: false,
         addNewMatrix: true
-      })
+      });
     } else {
       this.setState({
         matrixRange: [
@@ -91,82 +98,101 @@ class PriceMatrix extends Component {
         matrixId: "",
         isEditMatrix: false,
         addNewMatrix: false
-      })
+      });
     }
-  }
+  };
   handleMatrixModal = () => {
-    const { modelInfoReducer, modelOperate } = this.props
+    const { modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { matrixAddModalOpen } = modelDetails;
-    this.setState({
-      matrixRange: [
-        {
-          margin: "50",
-          markup: "100",
-          lower: "0.00",
-          upper: "beyond"
-        }
-      ],
-      matrixName: "",
-      errors: {},
-      matrixId: "",
-      isEditMatrix: false,
-      addNewMatrix: true
-    }, () => {
-      modelOperate({
-        matrixAddModalOpen: !matrixAddModalOpen
-      })
-    })
-  }
+    this.setState(
+      {
+        matrixRange: [
+          {
+            margin: "50",
+            markup: "100",
+            lower: "0.00",
+            upper: "beyond"
+          }
+        ],
+        matrixName: "",
+        errors: {},
+        matrixId: "",
+        isEditMatrix: false,
+        addNewMatrix: true
+      },
+      () => {
+        modelOperate({
+          matrixAddModalOpen: !matrixAddModalOpen
+        });
+      }
+    );
+  };
 
   handleChange = (index, e) => {
-    const { name, value } = e.target
-    if (name === 'matrixName') {
+    const { name, value } = e.target;
+    if (name === "matrixName") {
       this.setState({
         [name]: value
       });
     } else {
-      console.log("!!!!!!!!!!!!!!!!!", value, parseFloat(value) > 100);
+      logger("!!!!!!!!!!!!!!!!!", value, parseFloat(value) > 100);
       if ((name === "margin" || name === "markup") && parseFloat(value) > 100) {
-        return
+        return;
       }
-      const matrixRange = [...this.state.matrixRange]
+      const matrixRange = [...this.state.matrixRange];
       if (name === "margin") {
         if (!value) {
-          matrixRange[index].markup = CaluculateMarkupByMargin(parseFloat(0.99)).toFixed(2);
-          matrixRange[index].margin = 0.99
-        }
-        else if (parseFloat(value) < 0.99 || isNaN(this.state.matrixRange[index].markup)) {
+          matrixRange[index].markup = CaluculateMarkupByMargin(
+            parseFloat(0.99)
+          ).toFixed(2);
+          matrixRange[index].margin = 0.99;
+        } else if (
+          parseFloat(value) < 0.99 ||
+          isNaN(this.state.matrixRange[index].markup)
+        ) {
           if (!toast.isActive(this.toastId)) {
-            this.toastId = toast.error("Margin value should not be less than 0.99.");
+            this.toastId = toast.error(
+              "Margin value should not be less than 0.99."
+            );
           }
-          return
+          return;
+        } else {
+          matrixRange[index].markup = CaluculateMarkupByMargin(
+            parseFloat(value)
+          ).toFixed(2);
+          matrixRange[index].margin = value;
         }
-        else {
-          matrixRange[index].markup = CaluculateMarkupByMargin(parseFloat(value)).toFixed(2);
-          matrixRange[index].margin = value
-        }
-      } if (name === "markup") {
+      }
+      if (name === "markup") {
         if (!value) {
-          matrixRange[index].margin = CaluculateMarginByMarkup(parseFloat(1)).toFixed(2);
-          matrixRange[index].markup = 1
-        }
-        else if (parseFloat(value) < 1 || isNaN(this.state.matrixRange[index].margin) || !value) {
+          matrixRange[index].margin = CaluculateMarginByMarkup(
+            parseFloat(1)
+          ).toFixed(2);
+          matrixRange[index].markup = 1;
+        } else if (
+          parseFloat(value) < 1 ||
+          isNaN(this.state.matrixRange[index].margin) ||
+          !value
+        ) {
           if (!toast.isActive(this.toastId)) {
-            this.toastId = toast.error("Markup value should not be less than 1.");
+            this.toastId = toast.error(
+              "Markup value should not be less than 1."
+            );
           }
-          return
-        }
-        else {
-          matrixRange[index].margin = CaluculateMarginByMarkup(parseInt(value)).toFixed(2);
-          matrixRange[index].markup = value
+          return;
+        } else {
+          matrixRange[index].margin = CaluculateMarginByMarkup(
+            parseInt(value)
+          ).toFixed(2);
+          matrixRange[index].markup = value;
         }
       }
       this.setState({
         matrixRange
-      })
+      });
     }
-  }
+  };
   handleAddMatrixRange = () => {
     const { matrixRange } = this.state;
     const upper = "beyond";
@@ -189,9 +215,11 @@ class PriceMatrix extends Component {
       const matrixRange = [...this.state.matrixRange];
       if (parseFloat(value) >= parseFloat(matrixRange[index].upper)) {
         if (!toast.isActive(this.toastId)) {
-          this.toastId = toast.error("Lower price range cannot be higher or equal to upper price.");
+          this.toastId = toast.error(
+            "Lower price range cannot be higher or equal to upper price."
+          );
         }
-        return
+        return;
       } else if (isNaN(parseFloat(value)) || parseFloat(value) < 1) {
         if (!toast.isActive(this.toastId)) {
           this.toastId = toast.error("Minimum price should not be less than 1");
@@ -201,13 +229,16 @@ class PriceMatrix extends Component {
         this.setState({
           matrixRange
         });
-      } else if (parseFloat(value) <= parseFloat(matrixRange[index - 1].lower)) {
+      } else if (
+        parseFloat(value) <= parseFloat(matrixRange[index - 1].lower)
+      ) {
         if (!toast.isActive(this.toastId)) {
-          this.toastId = toast.error("Lower price range cannot be lower or equal to previous lower price.");
+          this.toastId = toast.error(
+            "Lower price range cannot be lower or equal to previous lower price."
+          );
         }
-        return
-      }
-      else {
+        return;
+      } else {
         matrixRange[index].lower = value;
         matrixRange[index - 1].upper = parseFloat(value) - 0.01;
         this.setState({
@@ -218,25 +249,31 @@ class PriceMatrix extends Component {
       const matrixRange = [...this.state.matrixRange];
       if (parseFloat(value) <= parseFloat(matrixRange[index].lower)) {
         if (!toast.isActive(this.toastId)) {
-          this.toastId = toast.error("Upper price range cannot be lower or equal to lower price.");
+          this.toastId = toast.error(
+            "Upper price range cannot be lower or equal to lower price."
+          );
         }
-        return
-      }
-      else if (isNaN(parseFloat(value)) || parseFloat(value) < 1) {
+        return;
+      } else if (isNaN(parseFloat(value)) || parseFloat(value) < 1) {
         if (!toast.isActive(this.toastId)) {
-          this.toastId = toast.error("Minimum price should not be less than 0.99");
+          this.toastId = toast.error(
+            "Minimum price should not be less than 0.99"
+          );
         }
         matrixRange[index].upper = 0.99;
         matrixRange[index + 1].lower = parseFloat(0.99) + 0.01;
         this.setState({
           matrixRange
         });
-      }
-      else if (parseFloat(value) >= parseFloat(matrixRange[index + 1].upper)) {
+      } else if (
+        parseFloat(value) >= parseFloat(matrixRange[index + 1].upper)
+      ) {
         if (!toast.isActive(this.toastId)) {
-          this.toastId = toast.error("Upper price range cannot be higher than or equal to next upper price.");
+          this.toastId = toast.error(
+            "Upper price range cannot be higher than or equal to next upper price."
+          );
         }
-        return
+        return;
       } else {
         matrixRange[index].upper = value;
         matrixRange[index + 1].lower = parseFloat(value) + 0.01;
@@ -356,10 +393,10 @@ class PriceMatrix extends Component {
   onSearch = data => {
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify(data)].join('?'));
+    this.props.redirectTo([pathname, qs.stringify(data)].join("?"));
   };
 
-  handleMatrixDelete = async (matrixId) => {
+  handleMatrixDelete = async matrixId => {
     const { value } = await ConfirmBox({
       text: "Do you want to delete this price matrix?"
     });
@@ -368,32 +405,31 @@ class PriceMatrix extends Component {
     }
     const data = {
       matrixId: matrixId
-    }
-    this.props.deletePriceMatrix(data)
-  }
+    };
+    this.props.deletePriceMatrix(data);
+  };
 
-  handleUpdateMatrix = (matrixData) => {
-    const {
-      matrixName,
-      matrixRange,
-      updatedAt
-    } = matrixData
+  handleUpdateMatrix = matrixData => {
+    const { matrixName, matrixRange, updatedAt } = matrixData;
     this.setState({
       matrixName,
       matrixRange,
       updatedAt,
       matrixId: matrixData._id,
-      isEditMatrix: true,
-    })
+      isEditMatrix: true
+    });
     const { modelDetails } = this.props.modelInfoReducer;
     let modaldata = {
-      matrixAddModalOpen: !modelDetails.matrixAddModalOpen,
+      matrixAddModalOpen: !modelDetails.matrixAddModalOpen
     };
     this.props.modelOperate(modaldata);
-  }
+  };
   handleAddMatrix = () => {
-    const { isEditMatrix } = this.state
-    const paylod = { matrixRange: this.state.matrixRange, matrixName: this.state.matrixName }
+    const { isEditMatrix } = this.state;
+    const paylod = {
+      matrixRange: this.state.matrixRange,
+      matrixName: this.state.matrixName
+    };
     const { isValid, errors } = Validator(
       paylod,
       CreatePriceMatrixValidations,
@@ -407,33 +443,43 @@ class PriceMatrix extends Component {
       return;
     } else {
       if (isEditMatrix) {
-        const paylod = { matrixRange: this.state.matrixRange, matrixName: this.state.matrixName, id: this.state.matrixId }
-        this.props.updatePriceMatrix(paylod)
+        const paylod = {
+          matrixRange: this.state.matrixRange,
+          matrixName: this.state.matrixName,
+          id: this.state.matrixId
+        };
+        this.props.updatePriceMatrix(paylod);
       } else {
-        this.props.addPriceMatrix(paylod)
+        this.props.addPriceMatrix(paylod);
       }
     }
-  }
+  };
   render() {
     const { matrixListReducer, modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { matrixAddModalOpen } = modelDetails;
-    const { matrixRange, errors, matrixName, isEditMatrix, addNewMatrix, updatedAt } = this.state;
+    const {
+      matrixRange,
+      errors,
+      matrixName,
+      isEditMatrix,
+      addNewMatrix,
+      updatedAt
+    } = this.state;
     return (
       <>
         <Card className={"white-card"}>
-
           <CardBody className={"custom-card-body position-relative"}>
             <div className={"text-right invt-add-btn-block"}>
               <Button
-                color='primary'
-                id='add-user'
+                color="primary"
+                id="add-user"
                 onClick={this.handleMatrixModal}
               >
-                <i className={'fa fa-plus'} />
+                <i className={"fa fa-plus"} />
                 &nbsp; Add New Matrix
-                </Button>
-              <UncontrolledTooltip target={'add-user'}>
+              </Button>
+              <UncontrolledTooltip target={"add-user"}>
                 Add New price matrix
               </UncontrolledTooltip>
             </div>
@@ -470,21 +516,21 @@ class PriceMatrix extends Component {
 }
 const mapStateToProps = state => ({
   matrixListReducer: state.matrixListReducer,
-  modelInfoReducer: state.modelInfoReducer,
+  modelInfoReducer: state.modelInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
-  getMatrixList: (data) => {
+  getMatrixList: data => {
     dispatch(getMatrixList(data));
   },
-  addPriceMatrix: (data) => {
-    dispatch(addMatrixRequest(data))
+  addPriceMatrix: data => {
+    dispatch(addMatrixRequest(data));
   },
-  updatePriceMatrix: (data) => {
-    dispatch(updateMatrixRequest(data))
+  updatePriceMatrix: data => {
+    dispatch(updateMatrixRequest(data));
   },
-  deletePriceMatrix: (data) => {
-    dispatch(deleteMatrixRequest(data))
+  deletePriceMatrix: data => {
+    dispatch(deleteMatrixRequest(data));
   }
 });
 

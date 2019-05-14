@@ -73,7 +73,12 @@ export class CrmVehicleModal extends Component {
       year: "",
       make: "",
       modal: "",
-      typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
+      typeSelected: {
+        value: "sedan",
+        label: "Sedan",
+        color: "#FF8B00",
+        icons: "sedan.svg"
+      },
       colorSelected: "",
       miles: "",
       licensePlate: "",
@@ -104,7 +109,14 @@ export class CrmVehicleModal extends Component {
       year: yeardata,
       make: this.state.make,
       modal: this.state.modal,
-      type: this.state.typeSelected ? this.state.typeSelected : { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
+      type: this.state.typeSelected
+        ? this.state.typeSelected
+        : {
+            value: "sedan",
+            label: "Sedan",
+            color: "#FF8B00",
+            icons: "sedan.svg"
+          },
       color: this.state.colorSelected,
       miles: this.state.miles,
       licensePlate: this.state.licensePlate,
@@ -148,7 +160,12 @@ export class CrmVehicleModal extends Component {
     try {
       const yearValidation = await this.yearValidation(this.state.year);
 
-      if (!isValid || !yearValidation || this.state.prodMonthError || this.state.prodYearError) {
+      if (
+        !isValid ||
+        !yearValidation ||
+        this.state.prodMonthError ||
+        this.state.prodYearError
+      ) {
         this.setState(
           {
             errors: errors,
@@ -176,25 +193,23 @@ export class CrmVehicleModal extends Component {
       return;
     }
     if (name === "productionDate") {
-      const splitedDate = value.split("/")
+      const splitedDate = value.split("/");
       var d = new Date();
       var n = d.getFullYear();
       if (parseInt(splitedDate[0]) > 12 && splitedDate[0]) {
         this.setState({
           prodMonthError: "Enter valid month."
-        })
-      }
-      else if (parseInt(splitedDate[1]) >= n && splitedDate[1]) {
+        });
+      } else if (parseInt(splitedDate[1]) >= n && splitedDate[1]) {
         this.setState({
           prodYearError: "Production year should be less than current year",
           prodMonthError: null
-        })
-      }
-      else {
+        });
+      } else {
         this.setState({
           prodYearError: null,
           prodMonthError: null
-        })
+        });
       }
     }
     this.setState({
@@ -238,7 +253,12 @@ export class CrmVehicleModal extends Component {
       year: "",
       make: "",
       modal: "",
-      typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
+      typeSelected: {
+        value: "sedan",
+        label: "Sedan",
+        color: "#FF8B00",
+        icons: "sedan.svg"
+      },
       colorSelected: "",
       miles: "",
       licensePlate: "",
@@ -311,7 +331,11 @@ export class CrmVehicleModal extends Component {
       prodMonthError,
       prodYearError
     } = this.state;
-    const { vehicleModalOpen, handleVehicleModal, isCustVehiclemodal } = this.props;
+    const {
+      vehicleModalOpen,
+      handleVehicleModal,
+      isCustVehiclemodal
+    } = this.props;
     const {
       expandForm,
       transmissionSelected,
@@ -328,13 +352,9 @@ export class CrmVehicleModal extends Component {
         >
           <ModalHeader toggle={handleVehicleModal}>
             Create New Vehicle
-            {
-              isCustVehiclemodal ?
-                <div className={"step-align"}>
-                  Step 2/2
-                </div> :
-                null
-            }
+            {isCustVehiclemodal ? (
+              <div className={"step-align"}>Step 2/2</div>
+            ) : null}
           </ModalHeader>
           <ModalBody>
             <Row className="justify-content-center">
@@ -551,8 +571,8 @@ export class CrmVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                  ""
-                )}
+                ""
+              )}
             </Row>
             {/* <Row className="justify-content-center">
               <Col md="12 text-center">
@@ -573,12 +593,9 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Engine Size
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <Input
                       type="text"
@@ -595,12 +612,9 @@ export class CrmVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Production Date
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <MaskedInput
                       name="productionDate"
@@ -609,8 +623,7 @@ export class CrmVehicleModal extends Component {
                       onChange={this._onInputChange}
                       className={classnames("form-control", {
                         "is-invalid":
-                          (prodMonthError || prodYearError) &&
-                          productionDate
+                          (prodMonthError || prodYearError) && productionDate
                       })}
                     />
                     <FormFeedback>
@@ -626,12 +639,9 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Transmission
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <Input
                       type="select"
@@ -643,16 +653,16 @@ export class CrmVehicleModal extends Component {
                       <option value={""}>Select</option>
                       {Transmission.length
                         ? Transmission.map((item, index) => {
-                          return (
-                            <option
-                              selected={item.key === transmissionSelected}
-                              value={item.key}
-                              key={index}
-                            >
-                              {item.text}
-                            </option>
-                          );
-                        })
+                            return (
+                              <option
+                                selected={item.key === transmissionSelected}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
                         : null}
                     </Input>
                     {!transmission && errors.transmission ? (
@@ -663,12 +673,9 @@ export class CrmVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Drivetrain
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <Input
                       type="select"
@@ -680,16 +687,16 @@ export class CrmVehicleModal extends Component {
                       <option value={""}>Select</option>
                       {Drivetrain.length
                         ? Drivetrain.map((item, index) => {
-                          return (
-                            <option
-                              selected={item.key === drivetrainSelected}
-                              value={item.key}
-                              key={index}
-                            >
-                              {item.text}
-                            </option>
-                          );
-                        })
+                            return (
+                              <option
+                                selected={item.key === drivetrainSelected}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
                         : null}
                     </Input>
                     {!drivetrain && errors.drivetrain ? (
@@ -702,12 +709,9 @@ export class CrmVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="12">
                 <FormGroup>
-                  <Label
-                    htmlFor="name"
-                    className="customer-modal-text-style"
-                  >
+                  <Label htmlFor="name" className="customer-modal-text-style">
                     Notes
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <Input
                       name="notes"
@@ -731,10 +735,10 @@ export class CrmVehicleModal extends Component {
                     className="customer-anchor-text customer-click-btn"
                   >
                     Show Less
-                      </span>
+                  </span>
                 ) : (
-                    ""
-                  )}
+                  ""
+                )}
               </Col>
             </Row>
             {/* </>
@@ -746,18 +750,10 @@ export class CrmVehicleModal extends Component {
             <div className="required-fields">*Fields are Required.</div>
             <div className={isCustVehiclemodal ? "btn-reverse" : "btn-forward"}>
               <Button color="primary" onClick={this.createVehicleFun}>
-                {
-                  isCustVehiclemodal ?
-                    "Add Vehicle and Finish" :
-                    "Add Vehicle"
-                }
+                {isCustVehiclemodal ? "Add Vehicle and Finish" : "Add Vehicle"}
               </Button>{" "}
               <Button color="secondary" onClick={handleVehicleModal}>
-                {
-                  isCustVehiclemodal ?
-                    "< Back To Previous" :
-                    "Cancel"
-                }
+                {isCustVehiclemodal ? "< Back To Previous" : "Cancel"}
               </Button>
             </div>
           </ModalFooter>

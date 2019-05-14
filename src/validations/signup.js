@@ -27,8 +27,7 @@ export const SingupValidations = {
     [ValidationTypes.REQUIRED]: true
   },
   workspace: {
-    [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.ALPHA_NUMERIC]: true
+    [ValidationTypes.REQUIRED]: true
   },
   companyWebsite: {
     [ValidationTypes.REQUIRED]: false

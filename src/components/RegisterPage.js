@@ -22,6 +22,7 @@ import { logger } from "../helpers/Logger";
 import { SingupValidations, SingupValidationsMessaages } from "../validations";
 import MailIcon from "./../assets/img/mail-icon.svg";
 import { Link } from "react-router-dom";
+import { validUrlCheck, isValidSubdomain } from "../helpers/Object";
 const ResendInvitation = props => {
   return (
     <div className={"confirm-block"}>
@@ -83,7 +84,10 @@ class RegisterPage extends Component {
   }
   eventHandler = e => {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.name === "workspace"
+          ? e.target.value.toLowerCase()
+          : e.target.value,
       errors: { ...this.state.errors, [e.target.name]: null }
     });
   };
@@ -93,18 +97,6 @@ class RegisterPage extends Component {
       errors: {}
     });
     try {
-      const { isValid, errors } = Validator(
-        this.state,
-        SingupValidations,
-        SingupValidationsMessaages
-      );
-      if (!isValid) {
-        this.setState({
-          errors,
-          isLoading: false
-        });
-        return;
-      }
       const {
         firstName,
         lastName,
@@ -113,9 +105,10 @@ class RegisterPage extends Component {
         companyLogo,
         companyName,
         companyWebsite,
-        workspace
+        workspace,
+        confirmPassword
       } = this.state;
-      this.props.onSignup({
+      const d = {
         firstName,
         lastName,
         email,
@@ -123,8 +116,31 @@ class RegisterPage extends Component {
         companyLogo,
         companyName,
         companyWebsite,
-        workspace
-      });
+        workspace,
+        confirmPassword
+      };
+      let { isValid, errors } = Validator(
+        d,
+        SingupValidations,
+        SingupValidationsMessaages
+      );
+      if (d.companyWebsite && !validUrlCheck(d.companyWebsite)) {
+        errors.companyWebsite = "Please enter a valid URL.";
+        isValid = false;
+      }
+      if (d.workspace && !isValidSubdomain(d.workspace)) {
+        errors.workspace = "Workspace can only have a-z, 0-9 and -";
+        isValid = false;
+      }
+      if (!isValid) {
+        this.setState({
+          errors,
+          isLoading: false
+        });
+        return;
+      }
+
+      this.props.onSignup(d);
     } catch (error) {
       logger(error);
     }

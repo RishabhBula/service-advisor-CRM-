@@ -9,7 +9,8 @@ import {
   profileInfoRequest,
   updateCompanyLogo,
   updateCompanyDetails,
-  modelOpenRequest
+  modelOpenRequest,
+  logOutRequest
 } from "../../actions";
 // routes config
 import routes, { BreadCrumbRoutes } from "../../routes";
@@ -82,8 +83,7 @@ class DefaultLayout extends Component {
     }
   }
   signOut() {
-    localStorage.removeItem("token");
-    this.props.redirectTo("/login");
+    this.props.logoutUser();
   }
   renderCompanyDetailsPopup = profileInfo => {
     const { firstTimeUser, parentId, firstName } = profileInfo;
@@ -229,18 +229,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  profileInfoAction: () => {
-    dispatch(profileInfoRequest());
-  },
-  updateCompanyLogo: data => {
-    dispatch(updateCompanyLogo(data));
-  },
-  onCompanyDetailsUdpate: data => {
-    dispatch(updateCompanyDetails(data));
-  },
-  modelOperate: data => {
-    dispatch(modelOpenRequest({ modelDetails: data }));
-  }
+  logoutUser: () => dispatch(logOutRequest()),
+  profileInfoAction: () => dispatch(profileInfoRequest()),
+  updateCompanyLogo: data => dispatch(updateCompanyLogo(data)),
+  onCompanyDetailsUdpate: data => dispatch(updateCompanyDetails(data)),
+  modelOperate: data => dispatch(modelOpenRequest({ modelDetails: data }))
 });
 
 export default connect(
