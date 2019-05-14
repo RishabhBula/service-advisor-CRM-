@@ -15,6 +15,18 @@ export default {
       authKey: "isAllowedCalendar"
     },
     {
+      name: AppRoutes.CUSTOMERS.name,
+      url: AppRoutes.CUSTOMERS.url,
+      icon: "icons icon-user",
+      authKey: "isAllowedCompanySettings"
+    },
+    {
+      name: AppRoutes.VEHICLES.name,
+      url: AppRoutes.VEHICLES.url,
+      icon: "fas fa-truck",
+      authKey: "isAllowedCompanySettings"
+    },
+    {
       name: AppRoutes.INVENTORY.name,
       url: AppRoutes.INVENTORY.url,
       icon: "icons icon-layers",
@@ -52,23 +64,10 @@ export default {
         }
       ]
     },
-
     {
       name: AppRoutes.STAFF_MEMBERS.name,
       url: AppRoutes.STAFF_MEMBERS.url,
       icon: "icons icon-people",
-      authKey: "isAllowedCompanySettings"
-    },
-    {
-      name: AppRoutes.CUSTOMERS.name,
-      url: AppRoutes.CUSTOMERS.url,
-      icon: "icons icon-user",
-      authKey: "isAllowedCompanySettings"
-    },
-    {
-      name: AppRoutes.VEHICLES.name,
-      url: AppRoutes.VEHICLES.url,
-      icon: "icons icon-mouse",
       authKey: "isAllowedCompanySettings"
     },
     {
@@ -82,7 +81,8 @@ export default {
       url: AppRoutes.PRICEMATRIX.url,
       icon: "fas fa-hand-holding-usd",
       authKey: "isAllowedCompanySettings"
-    }
+    },
+    
   ]
 };
 

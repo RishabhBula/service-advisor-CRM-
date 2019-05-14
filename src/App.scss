@@ -87,6 +87,13 @@ body {
   .form-control {
     border-color: #dddddd;
   }
+  .input-group-text{
+    background-color: #c6ccd0;
+    border: 1px solid #a0a2a5;
+  }
+  .font-weight-semibold{
+    font-weight: 600;
+  }
   .card {
     .card-header {
       display: flex;
@@ -112,6 +119,9 @@ body {
   .table td {
     font-size: 13px;
     font-weight: 400;
+  }
+  .table td.font-weight-semibold{
+    font-weight: 600;
   }
   .table-checkbox-wrap {
     position: relative;
@@ -378,7 +388,20 @@ body {
     .form-select-theme__menu{
       top: 25px !important;
     }
-
+    .form-select-theme__option{
+      padding: 4px 12px;
+      font-size: 13px;
+      font-family: 'open sans';
+      border-bottom: 1px solid #eee;
+    }
+    .form-select-theme__option--is-focused:not(.form-select-theme__option--is-selected){
+      background-color: #ddd !important;
+      cursor: pointer;
+      transition: all ease 0.4s;
+    }
+    .form-select-theme__option--is-selected{
+      background-color: #7f6cb9;
+    }
     /*===========Swith css==============*/
     .switch-primary .switch-input:checked + .switch-slider{
       background-color: #7852ea;

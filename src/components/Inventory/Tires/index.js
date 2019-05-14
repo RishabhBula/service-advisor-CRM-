@@ -182,7 +182,7 @@ class Tires extends Component {
   };
 
   editTire = tier => {
-    logger(tier,"!!!!!!!!!!!!!!!!!!!!!")
+    logger(tier, "!!!!!!!!!!!!!!!!!!!!!")
     this.setState({ tire: tier }, () => {
       this.props.modelOperate({
         tireEditModalOpen: true
@@ -274,9 +274,6 @@ class Tires extends Component {
 
   }
 
-  setVendorSearch = (vendorData) => {
-    this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
-  }
   render() {
     const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix, onAddClick } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -493,7 +490,7 @@ class Tires extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td className={"text-capitalize"}>
-                          <div className={"font-weight-bold"}>{tire.brandName || "-"}</div>
+                          <div className={"font-weight-semibold"}>{tire.brandName || "-"}</div>
                           {tire.modalName ? <div className={"modal-info"}>
                             Modal : <Badge>{tire.modalName}</Badge></div> : " "}
                         </td>
@@ -508,10 +505,14 @@ class Tires extends Component {
                             >
                               <b>Size Details</b>
                               {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
-                            </Button> : null
+                            </Button> : notExist
                           }
                         </td>
-                        <td onClick={tire.vendorId ? () => this.setVendorSearch(tire.vendorId) : null}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</td>
+                        <td>
+                          {tire.vendorId && tire.vendorId.name ?
+                            <a href={`/inventory/vendors?page=1&search=${tire.vendorId && tire.vendorId.name ? tire.vendorId.name : null}`} target="_blank" className={"text-body"}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</a> :
+                            tire.vendorId && tire.vendorId.name ? tire.vendorId.name : notExist}
+                        </td>
                         <td className={"season-td text-capitalize"}>
                           {tire.seasonality || "-"}
                         </td>
@@ -550,7 +551,7 @@ class Tires extends Component {
                             <i className={"icons cui-trash"}></i>
                           </Button>
                           <UncontrolledTooltip target={`delete-${tire._id}`}>
-                            Delete 
+                            Delete
                           </UncontrolledTooltip>
                         </td>
                       </tr>
@@ -577,8 +578,8 @@ class Tires extends Component {
                                     <td></td>
                                     <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
                                     <td>{size.part || notExist}</td>
-                                    <td width={"70"}>{size.cost || notExist}</td>
-                                    <td width={"70"}>{size.retailPrice || notExist}</td>
+                                    <td width={"70"}>{size.cost ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.cost}</span> : notExist}</td>
+                                    <td width={"70"}>{size.retailPrice ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.retailPrice}</span> : notExist}</td>
                                     <td width={"70"}>{size.quantity || 0}&nbsp;
                                       {size.quantity <= size.criticalQuantity ? (
                                         <Badge color={"warning"}>Reorder</Badge>

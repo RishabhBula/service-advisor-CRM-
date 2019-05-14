@@ -7,6 +7,7 @@ import {
   UncontrolledTooltip,
   FormFeedback,
   FormGroup,
+  InputGroup,
   Label,
   Modal,
   ModalBody,
@@ -114,7 +115,7 @@ class PriceMatrixComponent extends Component {
                                 >
                                   <div className={"d-inline-block"}>
                                     <Input
-                                      className={"form-control text-center"}
+                                      className={"form-control text-center cost-input"}
                                       name={"costPrice1"}
                                       value={item.lower}
                                       onChange={e => handleCostChange(index, e)}
@@ -126,7 +127,7 @@ class PriceMatrixComponent extends Component {
                                   </span>
                                   <div className={"d-inline-block"}>
                                     <Input
-                                      className={"form-control text-center"}
+                                      className={"form-control text-center cost-input"}
                                       onChange={e => handleCostChange(index, e)}
                                       name={"costPrice2"}
                                       value={item.upper}
@@ -143,6 +144,7 @@ class PriceMatrixComponent extends Component {
                                     "d-flex justify-content-center matrix-input-control"
                                   }
                                 >
+                                  <InputGroup className={"markup-input"}>
                                   <Input
                                     className={"form-control text-center "}
                                     value={item.markup}
@@ -151,6 +153,12 @@ class PriceMatrixComponent extends Component {
                                     onChange={(e) => handleChange(index, e)}
                                     placeholder={"100.00%"}
                                   />
+                                    <div class="input-group-append">
+                                      <span class="input-group-text">
+                                        <i class="fa fa-percent"></i>
+                                      </span>
+                                    </div>
+                                  </InputGroup>
                                 </div>
                               </td>
                               <td>
@@ -159,6 +167,7 @@ class PriceMatrixComponent extends Component {
                                     "d-flex justify-content-center matrix-input-control"
                                   }
                                 >
+                                  <InputGroup className={"markup-input"}>
                                   <Input
                                     className={"form-control text-center"}
                                     value={item.margin}
@@ -167,6 +176,12 @@ class PriceMatrixComponent extends Component {
                                     onChange={(e) => handleChange(index, e)}
                                     placeholder={"$0.00"}
                                   />
+                                    <div class="input-group-append">
+                                      <span class="input-group-text">
+                                        <i class="fa fa-percent"></i>
+                                      </span>
+                                    </div>
+                                  </InputGroup>
                                 </div>
                               </td>
                               <td className={"text-center"}>
@@ -182,7 +197,7 @@ class PriceMatrixComponent extends Component {
                                         }
                                         id={`tooltip-1-${index}`}
                                       >
-                                      <span className={"icon"}>
+                                        <span className={"icon cursor_pointer"}>
                                           <img src={shortUp} width={"20"} alt={"shortUp"}/>
                                           <UncontrolledTooltip target={`tooltip-1-${index}`}>
                                           Add range above
@@ -197,7 +212,7 @@ class PriceMatrixComponent extends Component {
                                       }
                                       id={`tooltip-2-${index+1}`}
                                     >
-                                      <span className={"icon"}>
+                                      <span className={"icon cursor_pointer"}>
                                         <img src={shortDown} width={"20"} alt={"shortUp"} />
                                         <UncontrolledTooltip target={`tooltip-2-${index+1}`}>
                                           Add range below
@@ -205,7 +220,7 @@ class PriceMatrixComponent extends Component {
                                       </span>
                                     </span>
                                     {index >= 1 ? (
-                                      <span className={"icon"} >
+                                      <span className={"icon cursor_pointer"} >
                                             <span
                                           className={"btn btn-theme-transparent btn-secondary"}
                                               size={"sm"}

@@ -475,7 +475,7 @@ export class CrmWelcomeModel extends Component {
                       );
                     })}
                   </div>
-                  <p className={"text-danger"}>
+                  <p className={"text-danger error-msg"}>
                     {errors.peopleWork ? errors.peopleWork : null}
                   </p>
                 </div>
@@ -517,7 +517,7 @@ export class CrmWelcomeModel extends Component {
                       );
                     })}
                   </div>
-                  <p className={"text-danger"}>
+                  <p className={"text-danger error-msg"}>
                     {errors.servicesOffer ? errors.servicesOffer : null}
                   </p>
                 </div>
@@ -556,7 +556,7 @@ export class CrmWelcomeModel extends Component {
                       }
                     )}
                   </div>
-                  <p className={"text-danger"}>
+                  <p className={"text-danger error-msg"}>
                     {errors.vehicleServicesOffer
                       ? errors.vehicleServicesOffer
                       : null}

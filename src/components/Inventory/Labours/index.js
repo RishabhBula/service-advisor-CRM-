@@ -27,6 +27,7 @@ import { AppConfig } from "../../../config/AppConfig";
 import { isEqual } from "../../../helpers/Object";
 import NoDataFound from "../../common/NoFound"
 import { notExist } from "../../../config/Constants";
+import LaboutIcon from "../../../assets/img/labor.svg"
 
 class Labours extends Component {
   constructor(props) {
@@ -301,12 +302,12 @@ class Labours extends Component {
           <thead>
             <tr>
               <th width='90px'>S No.</th>
-              <th width={"250"}>Labor Description</th>
-              <th width={"350"}>Note</th>
-              <th>Rate</th>
-              <th>Hours</th>
+              <th width={"250"}><i class="fa fa-user"></i> Labor Description</th>
+              <th width={"350"}><i class="fa fa-file-text"></i> Note</th>
+              <th><i class="fa fa-dollar"></i> Rate</th>
+              <th><i class="fa fa-hourglass-2"></i> Hours</th>
               {/* <th>Price</th> */}
-              <th>Discount</th>
+              <th><i class="fa fa-percent"></i> Discount</th>
               <th width={"90"} className={"text-center"}>Action</th>
             </tr>
           </thead>
@@ -321,7 +322,7 @@ class Labours extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </label>
                       </td>
-                      <td><b>{data.discription || notExist}</b></td>
+                      <td className={"font-weight-semibold"}>{data.discription || notExist}</td>
                       {
                         expandText && isReadMore === index ?
                           <td className={"pr-4"}>

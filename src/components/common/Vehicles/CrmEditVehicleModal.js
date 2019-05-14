@@ -461,7 +461,6 @@ export class CrmEditVehicleModal extends Component {
                     placeholder={"Pick a color"}
                     isClearable={true}
                     components={{ Option: CustomOption }}
-
                   />
                 </FormGroup>
               </Col>

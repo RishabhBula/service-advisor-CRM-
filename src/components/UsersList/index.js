@@ -428,15 +428,15 @@ class UserList extends Component {
                   </Input>
                 </div>
               </th>
-              <th width={"250"}><i className={"fa fa-users"} /> Member Details</th>
+              <th width={"300"}><i className={"fa fa-users"} /> Member Details</th>
               {/* <th>Email</th> */}
-              <th width={"100"}><i className={"fa fa-dollar"} /> Hourly Rate</th>
-              <th width={"100"} className={"text-center"}><i className={"fa fa-user-circle"} /> Role</th>
-              <th><i class="fa fa-clock-o"></i> Created</th>
-              <th><i className={"fa fa-sign-in"} /> Last Login Details</th>
+              <th width={"130"}><i className={"fa fa-dollar"} /> Hourly Rate</th>
+              <th width={"150"} ><i className={"fa fa-user-circle"} /> Role</th>
+              {/* <th><i class="fa fa-clock-o"></i> Created</th> */}
               {/* <th>Last Login IP</th> */}
-              <th className={"text-center"}><i className={"fa fa-share-alt"} /> Invitation Status</th>
-              <th className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th>
+              <th width={"150"} className={"text-center"}><i className={"fa fa-share-alt"} /> Invitation Status</th>
+              <th width={"150"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th>
+              <th width={"200"}><i className={"fa fa-sign-in"} /> Created /  Login Details</th>
               <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
@@ -461,7 +461,7 @@ class UserList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div className={"text-capitalize font-weight-bold"}>
+                        <div className={"text-capitalize font-weight-semibold"}>
                           {[user.firstName, user.lastName].join(" ").trim()}
                         </div>
                         <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : "-"} </div>
@@ -469,16 +469,12 @@ class UserList extends Component {
                       <td>
                         {user.rate ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
                       </td>
-                      <td className={"text-center text-capitalize"}>
+                      <td className={"text-capitalize"}>
                         {user.roleType ? user.roleType.userType : "-"}
                       </td>
-                      <td>
+                      {/* <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
-                      </td>
-                      <td>
-                        <div>{user.loggedInAt ? formateDate(user.loggedInAt) : "-"}</div>
-                        <div>{user.loggedInIp || " "}</div>
-                      </td>
+                      </td> */}
                       <td className={"text-center"}>
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
@@ -522,6 +518,20 @@ class UserList extends Component {
                             Inactive
                           </Badge>
                         )}
+                      </td>
+                      <td>
+                        <div id={`create${index}`}>
+                          {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
+                          {user.loggedInAt ? <UncontrolledTooltip target={`create${index}`}>
+                            Created At
+                          </UncontrolledTooltip> :null}
+                        </div>
+                        <div id={`loginip-${index}`}>
+                          {user.loggedInIp || " "}
+                          {user.loggedInIp ? <UncontrolledTooltip target={`loginip-${index}`}>
+                            Last Login Ip Address
+                          </UncontrolledTooltip> :null }
+                        </div>
                       </td>
                       <td className={"text-center"}>
                         <Button
