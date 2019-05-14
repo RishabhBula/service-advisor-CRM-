@@ -29,7 +29,6 @@ const signUp = async (req, res) => {
     });
     let $data = req.body;
     $data.roleType = roleType._id;
-
     $data.permissions =
       typeof roleType.permissionObject[0] === "object"
         ? roleType.permissionObject[0]
