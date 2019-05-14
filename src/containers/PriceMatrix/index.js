@@ -127,7 +127,7 @@ class PriceMatrix extends Component {
       });
     } else {
       console.log("!!!!!!!!!!!!!!!!!", value, parseFloat(value) > 100);
-      if ((name === "margin" || name === "markup") && parseFloat(value) > 100) {
+      if ((name === "margin") && parseFloat(value) > 100) {
         return
       }
       const matrixRange = [...this.state.matrixRange]
