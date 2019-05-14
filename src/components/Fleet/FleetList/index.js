@@ -21,6 +21,9 @@ import * as qs from "query-string";
 import { withRouter } from "react-router-dom";
 import { AppConfig } from "../../../config/AppConfig";
 import { toast } from 'react-toastify';
+import moment from 'moment';
+import NoDataFound from "../../common/NoFound";
+import { notExist } from "../../../config/Constants";
 
 class FleetList extends Component {
   constructor(props) {
@@ -35,7 +38,8 @@ class FleetList extends Component {
       sort: "",
       type: "",
       page: 1,
-      selectedFleets: []
+      selectedFleets: [],
+      filterApplied: false
     };
   }
 
@@ -43,12 +47,17 @@ class FleetList extends Component {
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status, type } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search || sort) {
+      filterApplied = true;
+    }
     this.setState({
       page: parseInt(page) || 1,
       sort: sort || "",
       status: status || "",
       search: search || "",
-      type: type || ""
+      type: type || "",
+      filterApplied
     });
   }
 
@@ -174,6 +183,9 @@ class FleetList extends Component {
       param.status = status;
     }
     this.props.onSearch(param);
+    this.setState({
+      filterApplied: true
+    })
   };
 
   onReset = e => {
@@ -186,6 +198,9 @@ class FleetList extends Component {
       user: {}
     });
     this.props.onSearch({});
+    this.setState({
+      filterApplied: false
+    })
   };
 
   editFleet = fleetData => {
@@ -218,7 +233,9 @@ class FleetList extends Component {
       status,
       sort,
       page,
-      selectedFleets } = this.state
+      selectedFleets,
+      filterApplied
+    } = this.state
     const { fleetListData } = this.props;
     const { isLoading, fleetData } = fleetListData;
     return (
@@ -228,7 +245,7 @@ class FleetList extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -244,9 +261,9 @@ class FleetList extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="exampleSelect" className="label">
+                  {/* <Label for="exampleSelect" className="label">
                     Status
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="status"
@@ -255,7 +272,7 @@ class FleetList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      Status
                     </option>
                     <option value={true}>Active</option>
                     <option value={false}>Inactive</option>
@@ -264,9 +281,9 @@ class FleetList extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label for="SortFilter" className="label">
+                  {/* <Label for="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -275,7 +292,7 @@ class FleetList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"nasc"}>Name A-Z</option>
@@ -288,26 +305,26 @@ class FleetList extends Component {
                   <Label className="height17 label" />
                   <div className="form-group mb-0">
                     <span className="mr-2">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="fa fa-search" />
-                      </button>
+                        <i className="icons cui-magnifying-glass"></i>
+                      </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
                       </UncontrolledTooltip>
                     </span>
                     <span className="">
-                      <button
+                      <Button
                         type="button"
-                        className="btn btn-danger"
+                        className="btn btn-theme-transparent"
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="fa fa-refresh" />
-                      </button>
+                        <i className="icon-refresh icons"></i>
+                      </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
                       </UncontrolledTooltip>
@@ -318,7 +335,7 @@ class FleetList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive >
           <thead>
             <tr>
               <th width='90px'>
@@ -366,14 +383,15 @@ class FleetList extends Component {
                     </Input>}
                 </div>
               </th>
-              <th>Company Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Vehicles</th>
-              <th>Orders</th>
-              <th>Lables</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th width={"250"}><i className={"fa fa-building-o"} /> Company Name</th>
+              <th width={"250"}><i className={"fa fa-phone"} /> Phone</th>
+              {/* <th width={"250"}>Email</th> */}
+              <th><i className={"fa fa-cab"} /> Vehicles</th>
+              <th><i className={"fa fa-list-ol"} /> Orders</th>
+              {/* <th><i className={"fa fa-bookmark"} /> Lables</th> */}
+              <th><i className={"fa fa-exclamation-circle"} /> Status</th>
+              <th><i className={"fa fa-clock-o"} /> Created</th>
+              <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -396,19 +414,25 @@ class FleetList extends Component {
                           </label>
                         </div>
                       </td>
-                      <td>{data.companyName || "-"}</td>
-                      <td>{data.phoneDetail ?
-                        data.phoneDetail.map((data, index) => {
-                          return (
-                            <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value || "-"}</div>
-                          )
-                        }) : "-"}</td>
-                      <td>{data.email || "-"}</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td className="text-center">
-                        <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
+                      <td>
+                        <div className={"text-capitalize font-weight-bold"}>{data.companyName || notExist}</div>
+                        <div>{data.email ? <a href={`mailto:${data.email}`} className={"text-body"}>{data.email}</a> : null}</div>
                       </td>
+                      <td>
+                        <div>
+                          {data.phoneDetail ?
+                            data.phoneDetail.map((data, index) => {
+                              return (
+                                <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : null}</div>
+                              )
+                            }) : "-"}
+                        </div>
+                      </td>
+                      <td className={"pl-4"}><span className={"qty-value"}>0</span></td>
+                      <td className={"pl-4 qty-value"}><span className={"qty-value"}>0</span></td>
+                      {/* <td >
+                        <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
+                      </td> */}
                       <td>
                         {data.status ? (
                           <Badge
@@ -443,29 +467,44 @@ class FleetList extends Component {
                           )}
                       </td>
                       <td>
-                        <Button
-                          color={"primary"}
-                          size={"sm"}
-                          onClick={() => this.editFleet(data)}
-                        >
-                          <i className={"fa fa-edit"} />
-                        </Button>{" "}
-                        &nbsp;
-                        <Button
-                          color={"danger"}
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedFleets: [data._id]
-                              },
-                              () => {
-                                this.onDelete();
-                              })
-                          }
-                        >
-                          <i className={"fa fa-trash"} />
-                        </Button>
+                        <div>{moment(data.createdAt).format("MMM Do YYYY")}</div>
+                        <div>{moment(data.createdAt).format("h:mm a")}</div>
+                      </td>
+                      <td className={"text-center"}>
+                        <span className="mr-2">
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editFleet(data)}
+                            className={"btn-theme-transparent"}
+                            id={"Tooltip-3"}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip target="Tooltip-3">
+                            Edit
+                          </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
+                          <Button
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedFleets: [data._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                })
+                            }
+                            className={"btn-theme-transparent"}
+                            id={"Tooltip-4"}
+                          >
+                            <i className={"icons cui-trash"} />
+                          </Button>
+                          <UncontrolledTooltip target="Tooltip-4">
+                            Delete
+                          </UncontrolledTooltip>
+                        </span>
                       </td>
                     </tr>
                   );
@@ -473,8 +512,10 @@ class FleetList extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={10}>
-                      No Fleets are available
-                  </td>
+                      {filterApplied ? <NoDataFound message={"No Fleet details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Fleet details added."} onAddClick={this.props.onAddClick} />
+                      }
+                    </td>
                   </tr>
                 )
             ) : (

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Col, FormGroup, Input, Label } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Col, FormGroup, Input, Label, InputGroup } from "reactstrap";
 
 export class CrmStandardModel extends Component {
   constructor(props) {
@@ -13,14 +13,14 @@ export class CrmStandardModel extends Component {
   }
 
   componentDidUpdate({ openStadardRateModel }) {
-    // if (this.props.openStadardRateModel !== openStadardRateModel) {
-    //   this.setState({
-    //     openStadardRateModel: false,
-    //     name: "",
-    //     hourRate: "",
-    //     isSubmitted: false
-    //   });
-    // }
+    if (this.props.openStadardRateModel !== openStadardRateModel) {
+      this.setState({
+        openStadardRateModel: false,
+        name: "",
+        hourRate: "",
+        isSubmitted: false
+      });
+    }
   }
 
   toggle = () => {
@@ -55,6 +55,7 @@ export class CrmStandardModel extends Component {
     this.props.handleRateAdd(data);
   }
   render() {
+    
     const { name, hourRate } = this.state
     const { openStadardRateModel, errors } = this.props
     return (
@@ -65,12 +66,12 @@ export class CrmStandardModel extends Component {
           className='customer-modal custom-form-modal '
           backdrop={"static"}
         >
-          <ModalHeader toggle={this.toggle}>Create New Labour Rate</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Create New Labor Rate</ModalHeader>
           <ModalBody>
             <Col md="12">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
-                  Name
+                  Name <span class="asteric">*</span>
                   </Label>
                 <div className={"input-block"}>
                   <Input
@@ -93,9 +94,15 @@ export class CrmStandardModel extends Component {
             <Col md="12">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
-                  Hour Rate
+                  Hour Rate <span class="asteric">*</span>
                   </Label>
                 <div className={"input-block"}>
+                  <InputGroup> 
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="fa fa-dollar"></i>
+                      </span>
+                    </div>
                   <Input
                     type="text"
                     name="hourRate"
@@ -105,6 +112,8 @@ export class CrmStandardModel extends Component {
                     id="make"
                     maxLength='3'
                   />
+                   
+                  </InputGroup>
                   {
                     errors && !hourRate && errors.hourRate ?
                       <p className="text-danger">Hour rate is required</p> :
@@ -116,7 +125,7 @@ export class CrmStandardModel extends Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.handleSubmit}>
-              Add Labour Rate
+              Add Labor Rate
             </Button>{" "}
             <Button color="secondary" onClick={this.toggle}>
               Cancel

@@ -180,10 +180,12 @@ const updateFleetdetails = async (req, res) => {
             success: false,
          });
       } else {
+         const today = new Date();
          const updateFleetDetails = await fleetModal.findByIdAndUpdate(
             body.fleetId,
             {
                $set: body.fleetData,
+               updatedAt: today
             }
          );
          if (!updateFleetDetails) {

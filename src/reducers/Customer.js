@@ -8,7 +8,8 @@ const initialAuthState = {
 const listCustomerState = {
   isLoading: false,
   customers: [],
-  totalUsers: []
+  totalUsers: [],
+  importError: undefined
 };
 
 export const customerInfoReducer = handleActions(
@@ -48,6 +49,10 @@ export const customerListReducer = handleActions(
       isLoading: false,
       customers: [],
       totalCustomers: []
+    }),
+    [customersAddActions.IMPORT_CUSTOMER_REQ_UPDATE]: (state, action) => ({
+      ...state,
+      ...action.payload
     })
   },
   listCustomerState

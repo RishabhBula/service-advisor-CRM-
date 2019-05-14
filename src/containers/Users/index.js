@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Row,
-  Col,
-  Button,
-  UncontrolledTooltip
-} from "reactstrap";
+import { Card, CardBody, Button, UncontrolledTooltip } from "reactstrap";
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
@@ -20,6 +12,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
+
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -51,8 +44,8 @@ class Users extends Component {
       }
     }
     if (
-      this.props.userReducer.userData.isEditSuccess !==
-      userReducer.userData.isEditSuccess
+      userReducer.userData.isEditSuccess !==
+      this.props.userReducer.userData.isEditSuccess
     ) {
       if (this.props.userReducer.userData.isEditSuccess) {
         const query = qs.parse(this.props.location.search);
@@ -94,30 +87,21 @@ class Users extends Component {
     const { addUserModal, editUserModal } = modelDetails;
     return (
       <>
-        <Card>
-          <CardHeader>
-            <Row>
-              <Col sm={"6"} className={"pull-left"}>
-                <h4>
-                  <i className={"fa fa-users"} /> Staff Members
-                </h4>
-              </Col>
-              <Col sm={"6"} className={"text-right"}>
-                <Button
-                  color="primary"
-                  id="add-user"
-                  onClick={this.toggleCreateModal}
-                >
-                  <i className={"fa fa-plus"} />
-                  &nbsp; Add New
-                </Button>
-                <UncontrolledTooltip target={"add-user"}>
-                  Add New Staff Member
-                </UncontrolledTooltip>
-              </Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
+        <Card className={"white-card"}>
+          <CardBody className={"custom-card-body position-relative"}>
+            <div className={"text-right invt-add-btn-block"}>
+              <Button
+                color="primary"
+                id="add-user"
+                onClick={this.toggleCreateModal}
+              >
+                <i className={"fa fa-plus"} />
+                &nbsp; Add New Staff Member
+              </Button>
+              <UncontrolledTooltip target={"add-user"}>
+                Add New Staff Member
+              </UncontrolledTooltip>
+            </div>
             <UsersList
               userData={userReducer}
               onPageChange={this.onPageChange}

@@ -23,6 +23,8 @@ import { CrmUserModal } from "../common/CrmUserModal";
 import { RoleOptions } from "../../config/Constants";
 import { toast } from "react-toastify";
 import { logger } from "../../helpers/Logger";
+import NoDataFound from "../common/NoFound"
+
 class UserList extends Component {
   constructor(props) {
     super(props);
@@ -219,6 +221,13 @@ class UserList extends Component {
       this.onDelete(true);
     }
   };
+
+  onAddClick =()=>{
+    this.props.modelOperate({
+      addUserModal: true
+    });
+  }
+
   render() {
     const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
@@ -243,7 +252,7 @@ class UserList extends Component {
             <Row>
               <Col lg={"3"} md={"3"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label className="label">Search</Label>
+                  {/* <Label className="label">Search</Label> */}
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -259,9 +268,9 @@ class UserList extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="exampleSelect" className="label">
+                  {/* <Label htmlFor="exampleSelect" className="label">
                     Invitation Status
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="invitaionStatus"
@@ -270,7 +279,7 @@ class UserList extends Component {
                     value={invitaionStatus}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                     Invitation Status
                     </option>
                     <option value={1}>Accepted</option>
                     <option value={0}>Pending</option>
@@ -279,9 +288,9 @@ class UserList extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="exampleSelect" className="label">
+                  {/* <Label htmlFor="exampleSelect" className="label">
                     User Status
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="status"
@@ -290,7 +299,7 @@ class UserList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                     User Status
                     </option>
                     <option value={1}>Active</option>
                     <option value={0}>Inactive</option>
@@ -299,9 +308,9 @@ class UserList extends Component {
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
                 <FormGroup className="mb-0">
-                  <Label htmlFor="SortFilter" className="label">
+                  {/* <Label htmlFor="SortFilter" className="label">
                     Sort By
-                  </Label>
+                  </Label> */}
                   <Input
                     type="select"
                     name="sort"
@@ -310,7 +319,7 @@ class UserList extends Component {
                     value={sort}
                   >
                     <option className="form-control" value={""}>
-                      -- Select --
+                      Sort By
                     </option>
                     <option value={"createddesc"}>Last Created</option>
                     <option value={"loginasc"}>Last login</option>
@@ -323,9 +332,9 @@ class UserList extends Component {
                 <Row>
                   <Col md={"6"}>
                     <FormGroup className="mb-0">
-                      <Label htmlFor="SortFilter" className="label">
+                      {/* <Label htmlFor="SortFilter" className="label">
                         User Type
-                      </Label>
+                      </Label> */}
                       <Input
                         type="select"
                         name="type"
@@ -334,7 +343,7 @@ class UserList extends Component {
                         value={type}
                       >
                         <option className="form-control" value={""}>
-                          -- Select --
+                          User Type
                         </option>
                         {RoleOptions.map((role, index) => {
                           return (
@@ -351,26 +360,26 @@ class UserList extends Component {
                       <Label className="height17 label" />
                       <div className="form-group mb-0">
                         <span className="mr-2">
-                          <button
+                          <Button
                             type="submit"
-                            className="btn btn-primary"
+                            className="btn btn-theme-transparent"
                             id="Tooltip-1"
                           >
-                            <i className="fa fa-search" />
-                          </button>
+                            <i className="icons cui-magnifying-glass"></i>
+                          </Button>
                           <UncontrolledTooltip target="Tooltip-1">
                             Search
                           </UncontrolledTooltip>
                         </span>
                         <span className="">
-                          <button
+                          <Button
                             type="button"
-                            className="btn btn-danger"
+                            className="btn btn-theme-transparent"
                             id="Tooltip-2"
                             onClick={this.onReset}
                           >
-                            <i className="fa fa-refresh" />
-                          </button>
+                            <i className="icon-refresh icons"></i>
+                          </Button>
                           <UncontrolledTooltip target={"Tooltip-2"}>
                             Reset all filters
                           </UncontrolledTooltip>
@@ -383,7 +392,7 @@ class UserList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive bordered>
+        <Table responsive>
           <thead>
             <tr>
               <th width="90px">
@@ -419,16 +428,16 @@ class UserList extends Component {
                   </Input>
                 </div>
               </th>
-              <th>Member Name</th>
-              <th>Email</th>
-              <th>Rate/hour</th>
-              <th className={"text-center"}>Role</th>
-              <th>Registered</th>
-              <th>Last Login</th>
-              <th>Last Login IP</th>
-              <th className={"text-center"}>Invitation Status</th>
-              <th className={"text-center"}>User Status</th>
-              <th className={"text-center"}>Action</th>
+              <th width={"300"}><i className={"fa fa-users"} /> Member Details</th>
+              {/* <th>Email</th> */}
+              <th width={"130"}><i className={"fa fa-dollar"} /> Hourly Rate</th>
+              <th width={"150"} ><i className={"fa fa-user-circle"} /> Role</th>
+              {/* <th><i class="fa fa-clock-o"></i> Created</th> */}
+              {/* <th>Last Login IP</th> */}
+              <th width={"150"} className={"text-center"}><i className={"fa fa-share-alt"} /> Invitation Status</th>
+              <th width={"150"} className={"text-center"}><i className={"fa fa-exclamation-circle"} /> Status</th>
+              <th width={"200"}><i className={"fa fa-sign-in"} /> Created /  Login Details</th>
+              <th width={"140"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -452,22 +461,20 @@ class UserList extends Component {
                         </div>
                       </td>
                       <td>
-                        {[user.firstName, user.lastName].join(" ").trim()}
+                        <div className={"text-capitalize font-weight-semibold"}>
+                          {[user.firstName, user.lastName].join(" ").trim()}
+                        </div>
+                        <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : "-"} </div>
                       </td>
-                      <td>{user.email || "-"}</td>
                       <td>
-                        {user.rate ? ["$", user.rate.toFixed(2)].join("") : "-"}
+                        {user.rate ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
                       </td>
-                      <td className={"text-center"}>
+                      <td className={"text-capitalize"}>
                         {user.roleType ? user.roleType.userType : "-"}
                       </td>
-                      <td>
+                      {/* <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
-                      </td>
-                      <td>
-                        {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
-                      </td>
-                      <td>{user.loggedInIp || "-"}</td>
+                      </td> */}
                       <td className={"text-center"}>
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
@@ -512,21 +519,34 @@ class UserList extends Component {
                           </Badge>
                         )}
                       </td>
+                      <td>
+                        <div id={`create${index}`}>
+                          {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
+                          {user.loggedInAt ? <UncontrolledTooltip target={`create${index}`}>
+                            Created At
+                          </UncontrolledTooltip> :null}
+                        </div>
+                        <div id={`loginip-${index}`}>
+                          {user.loggedInIp || " "}
+                          {user.loggedInIp ? <UncontrolledTooltip target={`loginip-${index}`}>
+                            Last Login Ip Address
+                          </UncontrolledTooltip> :null }
+                        </div>
+                      </td>
                       <td className={"text-center"}>
                         <Button
-                          color={"primary"}
                           size={"sm"}
                           onClick={() => this.editUser(user)}
                           id={`edit-${user._id}`}
+                          className={"btn-theme-transparent"}
                         >
-                          <i className={"fa fa-edit"} />
+                          <i className={"icons cui-pencil"} />
                         </Button>{" "}
                         <UncontrolledTooltip target={`edit-${user._id}`}>
-                          Edit details of {user.firstName}
+                          Edit
                         </UncontrolledTooltip>
                         &nbsp;
                         <Button
-                          color={"danger"}
                           size={"sm"}
                           onClick={() =>
                             this.setState(
@@ -539,11 +559,12 @@ class UserList extends Component {
                             )
                           }
                           id={`delete-${user._id}`}
+                          className={"btn-theme-transparent"}
                         >
-                          <i className={"fa fa-trash"} />
+                          <i className={"icons cui-trash"} />
                         </Button>
                         <UncontrolledTooltip target={`delete-${user._id}`}>
-                          Delete {user.firstName}
+                          Delete 
                         </UncontrolledTooltip>
                       </td>
                     </tr>
@@ -552,13 +573,9 @@ class UserList extends Component {
               ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    {filterApplied ? (
-                      <React.Fragment>
-                        No staff member found for your search
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>No staff member available</React.Fragment>
-                    )}
+                      {filterApplied ? <NoDataFound message={"No Member details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Staff Member details added."} onAddClick={this.onAddClick}/>
+                      }
                   </td>
                 </tr>
               )

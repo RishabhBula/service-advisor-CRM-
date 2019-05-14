@@ -11,6 +11,7 @@ import {
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const profileInfoLogic = createLogic({
   type: profileInfoActions.PROFILE_INFO_REQUEST,
@@ -63,7 +64,7 @@ const updateCompanyLogoLogic = createLogic({
     logger(result);
     dispatch(hideLoader());
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       done();
       return;
     } else {
@@ -92,7 +93,7 @@ const updateCompanyDetailsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

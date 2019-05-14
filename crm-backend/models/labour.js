@@ -17,7 +17,7 @@ const labourSchema = new Schema({
         default: null,
     },
     discount: {
-        type: String,
+        type: Object,
         default: null
     },
     notes: {
@@ -52,7 +52,7 @@ const labourSchema = new Schema({
     },
     updatedAt: {
         type: Date,
-        default: Date.now,
+        default: null,
     },
 });
 

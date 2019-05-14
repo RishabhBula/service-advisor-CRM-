@@ -10,8 +10,10 @@ import {
   getUsersListSuccess,
   getUsersList,
   modelOpenRequest,
-  addUserSuccess
+  addUserSuccess,
+  editUserSuccess
 } from "./../actions";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const getUsersLogic = createLogic({
   type: usersActions.GET_USER_LIST,
@@ -65,7 +67,7 @@ const addUsersLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -99,7 +101,7 @@ const editUsersLogic = createLogic({
       action.payload.data
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -114,6 +116,7 @@ const editUsersLogic = createLogic({
         })
       );
       dispatch(hideLoader());
+      dispatch(editUserSuccess())
       done();
     }
   }
@@ -133,7 +136,7 @@ const deleteUserLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -165,7 +168,7 @@ const updateUserStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   FormGroup,
+  InputGroup,
   Label,
   Input,
   FormFeedback
@@ -19,7 +20,7 @@ import Select from "react-select";
 import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
-import { PhoneOptions } from "../../config/Constants";
+import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText
@@ -68,6 +69,7 @@ export class CrmCustomerModal extends Component {
       phoneLength: AppConfig.phoneLength,
       openStadardRateModel: false,
       defaultOptions: [{ value: "", label: "Add New Customer" }],
+      selectedPriceMatrix: { value: "", label: "Type to select" },
       selectedLabourRate: { value: "", label: "Select..." }
     };
   }
@@ -130,7 +132,7 @@ export class CrmCustomerModal extends Component {
           ratedata
         );
         if (result.isError) {
-          toast.error(result.messages[0]);
+          toast.error(result.messages[0] || DefaultErrorMessage);
         } else {
           toast.success(result.messages[0]);
           this.setState({
@@ -398,12 +400,37 @@ export class CrmCustomerModal extends Component {
     }
   };
 
+  matrixLoadOptions = (input, callback) => {
+    this.props.getPriceMatrix({ input, callback });
+  }
+  handlePriceMatrix = (e) => {
+    if (e && e.value) {
+      const { customerDefaultPermissions } = this.state;
+      customerDefaultPermissions["shouldPricingMatrixOverride"].pricingMatrix =
+        e.value;
+      this.setState({
+        ...customerDefaultPermissions,
+        selectedPriceMatrix: {
+          value: e.value,
+          label: e.label
+        }
+      })
+    } else {
+      this.setState({
+        selectedPriceMatrix: {
+          value: "",
+          label: "Type to select"
+        }
+      })
+    }
+  }
+
   render() {
     const {
       customerModalOpen,
-      matrixListReducerData,
       rateStandardListData,
-      getCustomerFleetList
+      getCustomerFleetList,
+      isCustVehiclemodal
     } = this.props;
     const {
       selectedOption,
@@ -414,7 +441,8 @@ export class CrmCustomerModal extends Component {
       firstName,
       lastName,
       email,
-      selectedLabourRate
+      selectedLabourRate,
+      selectedPriceMatrix
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return (
@@ -449,6 +477,11 @@ export class CrmCustomerModal extends Component {
         >
           <ModalHeader toggle={this.handleCustomerModal}>
             {"Create New Customer"}
+            {
+              isCustVehiclemodal ?
+                <div className={"step-align"}>Step 1/2</div> :
+                null
+            }
           </ModalHeader>
           <ModalBody>
             <div className="">
@@ -500,58 +533,60 @@ export class CrmCustomerModal extends Component {
               <Row className="">
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
-                      return (
-                        <React.Fragment key={index}>
-                          {index < 1 ? (
-                            <>
-                              <Col md="6">
-                                <FormGroup className="phone-number-feild">
-                                  <Label
-                                    htmlFor="name"
-                                    className="customer-modal-text-style"
-                                  >
-                                    Phone <span className={"asteric"}>*</span>
-                                  </Label>
-                                  {/* <div></div> */}
+                    return (
+                      <React.Fragment key={index}>
+                        {index < 1 ? (
+                          <>
+                            <Col md="6">
+                              <FormGroup className="phone-number-feild">
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Phone <span className={"asteric"}>*</span>
+                                </Label>
+                                {/* <div></div> */}
 
-                                  <Input
-                                    onChange={e =>
-                                      this.handlePhoneNameChange(index, e)
-                                    }
-                                    type="select"
-                                    id="name"
-                                    required
-                                  >
-                                    {phoneOptions}
-                                  </Input>
-                                  {phoneDetail[index].phone === "mobile" ? (
-                                    <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111"
-                                        name="phoneDetail"
-                                        placeholder="(555) 055-0555"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
-                                        })}
-                                        size="20"
-                                        value={item.value}
-                                        onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
-                                        }
-                                      />
-                                      <FormFeedback>
-                                        {this.state.phoneErrors[index]}
-                                      </FormFeedback>
-                                    </div>
-                                  ) : (
+                                <Input
+                                  onChange={e =>
+                                    this.handlePhoneNameChange(index, e)
+                                  }
+                                  type="select"
+                                  id="name"
+                                  required
+                                >
+                                  {phoneOptions}
+                                </Input>
+                                {phoneDetail[index].phone === "mobile" ? (
+                                  <div className="input-block select-number-tile">
+                                    <MaskedInput
+                                      mask="(111) 111-111"
+                                      name="phoneDetail"
+                                      placeholder="(555) 055-0555"
+                                      className={classnames("form-control", {
+                                        "is-invalid":
+                                          this.state.phoneErrors[index] !== "" &&
+                                          !item.value
+                                      })}
+                                      size="20"
+                                      value={item.value}
+                                      onChange={e =>
+                                        this.handlePhoneValueChange(index, e)
+                                      }
+                                    />
+                                    <FormFeedback>
+                                      {this.state.phoneErrors[index]}
+                                    </FormFeedback>
+                                  </div>
+                                ) : (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
                                         mask="(111) 111-111 ext 1111"
                                         name="phoneDetail"
                                         className={classnames("form-control", {
                                           "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
+                                            this.state.phoneErrors[index] !== "" &&
+                                            !item.value
                                         })}
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
@@ -565,36 +600,36 @@ export class CrmCustomerModal extends Component {
                                       </FormFeedback>
                                     </div>
                                   )}
-                                </FormGroup>
-                              </Col>
-                              <Col md="6">
-                                <FormGroup>
-                                  <Label
-                                    htmlFor="name"
-                                    className="customer-modal-text-style"
-                                  >
-                                    Email
+                              </FormGroup>
+                            </Col>
+                            <Col md="6">
+                              <FormGroup>
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Email
                                   </Label>
-                                  <div className="input-block">
-                                    <Input
-                                      type="text"
-                                      className="customer-modal-text-style"
-                                      placeholder="john.doe@example.com"
-                                      onChange={this.handleInputChange}
-                                      name="email"
-                                      value={this.state.email}
-                                      maxLength="100"
-                                    />
-                                    {errors.email && email ? (
-                                      <p className="text-danger">
-                                        {errors.email}
-                                      </p>
-                                    ) : null}
-                                  </div>
-                                </FormGroup>
-                              </Col>
-                            </>
-                          ) : (
+                                <div className="input-block">
+                                  <Input
+                                    type="text"
+                                    className="customer-modal-text-style"
+                                    placeholder="john.doe@example.com"
+                                    onChange={this.handleInputChange}
+                                    name="email"
+                                    value={this.state.email}
+                                    maxLength="100"
+                                  />
+                                  {errors.email && email ? (
+                                    <p className="text-danger">
+                                      {errors.email}
+                                    </p>
+                                  ) : null}
+                                </div>
+                              </FormGroup>
+                            </Col>
+                          </>
+                        ) : (
                             <>
                               <Col md="6">
                                 <button
@@ -644,33 +679,33 @@ export class CrmCustomerModal extends Component {
                                       </FormFeedback>
                                     </div>
                                   ) : (
-                                    <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111 ext 1111"
-                                        name="phoneDetail"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
-                                        })}
-                                        placeholder="(555) 055-0555 ext 1234"
-                                        size="20"
-                                        value={item.value}
-                                        onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
-                                        }
-                                      />
-                                      <FormFeedback>
-                                        {this.state.phoneErrors[index]}
-                                      </FormFeedback>
-                                    </div>
-                                  )}
+                                      <div className="input-block select-number-tile">
+                                        <MaskedInput
+                                          mask="(111) 111-111 ext 1111"
+                                          name="phoneDetail"
+                                          className={classnames("form-control", {
+                                            "is-invalid":
+                                              this.state.phoneErrors[index] !== ""
+                                          })}
+                                          placeholder="(555) 055-0555 ext 1234"
+                                          size="20"
+                                          value={item.value}
+                                          onChange={e =>
+                                            this.handlePhoneValueChange(index, e)
+                                          }
+                                        />
+                                        <FormFeedback>
+                                          {this.state.phoneErrors[index]}
+                                        </FormFeedback>
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </>
                           )}
-                        </React.Fragment>
-                      );
-                    })
+                      </React.Fragment>
+                    );
+                  })
                   : null}
 
                 {phoneDetail.length < 3 ? (
@@ -718,7 +753,7 @@ export class CrmCustomerModal extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-              <Row className="justify-content-center">
+              {/* <Row className="justify-content-center">
                 <div>
                   {!expandForm ? (
                     <span
@@ -729,257 +764,251 @@ export class CrmCustomerModal extends Component {
                       Show More{" "}
                     </span>
                   ) : (
-                    ""
-                  )}
+                      ""
+                    )}
                 </div>
-              </Row>
+              </Row> */}
             </div>
-            {expandForm ? (
-              <>
-                <Row className="justify-content-center">
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Address
+            {/* {expandForm ? (
+              <> */}
+            <Row className="justify-content-center">
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Address
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="Address"
-                        name="address1"
-                        onChange={this.handleInputChange}
-                        maxLength="200"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        City
+                  <Input
+                    type="text"
+                    placeholder="Address"
+                    name="address1"
+                    onChange={this.handleInputChange}
+                    maxLength="200"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    City
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="New York"
-                        name="city"
-                        onChange={this.handleInputChange}
-                        maxLength="30"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="">
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        State
+                  <Input
+                    type="text"
+                    placeholder="New York"
+                    name="city"
+                    onChange={this.handleInputChange}
+                    maxLength="30"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="">
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    State
                       </Label>
-                      <Input
-                        type="text"
-                        name="state"
-                        onChange={this.handleInputChange}
-                        placeholder="NY"
-                        maxLength="30"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="6 ">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Zip Code
+                  <Input
+                    type="text"
+                    name="state"
+                    onChange={this.handleInputChange}
+                    placeholder="NY"
+                    maxLength="30"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="6 ">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Zip Code
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="Zip Code"
-                        name="zipCode"
-                        onChange={this.handleInputChange}
-                        maxLength="6"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md="6">
-                    <FormGroup>
-                      <Label
-                        htmlFor="name"
-                        className="customer-modal-text-style"
-                      >
-                        Referral Source
+                  <Input
+                    type="text"
+                    placeholder="Zip Code"
+                    name="zipCode"
+                    onChange={this.handleInputChange}
+                    maxLength="6"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="6">
+                <FormGroup>
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
+                    Referral Source
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="Referral"
-                        name="Refferal Source"
-                        onChange={this.handleInputChange}
-                        maxLength="100"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row className="custom-label-padding ">
-                  {CustomerPermissionsText
-                    ? CustomerPermissionsText.map((permission, index) => {
-                        let discountShow = false;
-                        let labourRate = false;
-                        let pricingMatrix = false;
-                        if (
-                          permission.key === "shouldReceiveDiscount" &&
-                          customerDefaultPermissions[permission.key].status
-                        ) {
-                          discountShow = true;
-                        }
+                  <Input
+                    type="text"
+                    placeholder="Referral"
+                    name="Refferal Source"
+                    onChange={this.handleInputChange}
+                    maxLength="100"
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="custom-label-padding ">
+              {CustomerPermissionsText
+                ? CustomerPermissionsText.map((permission, index) => {
+                  let discountShow = false;
+                  let labourRate = false;
+                  let pricingMatrix = false;
+                  if (
+                    permission.key === "shouldReceiveDiscount" &&
+                    customerDefaultPermissions[permission.key].status
+                  ) {
+                    discountShow = this.props.customerModalOpen ? false : true;
+                  }
 
-                        if (
-                          permission.key === "shouldLaborRateOverride" &&
-                          customerDefaultPermissions[permission.key].status
-                        ) {
-                          labourRate = true;
-                        }
+                  if (
+                    permission.key === "shouldLaborRateOverride" &&
+                    customerDefaultPermissions[permission.key].status
+                  ) {
+                    labourRate = true;
+                  }
 
-                        if (
-                          permission.key === "shouldPricingMatrixOverride" &&
-                          customerDefaultPermissions[permission.key].status
-                        ) {
-                          pricingMatrix = true;
-                        }
+                  if (
+                    permission.key === "shouldPricingMatrixOverride" &&
+                    customerDefaultPermissions[permission.key].status
+                  ) {
+                    pricingMatrix = true;
+                  }
 
-                        return (
-                          <React.Fragment key={index}>
-                            <Col
-                              md="6"
-                              key={index}
-                              className={
-                                permission.key === "shouldPricingMatrixOverride"
-                                  ? "price-matrix"
-                                  : null
-                              }
+                  return (
+                    <React.Fragment key={index}>
+                      <Col
+                        md="6"
+                        key={index}
+                        className={
+                          permission.key === "shouldPricingMatrixOverride"
+                            ? "price-matrix"
+                            : null
+                        }
+                      >
+                        <div className="d-flex">
+                          <AppSwitch
+                            className={"mx-1"}
+                            checked={
+                              customerDefaultPermissions[permission.key]
+                                .status
+                            }
+                            onClick={this.handleClick.bind(
+                              this,
+                              permission.key
+                            )}
+                            variant={"3d"}
+                            color={"primary"}
+                            size={"sm"}
+                          />
+                          <p className="customer-modal-text-style">
+                            {permission.text}
+                          </p>
+                        </div>
+                        {discountShow ? (
+                          <div
+                            className="custom-label d-flex col-12"
+                            key={index}
+                          >
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style mr-2"
                             >
-                              <div className="d-flex">
-                                <AppSwitch
-                                  className={"mx-1"}
-                                  checked={
-                                    customerDefaultPermissions[permission.key]
-                                      .status
-                                  }
-                                  onClick={this.handleClick.bind(
-                                    this,
-                                    permission.key
-                                  )}
-                                  variant={"3d"}
-                                  color={"primary"}
-                                  size={"sm"}
-                                />
-                                <p className="customer-modal-text-style">
-                                  {permission.text}
-                                </p>
-                              </div>
-                              {discountShow ? (
-                                <div
-                                  className="custom-label d-flex col-12"
-                                  key={index}
-                                >
-                                  <Label
-                                    htmlFor="name"
-                                    className="customer-modal-text-style mr-2"
-                                  >
-                                    Percent Discount
+                              Percent Discount
                                   </Label>
-                                  <FormGroup className={"mb-2"}>
-                                    <Col md="5" className={"p-0"}>
-                                      <MaskedInput
-                                        mask="11\.11 \%"
-                                        name="percentageDiscount"
-                                        size="20"
-                                        onChange={this.handlePercentageChange}
-                                        className="form-control"
-                                        placeholder="00.00%"
-                                      />
-                                    </Col>
-                                  </FormGroup>
-                                </div>
-                              ) : null}
-                              {labourRate ? (
-                                <Col
-                                  md=""
-                                  className={"fleet-block rate-standard-list"}
-                                >
-                                  <Async
-                                    defaultOptions={
-                                      rateStandardListData.standardRateList
-                                    }
-                                    loadOptions={this.loadOptions}
-                                    onChange={this.handleStandardRate}
-                                    isClearable={
-                                      selectedLabourRate.value !== ""
-                                        ? true
-                                        : false
-                                    }
-                                    value={selectedLabourRate}
+                            <FormGroup className={"mb-2"}>
+                              <InputGroup>
+                                <Col md="5" className={"p-0"}>
+                                  <Input
+                                    // mask="11\.11 \%"
+                                    name="percentageDiscount"
+                                    maxLength="5"
+                                    onChange={this.handlePercentageChange}
+                                    className="form-control"
+                                    placeholder="00.00"
                                   />
                                 </Col>
-                              ) : null}
-                              {/* */}
-                              {pricingMatrix ? (
-                                <Col md="12">
-                                  <FormGroup className={"mb-2"}>
-                                    <Input
-                                      type="select"
-                                      className=""
-                                      onChange={this.handleMatrixChange}
-                                      name="matrixType"
-                                      id="matrixId"
-                                    >
-                                      <option value={""}>Select</option>
-                                      {matrixListReducerData.matrixList.length
-                                        ? matrixListReducerData.matrixList.map(
-                                            (item, index) => {
-                                              return (
-                                                <option
-                                                  value={item._id}
-                                                  key={index}
-                                                >
-                                                  {item.name}
-                                                </option>
-                                              );
-                                            }
-                                          )
-                                        : null}
-                                    </Input>
-                                  </FormGroup>
-                                </Col>
-                              ) : null}
-                            </Col>
-                          </React.Fragment>
-                        );
-                      })
-                    : null}
-                </Row>
-                {expandForm ? (
-                  <Col md="12 text-center pt-3">
-                    <span
-                      onClick={this.handleExpandForm}
-                      className="customer-anchor-text customer-click-btn"
-                    >
-                      {" "}
-                      Show Less{" "}
-                    </span>
-                  </Col>
-                ) : null}
-              </>
+                                <div className="input-group-append">
+                                  <span className="input-group-text">
+                                    <i className="fa fa-percent"></i>
+                                  </span>
+                                </div>
+                              </InputGroup>
+                            </FormGroup>
+                          </div>
+                        ) : null}
+                        {labourRate ? (
+                          <Col
+                            md=""
+                            className={"fleet-block rate-standard-list"}
+                          >
+                            <Async
+                              defaultOptions={
+                                rateStandardListData.standardRateList
+                              }
+                              loadOptions={this.loadOptions}
+                              onChange={this.handleStandardRate}
+                              isClearable={
+                                selectedLabourRate.value !== ""
+                                  ? true
+                                  : false
+                              }
+                              value={selectedLabourRate}
+                            />
+                          </Col>
+                        ) : null}
+                        {/* */}
+                        {pricingMatrix ? (
+                          <Col
+                            md=""
+                            className={"fleet-block rate-standard-list"}
+                          >
+                            <Async
+                              placeholder={"Type to select price matrix"}
+                              loadOptions={this.matrixLoadOptions}
+                              onChange={(e) => this.handlePriceMatrix(e)}
+                              isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
+                              value={selectedPriceMatrix}
+                              noOptionsMessage={() => "Type price matrix name"
+                              }
+                            />
+                          </Col>
+                        ) : null}
+                      </Col>
+                    </React.Fragment>
+                  );
+                })
+                : null}
+            </Row>
+            {expandForm ? (
+              <Col md="12 text-center pt-3">
+                <span
+                  onClick={this.handleExpandForm}
+                  className="customer-anchor-text customer-click-btn"
+                >
+                  {" "}
+                  Show Less{" "}
+                </span>
+              </Col>
+            ) : null}
+            {/* </>
             ) : (
-              ""
-            )}
+                ""
+              )} */}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}
@@ -990,12 +1019,14 @@ export class CrmCustomerModal extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="required-fields">*Fields are Required.</div>
-            <Button color="primary" onClick={this.addNewCustomer}>
-              {"Add Customer"}
-            </Button>{" "}
-            <Button color="secondary" onClick={this.handleCustomerModal}>
-              Cancel
+            <div className={isCustVehiclemodal ? "btn-reverse" : "btn-forward"}>
+              <Button color="primary" onClick={this.addNewCustomer}>
+                {isCustVehiclemodal ? "Add Customer and Continue >" : "Add Customer"}
+              </Button>{" "}
+              <Button color="secondary" onClick={this.handleCustomerModal}>
+                Cancel
             </Button>
+            </div>
           </ModalFooter>
         </Modal>
       </>

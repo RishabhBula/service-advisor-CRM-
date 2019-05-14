@@ -3,6 +3,7 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
 import { loginActions, redirectTo, showLoader, hideLoader } from "./../actions";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const loginLogic = createLogic({
   type: loginActions.LOGIN_REQUEST,
@@ -19,7 +20,7 @@ const loginLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -56,7 +57,7 @@ const forgetPasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -83,7 +84,7 @@ const verifyResetTokenLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/404" }));
       done();
@@ -108,7 +109,7 @@ const resetPasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

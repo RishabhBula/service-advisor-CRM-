@@ -3,7 +3,6 @@ import {
   fleetAddStarted,
   fleetAddActions,
   fleetAddSuccess,
-  redirectTo,
   hideLoader,
   showLoader,
   fleetListActions,
@@ -21,6 +20,7 @@ import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import { logger } from "../helpers/Logger";
 import { AppConfig } from "../config/AppConfig";
+import { DefaultErrorMessage } from "../config/Constants";
 
 const fleetAddLogic = createLogic({
   type: fleetAddActions.FLEET_ADD_REQUEST,
@@ -42,7 +42,7 @@ const fleetAddLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -52,10 +52,9 @@ const fleetAddLogic = createLogic({
       dispatch(fleetAddSuccess());
       dispatch(
         fleetListRequest({
-          ...action.payload,
+          ...action.payload
         })
-      )
-      dispatch(redirectTo({ path: "/settings/fleets" }));
+      );
       done();
     }
   }
@@ -67,6 +66,7 @@ const fleetListLogic = createLogic({
   async process({ action }, dispatch, done) {
     dispatch(
       fleetListStarted({
+        isLoading: true,
         fleetData: []
       }),
       showLoader()
@@ -79,12 +79,12 @@ const fleetListLogic = createLogic({
       true,
       {
         ...action.payload,
-        limit: AppConfig.ITEMS_PER_PAGE,
+        limit: AppConfig.ITEMS_PER_PAGE
       },
-      undefined,
+      undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -92,9 +92,10 @@ const fleetListLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(
         fleetListSuccess({
-          fleetData: result.data
+          fleetData: result.data,
+          isLoading:false
         }),
-        hideLoader(),
+        hideLoader()
       );
       done();
     }
@@ -116,25 +117,26 @@ const editFleetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(hideLoader())
-      dispatch(fleetEditSuccess({
-        ...action.payload
-      }),
+      dispatch(hideLoader());
+      dispatch(
+        fleetEditSuccess({
+          ...action.payload
+        })
       );
       dispatch(
         fleetListRequest({
-          ...action.payload,
+          ...action.payload
         })
-      )
+      );
       done();
     }
-  },
+  }
 });
 
 const deleteFleetLogic = createLogic({
@@ -152,7 +154,7 @@ const deleteFleetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -162,12 +164,12 @@ const deleteFleetLogic = createLogic({
       delete action.payload.fleetId;
       dispatch(
         fleetListRequest({
-          ...action.payload,
+          ...action.payload
         })
       );
       done();
     }
-  },
+  }
 });
 
 const updateFleetStatusLogic = createLogic({
@@ -185,7 +187,7 @@ const updateFleetStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
@@ -226,7 +228,7 @@ const customerFleetListLogic = createLogic({
     );
 
     if (result.isError) {
-      toast.error(result.messages[0]);
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;

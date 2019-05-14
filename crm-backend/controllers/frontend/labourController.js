@@ -1,15 +1,17 @@
 const rateStandardModel = require("../../models/rateStandard");
 const mongoose = require("mongoose");
-const labourModel = require('../../models/labour')
+const labourModel = require("../../models/labour");
 const commonValidation = require("../../common");
 const { validationResult } = require("express-validator/check");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
+    console.log("**************", $data.searchValue);
+
     let condition = {
       name: new RegExp($data.searchValue, "i")
-    }
+    };
     const getAllStdRate = await rateStandardModel.find({
       parentId: mongoose.Types.ObjectId($data.parentId),
       ...condition
@@ -18,19 +20,19 @@ const getAllStandardRate = async (req, res) => {
       return res.status(200).json({
         responsecode: 200,
         success: true,
-        data: getAllStdRate,
+        data: getAllStdRate
       });
     } else {
       return res.status(400).json({
         responsecode: 200,
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -45,12 +47,12 @@ const addNewrateStandard = async (req, res) => {
     }
     if (!body.data.name) {
       return res.status(400).json({
-        message: "Name is required.",
+        message: "Name is required."
       });
     }
     if (!body.data.hourRate) {
       return res.status(400).json({
-        message: "Hour rate is required.",
+        message: "Hour rate is required."
       });
     }
     const newRateData = {
@@ -58,27 +60,27 @@ const addNewrateStandard = async (req, res) => {
       hourlyRate: body.data.hourRate,
       parentId: body.parentId,
       userId: body.userId,
-      status: true,
+      status: true
     };
     const addNewRateData = new rateStandardModel(newRateData);
     const result = await addNewRateData.save();
     if (!result) {
       return res.status(400).json({
         message: "Error adding rate standard",
-        success: false,
+        success: false
       });
     } else {
       return res.status(200).json({
         data: result,
         message: "Rate standard added successfully!.",
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -88,24 +90,24 @@ const addNewrateStandard = async (req, res) => {
 const getSingleStandardRate = async (req, res) => {
   try {
     let data = req.body;
-    const getSingleStdRate = await rateStandardModel.findById(data.rateId)
+    const getSingleStdRate = await rateStandardModel.findById(data.rateId);
     if (getSingleStdRate) {
       return res.status(200).json({
         responsecode: 200,
         success: true,
-        data: getSingleStdRate,
+        data: getSingleStdRate
       });
     } else {
       return res.status(400).json({
         responsecode: 200,
-        success: false,
+        success: false
       });
     }
   } catch (error) {
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -122,38 +124,36 @@ const createNewLabour = async (req, res) => {
     });
   }
   try {
-
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
-      currentUser.parentId = currentUser.id
+      currentUser.parentId = currentUser.id;
     }
     const addNewLabour = {
       discription: body.discription,
       hours: body.hours,
-      rate: body.rateId,
+      rate: body.rate,
       discount: body.discount,
       notes: body.notes,
       permission: body.permission,
       userId: currentUser.id,
       parentId: currentUser.parentId
-    }
-    const labourData = new labourModel(addNewLabour)
-    const result = labourData.save();
+    };
+    const labourData = new labourModel(addNewLabour);
+    labourData.save();
 
     return res.status(200).json({
       responsecode: 200,
-      message: "Labour added successfully!",
-      success: true,
+      message: "Labor added successfully!",
+      success: true
     });
-
   } catch (error) {
     console.log("**************This is add new labour error =>", error);
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
-}
+};
 /* -------------Create new labour End------------ */
 
 /* ------------Update Labour Details---------- */
@@ -167,24 +167,25 @@ const updateLabourdetails = async (req, res) => {
     });
   }
   try {
-
-    const updateLabourDetails = await labourModel.findByIdAndUpdate(
+    const today = new Date();
+    await labourModel.findByIdAndUpdate(
       mongoose.Types.ObjectId(body.labourId),
       {
         $set: body,
+        updatedAt: today
       }
     );
     return res.status(200).json({
       responsecode: 200,
-      message: "labour details updated successfully!",
-      success: true,
+      message: "Labor details updated successfully!",
+      success: true
     });
   } catch (error) {
     console.log("This is update labour error", error);
     return res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -204,22 +205,42 @@ const getAllLabourList = async (req, res) => {
     switch (sort) {
       case "loginasc":
         sortBy = {
-          updatedAt: -1,
+          updatedAt: -1
         };
         break;
       case "nasc":
         sortBy = {
-          discription: 1,
+          discription: 1
         };
         break;
       case "ndesc":
         sortBy = {
-          discription: -1,
+          discription: -1
+        };
+        break;
+      case "pasc":
+        sortBy = {
+          "rate.hourlyRate": 1
+        };
+        break;
+      case "pdesc":
+        sortBy = {
+          "rate.hourlyRate": -1
+        };
+        break;
+      case "diasc":
+        sortBy = {
+          discount: 1
+        };
+        break;
+      case "didesc":
+        sortBy = {
+          discount: -1
         };
         break;
       default:
         sortBy = {
-          createdAt: -1,
+          createdAt: -1
         };
         break;
     }
@@ -248,59 +269,59 @@ const getAllLabourList = async (req, res) => {
             isDeleted: false
           }
         ]
-      },
+      }
     ];
     if (searchValue) {
       condition["$and"].push({
         $or: [
           {
             discription: {
-              $regex: new RegExp(searchValue.trim(), "i"),
-            },
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
           },
           {
             note: {
-              $regex: new RegExp(searchValue.trim(), "i"),
-            },
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
           },
           {
             hour: {
-              $regex: new RegExp(searchValue.trim(), "i"),
-            },
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
           },
           {
             discount: {
-              $regex: new RegExp(searchValue.trim(), "i"),
-            },
-          },
-        ],
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          }
+        ]
       });
     }
     if (status) {
       condition["$and"].push({ status: status });
     }
     const getAllLabour = await labourModel
-      .find({
-        ...condition,
-      })
+      .find(condition)
+      .populate("rate")
+      .collation({ locale: "en_US", numericOrdering: true })
       .sort(sortBy)
       .skip(offset)
       .limit(limit);
     const getAllLabourCount = await labourModel.countDocuments({
-      ...condition,
+      ...condition
     });
     return res.status(200).json({
       responsecode: 200,
       data: getAllLabour,
       totalLabour: getAllLabourCount,
-      success: true,
+      success: true
     });
   } catch (error) {
     console.log("This is labour list error", error);
     res.status(500).json({
       responsecode: 500,
       message: error.message ? error.message : "Unexpected error occure.",
-      success: false,
+      success: false
     });
   }
 };
@@ -320,7 +341,7 @@ const deleteLabour = async ({ body }, res) => {
       }
     );
     return res.status(200).json({
-      message: "labour deleted successfully!",
+      message: "labor deleted successfully!",
       data
     });
   } catch (error) {

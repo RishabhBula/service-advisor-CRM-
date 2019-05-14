@@ -12,7 +12,7 @@ import {
   modelOpenRequest
 } from "../../actions";
 // routes config
-import routes from "../../routes";
+import routes, { BreadCrumbRoutes } from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
 import Loader from "./../Loader/Loader";
 import {
@@ -33,6 +33,7 @@ import { AppConfig } from "../../config/AppConfig";
 import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
+import { WildCardRoutes } from "../../config/Constants";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -41,7 +42,8 @@ class DefaultLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasAccess: true
+      hasAccess: true,
+      isCustVehiclemodal:false
     };
   }
 
@@ -62,18 +64,20 @@ class DefaultLayout extends Component {
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
       const currentPage = this.props.location.pathname;
-      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
-      logger(ind, currentPage);
-      if (ind > -1) {
-        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
-          logger("Allowed to use");
+      if (WildCardRoutes.indexOf(currentPage) === -1) {
+        const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
+        logger(ind, currentPage);
+        if (ind > -1) {
+          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+            logger("Allowed to use");
+          } else {
+            this.setState({
+              hasAccess: false
+            });
+          }
         } else {
-          this.setState({
-            hasAccess: false
-          });
+          this.signOut();
         }
-      } else {
-        this.signOut();
       }
     }
   }
@@ -110,6 +114,9 @@ class DefaultLayout extends Component {
 
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
+    this.setState({
+      isCustVehiclemodal:true
+    })
     let data = {
       custAndVehicle: !modelDetails.custAndVehicle,
       custAndVehicleCustomer: !modelDetails.custAndVehicle
@@ -121,6 +128,7 @@ class DefaultLayout extends Component {
     return (
       <CustAndVehicle
         toggleModal={this.toggleCustAndVehicleProps}
+        isCustVehiclemodal={this.state.isCustVehiclemodal}
         {...this.props}
       />
     );
@@ -163,7 +171,7 @@ class DefaultLayout extends Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           <main className="main">
-            <AppBreadcrumb appRoutes={routes} />
+            <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
             <Container fluid>
               {hasAccess ? (
                 <>

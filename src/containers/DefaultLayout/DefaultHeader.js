@@ -11,7 +11,7 @@ import {
   Nav,
   NavItem
 } from "reactstrap";
-import SearchBar from "../../components/common/SearchBar";
+// import SearchBar from "../../components/common/SearchBar";
 import { AppNavbarBrand } from "@coreui/react";
 
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
@@ -53,37 +53,37 @@ class DefaultHeader extends Component {
             className="custom-toggle-bar custom-toggle-ba d-md-down-none"
             display="lg"
           />
-          <Nav className="d-md-down-none search-input-wrap" navbar>
+          {/* <Nav className="d-md-down-none search-input-wrap" navbar>
             <NavItem className="px-3">
               <SearchBar />
             </NavItem>
-          </Nav>
+          </Nav> */}
           <Nav className="d-md-down-none" navbar>
-            {permissions.isAllowedDashboard ? (
+            {/* {permissions.isAllowedDashboard ? (
               <NavItem className="px-3">
                 <NavLink to="/dashboard" className="nav-link">
                   Dashboard
                 </NavLink>
               </NavItem>
-            ) : null}
+            ) : null} */}
             {permissions.isAllowedCalendar ? (
               <NavItem className="px-3">
                 <NavLink to="/calender" className="nav-link">
-                  Calender
+                  <i className={"icons icon-calendar"}/> Calender
                 </NavLink>
               </NavItem>
             ) : null}
             {permissions.isAllowedCompanySettings ? (
               <NavItem className="px-3">
-                <NavLink to="/settings/users" className="nav-link">
-                  Staff
+                <NavLink to="/staff-members" className="nav-link">
+                  <i className={"icons icon-people"} /> Staff
                 </NavLink>
               </NavItem>
             ) : null}
 
             <NavItem className="px-3">
               <NavLink to="/profile" className="nav-link">
-                Profile
+                <i className={"icons icon-user"} /> Profile
               </NavLink>
             </NavItem>
             <NavItem className="px-3">
@@ -92,7 +92,7 @@ class DefaultHeader extends Component {
                 className="nav-link"
                 onClick={e => this.props.onLogout(e)}
               >
-                Logout
+                <i className={"icons icon-logout"} /> Logout
               </NavLink>
             </NavItem>
           </Nav>

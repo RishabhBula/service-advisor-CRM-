@@ -25,6 +25,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fff !important;
 
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -32,6 +33,13 @@ body {
   }
   .row {
     width: 100%;
+  }
+  .sidebar {
+    .nav-dropdown-items{      
+     .nav-link{
+      padding: 7px 7px 7px 38px;
+    }
+  }
   }
   .brand-logo {
     display: inline-block;
@@ -64,15 +72,27 @@ body {
     }
   }
   .filter-block {
-    padding: 7px 0;
-    margin-bottom: 15px;
-    border-radius: 0.25rem;
+    padding: 7px 15px;
+    background: #f1f1f1;
+    border: 1px solid #eee;
+    .filter-btn-wrap {
+      height: 35px;
+      display: flex;
+      align-items: center;
+    }
   }
   .badge {
     text-transform: capitalize;
   }
   .form-control {
     border-color: #dddddd;
+  }
+  .input-group-text{
+    background-color: #c6ccd0;
+    border: 1px solid #a0a2a5;
+  }
+  .font-weight-semibold{
+    font-weight: 600;
   }
   .card {
     .card-header {
@@ -88,7 +108,7 @@ body {
   th,
   td {
     font-size: 14px;
-    font-weight:600;
+    font-weight: 600;
   }
   .table th,
   .table td {
@@ -99,6 +119,9 @@ body {
   .table td {
     font-size: 13px;
     font-weight: 400;
+  }
+  .table td.font-weight-semibold{
+    font-weight: 600;
   }
   .table-checkbox-wrap {
     position: relative;
@@ -262,7 +285,7 @@ body {
   }
   .table {
     thead {
-      th{
+      th {
         background: #f1f1f1;
       }
     }
@@ -281,63 +304,117 @@ body {
     border-color: #f86c6b !important;
   }
   /* ============= Start Toster CSS Design ============= */
-.Toastify,
-.Toastify__toast{
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"!important;
-}
-.Toastify .Toastify__toast--success {
-  background: #07bc0c;
-}
-.Toastify__toast.Toastify__toast--success .Toastify__toast-body{
-  position: relative;
-  padding-left: 50px;
-}
-.Toastify__toast.Toastify__toast--success .Toastify__toast-body::before{
-  content: "";
-  background-image: url("/assets/img/check.svg");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 40px;
-  position: absolute;
-  left: 0px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 11;
-  width: 40px;
-  height: 40px;
-}
-.Toastify__toast--error {
-  background: #e74c3c;
-}
-.Toastify__toast.Toastify__toast--error .Toastify__toast-body{
-  position: relative;
-  padding-left: 50px;
-}
-.Toastify__toast.Toastify__toast--error .Toastify__toast-body::before{
-  content: "";
-  background-image: url("/assets/img/error.svg");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 40px;
-  position: absolute;
-  left: 0px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 11;
-  width: 40px;
-  height: 40px;
-}
-.Toastify .Toastify__toast{
-  padding: 10px;
-  border-radius: 3px;
-  min-width: 200px;
-  font-size: 16px;
-}
-.Toastify .Toastify__progress-bar{
-  height: 3px;
-}
-.Toastify .Toastify__close-button{
-  font-family: sans-serif!important;
-}
-/* ============= End Toster CSS Design ============= */
+  .Toastify,
+  .Toastify__toast {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  }
+  .Toastify .Toastify__toast--success {
+    background: #07bc0c;
+  }
+  .Toastify__toast.Toastify__toast--success .Toastify__toast-body {
+    position: relative;
+    padding-left: 50px;
+  }
+  .Toastify__toast.Toastify__toast--success .Toastify__toast-body::before {
+    content: "";
+    background-image: url("/assets/img/check.svg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 40px;
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 11;
+    width: 40px;
+    height: 40px;
+  }
+  .Toastify__toast--error {
+    background: #e74c3c;
+  }
+  .Toastify__toast.Toastify__toast--error .Toastify__toast-body {
+    position: relative;
+    padding-left: 50px;
+  }
+  .Toastify__toast.Toastify__toast--error .Toastify__toast-body::before {
+    content: "";
+    background-image: url("/assets/img/error.svg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 40px;
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 11;
+    width: 40px;
+    height: 40px;
+  }
+  .Toastify .Toastify__toast {
+    padding: 10px;
+    border-radius: 3px;
+    min-width: 200px;
+    font-size: 16px;
+  }
+  .Toastify .Toastify__progress-bar {
+    height: 3px;
+  }
+  .Toastify .Toastify__close-button {
+    font-family: sans-serif !important;
+  }
+  /* ============= End Toster CSS Design ============= */
+
+  .dropzone-error {
+    border: 1px solid red;
+  }
+
+  /*==============Form Select=============*/
+
+    .form-select-theme__control--is-focused{
+      border-color: #a6a7a7 !important;
+      box-shadow: none;
+    }
+    .form-select-theme__value-container{
+      height: 29px;
+    }
+    .form-select-theme__indicators{
+      height: 29px;
+    }
+    .form-select-theme__dropdown-indicator{
+      padding: 4px;
+    }
+    .form-select-theme__menu{
+      top: 25px !important;
+    }
+    .form-select-theme__option{
+      padding: 4px 12px;
+      font-size: 13px;
+      font-family: 'open sans';
+      border-bottom: 1px solid #eee;
+    }
+    .form-select-theme__option--is-focused:not(.form-select-theme__option--is-selected){
+      background-color: #ddd !important;
+      cursor: pointer;
+      transition: all ease 0.4s;
+    }
+    .form-select-theme__option--is-selected{
+      background-color: #7f6cb9;
+    }
+    /*===========Swith css==============*/
+    .switch-primary .switch-input:checked + .switch-slider{
+      background-color: #7852ea;
+      border-color: #7853eb;
+    }
+    .btn-with-input{
+      background-color: transparent;
+      padding: 0px;
+      .form-control {
+          height: 35px;
+          border-color: #fff !important;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+    }
 }

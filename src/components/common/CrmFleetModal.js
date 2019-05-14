@@ -6,6 +6,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  InputGroup,
   Row,
   Col,
   FormFeedback,
@@ -15,7 +16,7 @@ import {
 } from "reactstrap";
 import { AppSwitch } from "@coreui/react";
 import { AppConfig } from "../../config/AppConfig";
-import { PhoneOptions } from "../../config/Constants";
+import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import MaskedInput from "react-maskedinput";
 import {
   CustomerDefaultPermissions,
@@ -65,6 +66,7 @@ export class CrmFleetModal extends Component {
       percentageDiscount: 0,
       defaultOptions: [{ value: "", label: "Add New Customer" }],
       selectedLabourRate: { value: "", label: "Select..." },
+      selectedPriceMatrix: { value: "", label: "Type to select" },
       vendorValue: "",
       openStadardRateModel: false
     };
@@ -142,7 +144,7 @@ export class CrmFleetModal extends Component {
           ratedata
         );
         if (result.isError) {
-          toast.error(result.messages[0]);
+          toast.error(result.messages[0] || DefaultErrorMessage);
         } else {
           toast.success(result.messages[0]);
           this.setState({
@@ -329,11 +331,34 @@ export class CrmFleetModal extends Component {
     }
   };
 
+  matrixLoadOptions = (input, callback) => {
+    this.props.getPriceMatrix({ input, callback });
+  }
+  handlePriceMatrix = (e) => {
+    if (e && e.value) {
+      const { fleetDefaultPermissions } = this.state;
+      fleetDefaultPermissions["shouldPricingMatrixOverride"].pricingMatrix =
+        e.value;
+      this.setState({
+        ...fleetDefaultPermissions,
+        selectedPriceMatrix: {
+          value: e.value,
+          label: e.label
+        }
+      })
+    } else {
+      this.setState({
+        selectedPriceMatrix: {
+          value: "",
+          label: "Type to select"
+        }
+      })
+    }
+  }
   render() {
     const {
       fleetModalOpen,
       handleFleetModal,
-      matrixListReducerData,
       rateStandardListData
     } = this.props;
     const {
@@ -350,10 +375,11 @@ export class CrmFleetModal extends Component {
       percentageDiscount,
       isEditMode,
       fleetId,
-      selectedLabourRate
+      selectedLabourRate,
+      selectedPriceMatrix
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
-      return <option value={item.key}>{item.text}</option>;
+      return <option value={item.key} key={index}>{item.text}</option>;
     });
     let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
     if (!fleetDefaultPermissions) {
@@ -406,7 +432,7 @@ export class CrmFleetModal extends Component {
                         value={companyName}
                         maxLength="20"
                         id="name"
-                        invalid={errors.companyName}
+                        invalid={errors.companyName && !companyName}
                       />
                       <FormFeedback>
                         {errors && !companyName && errors.companyName
@@ -448,30 +474,30 @@ export class CrmFleetModal extends Component {
                 {/* <Row className="justify-content-center"> */}
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
-                      return (
-                        <>
-                          {index < 1 ? (
-                            <>
-                              <Col md="6">
-                                <FormGroup className="phone-number-feild">
-                                  <Label
-                                    htmlFor="name"
-                                    className="customer-modal-text-style"
-                                  >
-                                    Phone <span className={"asteric"}>*</span>
-                                  </Label>
-                                  {/* <div></div> */}
+                    return (
+                      <>
+                        {index < 1 ? (
+                          <>
+                            <Col md="6">
+                              <FormGroup className="phone-number-feild">
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Phone <span className={"asteric"}>*</span>
+                                </Label>
+                                {/* <div></div> */}
 
-                                  <Input
-                                    onChange={e =>
-                                      this.handlePhoneNameChange(index, e)
-                                    }
-                                    type="select"
-                                    id="name"
-                                  >
-                                    {phoneOptions}
-                                  </Input>
-                                  {phoneDetail[index].phone === "mobile" ||
+                                <Input
+                                  onChange={e =>
+                                    this.handlePhoneNameChange(index, e)
+                                  }
+                                  type="select"
+                                  id="name"
+                                >
+                                  {phoneOptions}
+                                </Input>
+                                {phoneDetail[index].phone === "mobile" ||
                                   phoneDetail[index].phone === "" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
@@ -480,7 +506,8 @@ export class CrmFleetModal extends Component {
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
                                           "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
+                                            this.state.phoneErrors[index] !== "" &&
+                                            !item.value
                                         })}
                                         size="20"
                                         value={item.value}
@@ -491,13 +518,6 @@ export class CrmFleetModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                       </FormFeedback>
-                                      {/* {
-                                      console.log(typeof this.state.phoneErrors[index], "adadadaada")
-
-                                    }
-                                    <p className='text-danger'>
-                                      {this.state.phoneErrors[index]}
-                                    </p> */}
                                     </div>
                                   ) : (
                                     <div className="input-block select-number-tile">
@@ -517,10 +537,10 @@ export class CrmFleetModal extends Component {
                                       </p>
                                     </div>
                                   )}
-                                </FormGroup>
-                              </Col>
-                            </>
-                          ) : (
+                              </FormGroup>
+                            </Col>
+                          </>
+                        ) : (
                             <>
                               <Col md="6">
                                 <button
@@ -547,60 +567,59 @@ export class CrmFleetModal extends Component {
                                     {phoneOptions}
                                   </Input>
                                   {phoneDetail[index].phone === "mobile" ||
-                                  phoneDetail[index].phone === "" ? (
-                                    <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111"
-                                        name="phoneDetail"
-                                        placeholder="(555) 055-0555"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
-                                        })}
-                                        size="20"
-                                        value={item.value}
-                                        onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
-                                        }
-                                      />
-                                      <FormFeedback>
-                                        {this.state.phoneErrors[index]}
-                                      </FormFeedback>
-                                      {/* <p className='text-danger'>
+                                    phoneDetail[index].phone === "" ? (
+                                      <div className="input-block select-number-tile">
+                                        <MaskedInput
+                                          mask="(111) 111-111"
+                                          name="phoneDetail"
+                                          placeholder="(555) 055-0555"
+                                          className={classnames("form-control", {
+                                            "is-invalid":
+                                              this.state.phoneErrors[index] !== ""
+                                              && !item.value
+                                          })}
+                                          size="20"
+                                          value={item.value}
+                                          onChange={e =>
+                                            this.handlePhoneValueChange(index, e)
+                                          }
+                                        />
+                                        <FormFeedback>
+                                          {this.state.phoneErrors[index]}
+                                        </FormFeedback>
+                                        {/* <p className='text-danger'>
                                         {this.state.phoneErrors[index]}
                                       </p> */}
-                                    </div>
-                                  ) : (
-                                    <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111 ext 1111"
-                                        name="phoneDetail"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            this.state.phoneErrors[index] !== ""
-                                        })}
-                                        placeholder="(555) 055-0555 ext 1234"
-                                        size="20"
-                                        value={item.value}
-                                        onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
-                                        }
-                                      />
-                                      <FormFeedback>
-                                        {this.state.phoneErrors[index]}
-                                      </FormFeedback>
-                                      {/* <p className='text-danger'>
+                                      </div>
+                                    ) : (
+                                      <div className="input-block select-number-tile">
+                                        <MaskedInput
+                                          mask="(111) 111-111 ext 1111"
+                                          name="phoneDetail"
+                                          className={classnames("form-control", {
+                                            "is-invalid":
+                                              this.state.phoneErrors[index] !== ""
+                                              && !item.value
+                                          })}
+                                          placeholder="(555) 055-0555 ext 1234"
+                                          size="20"
+                                          value={item.value}
+                                          onChange={e =>
+                                            this.handlePhoneValueChange(index, e)
+                                          }
+                                        />
+                                        <FormFeedback>
                                           {this.state.phoneErrors[index]}
-                                        </p> */}
-                                    </div>
-                                  )}
+                                        </FormFeedback>
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </>
                           )}
-                        </>
-                      );
-                    })
+                      </>
+                    );
+                  })
                   : null}
                 {phoneDetail.length < 2 ? (
                   <Col md="6">
@@ -723,96 +742,94 @@ export class CrmFleetModal extends Component {
             <Row className="custom-label-padding ">
               {CustomerPermissionsText
                 ? CustomerPermissionsText.map((permission, index) => {
-                    let discountShow = false;
-                    let labourRate = false;
-                    let pricingMatrix = false;
-                    if (
-                      permission.key === "shouldReceiveDiscount" &&
-                      fleetDefaultPermissions[permission.key].status
-                    ) {
-                      discountShow = true;
-                    }
-                    if (
-                      permission.key === "shouldLaborRateOverride" &&
-                      fleetDefaultPermissions[permission.key].status
-                    ) {
-                      labourRate = true;
-                    }
+                  let discountShow = false;
+                  let labourRate = false;
+                  let pricingMatrix = false;
+                  if (
+                    permission.key === "shouldReceiveDiscount" &&
+                    fleetDefaultPermissions[permission.key].status
+                  ) {
+                    discountShow = true;
+                  }
+                  if (
+                    permission.key === "shouldLaborRateOverride" &&
+                    fleetDefaultPermissions[permission.key].status
+                  ) {
+                    labourRate = true;
+                  }
 
-                    if (
-                      permission.key === "shouldPricingMatrixOverride" &&
-                      fleetDefaultPermissions[permission.key].status
-                    ) {
-                      pricingMatrix = true;
-                    }
+                  if (
+                    permission.key === "shouldPricingMatrixOverride" &&
+                    fleetDefaultPermissions[permission.key].status
+                  ) {
+                    pricingMatrix = true;
+                  }
 
-                    return (
-                      <>
-                        <Col
-                          md="6"
-                          key={index}
-                          className={
-                            permission.key === "shouldPricingMatrixOverride"
-                              ? "price-matrix"
-                              : null
-                          }
-                        >
-                          <div className="d-flex">
-                            <AppSwitch
-                              className={"mx-1"}
-                              checked={
-                                fleetDefaultPermissions[permission.key].status
-                              }
-                              onClick={this.handleClick.bind(
-                                this,
-                                permission.key
-                              )}
-                              variant={"3d"}
-                              color={"primary"}
-                              size={"sm"}
-                            />
-                            <p className="customer-modal-text-style">
-                              {permission.text}
-                            </p>
-                          </div>
-                          {discountShow ? (
-                            <div
-                              className="custom-label col-12 d-flex"
-                              key={index}
+                  return (
+                    <>
+                      <Col
+                        md="6"
+                        key={index}
+                        className={
+                          permission.key === "shouldPricingMatrixOverride"
+                            ? "price-matrix"
+                            : null
+                        }
+                      >
+                        <div className="d-flex">
+                          <AppSwitch
+                            className={"mx-1"}
+                            checked={
+                              fleetDefaultPermissions[permission.key].status
+                            }
+                            onClick={this.handleClick.bind(
+                              this,
+                              permission.key
+                            )}
+                            variant={"3d"}
+                            color={"primary"}
+                            size={"sm"}
+                          />
+                          <p className="customer-modal-text-style">
+                            {permission.text}
+                          </p>
+                        </div>
+                        {discountShow ? (
+                          <div
+                            className="custom-label col-12 d-flex"
+                            key={index}
+                          >
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style mr-2"
                             >
-                              <Label
-                                htmlFor="name"
-                                className="customer-modal-text-style mr-2"
-                              >
-                                Percent Discount
+                              Percent Discount
                               </Label>
-                              <FormGroup>
-                                <Col md="4" className={"p-0"}>
-                                  {/* <Cleave
-                                  placeholder="00.00%"
-                                  options={{
-                                    delimiter: '.',
-                                    blocks: [1, 2],
-                                    numeral: true
-                                  }}
-                                /> */}
-                                  <MaskedInput
-                                    mask="11\.11 \%"
-                                    placeholder="00.00%"
-                                    name="percentageDiscount"
-                                    size="20"
-                                    onChange={this.handlePercentageChange}
-                                    className="form-control"
-                                    value={
-                                      fleetDefaultPermissions[permission.key]
-                                        .percentageDiscount
-                                    }
-                                  />
-                                </Col>
-                              </FormGroup>
-                            </div>
-                          ) : null}
-                          {labourRate &&
+                            <FormGroup>
+                              <Col md="5" className={"p-0"}>
+                              <InputGroup>
+                                <Input
+                                  placeholder="00.00"
+                                  name="percentageDiscount"
+                                  maxLength="5"
+                                  onChange={this.handlePercentageChange}
+                                  className="form-control"
+                                  value={
+                                    fleetDefaultPermissions[permission.key]
+                                      .percentageDiscount
+                                  }
+                                />
+                                <div className="input-group-append">
+                                  <span className="input-group-text">
+                                    <i className="fa fa-percent"></i>
+                                  </span>
+                                </div>
+                              </InputGroup>
+                              </Col>
+                            </FormGroup>
+                          </div>
+                        ) : null}
+                        {labourRate &&
                           rateStandardListData &&
                           rateStandardListData.standardRateList &&
                           rateStandardListData.standardRateList.length ? (
@@ -835,42 +852,27 @@ export class CrmFleetModal extends Component {
                               />
                             </Col>
                           ) : null}
-                          {/* */}
-                          {pricingMatrix ? (
-                            <Col md="12">
-                              <FormGroup>
-                                <Input
-                                  type="select"
-                                  className=""
-                                  onChange={this.handleMatrixChange}
-                                  name="matrixType"
-                                  id="matrixId"
-                                >
-                                  <option value={""}>Select</option>
-                                  {matrixListReducerData &&
-                                  matrixListReducerData.matrixList &&
-                                  matrixListReducerData.matrixList.length
-                                    ? matrixListReducerData.matrixList.map(
-                                        (item, index) => {
-                                          return (
-                                            <option
-                                              value={item._id}
-                                              key={index}
-                                            >
-                                              {item.name}
-                                            </option>
-                                          );
-                                        }
-                                      )
-                                    : null}
-                                </Input>
-                              </FormGroup>
-                            </Col>
-                          ) : null}
-                        </Col>
-                      </>
-                    );
-                  })
+                        {/* */}
+                        {pricingMatrix ? (
+                          <Col
+                            md=""
+                            className={"fleet-block rate-standard-list"}
+                          >
+                            <Async
+                              placeholder={"Type to select price matrix"}
+                              loadOptions={this.matrixLoadOptions}
+                              onChange={(e) => this.handlePriceMatrix(e)}
+                              isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
+                              noOptionsMessage={() => "Type price matrix name"
+                              }
+                              value={selectedPriceMatrix}
+                            />
+                          </Col>
+                        ) : null}
+                      </Col>
+                    </>
+                  );
+                })
                 : null}
             </Row>
             <CrmStandardModel
@@ -881,7 +883,7 @@ export class CrmFleetModal extends Component {
             />
           </ModalBody>
           <ModalFooter>
-            <div class="required-fields">*Fields are Required.</div>
+            <div className="required-fields">*Fields are Required.</div>
             <Button
               color="primary"
               onClick={() =>

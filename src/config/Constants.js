@@ -194,11 +194,37 @@ export const Drivetrain = [
   }
 ];
 
+export const LabourPermission = {
+  isShowHours: false,
+  showNoteOnQuotesInvoices: false
+}
+export const LabourPermissionText = {
+  isShowHours: "Display hours on quote & invoice",
+  showNoteOnQuotesInvoices: "Display note on quote & invoice" 
+}
+export const tierPermission = {
+   showNoteOnQuotesInvoices: false
+ }
+export const tierPermissionText = {
+  showNoteOnQuotesInvoices: "Display note on quote & invoice"
+};
 export const orderPermission = {
   isShowHours: true,
   showNoteOnQuotesInvoices: true
 };
 
+export const LabourText = [
+  { key: "isShowHours", text: "Display hours on quote & invoice" },
+  {
+    key: "showNoteOnQuotesInvoices",
+    text: "Display note on quote & invoice",
+  },
+ ];
+
+export const LabourTextDefault = {
+  isShowHours: false,
+  showNoteOnQuotesInvoices: false,
+};
 export const CreatePartOptions = [
   {
     key: "isTaxed",
@@ -217,3 +243,69 @@ export const CreatePartOptions = [
     text: "Display note on quote & invoice"
   }
 ];
+
+/*  */
+export const MarkupChangeValues = [
+  {
+    key: "15%",
+    value: 15
+  },
+  {
+    key: "25%",
+    value: 25
+  },
+  {
+    key: "35%",
+    value: 35
+  },
+  {
+    key: "50%",
+    value: 50
+  }
+];
+
+/*  */
+export const MarginChangeValues = [
+  {
+    key: "15%",
+    value: 15
+  },
+  {
+    key: "25%",
+    value: 25
+  },
+  {
+    key: "35%",
+    value: 35
+  },
+  {
+    key: "50%",
+    value: 50
+  }
+];
+
+export const DefaultErrorMessage =
+  "We are having some issues while completing your request. Please try after some time.";
+
+export const notExist = "-"
+export const WildCardRoutes = ["/profile"];
+
+export const CustomerSheetHeaderToJSONKey = {
+  "First Name": "firstName",
+  "Last Name": "lastName",
+  Phone: "value",
+  "Phone Type": "phone",
+  Email: "email",
+  Company: "company",
+  Address: "address",
+  City: "city",
+  State: "state",
+  "Zip Code": "zipCode",
+  "Is Tax Exempt": "isCorporateFleetTaxExempt",
+  "Is Receive A Discount?": "shouldReceiveDiscount"
+};
+
+
+export const currencyFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2
+})
