@@ -9,6 +9,12 @@ export default {
       authKey: "isAllowedDashboard"
     },
     {
+      name: AppRoutes.WORKFLOW.name,
+      url: AppRoutes.WORKFLOW.url,
+      icon: "icons icon-calendar",
+      authKey: "isAllowedCalendar"
+    },
+    {
       name: AppRoutes.CALENDER.name,
       url: AppRoutes.CALENDER.url,
       icon: "icons icon-calendar",
@@ -81,8 +87,7 @@ export default {
       url: AppRoutes.PRICEMATRIX.url,
       icon: "fas fa-hand-holding-usd",
       authKey: "isAllowedCompanySettings"
-    },
-    
+    }
   ]
 };
 
@@ -90,6 +95,10 @@ export const ValidatedRoutes = [
   {
     url: AppRoutes.DASHBOARD.url,
     authKey: "isAllowedDashboard"
+  },
+  {
+    url: AppRoutes.WORKFLOW.url,
+    authKey: "isAllowedCalendar"
   },
   {
     url: AppRoutes.CALENDER.url,

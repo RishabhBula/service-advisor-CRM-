@@ -104,7 +104,6 @@ class Customers extends Component {
   };
 
   onPageChange = page => {
-
     const { location } = this.props;
     const { search, pathname } = location;
     const query = qs.parse(search);
@@ -119,14 +118,6 @@ class Customers extends Component {
     const query = qs.parse(search);
     this.props.deleteCustomer({ ...query, userId });
   };
-
-  // changeCustomerStatus = (e, customerId) => {
-  //   let data = {
-  //     status: e.enabled,
-  //     customerId: customerId,
-  //   };
-  //   this.props.updateCustomer(data);
-  // }
 
   onStatusUpdate = data => {
     const { location } = this.props;
@@ -168,7 +159,7 @@ class Customers extends Component {
       customerEditModel: false
     };
     this.props.modelOperate(data);
-  }
+  };
   onImport = data => {
     this.props.importCustomer(data);
   };
@@ -190,11 +181,8 @@ class Customers extends Component {
       <>
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
-
             <div className={"text-right invt-add-btn-block"}>
-              <CrmExportSampleButton
-                sheetType={DemoSupportedSheets.CUSTOMER}
-              />{" "}
+              <CrmExportSampleButton sheetType={DemoSupportedSheets.CUSTOMER} />{" "}
               &nbsp;
               <CrmImportExcel
                 modalHeaderText={"Import customer data"}
@@ -217,14 +205,14 @@ class Customers extends Component {
                 ) : null}
               </CrmImportExcel>
               &nbsp;&nbsp;
-                <Button
+              <Button
                 color="primary"
                 id="export-customer"
                 onClick={this.exportCustomer}
               >
                 <i className={"fa fa-upload"} />
                 &nbsp; Export Customers
-                </Button>
+              </Button>
               &nbsp;&nbsp;
               <Button
                 color="primary"
@@ -233,10 +221,10 @@ class Customers extends Component {
               >
                 <i className={"fa fa-plus"} />
                 &nbsp; Add New Customer
-                </Button>
+              </Button>
               <UncontrolledTooltip target={"add-user"}>
                 Add New Customer
-                </UncontrolledTooltip>
+              </UncontrolledTooltip>
             </div>
 
             <CustomerList
@@ -302,7 +290,7 @@ const mapDispatchToProps = dispatch => ({
   addCustomer: data => {
     dispatch(customerAddRequest(data));
   },
-  getMatrix: (data) => {
+  getMatrix: data => {
     dispatch(getMatrixList(data));
   },
   modelOperate: data => {

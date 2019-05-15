@@ -35,11 +35,11 @@ body {
     width: 100%;
   }
   .sidebar {
-    .nav-dropdown-items{      
-     .nav-link{
-      padding: 7px 7px 7px 38px;
+    .nav-dropdown-items {
+      .nav-link {
+        padding: 7px 7px 7px 38px;
+      }
     }
-  }
   }
   .brand-logo {
     display: inline-block;
@@ -87,11 +87,11 @@ body {
   .form-control {
     border-color: #dddddd;
   }
-  .input-group-text{
+  .input-group-text {
     background-color: #c6ccd0;
     border: 1px solid #a0a2a5;
   }
-  .font-weight-semibold{
+  .font-weight-semibold {
     font-weight: 600;
   }
   .card {
@@ -120,7 +120,7 @@ body {
     font-size: 13px;
     font-weight: 400;
   }
-  .table td.font-weight-semibold{
+  .table td.font-weight-semibold {
     font-weight: 600;
   }
   .table-checkbox-wrap {
@@ -372,49 +372,61 @@ body {
 
   /*==============Form Select=============*/
 
-    .form-select-theme__control--is-focused{
-      border-color: #a6a7a7 !important;
-      box-shadow: none;
+  .form-select-theme__control--is-focused {
+    border-color: #a6a7a7 !important;
+    box-shadow: none;
+  }
+  .form-select-theme__value-container {
+    height: 29px;
+  }
+  .form-select-theme__indicators {
+    height: 29px;
+  }
+  .form-select-theme__dropdown-indicator {
+    padding: 4px;
+  }
+  .form-select-theme__menu {
+    top: 25px !important;
+  }
+  .form-select-theme__option {
+    padding: 4px 12px;
+    font-size: 13px;
+    font-family: "open sans";
+    border-bottom: 1px solid #eee;
+  }
+  .form-select-theme__option--is-focused:not(.form-select-theme__option--is-selected) {
+    background-color: #ddd !important;
+    cursor: pointer;
+    transition: all ease 0.4s;
+  }
+  .form-select-theme__option--is-selected {
+    background-color: #7f6cb9;
+  }
+  /*===========Swith css==============*/
+  .switch-primary .switch-input:checked + .switch-slider {
+    background-color: #7852ea;
+    border-color: #7853eb;
+  }
+  .btn-with-input {
+    background-color: transparent;
+    padding: 0px;
+    .form-control {
+      height: 35px;
+      border-color: #fff !important;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
-    .form-select-theme__value-container{
-      height: 29px;
+  }
+  .workflow-grid-card {
+    width: 250px;
+    float: left;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 0 15px;
+    border-radius: 5px;
+    [data-react-beautiful-dnd-droppable] {
+      min-height: 200px;
     }
-    .form-select-theme__indicators{
-      height: 29px;
-    }
-    .form-select-theme__dropdown-indicator{
-      padding: 4px;
-    }
-    .form-select-theme__menu{
-      top: 25px !important;
-    }
-    .form-select-theme__option{
-      padding: 4px 12px;
-      font-size: 13px;
-      font-family: 'open sans';
-      border-bottom: 1px solid #eee;
-    }
-    .form-select-theme__option--is-focused:not(.form-select-theme__option--is-selected){
-      background-color: #ddd !important;
-      cursor: pointer;
-      transition: all ease 0.4s;
-    }
-    .form-select-theme__option--is-selected{
-      background-color: #7f6cb9;
-    }
-    /*===========Swith css==============*/
-    .switch-primary .switch-input:checked + .switch-slider{
-      background-color: #7852ea;
-      border-color: #7853eb;
-    }
-    .btn-with-input{
-      background-color: transparent;
-      padding: 0px;
-      .form-control {
-          height: 35px;
-          border-color: #fff !important;
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-    }
+  }
 }

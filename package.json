@@ -41,6 +41,7 @@
     "react": "^16.8.5",
     "react-app-polyfill": "^0.2.2",
     "react-avatar": "^3.6.0",
+    "react-beautiful-dnd": "^11.0.3",
     "react-chartjs-2": "^2.7.4",
     "react-color": "^2.17.3",
     "react-cropper": "^1.2.0",
