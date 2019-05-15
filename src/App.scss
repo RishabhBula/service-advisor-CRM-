@@ -428,5 +428,18 @@ body {
     [data-react-beautiful-dnd-droppable] {
       min-height: 200px;
     }
+    .title {
+      background: #8157ef;
+      padding: 5px;
+      text-align: center;
+      color: #fff;
+    }
+    .content {
+      width: 100%;
+      min-height: 50px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
+      margin: 10px 0;
+      padding: 10px;
+    }
   }
 }
