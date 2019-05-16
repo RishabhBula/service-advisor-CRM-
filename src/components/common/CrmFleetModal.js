@@ -17,7 +17,7 @@ import {
 import { AppSwitch } from "@coreui/react";
 import { AppConfig } from "../../config/AppConfig";
 import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
-import MaskedInput from "react-maskedinput";
+// import MaskedInput from "react-maskedinput";
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText

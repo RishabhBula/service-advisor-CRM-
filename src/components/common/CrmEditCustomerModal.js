@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import * as classnames from "classnames";
-import MaskedInput from "react-maskedinput";
+// import MaskedInput from "react-maskedinput";
 import {
   Button,
   Modal,
@@ -775,15 +775,14 @@ export class CrmEditCustomerModal extends Component {
                                   </Input>
                                   {phoneDetail[index].phone === "mobile" ? (
                                     <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111"
+                                      <Input
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
                                           "is-invalid":
                                             this.state.phoneErrors[index] !== ""
                                         })}
-                                        size="20"
+                                        maxLength={"10"}
                                         value={item.value}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -795,15 +794,14 @@ export class CrmEditCustomerModal extends Component {
                                     </div>
                                   ) : (
                                       <div className="input-block select-number-tile">
-                                        <MaskedInput
-                                          mask="(111) 111-111 ext 1111"
+                                        <Input
                                           name="phoneDetail"
                                           className={classnames("form-control", {
                                             "is-invalid":
                                               this.state.phoneErrors[index] !== ""
                                           })}
                                           placeholder="(555) 055-0555 ext 1234"
-                                          size="20"
+                                          maxLength={"15"}
                                           value={item.value}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
