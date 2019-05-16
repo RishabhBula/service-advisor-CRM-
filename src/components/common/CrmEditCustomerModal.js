@@ -70,7 +70,8 @@ export class CrmEditCustomerModal extends Component {
       openStadardRateModel: false,
       defaultOptions: [{ value: "", label: "Add New Customer" }],
       selectedPriceMatrix: { value: "", label: "Type to select" },
-      selectedLabourRate: { value: "", label: "Select..." }
+      selectedLabourRate: { value: "", label: "Select..." },
+      percentageError: ""
     };
   }
 
@@ -252,6 +253,15 @@ export class CrmEditCustomerModal extends Component {
   };
 
   handlePercentageChange = e => {
+    if (parseFloat(e.target.value) >= 100) {
+      this.setState({
+        percentageError: "Enter proper percentage value,less than 100"
+      })
+    } else {
+      this.setState({
+        percentageError: ""
+      })
+    }
     const { customerDefaultPermissions } = this.state;
     customerDefaultPermissions["shouldReceiveDiscount"].percentageDiscount =
       e.target.value;
@@ -306,6 +316,9 @@ export class CrmEditCustomerModal extends Component {
   };
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
+    if (isNaN(value)) {
+      return
+    }
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
@@ -445,7 +458,7 @@ export class CrmEditCustomerModal extends Component {
       if (
         !isValid ||
         Object.keys(this.state.phoneErrors).length > 0 ||
-        customerData.firstName === ""
+        customerData.firstName === "" || this.state.percentageError
       ) {
         this.setState({
           errors: errors,
@@ -532,7 +545,8 @@ export class CrmEditCustomerModal extends Component {
       lastName,
       email,
       selectedLabourRate,
-      selectedPriceMatrix
+      selectedPriceMatrix,
+      percentageError
     } = this.state;
     let customerDefaultPermissions = this.state.customerDefaultPermissions;
     if (!customerDefaultPermissions) {
@@ -661,8 +675,7 @@ export class CrmEditCustomerModal extends Component {
                                 </Input>
                                 {phoneDetail[index].phone === "mobile" ? (
                                   <div className="input-block select-number-tile">
-                                    <MaskedInput
-                                      mask="(111) 111-111"
+                                    <Input
                                       name="phoneDetail"
                                       placeholder="(555) 055-0555"
                                       className={classnames("form-control", {
@@ -670,7 +683,7 @@ export class CrmEditCustomerModal extends Component {
                                           this.state.phoneErrors[index] !== "" &&
                                           !item.value
                                       })}
-                                      size="20"
+                                      maxLength={"10"}
                                       value={item.value}
                                       onChange={e =>
                                         this.handlePhoneValueChange(index, e)
@@ -682,8 +695,7 @@ export class CrmEditCustomerModal extends Component {
                                   </div>
                                 ) : (
                                     <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111 ext 1111"
+                                      <Input
                                         name="phoneDetail"
                                         className={classnames("form-control", {
                                           "is-invalid":
@@ -691,7 +703,7 @@ export class CrmEditCustomerModal extends Component {
                                             !item.value
                                         })}
                                         placeholder="(555) 055-0555 ext 1234"
-                                        size="20"
+                                        maxLength={"10"}
                                         value={item.value}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -1046,33 +1058,43 @@ export class CrmEditCustomerModal extends Component {
                           >
                             <Label
                               htmlFor="name"
-                              className="customer-modal-text-style mr-2"
+                              className="customer-modal-text-style mr-2 text-nowrap"
                             >
                               Percent Discount
-                                  </Label>
-                            <FormGroup className={"mb-2"}>
-                              <InputGroup>
-                                <Col md="5" className={"p-0"}>
-                                  <Input
-                                    // mask="11\.11 \%"
-                                    name="percentageDiscount"
-                                    maxLength="5"
-                                    onChange={this.handlePercentageChange}
-                                    className="form-control"
-                                    value={
-                                      customerDefaultPermissions[
-                                        permission.key
-                                      ].percentageDiscount
-                                    }
-                                    placeholder="00.00%"
-                                  />
-                                </Col>
-                                <div className="input-group-append">
-                                  <span className="input-group-text">
-                                    <i className="fa fa-percent"></i>
-                                  </span>
+                            </Label>
+                            <FormGroup>
+                              <Col md="6" className={"p-0"}>
+                                <div className={"input-block"}>
+                                  <InputGroup>
+                                    <Input
+                                      placeholder="00.00"
+                                      name="percentageDiscount"
+                                      maxLength="5"
+                                      onChange={this.handlePercentageChange}
+                                      className="form-control"
+                                      invalid={customerDefaultPermissions[permission.key]
+                                        .percentageDiscount && percentageError}
+                                      value={
+                                        customerDefaultPermissions[
+                                          permission.key
+                                        ].percentageDiscount
+                                      }
+                                    />
+
+                                    <div className="input-group-append">
+                                      <span className="input-group-text">
+                                        <i className="fa fa-percent"></i>
+                                      </span>
+                                    </div>
+                                  </InputGroup>
+                                  <p className="text-danger text-nowrap">
+                                    {customerDefaultPermissions[permission.key]
+                                      .percentageDiscount && percentageError
+                                      ? percentageError
+                                      : null}
+                                  </p>
                                 </div>
-                              </InputGroup>
+                              </Col>
                             </FormGroup>
                           </div>
                         ) : null}

@@ -68,6 +68,30 @@ const userSchema = new Schema({
     type: Boolean,
     default: false
   },
+  contactNumber: {
+    type: Number,
+    default: null
+  },
+  address: {
+    type: String,
+    default: null
+  },
+  currency: {
+    type: String,
+    default: null
+  },
+  timeZone: {
+    type: String,
+    default: null
+  },
+  vatNumber: {
+    type: String,
+    default: null
+  },
+  companyNumber: {
+    type: String,
+    default: null
+  },
   userSideActivationValue: {
     type: String,
     default: null
@@ -117,6 +141,7 @@ const userSchema = new Schema({
     ref: "user",
     default: null
   },
+
   rate: {
     type: Number,
     default: null

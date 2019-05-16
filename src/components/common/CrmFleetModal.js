@@ -68,6 +68,7 @@ export class CrmFleetModal extends Component {
       selectedLabourRate: { value: "", label: "Select..." },
       selectedPriceMatrix: { value: "", label: "Type to select" },
       vendorValue: "",
+      percentageError: "",
       openStadardRateModel: false
     };
   }
@@ -80,6 +81,15 @@ export class CrmFleetModal extends Component {
 
   handlePercentageChange = e => {
     const { fleetDefaultPermissions } = this.state;
+    if (parseFloat(e.target.value) >= 100) {
+      this.setState({
+        percentageError: "Enter proper percentage value,less than 100"
+      })
+    } else {
+      this.setState({
+        percentageError: ""
+      })
+    }
     fleetDefaultPermissions["shouldReceiveDiscount"].percentageDiscount =
       e.target.value;
     this.setState({
@@ -195,7 +205,8 @@ export class CrmFleetModal extends Component {
       selectedLabourRate: { value: "", label: "Select..." },
       vendorValue: "",
       error: {},
-      openStadardRateModel: false
+      openStadardRateModel: false,
+      percentageError: ""
     });
   }
 
@@ -218,6 +229,9 @@ export class CrmFleetModal extends Component {
 
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
+    if (isNaN(value)) {
+      return
+    }
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
@@ -299,7 +313,7 @@ export class CrmFleetModal extends Component {
       if (
         (!isValid && fleetData.email !== "") ||
         Object.keys(this.state.phoneErrors).length ||
-        fleetData.companyName === ""
+        fleetData.companyName === "" || this.state.percentageError
       ) {
         this.setState({
           errors,
@@ -376,7 +390,8 @@ export class CrmFleetModal extends Component {
       isEditMode,
       fleetId,
       selectedLabourRate,
-      selectedPriceMatrix
+      selectedPriceMatrix,
+      percentageError
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return <option value={item.key} key={index}>{item.text}</option>;
@@ -430,7 +445,7 @@ export class CrmFleetModal extends Component {
                         onChange={this.handleChange}
                         placeholder="Company Name"
                         value={companyName}
-                        maxLength="20"
+                        maxLength="50"
                         id="name"
                         invalid={errors.companyName && !companyName}
                       />
@@ -500,8 +515,7 @@ export class CrmFleetModal extends Component {
                                 {phoneDetail[index].phone === "mobile" ||
                                   phoneDetail[index].phone === "" ? (
                                     <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111"
+                                      <Input
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
@@ -511,6 +525,7 @@ export class CrmFleetModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
+                                        maxLength={"10"}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
@@ -521,13 +536,13 @@ export class CrmFleetModal extends Component {
                                     </div>
                                   ) : (
                                     <div className="input-block select-number-tile">
-                                      <MaskedInput
-                                        mask="(111) 111-111 ext 1111"
+                                      <Input
                                         name="phoneDetail"
                                         className="form-control"
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
+                                        maxLength={"15"}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
@@ -569,8 +584,7 @@ export class CrmFleetModal extends Component {
                                   {phoneDetail[index].phone === "mobile" ||
                                     phoneDetail[index].phone === "" ? (
                                       <div className="input-block select-number-tile">
-                                        <MaskedInput
-                                          mask="(111) 111-111"
+                                        <Input
                                           name="phoneDetail"
                                           placeholder="(555) 055-0555"
                                           className={classnames("form-control", {
@@ -580,6 +594,7 @@ export class CrmFleetModal extends Component {
                                           })}
                                           size="20"
                                           value={item.value}
+                                          maxLength={"10"}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
                                           }
@@ -593,8 +608,7 @@ export class CrmFleetModal extends Component {
                                       </div>
                                     ) : (
                                       <div className="input-block select-number-tile">
-                                        <MaskedInput
-                                          mask="(111) 111-111 ext 1111"
+                                        <Input
                                           name="phoneDetail"
                                           className={classnames("form-control", {
                                             "is-invalid":
@@ -604,6 +618,7 @@ export class CrmFleetModal extends Component {
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
                                           value={item.value}
+                                          maxLength={"15"}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
                                           }
@@ -801,30 +816,41 @@ export class CrmFleetModal extends Component {
                           >
                             <Label
                               htmlFor="name"
-                              className="customer-modal-text-style mr-2"
+                              className="customer-modal-text-style mr-2 text-nowrap"
                             >
                               Percent Discount
                               </Label>
                             <FormGroup>
-                              <Col md="5" className={"p-0"}>
-                              <InputGroup>
-                                <Input
-                                  placeholder="00.00"
-                                  name="percentageDiscount"
-                                  maxLength="5"
-                                  onChange={this.handlePercentageChange}
-                                  className="form-control"
-                                  value={
-                                    fleetDefaultPermissions[permission.key]
-                                      .percentageDiscount
-                                  }
-                                />
-                                <div className="input-group-append">
-                                  <span className="input-group-text">
-                                    <i className="fa fa-percent"></i>
-                                  </span>
+                              <Col md="6" className={"p-0"}>
+                                <div className={"input-block"}>
+                                  <InputGroup>
+                                    <Input
+                                      placeholder="00.00"
+                                      name="percentageDiscount"
+                                      maxLength="5"
+                                      onChange={this.handlePercentageChange}
+                                      className="form-control"
+                                      invalid={fleetDefaultPermissions[permission.key]
+                                        .percentageDiscount && percentageError}
+                                      value={
+                                        fleetDefaultPermissions[permission.key]
+                                          .percentageDiscount
+                                      }
+                                    />
+
+                                    <div className="input-group-append">
+                                      <span className="input-group-text">
+                                        <i className="fa fa-percent"></i>
+                                      </span>
+                                    </div>
+                                  </InputGroup>
+                                  <p className="text-danger text-nowrap">
+                                    {fleetDefaultPermissions[permission.key]
+                                      .percentageDiscount && percentageError
+                                      ? percentageError
+                                      : null}
+                                  </p>
                                 </div>
-                              </InputGroup>
                               </Col>
                             </FormGroup>
                           </div>
