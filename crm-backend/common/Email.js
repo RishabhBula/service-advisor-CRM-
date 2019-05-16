@@ -33,48 +33,48 @@ class Email {
     }
     switch (templateName) {
       case AvailiableTemplates.SIGNUP_CONFIRMATION:
-        this.subject = "[CRM-360 Degree] Please confirm your email address";
+        this.subject = "[Service Advisor] Please confirm your email address";
         break;
       case AvailiableTemplates.SIGNUP:
-        this.subject = "[CRM-360 Degree] Registration";
+        this.subject = "[Service Advisor] Registration";
         break;
       case AvailiableTemplates.USER_ADDED_CONFIRMATION:
-        this.subject = "[CRM-360 Degree] You've Been Invited to Join CRM 360 ";
+        this.subject = "[Service Advisor] You've Been Invited to Join Service Advisor ";
         break;
 
       case AvailiableTemplates.UPDATE_BY_ADMIN:
-        this.subject = "[CRM-360 Degree] Updated Your Password";
+        this.subject = "[Service Advisor] Updated Your Password";
         break;
 
       case AvailiableTemplates.FORGET_PASSWORD:
-        this.subject = "[CRM-360 Degree] Reset Password";
+        this.subject = "[Service Advisor] Reset Password";
         break;
       case AvailiableTemplates.ORDER_COMPLETE:
-        this.subject = "[CRM-360 Degree] Order Complete";
+        this.subject = "[Service Advisor] Order Complete";
         break;
       case AvailiableTemplates.WEBINAR_ORDER_COMPLETE:
-        this.subject = "[CRM-360 Degree] Order Complete";
+        this.subject = "[Service Advisor] Order Complete";
         break;
       case AvailiableTemplates.ADMIN_ORDER_EMAIL:
-        this.subject = "[CRM-360 Degree] New Order Placed";
+        this.subject = "[Service Advisor] New Order Placed";
         break;
       case AvailiableTemplates.ADMIN_WEBINAR_ORDER_EMAIL:
-        this.subject = "[CRM-360 Degree] New Order Placed";
+        this.subject = "[Service Advisor] New Order Placed";
         break;
       case AvailiableTemplates.WEBINAR_NOTIFICATION:
-        this.subject = "[CRM-360 Degree] Webinar Notification";
+        this.subject = "[Service Advisor] Webinar Notification";
         break;
       case AvailiableTemplates.REFUND_ORDER:
-        this.subject = "[CRM-360 Degree] Refund Order";
+        this.subject = "[Service Advisor] Refund Order";
         break;
       case AvailiableTemplates.REFUND_ORDER_ADMIN:
-        this.subject = "[CRM-360 Degree] Refund Order Successfully";
+        this.subject = "[Service Advisor] Refund Order Successfully";
         break;
       case AvailiableTemplates.NEWSLETTER_EMAIL:
-        this.subject = "[CRM-360 Degree] Subscription";
+        this.subject = "[Service Advisor] Subscription";
         break;
       case AvailiableTemplates.UNSUBSCRIBE_EMAIL:
-        this.subject = "[CRM-360 Degree] Unsubscription";
+        this.subject = "[Service Advisor] Unsubscription";
         break;
 
       default:
@@ -106,7 +106,7 @@ class Email {
       throw new Error("Please provide email.");
     }
     const mailOption = {
-      from: "CRM-360 <test.chapter247@gmail.com>",
+      from: "Sevice Advisor <test.chapter247@gmail.com>",
       to: email.split(","),
       subject: this.subject,
       html: this.body,
