@@ -18,9 +18,21 @@ const serviceSchema = new Schema({
    description: {
       type: [
          new Schema({
-            partId: Object,
-            tireId: Object,
-            laborId: Object,
+            partId: {
+               type: [Schema.Types.ObjectId],
+               ref: "part",
+               default: null,
+            },
+            tireId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Tier",
+               default: null,
+            },
+            laborId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Labour",
+               default: null,
+            },
          })
       ],
       default: null
@@ -28,8 +40,16 @@ const serviceSchema = new Schema({
    price: {
       type: [
          new Schema({
-            partId: Object,
-            tireId: Object
+            partId: {
+               type: [Schema.Types.ObjectId],
+               ref: "part",
+               default: null,
+            },
+            tireId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Tier",
+               default: null,
+            }
          })
       ],
       default: null
@@ -37,8 +57,16 @@ const serviceSchema = new Schema({
    quantity: {
       type: [
          new Schema({
-            partId: Object,
-            tireId: Object
+            partId: {
+               type: [Schema.Types.ObjectId],
+               ref: "part",
+               default: null,
+            },
+            tireId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Tier",
+               default: null,
+            }
          })
       ],
       default: null
@@ -46,7 +74,11 @@ const serviceSchema = new Schema({
    hours: {
       type: [
          new Schema({
-            laborId: Object
+            laborId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Labour",
+               default: null,
+            }
          })
       ],
       default: null
@@ -54,9 +86,21 @@ const serviceSchema = new Schema({
    disc: {
       type: [
          new Schema({
-            laborId: Object,
-            partId: Object,
-            tireId: Object
+            partId: {
+               type: [Schema.Types.ObjectId],
+               ref: "part",
+               default: null,
+            },
+            tireId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Tier",
+               default: null,
+            },
+            laborId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Labour",
+               default: null,
+            },
          })
       ],
       default: null
@@ -64,9 +108,21 @@ const serviceSchema = new Schema({
    subtotal: {
       type: [
          new Schema({
-            laborId: Object,
-            partId: Object,
-            tireId: Object
+            partId: {
+               type: [Schema.Types.ObjectId],
+               ref: "part",
+               default: null,
+            },
+            tireId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Tier",
+               default: null,
+            },
+            laborId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Labour",
+               default: null,
+            },
          })
       ],
       default: null
@@ -74,9 +130,21 @@ const serviceSchema = new Schema({
    lableStatus: {
       type: [
          new Schema({
-            laborId: Object,
-            partId: Object,
-            tireId: Object
+            partId: {
+               type: [Schema.Types.ObjectId],
+               ref: "part",
+               default: null,
+            },
+            tireId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Tier",
+               default: null,
+            },
+            laborId: {
+               type: [Schema.Types.ObjectId],
+               ref: "Labour",
+               default: null,
+            },
          })
       ],
       default: null
