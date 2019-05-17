@@ -339,7 +339,6 @@ export class CrmUserModal extends Component {
                         <CurrencyInput
                           value={rate}
                           name={"rate"}
-                          prefix="$"
                           onChangeEvent={this.handleInputChange}
                           className={classnames("form-control", {
                             "is-invalid": errors.rate

@@ -35,6 +35,13 @@ export const matrixListReducer = handleActions(
                 isSuccess: false
             }
         }),
+        [matrixActions.ADD_MATRIX_FAILED]: (state, action) => ({
+            ...state,
+            matrixData: {
+                ...state.matrixData,
+                isSuccess: false
+            }
+        }),
         [matrixActions.ADD_MATRIX_SUCCESS]: (state, action) => ({
             ...state,
             matrixData: {

@@ -9,6 +9,7 @@ import {
   hideLoader,
   modelOpenRequest,
   addMatrixSuccess,
+  addMatrixFailed,
   deleteMatrixSuccess,
   getMatrixList
 } from "./../actions";
@@ -77,6 +78,14 @@ const addPriceMatrixLogic = createLogic({
       action.payload
     );
     if (result.isError) {
+      dispatch(addMatrixFailed());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            matrixAddModalOpen: true
+          }
+        })
+      );
       toast.error(result.messages[0]);
       dispatch(hideLoader());
       done();
