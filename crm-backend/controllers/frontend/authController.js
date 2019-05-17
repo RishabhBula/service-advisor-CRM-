@@ -839,21 +839,12 @@ const changePasswordUser = async (req, res) => {
   }
 };
 const updateUserData = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      message: commonValidation.formatValidationErr(errors.mapped(), true),
-      success: false
-    });
-  }
   try {
     let $data = req.body;
     let currentUser = req.currentUser
     let inserList = {
       ...$data,
-      roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: currentUser.id,
-      rate: $data.rate ? parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2) : null
     };
     let result = await userModel.findByIdAndUpdate(
       currentUser.id,

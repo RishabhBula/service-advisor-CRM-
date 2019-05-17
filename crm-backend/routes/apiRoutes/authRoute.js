@@ -59,6 +59,6 @@ router.post("/image-delete", token.authorisedUser, authController.imageDelete);
 
 router.post("/change-password", token.authorisedUser, validation.userChangePasswordValidation, authController.changePasswordUser)
 
-router.put("/update-user", token.authorisedUser, validation.updateUserValidation, authController.updateUserData)
+router.put("/update-user", token.authorisedUser, authController.updateUserData)
 
 module.exports = router;
