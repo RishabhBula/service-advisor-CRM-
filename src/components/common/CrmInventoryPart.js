@@ -393,6 +393,8 @@ class CrmInventoryPart extends Component {
         type: "button"
       }
     ];
+    console.log("###################", isOpen);
+
     return (
       <Form onSubmit={this.addPart}>
         <CRMModal

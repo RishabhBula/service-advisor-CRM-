@@ -446,7 +446,6 @@ export class CrmTyreModal extends Component {
          isEditMode,
          selectedVendor,
       } = this.state;
-      logger(tireData, "@@@@@@@@@@@@@@@@@@@@@")
       return (
          <>
             <Modal

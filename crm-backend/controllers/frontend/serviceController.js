@@ -5,33 +5,33 @@ const mongoose = require("mongoose");
 const addNewService = async (req, res) => {
    const { body, currentUser } = req;
    try {
-      console.log("!!!!!!!!!!!Body!!!!!!!!!!!", body);
-      console.log("*******Part********", body.description.partId);
-
-      const serviceData = {
-         serviceName: body.serviceName,
-         notes: body.notes,
-         technician: body.technician,
-         description: { partId: body.description.partId, tireId: body.description.tireId, laborId: body.description.laborId },
-         price: { partId: body.price.partId, tireId: body.price.tireId },
-         quantity: { partId: body.quantity.partId, tireId: body.quantity.tireId },
-         hours: { laborId: body.hours.laborId },
-         disc: { partId: body.disc.partId, tireId: body.disc.tireId, laborId: body.disc.laborId },
-         subtotal: { partId: body.subtotal.partId, tireId: body.subtotal.tireId, laborId: body.subtotal.laborId },
-         lableStatus: { partId: body.lableStatus.partId, tireId: body.lableStatus.tireId, laborId: body.lableStatus.laborId },
-         epa: body.epa,
-         discount: body.discount,
-         taxes: body.taxes,
-         serviceTotal: body.serviceTotal,
-         userId: currentUser.id,
-         parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
-         status: true,
-         isDeleted: false
+      for (let index = 0; index < body.length; index++) {
+         const element = body[index];
+         const serviceData = {
+            serviceName: element.serviceName,
+            notes: element.notes,
+            technician: element.technician,
+            description: element.description,
+            price: element.price,
+            quantity: element.quantity,
+            hours: element.hours,
+            disc: element.disc,
+            subtotal: element.subtotal,
+            lableStatus: element.lableStatus,
+            epa: element.epa,
+            discount: element.discount,
+            taxes: element.taxes,
+            serviceTotal: element.serviceTotal,
+            userId: currentUser.id,
+            parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
+            status: true,
+            isDeleted: false
+         }
+         const serviceContent = new Service(serviceData);
+         const result = await serviceContent.save();
       }
-      const serviceContent = new Service(serviceData);
-      const result = serviceContent.save();
       return res.status(200).json({
-         message: "Service added successfully",
+         message: `${body.length}Service added successfully`,
          success: true
       })
 

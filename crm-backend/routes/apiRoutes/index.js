@@ -12,5 +12,6 @@ module.exports = {
   inventory: require("./inventory"),
   inventoryStat: require("./inventoryStats"),
   order: require("./orderRoutes"),
-  service: require("./serviceRoutes")
+  service: require("./serviceRoutes"),
+  inspection: require("./inspectionRoutes")
 };

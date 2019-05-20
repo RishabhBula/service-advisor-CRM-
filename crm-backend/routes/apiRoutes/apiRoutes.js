@@ -15,7 +15,8 @@ const {
   inventory,
   inventoryStat,
   order,
-  service
+  service,
+  inspection
 } = require("./index");
 
 router.use("/auth", auth);
@@ -31,5 +32,6 @@ router.use("/tier", tier);
 router.use("/inventory", inventory);
 router.use("/inventoryStat", inventoryStat);
 router.use("/order", order);
-router.use("/service", service)
+router.use("/service", service);
+router.use("/inspection", inspection)
 module.exports = router;

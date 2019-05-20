@@ -106,10 +106,7 @@ const getCustomersLogic = createLogic({
       "/getAllCustomerList",
       "GET",
       true,
-      {
-        ...action.payload,
-        limit: AppConfig.ITEMS_PER_PAGE
-      }
+      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null }
     );
     if (result.isError) {
       dispatch(
@@ -122,6 +119,11 @@ const getCustomersLogic = createLogic({
       done();
       return;
     } else {
+      const options = result.data.data.map(customer => ({
+        label: `${customer.firstName} ${customer.lastName}`,
+        value: customer._id
+      }));
+      logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(hideLoader());
       dispatch(
         customerGetSuccess({
@@ -275,7 +277,7 @@ const importCustomerLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `First name not found on row  <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }
@@ -283,7 +285,7 @@ const importCustomerLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `Phone number not found on row  <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }
@@ -413,14 +415,14 @@ const getExportData = async (payload, data = []) => {
         "Refral Source": res.referralSource || "-",
         "Is Tax Exempt":
           res.permission &&
-          res.permission.isCorporateFleetTaxExempt &&
-          res.permission.isCorporateFleetTaxExempt.status
+            res.permission.isCorporateFleetTaxExempt &&
+            res.permission.isCorporateFleetTaxExempt.status
             ? "yes"
             : "no",
         "Is Receive A Discount":
           res.permission &&
-          res.permission.shouldReceiveDiscount &&
-          res.permission.shouldReceiveDiscount.status
+            res.permission.shouldReceiveDiscount &&
+            res.permission.shouldReceiveDiscount.status
             ? "yes"
             : "no",
         Status: res.status ? "Active" : "Inactive"

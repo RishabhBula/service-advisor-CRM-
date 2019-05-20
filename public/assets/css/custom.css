@@ -1423,6 +1423,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-size: 10px;
   cursor: pointer;
 }
+/* Work-flow START */
+.service-card{
+  max-width: 98%
+}
 /* Media Query STRAT*/
 .btn-reverse{
   display: flex;

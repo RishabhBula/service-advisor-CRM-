@@ -14,6 +14,31 @@ export const AppRoutes = {
     name: "WorkFlow",
     exact: true
   },
+  WORKFLOW_ORDER: {
+    url: "/workflow/order",
+    name: "Order",
+    exact: true
+  },
+  WORKFLOW_ORDER_SERVICES: {
+    url: "/workflow/order/service",
+    name: "Service",
+    exact: true
+  },
+  WORKFLOW_ORDER_INSPECTION: {
+    url: "/workflow/order/inspection",
+    name: "Inspection",
+    exact: true
+  },
+  WORKFLOW_ORDER_TIME_CLOCK: {
+    url: "/workflow/order/timeClock",
+    name: "Time Clocks",
+    exact: true
+  },
+  WORKFLOW_ORDER_MESSAGES: {
+    url: "/workflow/order/message",
+    name: "Messages",
+    exact: true
+  },
   CALENDER: {
     url: "/calender",
     name: "Calender",

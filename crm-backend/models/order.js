@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
-    orderId: {
+    orderName: {
         type: String,
         default: null
     },
@@ -22,7 +22,7 @@ const orderSchema = new Schema({
         default: null,
     },
     inspectionId: {
-        type: Schema.Types.ObjectId,
+        type: [Schema.Types.ObjectId],
         ref: "Inspection",
         default: null,
     },
@@ -47,7 +47,7 @@ const orderSchema = new Schema({
         default: null
     },
     workflowStatus: {
-        type: Boolean,
+        type: String,
         default: true
     },
     status: {

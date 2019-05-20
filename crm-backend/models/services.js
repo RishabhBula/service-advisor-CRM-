@@ -33,6 +33,7 @@ const serviceSchema = new Schema({
                ref: "Labour",
                default: null,
             },
+            type: String
          })
       ],
       default: null
@@ -49,7 +50,8 @@ const serviceSchema = new Schema({
                type: [Schema.Types.ObjectId],
                ref: "Tier",
                default: null,
-            }
+            },
+            type: String
          })
       ],
       default: null
@@ -66,7 +68,8 @@ const serviceSchema = new Schema({
                type: [Schema.Types.ObjectId],
                ref: "Tier",
                default: null,
-            }
+            },
+            type: String
          })
       ],
       default: null
@@ -78,7 +81,8 @@ const serviceSchema = new Schema({
                type: [Schema.Types.ObjectId],
                ref: "Labour",
                default: null,
-            }
+            },
+            type: String
          })
       ],
       default: null
@@ -101,6 +105,7 @@ const serviceSchema = new Schema({
                ref: "Labour",
                default: null,
             },
+            type: String
          })
       ],
       default: null
@@ -123,6 +128,7 @@ const serviceSchema = new Schema({
                ref: "Labour",
                default: null,
             },
+            type: String
          })
       ],
       default: null
@@ -145,6 +151,7 @@ const serviceSchema = new Schema({
                ref: "Labour",
                default: null,
             },
+            type: String
          })
       ],
       default: null
