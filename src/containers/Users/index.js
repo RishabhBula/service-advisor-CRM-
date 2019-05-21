@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  UncontrolledTooltip
-} from "reactstrap";
+import { Card, CardBody, Button, UncontrolledTooltip } from "reactstrap";
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
@@ -17,7 +12,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
-import { logger } from "../../helpers/Logger";
+
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -102,10 +97,10 @@ class Users extends Component {
               >
                 <i className={"fa fa-plus"} />
                 &nbsp; Add New Staff Member
-                  </Button>
+              </Button>
               <UncontrolledTooltip target={"add-user"}>
                 Add New Staff Member
-                  </UncontrolledTooltip>
+              </UncontrolledTooltip>
             </div>
             <UsersList
               userData={userReducer}

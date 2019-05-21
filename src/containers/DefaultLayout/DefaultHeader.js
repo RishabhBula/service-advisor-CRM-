@@ -15,6 +15,7 @@ import {
 import { AppNavbarBrand } from "@coreui/react";
 
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
+import { AppRoutes } from "../../config/AppRoutes";
 
 const propTypes = {
   children: PropTypes.node
@@ -59,23 +60,16 @@ class DefaultHeader extends Component {
             </NavItem>
           </Nav> */}
           <Nav className="d-md-down-none" navbar>
-            {/* {permissions.isAllowedDashboard ? (
-              <NavItem className="px-3">
-                <NavLink to="/dashboard" className="nav-link">
-                  Dashboard
-                </NavLink>
-              </NavItem>
-            ) : null} */}
             {permissions.isAllowedCalendar ? (
               <NavItem className="px-3">
-                <NavLink to="/calender" className="nav-link">
-                  <i className={"icons icon-calendar"}/> Calender
+                <NavLink to={AppRoutes.CALENDER} className="nav-link">
+                  <i className={"icons icon-calendar"} /> Calender
                 </NavLink>
               </NavItem>
             ) : null}
             {permissions.isAllowedCompanySettings ? (
               <NavItem className="px-3">
-                <NavLink to="/staff-members" className="nav-link">
+                <NavLink to={AppRoutes.STAFF_MEMBERS} className="nav-link">
                   <i className={"icons icon-people"} /> Staff
                 </NavLink>
               </NavItem>

@@ -6,7 +6,7 @@ import {
   editTier,
   getInventoryPartVendors,
   getMatrixList
-} from '../../../actions'
+} from "../../../actions";
 import { connect } from "react-redux";
 import * as qs from "query-string";
 import {
@@ -27,10 +27,10 @@ import Loader from "../../../containers/Loader/Loader";
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import { toast } from "react-toastify";
-import { CrmTyreModal } from "../../common/Tires/CrmTyreModal"
+import { CrmTyreModal } from "../../common/Tires/CrmTyreModal";
 import { Async } from "react-select";
-import moment from 'moment';
-import NoDataFound from "../../common/NoFound"
+import moment from "moment";
+import NoDataFound from "../../common/NoFound";
 import { logger } from "../../../helpers/Logger";
 import { notExist } from "../../../config/Constants";
 
@@ -51,13 +51,13 @@ class Tires extends Component {
       selectedTires: [],
       filterApplied: false,
       bulkAction: "",
-      isTireSizeOpen: -1,
+      isTireSizeOpen: -1
     };
   }
 
   componentDidMount() {
     const { location } = this.props;
-    this.props.getPriceMatrix()
+    this.props.getPriceMatrix();
     const query = qs.parse(location.search);
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
@@ -71,7 +71,7 @@ class Tires extends Component {
       sort: sort || "",
       search: search || "",
       filterApplied
-    })
+    });
   }
 
   componentDidUpdate({ tireReducer, location }) {
@@ -106,7 +106,7 @@ class Tires extends Component {
         });
         query.vendorId = vendorId.value;
       }
-      this.props.getTires(query)
+      this.props.getTires(query);
     }
   }
 
@@ -137,7 +137,7 @@ class Tires extends Component {
     });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify(query)].join("?"))
+    this.props.redirectTo([pathname, qs.stringify(query)].join("?"));
   };
 
   onReset = e => {
@@ -175,14 +175,14 @@ class Tires extends Component {
     const query = qs.parse(search);
     const data = {
       ...query,
-      tireId: this.state.selectedTires,
+      tireId: this.state.selectedTires
     };
     this.props.deleteTire(data);
     this.setState({ selectedTires: [] });
   };
 
   editTire = tier => {
-    logger(tier, "!!!!!!!!!!!!!!!!!!!!!")
+    logger(tier, "!!!!!!!!!!!!!!!!!!!!!");
     this.setState({ tire: tier }, () => {
       this.props.modelOperate({
         tireEditModalOpen: true
@@ -262,7 +262,7 @@ class Tires extends Component {
     const { search, pathname } = location;
     const query = qs.parse(search);
     this.props.redirectTo(
-      [pathname, qs.stringify({ ...query, page })].join('?')
+      [pathname, qs.stringify({ ...query, page })].join("?")
     );
   };
   handleSize = (id, index) => {
@@ -270,12 +270,18 @@ class Tires extends Component {
       toggle: !this.state.toggle,
       isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
       tireSizeid: id
-    })
-
-  }
+    });
+  };
 
   render() {
-    const { tireReducer, modelInfoReducer, modelOperate, matrixListReducer, getPriceMatrix, onAddClick } = this.props;
+    const {
+      tireReducer,
+      modelInfoReducer,
+      modelOperate,
+      matrixListReducer,
+      getPriceMatrix,
+      onAddClick
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen } = modelDetails;
     const { tires, isLoading, totalTires } = tireReducer;
@@ -460,12 +466,24 @@ class Tires extends Component {
                 </div> */}
                 S No.
               </th>
-              <th width={"280"}><i className="fa fa-cube"></i> Brand Info</th>
-              <th width={"200"}><i className="fa fa-life-saver"></i> Size</th>
-              <th width={"280"}><i className="fa fa-id-badge"></i> Vendor</th>
-              <th width={"280"}><i className="fa fa-cloud"></i> Seasonality</th>
-              <th width={"280"}><i className="fa fa-clock-o"></i> Created</th>
-              <th width={"130"} className={"text-center action-td"}>Action</th>
+              <th width={"280"}>
+                <i className="fa fa-cube" /> Brand Info
+              </th>
+              <th width={"200"}>
+                <i className="fa fa-life-saver" /> Size
+              </th>
+              <th width={"280"}>
+                <i className="fa fa-id-badge" /> Vendor
+              </th>
+              <th width={"280"}>
+                <i className="fa fa-cloud" /> Seasonality
+              </th>
+              <th width={"280"}>
+                <i className="fa fa-clock-o" /> Created
+              </th>
+              <th width={"130"} className={"text-center action-td"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -490,34 +508,65 @@ class Tires extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td className={"text-capitalize"}>
-                          <div className={"font-weight-semibold"}>{tire.brandName || "-"}</div>
-                          {tire.modalName ? <div className={"modal-info"}>
-                            Modal : <Badge>{tire.modalName}</Badge></div> : " "}
+                          <div className={"font-weight-semibold"}>
+                            {tire.brandName || "-"}
+                          </div>
+                          {tire.modalName ? (
+                            <div className={"modal-info"}>
+                              Modal : <Badge>{tire.modalName}</Badge>
+                            </div>
+                          ) : (
+                            " "
+                          )}
                         </td>
                         {/* <td className={"text-capitalize"}>{tire.modalName || "-"}</td> */}
-                        <td >
-
-                          {tire.tierSize && tire.tierSize.length ?
+                        <td>
+                          {tire.tierSize && tire.tierSize.length ? (
                             <Button
                               size={"sm"}
                               className={"btn-square btn-light second"}
                               onClick={() => this.handleSize(tire._id, index)}
                             >
                               <b>Size Details</b>
-                              {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
-                            </Button> : notExist
-                          }
+                              {isTireSizeOpen === index ? (
+                                <i class="icons icon-arrow-up ml-2" />
+                              ) : (
+                                <i class="icons icon-arrow-down ml-2" />
+                              )}
+                            </Button>
+                          ) : (
+                            notExist
+                          )}
                         </td>
                         <td>
-                          {tire.vendorId && tire.vendorId.name ?
-                            <a href={`/inventory/vendors?page=1&search=${tire.vendorId && tire.vendorId.name ? tire.vendorId.name : null}`} target="_blank" className={"text-body"}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</a> :
-                            tire.vendorId && tire.vendorId.name ? tire.vendorId.name : notExist}
+                          {tire.vendorId && tire.vendorId.name ? (
+                            <a
+                              href={`/inventory/vendors?page=1&search=${
+                                tire.vendorId && tire.vendorId.name
+                                  ? tire.vendorId.name
+                                  : null
+                              }`}
+                              // eslint-disable-next-line react/jsx-no-target-blank
+                              target="_blank"
+                              className={"text-body"}
+                            >
+                              {tire.vendorId && tire.vendorId.name
+                                ? tire.vendorId.name
+                                : "-"}
+                            </a>
+                          ) : tire.vendorId && tire.vendorId.name ? (
+                            tire.vendorId.name
+                          ) : (
+                            notExist
+                          )}
                         </td>
                         <td className={"season-td text-capitalize"}>
                           {tire.seasonality || "-"}
                         </td>
                         <td>
-                          <div>{moment(tire.createdAt).format("MMM Do YYYY")}</div>
+                          <div>
+                            {moment(tire.createdAt).format("MMM Do YYYY")}
+                          </div>
                           <div>{moment(tire.createdAt).format("h:mm a")}</div>
                         </td>
                         <td className={"text-center action-td"}>
@@ -527,13 +576,13 @@ class Tires extends Component {
                             id={`edit-${tire._id}`}
                             className={"btn-theme-transparent"}
                           >
-                            <i className={"icons cui-pencil"}></i>
+                            <i className={"icons cui-pencil"} />
                           </Button>{" "}
                           <UncontrolledTooltip target={`edit-${tire._id}`}>
                             Edit
                           </UncontrolledTooltip>
                           &nbsp;
-                        <Button
+                          <Button
                             size={"sm"}
                             onClick={() =>
                               this.setState(
@@ -548,7 +597,7 @@ class Tires extends Component {
                             id={`delete-${tire._id}`}
                             className={"btn-theme-transparent"}
                           >
-                            <i className={"icons cui-trash"}></i>
+                            <i className={"icons cui-trash"} />
                           </Button>
                           <UncontrolledTooltip target={`delete-${tire._id}`}>
                             Delete
@@ -557,65 +606,119 @@ class Tires extends Component {
                       </tr>
                       {/* {isTireSizeOpen && tire.tierSize && tireSizeid === tire._id && tire.tierSize.length ? */}
 
-                      {tire.tierSize && tire.tierSize.length ? <tr className={isTireSizeOpen === index ? 'active' : 'inactive'}>
-                        <td colSpan={"7"} key={index} className={"p-0"}>
-                          <Table className={"size-desc-table"}>
-                            <thead>
-                              <tr>
-                                <th width={"90"} className={"s-no-th"}></th>
-                                <th className={"tire-th"} width={"280"}>Size</th>
-                                <th className={"tire-th"} width={"200"}>Part</th>
-                                <th className={"tire-th"} width={"280"}>Cost</th>
-                                <th className={"tire-th"} width={"280"}>Retails Price</th>
-                                <th className={"tire-th"} width={"280"}>Quatity</th>
-                                <th className={"tire-bin-th"} width={"130"}>BIN/Location</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {tire.tierSize.length ? tire.tierSize.map((size, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <td></td>
-                                    <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
-                                    <td>{size.part || notExist}</td>
-                                    <td width={"70"}>{size.cost ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.cost}</span> : notExist}</td>
-                                    <td width={"70"}>{size.retailPrice ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.retailPrice}</span> : notExist}</td>
-                                    <td width={"70"}>{size.quantity || 0}&nbsp;
-                                      {size.quantity <= size.criticalQuantity ? (
-                                        <Badge color={"warning"}>Reorder</Badge>
-                                      ) : null}</td>
-                                    <td width={"70"}>{size.bin || notExist}</td>
-                                  </tr>
-                                )
-
-                              }) :
-                                null
-                              }
-                            </tbody>
-                          </Table>
-                        </td>
-                      </tr> : null}
-
+                      {tire.tierSize && tire.tierSize.length ? (
+                        <tr
+                          className={
+                            isTireSizeOpen === index ? "active" : "inactive"
+                          }
+                        >
+                          <td colSpan={"7"} key={index} className={"p-0"}>
+                            <Table className={"size-desc-table"}>
+                              <thead>
+                                <tr>
+                                  <th width={"90"} className={"s-no-th"} />
+                                  <th className={"tire-th"} width={"280"}>
+                                    Size
+                                  </th>
+                                  <th className={"tire-th"} width={"200"}>
+                                    Part
+                                  </th>
+                                  <th className={"tire-th"} width={"280"}>
+                                    Cost
+                                  </th>
+                                  <th className={"tire-th"} width={"280"}>
+                                    Retails Price
+                                  </th>
+                                  <th className={"tire-th"} width={"280"}>
+                                    Quatity
+                                  </th>
+                                  <th className={"tire-bin-th"} width={"130"}>
+                                    BIN/Location
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {tire.tierSize.length
+                                  ? tire.tierSize.map((size, index) => {
+                                      return (
+                                        <tr key={index}>
+                                          <td />
+                                          <td width={"100"}>
+                                            {size.baseInfo.replace(
+                                              "_ __" || "_" || "___",
+                                              ""
+                                            ) || "-"}
+                                          </td>
+                                          <td>{size.part || notExist}</td>
+                                          <td width={"70"}>
+                                            {size.cost ? (
+                                              <span class="dollar-price">
+                                                <i class="fa fa-dollar dollar-icon" />
+                                                {size.cost}
+                                              </span>
+                                            ) : (
+                                              notExist
+                                            )}
+                                          </td>
+                                          <td width={"70"}>
+                                            {size.retailPrice ? (
+                                              <span class="dollar-price">
+                                                <i class="fa fa-dollar dollar-icon" />
+                                                {size.retailPrice}
+                                              </span>
+                                            ) : (
+                                              notExist
+                                            )}
+                                          </td>
+                                          <td width={"70"}>
+                                            {size.quantity || 0}&nbsp;
+                                            {size.quantity <=
+                                            size.criticalQuantity ? (
+                                              <Badge color={"warning"}>
+                                                Reorder
+                                              </Badge>
+                                            ) : null}
+                                          </td>
+                                          <td width={"70"}>
+                                            {size.bin || notExist}
+                                          </td>
+                                        </tr>
+                                      );
+                                    })
+                                  : null}
+                              </tbody>
+                            </Table>
+                          </td>
+                        </tr>
+                      ) : null}
                     </>
                   );
-                }
-                )
-
+                })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={12}>
-                      {filterApplied ? <NoDataFound message={"No Tire details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Tire details added."} onAddClick={onAddClick} />}
-                    </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    <Loader />
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={"No Tire details found related to your search"}
+                        noResult
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={"Currently there are no Tire details added."}
+                        onAddClick={onAddClick}
+                      />
+                    )}
                   </td>
                 </tr>
-              )}
-
+              )
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={12}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         {totalTires && !isLoading ? (
@@ -633,12 +736,11 @@ class Tires extends Component {
         <CrmTyreModal
           tyreModalOpen={tireEditModalOpen}
           handleTierModal={() => {
-            this.setState({ tier: {} })
+            this.setState({ tier: {} });
             modelOperate({
               tireEditModalOpen: !tireEditModalOpen
-            })
-          }
-          }
+            });
+          }}
           tireData={tire}
           updateTire={this.onUpdate}
           matrixList={matrixListReducer.matrixList}
@@ -655,7 +757,7 @@ const mapStateToProps = state => ({
   tireReducer: state.tiresReducer,
   modelInfoReducer: state.modelInfoReducer,
   vendorReducer: state.vendorsReducer,
-  matrixListReducer: state.matrixListReducer,
+  matrixListReducer: state.matrixListReducer
 });
 const mapDispatchToProps = dispatch => ({
   getTires: data => {
@@ -673,8 +775,8 @@ const mapDispatchToProps = dispatch => ({
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
   },
-  getPriceMatrix: (data) => {
-    dispatch(getMatrixList(data))
+  getPriceMatrix: data => {
+    dispatch(getMatrixList(data));
   }
 });
 export default connect(

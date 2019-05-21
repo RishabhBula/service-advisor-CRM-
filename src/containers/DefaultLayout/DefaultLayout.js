@@ -1,15 +1,16 @@
-import React, { Component, Suspense } from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch } from "react-router-dom";
-
 import { Container } from "reactstrap";
+import { Redirect, Route, Switch } from "react-router-dom";
+import React, { Component, Suspense } from "react";
+
 // sidebar nav config
 import navigation, { ValidatedRoutes } from "../../_nav";
 import {
   profileInfoRequest,
   updateCompanyLogo,
   updateCompanyDetails,
-  modelOpenRequest
+  modelOpenRequest,
+  logOutRequest
 } from "../../actions";
 // routes config
 import routes, { BreadCrumbRoutes } from "../../routes";
@@ -43,7 +44,8 @@ class DefaultLayout extends Component {
     super(props);
     this.state = {
       hasAccess: true,
-      isCustVehiclemodal:false
+      isCustVehiclemodal: false,
+      isURLChecked: false
     };
   }
 
@@ -57,37 +59,47 @@ class DefaultLayout extends Component {
   componentDidUpdate({ location }) {
     const { profileInfoReducer, location: newLocation } = this.props;
     const { profileInfo } = profileInfoReducer;
+    const { isURLChecked } = this.state;
     if (
-      location.pathname !== newLocation.pathname &&
+      (location.pathname !== newLocation.pathname || !isURLChecked) &&
       profileInfo &&
       profileInfo.permissions &&
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
-      const currentPage = this.props.location.pathname;
-      if (WildCardRoutes.indexOf(currentPage) === -1) {
-        const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
-        logger(ind, currentPage);
-        if (ind > -1) {
-          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
-            logger("Allowed to use");
-          } else {
-            this.setState({
-              hasAccess: false
-            });
-          }
-        } else {
-          this.signOut();
-        }
-      }
+      this.validateRoute();
     }
   }
+  validateRoute = () => {
+    const { profileInfoReducer, location } = this.props;
+    const currentPage = location.pathname;
+    const { profileInfo } = profileInfoReducer;
+
+    logger(currentPage);
+    if (WildCardRoutes.indexOf(currentPage) === -1) {
+      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
+      if (ind > -1) {
+        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+          logger("Allowed to use");
+          this.setState({
+            hasAccess: true
+          });
+        } else {
+          this.setState({
+            hasAccess: false
+          });
+        }
+      } else {
+        this.signOut();
+      }
+    }
+    this.setState({ isURLChecked: true });
+  };
   signOut() {
-    localStorage.removeItem("token");
-    this.props.redirectTo("/login");
+    this.props.logoutUser();
   }
   renderCompanyDetailsPopup = profileInfo => {
-    const { companyName, parentId, firstName } = profileInfo;
-    if (!companyName && !parentId) {
+    const { firstTimeUser, parentId, firstName } = profileInfo;
+    if (firstTimeUser && !parentId) {
       return (
         <CrmWelcomeModel
           modalOpen={true}
@@ -115,8 +127,8 @@ class DefaultLayout extends Component {
   toggleCustAndVehicleProps = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     this.setState({
-      isCustVehiclemodal:true
-    })
+      isCustVehiclemodal: true
+    });
     let data = {
       custAndVehicle: !modelDetails.custAndVehicle,
       custAndVehicleCustomer: !modelDetails.custAndVehicle
@@ -229,18 +241,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  profileInfoAction: () => {
-    dispatch(profileInfoRequest());
-  },
-  updateCompanyLogo: data => {
-    dispatch(updateCompanyLogo(data));
-  },
-  onCompanyDetailsUdpate: data => {
-    dispatch(updateCompanyDetails(data));
-  },
-  modelOperate: data => {
-    dispatch(modelOpenRequest({ modelDetails: data }));
-  }
+  logoutUser: () => dispatch(logOutRequest()),
+  profileInfoAction: () => dispatch(profileInfoRequest()),
+  updateCompanyLogo: data => dispatch(updateCompanyLogo(data)),
+  onCompanyDetailsUdpate: data => dispatch(updateCompanyDetails(data)),
+  modelOperate: data => dispatch(modelOpenRequest({ modelDetails: data }))
 });
 
 export default connect(

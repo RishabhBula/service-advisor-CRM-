@@ -1,6 +1,7 @@
 const { body } = require("express-validator/check");
 const { validationMessage } = require("./validationMessage");
 const userModel = require("../models/user");
+const normalizeEmail = require("normalize-email");
 
 const signupValidation = [
   body("firstName")
@@ -15,7 +16,21 @@ const signupValidation = [
   body("email", validationMessage.emailValidation)
     .trim()
     .isEmail()
-    .withMessage(validationMessage.emailInvalid),
+    .withMessage(validationMessage.emailInvalid)
+    .custom(async (email, { req }) => {
+      const normalizedEmail = normalizeEmail(email);
+      const result = await userModel.findOne({
+        $and: [
+          { normalizedEmail },
+          { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
+        ]
+      });
+      if (result) {
+        throw new Error(validationMessage.emailAlreadyExist);
+      }
+      req.body.normalizedEmail = normalizedEmail;
+      return true;
+    }),
   body("password")
     .not()
     .isEmpty()
@@ -23,6 +38,28 @@ const signupValidation = [
     .trim()
     .isLength({ min: 6 })
     .withMessage(validationMessage.minimumPasswordValidation),
+  body("companyName")
+    .not()
+    .isEmpty()
+    .withMessage("Please enter company name.")
+    .trim(),
+  body("workspace")
+    .not()
+    .isEmpty()
+    .withMessage("Please enter workspace.")
+    .trim()
+    .custom(async subdomain => {
+      const user = await userModel.findOne({
+        subdomain,
+        $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
+      });
+      if (user) {
+        throw new Error(
+          "Workspace is not available. Please choose a different name."
+        );
+      }
+      return true;
+    })
 ];
 
 const signupConfirmation = [
@@ -34,22 +71,24 @@ const signupConfirmation = [
   body("activeValue")
     .not()
     .isEmpty()
-    .withMessage("Please enter active value."),
+    .withMessage("Please enter active value.")
 ];
 const loginValidation = [
   body("email")
     .isEmail()
     .withMessage("Email must be a valid.")
-    .trim(),
+    .trim()
+    .normalizeEmail(),
   body("password", "Password must be at least 6 character long.")
     .trim()
-    .isLength({ min: 6 }),
+    .isLength({ min: 6 })
 ];
 const forgotPasswordValidation = [
   body("email")
     .isEmail()
     .withMessage("Email must be a valid.")
-    .trim(),
+    .trim()
+    .normalizeEmail()
 ];
 const verifyLinkValidation = [
   body("user")
@@ -66,14 +105,14 @@ const verifyLinkValidation = [
     .not()
     .isEmpty()
     .withMessage("token field is required.")
-    .trim(),
+    .trim()
 ];
 const resetPasswordValidation = [
   body("password")
     .not()
     .isEmpty()
     .withMessage("password field is required.")
-    .trim(),
+    .trim()
 ];
 
 const createUserValidation = [
@@ -90,18 +129,25 @@ const createUserValidation = [
     .trim()
     .isEmail()
     .withMessage(validationMessage.emailInvalid)
-    .custom(async value => {
-      const userFind = await userModel.find({ email: value, isDeleted: false });
-      if (userFind.length) {
+    .custom(async (email, { req }) => {
+      const normalizedEmail = normalizeEmail(email);
+      const result = await userModel.findOne({
+        $and: [
+          { normalizedEmail },
+          { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
+        ]
+      });
+      if (result) {
         throw new Error(validationMessage.emailAlreadyExist);
       }
+      req.body.normalizedEmail = normalizedEmail;
       return true;
     }),
   body("roleType")
     .not()
     .isEmpty()
     .withMessage("Role type is required.")
-    .trim(),
+    .trim()
 ];
 const updateUserValidation = [
   body("firstName")
@@ -116,12 +162,13 @@ const updateUserValidation = [
   body("email", validationMessage.emailValidation)
     .trim()
     .isEmail()
-    .withMessage(validationMessage.emailInvalid),
+    .withMessage(validationMessage.emailInvalid)
+    .normalizeEmail(),
   body("roleType")
     .not()
     .isEmpty()
     .withMessage("Role type is required.")
-    .trim(),
+    .trim()
 ];
 
 const userVerify = [
@@ -140,7 +187,7 @@ const userVerify = [
     .withMessage(validationMessage.passwordValidation)
     .trim()
     .isLength({ min: 6 })
-    .withMessage(validationMessage.minimumPasswordValidation),
+    .withMessage(validationMessage.minimumPasswordValidation)
 ];
 
 const userVerifyLink = [
@@ -152,13 +199,22 @@ const userVerifyLink = [
   body("activeValue")
     .not()
     .isEmpty()
-    .withMessage("Active value is required. "),
+    .withMessage("Active value is required. ")
 ];
 const addNewRateStandard = [
-  body("name").not().isEmpty().withMessage("Name is required."),
-  body("hourRate").not().isEmpty().withMessage("Hour rate is required."),
-  body("userId").not().isEmpty().withMessage("userId is required.")
-]
+  body("name")
+    .not()
+    .isEmpty()
+    .withMessage("Name is required."),
+  body("hourRate")
+    .not()
+    .isEmpty()
+    .withMessage("Hour rate is required."),
+  body("userId")
+    .not()
+    .isEmpty()
+    .withMessage("userId is required.")
+];
 
 const createCustomerValidation = [
   body("firstName")
@@ -168,29 +224,70 @@ const createCustomerValidation = [
     .trim()
 ];
 const createNewLabourValidations = [
-  body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
-
+  body("discription")
+    .not()
+    .isEmpty()
+    .withMessage("Discription is required.")
+    .trim()
 ];
 const updateLabourValidations = [
-  body("discription").not().isEmpty().withMessage("Discription is required.").trim(),
-  body("labourId").not().isEmpty().withMessage("Labour Id is required.").trim(),
+  body("discription")
+    .not()
+    .isEmpty()
+    .withMessage("Discription is required.")
+    .trim(),
+  body("labourId")
+    .not()
+    .isEmpty()
+    .withMessage("Labour Id is required.")
+    .trim()
 ];
 const createVendorValidations = [
-  body("name").not().isEmpty().withMessage("Name is required.").trim(),
-  body("accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
+  body("name")
+    .not()
+    .isEmpty()
+    .withMessage("Name is required.")
+    .trim(),
+  body("accountNumber")
+    .not()
+    .isEmpty()
+    .withMessage("Account number is required.")
+    .trim(),
   body("accountNumber", "Account Number should be a number").isNumeric(),
-  body("accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim()
+  body("accountNumber", "Account Number must be between 12 to 17 number")
+    .isLength({ min: 12, max: 17 })
+    .trim()
 ];
 const updateVendorValidations = [
-  body("data.name").not().isEmpty().withMessage("Name is required.").trim(),
-  body("data.accountNumber").not().isEmpty().withMessage("Account number is required.").trim(),
+  body("data.name")
+    .not()
+    .isEmpty()
+    .withMessage("Name is required.")
+    .trim(),
+  body("data.accountNumber")
+    .not()
+    .isEmpty()
+    .withMessage("Account number is required.")
+    .trim(),
   body("data.accountNumber", "Account Number should be a number").isNumeric(),
-  body("data.accountNumber", "Account Number must be between 12 to 17 number").isLength({ min: 12, max: 17 }).trim(),
-  body("id").not().isEmpty().withMessage("Vendor Id is required.").trim(),
+  body("data.accountNumber", "Account Number must be between 12 to 17 number")
+    .isLength({ min: 12, max: 17 })
+    .trim(),
+  body("id")
+    .not()
+    .isEmpty()
+    .withMessage("Vendor Id is required.")
+    .trim()
 ];
 const createTierValidation = [
-  body("brandName").not().isEmpty().withMessage("Brand name is required").trim(),
-  body("brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim(),
+  body("brandName")
+    .not()
+    .isEmpty()
+    .withMessage("Brand name is required")
+    .trim(),
+  body("brabdName", "Band name should be less than 100 wards")
+    .isLength({ max: 100 })
+    .trim()
   // body("tierSize").custom(tierSize => {
 
   //   for (let index = 0; index < tierSize.length; index++) {
@@ -207,8 +304,14 @@ const createTierValidation = [
   // })
 ];
 const updateTierValidation = [
-  body("data.brandName").not().isEmpty().withMessage("Brand name is required").trim(),
-  body("data.brabdName", "Band name should be less than 100 wards").isLength({ max: 100 }).trim(),
+  body("data.brandName")
+    .not()
+    .isEmpty()
+    .withMessage("Brand name is required")
+    .trim(),
+  body("data.brabdName", "Band name should be less than 100 wards")
+    .isLength({ max: 100 })
+    .trim()
   // body("data.tierSize").custom(tierSize => {
   //   for (let index = 0; index < tierSize.length; index++) {
   //     const element = tierSize[index];
@@ -224,12 +327,23 @@ const updateTierValidation = [
   // })
 ];
 const createNewMatrixValidation = [
-  body("matrixName").not().isEmpty().withMessage("Matrix name is required.").trim(),
+  body("matrixName")
+    .not()
+    .isEmpty()
+    .withMessage("Matrix name is required.")
+    .trim()
 ];
 const UpdateMatrixValidation = [
-  body("matrixName").not().isEmpty().withMessage("Matrix name is required.").trim(),
-  body("id").not().isEmpty().withMessage("Matrix id is required.")
-]
+  body("matrixName")
+    .not()
+    .isEmpty()
+    .withMessage("Matrix name is required.")
+    .trim(),
+  body("id")
+    .not()
+    .isEmpty()
+    .withMessage("Matrix id is required.")
+];
 module.exports = {
   signupValidation,
   signupConfirmation,

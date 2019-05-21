@@ -16,18 +16,21 @@ import {
 import Loader from "../../../containers/Loader/Loader";
 import { connect } from "react-redux";
 import {
-  labourEditRequest, labourListRequest, getRateStandardListRequest, deleteLabour,
-  setRateStandardListStart, rateAddRequest
+  labourEditRequest,
+  labourListRequest,
+  getRateStandardListRequest,
+  deleteLabour,
+  setRateStandardListStart,
+  rateAddRequest
 } from "../../../actions";
-import { CrmLabourModal } from '../../common/Labours/CrmLabourModal'
+import { CrmLabourModal } from "../../common/Labours/CrmLabourModal";
 import PaginationHelper from "../../../helpers/Pagination";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { isEqual } from "../../../helpers/Object";
-import NoDataFound from "../../common/NoFound"
+import NoDataFound from "../../common/NoFound";
 import { notExist } from "../../../config/Constants";
-import LaboutIcon from "../../../assets/img/labor.svg"
 
 class Labours extends Component {
   constructor(props) {
@@ -55,15 +58,14 @@ class Labours extends Component {
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
     this.props.getlabour({ ...query, page: query.page || 1 });
-    if (location.search !== '') {
+    if (location.search !== "") {
       this.setState({
         filterApplied: true,
         page: parseInt(page) || 1,
         sort: sort || "",
         search: search || ""
-      })
-    }
-    else {
+      });
+    } else {
       this.setState({
         page: parseInt(page) || 1,
         sort: sort || "",
@@ -123,7 +125,7 @@ class Labours extends Component {
     this.setState({ filterApplied: hasFilter });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify(param)].join("?"))
+    this.props.redirectTo([pathname, qs.stringify(param)].join("?"));
   };
 
   onReset = e => {
@@ -139,7 +141,7 @@ class Labours extends Component {
     });
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo([pathname, qs.stringify('')].join("?"))
+    this.props.redirectTo([pathname, qs.stringify("")].join("?"));
   };
   editLabour = data => {
     this.setState({ labour: data }, () => {
@@ -153,12 +155,12 @@ class Labours extends Component {
     try {
       this.props.updateLabour(data);
       this.setState({
-        tireEditModalOpen: !this.state.tireEditModalOpen,
+        tireEditModalOpen: !this.state.tireEditModalOpen
       });
     } catch (error) {
-      Loader(error)
+      Loader(error);
     }
-  }
+  };
   onDelete = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
       text: isMultiple
@@ -176,7 +178,7 @@ class Labours extends Component {
     const query = qs.parse(search);
     const data = {
       ...query,
-      labourId: this.state.selectedLabours,
+      labourId: this.state.selectedLabours
     };
     this.props.deleteLabour(data);
     this.setState({ selectedLabours: [] });
@@ -192,10 +194,10 @@ class Labours extends Component {
     try {
       this.props.addRate(data);
     } catch (error) {
-      Loader(error)
+      Loader(error);
     }
-  }
-  onPageChange = (page) => {
+  };
+  onPageChange = page => {
     this.setState({ page });
     const { location } = this.props;
     const { search, pathname } = location;
@@ -203,7 +205,7 @@ class Labours extends Component {
     this.props.redirectTo(
       [pathname, qs.stringify({ ...query, page })].join("?")
     );
-  }
+  };
   render() {
     const {
       search,
@@ -213,7 +215,14 @@ class Labours extends Component {
       expandText,
       isReadMore
     } = this.state;
-    const { labourReducer, profileInfoReducer, rateStandardListReducer, modelInfoReducer, modelOperate, onAddClick } = this.props;
+    const {
+      labourReducer,
+      profileInfoReducer,
+      rateStandardListReducer,
+      modelInfoReducer,
+      modelOperate,
+      onAddClick
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireEditModalOpen, rateAddModalOpen } = modelDetails;
     const { isLoading, labourData } = labourReducer;
@@ -298,17 +307,29 @@ class Labours extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive >
+        <Table responsive>
           <thead>
             <tr>
-              <th width='90px'>S No.</th>
-              <th width={"250"}><i class="fa fa-user"></i> Labor Description</th>
-              <th width={"350"}><i class="fa fa-file-text"></i> Note</th>
-              <th><i class="fa fa-dollar"></i> Rate</th>
-              <th><i class="fa fa-hourglass-2"></i> Hours</th>
+              <th width="90px">S No.</th>
+              <th width={"250"}>
+                <i class="fa fa-user" /> Labor Description
+              </th>
+              <th width={"350"}>
+                <i class="fa fa-file-text" /> Note
+              </th>
+              <th>
+                <i class="fa fa-dollar" /> Rate
+              </th>
+              <th>
+                <i class="fa fa-hourglass-2" /> Hours
+              </th>
               {/* <th>Price</th> */}
-              <th><i class="fa fa-percent"></i> Discount</th>
-              <th width={"90"} className={"text-center"}>Action</th>
+              <th>
+                <i class="fa fa-percent" /> Discount
+              </th>
+              <th width={"90"} className={"text-center"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -322,63 +343,94 @@ class Labours extends Component {
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </label>
                       </td>
-                      <td className={"font-weight-semibold"}>{data.discription || notExist}</td>
-                      {
-                        expandText && isReadMore === index ?
-                          <td className={"pr-4"}>
-
-                            <div className={"word-break"}>
-                              {data.notes ? data.notes : notExist}{" "}
-                              <span className={"read-more-text"} onClick={() => this.setState({
-                                expandText: false,
-                                isReadMore: this.state.isReadMore === index ? -1 : index
-                              })}>
-                                <Badge color={"warning"}>
-                                  {data.notes && data.notes.length >= 70 ? "show less" : null}
-                                </Badge>
-                              </span>
-                            </div>
-                          </td> :
-                          <td className={"pr-4"}>
-                            <div className={"word-break"}>
-                              {data.notes ? data.notes.substring(0, 70) : notExist}{" "}
-                              <span className={"read-more-text"} onClick={() => this.setState({
-                                expandText: true,
-                                isReadMore: this.state.isReadMore === index ? -1 : index
-                              })}>
-                                <Badge color={"warning"}>
-                                  {data.notes && data.notes.length >= 70 ? "read more...." : null}
-                                </Badge>
-                              </span>
-                            </div>
-                          </td>
-                      }
+                      <td className={"font-weight-semibold"}>
+                        {data.discription || notExist}
+                      </td>
+                      {expandText && isReadMore === index ? (
+                        <td className={"pr-4"}>
+                          <div className={"word-break"}>
+                            {data.notes ? data.notes : notExist}{" "}
+                            <span
+                              className={"read-more-text"}
+                              onClick={() =>
+                                this.setState({
+                                  expandText: false,
+                                  isReadMore:
+                                    this.state.isReadMore === index ? -1 : index
+                                })
+                              }
+                            >
+                              <Badge color={"warning"}>
+                                {data.notes && data.notes.length >= 70
+                                  ? "show less"
+                                  : null}
+                              </Badge>
+                            </span>
+                          </div>
+                        </td>
+                      ) : (
+                        <td className={"pr-4"}>
+                          <div className={"word-break"}>
+                            {data.notes
+                              ? data.notes.substring(0, 70)
+                              : notExist}{" "}
+                            <span
+                              className={"read-more-text"}
+                              onClick={() =>
+                                this.setState({
+                                  expandText: true,
+                                  isReadMore:
+                                    this.state.isReadMore === index ? -1 : index
+                                })
+                              }
+                            >
+                              <Badge color={"warning"}>
+                                {data.notes && data.notes.length >= 70
+                                  ? "read more...."
+                                  : null}
+                              </Badge>
+                            </span>
+                          </div>
+                        </td>
+                      )}
                       <td>
                         <div className="">
-                          {
-                            data.rate ?
-                              <>
-                                {(data.rate && data.rate.name) ? data.rate.name : notExist}{(data.rate && data.rate.name) ? ":" : null}&nbsp;
-                                {(data.rate && data.rate.hourlyRate) ? <span className={"dollar-price"}>
-                                  <i class="fa fa-dollar dollar-icon"></i>
+                          {data.rate ? (
+                            <>
+                              {data.rate && data.rate.name
+                                ? data.rate.name
+                                : notExist}
+                              {data.rate && data.rate.name ? ":" : null}&nbsp;
+                              {data.rate && data.rate.hourlyRate ? (
+                                <span className={"dollar-price"}>
+                                  <i class="fa fa-dollar dollar-icon" />
                                   {data.rate.hourlyRate}
-                                </span> : notExist}
-                              </> : notExist
-                          }
+                                </span>
+                              ) : (
+                                notExist
+                              )}
+                            </>
+                          ) : (
+                            notExist
+                          )}
                         </div>
                       </td>
-                      <td>{(data.hours) ? data.hours + ' Hrs' : notExist}</td>
+                      <td>{data.hours ? data.hours + " Hrs" : notExist}</td>
                       {/* <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td> */}
                       <td>
-                        {
-                          data.discount && data.discount.value && data.discount.type === "%"?
-                            <>
-                              {data.discount.value || notExist}&nbsp;{data.discount.type}
-                            </> :
-                            <><i class="fa fa-dollar dollar-icon"></i>
-                              {`${data.discount.value} Flat` || notExist}
-                            </>
-                        }
+                        {data.discount &&
+                        data.discount.value &&
+                        data.discount.type === "%" ? (
+                          <>
+                            {data.discount.value || notExist}&nbsp;
+                            {data.discount.type}
+                          </>
+                        ) : (
+                          <>
+                            <i class="fa fa-dollar dollar-icon" />
+                            {`${data.discount.value} Flat` || notExist}
+                          </>
+                        )}
                       </td>
                       <td className={"text-center"}>
                         <span className="mr-2">
@@ -392,7 +444,7 @@ class Labours extends Component {
                           </Button>
                           <UncontrolledTooltip target={"ToolTip-3"}>
                             Edit
-                        </UncontrolledTooltip>
+                          </UncontrolledTooltip>
                         </span>
                         <span>
                           <Button
@@ -404,38 +456,50 @@ class Labours extends Component {
                                 },
                                 () => {
                                   this.onDelete();
-                                })
+                                }
+                              )
                             }
                             className={"btn btn-theme-transparent"}
                             id={"ToolTip-4"}
                           >
-                            <i className={"icons cui-trash"}></i>
+                            <i className={"icons cui-trash"} />
                           </Button>
                           <UncontrolledTooltip target={"ToolTip-4"}>
                             Delete
-                        </UncontrolledTooltip>
+                          </UncontrolledTooltip>
                         </span>
                       </td>
                     </tr>
                   );
                 })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={8}>
-                      {filterApplied ? <NoDataFound message={"No Labor details found related to your search"} noResult={true} /> :
-                        <NoDataFound showAddButton message={"Currently there are no Labor details added."} onAddClick={onAddClick} noResult={false} />
-                      }
-                    </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={8}>
-                    <Loader />
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={
+                          "No Labor details found related to your search"
+                        }
+                        noResult={true}
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={"Currently there are no Labor details added."}
+                        onAddClick={onAddClick}
+                        noResult={false}
+                      />
+                    )}
                   </td>
                 </tr>
               )
-            }
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={8}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
 
@@ -468,7 +532,8 @@ class Labours extends Component {
           rateAddModalFun={() =>
             modelOperate({
               rateAddModalOpen: !rateAddModalOpen
-            })}
+            })
+          }
         />
       </>
     );
@@ -477,12 +542,12 @@ class Labours extends Component {
 
 const mapStateToProps = state => ({
   profileInfoReducer: state.profileInfoReducer,
-  labourReducer: state.labourReducer,
+  labourReducer: state.labourReducer
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateLabour: (data) => {
-    dispatch(labourEditRequest(data))
+  updateLabour: data => {
+    dispatch(labourEditRequest(data));
   },
   deleteLabour: data => {
     dispatch(deleteLabour(data));
@@ -496,9 +561,9 @@ const mapDispatchToProps = dispatch => ({
   setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
   },
-  addRate: (data) => {
+  addRate: data => {
     dispatch(rateAddRequest(data));
-  },
+  }
 });
 
 export default connect(
