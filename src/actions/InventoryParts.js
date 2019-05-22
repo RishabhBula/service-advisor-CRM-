@@ -8,7 +8,8 @@ export const inventoryPartsActions = {
   GET_PARTS_LIST_SUCCESS: "Get inventory list for part success!",
   ADD_PART_TO_INVENTORY: "Add part to inventory started!",
   UPDATE_PART_TO_INVENTORY: "Update part to inventory started!",
-  DELETE_PART_FROM_INVENTORY: "Delete part from inventory started!"
+  DELETE_PART_FROM_INVENTORY: "Delete part from inventory started!",
+  ADD_SERVICE_PART: "Add part to service",
 };
 
 export const getInventoryPartVendors = createAction(
@@ -37,3 +38,4 @@ export const deletePartFromInventory = createAction(
 export const updatePartFromInventory = createAction(
   inventoryPartsActions.UPDATE_PART_TO_INVENTORY
 );
+export const addPartToService = createAction(inventoryPartsActions.ADD_SERVICE_PART)

@@ -18,26 +18,37 @@ class ServiceItem extends Component {
       noteIndex: -1
     };
   }
-  handleServiceModalOpenAdd = async (index, serviceItem) => {
+  handleServiceModalOpenAdd = async (index, serviceType) => {
     let modelDetails = {};
-    switch (serviceItem) {
+    switch (serviceType) {
       case 'part':
         modelDetails = {
           partAddModalOpen: true
+        };
+        break;
+      case 'tire':
+        modelDetails = {
+          tireAddModalOpen: true
+        };
+        break;
+      case 'labor':
+        modelDetails = {
+          tireAddModalOpen: true
         };
         break;
       default:
         break;
     }
     await this.props.modelOperate(modelDetails);
-    this.props.handleServiceAdd(index, serviceItem)
+    this.props.handleServiceModal(serviceType)
   }
   render() {
     const { addNote, noteIndex } = this.state
     const {
       serviceItem,
       serviceData,
-      handleRemoveService
+      handleRemoveService,
+      serviceReducers
     } = this.props
     return (
       <>
@@ -99,8 +110,17 @@ class ServiceItem extends Component {
                         </thead>
                         <tbody>
                           {
-                            serviceData ?
-                              <tr></tr> :
+                            serviceReducers.serviceItems.length ?
+                              serviceReducers.serviceItems.map((service, index) => {
+                                return (
+                                  <tr>
+                                    <td>{service.description}</td>
+                                    <td>{service.cost}</td>
+                                    <td>{service.quantity}</td>
+                                    <td>{service.hours|| '-'}</td>
+                                  </tr>
+                                )
+                              }) :
                               <tr>
                                 <td className={"text-center"} colSpan={12}>
                                   <NoDataFound showAddButton={false} message={"Currently there are no Service details added."} />

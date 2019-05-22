@@ -12,7 +12,10 @@ import Loader from "../Loader/Loader";
 import {
   getOrderIdRequest,
   customerGetRequest,
-  vehicleGetRequest
+  vehicleGetRequest,
+  getInventoryPartsList,
+  addPartToService,
+  requestAddPart
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -74,7 +77,11 @@ class Order extends Component {
       getVehicleData,
       getCustomerData,
       modelInfoReducer,
-      modelOperate } = this.props
+      getPartDetails,
+      addPartToService,
+      modelOperate,
+      addInventoryPart,
+      serviceReducers } = this.props
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -109,6 +116,10 @@ class Order extends Component {
                           <Services
                             modelInfoReducer={modelInfoReducer}
                             modelOperate={modelOperate}
+                            addPartToService={addPartToService}
+                            getPartDetails={getPartDetails}
+                            addInventoryPart={addInventoryPart}
+                            serviceReducers={serviceReducers}
                           /> : null
                       }
                       {
@@ -137,7 +148,8 @@ class Order extends Component {
 }
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
-  modelInfoReducer: state.modelInfoReducer
+  modelInfoReducer: state.modelInfoReducer,
+  serviceReducers: state.serviceReducers
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -148,6 +160,15 @@ const mapDispatchToProps = dispatch => ({
   },
   getVehicleData: (data) => {
     dispatch(vehicleGetRequest(data))
+  },
+  getPartDetails: (data) => {
+    dispatch(getInventoryPartsList(data))
+  },
+  addPartToService: (data) => {
+    dispatch(addPartToService(data))
+  },
+  addInventoryPart: (data) => {
+    dispatch(requestAddPart(data))
   }
 });
 export default connect(

@@ -6,7 +6,8 @@ import {
   hideLoader,
   getInventoryPartsListStarted,
   getInventoryPartsListSuccess,
-  getInventoryPartsList
+  getInventoryPartsList,
+  addPartToService
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { ApiHelper } from "../helpers/ApiHelper";
@@ -45,7 +46,7 @@ const getInventoryPartsVendorLogic = createLogic({
 const addPartToInventoryLogic = createLogic({
   type: inventoryPartsActions.ADD_PART_TO_INVENTORY,
   async process({ action, getState }, dispatch, done) {
-    const { data, query } = action.payload;
+    const { data, query, serviceModal } = action.payload;
     dispatch(showLoader());
     const api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -64,6 +65,9 @@ const addPartToInventoryLogic = createLogic({
       return;
     }
     toast.success(result.messages[0]);
+    if (serviceModal) {
+      dispatch(addPartToService(result.result))
+    }
     dispatch(
       modelOpenRequest({
         modelDetails: {
@@ -86,10 +90,7 @@ const getInventoryPartsListLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     dispatch(getInventoryPartsListStarted());
     const api = new ApiHelper();
-    let result = await api.FetchFromServer("/inventory", "/part", "GET", true, {
-      ...action.payload,
-      limit: AppConfig.ITEMS_PER_PAGE
-    });
+    let result = await api.FetchFromServer("/inventory", "/part", "GET", true, { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null });
     if (result.isError) {
       dispatch(
         getInventoryPartsListSuccess({
@@ -108,6 +109,18 @@ const getInventoryPartsListLogic = createLogic({
         })
       );
     } else {
+      var defaultOptions = [
+        {
+          value: "",
+          label: "Add New Part"
+        }
+      ];
+      const options = result.data.parts.map(part => ({
+        label: `${part.description}`,
+        value: part._id,
+        partData: part
+      }));
+      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(getInventoryPartsListSuccess(result.data));
     }
     done();

@@ -83,7 +83,7 @@ export class CrmLabourModal extends Component {
     if (tyreModalOpen !== this.props.tyreModalOpen && !this.props.dataLabour) {
       this.removeAllState();
     }
-    if (this.props.rateStandardListData.selectedOptions !== rateStandardListData.selectedOptions) {
+    if (this.props.rateStandardListData && this.props.rateStandardListData.selectedOptions ? this.props.rateStandardListData.selectedOptions !== rateStandardListData.selectedOptions : null) {
       const { selectedOptions } = this.props.rateStandardListData
       this.setState({
         selectedRateOptions: {
@@ -331,30 +331,30 @@ export class CrmLabourModal extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Discount
                     </Label>
-                      <div className={"labor-discount"}>
+                    <div className={"labor-discount"}>
                       <InputGroup>
-                        {discount.type === '$' ? 
-                        <div class="input-group-prepend">
-                          <Button color={"primary"} size={"sm"}>
-                            <i className={"fa fa-dollar"}></i>
-                          </Button>
-                        </div> : null}
-                          <Input id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" invalid={errors.discount && !discount.isNumeric} value={discount.value} placeholder={"Discount"} />
-                        {discount.type === '%' ? 
-                        <div class="input-group-append">
+                        {discount.type === '$' ?
+                          <div className="input-group-prepend">
                             <Button color={"primary"} size={"sm"}>
-                            <i className={"fa fa-percent"}></i> 
+                              <i className={"fa fa-dollar"}></i>
                             </Button>
-                        </div> : null }
+                          </div> : null}
+                        <Input id="discount" name="discount" type={"text"} onChange={this.handleChange} maxLength="5" invalid={errors.discount && !discount.isNumeric} value={discount.value} placeholder={"Discount"} />
+                        {discount.type === '%' ?
+                          <div className="input-group-append">
+                            <Button color={"primary"} size={"sm"}>
+                              <i className={"fa fa-percent"}></i>
+                            </Button>
+                          </div> : null}
                       </InputGroup>
                       <DiscountBtn discountType={discount.type} handleClickDiscountType={this.handleClickDiscountType} />
-                      </div>
-                      <FormFeedback>
-                        {errors && !discount.isNumeric && errors.discount
-                          ? errors.discount
-                          : null}
-                      </FormFeedback>
-                   
+                    </div>
+                    <FormFeedback>
+                      {errors && !discount.isNumeric && errors.discount
+                        ? errors.discount
+                        : null}
+                    </FormFeedback>
+
                   </FormGroup>
                 </Col>
                 <Col md="12">
