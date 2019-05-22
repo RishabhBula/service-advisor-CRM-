@@ -40,12 +40,12 @@ class ServiceItem extends Component {
         break;
     }
     await this.props.modelOperate(modelDetails);
-    this.props.handleServiceModal(serviceType)
+    this.props.handleServiceModal(serviceType, index)
   }
   render() {
     const { addNote, noteIndex } = this.state
     const {
-      serviceItem,
+      services,
       serviceData,
       handleRemoveService,
       serviceReducers
@@ -54,7 +54,7 @@ class ServiceItem extends Component {
       <>
         <div>
           {
-            serviceItem && serviceItem.length ? serviceItem.map((item, index) => {
+            services && services.length ? services.map((item, index) => {
               return (
                 <>
                   <Card className={"service-card"}>
@@ -65,7 +65,7 @@ class ServiceItem extends Component {
                             <Label htmlFor="name" className="customer-modal-text-style">
                               Service name <span className={"asteric"}>*</span>
                             </Label>
-                            <Input />
+                            <Input value={item.name} />
                           </FormGroup>
                         </Col>
                         <Col md={"6"}>
@@ -110,14 +110,15 @@ class ServiceItem extends Component {
                         </thead>
                         <tbody>
                           {
-                            serviceReducers.serviceItems.length ?
-                              serviceReducers.serviceItems.map((service, index) => {
+                            serviceReducers.services[index] && serviceReducers.services[index].serviceItems.length ?
+                              serviceReducers.services[index].serviceItems.map((service, sIndex) => {
+                                console.log("************************", service)
                                 return (
                                   <tr>
                                     <td>{service.description}</td>
                                     <td>{service.cost}</td>
                                     <td>{service.quantity}</td>
-                                    <td>{service.hours|| '-'}</td>
+                                    <td>{service.hours || '-'}</td>
                                   </tr>
                                 )
                               }) :

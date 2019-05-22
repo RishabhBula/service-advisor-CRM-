@@ -47,6 +47,7 @@ const addPartToInventoryLogic = createLogic({
   type: inventoryPartsActions.ADD_PART_TO_INVENTORY,
   async process({ action, getState }, dispatch, done) {
     const { data, query, serviceModal } = action.payload;
+    logger(action.payload)
     dispatch(showLoader());
     const api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -65,23 +66,33 @@ const addPartToInventoryLogic = createLogic({
       return;
     }
     toast.success(result.messages[0]);
-    if (serviceModal) {
-      dispatch(addPartToService(result.result))
+    if (data.serviceModal) {
+      dispatch(addPartToService(result.data.result));
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            partAddModalOpen: false
+          }
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    } else {
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            partAddModalOpen: false
+          }
+        })
+      );
+      dispatch(hideLoader());
+      dispatch(
+        getInventoryPartsList({
+          ...query
+        })
+      );
+      done();
     }
-    dispatch(
-      modelOpenRequest({
-        modelDetails: {
-          partAddModalOpen: false
-        }
-      })
-    );
-    dispatch(hideLoader());
-    dispatch(
-      getInventoryPartsList({
-        ...query
-      })
-    );
-    done();
   }
 });
 

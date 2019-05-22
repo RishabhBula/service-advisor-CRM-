@@ -70,6 +70,9 @@ class Order extends Component {
       activeTab: activeTab
     })
   }
+  addInventoryPart = data => {
+    this.props.addInventoryPart({ data });
+  };
 
   render() {
     const { activeTab } = this.state;
@@ -80,7 +83,6 @@ class Order extends Component {
       getPartDetails,
       addPartToService,
       modelOperate,
-      addInventoryPart,
       serviceReducers } = this.props
     return (
       <div className="animated fadeIn">
@@ -118,7 +120,7 @@ class Order extends Component {
                             modelOperate={modelOperate}
                             addPartToService={addPartToService}
                             getPartDetails={getPartDetails}
-                            addInventoryPart={addInventoryPart}
+                            addInventoryPart={this.addInventoryPart}
                             serviceReducers={serviceReducers}
                           /> : null
                       }

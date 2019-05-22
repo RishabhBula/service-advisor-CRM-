@@ -26,17 +26,9 @@ const inspectionSchema = new Schema({
       ],
       default: [],
    },
-   template: {
-      type: [
-         new Schema({
-            name: String,
-            item: {
-               type: [Object],
-               default: [],
-            }
-         })
-      ],
-      default: []
+   isTemplate: {
+      type: Boolean,
+      default: false
    },
    userId: {
       type: Schema.Types.ObjectId,

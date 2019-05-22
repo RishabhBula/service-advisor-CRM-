@@ -108,5 +108,10 @@ export const AppRoutes = {
     url: "/settings/pricematrix",
     name: "Price Matrix",
     exact: true
+  },
+  SETTINGS: {
+    url: "/settings",
+    name: "Settings",
+    exact: true
   }
 };

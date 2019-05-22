@@ -15,23 +15,33 @@ class Services extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         serviceItem: [
+         servicesData: [
             {
-               serviceName: "Service item data!!"
+               name: "",
+               technician: "",
+               note: "",
+               serviceItems: []
             }
          ],
-         selectedService: ''
+         selectedService: '',
+         serviceIndex: -1
       };
    }
 
-   handleSeviceAdd = () => {
-      const { serviceItem } = this.state;
-      if (serviceItem) {
+   handleSeviceAdd = async () => {
+      if (this.state.servicesData) {
+         // const { serviceReducers } = this.props;
+         // const { services } = serviceReducers;
+         // services.push(this.state.servicesData)
+         // await this.props.addPartToService(services)
          this.setState((state, props) => {
             return {
-               serviceItem: state.serviceItem.concat([
+               servicesData: state.servicesData.concat([
                   {
-                     serviceName: "Service item data!!"
+                     name: "",
+                     technician: "",
+                     note: "",
+                     serviceItems: []
                   }
                ])
             };
@@ -40,28 +50,30 @@ class Services extends Component {
    }
 
    handleRemoveService = index => {
-      const { serviceItem } = this.state;
-      let t = [...serviceItem];
+      const { servicesData } = this.state;
+      let t = [...servicesData];
       t.splice(index, 1);
-      if (serviceItem.length) {
+      if (servicesData.length) {
          this.setState({
-            serviceItem: t
+            servicesData: t
          });
       }
    };
-   handleServiceModal = (serviceType) => {
+   handleServiceModal = (serviceType, index) => {
       this.setState({
-         selectedService: serviceType ? serviceType : ''
+         selectedService: serviceType ? serviceType : '',
+         serviceIndex: index
       })
    }
    handleOpenModal = () => {
-      const { selectedService } = this.state;
+      const { selectedService, serviceIndex } = this.state;
       const {
          modelInfoReducer,
          modelOperate,
          getPartDetails,
          addPartToService,
-         addInventoryPart
+         addInventoryPart,
+         serviceReducers
       } = this.props;
       const { modelDetails } = modelInfoReducer;
       const {
@@ -75,9 +87,11 @@ class Services extends Component {
                   <CrmInventoryPart
                      isOpen={partAddModalOpen}
                      serviceModal={true}
+                     serviceIndex={serviceIndex}
                      getPartDetails={getPartDetails}
                      addPartToService={addPartToService}
                      addInventoryPart={addInventoryPart}
+                     services={serviceReducers.services}
                      toggle={() =>
                         modelOperate({
                            partAddModalOpen: !partAddModalOpen
@@ -112,7 +126,7 @@ class Services extends Component {
       }
    }
    render() {
-      const { serviceItem, selectedService } = this.state
+      const { servicesData, selectedService } = this.state
       const {
          modelInfoReducer,
          modelOperate,
@@ -135,7 +149,7 @@ class Services extends Component {
             </Row>
             <div className={"d-flex justify-content-between pb-4"}>
                <ServiceItem
-                  serviceItem={serviceItem}
+                  services={servicesData}
                   handleRemoveService={this.handleRemoveService}
                   handleServiceModal={this.handleServiceModal}
                   modelOperate={modelOperate}

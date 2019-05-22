@@ -53,6 +53,7 @@ class CrmInventoryPart extends Component {
       criticalQuantity: "",
       quantity: "",
       partId: "",
+      partData: [],
       servicePartError: "",
       newServicePart: false,
       partOptions: {
@@ -133,7 +134,7 @@ class CrmInventoryPart extends Component {
     }
   }
   addPart = e => {
-    if (this.props.serviceModal && this.state.partId) {
+    if (this.props.serviceModal && !this.state.newServicePart) {
       this.handleServiceItem()
       return
     } else {
@@ -170,7 +171,8 @@ class CrmInventoryPart extends Component {
           margin,
           criticalQuantity,
           quantity,
-          partOptions
+          partOptions,
+          serviceModal: this.props.serviceModal ? this.props.serviceModal : false
         };
         const { isValid, errors } = Validator(
           data,
@@ -184,11 +186,11 @@ class CrmInventoryPart extends Component {
           return;
         }
         data.vendorId = vendorId ? vendorId.value : "";
-        const { addInventoryPart, updateInventoryPart, partDetails, serviceModal } = this.props;
+        const { addInventoryPart, updateInventoryPart, partDetails } = this.props;
         if (partDetails && partDetails._id) {
           updateInventoryPart({ ...data, id: partDetails._id });
         } else {
-          addInventoryPart(data, serviceModal ? serviceModal : null);
+          addInventoryPart(data);
         }
       } catch (error) {
         logger(error);
@@ -384,8 +386,13 @@ class CrmInventoryPart extends Component {
   }
   handleServiceItem = async () => {
     const { partId } = this.state
+    const { serviceIndex, services } = this.props
     if (partId) {
-      await this.props.addPartToService(partId.partData)
+      console.log("!!!!!!!!!!!!!!!",services);
+      
+      let servicePartData = services[serviceIndex].serviceItems
+      servicePartData.push(partId.partData)
+      await this.props.addPartToService(services)
       this.props.toggle()
     } else {
       this.setState({
@@ -429,8 +436,6 @@ class CrmInventoryPart extends Component {
         type: "button"
       }
     ];
-    console.log("##################", servicePartError);
-
     return (
       <Form onSubmit={this.addPart}>
         <CRMModal
@@ -451,29 +456,29 @@ class CrmInventoryPart extends Component {
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Search Part
                     </Label>
-                    <Async
-                      placeholder={"Type to select part from the list"}
-                      loadOptions={this.searchPart}
-                      className={classnames("w-100 form-select", {
-                        "is-invalid":
-                          servicePartError
-                      })}
-                      classNamePrefix={"form-select-theme"}
-                      value={partId}
-                      onChange={e => {
-                        this.handleServicePartAdd(e)
-                        this.setState({
-                          newServicePart: e && e.label === 'Add New Part' ? true : false
-                        });
-                      }}
-                      isClearable={true}
-                      invalid={errors.servicePartError}
-                      noOptionsMessage={() => "Type Part name"
-                      }
-                    />
-                    {servicePartError ? (
-                      <FormFeedback>{servicePartError}</FormFeedback>
-                    ) : null}
+                    <div className={"input-block"}>
+                      <Async
+                        placeholder={"Type to select part from the list"}
+                        loadOptions={this.searchPart}
+                        className={classnames("w-100 form-select", {
+                          "is-invalid":
+                            servicePartError
+                        })}
+                        value={partId}
+                        onChange={e => {
+                          this.handleServicePartAdd(e)
+                          this.setState({
+                            newServicePart: e && e.label === 'Add New Part' ? true : false
+                          });
+                        }}
+                        isClearable={true}
+                        noOptionsMessage={() => "Type Part name"
+                        }
+                      />
+                      {servicePartError ? (
+                        <FormFeedback>{servicePartError}</FormFeedback>
+                      ) : null}
+                    </div>
                   </FormGroup>
                 </Col>
               </div> :

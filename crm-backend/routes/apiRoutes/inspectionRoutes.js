@@ -6,4 +6,6 @@ const token = require("../../common/token");
 /* ----------Add new inspection------------ */
 router.post("/addInspection", token.authorisedUser, inspectionController.creteNewInspection);
 
+/* get all inspection */
+router.get("/inspectionList", token.authorisedUser, inspectionController.getInspectionData)
 module.exports = router;
