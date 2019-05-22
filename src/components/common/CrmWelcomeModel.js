@@ -315,7 +315,7 @@ export class CrmWelcomeModel extends Component {
                   <Col md="6">
                     <FormGroup>
                       <Label htmlFor="name" className="font-text">
-                        Company Name <span className="asteric">*</span>
+                        Company Name <span className="asteric">*</span> 
                       </Label>
                       <div className={"input-block"}>
                         <Input
@@ -337,17 +337,17 @@ export class CrmWelcomeModel extends Component {
                         Website (optional)
                       </Label>
                       <div className={"input-block"}>
-                        <Input
-                          type="text"
-                          placeholder="http://google.com"
-                          onChange={this.handleInputChange}
-                          value={website}
-                          name="website"
-                          invalid={errors.website}
-                        />
-                        <FormFeedback>
-                          {errors.website ? errors.website : null}
-                        </FormFeedback>
+                      <Input
+                        type="text"
+                        placeholder="http://google.com"
+                        onChange={this.handleInputChange}
+                        value={website}
+                        name="website"
+                        invalid={errors.website}
+                      />
+                      <FormFeedback>
+                        {errors.website ? errors.website : null}
+                      </FormFeedback>
                       </div>
                     </FormGroup>
                   </Col>
@@ -452,8 +452,7 @@ export class CrmWelcomeModel extends Component {
               </div>
               <div className="pb-3">
                 <h4 className="pb-2 section-head position-relative">
-                  2. How many people work in your shop?{" "}
-                  <span className="asteric">*</span>
+                  2. How many people work in your shop? <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -483,8 +482,7 @@ export class CrmWelcomeModel extends Component {
               </div>
               <div className="pb-3">
                 <h4 className="pb-2 section-head position-relative">
-                  3. What kinds of services do you offer?{" "}
-                  <span className="asteric">*</span>
+                  3. What kinds of services do you offer? <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -526,8 +524,7 @@ export class CrmWelcomeModel extends Component {
               </div>
               <div className="pb-3">
                 <h4 className="pb-2 section-head position-relative">
-                  4. What types of vehicles do you service?{" "}
-                  <span className="asteric">*</span>
+                  4. What types of vehicles do you service? <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">

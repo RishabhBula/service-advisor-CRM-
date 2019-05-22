@@ -40,7 +40,7 @@ export class CrmUserModal extends Component {
       lastName: "",
       email: "",
       phone: "",
-      roleType: RoleOptions[0].key,
+      roleType: "",
       rate: "",
       permissions: AdminDefaultPermissions,
       errors: {},
@@ -57,16 +57,16 @@ export class CrmUserModal extends Component {
         lastName: "",
         email: "",
         phone: "",
-        roleType: RoleOptions[0].key,
+        roleType: "",
         rate: "",
         permissions: AdminDefaultPermissions,
         errors: {}
       });
-    } else if (
+    }
+    else if (
       this.props.userData &&
       this.props.userData._id &&
-      (userData._id !== this.props.userData._id || !this.state.email) &&
-      this.props.userModalOpen
+      (userData._id !== this.props.userData._id || !this.state.email) && this.props.userModalOpen
     ) {
       const {
         firstName,
@@ -82,9 +82,7 @@ export class CrmUserModal extends Component {
         lastName,
         email,
         phone: phone || "",
-        roleType: this.props.userData.roleType
-          ? this.props.userData.roleType._id
-          : RoleOptions[0].key,
+        roleType: this.props.userData.roleType ? this.props.userData.roleType._id : "",
         rate: rate || "",
         permissions
       });
@@ -185,7 +183,7 @@ export class CrmUserModal extends Component {
       errors,
       isEditMode
     } = this.state;
-    logger(this.state, "!!!!!!!!This state!!!!!!!!");
+    logger(this.state, "!!!!!!!!This state!!!!!!!!")
     return (
       <>
         <Form onSubmit={this.addUser}>
@@ -196,9 +194,7 @@ export class CrmUserModal extends Component {
           >
             <ModalHeader toggle={handleUserModal}>
               {!isEditMode ? "Add New Member" : `Update member details`}
-              {isEditMode ? (
-                <LastUpdated updatedAt={userData.updatedAt} />
-              ) : null}
+              {isEditMode ? <LastUpdated updatedAt={userData.updatedAt} /> : null}
             </ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">
@@ -337,13 +333,12 @@ export class CrmUserModal extends Component {
                       <InputGroup>
                         <div className="input-group-prepend">
                           <span className="input-group-text">
-                            <i className="fa fa-dollar" />
+                            <i className="fa fa-dollar"></i>
                           </span>
                         </div>
                         <CurrencyInput
                           value={rate}
                           name={"rate"}
-                          prefix="$"
                           onChangeEvent={this.handleInputChange}
                           className={classnames("form-control", {
                             "is-invalid": errors.rate
@@ -360,32 +355,32 @@ export class CrmUserModal extends Component {
               <Row className={"custom-label-padding "}>
                 {roleType
                   ? UserPermissions.map((permission, index) => {
-                      return (
-                        <Col sm={"6"} key={index}>
-                          <Row
-                            className="justify-content-center pb-2"
-                            key={index}
-                          >
-                            <Col md="2">
-                              <AppSwitch
-                                className={"mx-1"}
-                                name={permission.key}
-                                checked={permissions[permission.key]}
-                                onClick={this.handleClick}
-                                variant={"3d"}
-                                color={"primary"}
-                                size={"sm"}
-                              />
-                            </Col>
-                            <Col md="10">
-                              <p className="customer-modal-text-style">
-                                {permission.text}
-                              </p>
-                            </Col>
-                          </Row>
-                        </Col>
-                      );
-                    })
+                    return (
+                      <Col sm={"6"} key={index}>
+                        <Row
+                          className="justify-content-center pb-2"
+                          key={index}
+                        >
+                          <Col md="2">
+                            <AppSwitch
+                              className={"mx-1"}
+                              name={permission.key}
+                              checked={permissions[permission.key]}
+                              onClick={this.handleClick}
+                              variant={"3d"}
+                              color={"primary"}
+                              size={"sm"}
+                            />
+                          </Col>
+                          <Col md="10">
+                            <p className="customer-modal-text-style">
+                              {permission.text}
+                            </p>
+                          </Col>
+                        </Row>
+                      </Col>
+                    );
+                  })
                   : null}
               </Row>
             </ModalBody>

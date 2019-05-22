@@ -282,14 +282,14 @@ class Inventory extends Component {
             &nbsp; Add New{" "}
             {InventoryTabs[activeTab].name.slice(
               0,
-              InventoryTabs[activeTab].name.length 
+              InventoryTabs[activeTab].name.length
             )}
           </Button>
           <UncontrolledTooltip target={"add-user"}>
             Add New{" "}
             {InventoryTabs[activeTab].name.slice(
               0,
-              InventoryTabs[activeTab].name.length 
+              InventoryTabs[activeTab].name.length
             )}
           </UncontrolledTooltip>
         </>

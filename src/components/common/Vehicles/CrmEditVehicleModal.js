@@ -699,6 +699,7 @@ export class CrmEditVehicleModal extends Component {
                     type="textarea"
                     placeholder="Enter a note..."
                     id="name"
+                    maxLength={"100"}
                     value={this.state.notes}
                     onChange={this._onInputChange}
                   />

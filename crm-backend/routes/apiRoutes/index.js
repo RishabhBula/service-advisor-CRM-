@@ -10,5 +10,8 @@ module.exports = {
   vendor: require("./vendorRoutes"),
   tier: require("./tierRoutes"),
   inventory: require("./inventory"),
-  inventoryStat: require("./inventoryStats")
+  inventoryStat: require("./inventoryStats"),
+  order: require("./orderRoutes"),
+  service: require("./serviceRoutes"),
+  inspection: require("./inspectionRoutes")
 };

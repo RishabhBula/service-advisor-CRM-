@@ -93,7 +93,11 @@ const getAllUserList = async (req, res) => {
       }
     }
     if (typeof invitaionStatus !== "undefined") {
-      condition["$and"].push({ userSideActivation: invitaionStatus });
+      if (invitaionStatus === '1') {
+        condition["$and"].push({ userSideActivation: true });
+      } else {
+        condition["$and"].push({ userSideActivation: false });
+      }
     }
     if (type) {
       condition["$and"].push({ roleType: mongoose.Types.ObjectId(type) });

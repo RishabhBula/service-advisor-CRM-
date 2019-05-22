@@ -1,13 +1,27 @@
-import React, { Component } from "react";
-
+import React, { Component, Suspense } from "react";
+import { Route, Switch } from "react-router-dom";
 import { Col, Row, Card, CardBody, Button } from "reactstrap";
 import WorkflowGridView from "../../components/Workflow/GridView";
+import { AppRoutes } from "../../config/AppRoutes";
+import Loader from "../Loader/Loader";
+
+const Order = React.lazy(() => import("../Orders"));
+export const OrderRoutes = {
+  path: AppRoutes.WORKFLOW_ORDER.url,
+  exact: AppRoutes.WORKFLOW_ORDER.exact,
+  name: AppRoutes.WORKFLOW_ORDER.name,
+  component: Order
+};
 
 class WorkFlow extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  handleOrder = () => {
+    this.props.redirectTo(OrderRoutes.path);
+  };
 
   render() {
     return (
@@ -32,7 +46,11 @@ class WorkFlow extends Component {
               </div>
             </Col>
             <Col className={"title-right-section invt-add-btn-block"}>
-              <Button color={"primary"} id={"add-Appointment"}>
+              <Button
+                onClick={this.handleOrder}
+                color={"primary"}
+                id={"add-Appointment"}
+              >
                 <i className={"fa fa-plus mr-1"} /> New Quote
               </Button>
             </Col>
@@ -42,6 +60,18 @@ class WorkFlow extends Component {
               <WorkflowGridView />
             </Col>
           </Row>
+          <Suspense fallback={<Loader />}>
+            <Switch>
+              <Route
+                path={OrderRoutes.path}
+                exact={OrderRoutes.exact}
+                name={OrderRoutes.name}
+                render={props => (
+                  <OrderRoutes.component {...props} {...this.props} />
+                )}
+              />
+            </Switch>
+          </Suspense>
         </CardBody>
       </Card>
     );

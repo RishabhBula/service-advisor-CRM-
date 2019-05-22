@@ -13,7 +13,7 @@ const Fleet = React.lazy(() => import("./containers/Fleet"));
 const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 const PriceMatrix = React.lazy(() => import("./containers/PriceMatrix"));
-const Settings = React.lazy(() => import("./containers/Settings"));
+const Order = React.lazy(() => import("./containers/Orders"))
 const routes = [
   {
     path: AppRoutes.HOME.url,
@@ -31,6 +31,12 @@ const routes = [
     exact: AppRoutes.WORKFLOW.exact,
     name: AppRoutes.WORKFLOW.name,
     component: WorkFlow
+  },
+  {
+    path: AppRoutes.WORKFLOW_ORDER.url,
+    exact: AppRoutes.WORKFLOW_ORDER.exact,
+    name: AppRoutes.WORKFLOW_ORDER.name,
+    component: Order
   },
   {
     path: AppRoutes.CALENDER.url,
@@ -86,12 +92,6 @@ const routes = [
     name: AppRoutes.PRICEMATRIX.name,
     component: PriceMatrix
   },
-  {
-    path: AppRoutes.SETTINGS.url,
-    exact: AppRoutes.SETTINGS.exact,
-    name: AppRoutes.SETTINGS.name,
-    component: Settings
-  },
   { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];
 
@@ -110,6 +110,11 @@ export const BreadCrumbRoutes = [
     path: AppRoutes.WORKFLOW.url,
     exact: AppRoutes.WORKFLOW.exact,
     name: AppRoutes.WORKFLOW.name
+  },
+  {
+    path: AppRoutes.WORKFLOW_ORDER.url,
+    exact: AppRoutes.WORKFLOW_ORDER.exact,
+    name: AppRoutes.WORKFLOW_ORDER.name
   },
   {
     path: AppRoutes.CALENDER.url,
@@ -155,11 +160,6 @@ export const BreadCrumbRoutes = [
     path: AppRoutes.REPORTS.url,
     exact: AppRoutes.REPORTS.exact,
     name: AppRoutes.REPORTS.name
-  },
-  {
-    path: AppRoutes.SETTINGS.url,
-    exact: AppRoutes.SETTINGS.exact,
-    name: AppRoutes.SETTINGS.name
   },
   {
     path: AppRoutes.STAFF_MEMBERS.url,

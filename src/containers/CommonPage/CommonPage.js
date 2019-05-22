@@ -20,9 +20,21 @@ class CommonPage extends Component {
     });
   };
 
-  handleChange = (newValue, actionMeta) => {};
-  handleInputChange = (inputValue, actionMeta) => {};
-  handleButtonClick = (name, company) => {};
+  handleChange = (newValue, actionMeta) => {
+    // console.group("Value Changed");
+    // console.log(newValue);
+    // console.log(`action: ${actionMeta.action}`);
+    // console.groupEnd();
+  };
+  handleInputChange = (inputValue, actionMeta) => {
+    // console.group("Input Changed");
+    // console.log(inputValue);
+    // console.log(`action: ${actionMeta.action}`);
+    // console.groupEnd();
+  };
+  handleButtonClick = (name, company) => {
+    // console.log("$$$$$$$$$$$$This is button click",name,company);
+  };
 
   render() {
     const colourOptions = [

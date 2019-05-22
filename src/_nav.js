@@ -11,7 +11,7 @@ export default {
     {
       name: AppRoutes.WORKFLOW.name,
       url: AppRoutes.WORKFLOW.url,
-      icon: "icons icon-calendar",
+      icon: "fas fa-network-wired",
       authKey: "isAllowedCalendar"
     },
     {
@@ -109,6 +109,26 @@ export const ValidatedRoutes = [
     authKey: "isAllowedCalendar"
   },
   {
+    url: AppRoutes.WORKFLOW_ORDER.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
+    url: AppRoutes.WORKFLOW_ORDER_SERVICES.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
+    url: AppRoutes.WORKFLOW_ORDER_INSPECTION.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
+    url: AppRoutes.WORKFLOW_ORDER_TIME_CLOCK.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
+    url: AppRoutes.WORKFLOW_ORDER_MESSAGES.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
     url: AppRoutes.CALENDER.url,
     authKey: "isAllowedCalendar"
   },
@@ -134,10 +154,6 @@ export const ValidatedRoutes = [
   },
   {
     url: AppRoutes.STAFF_MEMBERS.url,
-    authKey: "isAllowedCompanySettings"
-  },
-  {
-    url: AppRoutes.SETTINGS.url,
     authKey: "isAllowedCompanySettings"
   },
   {

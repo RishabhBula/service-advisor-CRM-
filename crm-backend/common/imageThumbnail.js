@@ -1,4 +1,12 @@
 const Jimp = require('jimp');
+const { s3Key } = require('../config/app')
+const AWS = require('aws-sdk');
+AWS.config.update({
+   accessKeyId: s3Key.keyId,
+   secretAccessKey: s3Key.key,
+});
+const s3 = new AWS.S3();
+var bucketName = 'service-advisor';
 
 const resizeImage = async (sourcePath, destinationPath, width) => {
    return new Promise((resolve, reject) => {
@@ -17,6 +25,29 @@ const resizeImage = async (sourcePath, destinationPath, width) => {
       )
    });
 };
+
+const imagePath = async (base64Image) => {
+   console.log("!!!!!!!!!!!!!!!!!!!!!", base64Image);
+   var params = {
+      Bucket: bucketName,
+      Body: fs.createReadStream(base64Image),
+      Key: 'download/' + Date.now() + '_' + path.basename(base64Image),
+      ACL: 'public-read',
+   };
+   await new Promise(resolve => {
+      s3.upload(params, function (err, data) {
+         if (err) {
+            console.log('====================================');
+            console.log(err);
+            console.log('====================================');
+            reject(new Error(err));
+         }
+         resolve(data.Location);
+      });
+   });
+}
+
 module.exports = {
-   resizeImage
+   resizeImage,
+   imagePath
 };

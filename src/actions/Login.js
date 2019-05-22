@@ -6,7 +6,6 @@ export const loginActions = {
   FORGET_PASSWORD_REQUEST: "Forget Password Started!",
   VALIDATE_RESET_REQUEST: "Reset Token Validation Started!",
   RESET_PASSSWORD_REQUEST: "Reset Password Started!",
-  VERIFY_WORKSPACE_LOGIN: "Verify the login for the workspace!"
 };
 
 export const loginRequest = createAction(loginActions.LOGIN_REQUEST);
@@ -19,7 +18,4 @@ export const validateResetToken = createAction(
 );
 export const resetPasswordRequest = createAction(
   loginActions.RESET_PASSSWORD_REQUEST
-);
-export const verifyWorkspaceLogin = createAction(
-  loginActions.VERIFY_WORKSPACE_LOGIN
 );
