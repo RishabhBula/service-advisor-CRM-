@@ -11,8 +11,8 @@ class WorkFlow extends Component {
 
   render() {
     return (
-      <Card className={"white-card"}>
-        <CardBody className={"position-relative"}>
+      <Card className={"white-card position-relative"}>
+        <CardBody>
           <Row className={"mb-4"}>
             <Col className={"title-left-section"}>
               <h4 className={"card-title"}>WorkFlow</h4>
@@ -31,7 +31,7 @@ class WorkFlow extends Component {
                 </div>
               </div>
             </Col>
-            <Col className={"title-right-section"}>
+            <Col className={"title-right-section invt-add-btn-block"}>
               <Button color={"primary"} id={"add-Appointment"}>
                 <i className={"fa fa-plus mr-1"} /> New Quote
               </Button>
