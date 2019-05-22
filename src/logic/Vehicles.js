@@ -103,10 +103,7 @@ const getVehiclesLogic = createLogic({
       "/getAllVehicleList",
       "GET",
       true,
-      {
-        ...action.payload,
-        limit: AppConfig.ITEMS_PER_PAGE
-      }
+      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null }
     );
     if (result.isError) {
       dispatch(
@@ -119,6 +116,11 @@ const getVehiclesLogic = createLogic({
       done();
       return;
     } else {
+      const options = result.data.data.map(vehicle => ({
+        label: `${vehicle.make} ${vehicle.modal}`,
+        value: vehicle._id
+      }));
+      logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(hideLoader());
       dispatch(
         vehicleGetSuccess({
@@ -261,7 +263,7 @@ const importVehicleLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `Year not found on row <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       } else if (
@@ -271,7 +273,7 @@ const importVehicleLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `Invalid year value found on row <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }
@@ -279,7 +281,7 @@ const importVehicleLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `Make not found on row <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }
@@ -287,7 +289,7 @@ const importVehicleLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `Model number not found on row <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }

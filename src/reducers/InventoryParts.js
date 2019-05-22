@@ -23,7 +23,7 @@ export const inventoryPartsReducers = handleActions(
       parts: action.payload.parts,
       totalParts: action.payload.total,
       isLoading: false
-    })
+    }),
   },
   initialInventoryPartState
 );

@@ -5,13 +5,16 @@ const { validationResult } = require("express-validator/check");
 const commonValidation = require("../../common");
 const commonSmtp = require("../../common/index");
 const commonCrypto = require("../../common/crypto");
-const { otherMessage } = require("../../common/validationMessage");
+const {
+  validationMessage,
+  otherMessage
+} = require("../../common/validationMessage");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const moment = require("moment");
 const fs = require("fs");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
-const { resizeImage } = require("../../common/imageThumbnail");
+const { resizeImage, imagePath } = require("../../common/imageThumbnail");
 const mongoose = require("mongoose");
 
 const signUp = async (req, res) => {
@@ -24,40 +27,47 @@ const signUp = async (req, res) => {
         success: false
       });
     }
-    const roleType = await roleModel.findOne({
-      userType: new RegExp("sub-admin", "i")
+    let userFind = await userModel.find({
+      email: req.body.email,
+      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
     });
-    let $data = req.body;
-    $data.roleType = roleType._id;
-    $data.permissions =
-      typeof roleType.permissionObject[0] === "object"
-        ? roleType.permissionObject[0]
-        : roleType.permissionObject;
-    $data.firstTimeUser = true;
-    $data.loggedInIp = commonSmtp.getIpAddress(req);
-    var salt = commonCrypto.generateSalt(6);
-    $data.salt = salt;
-    $data.password = commonCrypto.hashPassword($data.password, salt);
-    $data.userSideActivationValue = confirmationNumber;
-    $data.subdomain = $data.workspace;
-    $data.shopLogo = $data.companyLogo;
-    $data.website = $data.companyWebsite;
-    let result = await userModel($data).save();
-    const emailVar = new Email(req);
-    await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
-      firstName: result.firstName,
-      lastName: result.lastName,
-      email: result.email,
-      userId: result._id,
-      userSideActivationValue: confirmationNumber
-    });
-    await emailVar.sendEmail(result.email);
+    if (userFind.length >= 1) {
+      return res.status(401).json({
+        message: validationMessage.emailAlreadyExist,
+        success: false
+      });
+    } else {
+      var roleType = await roleModel.findOne({ userType: "sub-admin" });
+      var $data = req.body;
+      $data.roleType = roleType._id;
 
-    return res.status(200).json({
-      message: otherMessage.confirmMessage,
-      user: result._id,
-      success: true
-    });
+      $data.permissions =
+        typeof roleType.permissionObject[0] === "object"
+          ? roleType.permissionObject[0]
+          : roleType.permissionObject;
+      $data.firstTimeUser = true;
+      $data.loggedInIp = commonSmtp.getIpAddress(req);
+      var salt = commonCrypto.generateSalt(6);
+      $data.salt = salt;
+      $data.password = commonCrypto.hashPassword($data.password, salt);
+      $data.userSideActivationValue = confirmationNumber;
+      let result = await userModel($data).save();
+      const emailVar = new Email(req);
+      await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        userId: result._id,
+        userSideActivationValue: confirmationNumber
+      });
+      await emailVar.sendEmail(result.email);
+
+      return res.status(200).json({
+        message: otherMessage.confirmMessage,
+        user: result._id,
+        success: true
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
@@ -89,7 +99,7 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 /*  */
 const confirmationSignUp = async (req, res) => {
@@ -157,7 +167,7 @@ const loginApp = async (req, res) => {
     const { email, password } = req.body;
     const result = await userModel.findOne({
       $and: [
-        { normalizedEmail: email },
+        { email: email },
         { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
       ]
     });
@@ -211,8 +221,7 @@ const loginApp = async (req, res) => {
         email: result.email,
         firstName: result.firstName,
         lastName: result.lastName,
-        parentId: result.parentId,
-        subdomain: result.subdomain
+        parentId: result.parentId
       },
       commonCrypto.secret,
       {
@@ -409,9 +418,8 @@ const userCompanySetup = async (req, res) => {
       companyName: body.companyName,
       website: body.website,
       peopleWork: body.peopleWork,
-      serviceOffer: body.serviceOffer,
-      vehicleService: body.vehicleService,
-      firstTimeUser: false
+      serviceOffer: body.servicesOffer,
+      vehicleService: body.vehicleServicesOffer
     };
     const companySetup = await userModel.findByIdAndUpdate(
       {
@@ -471,12 +479,13 @@ const imageUpload = async (req, res) => {
       const fileName = [currentUser.id, "_company_logo.", type || "png"].join(
         ""
       );
-      var originalImagePath = path.join(__basedir, "images", fileName);
 
+      var originalImagePath = path.join(__basedir, "images", fileName);
       fs.writeFile(originalImagePath, buf, async err => {
         if (err) {
           throw err;
         }
+        await imageUpload(originalImagePath)
         var thumbnailImagePath = path.join(
           __basedir,
           "images-thumbnail",
@@ -488,7 +497,7 @@ const imageUpload = async (req, res) => {
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         };
         const companyLogo = await userModel.findByIdAndUpdate(
-          { _id: currentUser.id },
+          currentUser.id,
           {
             shopLogo: imageUploadData
           }
@@ -544,17 +553,16 @@ const imageDelete = async (req, res) => {
         ""
       );
       var buf = new Buffer(base64Image, "base64");
-
       var originalImagePath = __basedir + "/images/" + currentUser.id;
       var thumbnailImagePath =
         __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      fs.unlinkSync(originalImagePath, buf, function(err) {
+      fs.unlinkSync(originalImagePath, buf, function (err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
         if (err) {
           return console.log(err);
         }
@@ -620,8 +628,7 @@ const createUser = async (req, res) => {
       ...$data,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
-      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2),
-      subdomain: req.currentUser.subdomain
+      rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)
     };
     let result = await userModel(inserList).save();
     const emailVar = new Email(req);
@@ -786,6 +793,76 @@ const verfiyUserLink = async (req, res) => {
   }
 };
 
+/* Change password user*/
+const changePasswordUser = async (req, res) => {
+  const { body, currentUser } = req;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: commonValidation.formatValidationErr(errors.mapped(), true),
+      success: false
+    });
+  }
+  try {
+    const userData = await userModel.findById(currentUser.id)
+    if (!commonCrypto.verifyPassword(userData.password, body.oldPassword, userData.salt)) {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        code: 400,
+        message: "Password did not match!",
+        success: false
+      };
+    } else {
+      var salt = commonCrypto.generateSalt(6);
+      body.salt = salt;
+      body.newPassword = commonCrypto.hashPassword(body.newPassword, salt);
+      const result = await userModel.findByIdAndUpdate(currentUser.id,
+        {
+          $set: {
+            password: body.newPassword,
+            salt: body.salt,
+          }
+        })
+      if (result) {
+        return res.status(200).json({
+          message: "Password updated successfully!",
+          success: true
+        })
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+const updateUserData = async (req, res) => {
+  try {
+    let $data = req.body;
+    let currentUser = req.currentUser
+    let inserList = {
+      ...$data,
+      parentId: currentUser.id,
+    };
+    let result = await userModel.findByIdAndUpdate(
+      currentUser.id,
+      inserList
+    );
+    return res.status(200).json({
+      message: otherMessage.updateUserDataMessage,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
+
 module.exports = {
   signUp,
   confirmationSignUp,
@@ -800,5 +877,7 @@ module.exports = {
   verfiyUserLink,
   imageUpload,
   imageDelete,
-  resendConfirmationLink
+  resendConfirmationLink,
+  changePasswordUser,
+  updateUserData
 };

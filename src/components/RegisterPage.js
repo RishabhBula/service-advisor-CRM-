@@ -22,7 +22,6 @@ import { logger } from "../helpers/Logger";
 import { SingupValidations, SingupValidationsMessaages } from "../validations";
 import MailIcon from "./../assets/img/mail-icon.svg";
 import { Link } from "react-router-dom";
-import { validUrlCheck, isValidSubdomain } from "../helpers/Object";
 const ResendInvitation = props => {
   return (
     <div className={"confirm-block"}>
@@ -61,10 +60,6 @@ class RegisterPage extends Component {
       email: "",
       password: "",
       confirmPassword: "",
-      companyName: "",
-      workspace: "",
-      companyWebsite: "",
-      companyLogo: "",
       errors: {},
       isLoading: false,
       showResendPage: false
@@ -84,10 +79,7 @@ class RegisterPage extends Component {
   }
   eventHandler = e => {
     this.setState({
-      [e.target.name]:
-        e.target.name === "workspace"
-          ? e.target.value.toLowerCase()
-          : e.target.value,
+      [e.target.name]: e.target.value,
       errors: { ...this.state.errors, [e.target.name]: null }
     });
   };
@@ -97,41 +89,11 @@ class RegisterPage extends Component {
       errors: {}
     });
     try {
-      const {
-        firstName,
-        lastName,
-        email,
-        password,
-        companyLogo,
-        companyName,
-        companyWebsite,
-        workspace,
-        confirmPassword
-      } = this.state;
-      const d = {
-        firstName,
-        lastName,
-        email,
-        password,
-        companyLogo,
-        companyName,
-        companyWebsite,
-        workspace,
-        confirmPassword
-      };
-      let { isValid, errors } = Validator(
-        d,
+      const { isValid, errors } = Validator(
+        this.state,
         SingupValidations,
         SingupValidationsMessaages
       );
-      if (d.companyWebsite && !validUrlCheck(d.companyWebsite)) {
-        errors.companyWebsite = "Please enter a valid URL.";
-        isValid = false;
-      }
-      if (d.workspace && !isValidSubdomain(d.workspace)) {
-        errors.workspace = "Workspace can only have a-z, 0-9 and -";
-        isValid = false;
-      }
       if (!isValid) {
         this.setState({
           errors,
@@ -139,8 +101,8 @@ class RegisterPage extends Component {
         });
         return;
       }
-
-      this.props.onSignup(d);
+      const { firstName, lastName, email, password } = this.state;
+      this.props.onSignup({ firstName, lastName, email, password });
     } catch (error) {
       logger(error);
     }
@@ -160,10 +122,7 @@ class RegisterPage extends Component {
       lastName,
       password,
       confirmPassword,
-      showResendPage,
-      companyName,
-      workspace,
-      companyWebsite
+      showResendPage
     } = this.state;
     return (
       <div className="app flex-row align-items-center auth-page pt-3 pb-3">
@@ -268,7 +227,7 @@ class RegisterPage extends Component {
                         </InputGroup>
                       </FormGroup>
                       <FormGroup>
-                        <InputGroup>
+                        <InputGroup className="mb-4">
                           <InputGroupAddon addonType="prepend">
                             <InputGroupText>
                               <i className="icon-lock" />
@@ -286,71 +245,6 @@ class RegisterPage extends Component {
                           <FormFeedback>
                             {errors.confirmPassword
                               ? errors.confirmPassword
-                              : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup>
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="text"
-                            placeholder="Company Name"
-                            autoComplete="company-name"
-                            onChange={this.eventHandler}
-                            name="companyName"
-                            value={companyName}
-                            invalid={errors.companyName}
-                          />
-                          <FormFeedback>
-                            {errors.companyName ? errors.companyName : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup>
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="text"
-                            placeholder="Workspace"
-                            autoComplete="new-workspace"
-                            onChange={this.eventHandler}
-                            name="workspace"
-                            value={workspace}
-                            invalid={errors.workspace}
-                          />
-                          <FormFeedback>
-                            {errors.workspace ? errors.workspace : null}
-                          </FormFeedback>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <InputGroup className="mb-4">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="icon-lock" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="text"
-                            placeholder="Company Website"
-                            autoComplete="new-company-website"
-                            onChange={this.eventHandler}
-                            name="companyWebsite"
-                            value={companyWebsite}
-                            invalid={errors.companyWebsite}
-                          />
-                          <FormFeedback>
-                            {errors.companyWebsite
-                              ? errors.companyWebsite
                               : null}
                           </FormFeedback>
                         </InputGroup>

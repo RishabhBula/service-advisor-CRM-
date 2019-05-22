@@ -42,6 +42,8 @@ class PriceMatrixComponent extends Component {
       matrixModalOpen,
       handleMatrixModal
     } = this.props;
+    console.log("!!!!!!!!Matrix Add Open!!!!!!!", matrixModalOpen);
+
     return (
       <>{
         addNewMatrix || isEditMatrix ?
@@ -53,7 +55,7 @@ class PriceMatrixComponent extends Component {
               className="customer-modal custom-form-modal custom-modal-lg"
             >
               <ModalHeader toggle={handleMatrixModal}>
-                {!isEditMatrix ? "Add New Pricing Matrix": "Update Pricing Matrix"}
+                {!isEditMatrix ? "Add New Pricing Matrix" : "Update Pricing Matrix"}
                 {isEditMatrix ? <LastUpdated updatedAt={updateDate} /> : null}
               </ModalHeader>
               <ModalBody>
@@ -64,22 +66,22 @@ class PriceMatrixComponent extends Component {
                       <FormGroup className={"matrix-name-input"}>
                         <Label>Matrix Name<span class="asteric">*</span> </Label>
                         <div className={"input-block"}>
-                      <Input
-                        name="matrixName"
-                        value={matrixName}
-                        onChange={(e) => handleChange(0, e)}
-                        maxLength={"40"}
-                        placeholder={"Example Matrix A"}
-                        invalid={errors.matrixName && !matrixName} />
-                      <FormFeedback>
-                        {
-                          errors && errors.matrixName && !matrixName ?
-                            errors.matrixName :
-                            null
-                        }
-                      </FormFeedback>
+                          <Input
+                            name="matrixName"
+                            value={matrixName}
+                            onChange={(e) => handleChange(0, e)}
+                            maxLength={"40"}
+                            placeholder={"Example Matrix A"}
+                            invalid={errors.matrixName && !matrixName} />
+                          <FormFeedback>
+                            {
+                              errors && errors.matrixName && !matrixName ?
+                                errors.matrixName :
+                                null
+                            }
+                          </FormFeedback>
                         </div>
-                      {/* {
+                        {/* {
                         isEditMatrix ?
                           <div className={"matrix-action"}>
                             <Button onClick={handleMatrixDelete} className={"btn btn-danger"}>
@@ -132,7 +134,7 @@ class PriceMatrixComponent extends Component {
                                       name={"costPrice2"}
                                       value={item.upper}
                                       maxLength="6"
-                                      placeholder={"100.00%"}
+                                      placeholder={"0.00"}
                                       disabled={item.upper === "beyond"}
                                     />
                                   </div>
@@ -145,14 +147,14 @@ class PriceMatrixComponent extends Component {
                                   }
                                 >
                                   <InputGroup className={"markup-input"}>
-                                  <Input
-                                    className={"form-control text-center "}
-                                    value={item.markup}
-                                    name="markup"
-                                    maxLength="6"
-                                    onChange={(e) => handleChange(index, e)}
-                                    placeholder={"100.00%"}
-                                  />
+                                    <Input
+                                      className={"form-control text-center "}
+                                      value={item.markup}
+                                      name="markup"
+                                      maxLength="6"
+                                      onChange={(e) => handleChange(index, e)}
+                                      placeholder={"100.00"}
+                                    />
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="fa fa-percent"></i>
@@ -168,14 +170,14 @@ class PriceMatrixComponent extends Component {
                                   }
                                 >
                                   <InputGroup className={"markup-input"}>
-                                  <Input
-                                    className={"form-control text-center"}
-                                    value={item.margin}
-                                    name="margin"
-                                    maxLength={"6"}
-                                    onChange={(e) => handleChange(index, e)}
-                                    placeholder={"$0.00"}
-                                  />
+                                    <Input
+                                      className={"form-control text-center"}
+                                      value={item.margin}
+                                      name="margin"
+                                      maxLength={"6"}
+                                      onChange={(e) => handleChange(index, e)}
+                                      placeholder={"100.00"}
+                                    />
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="fa fa-percent"></i>
@@ -198,47 +200,47 @@ class PriceMatrixComponent extends Component {
                                         id={`tooltip-1-${index}`}
                                       >
                                         <span className={"icon cursor_pointer"}>
-                                          <img src={shortUp} width={"20"} alt={"shortUp"}/>
+                                          <img src={shortUp} width={"20"} alt={"shortUp"} />
                                           <UncontrolledTooltip target={`tooltip-1-${index}`}>
-                                          Add range above
+                                            Add range above
                                         </UncontrolledTooltip>
+                                        </span>
                                       </span>
-                                    </span>
                                     ) : null}
 
                                     <span
                                       onClick={() =>
                                         handleAddBelowMatrixRange(index, "below")
                                       }
-                                      id={`tooltip-2-${index+1}`}
+                                      id={`tooltip-2-${index + 1}`}
                                     >
                                       <span className={"icon cursor_pointer"}>
                                         <img src={shortDown} width={"20"} alt={"shortUp"} />
-                                        <UncontrolledTooltip target={`tooltip-2-${index+1}`}>
+                                        <UncontrolledTooltip target={`tooltip-2-${index + 1}`}>
                                           Add range below
                                         </UncontrolledTooltip>
                                       </span>
                                     </span>
                                     {index >= 1 ? (
                                       <span className={"icon cursor_pointer"} >
-                                            <span
+                                        <span
                                           className={"btn btn-theme-transparent btn-secondary"}
-                                              size={"sm"}
-                                              onClick={() =>
-                                                handleRemoveMatrixRange(index)
-                                              }
-                                          id={`tooltip-3-${index+1}`}
-                                            >
+                                          size={"sm"}
+                                          onClick={() =>
+                                            handleRemoveMatrixRange(index)
+                                          }
+                                          id={`tooltip-3-${index + 1}`}
+                                        >
                                           <i className="icons cui-trash" />
-                                            </span>
+                                        </span>
                                         <UncontrolledTooltip target={`tooltip-3-${index + 1}`}>
                                           Delete
                                         </UncontrolledTooltip>
-                                          </span>
-                                        ) : 
-                                    null}
+                                      </span>
+                                    ) :
+                                      null}
 
-{/* 
+                                    {/* 
                                     <UncontrolledDropdown>
                                        <DropdownToggle >
                                         <i className="fas fa-ellipsis-h" />
@@ -286,8 +288,8 @@ class PriceMatrixComponent extends Component {
                         );
                       })
                       : null}
-                      <tr>
-                        <td colSpan="5">
+                    <tr>
+                      <td colSpan="5">
                         <Row>
                           <Col md="6" className={"mt-2"}>
                             <span
@@ -299,24 +301,24 @@ class PriceMatrixComponent extends Component {
                           </Col>
                         </Row>
                       </td>
-                      </tr>
+                    </tr>
                   </tbody>
                 </table>
-               
+
               </ModalBody>
               <ModalFooter>
-                  <div class="flex-1">
-                    <div class="required-fields">*Fields are Required.</div>
-                  </div>
-                
-                    <Button
-                      color={"primary"}
-                      onClick={() => handleAddMatrix()}
-                    >
-                      {
-                        isEditMatrix ? "Update Matrix" : "Add Matrix"
-                      }
-                    </Button>
+                <div class="flex-1">
+                  <div class="required-fields">*Fields are Required.</div>
+                </div>
+
+                <Button
+                  color={"primary"}
+                  onClick={() => handleAddMatrix()}
+                >
+                  {
+                    isEditMatrix ? "Update Matrix" : "Add Matrix"
+                  }
+                </Button>
                 <Button color="secondary" onClick={handleMatrixModal}>
                   Cancel
                 </Button>

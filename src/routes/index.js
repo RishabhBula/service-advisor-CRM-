@@ -4,7 +4,6 @@ import { Route, Switch, withRouter } from "react-router-dom";
 import { hideLoader, showLoader, redirectTo } from "../actions";
 import "../App.scss";
 import FullPageLoader from "../containers/Loader/FullPageLoader";
-import VerifyLoginForWildcard from "../containers/Auth/VerifyLoginForWildcard";
 // Containers
 const DefaultLayout = React.lazy(() => import("../containers/DefaultLayout"));
 
@@ -68,12 +67,6 @@ const Routes = [
     path: "/register/create-password/:userId/:activationCode",
     name: "Create Password",
     component: GeneratePassword
-  },
-  {
-    exact: false,
-    path: "/verify-user-details",
-    name: "Verify User Details",
-    component: VerifyLoginForWildcard
   },
   {
     exact: false,

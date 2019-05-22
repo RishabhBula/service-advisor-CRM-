@@ -446,7 +446,6 @@ export class CrmTyreModal extends Component {
          isEditMode,
          selectedVendor,
       } = this.state;
-      logger(tireData, "@@@@@@@@@@@@@@@@@@@@@")
       return (
          <>
             <Modal
@@ -822,7 +821,7 @@ export class CrmTyreModal extends Component {
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleAddTire()}>
-                     {!isEditMode ? "Create New Tire" : `Update tire details`}
+                     {!isEditMode ? "Add New Tire" : `Update tire details`}
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel

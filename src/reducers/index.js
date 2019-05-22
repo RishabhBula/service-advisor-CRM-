@@ -16,6 +16,8 @@ import { modelInfoReducer } from "./ModelOperation";
 import { vendorsReducer } from "./Vendors"
 import { inventoryPartsReducers } from "./InventoryParts";
 import { inventoryStatsReducer } from "./InventorySats";
+import { orderReducer } from "./Order";
+import { serviceReducers } from "./Service"
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -47,6 +49,8 @@ const AppReducer = combineReducers({
   vendorsReducer,
   inventoryPartsReducers,
   inventoryStatsReducer,
+  orderReducer,
+  serviceReducers,
   routing: routerReducer
 });
 
