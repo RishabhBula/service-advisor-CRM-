@@ -1,9 +1,12 @@
-import React, { Component, Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
 import { Col, Row, Card, CardBody, Button } from "reactstrap";
-import WorkflowGridView from "../../components/Workflow/GridView";
+import { connect } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import React, { Component, Suspense } from "react";
+
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
+import WorkflowGridView from "../../components/Workflow/GridView";
+import { getOrderList } from "../../actions";
 
 const Order = React.lazy(() => import("../Orders"));
 export const OrderRoutes = {
@@ -18,12 +21,16 @@ class WorkFlow extends Component {
     super(props);
     this.state = {};
   }
-
+  componentDidMount() {
+    this.props.getOrders();
+  }
   handleOrder = () => {
     this.props.redirectTo(OrderRoutes.path);
   };
 
   render() {
+    const { orderReducer } = this.props;
+    const { orderData, orderStatus } = orderReducer;
     return (
       <Card className={"white-card position-relative"}>
         <CardBody>
@@ -57,7 +64,10 @@ class WorkFlow extends Component {
           </Row>
           <Row>
             <Col sm={"12"}>
-              <WorkflowGridView />
+              <WorkflowGridView
+                orderData={orderData}
+                orderStatus={orderStatus}
+              />
             </Col>
           </Row>
           <Suspense fallback={<Loader />}>
@@ -77,5 +87,13 @@ class WorkFlow extends Component {
     );
   }
 }
-
-export default WorkFlow;
+const mapStateToProps = state => ({
+  orderReducer: state.orderReducer
+});
+const mapDispatchToProps = dispatch => ({
+  getOrders: () => dispatch(getOrderList())
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WorkFlow);
