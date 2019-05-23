@@ -13,7 +13,8 @@ export const orderActions = {
   DELETE_ORDER_SUCCESS: "Order delete success!",
   GET_ORDER_ID_REQUEST: "Order id Requested",
   GET_ORDER_ID_SUCCESS: "Order id Ssccess!",
-  GET_ORDER_ID_FAILED: "Order id Failed!"
+  GET_ORDER_ID_FAILED: "Order id Failed!",
+  REQUEST_ORDER_STATUS_UPDATE: "Request order status update!"
 };
 
 export const getOrderList = createAction(orderActions.GET_ORDER_LIST_REQUEST);
@@ -45,3 +46,7 @@ export const getOrderIdSuccess = createAction(
   orderActions.GET_ORDER_ID_SUCCESS
 );
 export const getOrderIdFailed = createAction(orderActions.GET_ORDER_ID_FAILED);
+//
+export const updateOrderStatus = createAction(
+  orderActions.REQUEST_ORDER_STATUS_UPDATE
+);

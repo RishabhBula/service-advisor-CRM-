@@ -6,7 +6,7 @@ import React, { Component, Suspense } from "react";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import WorkflowGridView from "../../components/Workflow/GridView";
-import { getOrderList } from "../../actions";
+import { getOrderList, updateOrderStatus } from "../../actions";
 
 const Order = React.lazy(() => import("../Orders"));
 export const OrderRoutes = {
@@ -29,7 +29,7 @@ class WorkFlow extends Component {
   };
 
   render() {
-    const { orderReducer } = this.props;
+    const { orderReducer, updateOrderStatus } = this.props;
     const { orderData, orderStatus } = orderReducer;
     return (
       <Card className={"white-card position-relative"}>
@@ -67,6 +67,7 @@ class WorkFlow extends Component {
               <WorkflowGridView
                 orderData={orderData}
                 orderStatus={orderStatus}
+                updateOrderStatus={updateOrderStatus}
               />
             </Col>
           </Row>
@@ -91,7 +92,8 @@ const mapStateToProps = state => ({
   orderReducer: state.orderReducer
 });
 const mapDispatchToProps = dispatch => ({
-  getOrders: () => dispatch(getOrderList())
+  getOrders: () => dispatch(getOrderList()),
+  updateOrderStatus: data => dispatch(updateOrderStatus(data))
 });
 export default connect(
   mapStateToProps,

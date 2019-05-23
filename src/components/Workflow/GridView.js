@@ -6,7 +6,7 @@ import { logger } from "../../helpers/Logger";
 class WorkflowGridView extends React.Component {
   onDragEnd = result => {
     logger(result);
-    const { destination, source, draggableId } = result;
+    const { destination, source } = result;
 
     if (!destination) {
       return;
@@ -18,58 +18,11 @@ class WorkflowGridView extends React.Component {
     ) {
       return;
     }
-    const { orderData } = this.props;
-    const { orders } = orderData;
 
-    const start = orders[source.droppableId];
-    const finish = orders[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start._id);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds
-      };
-
-      const newState = {
-        ...this.state,
-        columns: {
-          ...this.state.columns,
-          [newColumn.id]: newColumn
-        }
-      };
-
-      this.setState(newState);
-      return;
-    }
-
-    // Moving from one list to another
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds
-    };
-
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds
-    };
-
-    const newState = {
-      ...this.state,
-      columns: {
-        ...this.state.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish
-      }
-    };
-    this.setState(newState);
+    this.props.updateOrderStatus({
+      from: source.droppableId,
+      to: destination.droppableId
+    });
   };
 
   render() {

@@ -60,4 +60,19 @@ const getOrdersLogic = createLogic({
   }
 });
 
-export const OrderLogic = [getOrderId, getOrdersLogic];
+/**
+ *
+ */
+
+const updateOrderStatusLogic = createLogic({
+  type: orderActions.REQUEST_ORDER_STATUS_UPDATE,
+  async process({ action, getState }, dispatch, done) {
+    const { orderReducer } = getState();
+    const { orderData } = orderReducer;
+    logger(action.payload, orderData);
+    dispatch(getOrderListSuccess({ ...orderReducer }));
+    done();
+  }
+});
+
+export const OrderLogic = [getOrderId, getOrdersLogic, updateOrderStatusLogic];
