@@ -57,6 +57,9 @@ const orderSchema = new Schema({
     ref: "orderStatus",
     default: null
   },
+  orderIndex: {
+    type: Number
+  },
   status: {
     type: Boolean,
     default: true

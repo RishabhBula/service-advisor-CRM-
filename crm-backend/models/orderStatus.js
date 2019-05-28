@@ -14,6 +14,10 @@ const orderStatusSchema = new Schema({
     type: Boolean,
     default: false
   },
+  orderIndex: {
+    type: Number,
+    default: 0
+  },
   isDeleted: {
     type: Boolean,
     default: false

@@ -14,7 +14,10 @@ export const orderActions = {
   GET_ORDER_ID_REQUEST: "Order id Requested",
   GET_ORDER_ID_SUCCESS: "Order id Ssccess!",
   GET_ORDER_ID_FAILED: "Order id Failed!",
-  REQUEST_ORDER_STATUS_UPDATE: "Request order status update!"
+  REQUEST_ORDER_STATUS_UPDATE: "Request order status update!",
+  ADD_ORDER_STATUS: "Request for add new order status!",
+  DELTE_ORDER_STATUS: "Request for delete existing order status!",
+  UPDATE_ORDER_OF_ORDER_STATUS: "Request for order update of order status!"
 };
 
 export const getOrderList = createAction(orderActions.GET_ORDER_LIST_REQUEST);
@@ -27,7 +30,7 @@ export const getOrderListFail = createAction(
 export const addOrderRequest = createAction(orderActions.ADD_ORDER_REQUEST);
 export const addOrderSuccess = createAction(orderActions.ADD_ORDER_SUCCESS);
 export const addOrderFailed = createAction(orderActions.ADD_ORDER_FAILED);
-export const updateOrderRequest = createAction(
+export const updateOrderWorkflowRequest = createAction(
   orderActions.UPDATE_ORDER_REQUEST
 );
 export const updateOrderSuccess = createAction(
@@ -49,4 +52,13 @@ export const getOrderIdFailed = createAction(orderActions.GET_ORDER_ID_FAILED);
 //
 export const updateOrderStatus = createAction(
   orderActions.REQUEST_ORDER_STATUS_UPDATE
+);
+
+//
+export const addOrderStatus = createAction(orderActions.ADD_ORDER_STATUS);
+export const deleteOrderStatusRequest = createAction(
+  orderActions.DELTE_ORDER_STATUS
+);
+export const updateOrderOfOrderStatus = createAction(
+  orderActions.UPDATE_ORDER_OF_ORDER_STATUS
 );

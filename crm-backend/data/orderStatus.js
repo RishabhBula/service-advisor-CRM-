@@ -1,19 +1,23 @@
 const DefaultOrderStatus = [
   {
     name: "Estimate",
-    isInvoice: false
+    isInvoice: false,
+    orderIndex: 0
   },
   {
     name: "In Progress",
-    isInvoice: false
+    isInvoice: false,
+    orderIndex: 1
   },
   {
     name: "Dropped Off",
-    isInvoice: false
+    isInvoice: false,
+    orderIndex: 2
   },
   {
     name: "Invoices",
-    isInvoice: true
+    isInvoice: true,
+    orderIndex: 3
   }
 ];
 

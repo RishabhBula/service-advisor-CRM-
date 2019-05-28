@@ -24,6 +24,35 @@ const countOrderNumber = async (req, res) => {
 const createNewOrder = async (req, res) => {
   const { body, currentUser } = req;
   try {
+    const { id, parentId } = currentUser;
+    const condition = {
+      $or: [
+        {
+          isDeleted: false
+        },
+        {
+          isDeleted: {
+            $exists: false
+          }
+        }
+      ],
+      parentId: parentId ? parentId : id
+    };
+    let orderStatus = await OrderStatus.find(condition, {
+      name: 1,
+      isInvoice: 1
+    }).sort({ orderIndex: 1 });
+    if (!orderStatus.length) {
+      defaultOrderStatus.forEach(e => {
+        e.parentId = condition.parentId;
+      });
+      await OrderStatus.insertMany(defaultOrderStatus);
+      orderStatus = await OrderStatus.find(condition, {
+        name: 1,
+        isInvoice: 1
+      });
+    }
+    const workflowStatus = orderStatus[0]._id;
     const orderConst = {
       orderName: body.orderName,
       customerId: mongoose.Types.ObjectId(body.customerId),
@@ -38,7 +67,7 @@ const createNewOrder = async (req, res) => {
         : null,
       userId: currentUser.id,
       parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,
-      workflowStatus: body.workflowStatus,
+      workflowStatus,
       isDeleted: false
     };
     const orderData = new Orders(orderConst);
@@ -87,7 +116,7 @@ const listOrders = async (req, res) => {
     let orderStatus = await OrderStatus.find(condition, {
       name: 1,
       isInvoice: 1
-    });
+    }).sort({ orderIndex: "asc" });
     if (!orderStatus.length) {
       defaultOrderStatus.forEach(e => {
         e.parentId = condition.parentId;
@@ -96,7 +125,7 @@ const listOrders = async (req, res) => {
       orderStatus = await OrderStatus.find(condition, {
         name: 1,
         isInvoice: 1
-      });
+      }).sort({ orderIndex: 1 });
     }
     let response = {};
     result.forEach(element => {
@@ -113,7 +142,7 @@ const listOrders = async (req, res) => {
       orderStatus
     });
   } catch (error) {
-    console.log("Erroe while fetching list of orders", error);
+    console.log("Error while fetching list of orders", error);
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false
@@ -121,8 +150,145 @@ const listOrders = async (req, res) => {
   }
 };
 
+/**
+ *
+ */
+const updateOrderWorkflowStatus = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { id, parentId } = currentUser;
+    const { orderId, orderStatus, orderIndex } = body;
+    await Orders.updateOne(
+      {
+        parentId: id || parentId,
+        _id: orderId
+      },
+      {
+        $set: {
+          workflowStatus: mongoose.Types.ObjectId(orderStatus),
+          orderIndex
+        }
+      }
+    );
+
+    return res.status(200).json({
+      message: "Order status updated successfully!"
+    });
+  } catch (error) {
+    console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
+/**
+ *
+ */
+const addOrderStatus = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { id, parentId } = currentUser;
+    const { name } = body;
+    const orderStatus = new OrderStatus({
+      name,
+      parentId: id || parentId
+    });
+    const newOrderStatus = await orderStatus.save();
+
+    return res.status(200).json({
+      message: "Order status added successfully!",
+      orderStatus: newOrderStatus
+    });
+  } catch (error) {
+    console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ *
+ */
+const deleteOrderStatus = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { id, parentId } = currentUser;
+    const { statusId, newStatusId } = body;
+    await Orders.updateOne(
+      {
+        parentId: id || parentId,
+        workflowStatus: mongoose.Types.ObjectId(statusId)
+      },
+      {
+        $set: {
+          workflowStatus: mongoose.Types.ObjectId(newStatusId)
+        }
+      }
+    );
+    await OrderStatus.updateOne(
+      {
+        parentId: id || parentId,
+        _id: mongoose.Types.ObjectId(statusId)
+      },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
+
+    return res.status(200).json({
+      message: "Order status deleted successfully!"
+    });
+  } catch (error) {
+    console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ *
+ */
+const updateWorkflowStatusOrder = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { id, parentId } = currentUser;
+    for (let i = 0; i < body.length; i++) {
+      const element = body[i];
+      await OrderStatus.updateOne(
+        {
+          parentId: id || parentId,
+          _id: mongoose.Types.ObjectId(element._id)
+        },
+        {
+          $set: {
+            orderIndex: i
+          }
+        }
+      );
+    }
+    return res.status(200).json({
+      message: "Reordered successfully!"
+    });
+  } catch (error) {
+    console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 module.exports = {
   countOrderNumber,
   createNewOrder,
-  listOrders
+  listOrders,
+  updateOrderWorkflowStatus,
+  addOrderStatus,
+  deleteOrderStatus,
+  updateWorkflowStatusOrder
 };
