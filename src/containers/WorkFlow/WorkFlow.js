@@ -383,6 +383,7 @@ class WorkFlow extends Component {
                     orderStatus={orderStatus}
                     updateOrderStatus={updateOrderStatus}
                     deleteOrderStatus={this.deleteOrderStatus}
+                    deleteOrder={this.deleteOrder}
                   />
                 ) : (
                   <div style={{ overflowX: "auto" }}>
