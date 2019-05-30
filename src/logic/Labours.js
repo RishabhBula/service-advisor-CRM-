@@ -9,6 +9,7 @@ import {
   labourListStarted,
   labourListSuccess,
   labourListRequest,
+  addLaborToService
 } from "./../actions";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
@@ -39,14 +40,43 @@ const labourAddLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
-      dispatch(hideLoader());
-      dispatch(modelOpenRequest({modelDetails: {tireAddModalOpen: false}})); 
-      dispatch(labourListRequest({
-        ...action.payload,
-      }));
-      dispatch(labourAddSuccess( {labourData: result.data}));
-      done();
+      const data = action.payload
+      if (data.serviceLaborModal) {
+        let servicePartData = data.services[data.serviceIndex].serviceItems
+        servicePartData.push({
+          ...result.data.laborData,
+          serviceType: "Labor",
+          discount: {
+            value: '',
+            type: "%"
+          },
+          label: [{
+            color: "",
+            name: "",
+            isAddLabel: false
+          }],
+          subTotalValue: ""
+        })
+        dispatch(addLaborToService(data.services))
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              tireAddModalOpen: false
+            }
+          })
+        );
+        dispatch(hideLoader());
+        done();
+      } else {
+        toast.success(result.messages[0]);
+        dispatch(hideLoader());
+        dispatch(modelOpenRequest({ modelDetails: { tireAddModalOpen: false } }));
+        dispatch(labourListRequest({
+          ...action.payload,
+        }));
+        dispatch(labourAddSuccess({ labourData: result.data }));
+        done();
+      }
     }
   }
 });
@@ -68,8 +98,9 @@ const labourListLogic = createLogic({
       "GET",
       true,
       {
-        ...action.payload,
-        limit: AppConfig.ITEMS_PER_PAGE,
+        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        sort: action.payload && action.payload.sort ? action.payload.sort : null,
+        limit: AppConfig.ITEMS_PER_PAGE
       },
       undefined,
     );
@@ -79,7 +110,32 @@ const labourListLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      var defaultOptions = [
+        {
+          value: "",
+          label: "+ Add New Labor"
+        },
+      ];
+      const options = result.data.data.map(labor => ({
+        label:
+          `${labor.discription} ${labor.hours}hrs $${labor.rate ? labor.rate.hourlyRate : 0}`,
+        value: labor._id,
+        laborData: {
+          ...labor,
+          serviceType: 'labor',
+          discount: {
+            value: '',
+            type: "%"
+          },
+          label: [{
+            color: "",
+            name: "",
+            isAddLabel: false
+          }],
+          subTotalValue: ""
+        }
+      }));
+      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(
         labourListSuccess({
           labourData: result.data,
@@ -115,8 +171,8 @@ const editLabourLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(
-        modelOpenRequest({modelDetails: {tireEditModalOpen: false}})        
-      )    
+        modelOpenRequest({ modelDetails: { tireEditModalOpen: false } })
+      )
       dispatch(labourListRequest({
         ...action.payload,
       }));

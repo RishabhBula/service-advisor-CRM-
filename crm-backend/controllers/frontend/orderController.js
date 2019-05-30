@@ -24,15 +24,15 @@ const createNewOrder = async (req, res) => {
    try {
       const orderConst = {
          orderName: body.orderName,
-         customerId: mongoose.Types.ObjectId(body.customerId),
-         vehicleId: mongoose.Types.ObjectId(body.vehicleId),
-         serviceId: body.serviceId,
-         inspectionId: body.inspectionId,
+         customerId: body.customerId ? mongoose.Types.ObjectId(body.customerId) : null,
+         vehicleId: body.vehicleId ? mongoose.Types.ObjectId(body.vehicleId) : null,
+         serviceId: body.serviceId ? mongoose.Types.ObjectId(body.serviceId) : null,
+         inspectionId: body.inspectionId ? mongoose.Types.ObjectId(body.inspectionId) : null,
          timeClockId: body.timeClockId ? mongoose.Types.ObjectId(body.timeClockId) : null,
          messageId: body.messageId ? mongoose.Types.ObjectId(body.messageId) : null,
          userId: currentUser.id,
          parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,
-         workflowStatus: body.workflowStatus,
+         workflowStatus: body.workflowStatus ? body.workflowStatus : null,
          isDeleted: false,
       }
       const orderData = new Orders(orderConst);
@@ -40,6 +40,7 @@ const createNewOrder = async (req, res) => {
 
       return res.status(200).json({
          message: "Order created successfully",
+         result,
          success: true
       })
    } catch (error) {

@@ -10,7 +10,8 @@ import {
    modelOpenRequest,
    addTierSuccess,
    getTiersListSuccess,
-   getTiersList
+   getTiersList,
+   addTireToService
 } from "./../actions";
 
 const addTireLogic = createLogic({
@@ -33,17 +34,46 @@ const addTireLogic = createLogic({
          done();
          return;
       } else {
-         toast.success(result.messages[0]);
-         dispatch(
-            modelOpenRequest({
-               modelDetails: {
-                  tireAddModalOpen: false
-               }
+         const data = action.payload
+         if (data.serviceTireModal) {
+            let servicePartData = data.services[data.serviceIndex].serviceItems
+            servicePartData.push({
+               ...result.data.tierData,
+               serviceType: "Tire",
+               discount: {
+                  value: '',
+                  type: "%"
+               },
+               label: [{
+                  color: "",
+                  name: "",
+                  isAddLabel: false
+                }],
+               subTotalValue: ""
             })
-         );
-         dispatch(addTierSuccess());
-         dispatch(hideLoader());
-         done();
+            dispatch(addTireToService(data.services))
+            dispatch(
+               modelOpenRequest({
+                  modelDetails: {
+                     tireAddModalOpen: false
+                  }
+               })
+            );
+            dispatch(hideLoader());
+            done();
+         } else {
+            toast.success(result.messages[0]);
+            dispatch(
+               modelOpenRequest({
+                  modelDetails: {
+                     tireAddModalOpen: false
+                  }
+               })
+            );
+            dispatch(addTierSuccess());
+            dispatch(hideLoader());
+            done();
+         }
       }
    }
 });
@@ -58,10 +88,20 @@ const getTiresLogic = createLogic({
          })
       );
       let api = new ApiHelper();
-      let result = await api.FetchFromServer("/tier", "/tierList", "GET", true, {
-         ...action.payload,
-         limit: AppConfig.ITEMS_PER_PAGE
-      });
+      let result = await api.FetchFromServer(
+         "/tier",
+         "/tierList",
+         "GET",
+         true,
+         {
+            search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+            sort: action.payload && action.payload.sort ? action.payload.sort : null,
+            status: action.payload && action.payload.status ? action.payload.status : null,
+            type: action.payload && action.payload.type ? action.payload.type : null,
+            vendorId: action.payload && action.payload.vendorId ? action.payload.vendorId : null,
+            limit: AppConfig.ITEMS_PER_PAGE
+         }
+      );
       if (result.isError) {
          dispatch(
             getTiersListSuccess({
@@ -72,6 +112,32 @@ const getTiresLogic = createLogic({
          done();
          return;
       } else {
+         var defaultOptions = [
+            {
+               value: "",
+               label: "+ Add New Tire"
+            }
+         ];
+         const options = result.data.data.map(tire => ({
+            label:
+               `${tire.brandName} ${tire.modalName}`,
+            value: tire._id,
+            tireData: {
+               ...tire,
+               serviceType: 'tire',
+               discount: {
+                  value: '',
+                  type: "%"
+               },
+               label: [{
+                  color: "",
+                  name: "",
+                  isAddLabel: false
+                }],
+               subTotalValue: ""
+            }
+         }));
+         logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
          dispatch(hideLoader());
          dispatch(
             getTiersListSuccess({

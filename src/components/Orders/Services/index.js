@@ -1,11 +1,4 @@
 import React, { Component } from "react";
-import {
-   Col,
-   Row,
-   FormGroup,
-   Input,
-   Button
-} from "reactstrap";
 import ServiceItem from "./serviceItem"
 import CrmInventoryPart from '../../common/CrmInventoryPart'
 import { CrmTyreModal } from '../../common/Tires/CrmTyreModal'
@@ -20,20 +13,34 @@ class Services extends Component {
                name: "",
                technician: "",
                note: "",
-               serviceItems: []
+               serviceItems: [],
+               epa: {
+                  type: "%",
+                  value: ""
+               },
+               discount: {
+                  type: "%",
+                  value: "",
+               },
+               taxes: {
+                  type: "%",
+                  value: ""
+               },
+               seviceTotal: "",
+               isError: false
             }
          ],
+         serviceElements: [],
          selectedService: '',
-         serviceIndex: -1
+         serviceIndex: -1,
       };
    }
-
    handleSeviceAdd = async () => {
       if (this.state.servicesData) {
-         // const { serviceReducers } = this.props;
-         // const { services } = serviceReducers;
-         // services.push(this.state.servicesData)
-         // await this.props.addPartToService(services)
+         const { serviceReducers } = this.props;
+         const { services } = serviceReducers;
+         services.push(this.state.servicesData[0])
+         await this.props.addPartToService(services)
          this.setState((state, props) => {
             return {
                servicesData: state.servicesData.concat([
@@ -41,24 +48,26 @@ class Services extends Component {
                      name: "",
                      technician: "",
                      note: "",
-                     serviceItems: []
+                     serviceItems: [],
+                     epa: {
+                        type: "",
+                        value: ""
+                     },
+                     discount: {
+                        type: "",
+                        value: "",
+                     },
+                     taxes: {
+                        type: "",
+                        value: ""
+                     },
+                     seviceTotal: ""
                   }
                ])
             };
          });
       }
    }
-
-   handleRemoveService = index => {
-      const { servicesData } = this.state;
-      let t = [...servicesData];
-      t.splice(index, 1);
-      if (servicesData.length) {
-         this.setState({
-            servicesData: t
-         });
-      }
-   };
    handleServiceModal = (serviceType, index) => {
       this.setState({
          selectedService: serviceType ? serviceType : '',
@@ -72,8 +81,14 @@ class Services extends Component {
          modelOperate,
          getPartDetails,
          addPartToService,
+         addTireToService,
          addInventoryPart,
-         serviceReducers
+         serviceReducers,
+         addInventryTire,
+         getTireDetails,
+         getLaborDetails,
+         addLaborToService,
+         addLaborInventry,
       } = this.props;
       const { modelDetails } = modelInfoReducer;
       const {
@@ -103,7 +118,12 @@ class Services extends Component {
             return (
                <CrmTyreModal
                   tyreModalOpen={tireAddModalOpen}
-                  serviceModal={true}
+                  serviceTireModal={true}
+                  serviceIndex={serviceIndex}
+                  services={serviceReducers.services}
+                  addTier={addInventryTire}
+                  addTireToService={addTireToService}
+                  getTireDetails={getTireDetails}
                   handleTierModal={() =>
                      modelOperate({
                         tireAddModalOpen: !tireAddModalOpen
@@ -114,7 +134,12 @@ class Services extends Component {
             return (
                <CrmLabourModal
                   tyreModalOpen={tireAddModalOpen}
-                  serviceModal={true}
+                  serviceLaborModal={true}
+                  serviceIndex={serviceIndex}
+                  services={serviceReducers.services}
+                  addLabour={addLaborInventry}
+                  getLaborDetails={getLaborDetails}
+                  addLaborToService={addLaborToService}
                   handleLabourModal={() =>
                      modelOperate({
                         tireAddModalOpen: !tireAddModalOpen
@@ -130,31 +155,31 @@ class Services extends Component {
       const {
          modelInfoReducer,
          modelOperate,
-         serviceReducers
+         serviceReducers,
+         getUserData,
+         addPartToService,
+         labelReducer,
+         addNewLabel,
+         addNewService
       } = this.props;
+
       const { modelDetails } = modelInfoReducer;
       return (
          <div>
-            <Row>
-               <Col md={"6"}>
-                  <FormGroup>
-                     <Input type={"textarea"} rows={"4"} col={"12"} placeholder={"Customer Comments"} />
-                  </FormGroup>
-               </Col>
-               <Col md={"6"}>
-                  <FormGroup>
-                     <Input type={"textarea"} rows={"4"} col={"12"} placeholder={"Recommendations"} />
-                  </FormGroup>
-               </Col>
-            </Row>
             <div className={"d-flex justify-content-between pb-4"}>
                <ServiceItem
-                  services={servicesData}
+                  servicesData={servicesData}
                   handleRemoveService={this.handleRemoveService}
                   handleServiceModal={this.handleServiceModal}
                   modelOperate={modelOperate}
                   modelDetails={modelDetails}
                   serviceReducers={serviceReducers}
+                  getUserData={getUserData}
+                  handleSeviceAdd={this.handleSeviceAdd}
+                  addPartToService={addPartToService}
+                  labelReducer={labelReducer}
+                  addNewLabel={addNewLabel}
+                  addNewService={addNewService}
                />
             </div>
             {
@@ -162,7 +187,6 @@ class Services extends Component {
                   this.handleOpenModal() :
                   null
             }
-            <Button color={"primary"} onClick={this.handleSeviceAdd}>+ Add new service</Button>
          </div>
       );
    }

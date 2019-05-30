@@ -172,7 +172,9 @@ class CrmInventoryPart extends Component {
           criticalQuantity,
           quantity,
           partOptions,
-          serviceModal: this.props.serviceModal ? this.props.serviceModal : false
+          serviceModal: this.props.serviceModal ? this.props.serviceModal : false,
+          serviceIndex: this.props.serviceIndex !== null ? this.props.serviceIndex : null,
+          services: this.props.services ? this.props.services : null
         };
         const { isValid, errors } = Validator(
           data,
@@ -388,8 +390,6 @@ class CrmInventoryPart extends Component {
     const { partId } = this.state
     const { serviceIndex, services } = this.props
     if (partId) {
-      console.log("!!!!!!!!!!!!!!!",services);
-      
       let servicePartData = services[serviceIndex].serviceItems
       servicePartData.push(partId.partData)
       await this.props.addPartToService(services)

@@ -4,6 +4,9 @@ import { Col, Row, Card, CardBody, Button } from "reactstrap";
 import WorkflowGridView from "../../components/Workflow/GridView";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
+import { addOrderRequest } from "../../actions";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 const Order = React.lazy(() => import("../Orders"));
 export const OrderRoutes =
@@ -20,9 +23,11 @@ class WorkFlow extends Component {
     this.state = {};
   }
 
-  handleOrder = () => {
-    this.props.redirectTo(OrderRoutes.path);
-  }
+  handleOrder = async () => {
+    await this.props.addOrderRequest()
+    /* const { orderData } = this.props.orderReducer
+    this.props.redirectTo(`${OrderRoutes.path}/id:${orderData._id}`);
+   */}
 
   render() {
     return (
@@ -77,5 +82,15 @@ class WorkFlow extends Component {
     );
   }
 }
-
-export default WorkFlow;
+const mapStateToProps = state => ({
+  orderReducer: state.orderReducer,
+});
+const mapDispatchToProps = dispatch => ({
+  addOrderRequest: (data) => {
+    dispatch(addOrderRequest(data))
+  }
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(WorkFlow));

@@ -15,7 +15,17 @@ import {
   vehicleGetRequest,
   getInventoryPartsList,
   addPartToService,
-  requestAddPart
+  addTireToService,
+  requestAddPart,
+  addNewTier,
+  getTiersList,
+  labourAddRequest,
+  addLaborToService,
+  labourListRequest,
+  getUsersList,
+  addNewService,
+  getLabelList,
+  addNewLabel
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -63,6 +73,7 @@ class Order extends Component {
   }
   componentDidMount() {
     this.props.getOrderId();
+    this.props.getLabelList()
   }
 
   onTabChange = (activeTab) => {
@@ -82,8 +93,18 @@ class Order extends Component {
       modelInfoReducer,
       getPartDetails,
       addPartToService,
+      addTireToService,
       modelOperate,
-      serviceReducers } = this.props
+      serviceReducers,
+      addLaborToService,
+      addInventryTire,
+      addLaborInventry,
+      getTireDetails,
+      getLaborDetails,
+      getUserData,
+      addNewService,
+      labelReducer,
+      addNewLabel } = this.props
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -119,9 +140,19 @@ class Order extends Component {
                             modelInfoReducer={modelInfoReducer}
                             modelOperate={modelOperate}
                             addPartToService={addPartToService}
+                            addTireToService={addTireToService}
                             getPartDetails={getPartDetails}
                             addInventoryPart={this.addInventoryPart}
+                            addInventryTire={addInventryTire}
                             serviceReducers={serviceReducers}
+                            getTireDetails={getTireDetails}
+                            addLaborInventry={addLaborInventry}
+                            addLaborToService={addLaborToService}
+                            getLaborDetails={getLaborDetails}
+                            getUserData={getUserData}
+                            addNewService={addNewService}
+                            labelReducer={labelReducer}
+                            addNewLabel={addNewLabel}
                           /> : null
                       }
                       {
@@ -151,7 +182,8 @@ class Order extends Component {
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
   modelInfoReducer: state.modelInfoReducer,
-  serviceReducers: state.serviceReducers
+  serviceReducers: state.serviceReducers,
+  labelReducer: state.labelReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -169,8 +201,38 @@ const mapDispatchToProps = dispatch => ({
   addPartToService: (data) => {
     dispatch(addPartToService(data))
   },
+  addTireToService: (data) => {
+    dispatch(addTireToService(data))
+  },
   addInventoryPart: (data) => {
     dispatch(requestAddPart(data))
+  },
+  addInventryTire: (data) => {
+    dispatch(addNewTier(data))
+  },
+  getTireDetails: data => {
+    dispatch(getTiersList(data));
+  },
+  addLaborInventry: (data) => {
+    dispatch(labourAddRequest(data))
+  },
+  addLaborToService: (data) => {
+    dispatch(addLaborToService(data))
+  },
+  getLaborDetails: (data) => {
+    dispatch(labourListRequest(data))
+  },
+  getUserData: (data) => {
+    dispatch(getUsersList(data))
+  },
+  addNewService: (data) => {
+    dispatch(addNewService(data))
+  },
+  getLabelList: () => {
+    dispatch(getLabelList())
+  },
+  addNewLabel: (data) => {
+    dispatch(addNewLabel(data))
   }
 });
 export default connect(

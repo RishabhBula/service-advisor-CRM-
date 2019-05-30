@@ -12,6 +12,7 @@ export const labourActions = {
   EDIT_LABOUR_REQUESTED: "Edit labour Requested!",
   EDIT_LABOUR_SUCCESS: "Edit labour Success!",
   DELETE_LABOUR: "Delete labour Requested!",
+  ADD_SERVICE_LABOR: "Add labor to service",
 };
 
 export const labourAddRequest = createAction(labourActions.LABOUR_ADD_REQUEST);
@@ -26,4 +27,5 @@ export const labourListFailed = createAction(labourActions.LABOUR_LIST_FAILED);
 export const labourEditRequest = createAction(labourActions.EDIT_LABOUR_REQUESTED)
 export const labourEditSuccess = createAction(labourActions.EDIT_LABOUR_SUCCESS)
 export const deleteLabour = createAction(labourActions.DELETE_LABOUR);
+export const addLaborToService = createAction(labourActions.ADD_SERVICE_LABOR)
 

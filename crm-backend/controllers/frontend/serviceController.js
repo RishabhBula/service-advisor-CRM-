@@ -1,25 +1,36 @@
 const Service = require("../../models/services");
 const mongoose = require("mongoose");
-
+const CustomerAndUser = require("../../models/customerAndUser")
+const Label = require("../../models/label")
 /* create new service */
 const addNewService = async (req, res) => {
    const { body, currentUser } = req;
    try {
-      for (let index = 0; index < body.length; index++) {
-         const element = body[index];
-         const serviceData = {
-            serviceName: element.serviceName,
+      const cutomerUser = {
+         customerComment: body.customerComment,
+         userRecommendations: body.userRecommendations,
+         userId: currentUser.id,
+         parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
+         status: true,
+         isDeleted: false
+      }
+      let serviceData
+      for (let index = 0; index < body.services.length; index++) {
+
+         const element = body.services[index];
+         if (!element.name) {
+            return res.status(400).json({
+               message: "Service Name is required",
+               success: false
+            })
+         }
+         serviceData = {
+            serviceName: element.name,
             notes: element.notes,
-            technician: element.technician,
-            description: element.description,
-            price: element.price,
-            quantity: element.quantity,
-            hours: element.hours,
-            disc: element.disc,
-            subtotal: element.subtotal,
-            lableStatus: element.lableStatus,
+            serviceItems: element.serviceItems,
             epa: element.epa,
             discount: element.discount,
+            technician: element.technician.value,
             taxes: element.taxes,
             serviceTotal: element.serviceTotal,
             userId: currentUser.id,
@@ -27,11 +38,14 @@ const addNewService = async (req, res) => {
             status: true,
             isDeleted: false
          }
+
          const serviceContent = new Service(serviceData);
          const result = await serviceContent.save();
       }
+      const customerAndUserContent = new CustomerAndUser(cutomerUser);
+      const result = await customerAndUserContent.save();
       return res.status(200).json({
-         message: `${body.length}Service added successfully`,
+         message: `${body.services.length}Service added successfully`,
          success: true
       })
 

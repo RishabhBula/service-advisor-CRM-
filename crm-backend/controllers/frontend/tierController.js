@@ -52,11 +52,12 @@ const createNewTier = async (req, res) => {
       parentId: currentUser.parentId
     };
     const tierData = new tierModel(addNewTier);
-    tierData.save();
+    const result = tierData.save();
 
     return res.status(200).json({
       responsecode: 200,
       message: "Tier added successfully!",
+      tierData,
       success: true
     });
   } catch (error) {

@@ -27,7 +27,6 @@ import { AppConfig } from "../../../config/AppConfig";
 import { isEqual } from "../../../helpers/Object";
 import NoDataFound from "../../common/NoFound"
 import { notExist } from "../../../config/Constants";
-import LaboutIcon from "../../../assets/img/labor.svg"
 
 class Labours extends Component {
   constructor(props) {

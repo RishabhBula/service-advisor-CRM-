@@ -2,7 +2,6 @@ import { push } from "react-router-redux";
 import { createLogic } from "redux-logic";
 import { toast } from "react-toastify";
 import { ApiHelper } from "../helpers/ApiHelper";
-import { AppConfig } from "../config/AppConfig";
 import { logger } from "../helpers/Logger";
 import {
   showLoader,

@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
-import { AppConfig } from "../config/AppConfig";
 import { logger } from "../helpers/Logger";
 import {
   showLoader,
@@ -22,6 +21,7 @@ import {
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
+import { AppConfig } from "../config/AppConfig";
 
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
@@ -106,7 +106,12 @@ const getCustomersLogic = createLogic({
       "/getAllCustomerList",
       "GET",
       true,
-      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null }
+      {
+        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        sort: action.payload && action.payload.sort ? action.payload.sort : null,
+        status: action.payload && action.payload.status ? action.payload.status : null,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
       dispatch(

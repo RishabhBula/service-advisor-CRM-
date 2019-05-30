@@ -1,15 +1,27 @@
 import { createLogic } from "redux-logic";
+import React from "react";
 import { ApiHelper } from "../helpers/ApiHelper";
 import {
-   getOrderIdRequest,
    getOrderIdFailed,
    getOrderIdSuccess,
    orderActions,
+   showLoader,
+   hideLoader,
+   addOrderSuccess,
+   redirectTo
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
-
+import { AppRoutes } from "../config/AppRoutes";
+const Order = React.lazy(() => import("../containers/Orders"));
+export const OrderRoutes =
+{
+   path: AppRoutes.WORKFLOW_ORDER.url,
+   exact: AppRoutes.WORKFLOW_ORDER.exact,
+   name: AppRoutes.WORKFLOW_ORDER.name,
+   component: Order
+}
 const getOrderId = createLogic({
    type: orderActions.GET_ORDER_ID_REQUEST,
    async process({ action }, dispatch, done) {
@@ -43,6 +55,40 @@ const getOrderId = createLogic({
    }
 });
 
+const addOrderLogic = createLogic({
+   type: orderActions.ADD_ORDER_REQUEST,
+   async process({ action }, dispatch, done) {
+      dispatch(showLoader());
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/order",
+         "/addOrder",
+         "POST",
+         true,
+         undefined,
+         action.payload
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         dispatch(hideLoader());
+         done();
+         return;
+      } else {
+         toast.success(result.messages[0]);
+         dispatch(redirectTo({ path:`${OrderRoutes.path.replace(':id',`${result.data.result._id}`)}` }))
+         dispatch(addOrderSuccess(
+            {
+               orderData: result.data.result
+            }
+         ));
+         dispatch(hideLoader());
+         done();
+      }
+   }
+});
+
 export const OrderLogic = [
-   getOrderId
+   getOrderId,
+   addOrderLogic
 ];

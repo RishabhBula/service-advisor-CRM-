@@ -8,7 +8,8 @@ export const tiersActions = {
     EDIT_TIER: "Edit tier Requested!",
     EDIT_TIER_SUCCESS: "Edit tier Success!",
     DELETE_TIER: "Delete tier Requested!",
-    UPDATE_TIER_STATUS: "Update tier status Requested!"
+    UPDATE_TIER_STATUS: "Update tier status Requested!",
+    ADD_SERVICE_TIRE: "Add tire to service",
 };
 
 export const getTiersList = createAction(tiersActions.GET_TIER_LIST);
@@ -21,3 +22,4 @@ export const editTier = createAction(tiersActions.EDIT_TIER);
 export const editTierSuccess = createAction(tiersActions.EDIT_TIER_SUCCESS);
 export const deleteTier = createAction(tiersActions.DELETE_TIER);
 export const updateTierStatus = createAction(tiersActions.UPDATE_TIER_STATUS);
+export const addTireToService = createAction(tiersActions.ADD_SERVICE_TIRE)

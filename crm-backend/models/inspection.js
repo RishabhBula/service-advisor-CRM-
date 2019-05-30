@@ -6,7 +6,7 @@ const inspectionSchema = new Schema({
       type: String,
       default: null
    },
-   item: {
+   items: {
       type: [
          new Schema({
             name: {
