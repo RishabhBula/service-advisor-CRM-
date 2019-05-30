@@ -15,12 +15,11 @@ import {
   FormFeedback
 } from "reactstrap";
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 
 import { AppRoutes } from "../../config/AppRoutes";
-import Loader from "../Loader/Loader";
 import WorkflowGridView from "../../components/Workflow/GridView";
+
 import {
   getOrderList,
   updateOrderStatus,
@@ -40,15 +39,6 @@ import {
 
 import * as classNames from "classnames";
 import WorkflowListView from "../../components/Workflow/ListView";
-
-const Order = React.lazy(() => import("../Orders"));
-
-export const OrderRoutes = {
-  path: AppRoutes.WORKFLOW_ORDER.url,
-  exact: AppRoutes.WORKFLOW_ORDER.exact,
-  name: AppRoutes.WORKFLOW_ORDER.name,
-  component: Order
-};
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -83,7 +73,7 @@ class WorkFlow extends Component {
    *
    */
   handleOrder = () => {
-    this.props.redirectTo(OrderRoutes.path);
+    this.props.redirectTo(AppRoutes.WORKFLOW_ORDER.url);
   };
   /**
    *
@@ -393,18 +383,6 @@ class WorkFlow extends Component {
                 )}
               </Col>
             </Row>
-            <Suspense fallback={<Loader />}>
-              <Switch>
-                <Route
-                  path={OrderRoutes.path}
-                  exact={OrderRoutes.exact}
-                  name={OrderRoutes.name}
-                  render={props => (
-                    <OrderRoutes.component {...props} {...this.props} />
-                  )}
-                />
-              </Switch>
-            </Suspense>
           </CardBody>
         </Card>
         {this.renderOrderSelectionModal()}
