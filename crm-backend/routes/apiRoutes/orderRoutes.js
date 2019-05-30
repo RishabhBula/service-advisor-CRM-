@@ -11,7 +11,12 @@ router.post("/addOrder", token.authorisedUser, orderController.createNewOrder);
 
 // get orders
 router.get("/getOrders", token.authorisedUser, orderController.listOrders);
-
+//
+router.delete(
+  "/deleteOrder",
+  token.authorisedUser,
+  orderController.deleteOrder
+);
 // update orders status
 router.post(
   "/updateOrderStatus",

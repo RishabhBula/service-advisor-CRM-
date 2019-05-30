@@ -26,7 +26,8 @@ import {
   deleteOrderStatusRequest,
   addOrderStatus,
   updateOrderOfOrderStatus,
-  addOrderRequest
+  addOrderRequest,
+  deleteOrderRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -39,6 +40,7 @@ import {
 
 import * as classNames from "classnames";
 import WorkflowListView from "../../components/Workflow/ListView";
+import { ConfirmBox } from "../../helpers/SweetAlert";
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -161,6 +163,18 @@ class WorkFlow extends Component {
     this.props.modelOperate({
       addOrderStatusModalOpen: !addOrderStatusModalOpen
     });
+  };
+  /**
+   *
+   */
+  deleteOrder = async data => {
+    const { value } = await ConfirmBox({
+      text: "Are you sure, you want to abandoned this order?"
+    });
+    if (!value) {
+      return;
+    }
+    this.props.deleteOrder(data);
   };
   /**
    *
@@ -378,6 +392,7 @@ class WorkFlow extends Component {
                       updateOrderStatus={updateOrderStatus}
                       deleteOrderStatus={this.deleteOrderStatus}
                       updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                      deleteOrder={this.deleteOrder}
                     />
                   </div>
                 )}
@@ -400,7 +415,8 @@ const mapDispatchToProps = dispatch => ({
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
   deleteOrderStatus: data => dispatch(deleteOrderStatusRequest(data)),
   addOrderStatus: data => dispatch(addOrderStatus(data)),
-  updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data))
+  updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data)),
+  deleteOrder: data => dispatch(deleteOrderRequest(data))
 });
 export default connect(
   mapStateToProps,

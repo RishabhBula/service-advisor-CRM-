@@ -283,6 +283,36 @@ const updateWorkflowStatusOrder = async (req, res) => {
     });
   }
 };
+/**
+ *
+ */
+const deleteOrder = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { id, parentId } = currentUser;
+    const { id: orderID } = body;
+    await Orders.updateOne(
+      {
+        parentId: id || parentId,
+        _id: mongoose.Types.ObjectId(orderID)
+      },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
+    return res.status(200).json({
+      message: "Order deleted successfully!"
+    });
+  } catch (error) {
+    console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 module.exports = {
   countOrderNumber,
   createNewOrder,
@@ -290,5 +320,6 @@ module.exports = {
   updateOrderWorkflowStatus,
   addOrderStatus,
   deleteOrderStatus,
-  updateWorkflowStatusOrder
+  updateWorkflowStatusOrder,
+  deleteOrder
 };

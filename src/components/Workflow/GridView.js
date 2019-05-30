@@ -114,6 +114,16 @@ class WorkflowGridView extends React.Component {
                     className={"content"}
                   >
                     {task.orderName || "Unnamed order"}
+                    <i
+                      className={"fa fa-trash pull-right"}
+                      onClick={() => {
+                        this.props.deleteOrder({
+                          statusId: status._id,
+                          index,
+                          id: task._id
+                        });
+                      }}
+                    />
                   </div>
                 )}
               </Draggable>
