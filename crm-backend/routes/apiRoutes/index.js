@@ -13,5 +13,6 @@ module.exports = {
   inventoryStat: require("./inventoryStats"),
   order: require("./orderRoutes"),
   service: require("./serviceRoutes"),
-  inspection: require("./inspectionRoutes")
+  inspection: require("./inspectionRoutes"),
+  label: require("./labelRoutes")
 };

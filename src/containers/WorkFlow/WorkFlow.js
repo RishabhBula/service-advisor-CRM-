@@ -26,7 +26,8 @@ import {
   updateOrderStatus,
   deleteOrderStatusRequest,
   addOrderStatus,
-  updateOrderOfOrderStatus
+  updateOrderOfOrderStatus,
+  addOrderRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -64,6 +65,14 @@ class WorkFlow extends Component {
       listView: false
     };
   }
+
+  handleOrder = async () => {
+    await this.props.addOrderRequest();
+    /* const { orderData } = this.props.orderReducer
+    this.props.redirectTo(`${OrderRoutes.path}/id:${orderData._id}`);
+   */
+  };
+
   /**
    *
    */
@@ -408,6 +417,7 @@ const mapStateToProps = state => ({
   orderReducer: state.orderReducer
 });
 const mapDispatchToProps = dispatch => ({
+  addOrderRequest: data => dispatch(addOrderRequest(data)),
   getOrders: () => dispatch(getOrderList()),
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
   deleteOrderStatus: data => dispatch(deleteOrderStatusRequest(data)),

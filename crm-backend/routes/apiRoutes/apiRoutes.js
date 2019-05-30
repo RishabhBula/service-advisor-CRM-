@@ -16,7 +16,8 @@ const {
   inventoryStat,
   order,
   service,
-  inspection
+  inspection,
+  label
 } = require("./index");
 
 router.use("/auth", auth);
@@ -33,5 +34,6 @@ router.use("/inventory", inventory);
 router.use("/inventoryStat", inventoryStat);
 router.use("/order", order);
 router.use("/service", service);
-router.use("/inspection", inspection)
+router.use("/inspection", inspection);
+router.use("/label", label)
 module.exports = router;

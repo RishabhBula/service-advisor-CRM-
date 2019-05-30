@@ -143,6 +143,7 @@ const createNewLabour = async (req, res) => {
     return res.status(200).json({
       responsecode: 200,
       message: "Labor added successfully!",
+      laborData: labourData,
       success: true
     });
   } catch (error) {

@@ -1479,6 +1479,39 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   top: 13px;
   right: 30px;
 }
+.lable-color {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0px;
+  text-align: center;
+  display: flex;
+}
+.lable-color li {
+  display: inline-block;
+}
+.lable-color li span {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 7px 3px;
+  border: 1px solid #a9a9a9;
+  cursor: pointer;
+}
+.lable-color li span i {
+  position: relative;
+  top: 5px;
+}
+.label-btn {
+  padding-right: 20px !important;
+  position: relative;
+}
+.label-btn span {
+  position: absolute;
+  right: 5px;
+  top: 4px;
+}
+
 @media (max-width: 1220px) {
   .table {
     min-width: 1000px;

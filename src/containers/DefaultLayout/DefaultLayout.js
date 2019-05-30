@@ -35,6 +35,7 @@ import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
 import { WildCardRoutes } from "../../config/Constants";
+import { isValidObjectId } from "../../helpers";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -66,24 +67,32 @@ class DefaultLayout extends Component {
       profileInfo.permissions &&
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
-      this.validateRoute();
-    }
-  }
-  validateRoute = () => {
-    const { profileInfoReducer, location } = this.props;
-    const currentPage = location.pathname;
-    const { profileInfo } = profileInfoReducer;
+      let currentPage = this.props.location.pathname;
+      if (WildCardRoutes.indexOf(currentPage) === -1) {
+        let currentPageArr = currentPage.split("/");
+        let inde = [];
+        currentPageArr.forEach((value, index) => {
+          if (isValidObjectId(value)) {
+            inde.push(index);
+          }
+        });
+        for (let index = 0; index < inde; index++) {
+          currentPageArr[inde[index]] = ":id";
+        }
+        currentPage = currentPageArr.join("/");
+        const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
 
-    logger(currentPage);
-    if (WildCardRoutes.indexOf(currentPage) === -1) {
-      const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
-      if (ind > -1) {
-        if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
-          logger("Allowed to use");
-          this.setState({
-            hasAccess: true
-          });
+        logger(ind, currentPage, location);
+        if (ind > -1) {
+          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+            logger("Allowed to use");
+          } else {
+            this.setState({
+              hasAccess: false
+            });
+          }
         } else {
+          // this.signOut();
           this.setState({
             hasAccess: false
           });
@@ -91,9 +100,9 @@ class DefaultLayout extends Component {
       } else {
         this.signOut();
       }
+      this.setState({ isURLChecked: true });
     }
-    this.setState({ isURLChecked: true });
-  };
+  }
   signOut() {
     this.props.logoutUser();
   }

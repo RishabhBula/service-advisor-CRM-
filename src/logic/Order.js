@@ -6,14 +6,18 @@ import {
   getOrderIdFailed,
   getOrderIdSuccess,
   orderActions,
-  getOrderListSuccess,
   showLoader,
   hideLoader,
+  addOrderSuccess,
+  redirectTo,
+  getOrderListSuccess,
   modelOpenRequest
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
+import { AppRoutes } from "../config/AppRoutes";
+
 /**
  *
  */
@@ -202,12 +206,50 @@ const updateOrderOfOrderStatusLogic = createLogic({
 /**
  *
  */
-
+const addOrderLogic = createLogic({
+  type: orderActions.ADD_ORDER_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/order",
+      "/addOrder",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
+            ":id",
+            `${result.data.result._id}`
+          )}`
+        })
+      );
+      dispatch(
+        addOrderSuccess({
+          orderData: result.data.result
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
 export const OrderLogic = [
   getOrderId,
   getOrdersLogic,
   deleteOrderStatusLogic,
   addOrderStatusLogic,
   updateOrderWorkflowStatusLogic,
-  updateOrderOfOrderStatusLogic
+  updateOrderOfOrderStatusLogic,
+  addOrderLogic
 ];

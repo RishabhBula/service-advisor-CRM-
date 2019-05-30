@@ -403,7 +403,6 @@ export class CrmCustomerModal extends Component {
       zipCode: "",
       fleet: "",
       errors: {},
-      selectedLabourRate: {},
       customerDefaultPermissions: Object.assign({}, CustomerDefaultPermissions),
       phoneErrors: [""],
       expandForm: false,

@@ -74,6 +74,18 @@ export const validUrlCheck = str => {
     return true;
   }
 };
+
+/**
+ *
+ */
+
+export const isValidObjectId = id => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return true;
+  } else {
+    return false;
+  }
+};
 /**
  *
  */

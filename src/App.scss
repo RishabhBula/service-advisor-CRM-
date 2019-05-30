@@ -447,8 +447,11 @@ body {
       padding: 10px;
     }
   }
-  .is-invalid {
-    background-image: none !important;
+  .tax-popover {
+    max-width: 327px;
+    .discount-button {
+      width: 56px;
+    }
   }
   .workflow-grid-container {
     width: max-content;

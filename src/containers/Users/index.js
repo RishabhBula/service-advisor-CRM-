@@ -17,7 +17,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
-import { logger } from "../../helpers/Logger";
+
 class Users extends Component {
   constructor(props) {
     super(props);

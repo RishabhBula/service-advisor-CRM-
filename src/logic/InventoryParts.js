@@ -14,6 +14,7 @@ import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppConfig } from "../config/AppConfig";
+
 let lastReq;
 const getInventoryPartsVendorLogic = createLogic({
   type: inventoryPartsActions.GET_VENDORS_LIST,
@@ -46,7 +47,7 @@ const getInventoryPartsVendorLogic = createLogic({
 const addPartToInventoryLogic = createLogic({
   type: inventoryPartsActions.ADD_PART_TO_INVENTORY,
   async process({ action, getState }, dispatch, done) {
-    const { data, query, serviceModal } = action.payload;
+    const { data, query } = action.payload;
     logger(action.payload)
     dispatch(showLoader());
     const api = new ApiHelper();
@@ -67,7 +68,23 @@ const addPartToInventoryLogic = createLogic({
     }
     toast.success(result.messages[0]);
     if (data.serviceModal) {
-      dispatch(addPartToService(result.data.result));
+      logger(data.services, data.services[data.serviceIndex], "!###########221233")
+      let servicePartData = data.services[data.serviceIndex].serviceItems
+      servicePartData.push({
+        ...result.data.result,
+        serviceType: "Part",
+        discount: {
+          value: '',
+          type: "%"
+        },
+        label: [{
+          color: "",
+          name: "",
+          isAddLabel: false
+        }],
+        subTotalValue: ""
+      })
+      dispatch(addPartToService(data.services))
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -101,7 +118,20 @@ const getInventoryPartsListLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     dispatch(getInventoryPartsListStarted());
     const api = new ApiHelper();
-    let result = await api.FetchFromServer("/inventory", "/part", "GET", true, { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null });
+    let result = await api.FetchFromServer(
+      "/inventory",
+      "/part",
+      "GET",
+      true,
+      {
+        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        sort: action.payload && action.payload.sort ? action.payload.sort : null,
+        status: action.payload && action.payload.status ? action.payload.status : null,
+        type: action.payload && action.payload.type ? action.payload.type : null,
+        vendorId: action.payload && action.payload.vendorId ? action.payload.vendorId : null,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
+    );
     if (result.isError) {
       dispatch(
         getInventoryPartsListSuccess({
@@ -129,7 +159,20 @@ const getInventoryPartsListLogic = createLogic({
       const options = result.data.parts.map(part => ({
         label: `${part.description}`,
         value: part._id,
-        partData: part
+        partData: {
+          ...part,
+          serviceType: 'part',
+          discount: {
+            value: '',
+            type: "%"
+          },
+          label: [{
+            color: "",
+            name: "",
+            isAddLabel: false
+          }],
+          subTotalValue: ""
+        }
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(getInventoryPartsListSuccess(result.data));

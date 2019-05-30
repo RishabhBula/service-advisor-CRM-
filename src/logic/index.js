@@ -17,7 +17,8 @@ import { TiersLogic } from "./Tier";
 import { InventoryPartsLogic } from "./InventoryParts";
 import { InventoryStatsLogic } from "./inventoryStat";
 import { OrderLogic } from "./Order";
-
+import { ServiceLogic } from "./Service"
+import { LabelLogic } from "./Label"
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
   async process({ action }, dispatch, done) {
@@ -42,5 +43,7 @@ export default [
   ...InventoryPartsLogic,
   ...InventoryStatsLogic,
   ...OrderLogic,
+  ...ServiceLogic,
+  ...LabelLogic,
   redirectToLogic
 ];

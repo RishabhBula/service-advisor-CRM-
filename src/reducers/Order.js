@@ -17,6 +17,16 @@ export const orderReducer = handleActions(
       ...state,
       ...payload
     }),
+    [orderActions.ADD_ORDER_REQUEST]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      orderData: []
+    }),
+    [orderActions.ADD_ORDER_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      orderData: payload.orderData
+    }),
     [orderActions.GET_ORDER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,
       orderData: {

@@ -15,7 +15,7 @@ export const AppRoutes = {
     exact: true
   },
   WORKFLOW_ORDER: {
-    url: "/workflow/order",
+    url: "/workflow/order/:id",
     name: "Order",
     exact: true
   },

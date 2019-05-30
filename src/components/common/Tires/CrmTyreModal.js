@@ -34,7 +34,7 @@ import {
    CalculateRetailPriceByMarginPercent
 } from "../../../helpers/Sales";
 import LastUpdated from "../../common/LastUpdated";
-import { logger } from "../../../helpers/Logger";
+import * as classnames from "classnames";
 
 export class CrmTyreModal extends Component {
    constructor(props) {
@@ -68,7 +68,12 @@ export class CrmTyreModal extends Component {
             value: ""
          },
          selectedMatrix: [],
-         isEditMode: false
+         newServiceTire: false,
+         tireId: "",
+         serviceTireError: "",
+         isEditMode: false,
+         selectedTireSize: false,
+         selectedTireIndex: -1
       };
    }
 
@@ -340,39 +345,48 @@ export class CrmTyreModal extends Component {
    };
 
    handleAddTire = () => {
-      const {
-         brandName,
-         modalName,
-         vendorId,
-         seasonality,
-         tierSize,
-         tierPermission
-      } = this.state
-
-      const payload = {
-         brandName,
-         modalName,
-         vendorId: vendorId ? vendorId.value : null,
-         seasonality,
-         tierSize,
-         tierPermission
-      }
-      const { isValid, errors } = Validator(
-         payload,
-         CreateTierValidations,
-         CreateTierValidMessaages
-      );
-      if (!isValid) {
-         this.setState({
-            errors
-         });
-         return;
+      const { serviceTireModal } = this.props
+      if (serviceTireModal && !this.state.newServiceTire) {
+         this.handleServiceItem()
+         return
       } else {
-         if (!this.state.isEditMode) {
-            this.props.addTier(payload)
+         const {
+            brandName,
+            modalName,
+            vendorId,
+            seasonality,
+            tierSize,
+            tierPermission
+         } = this.state
+
+         const payload = {
+            brandName,
+            modalName,
+            vendorId: vendorId ? vendorId.value : null,
+            seasonality,
+            tierSize,
+            tierPermission,
+            serviceTireModal: this.props.serviceTireModal ? this.props.serviceTireModal : false,
+            serviceIndex: this.props.serviceIndex !== null ? this.props.serviceIndex : null,
+            services: this.props.services ? this.props.services : null
+         }
+         const { isValid, errors } = Validator(
+            payload,
+            CreateTierValidations,
+            CreateTierValidMessaages
+         );
+         if (!isValid) {
+            this.setState({
+               errors
+            });
+            return;
          } else {
-            const tireId = this.props.tireData._id
-            this.props.updateTire(tireId, payload)
+            if (!this.state.isEditMode) {
+               this.props.addTier(payload)
+            } else {
+               const tireId = this.props.tireData._id
+               this.props.updateTire(tireId, payload)
+            }
          }
       }
    };
@@ -400,7 +414,13 @@ export class CrmTyreModal extends Component {
          ],
          tierPermission: tierPermission,
          selectedPriceMatrix: { value: "", label: "Type to select" },
-         errors: {}
+         errors: {},
+         tireId: "",
+         serviceTireError: "",
+         isEditMode: false,
+         selectedTireSize: false,
+         newServiceTire: false,
+         selectedTireIndex: -1
       });
    }
 
@@ -433,8 +453,51 @@ export class CrmTyreModal extends Component {
       }
    }
 
+   searchTire = (input, callback) => {
+      this.props.getTireDetails({ input, callback });
+   }
+
+   handleServiceTireAdd = (e) => {
+      if (e && e.tireData) {
+         this.setState({
+            tireId: e,
+         })
+      } else {
+         this.setState({
+            tireId: ""
+         })
+      }
+   }
+   handleServiceItem = async () => {
+      const { tireId } = this.state
+      const { serviceIndex, services } = this.props
+      if (tireId) {
+         let servicePartData = services[serviceIndex].serviceItems
+         servicePartData.push(tireId.tireData)
+         await this.props.addTireToService(services)
+         this.props.handleTierModal()
+      } else {
+         this.setState({
+            serviceTireError: "Tire is required."
+         })
+      }
+   }
+   handleServiceTireSize = (size, index) => {
+      this.setState({
+         tireId: {
+            ...this.state.tireId,
+            tireData: {
+               ...this.state.tireId.tireData,
+               tierSize: [size]
+            }
+         },
+         selectedTireSize: false,
+         selectedTireIndex: index
+      })
+   }
+
    render() {
-      const { tyreModalOpen, handleTierModal, tireData } = this.props;
+      const { tyreModalOpen, handleTierModal, tireData, serviceTireModal } = this.props;
       const {
          tierSize,
          tierPermission,
@@ -445,6 +508,9 @@ export class CrmTyreModal extends Component {
          vendorId,
          isEditMode,
          selectedVendor,
+         newServiceTire,
+         tireId,
+         serviceTireError,
       } = this.state;
       return (
          <>
@@ -456,367 +522,438 @@ export class CrmTyreModal extends Component {
             >
                <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}{" "}{isEditMode ? <LastUpdated updatedAt={tireData.updatedAt} /> : null}</ModalHeader>
                <ModalBody>
-                  <div className="">
-                     <Row className="justify-content-center">
-                        <Col md="6">
-                           <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                 Brand Name <span className={"asteric"}>*</span>
-                              </Label>
-                              <div className="input-block">
-                                 <Input
-                                    onChange={this.handleChange}
-                                    className={"form-control"}
-                                    name="brandName"
-                                    value={brandName}
-                                    maxLength="20"
-                                    placeholder={"MRF"}
-                                    type={"text"}
-                                    invalid={errors.brandName && !brandName}
-                                 />
-                                 <FormFeedback>
-                                    {errors && !brandName && errors.brandName
-                                       ? errors.brandName
-                                       : null}
-                                 </FormFeedback>
-                              </div>
-                           </FormGroup>
-                        </Col>
-                        <Col md="6">
-                           <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                 Modal Name <span className={"asteric"}>*</span>
-                              </Label>
-                              <div className="input-block">
-                                 <Input
-                                    name="modalName"
-                                    value={modalName}
-                                    placeholder={"Road Grip"}
-                                    onChange={this.handleChange}
-                                    maxLength="20"
-                                    className={"form-control"}
-                                    type={"text"}
-                                    invalid={errors.modalName && !modalName} />
-                                 <FormFeedback>
-                                    {errors && !modalName && errors.modalName
-                                       ? errors.modalName
-                                       : null}
-                                 </FormFeedback>
-                              </div>
-                           </FormGroup>
-                        </Col>
-                     </Row>
-                     <Row>
-                        <Col md="6">
-                           <FormGroup className={"fleet-block"}>
-                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                 Vendor
-                              </Label>
-                              <Async
-                                 placeholder={"Type vendor name"}
-                                 loadOptions={this.loadOptions}
-                                 className={"w-100 form-select"}
-                                 value={tireData && selectedVendor.value !== '' ? selectedVendor : vendorId}
-                                 isClearable={true}
-                                 onChange={e => {
-                                    this.setState({
-                                       vendorId: e
-                                    });
-                                 }}
-                              />
-                           </FormGroup>
-                        </Col>
-                        <Col md={"6"}>
-                           <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                 Seasonality
-                              </Label>
-                              <ButtonGroup className="tyre-season">
-                                 <Button
-                                    value={seasonality}
-                                    className={seasonality === 'summer' ? "margin-markup-btn-active" : "season-btn"}
-                                    onClick={() => this.handleButtonClick("summer")}
-                                 >
-                                    Summer
-                                 </Button>
-                                 <Button
-                                    value={seasonality}
-                                    className={seasonality === 'winter' ? "margin-markup-btn-active" : "season-btn"}
-                                    onClick={() => this.handleButtonClick("winter")}
-                                 >Winter</Button>
-                                 <Button
-                                    value={seasonality}
-                                    className={seasonality === 'all seasons' ? "margin-markup-btn-active" : "season-btn"}
-                                    onClick={() => this.handleButtonClick("all seasons")}
-                                 >All Seasons</Button>
-                              </ButtonGroup>
-                           </FormGroup>
-                        </Col>
-                     </Row>
-                     <h5 className={"font-weight-bold"}>Sizes</h5>
-                     {tierSize && tierSize.length
-                        ? tierSize.map((item, index) => {
-                           return (
-                              <div className="tyre-size-col" key={index}>
-                                 <Row>
-                                    <Col md="6">
-                                       <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                             Base Info
-                                          </Label>
-                                          <Input
-                                             type="text"
-                                             className={"form-control"}
-                                             name="baseInfo"
-                                             value={tierSize[index].baseInfo}
-                                             onChange={e => this.handleTireSizeStates(index, e)}
-                                             placeholder={"175/70R13 82T"}
-                                          />
-                                       </FormGroup>
-                                       <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                             Note
-                                          </Label>
-                                          <Input
-                                             type="textarea"
-                                             rows={"1"}
-                                             value={tierSize[index].notes}
-                                             name="notes"
-                                             maxLength="100"
-                                             onChange={e => this.handleTireSizeStates(index, e)}
-                                          />
-                                       </FormGroup>
-                                       <div className="child-row">
-                                          <Row className="m-0">
-                                             <Col md="6">
-                                                <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                                      Part #
-                                                   </Label>
-                                                   <Input
-                                                      type="text"
-                                                      name="part"
-                                                      placeholder={"1234"}
-                                                      maxLength="10"
-                                                      value={tierSize[index].part}
-                                                      onChange={e => this.handleTireSizeStates(index, e)}
-                                                   />
-                                                </FormGroup>
-                                             </Col>
-                                             <Col md="6">
-                                                <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                                      Bin
-                                                   </Label>
-                                                   <Input
-                                                      type="text"
-                                                      name="bin"
-                                                      maxLength="10"
-                                                      value={tierSize[index].bin}
-                                                      onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"175abd"}
-                                                   />
-                                                </FormGroup>
-                                             </Col>
-                                          </Row>
-                                          <Row className="m-0">
-                                             <Col md="6">
-                                                <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                                      Quantity
-                                                    </Label>
-                                                   <Input
-                                                      type="text"
-                                                      name="quantity"
-                                                      maxLength="5"
-                                                      value={tierSize[index].quantity}
-                                                      onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"123"}
-                                                   />
-                                                </FormGroup>
-                                             </Col>
-                                             <Col md="6">
-                                                <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
-                                                      Critical Quantity
-                                                   </Label>
-                                                   <Input
-                                                      type="text"
-                                                      name="criticalQuantity"
-                                                      maxLength="5"
-                                                      value={tierSize[index].criticalQuantity}
-                                                      onChange={e => this.handleTireSizeStates(index, e)}
-                                                      placeholder={"1"}
-                                                   />
-                                                </FormGroup>
-                                             </Col>
-                                          </Row>
-                                       </div>
-                                    </Col>
-                                    <Col md="6" className={"fleet-block"}>
-                                       <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
-                                             Pricing Matrix
-                                          </Label>
-                                          <Async
-                                             placeholder={"Type to select price matrix"}
-                                             loadOptions={this.matrixLoadOptions}
-                                             className={"w-100 form-select"}
-                                             onChange={(e) => this.handlePriceMatrix(e, index)}
-                                             isClearable={tierSize[index].priceMatrix && tierSize[index].priceMatrix.value ? true : false}
-                                             noOptionsMessage={() => "Type price matrix name"
-                                             }
-                                             value={tierSize[index].priceMatrix}
-                                          />
-                                       </FormGroup>
-                                       <div className="child-row">
-                                          <Row className="m-0">
-                                             <Col md="6">
-                                                <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                                      Cost
-                                                    </Label>
-                                                   <InputGroup>
-                                                      <div className="input-group-prepend">
-                                                         <span className="input-group-text">
-                                                            <i className="fa fa-dollar"></i>
-                                                         </span>
-                                                      </div>
-                                                      <Input
-                                                         type="text"
-                                                         name="cost"
-                                                         value={tierSize[index].cost}
-                                                         onChange={e => this.handleCostPricechange(index, e)}
-                                                         placeholder={"0.00"}
-                                                      />
-                                                   </InputGroup>
-                                                </FormGroup>
-                                             </Col>
-                                             <Col md="6">
-                                                <FormGroup>
-                                                   <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                                      Retail Price
-                                                   </Label>
-                                                   <InputGroup>
-                                                      <div className="input-group-prepend">
-                                                         <span className="input-group-text">
-                                                            <i className="fa fa-dollar"></i>
-                                                         </span>
-                                                      </div>
-                                                      <Input
-                                                         type="text"
-                                                         name="retailPrice"
-                                                         value={tierSize[index].retailPrice}
-                                                         onChange={e => this.handleRetailsPriceChange(index, e)}
-                                                         placeholder={"0.00"}
-                                                      />
-                                                   </InputGroup>
-                                                </FormGroup>
-                                             </Col>
-                                          </Row>
-                                       </div>
-                                       <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                             Markup
-                                          </Label>
-                                          <ButtonGroup className="tyre-season">
-                                             {MarkupChangeValues.map((mark, i) => {
-                                                return (
-                                                   <Button
-                                                      key={i}
-                                                      type={"button"}
-                                                      size={"sm"}
-                                                      className={tierSize[index].markup === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
-                                                      onClick={() => this.setPriceByMarkup(index, mark.value)}
-                                                   >
-                                                      {mark.key}
-                                                   </Button>
-                                                );
-                                             })}
-                                             <Button type={"button"} size={"sm"} className={"btn-with-input"}>
-                                                <Input
-                                                   type={"text"}
-                                                   placeholder={"Markup"}
-                                                   defaultValue={tierSize[index].markup}
-                                                   value={tierSize[index].markup}
-                                                   onChange={e => this.setPriceByMarkup(index, e.target.value)}
-                                                />
-                                             </Button>
-                                          </ButtonGroup>
-                                       </FormGroup>
-                                       <FormGroup>
-                                          <Label htmlFor="name" className="customer-modal-text-style tire-col">
-                                             Margin
-                                          </Label>
-                                          <ButtonGroup className="tyre-season">
-                                             {MarginChangeValues.map((mark, i) => {
-                                                return (
-                                                   <Button
-                                                      key={i}
-                                                      type={"button"}
-                                                      size={"sm"}
-                                                      className={tierSize[index].margin === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
-                                                      onClick={() => this.setPriceByMargin(index, mark.value)}
-                                                   >
-                                                      {mark.key}
-                                                   </Button>
-                                                );
-                                             })}
-                                             <Button type={"button"} size={"sm"} className={"btn-with-input"}>
-                                                <Input
-                                                   type={"text"}
-                                                   placeholder={"Margin"}
-                                                   value={tierSize[index].margin}
-                                                   defaultValue={tierSize[index].margin}
-                                                   onChange={e => this.setPriceByMargin(index, e.target.value)}
-                                                />
-                                             </Button>
-                                          </ButtonGroup>
-                                       </FormGroup>
-                                    </Col>
-                                 </Row>
-                                 <Button
-                                    className="btn-sm btn btn-danger remove-tire-btn"
-                                    onClick={() => this.handleRemoveTierSize(index)}
-                                 >
-                                    <i className="fas fa-times" />
-                                 </Button>
-                              </div>
-                           );
-                        })
-                        : null}
-                     {tierSize.length < 5 ? (
-                        <span
-                           onClick={this.handleAddTierSize}
-                           className="customer-add-phone customer-anchor-text customer-click-btn"
-                        >
-                           Add Tire Size
-                        </span>
-                     ) : null}
-
-                     <Col md="6">
-                        <div className="d-flex">
-                           <AppSwitch
-                              className={"mx-1"}
-                              checked={
-                                 tierPermission.showNoteOnQuotesInvoices
-                              }
-                              onClick={this.handleClick}
-                              variant={"3d"}
-                              // value={tierPermission.showNoteOnQuotesInvoices}
-                              color={"primary"}
-                              size={"sm"}
-                           />
-                           <p className="customer-modal-text-style">
-                              {tierPermissionText.showNoteOnQuotesInvoices}
-                           </p>
+                  {
+                     serviceTireModal && !newServiceTire ?
+                        <>
+                           <div className={"text-center"}>
+                              <Col md={"12"}>
+                                 <FormGroup className={"fleet-block"}>
+                                    <Label htmlFor="name" className="customer-modal-text-style">
+                                       Search Tire
+                                    </Label>
+                                    <div className={"input-block"}>
+                                       <Async
+                                          placeholder={"Type to select tire from the list"}
+                                          loadOptions={this.searchTire}
+                                          className={classnames("w-100 form-select", {
+                                             "is-invalid":
+                                                serviceTireError
+                                          })}
+                                          value={tireId}
+                                          onChange={e => {
+                                             this.handleServiceTireAdd(e)
+                                             this.setState({
+                                                newServiceTire: e && e.label === '+ Add New Tire' ? true : false
+                                             });
+                                          }}
+                                          isClearable={true}
+                                          noOptionsMessage={() => "Type Tire name"
+                                          }
+                                       />
+                                       {serviceTireError ? (
+                                          <FormFeedback>{serviceTireError}</FormFeedback>
+                                       ) : null}
+                                    </div>
+                                 </FormGroup>
+                              </Col>
+                           </div>
                            {
-                              (tierPermission.showNoteOnQuotesInvoices)
-
+                              tireId && tireId.tireData && tireId.tireData.tierSize.length ?
+                                 <div>
+                                    <table className={"table"}>
+                                       <thead>
+                                          <td>Base Info</td>
+                                          <td>Cost</td>
+                                          <td>Retail Price</td>
+                                          <td>Quantity</td>
+                                          <td>Select</td>
+                                       </thead>
+                                       <tbody>
+                                          {
+                                             tireId && tireId.tireData && tireId.tireData.tierSize ? tireId.tireData.tierSize.map((size, index) => {
+                                                return (
+                                                   <tr key={index}>
+                                                      <td>{size.baseInfo || "-"}</td>
+                                                      <td>{size.cost || "$0.00"}</td>
+                                                      <td>{size.retailPrice || "$0.00"}</td>
+                                                      <td>{size.quantity || 0}</td>
+                                                      <td>
+                                                         <Input
+                                                            type={"checkbox"}
+                                                            onChange={() => this.handleServiceTireSize(size, index)}
+                                                         /></td>
+                                                   </tr>
+                                                )
+                                             }) : null
+                                          }
+                                       </tbody>
+                                    </table>
+                                 </div> :
+                                 null
                            }
-                        </div>
-                     </Col>
-                  </div>
+                        </>
+                        :
+                        <div className="">
+                           <Row className="justify-content-center">
+                              <Col md="6">
+                                 <FormGroup>
+                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                       Brand Name <span className={"asteric"}>*</span>
+                                    </Label>
+                                    <div className="input-block">
+                                       <Input
+                                          onChange={this.handleChange}
+                                          className={"form-control"}
+                                          name="brandName"
+                                          value={brandName}
+                                          maxLength="20"
+                                          placeholder={"MRF"}
+                                          type={"text"}
+                                          invalid={errors.brandName && !brandName}
+                                       />
+                                       <FormFeedback>
+                                          {errors && !brandName && errors.brandName
+                                             ? errors.brandName
+                                             : null}
+                                       </FormFeedback>
+                                    </div>
+                                 </FormGroup>
+                              </Col>
+                              <Col md="6">
+                                 <FormGroup>
+                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                       Modal Name <span className={"asteric"}>*</span>
+                                    </Label>
+                                    <div className="input-block">
+                                       <Input
+                                          name="modalName"
+                                          value={modalName}
+                                          placeholder={"Road Grip"}
+                                          onChange={this.handleChange}
+                                          maxLength="20"
+                                          className={"form-control"}
+                                          type={"text"}
+                                          invalid={errors.modalName && !modalName} />
+                                       <FormFeedback>
+                                          {errors && !modalName && errors.modalName
+                                             ? errors.modalName
+                                             : null}
+                                       </FormFeedback>
+                                    </div>
+                                 </FormGroup>
+                              </Col>
+                           </Row>
+                           <Row>
+                              <Col md="6">
+                                 <FormGroup className={"fleet-block"}>
+                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                       Vendor
+                                    </Label>
+                                    <Async
+                                       placeholder={"Type vendor name"}
+                                       loadOptions={this.loadOptions}
+                                       className={"w-100 form-select"}
+                                       value={tireData && selectedVendor.value !== '' ? selectedVendor : vendorId}
+                                       isClearable={true}
+                                       onChange={e => {
+                                          this.setState({
+                                             vendorId: e
+                                          });
+                                       }}
+                                    />
+                                 </FormGroup>
+                              </Col>
+                              <Col md={"6"}>
+                                 <FormGroup>
+                                    <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                       Seasonality
+                                    </Label>
+                                    <ButtonGroup className="tyre-season">
+                                       <Button
+                                          value={seasonality}
+                                          className={seasonality === 'summer' ? "margin-markup-btn-active" : "season-btn"}
+                                          onClick={() => this.handleButtonClick("summer")}
+                                       >
+                                          Summer
+                                       </Button>
+                                       <Button
+                                          value={seasonality}
+                                          className={seasonality === 'winter' ? "margin-markup-btn-active" : "season-btn"}
+                                          onClick={() => this.handleButtonClick("winter")}
+                                       >Winter</Button>
+                                       <Button
+                                          value={seasonality}
+                                          className={seasonality === 'all seasons' ? "margin-markup-btn-active" : "season-btn"}
+                                          onClick={() => this.handleButtonClick("all seasons")}
+                                       >All Seasons</Button>
+                                    </ButtonGroup>
+                                 </FormGroup>
+                              </Col>
+                           </Row>
+                           <h5 className={"font-weight-bold"}>Sizes</h5>
+                           {tierSize && tierSize.length
+                              ? tierSize.map((item, index) => {
+                                 return (
+                                    <div className="tyre-size-col" key={index}>
+                                       <Row>
+                                          <Col md="6">
+                                             <FormGroup>
+                                                <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                   Base Info
+                                                </Label>
+                                                <Input
+                                                   type="text"
+                                                   className={"form-control"}
+                                                   name="baseInfo"
+                                                   value={tierSize[index].baseInfo}
+                                                   onChange={e => this.handleTireSizeStates(index, e)}
+                                                   placeholder={"175/70R13 82T"}
+                                                />
+                                             </FormGroup>
+                                             <FormGroup>
+                                                <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                   Note
+                                                </Label>
+                                                <Input
+                                                   type="textarea"
+                                                   rows={"1"}
+                                                   value={tierSize[index].notes}
+                                                   name="notes"
+                                                   maxLength="100"
+                                                   onChange={e => this.handleTireSizeStates(index, e)}
+                                                />
+                                             </FormGroup>
+                                             <div className="child-row">
+                                                <Row className="m-0">
+                                                   <Col md="6">
+                                                      <FormGroup>
+                                                         <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                            Part #
+                                                         </Label>
+                                                         <Input
+                                                            type="text"
+                                                            name="part"
+                                                            placeholder={"1234"}
+                                                            maxLength="10"
+                                                            value={tierSize[index].part}
+                                                            onChange={e => this.handleTireSizeStates(index, e)}
+                                                         />
+                                                      </FormGroup>
+                                                   </Col>
+                                                   <Col md="6">
+                                                      <FormGroup>
+                                                         <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                            Bin
+                                                         </Label>
+                                                         <Input
+                                                            type="text"
+                                                            name="bin"
+                                                            maxLength="10"
+                                                            value={tierSize[index].bin}
+                                                            onChange={e => this.handleTireSizeStates(index, e)}
+                                                            placeholder={"175abd"}
+                                                         />
+                                                      </FormGroup>
+                                                   </Col>
+                                                </Row>
+                                                <Row className="m-0">
+                                                   <Col md="6">
+                                                      <FormGroup>
+                                                         <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                            Quantity
+                                                         </Label>
+                                                         <Input
+                                                            type="text"
+                                                            name="quantity"
+                                                            maxLength="5"
+                                                            value={tierSize[index].quantity}
+                                                            onChange={e => this.handleTireSizeStates(index, e)}
+                                                            placeholder={"123"}
+                                                         />
+                                                      </FormGroup>
+                                                   </Col>
+                                                   <Col md="6">
+                                                      <FormGroup>
+                                                         <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
+                                                            Critical Quantity
+                                                         </Label>
+                                                         <Input
+                                                            type="text"
+                                                            name="criticalQuantity"
+                                                            maxLength="5"
+                                                            value={tierSize[index].criticalQuantity}
+                                                            onChange={e => this.handleTireSizeStates(index, e)}
+                                                            placeholder={"1"}
+                                                         />
+                                                      </FormGroup>
+                                                   </Col>
+                                                </Row>
+                                             </div>
+                                          </Col>
+                                          <Col md="6" className={"fleet-block"}>
+                                             <FormGroup>
+                                                <Label htmlFor="name" className="customer-modal-text-style tire-col two-line-label">
+                                                   Pricing Matrix
+                                                </Label>
+                                                <Async
+                                                   placeholder={"Type to select price matrix"}
+                                                   loadOptions={this.matrixLoadOptions}
+                                                   className={"w-100 form-select"}
+                                                   onChange={(e) => this.handlePriceMatrix(e, index)}
+                                                   isClearable={tierSize[index].priceMatrix && tierSize[index].priceMatrix.value ? true : false}
+                                                   noOptionsMessage={() => "Type price matrix name"
+                                                   }
+                                                   value={tierSize[index].priceMatrix}
+                                                />
+                                             </FormGroup>
+                                             <div className="child-row">
+                                                <Row className="m-0">
+                                                   <Col md="6">
+                                                      <FormGroup>
+                                                         <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                            Cost
+                                                         </Label>
+                                                         <InputGroup>
+                                                            <div className="input-group-prepend">
+                                                               <span className="input-group-text">
+                                                                  <i className="fa fa-dollar"></i>
+                                                               </span>
+                                                            </div>
+                                                            <Input
+                                                               type="text"
+                                                               name="cost"
+                                                               value={tierSize[index].cost}
+                                                               onChange={e => this.handleCostPricechange(index, e)}
+                                                               placeholder={"0.00"}
+                                                            />
+                                                         </InputGroup>
+                                                      </FormGroup>
+                                                   </Col>
+                                                   <Col md="6">
+                                                      <FormGroup>
+                                                         <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                            Retail Price
+                                                         </Label>
+                                                         <InputGroup>
+                                                            <div className="input-group-prepend">
+                                                               <span className="input-group-text">
+                                                                  <i className="fa fa-dollar"></i>
+                                                               </span>
+                                                            </div>
+                                                            <Input
+                                                               type="text"
+                                                               name="retailPrice"
+                                                               value={tierSize[index].retailPrice}
+                                                               onChange={e => this.handleRetailsPriceChange(index, e)}
+                                                               placeholder={"0.00"}
+                                                            />
+                                                         </InputGroup>
+                                                      </FormGroup>
+                                                   </Col>
+                                                </Row>
+                                             </div>
+                                             <FormGroup>
+                                                <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                   Markup
+                                                </Label>
+                                                <ButtonGroup className="tyre-season">
+                                                   {MarkupChangeValues.map((mark, i) => {
+                                                      return (
+                                                         <Button
+                                                            key={i}
+                                                            type={"button"}
+                                                            size={"sm"}
+                                                            className={tierSize[index].markup === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
+                                                            onClick={() => this.setPriceByMarkup(index, mark.value)}
+                                                         >
+                                                            {mark.key}
+                                                         </Button>
+                                                      );
+                                                   })}
+                                                   <Button type={"button"} size={"sm"} className={"btn-with-input"}>
+                                                      <Input
+                                                         type={"text"}
+                                                         placeholder={"Markup"}
+                                                         defaultValue={tierSize[index].markup}
+                                                         value={tierSize[index].markup}
+                                                         onChange={e => this.setPriceByMarkup(index, e.target.value)}
+                                                      />
+                                                   </Button>
+                                                </ButtonGroup>
+                                             </FormGroup>
+                                             <FormGroup>
+                                                <Label htmlFor="name" className="customer-modal-text-style tire-col">
+                                                   Margin
+                                                </Label>
+                                                <ButtonGroup className="tyre-season">
+                                                   {MarginChangeValues.map((mark, i) => {
+                                                      return (
+                                                         <Button
+                                                            key={i}
+                                                            type={"button"}
+                                                            size={"sm"}
+                                                            className={tierSize[index].margin === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
+                                                            onClick={() => this.setPriceByMargin(index, mark.value)}
+                                                         >
+                                                            {mark.key}
+                                                         </Button>
+                                                      );
+                                                   })}
+                                                   <Button type={"button"} size={"sm"} className={"btn-with-input"}>
+                                                      <Input
+                                                         type={"text"}
+                                                         placeholder={"Margin"}
+                                                         value={tierSize[index].margin}
+                                                         defaultValue={tierSize[index].margin}
+                                                         onChange={e => this.setPriceByMargin(index, e.target.value)}
+                                                      />
+                                                   </Button>
+                                                </ButtonGroup>
+                                             </FormGroup>
+                                          </Col>
+                                       </Row>
+                                       <Button
+                                          className="btn-sm btn btn-danger remove-tire-btn"
+                                          onClick={() => this.handleRemoveTierSize(index)}
+                                       >
+                                          <i className="fas fa-times" />
+                                       </Button>
+                                    </div>
+                                 );
+                              })
+                              : null}
+                           {tierSize.length < 5 && !serviceTireModal ? (
+                              <span
+                                 onClick={this.handleAddTierSize}
+                                 className="customer-add-phone customer-anchor-text customer-click-btn"
+                              >
+                                 Add Tire Size
+                              </span>
+                           ) : null}
+
+                           <Col md="6">
+                              <div className="d-flex">
+                                 <AppSwitch
+                                    className={"mx-1"}
+                                    checked={
+                                       tierPermission.showNoteOnQuotesInvoices
+                                    }
+                                    onClick={this.handleClick}
+                                    variant={"3d"}
+                                    // value={tierPermission.showNoteOnQuotesInvoices}
+                                    color={"primary"}
+                                    size={"sm"}
+                                 />
+                                 <p className="customer-modal-text-style">
+                                    {tierPermissionText.showNoteOnQuotesInvoices}
+                                 </p>
+                                 {
+                                    (tierPermission.showNoteOnQuotesInvoices)
+
+                                 }
+                              </div>
+                           </Col>
+                        </div>}
                </ModalBody>
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
