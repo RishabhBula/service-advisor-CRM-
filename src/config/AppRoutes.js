@@ -100,7 +100,7 @@ export const AppRoutes = {
     exact: true
   },
   CUSTOMERS: {
-    url: "/settings/customers",
+    url: "/customers",
     name: "Customers",
     exact: true
   },
