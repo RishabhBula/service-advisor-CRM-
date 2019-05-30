@@ -86,6 +86,9 @@ class DefaultLayout extends Component {
         if (ind > -1) {
           if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
             logger("Allowed to use");
+            this.setState({
+              hasAccess: true
+            });
           } else {
             this.setState({
               hasAccess: false
