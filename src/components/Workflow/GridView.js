@@ -146,39 +146,38 @@ class WorkflowGridView extends React.Component {
             >
               {orderStatus.map((status, index) => (
                 <React.Fragment key={status._id}>
-                  <div className={"workflow-grid-card"}>
-                    <Draggable draggableId={status._id} index={index}>
-                      {provided => (
-                        <>
+                  <Draggable draggableId={status._id} index={index}>
+                    {provided => (
+                      <>
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={"workflow-grid-card"}
+                        >
                           <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={"title"}
                           >
-                            <div
-                              {...provided.dragHandleProps}
-                              className={"title"}
-                            >
-                              <Row>
-                                <Col sm={"10"}>{status.name}</Col>
-                                <Col sm={"2"}>
-                                  {this.renderActions(status, index)}
-                                </Col>
-                              </Row>
-                            </div>
-                            {this.renderOrders(
-                              status,
-                              orders[status._id] || [],
-                              isLoading
-                            )}
+                            <Row>
+                              <Col sm={"10"}>{status.name}</Col>
+                              <Col sm={"2"}>
+                                {this.renderActions(status, index)}
+                              </Col>
+                            </Row>
                           </div>
-                          {provided.placeholder}
-                        </>
-                      )}
-                    </Draggable>
-                  </div>
+                          {this.renderOrders(
+                            status,
+                            orders[status._id] || [],
+                            isLoading
+                          )}
+                        </div>
+                        {provided.placeholder}
+                      </>
+                    )}
+                  </Draggable>
                 </React.Fragment>
               ))}
-              <div>{provided.placeholder}</div>
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
