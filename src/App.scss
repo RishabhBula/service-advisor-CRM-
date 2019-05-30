@@ -418,15 +418,20 @@ body {
     }
   }
   .workflow-grid-card {
-    width: 250px;
-    float: left;
     background: #fff;
     border: 1px solid #ccc;
     padding: 10px;
-    margin: 0 15px;
+    margin: 15px;
     border-radius: 5px;
+    width: 250px;
+    display: inline-block;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
     [data-react-beautiful-dnd-droppable] {
-      min-height: 200px;
+      height: 400px;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     .title {
       background: #8157ef;
@@ -441,5 +446,11 @@ body {
       margin: 10px 0;
       padding: 10px;
     }
+  }
+  .is-invalid {
+    background-image: none !important;
+  }
+  .workflow-grid-container {
+    width: max-content;
   }
 }

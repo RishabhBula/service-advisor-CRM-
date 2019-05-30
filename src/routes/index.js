@@ -23,6 +23,10 @@ const GeneratePassword = React.lazy(() =>
   import("../containers/Auth/GeneratePassword")
 );
 
+const VerifyLoginForWildcard = React.lazy(() =>
+  import("../containers/Auth/VerifyLoginForWildcard")
+);
+
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
 const Routes = [
@@ -67,6 +71,12 @@ const Routes = [
     path: "/register/create-password/:userId/:activationCode",
     name: "Create Password",
     component: GeneratePassword
+  },
+  {
+    exact: false,
+    path: "/verify-user-details",
+    name: "Verify User Details",
+    component: VerifyLoginForWildcard
   },
   {
     exact: false,

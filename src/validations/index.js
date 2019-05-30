@@ -9,3 +9,4 @@ export * from "./tier";
 export * from "./parts";
 export * from "./Labour";
 export * from "./priceMatrix";
+export * from "./orderStatus";
