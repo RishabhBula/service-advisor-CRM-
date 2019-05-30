@@ -62,12 +62,23 @@ export const isValidURL = str => {
   return pattern.test(str);
 };
 
-export const validUrlCheck = str => { 
-  var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/; 
+export const validUrlCheck = str => {
+  var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
   if (!regex.test(str)) {
-    return false; 
-  } 
-  else { 
-    return true; 
-  } 
-}
+    return false;
+  } else {
+    return true;
+  }
+};
+
+/**
+ *
+ */
+
+export const isValidObjectId = id => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    return true;
+  } else {
+    return false;
+  }
+};
