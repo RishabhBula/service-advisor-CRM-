@@ -13,10 +13,11 @@ const CRMModal = props => (
       "custom-modal-lg",
       { ...props.classNames }
     )}
+    {...props.modalProps}
   >
     <ModalHeader toggle={props.toggle}>
       {props.headerText || "Modal Header"}
-      {props.updatedAt ? <LastUpdated updatedAt={props.updatedAt}/> : null}
+      {props.updatedAt ? <LastUpdated updatedAt={props.updatedAt} /> : null}
     </ModalHeader>
     <ModalBody>{props.children}</ModalBody>
     <ModalFooter>

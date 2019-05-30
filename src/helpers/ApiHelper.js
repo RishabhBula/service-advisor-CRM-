@@ -70,7 +70,7 @@ export class ApiHelper {
       const data = new SuccessHandlerHelper(response.data);
       return data.data;
     } catch (err) {
-      if (Axios.isCancel(err)) {
+      if (Axios.isCancel(err) || !err.response) {
         console.log("%s Req Cancelled", err);
         return {
           isError: true,

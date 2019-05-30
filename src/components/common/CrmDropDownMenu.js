@@ -4,7 +4,7 @@ import {
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Dropdown,
+  Dropdown
 } from "reactstrap";
 import CrmCircleIcon from "../../components/common/CrmCircleIcon";
 
@@ -14,13 +14,13 @@ class CrmDropDownMenu extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: false,
+      dropdownOpen: false
     };
   }
 
   toggle() {
     this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen,
+      dropdownOpen: !prevState.dropdownOpen
     }));
   }
 
@@ -45,7 +45,7 @@ class CrmDropDownMenu extends Component {
       imagePass,
       iconPass,
       classNamePass,
-      cssPass,
+      cssPass
     } = this.props;
 
     return (
@@ -67,25 +67,7 @@ class CrmDropDownMenu extends Component {
               <CrmCircleIcon circleIconPass={iconPass} cssPass={cssPass} />
             )}
           </DropdownToggle>
-          <DropdownMenu right>
-            {this.optionsArray()}
-            {/* <DropdownItem>
-              <i className="fa fa-bell-o" /> Updates
-              <Badge color="info">42</Badge>
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fa fa-envelope-o" /> Messages
-              <Badge color="success">42</Badge>
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fa fa-tasks" /> Tasks
-              <Badge color="danger">42</Badge>
-            </DropdownItem>
-            <DropdownItem>
-              <i className="fa fa-comments" /> Comments
-              <Badge color="warning">42</Badge>
-            </DropdownItem> */}
-          </DropdownMenu>
+          <DropdownMenu right>{this.optionsArray()}</DropdownMenu>
         </Dropdown>
       </div>
     );
