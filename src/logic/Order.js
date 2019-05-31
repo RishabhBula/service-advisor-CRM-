@@ -8,9 +8,9 @@ import {
   orderActions,
   showLoader,
   hideLoader,
-  addOrderSuccess,
   redirectTo,
   getOrderListSuccess,
+  addOrderSuccess,
   modelOpenRequest
 } from "./../actions";
 import { logger } from "../helpers/Logger";
@@ -226,17 +226,15 @@ const addOrderLogic = createLogic({
       done();
       return;
     } else {
+      dispatch(addOrderSuccess({
+        result:result.data.result
+      }))
       dispatch(
         redirectTo({
           path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
             ":id",
             `${result.data.result._id}`
           )}`
-        })
-      );
-      dispatch(
-        addOrderSuccess({
-          orderData: result.data.result
         })
       );
       dispatch(hideLoader());

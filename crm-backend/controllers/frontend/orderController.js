@@ -55,8 +55,8 @@ const createNewOrder = async (req, res) => {
     const workflowStatus = orderStatus[0]._id;
     const orderConst = {
       orderName: body.orderName,
-      customerId: mongoose.Types.ObjectId(body.customerId),
-      vehicleId: mongoose.Types.ObjectId(body.vehicleId),
+      customerId: body.customerId ? mongoose.Types.ObjectId(body.customerId) : null,
+      vehicleId: body.vehicleId ? mongoose.Types.ObjectId(body.vehicleId) : null,
       serviceId: body.serviceId,
       inspectionId: body.inspectionId,
       timeClockId: body.timeClockId
@@ -75,6 +75,7 @@ const createNewOrder = async (req, res) => {
 
     return res.status(200).json({
       message: "Order created successfully",
+      result: orderData,
       success: true
     });
   } catch (error) {

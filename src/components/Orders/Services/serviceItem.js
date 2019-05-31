@@ -19,12 +19,13 @@ import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
 import { getSumOfArray } from "../../../helpers"
-
+import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 class ServiceItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
       addNote: false,
+      openCannedService: false,
       noteIndex: -1,
       customerComment: "",
       userRecommendations: "",
@@ -451,7 +452,8 @@ class ServiceItem extends Component {
           },
           serviceSubTotalValue: [],
           serviceTotal: "0.00",
-          isError: false
+          isError: false,
+          isCannedService: false
         }
       ]
       services.push(serviceData[0])
@@ -652,11 +654,34 @@ class ServiceItem extends Component {
       this.props.addNewService(payload)
     }
   }
+  handleCannedServiceModal = () => {
+    this.setState({
+      openCannedService: !this.state.openCannedService
+    })
+  }
 
+  handleAddCannedService = (serviceData, index) => {
+    const services = [...this.state.services]
+    if (!serviceData.name) {
+      services[index].isError = true
+    } else {
+      services[index].isCannedService = true
+      const payload = 
+        {
+          services: [services[index]]
+        }
+      
+      this.props.addNewService(payload)
+    }
+    this.setState({
+      isServiceSubmitted: true,
+      services
+    })
+  }
   render() {
     const { addNote, noteIndex, services, selectedTechnician, customerComment,
-      userRecommendations, isServiceSubmitted } = this.state
-    const { labelReducer } = this.props
+      userRecommendations, isServiceSubmitted, openCannedService } = this.state
+    const { labelReducer, getCannedServiceList, serviceReducers } = this.props
     const LabelColors = (index, sIndex) => {
       const labelLength = services[index].serviceItems[sIndex].label.length
       return (
@@ -696,7 +721,7 @@ class ServiceItem extends Component {
           </Row>
           <div className={"pb-2"}>
             <Button color={"primary"} className={"mr-2"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
-            <Button color={"primary"} onClick={() => this.handleSeviceAdd()}>Browse service</Button>
+            <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
           </div>
           {
             services && services.length ? services.map((item, index) => {
@@ -943,8 +968,16 @@ class ServiceItem extends Component {
                           onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
                           Add Part
                         </Button>
-                        <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >Add Tire</Button>
-                        <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>Add Labor</Button>{/* 
+                        <Button
+                          className={"mr-2"}
+                          onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
+                          Add Tire
+                        </Button>
+                        <Button
+                          className={"mr-2"}
+                          onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
+                          Add Labor
+                        </Button>{/* 
                         <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
                       </div>
 
@@ -971,6 +1004,9 @@ class ServiceItem extends Component {
                       <div>
                         <span>Service Total: ${parseFloat(item.serviceTotal).toFixed(2)}</span>
                       </div>
+                    </div>
+                    <div className={"m-2 d-flex justify-content-end"}>
+                      <Button color={"secondary"} onClick={() => this.handleAddCannedService(item, index)}>Save as canned service</Button>
                     </div>
                     <div>
                       {
@@ -1071,6 +1107,7 @@ class ServiceItem extends Component {
                           </Row> :
                           null
                       }
+
                     </div>
                   </Card>
                 </>
@@ -1085,6 +1122,12 @@ class ServiceItem extends Component {
               }
             }>Submit services</Button>
           </div>
+          <CrmCannedServiceModal
+            openCannedService={openCannedService}
+            handleCannedServiceModal={this.handleCannedServiceModal}
+            getCannedServiceList={getCannedServiceList}
+            serviceReducers={serviceReducers}
+          />
         </div>
       </>
     );

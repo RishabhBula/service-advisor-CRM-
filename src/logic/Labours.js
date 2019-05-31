@@ -55,7 +55,8 @@ const labourAddLogic = createLogic({
             name: "",
             isAddLabel: false
           }],
-          subTotalValue: ""
+          subTotalValue: "",
+          isItemChecked: true
         })
         dispatch(addLaborToService(data.services))
         dispatch(
@@ -132,7 +133,8 @@ const labourListLogic = createLogic({
             name: "",
             isAddLabel: false
           }],
-          subTotalValue: ""
+          subTotalValue: "",
+          isItemChecked: true
         }
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

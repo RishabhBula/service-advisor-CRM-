@@ -66,8 +66,8 @@ class WorkFlow extends Component {
     };
   }
 
-  handleOrder = async () => {
-    await this.props.addOrderRequest();
+  handleOrder = () => {
+    this.props.addOrderRequest();
     /* const { orderData } = this.props.orderReducer
     this.props.redirectTo(`${OrderRoutes.path}/id:${orderData._id}`);
    */
@@ -79,12 +79,6 @@ class WorkFlow extends Component {
   componentDidMount() {
     this.props.getOrders();
   }
-  /**
-   *
-   */
-  handleOrder = () => {
-    this.props.redirectTo(OrderRoutes.path);
-  };
   /**
    *
    */
@@ -381,16 +375,16 @@ class WorkFlow extends Component {
                     deleteOrderStatus={this.deleteOrderStatus}
                   />
                 ) : (
-                  <div style={{ overflowX: "auto" }}>
-                    <WorkflowGridView
-                      orderData={orderData}
-                      orderStatus={orderStatus}
-                      updateOrderStatus={updateOrderStatus}
-                      deleteOrderStatus={this.deleteOrderStatus}
-                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                    />
-                  </div>
-                )}
+                    <div style={{ overflowX: "auto" }}>
+                      <WorkflowGridView
+                        orderData={orderData}
+                        orderStatus={orderStatus}
+                        updateOrderStatus={updateOrderStatus}
+                        deleteOrderStatus={this.deleteOrderStatus}
+                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                      />
+                    </div>
+                  )}
               </Col>
             </Row>
             <Suspense fallback={<Loader />}>

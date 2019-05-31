@@ -8,6 +8,7 @@ const initialState = {
     isLoading: true
   },
   orderStatus: [],
+  orderItems:[],
   isLoading: true
 };
 
@@ -20,12 +21,11 @@ export const orderReducer = handleActions(
     [orderActions.ADD_ORDER_REQUEST]: (state, { payload }) => ({
       ...state,
       ...payload,
-      orderData: []
     }),
     [orderActions.ADD_ORDER_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
-      orderData: payload.orderData
+      orderItems: payload.result
     }),
     [orderActions.GET_ORDER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,

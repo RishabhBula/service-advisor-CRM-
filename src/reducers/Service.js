@@ -29,6 +29,7 @@ const serviceData = {
          serviceTotal: ""
       }
    ],
+   cannedServiceList:[],
    isLoading: true,
 };
 
@@ -55,6 +56,15 @@ export const serviceReducers = handleActions(
       }),
       [serviceActions.ADD_SERVICE_SUCCESS]: (state, action) => ({
          ...state,
+         isLoading: false
+      }),
+      [serviceActions.GET_CANNED_SERVICE_LIST]: (state, action) => ({
+         ...state,
+         isLoading: true
+      }),
+      [serviceActions.GET_CANNED_SERVICE_LIST_SUCCESS]: (state, action) => ({
+         ...state,
+         cannedServiceList: action.payload.cannedServiceList,
          isLoading: false
       }),
    },

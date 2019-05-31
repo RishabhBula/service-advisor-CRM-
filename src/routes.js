@@ -107,14 +107,14 @@ export const BreadCrumbRoutes = [
     name: AppRoutes.DASHBOARD.name
   },
   {
-    path: AppRoutes.WORKFLOW.url,
-    exact: AppRoutes.WORKFLOW.exact,
-    name: AppRoutes.WORKFLOW.name
-  },
-  {
     path: AppRoutes.WORKFLOW_ORDER.url,
     exact: AppRoutes.WORKFLOW_ORDER.exact,
     name: AppRoutes.WORKFLOW_ORDER.name
+  },
+  {
+    path: AppRoutes.WORKFLOW.url,
+    exact: AppRoutes.WORKFLOW.exact,
+    name: AppRoutes.WORKFLOW.name
   },
   {
     path: AppRoutes.CALENDER.url,
