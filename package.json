@@ -36,6 +36,7 @@
     "js-object-validation": "^1.0.16",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
+    "pdfjs": "^2.3.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.4.2",
     "react": "^16.8.5",

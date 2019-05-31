@@ -12,7 +12,15 @@ import Loader from "../Loader/Loader";
 import {
   getOrderIdRequest,
   customerGetRequest,
-  vehicleGetRequest
+  vehicleGetRequest,
+  addNewInspection,
+  addInspectionTemplate,
+  addMessageTemplate,
+  getMessageTemplate,
+  getTemplateList,
+  updateMessageTemplate,
+  deleteMessageTemplate,
+  searchMessageTemplateList
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -74,7 +82,16 @@ class Order extends Component {
       getVehicleData,
       getCustomerData,
       modelInfoReducer,
-      modelOperate } = this.props
+      modelOperate,
+      addNewInspection,
+      addInspectionTemplate,
+      addMessageTemplate,
+      getMessageTemplate,
+      getTemplateList,
+      updateMessageTemplate,
+      deleteMessageTemplate,
+      searchMessageTemplateList
+     } = this.props
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -113,7 +130,7 @@ class Order extends Component {
                       }
                       {
                         activeTab === 1 ?
-                          <Inspection /> : null
+                          <Inspection addNewInspection={addNewInspection} inspectionData={this.props.inspectionReducer} addInspectionTemplate={addInspectionTemplate} getTemplateList={getTemplateList} addMessageTemplate={addMessageTemplate} getMessageTemplate={getMessageTemplate} updateMessageTemplate={updateMessageTemplate} deleteMessageTemplate={deleteMessageTemplate} searchMessageTemplateList={searchMessageTemplateList}/> : null
                       }
                       {
                         activeTab === 2 ?
@@ -137,6 +154,7 @@ class Order extends Component {
 }
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
+  inspectionReducer:state.inspectionReducer,
   modelInfoReducer: state.modelInfoReducer
 });
 const mapDispatchToProps = dispatch => ({
@@ -148,7 +166,31 @@ const mapDispatchToProps = dispatch => ({
   },
   getVehicleData: (data) => {
     dispatch(vehicleGetRequest(data))
-  }
+  },
+  addNewInspection: (data) =>{
+    dispatch(addNewInspection(data))
+  },
+  addInspectionTemplate : (data) =>{
+    dispatch(addInspectionTemplate(data))
+  },
+  getTemplateList : (data) =>{
+    dispatch(getTemplateList(data))
+  },
+  addMessageTemplate: (data) => {
+    dispatch(addMessageTemplate(data))
+  },
+  getMessageTemplate: (data) => {
+    dispatch(getMessageTemplate(data))
+  },
+  updateMessageTemplate:(data)=>{
+    dispatch(updateMessageTemplate(data))
+  }, 
+  deleteMessageTemplate: (data) => {
+    dispatch(deleteMessageTemplate(data))
+  },
+  searchMessageTemplateList: (data) => {
+    dispatch(searchMessageTemplateList(data))
+  }, 
 });
 export default connect(
   mapStateToProps,
