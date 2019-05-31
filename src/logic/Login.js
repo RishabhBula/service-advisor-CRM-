@@ -2,9 +2,19 @@ import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
-import { loginActions, redirectTo, showLoader, hideLoader } from "./../actions";
+import {
+  loginActions,
+  redirectTo,
+  showLoader,
+  hideLoader,
+  logOutRequest
+} from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
-
+import { APP_URL } from "../config/AppConfig";
+import { AppRoutes } from "../config/AppRoutes";
+/**
+ *
+ */
 const loginLogic = createLogic({
   type: loginActions.LOGIN_REQUEST,
   cancelType: loginActions.LOGIN_FAILED,
@@ -19,30 +29,43 @@ const loginLogic = createLogic({
       undefined,
       action.payload
     );
-    if (result.isError) {
+    if (result.isError || !result.data.data || !result.data.data.subdomain) {
       toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
     } else {
-      logger(result);
-      localStorage.setItem("token", result.data.token);
-      // toast.success(result.messages[0]);
-      dispatch(hideLoader());
-      dispatch(redirectTo({ path: "/dashboard" }));
+      logger(
+        `Redirect URI: ${window.location.protocol}://${
+          result.data.data.subdomain
+        }.${APP_URL}/verify-user-details?user=${
+          result.data.token
+        }&key=${Date.now()}&verification=${Math.random()}`
+      );
+      window.location.href = `${"http"}://${
+        result.data.data.subdomain
+      }.${APP_URL}/verify-user-details?user=${
+        result.data.token
+      }&key=${Date.now()}&verification=${Math.random()}`;
+
       done();
     }
   }
 });
-
+/**
+ *
+ */
 const logOutLogic = createLogic({
   type: loginActions.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
     localStorage.removeItem("token");
-    dispatch(redirectTo({ path: "/login" }));
+    window.location.href = `http://${APP_URL}`;
     done();
   }
 });
+/**
+ *
+ */
 const forgetPasswordLogic = createLogic({
   type: loginActions.FORGET_PASSWORD_REQUEST,
   async process({ action }, dispatch, done) {
@@ -70,6 +93,9 @@ const forgetPasswordLogic = createLogic({
     }
   }
 });
+/**
+ *
+ */
 const verifyResetTokenLogic = createLogic({
   type: loginActions.VALIDATE_RESET_REQUEST,
   async process({ action }, dispatch, done) {
@@ -95,6 +121,9 @@ const verifyResetTokenLogic = createLogic({
     }
   }
 });
+/**
+ *
+ */
 const resetPasswordLogic = createLogic({
   type: loginActions.RESET_PASSSWORD_REQUEST,
   async process({ action }, dispatch, done) {
@@ -121,10 +150,47 @@ const resetPasswordLogic = createLogic({
     }
   }
 });
+/**
+ *
+ */
+const verifyAccountAccessLogic = createLogic({
+  type: loginActions.VERIFY_WORKSPACE_LOGIN,
+  async process({ action }, dispatch, done) {
+    const { payload } = action;
+    logger(payload);
+    const { user, key, verification } = payload;
+    if (!user || !key || !verification) {
+      dispatch(logOutRequest());
+    }
+    localStorage.setItem("token", user);
+    const result = await new ApiHelper().FetchFromServer(
+      "/user",
+      "/getProfile",
+      "GET",
+      true
+    );
+    logger(result);
+    if (result.isError) {
+      dispatch(logOutRequest());
+    }
+
+    dispatch(
+      redirectTo({
+        path: AppRoutes.DASHBOARD.url
+      })
+    );
+    done();
+  }
+});
+
+/**
+ *
+ */
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
   forgetPasswordLogic,
   verifyResetTokenLogic,
-  resetPasswordLogic
+  resetPasswordLogic,
+  verifyAccountAccessLogic
 ];

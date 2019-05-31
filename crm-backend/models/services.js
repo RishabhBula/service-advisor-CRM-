@@ -10,151 +10,22 @@ const serviceSchema = new Schema({
       type: String,
       default: null,
    },
+   customerComment: {
+      type: String,
+      default: null
+   },
+   userRecommendations: {
+      type: String,
+      default: null
+   },
    technician: {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: "user",
       default: null,
    },
-   description: {
-      type: [
-         new Schema({
-            partId: {
-               type: [Schema.Types.ObjectId],
-               ref: "part",
-               default: null,
-            },
-            tireId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Tier",
-               default: null,
-            },
-            laborId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Labour",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
-   },
-   price: {
-      type: [
-         new Schema({
-            partId: {
-               type: [Schema.Types.ObjectId],
-               ref: "part",
-               default: null,
-            },
-            tireId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Tier",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
-   },
-   quantity: {
-      type: [
-         new Schema({
-            partId: {
-               type: [Schema.Types.ObjectId],
-               ref: "part",
-               default: null,
-            },
-            tireId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Tier",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
-   },
-   hours: {
-      type: [
-         new Schema({
-            laborId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Labour",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
-   },
-   disc: {
-      type: [
-         new Schema({
-            partId: {
-               type: [Schema.Types.ObjectId],
-               ref: "part",
-               default: null,
-            },
-            tireId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Tier",
-               default: null,
-            },
-            laborId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Labour",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
-   },
-   subtotal: {
-      type: [
-         new Schema({
-            partId: {
-               type: [Schema.Types.ObjectId],
-               ref: "part",
-               default: null,
-            },
-            tireId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Tier",
-               default: null,
-            },
-            laborId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Labour",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
-   },
-   lableStatus: {
-      type: [
-         new Schema({
-            partId: {
-               type: [Schema.Types.ObjectId],
-               ref: "part",
-               default: null,
-            },
-            tireId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Tier",
-               default: null,
-            },
-            laborId: {
-               type: [Schema.Types.ObjectId],
-               ref: "Labour",
-               default: null,
-            },
-            type: String
-         })
-      ],
-      default: null
+   serviceItems: {
+      type: [Object],
+      default: []
    },
    epa: {
       type: Object,

@@ -17,6 +17,15 @@ export const ColorOptions = [
   { color: "#E2E9EB", label: "Other", value: "other" }
 ];
 
+export const LabelColorOptions = [
+  { color: "#e45361",  value: "red" },
+  { color: "rgb(239, 239, 239)",  value: "silver" },
+  { color: "#15a7f1",  value: "blue" },
+  { color: "#36c15c",  value: "green" },
+  { color: "#ffd62c",  value: "gold" },
+  { color: "#744cda",  value: "purple" },
+]
+
 export const carsOptions = [
   {
     value: "convertible",

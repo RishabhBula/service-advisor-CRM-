@@ -6,13 +6,15 @@ import {
   hideLoader,
   getInventoryPartsListStarted,
   getInventoryPartsListSuccess,
-  getInventoryPartsList
+  getInventoryPartsList,
+  addPartToService
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppConfig } from "../config/AppConfig";
+
 let lastReq;
 const getInventoryPartsVendorLogic = createLogic({
   type: inventoryPartsActions.GET_VENDORS_LIST,
@@ -46,6 +48,7 @@ const addPartToInventoryLogic = createLogic({
   type: inventoryPartsActions.ADD_PART_TO_INVENTORY,
   async process({ action, getState }, dispatch, done) {
     const { data, query } = action.payload;
+    logger(action.payload)
     dispatch(showLoader());
     const api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -64,20 +67,49 @@ const addPartToInventoryLogic = createLogic({
       return;
     }
     toast.success(result.messages[0]);
-    dispatch(
-      modelOpenRequest({
-        modelDetails: {
-          partAddModalOpen: false
-        }
+    if (data.serviceModal) {
+      logger(data.services, data.services[data.serviceIndex], "!###########221233")
+      let servicePartData = data.services[data.serviceIndex].serviceItems
+      servicePartData.push({
+        ...result.data.result,
+        serviceType: "Part",
+        discount: {
+          value: '',
+          type: "%"
+        },
+        label: [{
+          color: "",
+          name: "",
+          isAddLabel: false
+        }],
+        subTotalValue: ""
       })
-    );
-    dispatch(hideLoader());
-    dispatch(
-      getInventoryPartsList({
-        ...query
-      })
-    );
-    done();
+      dispatch(addPartToService(data.services))
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            partAddModalOpen: false
+          }
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    } else {
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            partAddModalOpen: false
+          }
+        })
+      );
+      dispatch(hideLoader());
+      dispatch(
+        getInventoryPartsList({
+          ...query
+        })
+      );
+      done();
+    }
   }
 });
 
@@ -86,10 +118,20 @@ const getInventoryPartsListLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     dispatch(getInventoryPartsListStarted());
     const api = new ApiHelper();
-    let result = await api.FetchFromServer("/inventory", "/part", "GET", true, {
-      ...action.payload,
-      limit: AppConfig.ITEMS_PER_PAGE
-    });
+    let result = await api.FetchFromServer(
+      "/inventory",
+      "/part",
+      "GET",
+      true,
+      {
+        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        sort: action.payload && action.payload.sort ? action.payload.sort : null,
+        status: action.payload && action.payload.status ? action.payload.status : null,
+        type: action.payload && action.payload.type ? action.payload.type : null,
+        vendorId: action.payload && action.payload.vendorId ? action.payload.vendorId : null,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
+    );
     if (result.isError) {
       dispatch(
         getInventoryPartsListSuccess({
@@ -108,6 +150,31 @@ const getInventoryPartsListLogic = createLogic({
         })
       );
     } else {
+      var defaultOptions = [
+        {
+          value: "",
+          label: "Add New Part"
+        }
+      ];
+      const options = result.data.parts.map(part => ({
+        label: `${part.description}`,
+        value: part._id,
+        partData: {
+          ...part,
+          serviceType: 'part',
+          discount: {
+            value: '',
+            type: "%"
+          },
+          label: [{
+            color: "",
+            name: "",
+            isAddLabel: false
+          }],
+          subTotalValue: ""
+        }
+      }));
+      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(getInventoryPartsListSuccess(result.data));
     }
     done();

@@ -20,7 +20,20 @@ import {
   getTemplateList,
   updateMessageTemplate,
   deleteMessageTemplate,
-  searchMessageTemplateList
+  searchMessageTemplateList,
+  getInventoryPartsList,
+  addPartToService,
+  addTireToService,
+  requestAddPart,
+  addNewTier,
+  getTiersList,
+  labourAddRequest,
+  addLaborToService,
+  labourListRequest,
+  getUsersList,
+  addNewService,
+  getLabelList,
+  addNewLabel
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -68,6 +81,7 @@ class Order extends Component {
   }
   componentDidMount() {
     this.props.getOrderId();
+    this.props.getLabelList()
   }
 
   onTabChange = (activeTab) => {
@@ -75,6 +89,9 @@ class Order extends Component {
       activeTab: activeTab
     })
   }
+  addInventoryPart = data => {
+    this.props.addInventoryPart({ data });
+  };
 
   render() {
     const { activeTab } = this.state;
@@ -90,7 +107,20 @@ class Order extends Component {
       getTemplateList,
       updateMessageTemplate,
       deleteMessageTemplate,
-      searchMessageTemplateList
+      searchMessageTemplateList,
+      getPartDetails,
+      addPartToService,
+      addTireToService,
+      serviceReducers,
+      addLaborToService,
+      addInventryTire,
+      addLaborInventry,
+      getTireDetails,
+      getLaborDetails,
+      getUserData,
+      addNewService,
+      labelReducer,
+      addNewLabel 
      } = this.props
     return (
       <div className="animated fadeIn">
@@ -126,6 +156,20 @@ class Order extends Component {
                           <Services
                             modelInfoReducer={modelInfoReducer}
                             modelOperate={modelOperate}
+                            addPartToService={addPartToService}
+                            addTireToService={addTireToService}
+                            getPartDetails={getPartDetails}
+                            addInventoryPart={this.addInventoryPart}
+                            addInventryTire={addInventryTire}
+                            serviceReducers={serviceReducers}
+                            getTireDetails={getTireDetails}
+                            addLaborInventry={addLaborInventry}
+                            addLaborToService={addLaborToService}
+                            getLaborDetails={getLaborDetails}
+                            getUserData={getUserData}
+                            addNewService={addNewService}
+                            labelReducer={labelReducer}
+                            addNewLabel={addNewLabel}
                           /> : null
                       }
                       {
@@ -155,7 +199,9 @@ class Order extends Component {
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
   inspectionReducer:state.inspectionReducer,
-  modelInfoReducer: state.modelInfoReducer
+  modelInfoReducer: state.modelInfoReducer,
+  serviceReducers: state.serviceReducers,
+  labelReducer: state.labelReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -191,6 +237,45 @@ const mapDispatchToProps = dispatch => ({
   searchMessageTemplateList: (data) => {
     dispatch(searchMessageTemplateList(data))
   }, 
+  getPartDetails: (data) => {
+    dispatch(getInventoryPartsList(data))
+  },
+  addPartToService: (data) => {
+    dispatch(addPartToService(data))
+  },
+  addTireToService: (data) => {
+    dispatch(addTireToService(data))
+  },
+  addInventoryPart: (data) => {
+    dispatch(requestAddPart(data))
+  },
+  addInventryTire: (data) => {
+    dispatch(addNewTier(data))
+  },
+  getTireDetails: data => {
+    dispatch(getTiersList(data));
+  },
+  addLaborInventry: (data) => {
+    dispatch(labourAddRequest(data))
+  },
+  addLaborToService: (data) => {
+    dispatch(addLaborToService(data))
+  },
+  getLaborDetails: (data) => {
+    dispatch(labourListRequest(data))
+  },
+  getUserData: (data) => {
+    dispatch(getUsersList(data))
+  },
+  addNewService: (data) => {
+    dispatch(addNewService(data))
+  },
+  getLabelList: () => {
+    dispatch(getLabelList())
+  },
+  addNewLabel: (data) => {
+    dispatch(addNewLabel(data))
+  }
 });
 export default connect(
   mapStateToProps,

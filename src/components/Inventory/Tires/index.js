@@ -271,7 +271,6 @@ class Tires extends Component {
       isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
       tireSizeid: id
     })
-
   }
 
   render() {
@@ -510,7 +509,7 @@ class Tires extends Component {
                         </td>
                         <td>
                           {tire.vendorId && tire.vendorId.name ?
-                            <a href={`/inventory/vendors?page=1&search=${tire.vendorId && tire.vendorId.name ? tire.vendorId.name : null}`} target="_blank" className={"text-body"}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</a> :
+                            <a href={`/inventory/vendors?page=1&search=${tire.vendorId && tire.vendorId.name ? tire.vendorId.name : null}`} target="_blank" rel="noopener noreferrer" className={"text-body"}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</a> :
                             tire.vendorId && tire.vendorId.name ? tire.vendorId.name : notExist}
                         </td>
                         <td className={"season-td text-capitalize"}>

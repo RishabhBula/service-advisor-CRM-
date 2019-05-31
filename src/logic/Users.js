@@ -26,7 +26,11 @@ const getUsersLogic = createLogic({
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer("/user", "/", "GET", true, {
-      ...action.payload,
+      search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+      sort: action.payload && action.payload.sort ? action.payload.sort : null,
+      status: action.payload && action.payload.status ? action.payload.status : null,
+      type: action.payload && action.payload.type ? action.payload.type : null,
+      invitaionStatus: action.payload && action.payload.invitaionStatus ? action.payload.invitaionStatus : null,
       limit: AppConfig.ITEMS_PER_PAGE
     });
     if (result.isError) {
@@ -39,6 +43,17 @@ const getUsersLogic = createLogic({
       done();
       return;
     } else {
+      var defaultOptions = [
+        {
+          value: "",
+          label: "+ Add New Technician"
+        }
+      ];
+      const options = result.data.data.map(user => ({
+        label: `${user.firstName} ${user.lastName}`,
+        value: user._id,
+      }));
+      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(hideLoader());
       dispatch(
         getUsersListSuccess({

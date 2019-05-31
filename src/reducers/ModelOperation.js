@@ -21,8 +21,9 @@ const initialAuthState = {
     rateAddModalOpen: false,
     partEditModalOpen: false,
     showImportModal: false,
-    matrixAddModalOpen:false,
-    matrixEditModalOpen: false
+    matrixAddModalOpen: false,
+    matrixEditModalOpen: false,
+    addOrderStatusModalOpen: false
   }
 };
 

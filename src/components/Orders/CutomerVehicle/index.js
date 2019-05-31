@@ -3,7 +3,6 @@ import {
    Col,
    Row,
    FormGroup,
-   Input,
    Label
 } from "reactstrap";
 import Async from "react-select/lib/Async";

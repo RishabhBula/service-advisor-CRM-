@@ -30,6 +30,8 @@ import {
 } from "../../helpers/Sales";
 import { Async } from "react-select";
 import { toast } from "react-toastify";
+import * as classnames from "classnames";
+
 class CrmInventoryPart extends Component {
   constructor(props) {
     super(props);
@@ -50,6 +52,10 @@ class CrmInventoryPart extends Component {
       margin: "",
       criticalQuantity: "",
       quantity: "",
+      partId: "",
+      partData: [],
+      servicePartError: "",
+      newServicePart: false,
       partOptions: {
         isTaxed: true,
         showNumberOnQuoteAndInvoice: false,
@@ -128,62 +134,70 @@ class CrmInventoryPart extends Component {
     }
   }
   addPart = e => {
-    e.preventDefault();
-    this.setState({
-      errors: {}
-    });
-    try {
-      const {
-        partDescription,
-        note,
-        partNumber,
-        vendorId,
-        location,
-        priceMatrix,
-        cost,
-        price,
-        markup,
-        margin,
-        criticalQuantity,
-        quantity,
-        partOptions
-      } = this.state;
-      let data = {
-        partDescription,
-        note,
-        partNumber,
-        vendorId,
-        location,
-        priceMatrix,
-        cost,
-        price,
-        markup,
-        margin,
-        criticalQuantity,
-        quantity,
-        partOptions
-      };
-      const { isValid, errors } = Validator(
-        data,
-        PartValidations,
-        PartValidationMessages
-      );
-      if (!isValid) {
-        this.setState({
-          errors
-        });
-        return;
+    if (this.props.serviceModal && !this.state.newServicePart) {
+      this.handleServiceItem()
+      return
+    } else {
+      e.preventDefault();
+      this.setState({
+        errors: {}
+      });
+      try {
+        const {
+          partDescription,
+          note,
+          partNumber,
+          vendorId,
+          location,
+          priceMatrix,
+          cost,
+          price,
+          markup,
+          margin,
+          criticalQuantity,
+          quantity,
+          partOptions
+        } = this.state;
+        let data = {
+          partDescription,
+          note,
+          partNumber,
+          vendorId,
+          location,
+          priceMatrix,
+          cost,
+          price,
+          markup,
+          margin,
+          criticalQuantity,
+          quantity,
+          partOptions,
+          serviceModal: this.props.serviceModal ? this.props.serviceModal : false,
+          serviceIndex: this.props.serviceIndex !== null ? this.props.serviceIndex : null,
+          services: this.props.services ? this.props.services : null
+        };
+        const { isValid, errors } = Validator(
+          data,
+          PartValidations,
+          PartValidationMessages
+        );
+        if (!isValid) {
+          this.setState({
+            errors
+          });
+          return;
+        }
+        data.vendorId = vendorId ? vendorId.value : "";
+        const { addInventoryPart, updateInventoryPart, partDetails } = this.props;
+        if (partDetails && partDetails._id) {
+          updateInventoryPart({ ...data, id: partDetails._id });
+        } else {
+          addInventoryPart(data);
+        }
+      } catch (error) {
+        logger(error);
+        toast.error(DefaultErrorMessage);
       }
-      data.vendorId = vendorId ? vendorId.value : "";
-      const { addInventoryPart, updateInventoryPart, partDetails } = this.props;
-      if (partDetails && partDetails._id) {
-        updateInventoryPart({ ...data, id: partDetails._id });
-      } else {
-        addInventoryPart(data);
-      }
-    } catch (error) {
-      logger(error);
-      toast.error(DefaultErrorMessage);
     }
   };
   handleClick = e => {
@@ -267,7 +281,6 @@ class CrmInventoryPart extends Component {
   };
   editPart = e => {
     e.preventDefault();
-    logger(this.state);
   };
 
   handleCostPricechange = (event) => {
@@ -338,6 +351,9 @@ class CrmInventoryPart extends Component {
   matrixLoadOptions = (input, callback) => {
     this.props.getPriceMatrix({ input, callback });
   }
+  searchPart = (input, callback) => {
+    this.props.getPartDetails({ input, callback });
+  }
   handlePriceMatrix = (e) => {
     if (e && e.value) {
       this.setState({
@@ -359,6 +375,31 @@ class CrmInventoryPart extends Component {
       })
     }
   }
+  handleServicePartAdd = (e) => {
+    if (e && e.partData) {
+      this.setState({
+        partId: e,
+      })
+    } else {
+      this.setState({
+        partId: ""
+      })
+    }
+  }
+  handleServiceItem = async () => {
+    const { partId } = this.state
+    const { serviceIndex, services } = this.props
+    if (partId) {
+      let servicePartData = services[serviceIndex].serviceItems
+      servicePartData.push(partId.partData)
+      await this.props.addPartToService(services)
+      this.props.toggle()
+    } else {
+      this.setState({
+        servicePartError: "Part is required."
+      })
+    }
+  }
 
   render() {
     const {
@@ -376,10 +417,12 @@ class CrmInventoryPart extends Component {
       criticalQuantity,
       quantity,
       vendorInput,
-      selectedPriceMatrix
+      selectedPriceMatrix,
+      partId,
+      newServicePart,
+      servicePartError
     } = this.state;
-    logger(price, margin, "!!!!!!!!!!!!!!!!!")
-    const { isOpen, toggle, isEditMode, partDetails } = this.props;
+    const { isOpen, toggle, isEditMode, partDetails, serviceModal } = this.props;
     const buttons = [
       {
         text: isEditMode ? "Update Part" : "Add Part",
@@ -393,351 +436,385 @@ class CrmInventoryPart extends Component {
         type: "button"
       }
     ];
-    console.log("###################", isOpen);
-
     return (
       <Form onSubmit={this.addPart}>
         <CRMModal
           isOpen={isOpen}
           toggle={toggle}
           headerText={
-            isEditMode ? "Update Part Details" : "Add New Part To Inventory"
+            serviceModal ? "Add Part To Service" : isEditMode ? "Update Part Details" : "Add New Part To Inventory"
           }
           footerButtons={buttons}
           showfooterMsg
           updatedAt={isEditMode ? partDetails.updatedAt : null}
         >
-          <Row className="justify-content-center">
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Part Description <span className={"asteric"}>*</span>
-                </Label>
-                <InputGroup>
-                  <div className={"input-block"}>
-                    <Input
-                      type="text"
-                      name="partDescription"
-                      onChange={this.handleChange}
-                      placeholder="Part Description"
-                      id="name"
-                      value={partDescription}
-                      invalid={errors.partDescription}
-                    />
-                    {errors.partDescription ? (
-                      <FormFeedback>{errors.partDescription}</FormFeedback>
-                    ) : null}
-                  </div>
-                </InputGroup>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Note
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="Note"
-                    onChange={this.handleChange}
-                    name="note"
-                    value={note}
-                    invalid={errors.note}
-                  />
-                  {errors.note ? (
-                    <FormFeedback>{errors.note}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Part Number
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="#10000"
-                    onChange={this.handleChange}
-                    maxLength="10"
-                    name="partNumber"
-                    value={partNumber}
-                    invalid={errors.partNumber}
-                  />
-                  {errors.partNumber ? (
-                    <FormFeedback>{errors.partNumber}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Vendor
-                </Label>
-                <div className={"input-block"}>
-                  <Async
-                    placeholder={"Type vendor name"}
-                    loadOptions={this.loadOptions}
-                    value={vendorId}
-                    onChange={e => {
-                      this.setState({
-                        vendorId: e
-                      });
-                    }}
-                    isClearable={true}
-                    noOptionsMessage={() =>
-                      vendorInput ? "No vendor found" : "Type vendor name"
-                    }
-                    className={"w-100 form-select"}
-                    classNamePrefix={"form-select-theme"}
-                  />
-                  {errors.vendorId ? (
-                    <FormFeedback>{errors.vendorId}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Bin/Location
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="text"
-                    className="customer-modal-text-style"
-                    placeholder="Bin/Location"
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    name="location"
-                    value={location}
-                    invalid={errors.location}
-                  />
-                  {errors.location ? (
-                    <FormFeedback>{errors.location}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup classname={"fleet-block"}>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Pricing Matrix
-                </Label>
-                <Async
-                  placeholder={"Type to select price matrix"}
-                  loadOptions={this.matrixLoadOptions}
-                  className={"w-100 form-select"}
-                  classNamePrefix={"form-select-theme"}
-                  onChange={(e) => this.handlePriceMatrix(e)}
-                  isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
-                  noOptionsMessage={() => "Type price matrix name"
-                  }
-                  value={selectedPriceMatrix}
-                />
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Cost
-                </Label>
-                <div className={"input-block"}>
-                  <InputGroup>
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">
-                        <i className="fa fa-dollar"></i>
-                      </span>
+          {
+            serviceModal && !newServicePart ?
+              <div className={"text-center"}>
+                <Col md={"12"}>
+                  <FormGroup className={"fleet-block"}>
+                    <Label htmlFor="name" className="customer-modal-text-style">
+                      Search Part
+                    </Label>
+                    <div className={"input-block"}>
+                      <Async
+                        placeholder={"Type to select part from the list"}
+                        loadOptions={this.searchPart}
+                        className={classnames("w-100 form-select", {
+                          "is-invalid":
+                            servicePartError
+                        })}
+                        value={partId}
+                        onChange={e => {
+                          this.handleServicePartAdd(e)
+                          this.setState({
+                            newServicePart: e && e.label === 'Add New Part' ? true : false
+                          });
+                        }}
+                        isClearable={true}
+                        noOptionsMessage={() => "Type Part name"
+                        }
+                      />
+                      {servicePartError ? (
+                        <FormFeedback>{servicePartError}</FormFeedback>
+                      ) : null}
                     </div>
-                    <Input
-                      type="number"
-                      className="customer-modal-text-style"
-                      placeholder="0.00"
-                      onChange={(e) => this.handleCostPricechange(e)}
-                      maxLength="40"
-                      name="cost"
-                      invalid={errors.cost}
-                      value={cost}
-                    />
-                  </InputGroup>
-                  {errors.cost ? (
-                    <FormFeedback>{errors.cost}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Retail Price
-                </Label>
-                <div className={"input-block"}>
-                  <InputGroup>
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">
-                        <i className="fa fa-dollar"></i>
-                      </span>
-                    </div>
-                    <Input
-                      type="number"
-                      className="customer-modal-text-style"
-                      placeholder="0.00"
-                      onChange={this.handleRetailsPriceChange}
-                      maxLength="40"
-                      name="price"
-                      invalid={errors.price}
-                      value={price}
-                    />
-                  </InputGroup>
-                  {errors.price ? (
-                    <FormFeedback>{errors.price}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Quantity in hand <span className={"asteric"}>*</span>
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="number"
-                    className="customer-modal-text-style"
-                    placeholder="100"
-                    onChange={this.handleChange}
-                    maxLength="10"
-                    name="quantity"
-                    invalid={errors.quantity}
-                    value={quantity}
-                  />
-                  {errors.quantity ? (
-                    <FormFeedback>{errors.quantity}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Critical Quantity
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    type="number"
-                    className="customer-modal-text-style"
-                    placeholder="10"
-                    onChange={this.handleChange}
-                    maxLength="10"
-                    name="criticalQuantity"
-                    invalid={errors.criticalQuantity}
-                    value={criticalQuantity}
-                  />
-                  {errors.criticalQuantity ? (
-                    <FormFeedback>{errors.criticalQuantity}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Markup
-                </Label>
-                <div className={"input-block"}>
-                  <ButtonGroup>
-                    {MarkupChangeValues.map((mark, index) => {
-                      return (
-                        <Button
-                          key={index}
-                          type={"button"}
-                          color={"secondary"}
-                          className={markup === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
-                          size={"sm"}
-                          onClick={() => this.setPriceByMarkup(mark.value)}
-                        >
-                          {mark.key}
-                        </Button>
-                      );
-                    })}
-                    <Button type={"button"} size={"sm"} className={"btn-with-input"}>
-                      <Input
-                        type={"text"}
-                        placeholder={"Markup"}
-                        defaultValue={markup}
-                        value={markup}
-                        onChange={e => this.setPriceByMarkup(e.target.value)}
-                      />
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Margin
-                </Label>
-                <div className={"input-block"}>
-                  <ButtonGroup>
-                    {MarginChangeValues.map((mark, index) => {
-                      return (
-                        <Button
-                          key={index}
-                          type={"button"}
-                          color={"secondary"}
-                          className={margin === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
-                          size={"sm"}
-                          onClick={() => this.setPriceByMargin(mark.value)}
-                        >
-                          {mark.key}
-                        </Button>
-                      );
-                    })}
-                    <Button type={"button"} size={"sm"} className={"btn-with-input"}>
-                      <Input
-                        type={"text"}
-                        placeholder={"Margin"}
-                        defaultValue={margin}
-                        value={margin}
-                        onChange={e => this.setPriceByMargin(e.target.value)}
-                      />
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <Row>
-            {CreatePartOptions.map((option, index) => {
-              return (
-                <Col sm={{ size: 5, offset: 1 }} key={index}>
-                  <Row className="justify-content-center pb-2" key={index}>
-                    <Col md="2">
-                      <AppSwitch
-                        className={"mx-1"}
-                        name={option.key}
-                        checked={partOptions[option.key]}
-                        onClick={this.handleClick}
-                        variant={"3d"}
-                        color={"primary"}
-                        size={"sm"}
-                      />
-                    </Col>
-                    <Col md="10">
-                      <p className="customer-modal-text-style">{option.text}</p>
-                    </Col>
-                  </Row>
+                  </FormGroup>
                 </Col>
-              );
-            })}
-          </Row>
+              </div> :
+              <>
+                <Row className="justify-content-center">
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Part Description <span className={"asteric"}>*</span>
+                      </Label>
+                      <InputGroup>
+                        <div className={"input-block"}>
+                          <Input
+                            type="text"
+                            name="partDescription"
+                            onChange={this.handleChange}
+                            placeholder="Part Description"
+                            id="name"
+                            value={partDescription}
+                            invalid={errors.partDescription}
+                          />
+                          {errors.partDescription ? (
+                            <FormFeedback>{errors.partDescription}</FormFeedback>
+                          ) : null}
+                        </div>
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Note
+                    </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          className="customer-modal-text-style"
+                          placeholder="Note"
+                          onChange={this.handleChange}
+                          name="note"
+                          value={note}
+                          invalid={errors.note}
+                        />
+                        {errors.note ? (
+                          <FormFeedback>{errors.note}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Part Number
+                    </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          className="customer-modal-text-style"
+                          placeholder="#10000"
+                          onChange={this.handleChange}
+                          maxLength="10"
+                          name="partNumber"
+                          value={partNumber}
+                          invalid={errors.partNumber}
+                        />
+                        {errors.partNumber ? (
+                          <FormFeedback>{errors.partNumber}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Vendor
+                    </Label>
+                      <div className={"input-block"}>
+                        <Async
+                          placeholder={"Type vendor name"}
+                          loadOptions={this.loadOptions}
+                          value={vendorId}
+                          onChange={e => {
+                            this.setState({
+                              vendorId: e
+                            });
+                          }}
+                          isClearable={true}
+                          noOptionsMessage={() =>
+                            vendorInput ? "No vendor found" : "Type vendor name"
+                          }
+                          className={"w-100 form-select"}
+                          classNamePrefix={"form-select-theme"}
+                        />
+                        {errors.vendorId ? (
+                          <FormFeedback>{errors.vendorId}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Bin/Location
+                    </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          className="customer-modal-text-style"
+                          placeholder="Bin/Location"
+                          onChange={this.handleChange}
+                          maxLength="40"
+                          name="location"
+                          value={location}
+                          invalid={errors.location}
+                        />
+                        {errors.location ? (
+                          <FormFeedback>{errors.location}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup className={"fleet-block"}>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Pricing Matrix
+                    </Label>
+                      <Async
+                        placeholder={"Type to select price matrix"}
+                        loadOptions={this.matrixLoadOptions}
+                        className={"w-100 form-select"}
+                        classNamePrefix={"form-select-theme"}
+                        onChange={(e) => this.handlePriceMatrix(e)}
+                        isClearable={selectedPriceMatrix && selectedPriceMatrix.value ? true : false}
+                        noOptionsMessage={() => "Type price matrix name"
+                        }
+                        value={selectedPriceMatrix}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Cost
+                    </Label>
+                      <div className={"input-block"}>
+                        <InputGroup>
+                          <div className="input-group-prepend">
+                            <span className="input-group-text">
+                              <i className="fa fa-dollar"></i>
+                            </span>
+                          </div>
+                          <Input
+                            type="number"
+                            className="customer-modal-text-style"
+                            placeholder="0.00"
+                            onChange={(e) => this.handleCostPricechange(e)}
+                            maxLength="40"
+                            name="cost"
+                            invalid={errors.cost}
+                            value={cost}
+                          />
+                        </InputGroup>
+                        {errors.cost ? (
+                          <FormFeedback>{errors.cost}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Retail Price
+                    </Label>
+                      <div className={"input-block"}>
+                        <InputGroup>
+                          <div className="input-group-prepend">
+                            <span className="input-group-text">
+                              <i className="fa fa-dollar"></i>
+                            </span>
+                          </div>
+                          <Input
+                            type="number"
+                            className="customer-modal-text-style"
+                            placeholder="0.00"
+                            onChange={this.handleRetailsPriceChange}
+                            maxLength="40"
+                            name="price"
+                            invalid={errors.price}
+                            value={price}
+                          />
+                        </InputGroup>
+                        {errors.price ? (
+                          <FormFeedback>{errors.price}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Quantity in hand <span className={"asteric"}>*</span>
+                      </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="number"
+                          className="customer-modal-text-style"
+                          placeholder="100"
+                          onChange={this.handleChange}
+                          maxLength="10"
+                          name="quantity"
+                          invalid={errors.quantity}
+                          value={quantity}
+                        />
+                        {errors.quantity ? (
+                          <FormFeedback>{errors.quantity}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Critical Quantity
+                    </Label>
+                      <div className={"input-block"}>
+                        <Input
+                          type="number"
+                          className="customer-modal-text-style"
+                          placeholder="10"
+                          onChange={this.handleChange}
+                          maxLength="10"
+                          name="criticalQuantity"
+                          invalid={errors.criticalQuantity}
+                          value={criticalQuantity}
+                        />
+                        {errors.criticalQuantity ? (
+                          <FormFeedback>{errors.criticalQuantity}</FormFeedback>
+                        ) : null}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Markup
+                    </Label>
+                      <div className={"input-block"}>
+                        <ButtonGroup>
+                          {MarkupChangeValues.map((mark, index) => {
+                            return (
+                              <Button
+                                key={index}
+                                type={"button"}
+                                color={"secondary"}
+                                className={markup === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
+                                size={"sm"}
+                                onClick={() => this.setPriceByMarkup(mark.value)}
+                              >
+                                {mark.key}
+                              </Button>
+                            );
+                          })}
+                          <Button type={"button"} size={"sm"} className={"btn-with-input"}>
+                            <Input
+                              type={"text"}
+                              placeholder={"Markup"}
+                              defaultValue={markup}
+                              value={markup}
+                              onChange={e => this.setPriceByMarkup(e.target.value)}
+                            />
+                          </Button>
+                        </ButtonGroup>
+                      </div>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup>
+                      <Label htmlFor="name" className="customer-modal-text-style">
+                        Margin
+                    </Label>
+                      <div className={"input-block"}>
+                        <ButtonGroup>
+                          {MarginChangeValues.map((mark, index) => {
+                            return (
+                              <Button
+                                key={index}
+                                type={"button"}
+                                color={"secondary"}
+                                className={margin === mark.value ? 'margin-markup-btn-active' : 'margin-markup-btn'}
+                                size={"sm"}
+                                onClick={() => this.setPriceByMargin(mark.value)}
+                              >
+                                {mark.key}
+                              </Button>
+                            );
+                          })}
+                          <Button type={"button"} size={"sm"} className={"btn-with-input"}>
+                            <Input
+                              type={"text"}
+                              placeholder={"Margin"}
+                              defaultValue={margin}
+                              value={margin}
+                              onChange={e => this.setPriceByMargin(e.target.value)}
+                            />
+                          </Button>
+                        </ButtonGroup>
+                      </div>
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  {CreatePartOptions.map((option, index) => {
+                    return (
+                      <Col sm={{ size: 5, offset: 1 }} key={index}>
+                        <Row className="justify-content-center pb-2" key={index}>
+                          <Col md="2">
+                            <AppSwitch
+                              className={"mx-1"}
+                              name={option.key}
+                              checked={partOptions[option.key]}
+                              onClick={this.handleClick}
+                              variant={"3d"}
+                              color={"primary"}
+                              size={"sm"}
+                            />
+                          </Col>
+                          <Col md="10">
+                            <p className="customer-modal-text-style">{option.text}</p>
+                          </Col>
+                        </Row>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </>
+          }
         </CRMModal>
       </Form>
     );

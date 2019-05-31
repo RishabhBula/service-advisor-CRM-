@@ -1,53 +1,27 @@
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  DropdownItem,
+  DropdownToggle,
+  DropdownMenu,
+  Dropdown,
+  Row,
+  Col
+} from "reactstrap";
 
 import { logger } from "../../helpers/Logger";
-const initialData = {
-  tasks: {
-    "task-1": { id: "task-1", content: "Take out the garbage" },
-    "task-2": { id: "task-2", content: "Watch my favorite show" },
-    "task-3": { id: "task-3", content: "Charge my phone" },
-    "task-4": { id: "task-4", content: "Cook dinner" },
-    "task-5": { id: "task-5", content: "Take out the garbage" },
-    "task-6": { id: "task-6", content: "Watch my favorite show" },
-    "task-7": { id: "task-7", content: "Charge my phone" },
-    "task-8": { id: "task-8", content: "Cook dinner" },
-    "task-9": { id: "task-9", content: "Take out the garbage" },
-    "task-10": { id: "task-10", content: "Watch my favorite show" },
-    "task-11": { id: "task-11", content: "Charge my phone" },
-    "task-12": { id: "task-12", content: "Cook dinner" },
-    "task-13": { id: "task-13", content: "Take out the garbage" },
-    "task-14": { id: "task-14", content: "Watch my favorite show" },
-    "task-15": { id: "task-15", content: "Charge my phone" },
-    "task-16": { id: "task-16", content: "Cook dinner" }
-  },
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "To do",
-      taskIds: ["task-1", "task-2", "task-3", "task-4", "task-15", "task-16"]
-    },
-    "column-2": {
-      id: "column-2",
-      title: "In progress",
-      taskIds: ["task-5", "task-6", "task-7", "task-8", "task-14"]
-    },
-    "column-3": {
-      id: "column-3",
-      title: "Done",
-      taskIds: ["task-12", "task-11", "task-10", "task-9", "task-13"]
-    }
-  },
-  // Facilitate reordering of the columns
-  columnOrder: ["column-1", "column-2", "column-3"]
-};
+import Loader from "../../containers/Loader/Loader";
 
 class WorkflowGridView extends React.Component {
-  state = initialData;
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      openAction: []
+    };
+  }
   onDragEnd = result => {
     logger(result);
-    const { destination, source, draggableId } = result;
+    const { destination, source, draggableId: orderId } = result;
 
     if (!destination) {
       return;
@@ -55,103 +29,168 @@ class WorkflowGridView extends React.Component {
 
     if (
       destination.droppableId === source.droppableId &&
-      destination.index === source.index
+      source.index === destination.index
     ) {
       return;
     }
-
-    const start = this.state.columns[source.droppableId];
-    const finish = this.state.columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds
-      };
-
-      const newState = {
-        ...this.state,
-        columns: {
-          ...this.state.columns,
-          [newColumn.id]: newColumn
+    if (result.type === "droppableItem") {
+      logger(source.droppableId, destination.droppableId);
+      this.props.updateOrderOfOrderStatus({
+        from: {
+          index: parseInt(source.index),
+          id: this.props.orderStatus[source.index]._id
+        },
+        to: {
+          index: parseInt(destination.index),
+          id: this.props.orderStatus[destination.index]._id
         }
-      };
-
-      this.setState(newState);
+      });
       return;
     }
-
-    // Moving from one list to another
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds
-    };
-
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds
-    };
-
-    const newState = {
-      ...this.state,
-      columns: {
-        ...this.state.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish
-      }
-    };
-    this.setState(newState);
+    this.props.updateOrderStatus({
+      from: source.droppableId,
+      to: destination.droppableId,
+      orderId,
+      destinationIndex: destination.index,
+      sourceIndex: source.index
+    });
   };
-
+  /**
+   *
+   */
+  toggleOpenAction = ind => {
+    const { openAction } = this.state;
+    openAction.forEach(d => (d = false));
+    openAction[ind] = !openAction[ind];
+    this.setState({
+      openAction
+    });
+  };
+  /**
+   *
+   */
+  renderActions = (status, ind) => {
+    return (
+      <Dropdown
+        direction="down"
+        isOpen={this.state.openAction[ind]}
+        toggle={() => {
+          this.toggleOpenAction(ind);
+        }}
+      >
+        <DropdownToggle nav>
+          <i className="fas fa-ellipsis-h text-white" />
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem
+            onClick={() =>
+              this.props.deleteOrderStatus({
+                orderStatusId: status._id,
+                index: ind
+              })
+            }
+          >
+            Delete
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    );
+  };
+  /**
+   *
+   */
+  renderOrders = (status, tasks, isLoading) => {
+    return (
+      <Droppable droppableId={status._id}>
+        {provided => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {tasks.map((task, index) => (
+              <Draggable draggableId={task._id} key={task._id} index={index}>
+                {providedNew => (
+                  <div
+                    {...providedNew.draggableProps}
+                    {...providedNew.dragHandleProps}
+                    ref={providedNew.innerRef}
+                    className={"content"}
+                  >
+                    {task.orderName || "Unnamed order"}
+                    <i
+                      className={"fa fa-trash pull-right"}
+                      onClick={() => {
+                        this.props.deleteOrder({
+                          statusId: status._id,
+                          index,
+                          id: task._id
+                        });
+                      }}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {isLoading ? <Loader /> : provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    );
+  };
+  /**
+   *
+   */
   render() {
+    const { orderStatus, orderData } = this.props;
+    const { orders, isLoading } = orderData;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <div>
-          {this.state.columnOrder.map(columnId => {
-            const column = this.state.columns[columnId];
-            const tasks = column.taskIds.map(
-              taskId => this.state.tasks[taskId]
-            );
-            return (
-              <div className={"workflow-grid-card"} key={columnId}>
-                <div className={"title"}>{column.title}</div>
-                <Droppable droppableId={column.id}>
-                  {provided => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                      {tasks.map((task, index) => (
-                        <Draggable
-                          draggableId={task.id}
-                          key={task.id}
-                          index={index}
+        <Droppable
+          droppableId={`dropableId`}
+          type="droppableItem"
+          direction={"horizontal"}
+        >
+          {provided => (
+            <div
+              ref={provided.innerRef}
+              style={{
+                width: `${300 * orderStatus.length}px`
+              }}
+            >
+              {orderStatus.map((status, index) => (
+                <React.Fragment key={status._id}>
+                  <Draggable draggableId={status._id} index={index}>
+                    {provided => (
+                      <>
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={"workflow-grid-card"}
                         >
-                          {providedNew => (
-                            <div
-                              {...providedNew.draggableProps}
-                              {...providedNew.dragHandleProps}
-                              ref={providedNew.innerRef}
-                              className={"content"}
-                            >
-                              {task.content}
-                            </div>
+                          <div
+                            {...provided.dragHandleProps}
+                            className={"title"}
+                          >
+                            <Row>
+                              <Col sm={"10"}>{status.name}</Col>
+                              <Col sm={"2"}>
+                                {this.renderActions(status, index)}
+                              </Col>
+                            </Row>
+                          </div>
+                          {this.renderOrders(
+                            status,
+                            orders[status._id] || [],
+                            isLoading
                           )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </div>
-            );
-          })}
-        </div>
+                        </div>
+                        {provided.placeholder}
+                      </>
+                    )}
+                  </Draggable>
+                </React.Fragment>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </DragDropContext>
     );
   }

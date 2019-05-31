@@ -15,7 +15,7 @@ const createpriceMatrix = async (req, res) => {
   }
   try {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
-      currentUser.parentId = currentUser.id
+      currentUser.parentId = currentUser.id;
     }
     const newPriceMatrixData = {
       matrixName: body.matrixName,
@@ -25,12 +25,12 @@ const createpriceMatrix = async (req, res) => {
       status: true,
       isDeleted: false
     };
-    const matrixData = new matrixModel(newPriceMatrixData)
-    const result = matrixData.save();
+    const matrixData = new matrixModel(newPriceMatrixData);
+    matrixData.save();
     return res.status(200).json({
       responsecode: 200,
       message: "Price matrix added successfully!",
-      success: true,
+      success: true
     });
   } catch (error) {
     res.status(500).json({
@@ -53,16 +53,13 @@ const updatepriceMatrix = async (req, res) => {
     });
   }
   try {
-    const updateMatrixDetails = await matrixModel.findByIdAndUpdate(
-      mongoose.Types.ObjectId(body.id),
-      {
-        $set: body
-      }
-    );
+    await matrixModel.findByIdAndUpdate(mongoose.Types.ObjectId(body.id), {
+      $set: body
+    });
     return res.status(200).json({
       responsecode: 200,
       message: "Matrix details updated successfully!",
-      success: true,
+      success: true
     });
   } catch (error) {
     res.status(500).json({
@@ -76,10 +73,10 @@ const updatepriceMatrix = async (req, res) => {
 
 /*Get All Price Metrices*/
 const getAllMatrix = async (req, res) => {
-  const { currentUser,query } = req;
+  const { currentUser, query } = req;
   try {
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
-      currentUser.parentId = currentUser.id
+      currentUser.parentId = currentUser.id;
     }
     const searchValue = query.search;
     const id = currentUser.id;
@@ -121,9 +118,7 @@ const getAllMatrix = async (req, res) => {
       });
     }
 
-    const matrices = await matrixModel.find(
-      condition
-    );
+    const matrices = await matrixModel.find(condition);
     return res.status(200).json({
       responsecode: 200,
       success: true,
