@@ -63,6 +63,14 @@ export class CrmCannedServiceModal extends Component {
          })
       }
    }
+   handleAddToService = (service, index) => {
+      const ServiceData = [...this.state.serviceData]
+      ServiceData[index].isCannedAdded = true
+      this.setState({
+         serviceData: ServiceData
+      })
+      this.props.handleAddToService(service)
+   }
    handleServiceItems = (e, serviceItem, index, sIndex) => {
       const { value } = e.target
       const ServiceData = [...this.state.serviceData]
@@ -71,8 +79,6 @@ export class CrmCannedServiceModal extends Component {
       this.setState({
          serviceData: ServiceData
       }, () => {
-         console.log("%%%%%%%%%%%%",serviceItem);
-         
          if (serviceItem && !serviceItem.isItemChecked) {
             const ServiceData = [...this.state.serviceData]
             ServiceData[index].serviceItems.splice(sIndex, 1)
@@ -129,21 +135,27 @@ export class CrmCannedServiceModal extends Component {
                               serviceData.map((item, index) => {
                                  return (
                                     <>
-                                       <div key={index} onClick={() => this.handleServiceCollaps(index)} className={"p-2 mb-0 border-secondary border"}>
+                                       <div key={index} onClick={() => this.handleServiceCollaps(index)} className={"p-2 pl-5 mb-0 border-secondary border position-relative arrow-icon"}>
                                           {
                                              item.serviceItems && item.serviceItems.length ?
-                                                isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-up ml-2"></i> : <i className="icons icon-arrow-down ml-2"></i> : null
+                                                isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-up arrow ml-2"></i> : <i className="icons arrow icon-arrow-down ml-2"></i> : null
                                           }
                                           <div className={"d-flex justify-content-between"}>
                                              <span>{item.serviceName}</span>
-                                             <span><Button color={"primary"} className={"btn btn-round"}>Add to service</Button></span>
+                                             <span><Button color={"primary"} disabled={item.isCannedAdded} className={"btn btn-round"} onClick={() => this.handleAddToService(item, index)}>
+                                             {
+                                                item.isCannedAdded ?
+                                                <>Service Added <i className={"fa fa-check"} /></>
+                                                 : "Add to service"
+                                             }
+                                             </Button></span>
                                           </div>
                                        </div>
                                        {
                                           item.serviceItems && item.serviceItems.length && (serviceIndex === index) && isToggelOpen ?
                                              item.serviceItems.map((serviceItem, sIndex) => {
                                                 return (
-                                                   <div className={"pl-3 p-2 mb-0 border-secondary border d-flex                       justify-content-between"}>
+                                                   <div className={"pl-3 p-2 mb-0 border-secondary border d-flex justify-content-between"}>
                                                       <Input type="checkbox" checked={serviceItem.isItemChecked} value={serviceItem.isItemChecked} onChange={(e) => this.handleServiceItems(e, serviceItem, index, sIndex)} className={"ml-0"} />
                                                       <span className={"pl-3"}>{serviceItem.description || serviceItem.brandName || serviceItem.discription || '-'}</span>
                                                    </div>

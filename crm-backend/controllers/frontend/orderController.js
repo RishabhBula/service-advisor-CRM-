@@ -284,6 +284,31 @@ const updateWorkflowStatusOrder = async (req, res) => {
     });
   }
 };
+/**
+ *
+ */
+const updateOrderDetails = async (req, res) => {
+  const { body } = req;
+  try {
+    console.log("##############", body._id);
+    
+    const updateOrderDetails = await Orders.findByIdAndUpdate(body._id,
+      {
+        $set: body
+      }
+    )
+    return res.status(200).json({
+      message: "Order Updated Successfully!",
+      success: true
+    })
+  } catch (error) {
+    console.log("Error while updating orders details", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
 module.exports = {
   countOrderNumber,
   createNewOrder,
@@ -291,5 +316,6 @@ module.exports = {
   updateOrderWorkflowStatus,
   addOrderStatus,
   deleteOrderStatus,
-  updateWorkflowStatusOrder
+  updateWorkflowStatusOrder,
+  updateOrderDetails
 };

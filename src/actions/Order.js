@@ -9,6 +9,8 @@ export const orderActions = {
   ADD_ORDER_SUCCESS: "Order add success!",
   UPDATE_ORDER_REQUEST: "Order update request!",
   UPDATE_ORDER_SUCCESS: "Order update success!",
+  UPDATE_ORDER_DETAILS:"Order detials update request",
+  UPDATE_ORDER_DETAILS_SUCCESS:"Order detials update success",
   DELETE_ORDER_REQUEST: "Order delete request!",
   DELETE_ORDER_SUCCESS: "Order delete success!",
   GET_ORDER_ID_REQUEST: "Order id Requested",
@@ -62,3 +64,5 @@ export const deleteOrderStatusRequest = createAction(
 export const updateOrderOfOrderStatus = createAction(
   orderActions.UPDATE_ORDER_OF_ORDER_STATUS
 );
+export const updateOrderDetailsRequest = createAction(orderActions.UPDATE_ORDER_DETAILS);
+export const updateOrderDetailsSuccess = createAction(orderActions.UPDATE_ORDER_DETAILS_SUCCESS)

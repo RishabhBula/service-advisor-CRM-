@@ -48,4 +48,9 @@ router.put(
 /**
  *
  */
+router.put(
+  "/updateOrderDetails",
+  token.authorisedUser,
+  orderController.updateOrderDetails
+)
 module.exports = router;

@@ -18,11 +18,12 @@ const AvailiableTemplates = {
   REFUND_ORDER_ADMIN: "refundOrderAdminEmail",
   NEWSLETTER_EMAIL: "newsletterEmail",
   UNSUBSCRIBE_EMAIL: "unSubscribeEmail",
+  INSPECTION_TEMPLATE: "inspectionTemplate"
 };
 class Email {
   constructor(req) {
-    const host = req.headers.referer.split("/");
-    this.host = [host[0], host[1], host[2]].join("/");
+    const host = req.headers && req.headers.referer ? req.headers.referer.split("/") : null;
+    this.host = host ? [host[0], host[1], host[2]].join("/") : null;
     this.body = "";
     this.subject = "";
     this.to = "";
@@ -76,7 +77,9 @@ class Email {
       case AvailiableTemplates.UNSUBSCRIBE_EMAIL:
         this.subject = "[Service Advisor] Unsubscription";
         break;
-
+      case AvailiableTemplates.INSPECTION_TEMPLATE:
+        // this.subject = "[Service Advisor] Unsubscription";
+        break;
       default:
         throw new Error("Invalid template name", 400);
     }

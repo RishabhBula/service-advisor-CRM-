@@ -1511,6 +1511,11 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   right: 5px;
   top: 4px;
 }
+.arrow-icon i.arrow{
+  position: absolute;
+  left: 18px;
+  top: 12px;
+}
 
 @media (max-width: 1220px) {
   .table {

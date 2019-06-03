@@ -11,7 +11,8 @@ import {
   redirectTo,
   getOrderListSuccess,
   addOrderSuccess,
-  modelOpenRequest
+  modelOpenRequest,
+  updateOrderDetailsSuccess
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -242,6 +243,37 @@ const addOrderLogic = createLogic({
     }
   }
 });
+/**
+ *
+ */
+const updateOrderDetailsLogic = createLogic({
+  type: orderActions.UPDATE_ORDER_DETAILS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/order",
+      "/updateOrderDetails",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(updateOrderDetailsSuccess())
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
 export const OrderLogic = [
   getOrderId,
   getOrdersLogic,
@@ -249,5 +281,6 @@ export const OrderLogic = [
   addOrderStatusLogic,
   updateOrderWorkflowStatusLogic,
   updateOrderOfOrderStatusLogic,
-  addOrderLogic
+  addOrderLogic,
+  updateOrderDetailsLogic
 ];

@@ -5,30 +5,34 @@ const serviceData = {
    services: [
       {
          isButtonValue: "",
-         isConfirmedValue: {
+          isConfirmedValue: {
             type: "",
             value: false
-         },
-         name: "",
-         technician: "",
-         note: "",
-         serviceItems: [],
-         epa: {
+          },
+          serviceName: "",
+          technician: "",
+          note: "",
+          serviceItems: [],
+          epa: {
             type: "%",
             value: ""
-         },
-         discount: {
+          },
+          discount: {
             type: "%",
             value: "",
-         },
-         taxes: {
+          },
+          taxes: {
             type: "%",
             value: ""
-         },
-         serviceSubTotalValue:[],
-         serviceTotal: ""
+          },
+          serviceSubTotalValue: [],
+          serviceTotal: "0.00",
+          isError: false,
+          isCannedAdded: false
       }
    ],
+   submittedServiceId:[],
+   customerCommentId:"",
    cannedServiceList:[],
    isLoading: true,
 };
@@ -56,7 +60,10 @@ export const serviceReducers = handleActions(
       }),
       [serviceActions.ADD_SERVICE_SUCCESS]: (state, action) => ({
          ...state,
-         isLoading: false
+         isLoading: false,
+         submittedServiceId: action.payload.serviceIds,
+         customerCommentId: action.payload.customerCommentId,
+         services: action.payload.services
       }),
       [serviceActions.GET_CANNED_SERVICE_LIST]: (state, action) => ({
          ...state,

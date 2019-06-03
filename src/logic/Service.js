@@ -32,7 +32,18 @@ const addServiceLogic = createLogic({
          return;
       } else {
          toast.success(result.messages[0]);
-         dispatch(addServiceSuccess());
+         let serviceIds = []
+         result.data.serviceResultData.map((service, index) => {
+            serviceIds.push(service._id)
+            return true
+         })
+         dispatch(addServiceSuccess(
+            {
+               serviceIds: serviceIds,
+               customerCommentId: result.data.commentResult._id,
+               services: result.data.serviceResultData
+            }
+         ));
          dispatch(getCannedServiceList())
          dispatch(hideLoader());
          done();
