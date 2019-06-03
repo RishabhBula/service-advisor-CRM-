@@ -117,7 +117,8 @@ const getVehiclesLogic = createLogic({
     } else {
       const options = result.data.data.map(vehicle => ({
         label: `${vehicle.make} ${vehicle.modal}`,
-        value: vehicle._id
+        value: vehicle._id,
+        data: vehicle
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(hideLoader());

@@ -21,6 +21,7 @@ import {
   updateMessageTemplate,
   deleteMessageTemplate,
   searchMessageTemplateList,
+  sendMessageTemplate,
   getInventoryPartsList,
   addPartToService,
   addTireToService,
@@ -33,13 +34,16 @@ import {
   getUsersList,
   addNewService,
   getLabelList,
-  addNewLabel
+  addNewLabel,
+  getCannedServiceList
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
 import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle"
+import { logger } from "../../helpers";
+
 const OrderTab = React.lazy(() =>
   import("../../components/Orders/OrderTab")
 );
@@ -76,12 +80,19 @@ class Order extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: 0
+      activeTab: 0,
+      orderId: "",
+      customerData: "",
+      vehicleData: ""
     };
   }
   componentDidMount() {
     this.props.getOrderId();
-    this.props.getLabelList()
+    this.props.getLabelList();
+    this.props.getCannedServiceList()
+    this.setState({
+      orderId: this.props.match.params.id
+    })
   }
 
   onTabChange = (activeTab) => {
@@ -93,8 +104,14 @@ class Order extends Component {
     this.props.addInventoryPart({ data });
   };
 
+  customerVehicleData = (customer, vehicle) => {
+    this.setState({
+      customerData: customer.data,
+      vehicleData: vehicle.data
+    })
+  }
   render() {
-    const { activeTab } = this.state;
+    const { activeTab, customerData, vehicleData } = this.state;
     const {
       getVehicleData,
       getCustomerData,
@@ -120,8 +137,10 @@ class Order extends Component {
       getUserData,
       addNewService,
       labelReducer,
-      addNewLabel 
-     } = this.props
+      getCannedServiceList,
+      addNewLabel,
+      sendMessageTemplate } = this.props
+    logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -133,6 +152,7 @@ class Order extends Component {
             <CustomerVehicle
               getCustomerData={getCustomerData}
               getVehicleData={getVehicleData}
+              customerVehicleData={this.customerVehicleData}
             />
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>
@@ -170,11 +190,27 @@ class Order extends Component {
                             addNewService={addNewService}
                             labelReducer={labelReducer}
                             addNewLabel={addNewLabel}
+                            getCannedServiceList={getCannedServiceList}
+                            customerData={customerData}
+                            vehicleData={vehicleData}
                           /> : null
                       }
                       {
                         activeTab === 1 ?
-                          <Inspection addNewInspection={addNewInspection} inspectionData={this.props.inspectionReducer} addInspectionTemplate={addInspectionTemplate} getTemplateList={getTemplateList} addMessageTemplate={addMessageTemplate} getMessageTemplate={getMessageTemplate} updateMessageTemplate={updateMessageTemplate} deleteMessageTemplate={deleteMessageTemplate} searchMessageTemplateList={searchMessageTemplateList}/> : null
+                          <Inspection 
+                          addNewInspection={addNewInspection} 
+                          inspectionData={this.props.inspectionReducer} 
+                          addInspectionTemplate={addInspectionTemplate} 
+                          getTemplateList={getTemplateList} 
+                          addMessageTemplate={addMessageTemplate} 
+                          getMessageTemplate={getMessageTemplate} 
+                          updateMessageTemplate={updateMessageTemplate} 
+                          deleteMessageTemplate={deleteMessageTemplate} 
+                          searchMessageTemplateList={searchMessageTemplateList}
+                          customerData={customerData}
+                          vehicleData={vehicleData}
+                          sendMessageTemplate={sendMessageTemplate}
+                          /> : null
                       }
                       {
                         activeTab === 2 ?
@@ -275,6 +311,12 @@ const mapDispatchToProps = dispatch => ({
   },
   addNewLabel: (data) => {
     dispatch(addNewLabel(data))
+  },
+  getCannedServiceList: (data) => {
+    dispatch(getCannedServiceList(data))
+  },
+  sendMessageTemplate: (data) =>{
+    dispatch(sendMessageTemplate(data))
   }
 });
 export default connect(

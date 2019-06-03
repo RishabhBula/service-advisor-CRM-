@@ -7,6 +7,8 @@ import {
    hideLoader,
    serviceActions,
    addServiceSuccess,
+   getCannedServiceListSuccess,
+   getCannedServiceList
 } from "./../actions";
 
 const addServiceLogic = createLogic({
@@ -31,12 +33,63 @@ const addServiceLogic = createLogic({
       } else {
          toast.success(result.messages[0]);
          dispatch(addServiceSuccess());
+         dispatch(getCannedServiceList())
          dispatch(hideLoader());
          done();
       }
    }
 });
 
+const getCannedServiceLogic = createLogic({
+   type: serviceActions.GET_CANNED_SERVICE_LIST,
+   async process({ action }, dispatch, done) {
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/service",
+         "/cannedServiceList",
+         "GET",
+         true,
+         {
+            search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+         }
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         dispatch(getCannedServiceListSuccess(
+            {
+               cannedServiceList: [],
+               isLoading: false
+            }
+         ))
+         done();
+         return;
+      } else {
+         var defaultOptions = [
+            {
+               value: "",
+               label: "+ Add New Canned Service"
+            }
+         ];
+         const options = result.data.data.map(service => ({
+            label: service.serviceName,
+            value: service._id,
+            serviceData: service
+         }));
+         logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
+         dispatch(hideLoader());
+         dispatch(getCannedServiceListSuccess(
+            {
+               cannedServiceList: result.data.data,
+               isLoading: false
+            }
+         ))
+         done();
+      }
+   }
+})
+
 export const ServiceLogic = [
-   addServiceLogic
+   addServiceLogic,
+   getCannedServiceLogic
 ];

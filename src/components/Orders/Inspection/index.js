@@ -16,6 +16,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import Templates from "./template";
 import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate"
+import { logger } from "../../../helpers";
 class Inspection extends Component {
    constructor(props) {
       super(props);
@@ -26,16 +27,32 @@ class Inspection extends Component {
          mesageModal: false,
          templateData: [],
          colorIndex: '',
-         selectedOption: ''
+         selectedOption: '',
       };
    }
 
-   componentDidUpdate = ({ inspectionData }) => {
+   componentDidMount = () =>{
+      this.setState({
+         customerData: this.props.customerData,
+         vehicleData: this.props.vehicleData
+      })
+   }
+
+   componentDidUpdate = ({ inspectionData, customerData}) => {
       let propdata = this.props.inspectionData;
       if (propdata && propdata.inspectionData && propdata.inspectionData.data && propdata.inspectionData.isSuccess && inspectionData !== propdata) {
          this.setState({
-            inspection: propdata.inspectionData.data
+            inspection: propdata.inspectionData.data,
          })
+      }
+      let propsCustomerData = this.props.customerData
+      let propsVehicleData = this.props.vehicleData
+      if (propsCustomerData && propsCustomerData !== customerData) {
+         this.setState({
+            customerData: propsCustomerData,
+            vehicleData: propsVehicleData
+         })
+         // console.log(customerData, "propdata.customerData")
       }
    }
 
@@ -232,10 +249,26 @@ class Inspection extends Component {
          modal: !this.state.modal
       });
    }
-   toggleSentInspection = (e) => {
-      this.setState({
-         sentModal: !this.state.sentModal
-      });
+   toggleSentInspection = async (e) => {
+      if (!this.props.customerData || !this.props.vehicleData){
+         const { value } = await ConfirmBox({
+            title: "Please Select a Customer!",
+            text: "Please select one of customer details form Customer Selection box",
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonColor:  "#3085d6",
+            confirmButtonText:  "Ok",
+         });
+         if (!value) {
+            return;
+         }
+         console.log(this.props.customerData, "check it now +++++++++++++++++")
+      }else{
+         this.setState({
+            sentModal: !this.state.sentModal
+         });
+      }
+
    }
 
    handleApproval = (e, inspIndex, itemIndex) => {
@@ -253,7 +286,8 @@ class Inspection extends Component {
    }
 
    render() {
-      const { inspection, templateData, selectedOption } = this.state
+      const { inspection, templateData} = this.state
+      console.log(this.props.customerData, "customerData didmount")
       return (
          <div>
             <Button onClick={this.toggleSentInspection}>Send</Button>
@@ -428,7 +462,17 @@ class Inspection extends Component {
 
             <Templates isOpen={this.state.modal} addTemplate={this.addTemplate} removeTemplate={this.removeTemplate} toggle={this.toggle} templateData={templateData} getTemplateList={this.props.getTemplateList} inspectionData={this.props.inspectionData} />
 
-            <SendInspection isOpen={this.state.sentModal} inspectionData={this.props.inspectionData} toggle={this.toggleSentInspection} toggleMessageTemplate={this.toggleMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} searchMessageTemplateList={this.props.searchMessageTemplateList}/>
+            <SendInspection 
+            isOpen={this.state.sentModal} 
+            inspectionData={this.props.inspectionData} 
+            toggle={this.toggleSentInspection} 
+            toggleMessageTemplate={this.toggleMessageTemplate} 
+            getMessageTemplate={this.props.getMessageTemplate} 
+            searchMessageTemplateList={this.props.searchMessageTemplateList}
+            customerData={this.props.customerData}
+            vehicleData={this.props.vehicleData}
+            sendMessageTemplate={this.props.sendMessageTemplate}
+            />
 
             {/* ====== MessageTemplate Modal====== */}
             <MessageTemplate isOpen={this.state.mesageModal} toggle={this.toggleMessageTemplate} inspectionData={this.props.inspectionData} addMessageTemplate={this.props.addMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} updateMessageTemplate={this.props.updateMessageTemplate} deleteMessageTemplate={this.props.deleteMessageTemplate} />

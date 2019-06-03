@@ -21,6 +21,14 @@ const inspectionSchema = new Schema({
             aprovedStatus: {
                type: Boolean,
                default: false
+            },
+            itemImage: {
+               type: [String],
+               default: []
+            },
+            itemImagePreview: {
+               type: [String],
+               default: []
             }
          })
       ],

@@ -34,8 +34,6 @@ class MessageTemplate extends Component {
   }
 
   componentDidMount = () => {
-    console.log('didmount');
-    
     this.props.getMessageTemplate()
   }
 
@@ -151,8 +149,8 @@ class MessageTemplate extends Component {
                     {templateListData && templateListData.length ?
                       templateListData.map((ele, index) => {
                         return (
-                          <div>
-                          <div key={index} className={activeIndex === index ? 'template-tile d-flex active' : 'template-tile d-flex'} onClick={(e) => this.handleEditTemplate(e, ele._id, index)}>
+                          <div key={index}>
+                          <div  className={activeIndex === index ? 'template-tile d-flex active' : 'template-tile d-flex'} onClick={(e) => this.handleEditTemplate(e, ele._id, index)}>
                             <div>Template Name -: {ele.templateName || '-'}</div>
                             <div>Subject -: {ele.subject || '-'}</div>
                             <div>Message -: {ele.messageText ? stripHTML(ele.messageText) : '-'}</div>

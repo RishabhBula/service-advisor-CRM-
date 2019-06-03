@@ -19,6 +19,8 @@ export const InspectionActions = {
   DELETE_MESSAGE_TEMPLATE_SUCCESS: "Message Template Delete Success",
   SEARCH_MESSAGE_TEMPLATE_LIST:"Search Message Template",
   SEARCH_MESSAGE_TEMPLATE_LIST_SUCCESS: "Search Message Template Success",
+  SEND_MESSAGE_TEMPLATE: "Sent Message Template",
+  SEND_MESSAGE_TEMPLATE_SUCCESS: "Sent Message Template Success",
 }
 
 export const addNewInspection = createAction(InspectionActions.ADD_INSPCETION);
@@ -47,3 +49,6 @@ export const deleteMessageTemplateSuccess = createAction(InspectionActions.DELET
 
 export const searchMessageTemplateList = createAction(InspectionActions.SEARCH_MESSAGE_TEMPLATE_LIST);
 export const searchMessageTemplateListSuccess = createAction(InspectionActions.SEARCH_MESSAGE_TEMPLATE_LIST_SUCCESS);
+
+export const sendMessageTemplate = createAction(InspectionActions.SEND_MESSAGE_TEMPLATE);
+export const sendMessageTemplateSuccess = createAction(InspectionActions.SEND_MESSAGE_TEMPLATE_SUCCESS);

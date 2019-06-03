@@ -43,6 +43,10 @@ const serviceSchema = new Schema({
       type: Number,
       default: null
    },
+   isCannedService: {
+      type: Boolean,
+      default: false
+   },
    userId: {
       type: Schema.Types.ObjectId,
       ref: "user",

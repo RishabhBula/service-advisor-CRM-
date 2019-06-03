@@ -126,7 +126,8 @@ const getCustomersLogic = createLogic({
     } else {
       const options = result.data.data.map(customer => ({
         label: `${customer.firstName} ${customer.lastName}`,
-        value: customer._id
+        value: customer._id,
+        data: customer
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(hideLoader());

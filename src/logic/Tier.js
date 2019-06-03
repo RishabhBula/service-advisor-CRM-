@@ -49,7 +49,8 @@ const addTireLogic = createLogic({
                   name: "",
                   isAddLabel: false
                 }],
-               subTotalValue: ""
+               subTotalValue: "",
+               isItemChecked: true
             })
             dispatch(addTireToService(data.services))
             dispatch(
@@ -134,7 +135,8 @@ const getTiresLogic = createLogic({
                   name: "",
                   isAddLabel: false
                 }],
-               subTotalValue: ""
+               subTotalValue: "",
+               isItemChecked: true
             }
          }));
          logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

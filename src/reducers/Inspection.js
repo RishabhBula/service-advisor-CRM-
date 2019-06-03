@@ -29,7 +29,6 @@ export const inspectionReducer = handleActions(
         isSuccess: true,
         ...state.userData,
         data:action.payload,
-
       }
     }),
     [InspectionActions.ADD_INSPCETION_TEMPLATE]: (state, action) => ({
@@ -89,6 +88,21 @@ export const inspectionReducer = handleActions(
       messageTemplateData: {
         isSuccess: true,
         ...state.data,
+      }
+    }),
+    [InspectionActions.SEND_MESSAGE_TEMPLATE]: (state, action) => ({
+      ...state,
+      messageTemplateData: {
+        ...state.userData,
+        isSuccess: false
+      }
+    }),
+    [InspectionActions.SEND_MESSAGE_TEMPLATE_SUCCESS]: (state, action) => ({
+      ...state,
+      messageTemplateData: {
+        isSuccess: true,
+        ...state.data,
+        data: action.payload,
       }
     }),
   },

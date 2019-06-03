@@ -15,6 +15,7 @@ import {
   updateMessageTemplateSuccess,
   deleteMessageTemplateSuccess,
   searchMessageTemplateListSuccess,
+  sendMessageTemplateSuccess,
   showLoader,
   hideLoader,
 } from "../actions"
@@ -295,6 +296,33 @@ const searchMessageTemplateListLogic = createLogic({
   }
 });
 
+const sentmessageTemplateLogic = createLogic({
+  type: InspectionActions.SEND_MESSAGE_TEMPLATE,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/inspection",
+      "/sendInspectionDetails",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(sendMessageTemplateSuccess());
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
 export const InspectLogic = [
   addInspectionLogic,
   addInspectionTemplateLogic,
@@ -303,5 +331,6 @@ export const InspectLogic = [
   getMessageTemplateListLogic,
   updateMessageTemplateLogic,
   deleteMessageTemplateLogic,
-  searchMessageTemplateListLogic
+  searchMessageTemplateListLogic,
+  sentmessageTemplateLogic
 ];

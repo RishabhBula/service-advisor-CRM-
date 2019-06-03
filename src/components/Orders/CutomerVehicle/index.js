@@ -29,6 +29,10 @@ class CutomerVehicle extends Component {
    loadVehicles = (input, callback) => {
       this.props.getVehicleData({ input, callback });
    };
+   handaleCustomerVehicleSelect = () => {
+      const { customerId, vehicleId } = this.state;
+      this.props.customerVehicleData(customerId, vehicleId)
+   }
    render() {
       const {
          selectedCustomer,
@@ -53,6 +57,8 @@ class CutomerVehicle extends Component {
                         onChange={e => {
                            this.setState({
                               customerId: e
+                           }, () => {
+                              this.handaleCustomerVehicleSelect()
                            });
                         }}
                      />
@@ -72,6 +78,8 @@ class CutomerVehicle extends Component {
                         onChange={e => {
                            this.setState({
                               vehicleId: e
+                           }, () => {
+                              this.handaleCustomerVehicleSelect()
                            });
                         }}
                      />

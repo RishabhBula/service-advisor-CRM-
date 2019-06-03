@@ -21,28 +21,39 @@ class SendInspection extends Component {
     this.state = {
       recipients:"Rishabh",
       errors:[],
-      orderData: [],
-      orderId:"5ce00c4e3e7c7c0c9aa50444",
-      templateData: [
-        {
-          templateName:"",
-          subject: "Inspection (#1000) for your 1987 Isuzu I-Mark S",
-          messageText: "Below is a link to the inspection you requested from Fix-It-All Auto Repair. Please review and let us know if you have any questions.",
-        }
-      ],
+      customerData:{},
+      vehicleData:{},
+      orderId:"",
+      templateData: [],
       searchInput: "",
       search:"",
       
     };
   }
   
-  componentDidUpdate = ({ inspectionData }) => {
-    let propdata = this.props.inspectionData;
-    if (propdata.inspectionData && inspectionData !== propdata) {
+  componentDidMount = () =>{
+    console.log(this.props.match, "location.query")
+    this.setState({
+      customerData: this.props.customerData,
+      vehicleData: this.props.vehicleData
+    })
+    // console.log(this.props.vehicleData, "vehicleData didmount sentInspection")
+  }
+
+  componentDidUpdate = ({ customerData, vehicleData }) => {
+    let propsCustomerData = this.props.customerData
+    let propsVehicleData = this.props.vehicleData
+    if ((propsCustomerData && propsCustomerData !== customerData) || (propsVehicleData && propsVehicleData !== vehicleData)){
+      console.log(this.props.vehicleData, "vehicleData in search")
       this.setState({
-        templateListData: propdata.messageTemplateData
+        customerData: propsCustomerData,
+        vehicleData: propsVehicleData
       })
+      
     }
+    //console.log(this.state.customerData, "customerData didupdate sentInspection")
+    //console.log(this.state.vehicleData, "vehicleData didupdate sentInspection")
+
   }
 
   handleChange = (e) => {
@@ -60,10 +71,34 @@ class SendInspection extends Component {
         this.props.searchMessageTemplateList();
       });
     }
-    if (e && e !== ""){
-      this.setState({
-        templateData: e.templateData
-      })
+    if (e && e !== "") {
+    let content = e.templateData.messageText;
+    let contentSubject = e.templateData.subject;
+      const { customerData, vehicleData} = this.state;
+      
+    const replaceObj = {  
+      first_name: customerData.firstName,
+      last_name: customerData.lastName,
+      year: vehicleData && vehicleData.year ? vehicleData.year : null,
+      make: vehicleData && vehicleData.make ? vehicleData.make : null,
+      model: vehicleData && vehicleData.model ? vehicleData.model :  null,
+    };
+    for (const key in replaceObj) {
+      if (replaceObj.hasOwnProperty(key)) {
+        const val = replaceObj[key];
+        content = content.replace(new RegExp(`{${key}}`, "g"), val);
+        contentSubject = contentSubject.replace(new RegExp(`{${key}}`, "g"), val);
+      }
+    }
+    const data = {
+      messageText: content,
+      subject: contentSubject,
+    }
+    this.state.templateData.push(data)
+    this.setState({
+      templateData: this.state.templateData
+    })
+     
     }
   };
 
@@ -72,9 +107,23 @@ class SendInspection extends Component {
     this.props.searchMessageTemplateList({ search, callback });
   };
 
-  render() {
-    const { templateData, recipients, errors, search} = this.state
+  handleSentInspection = () =>{
+    const { templateData, customerData} = this.state
+    const customerEmail = customerData.email
+    console.log(customerEmail, "customerEmail")
+    const MessageData = templateData
+    const payload = {
+      message: MessageData[0].messageText,
+      subject: MessageData[0].subject,
+      email: customerEmail
+    }
+    console.log(payload, "payload")
+    this.props.sendMessageTemplate(payload)
+  }
 
+  render() {
+    const { templateData, recipients, errors, search, customerData, vehicleData} = this.state
+    console.log(templateData, "vehicleData ######################")
     return (
       <>
         <Modal
@@ -104,10 +153,11 @@ class SendInspection extends Component {
                         name='name'
                         onChange={(e) => this.handleChange(e)}
                         placeholder='John'
-                        value={recipients}
+                        value={customerData.firstName}
                         maxLength='50'
                         id='recipients'
                         invalid={errors.recipients && !recipients}
+                        disabled
                       />
                       <FormFeedback>
                         {errors.recipients && !recipients ? errors.recipients : null}
@@ -147,7 +197,7 @@ class SendInspection extends Component {
                         name='subject'
                         onChange={(e) => this.handleChange(e)}
                         placeholder='Inspection #1000 for your vehicle'
-                        value={templateData.subject}
+                        value={templateData && templateData.length ? templateData[0].subject : ''}
                         id='name'
                       />
                     </div>
@@ -162,8 +212,8 @@ class SendInspection extends Component {
                       <p
                         suppressContentEditableWarning contentEditable={"true"}
                         className={"message-input"}
-                        id={'messageText'}
-                        dangerouslySetInnerHTML={templateData.messageText ? { __html: templateData.messageText } : null}
+                        id={'messageTextSent'}
+                        dangerouslySetInnerHTML={templateData && templateData.length ? { __html: templateData[0].messageText } : null}
                       >
                       </p>
                     </div>
@@ -177,8 +227,8 @@ class SendInspection extends Component {
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
             </div>
-            <Button color='primary'>
-              Sent New Template
+            <Button color='primary' onClick={this.handleSentInspection}>
+              Sent Inspection
             </Button>{' '}
             <Button color='secondary' onClick={this.props.toggle}>
               Cancel
