@@ -16,8 +16,8 @@ const creteNewInspection = async (req, res) => {
   try {
     let result = []
     let inspectionContent
-    for (let index = 0; index < body.length; index++) {
-      const element = body[index];
+    for (let index = 0; index < body.inspection.length; index++) {
+      const element = body.inspection[index];
       const inspectionDataModal = {
         inspectionName: element.inspectionName,
         items: element.items,
@@ -33,7 +33,7 @@ const creteNewInspection = async (req, res) => {
     }
     if (result) {
       return res.status(200).json({
-        message: `${body.length} Inspection added successfully!`,
+        message: `${body.inspection.length} Inspection added successfully!`,
         data: result,
         success: true
       })

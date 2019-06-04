@@ -13,7 +13,8 @@ import {
   addOrderSuccess,
   modelOpenRequest,
   updateOrderDetailsSuccess,
-  getServiceListSuccess
+  getServiceListSuccess,
+  getOrderDetailsSuccess
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -302,7 +303,12 @@ const getOrderDetails = createLogic({
     } else {
       dispatch(getServiceListSuccess(
         {
-          services:result.data.serviceResult
+          services: result.data.serviceResult
+        }
+      ))
+      dispatch(getOrderDetailsSuccess(
+        {
+          order: result.data.data[0]
         }
       ))
       dispatch(hideLoader());

@@ -290,8 +290,6 @@ const updateWorkflowStatusOrder = async (req, res) => {
 const updateOrderDetails = async (req, res) => {
   const { body } = req;
   try {
-    console.log("##############", body._id);
-
     const updateOrderDetails = await Orders.findByIdAndUpdate(body._id,
       {
         $set: body
@@ -370,16 +368,23 @@ const getOrderDetails = async (req, res) => {
     }
     const result1 = await Orders.find(condition).populate('customerId vehicleId serviceId.serviceId inspectionId.inspectionId')
     const result = result1
-    const serviceData = []
+    const serviceData = [], inspectionData = []
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
         const element = result[0].serviceId[index];
         serviceData.push(element.serviceId)
       }
     }
+    if (result[0].inspectionId.length) {
+      for (let index = 0; index < result[0].inspectionId.length; index++) {
+        const element = result[0].inspectionId[index];
+        inspectionData.push(element.inspectionId)
+      }
+    }
     return res.status(200).json({
       data: result,
       serviceResult: serviceData,
+      inspectionResult: inspectionData,
       success: true
     })
   } catch (error) {

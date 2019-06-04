@@ -98,6 +98,12 @@ class Order extends Component {
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
   }
 
+  componentDidUpdate = ({ serviceReducers }) => {
+    if (serviceReducers.isLoading !== this.props.serviceReducers.isLoading) {
+      this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
+    }
+  }
+
   onTabChange = (activeTab) => {
     this.setState({
       activeTab: activeTab
@@ -138,7 +144,7 @@ class Order extends Component {
       vehicleId: vehicleData ? vehicleData._id : null,
       serviceId: serviceIdData,
       orderName: orderName,
-      customerCommentId: serviceReducers.customerCommentId,
+      customerCommentId: serviceReducers.customerCommentId ? serviceReducers.customerCommentId : null,
       _id: orderId
     }
     logger("*******payload*****", payload)
@@ -170,6 +176,7 @@ class Order extends Component {
       addNewService,
       labelReducer,
       getCannedServiceList,
+      orderReducer,
       addNewLabel } = this.props
     logger(customerData, vehicleData)
     return (
@@ -209,6 +216,7 @@ class Order extends Component {
               getVehicleData={getVehicleData}
               customerVehicleData={this.customerVehicleData}
               isError={isError}
+              orderReducer={orderReducer}
             />
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>
