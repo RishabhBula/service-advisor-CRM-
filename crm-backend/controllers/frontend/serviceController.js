@@ -14,38 +14,41 @@ const addNewService = async (req, res) => {
          status: true,
          isDeleted: false
       }
-      let serviceData, isCannedService
+      let serviceData, isCannedService, serviceResultData = []
       for (let index = 0; index < body.services.length; index++) {
 
          const element = body.services[index];
-         if (!element.name) {
+         if (!element.serviceName) {
             return res.status(400).json({
                message: "Service Name is required",
                success: false
             })
          }
-         if (element.isCannedService) {
+         if (element.isCannedService && !element.isCannedAdded) {
+            if (body.services.length > 1) {
+               isCannedService = false
+            }
             isCannedService = true
             const CannedServiceData = await Service.find({
-               serviceName:element.name,
+               serviceName: element.serviceName,
                isCannedService: true
             })
             if (CannedServiceData.length) {
                return res.status(400).json({
-                  message:"Canned service name already exist,enter new name.",
+                  message: "Canned service name already exist,enter new name.",
                   success: false
                })
             }
          }
          serviceData = {
-            serviceName: element.name,
+            serviceName: element.serviceName,
             notes: element.notes,
             serviceItems: element.serviceItems,
             epa: element.epa,
             discount: element.discount,
-            technician: element.technician.value,
+            technician: element.technician ? element.technician.value : null,
             taxes: element.taxes,
-            isCannedService: element.isCannedService ? element.isCannedService : false,
+            isCannedService: isCannedService ? isCannedService : false,
             serviceTotal: element.serviceTotal,
             userId: currentUser.id,
             parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
@@ -55,13 +58,14 @@ const addNewService = async (req, res) => {
 
          const serviceContent = new Service(serviceData);
          const result = await serviceContent.save();
+         serviceResultData.push(result)
       }
       const customerAndUserContent = new CustomerAndUser(cutomerUser);
-      const result = await customerAndUserContent.save();
-      console.log(isCannedService);
-      
+      const commentResult = await customerAndUserContent.save();
       return res.status(200).json({
-         message: `${body.services.length} ${isCannedService ? 'canned' : null} Service added successfully`,
+         message: `${body.services.length} ${isCannedService ? 'canned' : " "} Service added successfully`,
+         serviceResultData,
+         commentResult,
          success: true
       })
 

@@ -27,4 +27,8 @@ router.put("/messageTemplateUpdate", token.authorisedUser, msgTempController.upd
 
 /* delete message template */
 router.delete("/messageTemplateDelete", token.authorisedUser, msgTempController.deleteMessageTemplate)
+
+/* send inspection details mail */
+router.post("/sendInspectionDetails", token.authorisedUser, msgTempController.sendMailToCustomer)
+
 module.exports = router;

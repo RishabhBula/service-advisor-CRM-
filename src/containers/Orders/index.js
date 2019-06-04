@@ -6,6 +6,12 @@ import {
   Card,
   CardBody,
   Button,
+  Col,
+  Input,
+  FormGroup,
+  Label,
+  Row,
+  FormFeedback
 } from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
@@ -35,7 +41,9 @@ import {
   addNewService,
   getLabelList,
   addNewLabel,
-  getCannedServiceList
+  getCannedServiceList,
+  updateOrderDetailsRequest,
+  getOrderDetailsRequest
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -83,7 +91,10 @@ class Order extends Component {
       activeTab: 0,
       orderId: "",
       customerData: "",
-      vehicleData: ""
+      vehicleData: "",
+      isError: false,
+      orderName: "",
+      isOrderSubbmited: false
     };
   }
   componentDidMount() {
@@ -93,6 +104,7 @@ class Order extends Component {
     this.setState({
       orderId: this.props.match.params.id
     })
+    this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
   }
 
   onTabChange = (activeTab) => {
@@ -110,8 +122,45 @@ class Order extends Component {
       vehicleData: vehicle.data
     })
   }
+  handleEditOrder = () => {
+    const { customerData, vehicleData, orderId, orderName } = this.state
+    if (!customerData || !vehicleData || !orderName) {
+      this.setState({
+        isError: true,
+      })
+      return
+    }
+    const { serviceReducers } = this.props
+    let serviceIdData = []
+    if (serviceReducers.submittedServiceId.length) {
+      serviceReducers.submittedServiceId.map((item, index) => {
+        const serviceId =
+        {
+          serviceId: item
+        }
+        serviceIdData.push(serviceId)
+        return true
+      })
+    }
+    const payload = {
+      customerId: customerData ? customerData._id : null,
+      vehicleId: vehicleData ? vehicleData._id : null,
+      serviceId: serviceIdData,
+      orderName: orderName,
+      customerCommentId: serviceReducers.customerCommentId,
+      _id: orderId
+    }
+    logger("*******payload*****", payload)
+    this.props.updateOrderDetails(payload)
+  }
+  handleChange = (e) => {
+    const { name, value } = e.target
+    this.setState({
+      [name]: value
+    })
+  }
   render() {
-    const { activeTab, customerData, vehicleData } = this.state;
+    const { activeTab, customerData, vehicleData, isError, orderName, orderId } = this.state;
     const {
       getVehicleData,
       getCustomerData,
@@ -147,12 +196,37 @@ class Order extends Component {
           <CardBody className={"custom-card-body inventory-card"}>
             <div className={"d-flex justify-content-between pb-4"}>
               <h3>Order (#{typeof this.props.orderReducer.orderId !== 'object' ? this.props.orderReducer.orderId : null})</h3>
-              <Button color={"primary"}>Save Order</Button>
+              <Button color={"primary"} onClick={() => this.handleEditOrder()}>Update Order</Button>
+            </div>
+            <div className={"custom-form-modal mt-3"}>
+              <Row>
+                <Col md={"8"}>
+                  <FormGroup>
+                    <Label htmlFor="name" className="customer-modal-text-style">
+                      Order Name  <span className={"asteric"}>*</span>
+                    </Label>
+                    <div className="input-block">
+                      <Input
+                        placeholder={"Enter a order title"}
+                        onChange={(e) => this.handleChange(e)} name={"orderName"}
+                        value={orderName}
+                        invalid={isError && !orderName}
+                      />
+                      <FormFeedback>
+                        {isError && !orderName
+                          ? "Order name is required."
+                          : null}
+                      </FormFeedback>
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
             </div>
             <CustomerVehicle
               getCustomerData={getCustomerData}
               getVehicleData={getVehicleData}
               customerVehicleData={this.customerVehicleData}
+              isError={isError}
             />
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>
@@ -193,23 +267,25 @@ class Order extends Component {
                             getCannedServiceList={getCannedServiceList}
                             customerData={customerData}
                             vehicleData={vehicleData}
+                            orderId={orderId}
                           /> : null
                       }
                       {
                         activeTab === 1 ?
-                          <Inspection 
-                          addNewInspection={addNewInspection} 
-                          inspectionData={this.props.inspectionReducer} 
-                          addInspectionTemplate={addInspectionTemplate} 
-                          getTemplateList={getTemplateList} 
-                          addMessageTemplate={addMessageTemplate} 
-                          getMessageTemplate={getMessageTemplate} 
-                          updateMessageTemplate={updateMessageTemplate} 
-                          deleteMessageTemplate={deleteMessageTemplate} 
-                          searchMessageTemplateList={searchMessageTemplateList}
-                          customerData={customerData}
-                          vehicleData={vehicleData}
-                          sendMessageTemplate={sendMessageTemplate}
+                          <Inspection
+                            addNewInspection={addNewInspection}
+                            inspectionData={this.props.inspectionReducer}
+                            addInspectionTemplate={addInspectionTemplate}
+                            getTemplateList={getTemplateList}
+                            addMessageTemplate={addMessageTemplate}
+                            getMessageTemplate={getMessageTemplate}
+                            updateMessageTemplate={updateMessageTemplate}
+                            deleteMessageTemplate={deleteMessageTemplate}
+                            searchMessageTemplateList={searchMessageTemplateList}
+                            customerData={customerData}
+                            vehicleData={vehicleData}
+                            sendMessageTemplate={sendMessageTemplate}
+                            orderId={orderId}
                           /> : null
                       }
                       {
@@ -234,7 +310,7 @@ class Order extends Component {
 }
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
-  inspectionReducer:state.inspectionReducer,
+  inspectionReducer: state.inspectionReducer,
   modelInfoReducer: state.modelInfoReducer,
   serviceReducers: state.serviceReducers,
   labelReducer: state.labelReducer
@@ -249,13 +325,13 @@ const mapDispatchToProps = dispatch => ({
   getVehicleData: (data) => {
     dispatch(vehicleGetRequest(data))
   },
-  addNewInspection: (data) =>{
+  addNewInspection: (data) => {
     dispatch(addNewInspection(data))
   },
-  addInspectionTemplate : (data) =>{
+  addInspectionTemplate: (data) => {
     dispatch(addInspectionTemplate(data))
   },
-  getTemplateList : (data) =>{
+  getTemplateList: (data) => {
     dispatch(getTemplateList(data))
   },
   addMessageTemplate: (data) => {
@@ -264,15 +340,15 @@ const mapDispatchToProps = dispatch => ({
   getMessageTemplate: (data) => {
     dispatch(getMessageTemplate(data))
   },
-  updateMessageTemplate:(data)=>{
+  updateMessageTemplate: (data) => {
     dispatch(updateMessageTemplate(data))
-  }, 
+  },
   deleteMessageTemplate: (data) => {
     dispatch(deleteMessageTemplate(data))
   },
   searchMessageTemplateList: (data) => {
     dispatch(searchMessageTemplateList(data))
-  }, 
+  },
   getPartDetails: (data) => {
     dispatch(getInventoryPartsList(data))
   },
@@ -315,8 +391,14 @@ const mapDispatchToProps = dispatch => ({
   getCannedServiceList: (data) => {
     dispatch(getCannedServiceList(data))
   },
-  sendMessageTemplate: (data) =>{
+  sendMessageTemplate: (data) => {
     dispatch(sendMessageTemplate(data))
+  },
+  updateOrderDetails: (data) => {
+    dispatch(updateOrderDetailsRequest(data))
+  },
+  getOrderDetailsRequest: (data) => {
+    dispatch(getOrderDetailsRequest(data))
   }
 });
 export default connect(

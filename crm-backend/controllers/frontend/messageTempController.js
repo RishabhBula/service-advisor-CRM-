@@ -1,5 +1,8 @@
 const MessageTemplate = require("../../models/messageTemplate");
 const mongoose = require("mongoose");
+const { Email, AvailiableTemplates } = require("../../common/Email");
+const path = require("path");
+const __basedir = path.join(__dirname, "../../public");
 
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
@@ -192,10 +195,33 @@ const deleteMessageTemplate = async (req, res) => {
       });
    }
 }
+/* send message to custormer with inspection attachment */
+const sendMailToCustomer = async (req, res) => {
+   const { body } = req;
+   try {
+      const emailVar = new Email(body);
+      await emailVar.setSubject("[Service Advisor]" + body.subject + " - Inspection Details");
+      await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+         body: body.message,
+      });
+      await emailVar.sendEmail(body.email);
+      return res.status(200).json({
+         message: "Inspection details send to customer successfully!",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is send mail error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
 module.exports = {
    addMessageTemplate,
    getAllMsgTemplateList,
    getAllMsgTemplateListSearch,
    updateMessageTemplate,
-   deleteMessageTemplate
+   deleteMessageTemplate,
+   sendMailToCustomer
 }

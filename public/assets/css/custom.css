@@ -1778,6 +1778,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-left: 5px;
   font-size: 19px;
 }
+.arrow-icon i.arrow{
+  position: absolute;
+  left: 18px;
+  top: 12px;
+}
+
 @media(max-width:1220px){
 .lable-color {
   list-style: none;

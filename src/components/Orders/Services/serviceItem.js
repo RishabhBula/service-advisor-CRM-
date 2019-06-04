@@ -18,7 +18,7 @@ import CrmDiscountBtn from "../../common/CrmDiscountBtn";
 import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
-import { getSumOfArray } from "../../../helpers"
+import { getSumOfArray, logger } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 class ServiceItem extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class ServiceItem extends Component {
             type: "",
             value: false
           },
-          name: "",
+          serviceName: "",
           technician: "",
           note: "",
           serviceItems: [],
@@ -58,14 +58,14 @@ class ServiceItem extends Component {
           },
           serviceSubTotalValue: [],
           serviceTotal: "0.00",
-          isError: false
+          isError: false,
+          isCannedAdded: false
         }
       ],
       isError: false,
       isServiceSubmitted: false
     };
   }
-
   componentDidUpdate = ({ serviceReducers }) => {
     if (serviceReducers !== this.props.serviceReducers) {
       const {
@@ -104,14 +104,16 @@ class ServiceItem extends Component {
           })
 
           const serviceData = [...this.state.services]
-          let serviceTotal = serviceData[index].serviceSubTotalValue
-          const serviceSubTotal = serviceData[index].serviceItems.length ? serviceData[index].serviceItems[Sindex].subTotalValue : null
-          serviceTotal.push(serviceSubTotal)
-          serviceData[index].serviceSubTotalValue = serviceTotal
-          serviceData[index].serviceTotal = getSumOfArray(services[index].serviceSubTotalValue)
-          this.setState({
-            services: serviceData
-          })
+          if (serviceData[index].serviceSubTotalValue) {
+            let serviceTotal = serviceData[index].serviceSubTotalValue
+            const serviceSubTotal = serviceData[index].serviceItems.length ? serviceData[index].serviceItems[Sindex].subTotalValue : null
+            serviceTotal.push(serviceSubTotal)
+            serviceData[index].serviceSubTotalValue = serviceTotal
+            serviceData[index].serviceTotal = getSumOfArray(services[index].serviceSubTotalValue)
+            this.setState({
+              services: serviceData
+            })
+          }
           return true
         })
       }
@@ -391,7 +393,7 @@ class ServiceItem extends Component {
   handleChange = (e, index) => {
     const { value } = e.target;
     const serviceData = [...this.state.services]
-    serviceData[index].name = value
+    serviceData[index].serviceName = value
     this.setState({
       services: serviceData
     })
@@ -434,7 +436,7 @@ class ServiceItem extends Component {
             type: "",
             value: false
           },
-          name: "",
+          serviceName: "",
           technician: "",
           note: "",
           serviceItems: [],
@@ -453,7 +455,8 @@ class ServiceItem extends Component {
           serviceSubTotalValue: [],
           serviceTotal: "0.00",
           isError: false,
-          isCannedService: false
+          isCannedService: false,
+          isCannedAdded: false
         }
       ]
       services.push(serviceData[0])
@@ -463,6 +466,7 @@ class ServiceItem extends Component {
 
   handleRemoveService = (index) => {
     const { services } = this.state;
+    services[index].isCannedAdded = false
     let t = [...services];
     t.splice(index, 1);
     if (services.length) {
@@ -632,13 +636,14 @@ class ServiceItem extends Component {
     const payload = {
       services: serviceData,
       customerComment: customerComment,
-      userRecommendations: userRecommendations
+      userRecommendations: userRecommendations,
+      orderId: this.props.orderId
     }
     let ele
     for (let index = 0; index < serviceData.length; index++) {
       const serviceContent = [...this.state.services]
       ele = serviceContent[index];
-      if (ele.hasOwnProperty('name') && ele.name === '') {
+      if (ele.hasOwnProperty('serviceName') && ele.serviceName === '') {
         serviceContent[index].isError = true
         this.setState({
           services: serviceContent
@@ -650,7 +655,7 @@ class ServiceItem extends Component {
         })
       }
     }
-    if (ele.name !== '') {
+    if (ele.serviceName !== '') {
       this.props.addNewService(payload)
     }
   }
@@ -662,20 +667,28 @@ class ServiceItem extends Component {
 
   handleAddCannedService = (serviceData, index) => {
     const services = [...this.state.services]
-    if (!serviceData.name) {
+    if (!serviceData.serviceName) {
       services[index].isError = true
     } else {
       services[index].isCannedService = true
-      const payload = 
-        {
-          services: [services[index]]
-        }
-      
+      const payload =
+      {
+        services: [services[index]]
+      }
+
       this.props.addNewService(payload)
     }
     this.setState({
       isServiceSubmitted: true,
       services
+    })
+  }
+  handleCannedAddToService = (services) => {
+    const SeriviceData = [...this.state.services]
+    SeriviceData.push(services)
+    this.handleCannedServiceModal()
+    this.setState({
+      services: SeriviceData
     })
   }
   render() {
@@ -703,7 +716,7 @@ class ServiceItem extends Component {
         })
       )
     }
-
+    logger("!!!!!!!!!!!!!!!!", services)
     return (
       <>
         <div>
@@ -720,7 +733,6 @@ class ServiceItem extends Component {
             </Col>
           </Row>
           <div className={"pb-2"}>
-            <Button color={"primary"} className={"mr-2"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
             <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
           </div>
           {
@@ -738,12 +750,12 @@ class ServiceItem extends Component {
                             <div className="input-block">
                               <Input
                                 placeholder={"Enter a name for this service"}
-                                onChange={(e) => this.handleChange(e, index)} name={"name"}
-                                value={item.name}
-                                invalid={isServiceSubmitted && item.isError && !item.name}
+                                onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
+                                value={item.serviceName}
+                                invalid={isServiceSubmitted && item.isError && !item.serviceName}
                               />
                               <FormFeedback>
-                                {item.isError && isServiceSubmitted && !item.name
+                                {item.isError && isServiceSubmitted && !item.serviceName
                                   ? "Service name is required."
                                   : null}
                               </FormFeedback>
@@ -1116,6 +1128,7 @@ class ServiceItem extends Component {
           }
           <div className="d-flex justify-content-between pb-4">
             <Button color={"primary"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
+            <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
             <Button color={"secondary"} onClick={
               () => {
                 this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
@@ -1127,6 +1140,7 @@ class ServiceItem extends Component {
             handleCannedServiceModal={this.handleCannedServiceModal}
             getCannedServiceList={getCannedServiceList}
             serviceReducers={serviceReducers}
+            handleAddToService={this.handleCannedAddToService}
           />
         </div>
       </>

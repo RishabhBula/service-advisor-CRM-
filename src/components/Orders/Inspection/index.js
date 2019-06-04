@@ -159,7 +159,10 @@ class Inspection extends Component {
       const {
          inspection
       } = this.state;
-      const payload = inspection
+      const payload = {
+         inspection: inspection,
+         orderId: this.props.orderId
+      }
       try {
          var inspectionArray = [...this.state.inspection];
          let i, ele;
@@ -175,7 +178,7 @@ class Inspection extends Component {
          if (!ele.error) {
             this.props.addNewInspection(payload)
             this.setState({
-               inspection: null
+               inspection: []
             })
          }
       }
@@ -223,7 +226,6 @@ class Inspection extends Component {
     *
     */
    removeTemplate = async data => {
-      
       try {
          const { value } = await ConfirmBox({
             text: "You want to delete this Template"
@@ -245,7 +247,6 @@ class Inspection extends Component {
     */
    addTemplate = data => {
       const dataArray = data;
-    
       let i;
       for (i = 0; i < dataArray.items.length; i++) {
          dataArray.items[i].color = ""
@@ -271,7 +272,6 @@ class Inspection extends Component {
                inspection
             })
          });
-
          await picReader.readAsDataURL(file);
       })
    };

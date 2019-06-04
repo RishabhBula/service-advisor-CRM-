@@ -16,6 +16,7 @@ import {
   deleteMessageTemplateSuccess,
   searchMessageTemplateListSuccess,
   sendMessageTemplateSuccess,
+  updateOrderDetailsRequest,
   showLoader,
   hideLoader,
 } from "../actions"
@@ -41,7 +42,28 @@ const addInspectionLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(addInspectionSuccess(result.data.data));
+      let inspectionIds = []
+      result.data.data.map((inspection, index) => {
+        inspectionIds.push(inspection._id)
+        return true
+      })
+      dispatch(addInspectionSuccess(result.data.data))
+      if (inspectionIds.length) {
+        let inspectionIdData = []
+        inspectionIds.map((item, index) => {
+          const inspectionId =
+          {
+            inspectionId: item
+          }
+          inspectionIdData.push(inspectionId)
+          return true
+        })
+        const payload = {
+          inspectionId: inspectionIdData,
+          _id: action.payload.orderId
+        }
+        dispatch(updateOrderDetailsRequest(payload))
+      }
       dispatch(hideLoader());
       done();
     }
