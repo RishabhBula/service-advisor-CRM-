@@ -79,17 +79,13 @@ class MessageTemplate extends Component {
     else {
       if(!this.state.isEditMode){
        this.props.addMessageTemplate(payload)
-        console.log(payload,"payload with all succsess")
+
       }
       else{
         payload._id = singleTemplateData._id
-        
         this.props.updateMessageTemplate(payload)
-        console.log(payload, "Edit payload with all succsess")
-        console.log(this.state.isEditMode, "this.state.isEditMode Edit payload with all succsess")
       }
     }
-    //console.log(payload)
   }
 
   handleFocus = (id) => {
@@ -119,13 +115,11 @@ class MessageTemplate extends Component {
   }
 
   handelTemplateDelete = (e,id) =>{
-    console.log(id,"id for delete")
     this.props.deleteMessageTemplate(id)
   }
 
   render() {
     const { templateListData, errors, isEditMode, singleTemplateData, activeIndex} = this.state;
-    //console.log(errors, "ERRORS  singleTemplateData")
     return (
       <>
         <Modal

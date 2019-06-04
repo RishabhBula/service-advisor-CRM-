@@ -15,8 +15,11 @@ import Dropzone from "react-dropzone";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import Templates from "./template";
 import SendInspection from "./sentInspect";
-import MessageTemplate from "./messageTemplate"
+import MessageTemplate from "./messageTemplate";
 import { logger } from "../../../helpers";
+import * as InspectionPdf from "./inspectionPdf"
+import * as jsPDF from "jspdf";
+
 class Inspection extends Component {
    constructor(props) {
       super(props);
@@ -28,6 +31,7 @@ class Inspection extends Component {
          templateData: [],
          colorIndex: '',
          selectedOption: '',
+         showPDF:false
       };
    }
 
@@ -52,10 +56,11 @@ class Inspection extends Component {
             customerData: propsCustomerData,
             vehicleData: propsVehicleData
          })
-         // console.log(customerData, "propdata.customerData")
       }
    }
-
+   /**
+   *
+   */
    handleChange = (e, inspIndex) => {
       const { name, value } = e.target;
       const { inspection } = this.state;
@@ -67,7 +72,9 @@ class Inspection extends Component {
          [e.target.name]: e.target.value,
       });
    }
-
+   /**
+   *
+   */
    handleItemChange = (index, e, inspIndex) => {
       const { name, value } = e.target;
       const { inspection } = this.state
@@ -77,7 +84,9 @@ class Inspection extends Component {
          inspection
       });
    }
-
+   /**
+    *
+    */
    addInspectionItem = (e) => {
       const obj = {
          inspectionName: "",
@@ -92,7 +101,9 @@ class Inspection extends Component {
          inspection: [...this.state.inspection, obj]
       });
    }
-
+   /**
+   *
+   */
    removeInspection = async e => {
       const { value } = await ConfirmBox({
          text: "You want to delete this Inspection"
@@ -105,7 +116,9 @@ class Inspection extends Component {
       itemList.splice(e, 1);
       this.setState({ inspection })
    }
-
+   /**
+    *
+    */
    addItem = (inspIndex) => {
       const { inspection } = this.state
       inspection[inspIndex].items.push({
@@ -115,7 +128,9 @@ class Inspection extends Component {
          inspection
       })
    }
-
+   /**
+   *
+   */
    removeItem = (inspIndex, itemIndex) => {
       const { inspection } = this.state
       let itemList = inspection[inspIndex].items;
@@ -123,7 +138,9 @@ class Inspection extends Component {
       inspection[inspIndex].items = itemList
       this.setState({ inspection })
    }
-
+   /**
+   *
+   */
    removeImage = (previewindx, itemIndex, inspIndex) => {
       const { inspection } = this.state
       let itemImagePreview = inspection[inspIndex].items[itemIndex].itemImagePreview;
@@ -134,7 +151,9 @@ class Inspection extends Component {
       inspection[inspIndex].items[itemIndex].itemImage = itemImage
       this.setState({ inspection })
    }
-
+   /**
+    *
+    */
    handleInspection = (e) => {
       e.preventDefault();
       const {
@@ -164,7 +183,9 @@ class Inspection extends Component {
          console.log(error)
       }
    }
-
+   /**
+    *
+    */
    handleOptionChange = (e, inspIndex, itemIndex) => {
       const { inspection } = this.state
       inspection[inspIndex].items[itemIndex].color = e.target.value;
@@ -174,7 +195,9 @@ class Inspection extends Component {
       });
     
    }
-
+   /**
+    *
+    */
    handleTemplate = (e, inspIndex, id) => {
       e.preventDefault();
       try {
@@ -196,6 +219,9 @@ class Inspection extends Component {
          console.log(error)
       }
    }
+   /**
+    *
+    */
    removeTemplate = async data => {
       
       try {
@@ -214,6 +240,9 @@ class Inspection extends Component {
          console.log(error)
       }
    }
+   /**
+    *
+    */
    addTemplate = data => {
       const dataArray = data;
     
@@ -226,7 +255,9 @@ class Inspection extends Component {
          modal: false
       });
    }
-
+   /**
+    *
+    */
    onDrop = async (files, inspIndex, itemIndex ) => {
       files.map(async (k, i) => {
          let picReader = new FileReader();
@@ -244,11 +275,17 @@ class Inspection extends Component {
          await picReader.readAsDataURL(file);
       })
    };
+   /**
+   *
+   */
    toggle = (e) => {
       this.setState({
          modal: !this.state.modal
       });
    }
+   /**
+    *
+    */
    toggleSentInspection = async (e) => {
       if (!this.props.customerData || !this.props.vehicleData){
          const { value } = await ConfirmBox({
@@ -262,7 +299,7 @@ class Inspection extends Component {
          if (!value) {
             return;
          }
-         console.log(this.props.customerData, "check it now +++++++++++++++++")
+        
       }else{
          this.setState({
             sentModal: !this.state.sentModal
@@ -270,7 +307,9 @@ class Inspection extends Component {
       }
 
    }
-
+   /**
+    *
+    */
    handleApproval = (e, inspIndex, itemIndex) => {
       const { inspection } = this.state
       inspection[inspIndex].items[itemIndex].aprovedStatus = !inspection[inspIndex].items[itemIndex].aprovedStatus
@@ -278,19 +317,105 @@ class Inspection extends Component {
          inspection
       })
    }
-
+   /**
+    *
+    */
    toggleMessageTemplate = (ele) => {
       this.setState({
          mesageModal: !this.state.mesageModal,
       });
    }
 
+   downloadPDF = () => {
+      var doc = new jsPDF();
+      doc.setProperties({
+         title: "Title",
+         subject: "This is the subject",
+         author: "Chapter247",
+         keywords: "React, JavaScript, NodeJS",
+         creator: "Sonu Bamniya"
+      });
+      doc.setTextColor(150);
+
+      // const html = document.getElementById("white-card");
+      // const text = this.setDocText(html);
+      // doc.text(`${text}`, 10, 10);
+      doc.text('Inspection Name',1,5)
+      doc.table(1, 10, this.generateData(1), this.headers, { autoSize: true });
+      window.open(doc.output("bloburl"), "_blank");
+   };
+
+generateData = (amount) => {
+   var result = [];
+   var data =
+   {
+      'Item Title': "100",
+      'Item Description': "GameGroup",
+      'Status': "XPTO2",
+      game_version: "25",
+   };
+   for (var i = 0; i < amount; i += 1) {
+      data.id = (i + 1).toString();
+      result.push(Object.assign({}, data));
+   }
+   return result;
+};
+
+createHeaders = ()=> {
+   const keys = ["id", "coin", "game_group", "game_name", "game_version", "machine", "vlt"];
+   var result = [];
+   for (var i = 0; i < keys.length; i += 1) {
+      result.push({
+         'id': keys[i],
+         'name': keys[i],
+         'prompt': keys[i],
+         'width': 65,
+         'align': 'center',
+         'padding': 0
+      });
+   }
+   return result;
+}
+
+
+   /**
+ *
+ */
+   setDocText = (html, str = "") => {
+      if (html.children) {
+         for (let i = 0; i < html.children.length; i++) {
+            const element = html.children[i];
+            if (!element.children || !element.children.length) {
+               str += `\n${element.innerText}`;
+               logger(element.innerText);
+            } else {
+               return this.setDocText(element, str);
+            }
+         }
+      }
+      return str;
+   };
+  /**
+ *
+ */
+   showPDF = () =>{
+      this.setState({
+         showPDF: !this.state.showPDF
+      })
+   }
+   
    render() {
       const { inspection, templateData} = this.state
-      console.log(this.props.customerData, "customerData didmount")
       return (
          <div>
             <Button onClick={this.toggleSentInspection}>Send</Button>
+            <Button
+               onClick={this.downloadPDF}
+               color={"primary"}
+               id={"add-Appointment"}
+            >
+               <i className={"fa fa-plus mr-1"} /> Download PDF
+            </Button>
             <div className={"inspection-add-block"} id={"inspection-add-block"}>
 
                {inspection && inspection.length ? inspection.map((ele, inspIndex) => {
@@ -476,7 +601,10 @@ class Inspection extends Component {
 
             {/* ====== MessageTemplate Modal====== */}
             <MessageTemplate isOpen={this.state.mesageModal} toggle={this.toggleMessageTemplate} inspectionData={this.props.inspectionData} addMessageTemplate={this.props.addMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} updateMessageTemplate={this.props.updateMessageTemplate} deleteMessageTemplate={this.props.deleteMessageTemplate} />
-
+            
+           
+            {/* <InspectionPdf /> */}
+            
          </div>
       );
    }

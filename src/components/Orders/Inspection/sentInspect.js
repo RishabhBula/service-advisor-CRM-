@@ -32,28 +32,22 @@ class SendInspection extends Component {
   }
   
   componentDidMount = () =>{
-    console.log(this.props.match, "location.query")
     this.setState({
       customerData: this.props.customerData,
       vehicleData: this.props.vehicleData
     })
-    // console.log(this.props.vehicleData, "vehicleData didmount sentInspection")
   }
 
   componentDidUpdate = ({ customerData, vehicleData }) => {
     let propsCustomerData = this.props.customerData
     let propsVehicleData = this.props.vehicleData
     if ((propsCustomerData && propsCustomerData !== customerData) || (propsVehicleData && propsVehicleData !== vehicleData)){
-      console.log(this.props.vehicleData, "vehicleData in search")
       this.setState({
         customerData: propsCustomerData,
         vehicleData: propsVehicleData
       })
       
     }
-    //console.log(this.state.customerData, "customerData didupdate sentInspection")
-    //console.log(this.state.vehicleData, "vehicleData didupdate sentInspection")
-
   }
 
   handleChange = (e) => {
@@ -110,20 +104,19 @@ class SendInspection extends Component {
   handleSentInspection = () =>{
     const { templateData, customerData} = this.state
     const customerEmail = customerData.email
-    console.log(customerEmail, "customerEmail")
     const MessageData = templateData
     const payload = {
       message: MessageData[0].messageText,
       subject: MessageData[0].subject,
       email: customerEmail
     }
-    console.log(payload, "payload")
     this.props.sendMessageTemplate(payload)
   }
 
+
+
   render() {
     const { templateData, recipients, errors, search, customerData, vehicleData} = this.state
-    console.log(templateData, "vehicleData ######################")
     return (
       <>
         <Modal
