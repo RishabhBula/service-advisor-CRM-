@@ -12,7 +12,8 @@ import {
   getOrderListSuccess,
   addOrderSuccess,
   modelOpenRequest,
-  updateOrderDetailsSuccess
+  updateOrderDetailsSuccess,
+  getServiceListSuccess
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -228,7 +229,7 @@ const addOrderLogic = createLogic({
       return;
     } else {
       dispatch(addOrderSuccess({
-        result:result.data.result
+        result: result.data.result
       }))
       dispatch(
         redirectTo({
@@ -273,6 +274,42 @@ const updateOrderDetailsLogic = createLogic({
     }
   }
 });
+/**
+ *
+ */
+const getOrderDetails = createLogic({
+  type: orderActions.GET_ORDER_DETAILS_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/order",
+      "/orderDetails",
+      "GET",
+      true,
+      {
+        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        _id: action.payload && action.payload._id ? action.payload._id : null
+      },
+      undefined,
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      dispatch(getServiceListSuccess(
+        {
+          services:result.data.serviceResult
+        }
+      ))
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
 
 export const OrderLogic = [
   getOrderId,
@@ -282,5 +319,6 @@ export const OrderLogic = [
   updateOrderWorkflowStatusLogic,
   updateOrderOfOrderStatusLogic,
   addOrderLogic,
-  updateOrderDetailsLogic
+  updateOrderDetailsLogic,
+  getOrderDetails
 ];

@@ -1,6 +1,8 @@
 const MessageTemplate = require("../../models/messageTemplate");
 const mongoose = require("mongoose");
 const { Email, AvailiableTemplates } = require("../../common/Email");
+const path = require("path");
+const __basedir = path.join(__dirname, "../../public");
 
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
@@ -204,7 +206,7 @@ const sendMailToCustomer = async (req, res) => {
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({
-         message:"Inspection details send to customer successfully!",
+         message: "Inspection details send to customer successfully!",
          success: true
       })
    } catch (error) {

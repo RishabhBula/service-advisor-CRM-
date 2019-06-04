@@ -33,7 +33,8 @@ import {
   getLabelList,
   addNewLabel,
   getCannedServiceList,
-  updateOrderDetailsRequest
+  updateOrderDetailsRequest,
+  getOrderDetailsRequest
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -94,6 +95,7 @@ class Order extends Component {
     this.setState({
       orderId: this.props.match.params.id
     })
+    this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
   }
 
   onTabChange = (activeTab) => {
@@ -149,7 +151,7 @@ class Order extends Component {
     })
   }
   render() {
-    const { activeTab, customerData, vehicleData, isError, orderName } = this.state;
+    const { activeTab, customerData, vehicleData, isError, orderName, orderId } = this.state;
     const {
       getVehicleData,
       getCustomerData,
@@ -247,6 +249,7 @@ class Order extends Component {
                             getCannedServiceList={getCannedServiceList}
                             customerData={customerData}
                             vehicleData={vehicleData}
+                            orderId={orderId}
                           /> : null
                       }
                       {
@@ -333,6 +336,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateOrderDetails: (data) => {
     dispatch(updateOrderDetailsRequest(data))
+  },
+  getOrderDetailsRequest: (data) => {
+    dispatch(getOrderDetailsRequest(data))
   }
 });
 export default connect(

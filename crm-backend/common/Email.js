@@ -27,6 +27,8 @@ class Email {
     this.body = "";
     this.subject = "";
     this.to = "";
+    this.cc = [];
+    this.attachments = [];
   }
   async setTemplate(templateName, replaceObject = {}) {
     if (!templateName) {
@@ -104,15 +106,24 @@ class Email {
   setBody(body) {
     this.body = body;
   }
+  setAttachements(attachments) {
+    this.attachments = attachments;
+  }
+  setCC(cc) {
+    this.cc = cc;
+  }
   async sendEmail(email) {
     if (!email) {
       throw new Error("Please provide email.");
     }
     const mailOption = {
       from: "Sevice Advisor <test.chapter247@gmail.com>",
-      to: email.split(","),
+      to: this.to || email.split(","),
+      cc: this.cc,
       subject: this.subject,
       html: this.body,
+      debug: true,
+      attachments: this.attachments
     };
     const resp = await commonSmtp.smtpTransport.sendMail(mailOption);
     return resp;

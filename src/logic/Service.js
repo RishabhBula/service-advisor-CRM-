@@ -8,7 +8,8 @@ import {
    serviceActions,
    addServiceSuccess,
    getCannedServiceListSuccess,
-   getCannedServiceList
+   getCannedServiceList,
+   updateOrderDetailsRequest
 } from "./../actions";
 
 const addServiceLogic = createLogic({
@@ -44,6 +45,22 @@ const addServiceLogic = createLogic({
                services: result.data.serviceResultData
             }
          ));
+         if (serviceIds.length) {
+            let serviceIdData = []
+            serviceIds.map((item, index) => {
+               const serviceId = 
+               {
+                  serviceId: item
+               }
+               serviceIdData.push(serviceId)
+               return true
+            })
+            const payload = {
+               serviceId: serviceIdData,
+               _id: action.payload.orderId
+            }
+            dispatch(updateOrderDetailsRequest(payload))
+         }
          dispatch(getCannedServiceList())
          dispatch(hideLoader());
          done();

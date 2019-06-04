@@ -66,7 +66,6 @@ class ServiceItem extends Component {
       isServiceSubmitted: false
     };
   }
-
   componentDidUpdate = ({ serviceReducers }) => {
     if (serviceReducers !== this.props.serviceReducers) {
       const {
@@ -637,7 +636,8 @@ class ServiceItem extends Component {
     const payload = {
       services: serviceData,
       customerComment: customerComment,
-      userRecommendations: userRecommendations
+      userRecommendations: userRecommendations,
+      orderId: this.props.orderId
     }
     let ele
     for (let index = 0; index < serviceData.length; index++) {
@@ -685,8 +685,6 @@ class ServiceItem extends Component {
   }
   handleCannedAddToService = (services) => {
     const SeriviceData = [...this.state.services]
-    console.log("############", services);
-
     SeriviceData.push(services)
     this.handleCannedServiceModal()
     this.setState({

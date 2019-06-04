@@ -161,10 +161,9 @@ class Services extends Component {
          labelReducer,
          addNewLabel,
          addNewService,
-         getCannedServiceList
+         getCannedServiceList,
+         orderId
       } = this.props;
-console.log("!!!!!!!!!!!!!!!!!!!!!", serviceReducers);
-
       const { modelDetails } = modelInfoReducer;
       return (
          <div>
@@ -183,6 +182,7 @@ console.log("!!!!!!!!!!!!!!!!!!!!!", serviceReducers);
                   addNewLabel={addNewLabel}
                   addNewService={addNewService}
                   getCannedServiceList={getCannedServiceList}
+                  orderId={orderId}
                />
             </div>
             {

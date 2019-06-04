@@ -291,7 +291,7 @@ const updateOrderDetails = async (req, res) => {
   const { body } = req;
   try {
     console.log("##############", body._id);
-    
+
     const updateOrderDetails = await Orders.findByIdAndUpdate(body._id,
       {
         $set: body
@@ -309,6 +309,87 @@ const updateOrderDetails = async (req, res) => {
     });
   }
 }
+/* get order details */
+const getOrderDetails = async (req, res) => {
+  const { query, currentUser } = req;
+  try {
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
+    const searchValue = query.search;
+    const orderId = query._id
+    let condition = {};
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: mongoose.Types.ObjectId(parentId)
+          },
+          {
+            _id: mongoose.Types.ObjectId(orderId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
+            }
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      }
+    ];
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            orderName: {
+              $regex: new RegExp(searchValue.trim(), "i"),
+            },
+          },
+          {
+            _id: mongoose.Types.ObjectId(orderId),
+          }
+        ],
+      });
+    }
+    if (orderId) {
+      condition["$and"].push({
+        $or: [
+          {
+            _id: mongoose.Types.ObjectId(orderId),
+          }
+        ],
+      });
+    }
+    const result1 = await Orders.find(condition).populate('customerId vehicleId serviceId.serviceId inspectionId.inspectionId')
+    const result = result1
+    const serviceData = []
+    if (result[0].serviceId.length) {
+      for (let index = 0; index < result[0].serviceId.length; index++) {
+        const element = result[0].serviceId[index];
+        serviceData.push(element.serviceId)
+      }
+    }
+    return res.status(200).json({
+      data: result,
+      serviceResult: serviceData,
+      success: true
+    })
+  } catch (error) {
+    console.log("this is get label error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
 module.exports = {
   countOrderNumber,
   createNewOrder,
@@ -317,5 +398,6 @@ module.exports = {
   addOrderStatus,
   deleteOrderStatus,
   updateWorkflowStatusOrder,
-  updateOrderDetails
+  updateOrderDetails,
+  getOrderDetails
 };

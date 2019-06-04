@@ -19,7 +19,9 @@ export const orderActions = {
   REQUEST_ORDER_STATUS_UPDATE: "Request order status update!",
   ADD_ORDER_STATUS: "Request for add new order status!",
   DELTE_ORDER_STATUS: "Request for delete existing order status!",
-  UPDATE_ORDER_OF_ORDER_STATUS: "Request for order update of order status!"
+  UPDATE_ORDER_OF_ORDER_STATUS: "Request for order update of order status!",
+  GET_ORDER_DETAILS_REQUEST:"Get order details request",
+  GET_ORDER_DETAILS_SUCCESS:"Get order details success"
 };
 
 export const getOrderList = createAction(orderActions.GET_ORDER_LIST_REQUEST);
@@ -65,4 +67,7 @@ export const updateOrderOfOrderStatus = createAction(
   orderActions.UPDATE_ORDER_OF_ORDER_STATUS
 );
 export const updateOrderDetailsRequest = createAction(orderActions.UPDATE_ORDER_DETAILS);
-export const updateOrderDetailsSuccess = createAction(orderActions.UPDATE_ORDER_DETAILS_SUCCESS)
+export const updateOrderDetailsSuccess = createAction(orderActions.UPDATE_ORDER_DETAILS_SUCCESS);
+export const getOrderDetailsRequest = createAction(orderActions.GET_ORDER_DETAILS_REQUEST);
+export const getOrderDetailsSuccess = createAction(orderActions.GET_ORDER_DETAILS_SUCCESS)
+

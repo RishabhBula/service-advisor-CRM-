@@ -53,4 +53,12 @@ router.put(
   token.authorisedUser,
   orderController.updateOrderDetails
 )
+/**
+ *
+ */
+router.get(
+  "/orderDetails",
+  token.authorisedUser,
+  orderController.getOrderDetails
+)
 module.exports = router;
