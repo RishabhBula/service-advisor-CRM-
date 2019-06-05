@@ -14,9 +14,22 @@ class WorkflowListView extends React.Component {
    *
    */
   renderRow = (order, index) => {
+    const { activeTab } = this.state;
     return (
       <tr key={index}>
         <td>{order.name || "Unnamed order"}</td>
+        <td>
+          <i
+            className={"fa fa-trash"}
+            onClick={() =>
+              this.props.deleteOrder({
+                statusId: activeTab,
+                id: order._id,
+                index
+              })
+            }
+          />
+        </td>
       </tr>
     );
   };
@@ -59,6 +72,7 @@ class WorkflowListView extends React.Component {
           <thead>
             <tr>
               <th>Order Name</th>
+              <th />
             </tr>
           </thead>
           <tbody>

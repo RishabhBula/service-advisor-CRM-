@@ -20,6 +20,7 @@ import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
+import { reorderArray } from "../helpers/Array";
 
 /**
  *
@@ -173,13 +174,7 @@ const deleteOrderStatusLogic = createLogic({
     done();
   }
 });
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
 
-  return result;
-};
 /**
  *
  */
@@ -191,7 +186,7 @@ const updateOrderOfOrderStatusLogic = createLogic({
     const { orderStatus: oldOrderStatus, orderData } = getState().orderReducer;
     const { orders: data } = orderData;
 
-    const orderStatus = reorder(oldOrderStatus, from.index, to.index);
+    const orderStatus = reorderArray(oldOrderStatus, from.index, to.index);
     logger(orderStatus);
     dispatch(getOrderListSuccess({ data, orderStatus }));
     await new ApiHelper().FetchFromServer(
@@ -229,9 +224,11 @@ const addOrderLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(addOrderSuccess({
-        result: result.data.result
-      }))
+      dispatch(
+        addOrderSuccess({
+          result: result.data.result
+        })
+      );
       dispatch(
         redirectTo({
           path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
@@ -269,10 +266,39 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(updateOrderDetailsSuccess())
+      dispatch(updateOrderDetailsSuccess());
       dispatch(hideLoader());
       done();
     }
+  }
+});
+const deleteOrderLogic = createLogic({
+  type: orderActions.DELETE_ORDER_REQUEST,
+  async process({ action, getState }, dispatch, done) {
+    const { payload } = action;
+    const { id, index, statusId } = payload;
+    logger(id, index);
+    const { orderReducer } = getState();
+    const { orderData, orderStatus } = orderReducer;
+    const { orders } = orderData;
+
+    orders[statusId].splice(index, 1);
+    let api = new ApiHelper();
+    const result = await api.FetchFromServer(
+      "/order",
+      "/deleteOrder",
+      "DELETE",
+      true,
+      undefined,
+      { id }
+    );
+    let toastType = "error";
+    if (!result.isError) {
+      toastType = "success";
+      dispatch(getOrderListSuccess({ data: orders, orderStatus }));
+    }
+    toast[toastType](result.messages[0]);
+    done();
   }
 });
 /**
@@ -290,10 +316,15 @@ const getOrderDetails = createLogic({
       "GET",
       true,
       {
-        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        search:
+          action.payload && action.payload.input
+            ? action.payload.input
+            : action.payload && action.payload.search
+            ? action.payload.search
+            : null,
         _id: action.payload && action.payload._id ? action.payload._id : null
       },
-      undefined,
+      undefined
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -301,16 +332,16 @@ const getOrderDetails = createLogic({
       done();
       return;
     } else {
-      dispatch(getServiceListSuccess(
-        {
+      dispatch(
+        getServiceListSuccess({
           services: result.data.serviceResult
-        }
-      ))
-      dispatch(getOrderDetailsSuccess(
-        {
+        })
+      );
+      dispatch(
+        getOrderDetailsSuccess({
           order: result.data.data[0]
-        }
-      ))
+        })
+      );
       dispatch(hideLoader());
       done();
     }
@@ -326,5 +357,6 @@ export const OrderLogic = [
   updateOrderOfOrderStatusLogic,
   addOrderLogic,
   updateOrderDetailsLogic,
-  getOrderDetails
+  getOrderDetails,
+  deleteOrderLogic
 ];

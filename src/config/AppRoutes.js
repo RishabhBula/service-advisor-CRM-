@@ -85,7 +85,7 @@ export const AppRoutes = {
     exact: true
   },
   STAFF_MEMBERS: {
-    url: "/staff-members",
+    url: "/settings/staff-members",
     name: "Staff Members",
     exact: true
   },
@@ -95,12 +95,12 @@ export const AppRoutes = {
     exact: true
   },
   FLEETS: {
-    url: "/fleets",
+    url: "/settings/fleets",
     name: "Fleets",
     exact: true
   },
   CUSTOMERS: {
-    url: "/settings/customers",
+    url: "/customers",
     name: "Customers",
     exact: true
   },

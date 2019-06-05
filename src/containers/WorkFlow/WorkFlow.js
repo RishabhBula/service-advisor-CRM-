@@ -15,19 +15,19 @@ import {
   FormFeedback
 } from "reactstrap";
 import { connect } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 
 import { AppRoutes } from "../../config/AppRoutes";
-import Loader from "../Loader/Loader";
 import WorkflowGridView from "../../components/Workflow/GridView";
+
 import {
   getOrderList,
   updateOrderStatus,
   deleteOrderStatusRequest,
   addOrderStatus,
   updateOrderOfOrderStatus,
-  addOrderRequest
+  addOrderRequest,
+  deleteOrderRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -40,15 +40,7 @@ import {
 
 import * as classNames from "classnames";
 import WorkflowListView from "../../components/Workflow/ListView";
-
-const Order = React.lazy(() => import("../Orders"));
-
-export const OrderRoutes = {
-  path: AppRoutes.WORKFLOW_ORDER.url,
-  exact: AppRoutes.WORKFLOW_ORDER.exact,
-  name: AppRoutes.WORKFLOW_ORDER.name,
-  component: Order
-};
+import { ConfirmBox } from "../../helpers/SweetAlert";
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -79,6 +71,12 @@ class WorkFlow extends Component {
   componentDidMount() {
     this.props.getOrders();
   }
+  /**
+   *
+   */
+  handleOrder = () => {
+    this.props.redirectTo(AppRoutes.WORKFLOW_ORDER.url);
+  };
   /**
    *
    */
@@ -165,6 +163,18 @@ class WorkFlow extends Component {
     this.props.modelOperate({
       addOrderStatusModalOpen: !addOrderStatusModalOpen
     });
+  };
+  /**
+   *
+   */
+  deleteOrder = async data => {
+    const { value } = await ConfirmBox({
+      text: "Are you sure, you want to abandoned this order?"
+    });
+    if (!value) {
+      return;
+    }
+    this.props.deleteOrder(data);
   };
   /**
    *
@@ -373,32 +383,22 @@ class WorkFlow extends Component {
                     orderStatus={orderStatus}
                     updateOrderStatus={updateOrderStatus}
                     deleteOrderStatus={this.deleteOrderStatus}
+                    deleteOrder={this.deleteOrder}
                   />
                 ) : (
-                    <div style={{ overflowX: "auto" }}>
-                      <WorkflowGridView
-                        orderData={orderData}
-                        orderStatus={orderStatus}
-                        updateOrderStatus={updateOrderStatus}
-                        deleteOrderStatus={this.deleteOrderStatus}
-                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                      />
-                    </div>
-                  )}
+                  <div style={{ overflowX: "auto" }}>
+                    <WorkflowGridView
+                      orderData={orderData}
+                      orderStatus={orderStatus}
+                      updateOrderStatus={updateOrderStatus}
+                      deleteOrderStatus={this.deleteOrderStatus}
+                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                      deleteOrder={this.deleteOrder}
+                    />
+                  </div>
+                )}
               </Col>
             </Row>
-            <Suspense fallback={<Loader />}>
-              <Switch>
-                <Route
-                  path={OrderRoutes.path}
-                  exact={OrderRoutes.exact}
-                  name={OrderRoutes.name}
-                  render={props => (
-                    <OrderRoutes.component {...props} {...this.props} />
-                  )}
-                />
-              </Switch>
-            </Suspense>
           </CardBody>
         </Card>
         {this.renderOrderSelectionModal()}
@@ -416,7 +416,8 @@ const mapDispatchToProps = dispatch => ({
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
   deleteOrderStatus: data => dispatch(deleteOrderStatusRequest(data)),
   addOrderStatus: data => dispatch(addOrderStatus(data)),
-  updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data))
+  updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data)),
+  deleteOrder: data => dispatch(deleteOrderRequest(data))
 });
 export default connect(
   mapStateToProps,

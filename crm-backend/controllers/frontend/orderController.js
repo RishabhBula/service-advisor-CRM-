@@ -55,8 +55,12 @@ const createNewOrder = async (req, res) => {
     const workflowStatus = orderStatus[0]._id;
     const orderConst = {
       orderName: body.orderName,
-      customerId: body.customerId ? mongoose.Types.ObjectId(body.customerId) : null,
-      vehicleId: body.vehicleId ? mongoose.Types.ObjectId(body.vehicleId) : null,
+      customerId: body.customerId
+        ? mongoose.Types.ObjectId(body.customerId)
+        : null,
+      vehicleId: body.vehicleId
+        ? mongoose.Types.ObjectId(body.vehicleId)
+        : null,
       serviceId: body.serviceId,
       inspectionId: body.inspectionId,
       timeClockId: body.timeClockId
@@ -290,15 +294,13 @@ const updateWorkflowStatusOrder = async (req, res) => {
 const updateOrderDetails = async (req, res) => {
   const { body } = req;
   try {
-    const updateOrderDetails = await Orders.findByIdAndUpdate(body._id,
-      {
-        $set: body
-      }
-    )
+    await Orders.findByIdAndUpdate(body._id, {
+      $set: body
+    });
     return res.status(200).json({
       message: "Order Updated Successfully!",
       success: true
-    })
+    });
   } catch (error) {
     console.log("Error while updating orders details", error);
     return res.status(500).json({
@@ -306,7 +308,7 @@ const updateOrderDetails = async (req, res) => {
       success: false
     });
   }
-}
+};
 /* get order details */
 const getOrderDetails = async (req, res) => {
   const { query, currentUser } = req;
@@ -314,7 +316,7 @@ const getOrderDetails = async (req, res) => {
     const id = currentUser.id;
     const parentId = currentUser.parentId || currentUser.id;
     const searchValue = query.search;
-    const orderId = query._id
+    const orderId = query._id;
     let condition = {};
     condition["$and"] = [
       {
@@ -348,37 +350,40 @@ const getOrderDetails = async (req, res) => {
         $or: [
           {
             orderName: {
-              $regex: new RegExp(searchValue.trim(), "i"),
-            },
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
           },
           {
-            _id: mongoose.Types.ObjectId(orderId),
+            _id: mongoose.Types.ObjectId(orderId)
           }
-        ],
+        ]
       });
     }
     if (orderId) {
       condition["$and"].push({
         $or: [
           {
-            _id: mongoose.Types.ObjectId(orderId),
+            _id: mongoose.Types.ObjectId(orderId)
           }
-        ],
+        ]
       });
     }
-    const result1 = await Orders.find(condition).populate('customerId vehicleId serviceId.serviceId inspectionId.inspectionId')
-    const result = result1
-    const serviceData = [], inspectionData = []
+    const result1 = await Orders.find(condition).populate(
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId"
+    );
+    const result = result1;
+    const serviceData = [],
+      inspectionData = [];
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
         const element = result[0].serviceId[index];
-        serviceData.push(element.serviceId)
+        serviceData.push(element.serviceId);
       }
     }
     if (result[0].inspectionId.length) {
       for (let index = 0; index < result[0].inspectionId.length; index++) {
         const element = result[0].inspectionId[index];
-        inspectionData.push(element.inspectionId)
+        inspectionData.push(element.inspectionId);
       }
     }
     return res.status(200).json({
@@ -386,7 +391,7 @@ const getOrderDetails = async (req, res) => {
       serviceResult: serviceData,
       inspectionResult: inspectionData,
       success: true
-    })
+    });
   } catch (error) {
     console.log("this is get label error", error);
     return res.status(500).json({
@@ -394,7 +399,33 @@ const getOrderDetails = async (req, res) => {
       success: false
     });
   }
-}
+};
+/**
+ *
+ */
+const deleteOrder = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { id, parentId } = currentUser;
+    const { id: orderID } = body;
+    await Orders.updateOne(
+      {
+        parentId: id || parentId,
+        _id: mongoose.Types.ObjectId(orderID)
+      },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
+    return res.status(200).json({
+      message: "Order deleted successfully!"
+    });
+  } catch (error) {
+    console.log("Error while fetching list of orders", error);
+  }
+};
 module.exports = {
   countOrderNumber,
   createNewOrder,
@@ -404,5 +435,6 @@ module.exports = {
   deleteOrderStatus,
   updateWorkflowStatusOrder,
   updateOrderDetails,
-  getOrderDetails
+  getOrderDetails,
+  deleteOrder
 };
