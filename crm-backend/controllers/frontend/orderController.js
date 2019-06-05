@@ -369,9 +369,10 @@ const getOrderDetails = async (req, res) => {
         ]
       });
     }
-    const result1 = await Orders.find(condition).populate(
+    const result2 = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId"
     );
+    const result1 = await Orders.populate(result2,{path:'serviceId.serviceId.technician'})
     const result = result1;
     const serviceData = [],
       inspectionData = [];

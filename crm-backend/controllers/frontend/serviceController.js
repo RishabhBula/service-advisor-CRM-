@@ -56,10 +56,17 @@ const addNewService = async (req, res) => {
             status: true,
             isDeleted: false
          }
-
-         const serviceContent = new Service(serviceData);
-         const result = await serviceContent.save();
-         serviceResultData.push(result)
+         const addedService = await Service.findByIdAndUpdate(element._id,{
+            $set: serviceData
+         })
+         if (!addedService) {
+            const serviceContent = new Service(serviceData);
+            const result = await serviceContent.save();
+            serviceResultData.push(result)
+         }else{
+            const seviceData = await Service.findById(element._id)
+            serviceResultData.push(seviceData)
+         }
       }
       const customerAndUserContent = new CustomerAndUser(cutomerUser);
       const commentResult = await customerAndUserContent.save();
