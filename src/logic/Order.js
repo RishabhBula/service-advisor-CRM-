@@ -237,7 +237,6 @@ const addOrderLogic = createLogic({
           )}`
         })
       );
-      dispatch(hideLoader());
       done();
     }
   }

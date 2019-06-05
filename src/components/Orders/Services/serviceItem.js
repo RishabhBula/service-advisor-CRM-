@@ -764,7 +764,7 @@ class ServiceItem extends Component {
           {
             services && services.length ? services.map((item, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal mt-3"}>
                       <Row>
@@ -1145,7 +1145,7 @@ class ServiceItem extends Component {
 
                     </div>
                   </Card>
-                </>
+                </React.Fragment>
               )
             }) : null
           }

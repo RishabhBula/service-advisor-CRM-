@@ -9,7 +9,8 @@ const countOrderNumber = async (req, res) => {
     const result = await Orders.countDocuments();
     return res.status(200).json({
       orderId: parseInt(result) + 1,
-      success: true
+      success: true,
+      result
     });
   } catch (error) {
     console.log("this is order count error", error);
