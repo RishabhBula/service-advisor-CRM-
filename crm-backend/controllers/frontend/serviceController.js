@@ -42,13 +42,14 @@ const addNewService = async (req, res) => {
          }
          serviceData = {
             serviceName: element.serviceName,
-            notes: element.notes,
+            note: element.note,
             serviceItems: element.serviceItems,
             epa: element.epa,
             discount: element.discount,
             technician: element.technician ? element.technician.value : null,
             taxes: element.taxes,
             isCannedService: isCannedService ? isCannedService : false,
+            isConfirmedValue: element.isConfirmedValue,
             serviceTotal: element.serviceTotal,
             userId: currentUser.id,
             parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,

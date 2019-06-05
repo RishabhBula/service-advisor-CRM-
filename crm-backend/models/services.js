@@ -6,7 +6,7 @@ const serviceSchema = new Schema({
       type: String,
       default: null,
    },
-   notes: {
+   note: {
       type: String,
       default: null,
    },
@@ -41,6 +41,10 @@ const serviceSchema = new Schema({
    },
    serviceTotal: {
       type: Number,
+      default: null
+   },
+   isConfirmedValue: {
+      type: Object,
       default: null
    },
    isCannedService: {

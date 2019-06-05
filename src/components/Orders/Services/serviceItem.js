@@ -18,8 +18,10 @@ import CrmDiscountBtn from "../../common/CrmDiscountBtn";
 import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
-import { getSumOfArray, logger } from "../../../helpers"
+import { getSumOfArray } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
+import { ConfirmBox } from "../../../helpers/SweetAlert";
+
 class ServiceItem extends Component {
   constructor(props) {
     super(props);
@@ -399,9 +401,9 @@ class ServiceItem extends Component {
     })
   }
   handleChange = (e, index) => {
-    const { value } = e.target;
+    const { value, name } = e.target;
     const serviceData = [...this.state.services]
-    serviceData[index].serviceName = value
+    serviceData[index][name] = value
     this.setState({
       services: serviceData
     })
@@ -435,8 +437,7 @@ class ServiceItem extends Component {
       isError: true
     })
     if (this.state.services) {
-      const { serviceReducers } = this.props;
-      const { services } = serviceReducers;
+      const services = [...this.state.services]
       const serviceData = [
         {
           isButtonValue: "",
@@ -468,11 +469,23 @@ class ServiceItem extends Component {
         }
       ]
       services.push(serviceData[0])
+      this.setState({
+        services
+      })
       await this.props.addPartToService(services)
     }
   }
 
-  handleRemoveService = (index) => {
+  handleRemoveService = async(index) => {
+    const { value } = await ConfirmBox({
+      text: "Do you want to remove this service?"
+    });
+    if (!value) {
+      this.setState({
+        selectedVehicles: []
+      });
+      return;
+    }
     const { services } = this.state;
     services[index].isCannedAdded = false
     let t = [...services];
@@ -512,6 +525,8 @@ class ServiceItem extends Component {
   }
   handleValueConfirmed = (index, name) => {
     const serviceData = [...this.state.services]
+    console.log("@@@@@@@@@@", serviceData[index]);
+
     serviceData[index].isConfirmedValue.value = true
     serviceData[index].isConfirmedValue.type = name
     serviceData[index].isButtonValue = ''
@@ -638,6 +653,8 @@ class ServiceItem extends Component {
     })
   }
   handleServiceSubmit = (serviceData, customerComment, userRecommendations) => {
+    console.log("*********************Service data", serviceData);
+
     this.setState({
       isServiceSubmitted: true
     })
@@ -700,7 +717,7 @@ class ServiceItem extends Component {
     })
   }
   render() {
-    const { addNote, noteIndex, services, selectedTechnician, customerComment,
+    const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService } = this.state
     const { labelReducer, getCannedServiceList, serviceReducers } = this.props
     const LabelColors = (index, sIndex) => {
@@ -724,7 +741,8 @@ class ServiceItem extends Component {
         })
       )
     }
-    logger("!!!!!!!!!!!!!!!!", services)
+    console.log("***************This is service state", services);
+
     return (
       <>
         <div>
@@ -760,6 +778,7 @@ class ServiceItem extends Component {
                                 placeholder={"Enter a name for this service"}
                                 onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
                                 value={item.serviceName}
+                                maxLength={"100"}
                                 invalid={isServiceSubmitted && item.isError && !item.serviceName}
                               />
                               <FormFeedback>
@@ -789,21 +808,17 @@ class ServiceItem extends Component {
                       </Row>
                       <Col md="12">
                         <FormGroup>
-                          {
-                            addNote && noteIndex === index ?
-                              <>
-                                <Label htmlFor="name" className="customer-modal-text-style">
-                                  Note
-                                </Label>
-                                <Input type={"textarea"} rows={"2"} cols={"3"} />
-                              </>
-                              :
-                              <Label onClick={() => this.setState({
-                                addNote: true,
-                                noteIndex: index
-                              })}>Add Note</Label>
+                          <Label htmlFor="name" className="customer-modal-text-style">
+                            Note
+                          </Label>
+                          <Input
+                            type={"textarea"}
+                            onChange={(e) => this.handleChange(e, index)}
+                            name={"note"}
+                            value={item.note}
+                            maxLength={"200"}
+                            rows={"2"} cols={"3"} />
 
-                          }
                         </FormGroup>
                       </Col>
                       <table className={"table matrix-table"}>
@@ -814,9 +829,9 @@ class ServiceItem extends Component {
                             <th width="250" className={"text-center"}>QTY</th>
                             <th width="250" className={"text-center"}>HRS</th>
                             <th width="250" className={"text-center"}>DISC</th>
-                            <th width="250" className={"text-center"}>SUBTOTAL</th>
-                            <th width="250" className={"text-center"}>STATUS</th>
-                            <th width="250" className={"text-center"}>Action</th>
+                            <th width="150" className={"text-center"}>SUBTOTAL</th>
+                            <th width="200" className={"text-center"}>STATUS</th>
+                            <th width="30" className={"text-center"}></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -927,10 +942,10 @@ class ServiceItem extends Component {
                                             }) :
                                             null
                                         }
-                                        <Button id={`new${sIndex}`} className={"btn-sm"} type="button">
+                                        <Button id={`new${sIndex}${index}`} className={"btn-sm"} type="button">
                                           New +
                                         </Button>
-                                        <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}`}>
+                                        <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}${index}`}>
                                           <PopoverHeader>
                                             <div>
                                               <FormGroup className={"mb-0"}>
@@ -1137,11 +1152,15 @@ class ServiceItem extends Component {
           <div className="d-flex justify-content-between pb-4">
             <Button color={"primary"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
             <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
-            <Button color={"secondary"} onClick={
-              () => {
-                this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
-              }
-            }>Submit services</Button>
+
+            {
+              this.state.services && this.state.services.length ?
+                <Button color={"secondary"} onClick={
+                  () => {
+                    this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
+                  }
+                }>Submit services</Button> : null
+            }
           </div>
           <CrmCannedServiceModal
             openCannedService={openCannedService}

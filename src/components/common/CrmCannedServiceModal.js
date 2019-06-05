@@ -155,7 +155,7 @@ export class CrmCannedServiceModal extends Component {
                                           item.serviceItems && item.serviceItems.length && (serviceIndex === index) && isToggelOpen ?
                                              item.serviceItems.map((serviceItem, sIndex) => {
                                                 return (
-                                                   <div className={"pl-3 p-2 mb-0 border-secondary border d-flex justify-content-between"}>
+                                                   <div key={index} className={"pl-3 p-2 mb-0 border-secondary border d-flex justify-content-between"}>
                                                       <Input type="checkbox" checked={serviceItem.isItemChecked} value={serviceItem.isItemChecked} onChange={(e) => this.handleServiceItems(e, serviceItem, index, sIndex)} className={"ml-0"} />
                                                       <span className={"pl-3"}>{serviceItem.description || serviceItem.brandName || serviceItem.discription || '-'}</span>
                                                    </div>

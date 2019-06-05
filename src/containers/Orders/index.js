@@ -98,9 +98,21 @@ class Order extends Component {
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
   }
 
-  componentDidUpdate = ({ serviceReducers }) => {
+  componentDidUpdate = ({ serviceReducers, orderReducer }) => {
     if (serviceReducers.isLoading !== this.props.serviceReducers.isLoading) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
+    }
+    if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
+      const {
+        orderName,
+        customerId,
+        vehicleId
+      } = this.props.orderReducer.orderItems
+      this.setState({
+        orderName,
+        customerData: customerId,
+        vehicleData: vehicleId
+      })
     }
   }
 
@@ -122,29 +134,17 @@ class Order extends Component {
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state
     if (!customerData || !vehicleData || !orderName) {
+      console.log("!!!!!!!!!!!!", customerData, vehicleData, orderId, orderName);
+
       this.setState({
         isError: true,
       })
       return
     }
-    const { serviceReducers } = this.props
-    let serviceIdData = []
-    if (serviceReducers.submittedServiceId.length) {
-      serviceReducers.submittedServiceId.map((item, index) => {
-        const serviceId =
-        {
-          serviceId: item
-        }
-        serviceIdData.push(serviceId)
-        return true
-      })
-    }
     const payload = {
       customerId: customerData ? customerData._id : null,
       vehicleId: vehicleData ? vehicleData._id : null,
-      serviceId: serviceIdData,
       orderName: orderName,
-      customerCommentId: serviceReducers.customerCommentId ? serviceReducers.customerCommentId : null,
       _id: orderId
     }
     logger("*******payload*****", payload)
@@ -182,102 +182,107 @@ class Order extends Component {
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
-          <CardBody className={"custom-card-body inventory-card"}>
-            <div className={"d-flex justify-content-between pb-4"}>
-              <h3>Order (#{typeof this.props.orderReducer.orderId !== 'object' ? this.props.orderReducer.orderId : null})</h3>
-              <Button color={"primary"} onClick={() => this.handleEditOrder()}>Update Order</Button>
-            </div>
-            <div className={"custom-form-modal mt-3"}>
-              <Row>
-                <Col md={"8"}>
-                  <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
-                      Order Name  <span className={"asteric"}>*</span>
-                    </Label>
-                    <div className="input-block">
-                      <Input
-                        placeholder={"Enter a order title"}
-                        onChange={(e) => this.handleChange(e)} name={"orderName"}
-                        value={orderName}
-                        invalid={isError && !orderName}
-                      />
-                      <FormFeedback>
-                        {isError && !orderName
-                          ? "Order name is required."
-                          : null}
-                      </FormFeedback>
-                    </div>
-                  </FormGroup>
-                </Col>
-              </Row>
-            </div>
-            <CustomerVehicle
-              getCustomerData={getCustomerData}
-              getVehicleData={getVehicleData}
-              customerVehicleData={this.customerVehicleData}
-              isError={isError}
-              orderReducer={orderReducer}
-            />
-            <div className={"position-relative"}>
-              <Suspense fallback={"Loading.."}>
-                <OrderTab
-                  tabs={OrderTabs}
-                  activeTab={activeTab}
-                  onTabChange={this.onTabChange}
+          <Row>
+            <Col md={"8"}>
+              <CardBody className={"custom-card-body inventory-card"}>
+                <div className={"d-flex justify-content-between pb-4"}>
+                  <h3>Order (#{typeof this.props.orderReducer.orderId !== 'object' ? this.props.orderReducer.orderId : null})</h3>
+                  <Button color={"primary"} onClick={() => this.handleEditOrder()}>Update Order</Button>
+                </div>
+                <div className={"custom-form-modal mt-3"}>
+                  <Row>
+                    <Col md={"8"}>
+                      <FormGroup>
+                        <Label htmlFor="name" className="customer-modal-text-style">
+                          Order Name  <span className={"asteric"}>*</span>
+                        </Label>
+                        <div className="input-block">
+                          <Input
+                            placeholder={"Enter a order title"}
+                            onChange={(e) => this.handleChange(e)} name={"orderName"}
+                            value={orderName}
+                            invalid={isError && !orderName}
+                          />
+                          <FormFeedback>
+                            {isError && !orderName
+                              ? "Order name is required."
+                              : null}
+                          </FormFeedback>
+                        </div>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </div>
+                <CustomerVehicle
+                  getCustomerData={getCustomerData}
+                  getVehicleData={getVehicleData}
+                  customerVehicleData={this.customerVehicleData}
+                  isError={isError}
+                  orderReducer={orderReducer}
                 />
-              </Suspense>
-              {/* <div className={"invt-add-btn-block"}>
+                <div className={"position-relative"}>
+                  <Suspense fallback={"Loading.."}>
+                    <OrderTab
+                      tabs={OrderTabs}
+                      activeTab={activeTab}
+                      onTabChange={this.onTabChange}
+                    />
+                  </Suspense>
+                  {/* <div className={"invt-add-btn-block"}>
                 {this.renderAddNewButton()}
               </div> */}
-            </div>
-            <Suspense fallback={<Loader />}>
-              <Switch>
-                {OrderComponents.map((route, idx) => {
-                  return route.component ? (
-                    <>
-                      {
-                        activeTab === 0 ?
-                          <Services
-                            modelInfoReducer={modelInfoReducer}
-                            modelOperate={modelOperate}
-                            addPartToService={addPartToService}
-                            addTireToService={addTireToService}
-                            getPartDetails={getPartDetails}
-                            addInventoryPart={this.addInventoryPart}
-                            addInventryTire={addInventryTire}
-                            serviceReducers={serviceReducers}
-                            getTireDetails={getTireDetails}
-                            addLaborInventry={addLaborInventry}
-                            addLaborToService={addLaborToService}
-                            getLaborDetails={getLaborDetails}
-                            getUserData={getUserData}
-                            addNewService={addNewService}
-                            labelReducer={labelReducer}
-                            addNewLabel={addNewLabel}
-                            getCannedServiceList={getCannedServiceList}
-                            customerData={customerData}
-                            vehicleData={vehicleData}
-                            orderId={orderId}
-                          /> : null
-                      }
-                      {
-                        activeTab === 1 ?
-                          <Inspection /> : null
-                      }
-                      {
-                        activeTab === 2 ?
-                          <TimeClock /> : null
-                      }
-                      {
-                        activeTab === 3 ?
-                          <Message /> : null
-                      }
-                    </>
-                  ) : null;
-                })}
-              </Switch>
-            </Suspense>
-          </CardBody>
+                </div>
+                <Suspense fallback={<Loader />}>
+                  <Switch>
+                    {OrderComponents.map((route, idx) => {
+                      return route.component ? (
+                        <>
+                          {
+                            activeTab === 0 ?
+                              <Services
+                                modelInfoReducer={modelInfoReducer}
+                                modelOperate={modelOperate}
+                                addPartToService={addPartToService}
+                                addTireToService={addTireToService}
+                                getPartDetails={getPartDetails}
+                                addInventoryPart={this.addInventoryPart}
+                                addInventryTire={addInventryTire}
+                                serviceReducers={serviceReducers}
+                                getTireDetails={getTireDetails}
+                                addLaborInventry={addLaborInventry}
+                                addLaborToService={addLaborToService}
+                                getLaborDetails={getLaborDetails}
+                                getUserData={getUserData}
+                                addNewService={addNewService}
+                                labelReducer={labelReducer}
+                                addNewLabel={addNewLabel}
+                                getCannedServiceList={getCannedServiceList}
+                                customerData={customerData}
+                                vehicleData={vehicleData}
+                                orderId={orderId}
+                              /> : null
+                          }
+                          {
+                            activeTab === 1 ?
+                              <Inspection /> : null
+                          }
+                          {
+                            activeTab === 2 ?
+                              <TimeClock /> : null
+                          }
+                          {
+                            activeTab === 3 ?
+                              <Message /> : null
+                          }
+                        </>
+                      ) : null;
+                    })}
+                  </Switch>
+                </Suspense>
+              </CardBody>
+            </Col>
+            <Col md={"4"}></Col>
+          </Row>
         </Card>
         {/* {this.renderModals()} */}
       </div>
