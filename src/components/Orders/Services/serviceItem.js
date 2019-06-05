@@ -66,6 +66,14 @@ class ServiceItem extends Component {
       isServiceSubmitted: false
     };
   }
+  componentDidMount = () => {
+    const {
+      services
+    } = this.props.serviceReducers
+    this.setState({
+      services
+    })
+  }
   componentDidUpdate = ({ serviceReducers }) => {
     if (serviceReducers !== this.props.serviceReducers) {
       const {

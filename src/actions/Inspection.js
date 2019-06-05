@@ -21,6 +21,8 @@ export const InspectionActions = {
   SEARCH_MESSAGE_TEMPLATE_LIST_SUCCESS: "Search Message Template Success",
   SEND_MESSAGE_TEMPLATE: "Sent Message Template",
   SEND_MESSAGE_TEMPLATE_SUCCESS: "Sent Message Template Success",
+  GET_INSPECTION_LIST: "Get inspection list request",
+  GET_INSPECTION_LIST_SUCCESS: "Get inspection list Success",
 }
 
 export const addNewInspection = createAction(InspectionActions.ADD_INSPCETION);
@@ -52,3 +54,6 @@ export const searchMessageTemplateListSuccess = createAction(InspectionActions.S
 
 export const sendMessageTemplate = createAction(InspectionActions.SEND_MESSAGE_TEMPLATE);
 export const sendMessageTemplateSuccess = createAction(InspectionActions.SEND_MESSAGE_TEMPLATE_SUCCESS);
+
+export const getInspectionList = createAction(InspectionActions.GET_INSPECTION_LIST);
+export const getInspectionListSuccess = createAction(InspectionActions.GET_INSPECTION_LIST_SUCCESS);

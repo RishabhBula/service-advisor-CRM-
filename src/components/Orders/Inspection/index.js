@@ -17,8 +17,8 @@ import Templates from "./template";
 import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import { logger } from "../../../helpers";
-import * as InspectionPdf from "./inspectionPdf"
 import * as jsPDF from "jspdf";
+import 'jspdf-autotable';
 
 class Inspection extends Component {
    constructor(props) {
@@ -31,20 +31,20 @@ class Inspection extends Component {
          templateData: [],
          colorIndex: '',
          selectedOption: '',
-         showPDF:false
+         showPDF: false
       };
    }
 
-   componentDidMount = () =>{
+   componentDidMount = () => {
       this.setState({
          customerData: this.props.customerData,
          vehicleData: this.props.vehicleData
       })
    }
 
-   componentDidUpdate = ({ inspectionData, customerData}) => {
+   componentDidUpdate = ({ inspectionData, customerData }) => {
       let propdata = this.props.inspectionData;
-      if (propdata && propdata.inspectionData && propdata.inspectionData.data && propdata.inspectionData.isSuccess && inspectionData !== propdata) {
+      if (propdata && propdata.inspectionData && propdata.inspectionData.data && inspectionData !== propdata) {
          this.setState({
             inspection: propdata.inspectionData.data,
          })
@@ -196,7 +196,7 @@ class Inspection extends Component {
          selectedOption: e.target.value,
          inspection
       });
-    
+
    }
    /**
     *
@@ -259,7 +259,7 @@ class Inspection extends Component {
    /**
     *
     */
-   onDrop = async (files, inspIndex, itemIndex ) => {
+   onDrop = async (files, inspIndex, itemIndex) => {
       files.map(async (k, i) => {
          let picReader = new FileReader();
          let file = files[i];
@@ -287,20 +287,20 @@ class Inspection extends Component {
     *
     */
    toggleSentInspection = async (e) => {
-      if (!this.props.customerData || !this.props.vehicleData){
+      if (!this.props.customerData || !this.props.vehicleData) {
          const { value } = await ConfirmBox({
             title: "Please Select a Customer!",
             text: "Please select one of customer details form Customer Selection box",
             type: "warning",
             showCancelButton: false,
-            confirmButtonColor:  "#3085d6",
-            confirmButtonText:  "Ok",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Ok",
          });
          if (!value) {
             return;
          }
-        
-      }else{
+
+      } else {
          this.setState({
             sentModal: !this.state.sentModal
          });
@@ -335,77 +335,42 @@ class Inspection extends Component {
          keywords: "React, JavaScript, NodeJS",
          creator: "Sonu Bamniya"
       });
-      doc.setTextColor(150);
 
-      // const html = document.getElementById("white-card");
-      // const text = this.setDocText(html);
-      // doc.text(`${text}`, 10, 10);
-      doc.text('Inspection Name',1,5)
-      doc.table(1, 10, this.generateData(1), this.headers, { autoSize: true });
+      
+
+      // let header = function (data) {
+      //    doc.setFontSize(18);
+      //    doc.setTextColor(40);
+      //    doc.setFontStyle('normal');
+      //    doc.text("Testing Report", data.settings.margin.left, 50);
+      // };
+
+      // let options = {
+      //    beforePageContent: header,
+      //    margin: {
+      //       top: 80
+      //    },
+      //    startY: doc.autoTableEndPosY() + 20
+      // };
+      const inspectData = this.state.inspection
+      for (let index = 0; index < inspectData.length; index++) {
+         const itemArray = []
+         for (let j = 0; j < inspectData[index].items.length; j++) {
+            itemArray.push([inspectData[index].items[j].name, inspectData[index].items[j].note])
+         }
+         
+         doc.autoTable({
+            head: [['Item Tile', 'Note', 'status']],
+            body: itemArray,
+         });
+      }
       window.open(doc.output("bloburl"), "_blank");
    };
 
-generateData = (amount) => {
-   var result = [];
-   var data =
-   {
-      'Item Title': "100",
-      'Item Description': "GameGroup",
-      'Status': "XPTO2",
-      game_version: "25",
-   };
-   for (var i = 0; i < amount; i += 1) {
-      data.id = (i + 1).toString();
-      result.push(Object.assign({}, data));
-   }
-   return result;
-};
-
-createHeaders = ()=> {
-   const keys = ["id", "coin", "game_group", "game_name", "game_version", "machine", "vlt"];
-   var result = [];
-   for (var i = 0; i < keys.length; i += 1) {
-      result.push({
-         'id': keys[i],
-         'name': keys[i],
-         'prompt': keys[i],
-         'width': 65,
-         'align': 'center',
-         'padding': 0
-      });
-   }
-   return result;
-}
 
 
-   /**
- *
- */
-   setDocText = (html, str = "") => {
-      if (html.children) {
-         for (let i = 0; i < html.children.length; i++) {
-            const element = html.children[i];
-            if (!element.children || !element.children.length) {
-               str += `\n${element.innerText}`;
-               logger(element.innerText);
-            } else {
-               return this.setDocText(element, str);
-            }
-         }
-      }
-      return str;
-   };
-  /**
- *
- */
-   showPDF = () =>{
-      this.setState({
-         showPDF: !this.state.showPDF
-      })
-   }
-   
    render() {
-      const { inspection, templateData} = this.state
+      const { inspection, templateData } = this.state;
       return (
          <div>
             <Button onClick={this.toggleSentInspection}>Send</Button>
@@ -460,22 +425,22 @@ createHeaders = ()=> {
                                                       {/* success */}
                                                    </Label>
                                                    <span>
-                                                      {val.color === 'success' || val.color === 'danger' ?<>
-                                                      <Button size={"sm"} outline color={val.aprovedStatus ? "success" : "dark"} className={"status-btn"} onClick={(e) => this.handleApproval(e, inspIndex, itemIndex)} id={`item-status-${itemIndex}`}>
-                                                         <i className={"fa fa-check"}></i> Approved
+                                                      {val.color === 'success' || val.color === 'danger' ? <>
+                                                         <Button size={"sm"} outline color={val.aprovedStatus ? "success" : "dark"} className={"status-btn"} onClick={(e) => this.handleApproval(e, inspIndex, itemIndex)} id={`item-status-${itemIndex}`}>
+                                                            <i className={"fa fa-check"}></i> Approved
                                                       </Button>
-                                                      <UncontrolledTooltip target={`item-status-${itemIndex}`}>
-                                                         Click to change status of this inpection item
+                                                         <UncontrolledTooltip target={`item-status-${itemIndex}`}>
+                                                            Click to change status of this inpection item
                                                       </UncontrolledTooltip>
                                                       </>
-                                                      : null
+                                                         : null
                                                       }
                                                    </span>
                                                    <span id={`status-warp-${itemIndex}`} className={"info-icon"}>
                                                       <i className={"fa fa-question-circle"}></i>
                                                    </span>
                                                    <UncontrolledTooltip target={`status-warp-${itemIndex}`}>
-                                                      Define the priority of this Inspection item by adding appropriate labels. 
+                                                      Define the priority of this Inspection item by adding appropriate labels.
                                                    </UncontrolledTooltip>
                                                 </div>
                                              </div>
@@ -500,7 +465,7 @@ createHeaders = ()=> {
                                           </Col>
                                           <Col lg={3} md={3} className={"mt-2 p-0"}>
                                              <div className={"d-flex flex-row"}>
-                                                <Dropzone onDrop={(files) => this.onDrop(files, inspIndex , itemIndex)}>
+                                                <Dropzone onDrop={(files) => this.onDrop(files, inspIndex, itemIndex)}>
                                                    {({ getRootProps, getInputProps }) => (
                                                       <section className="drop-image-block">
                                                          <div {...getRootProps({ className: 'dropzone' })}>
@@ -511,12 +476,12 @@ createHeaders = ()=> {
                                                    )}
                                                 </Dropzone>
                                                 {itemIndex >= 1 ?
-                                                <>
-                                                   <span onClick={() => { this.removeItem(inspIndex, itemIndex) }} color={"danger"} className={"delete-icon"} id={`delete-${itemIndex}`}><i className={"icons cui-circle-x"}></i></span>
-                                                   <UncontrolledTooltip target={`delete-${itemIndex}`}>
-                                                      Delete this Item
+                                                   <>
+                                                      <span onClick={() => { this.removeItem(inspIndex, itemIndex) }} color={"danger"} className={"delete-icon"} id={`delete-${itemIndex}`}><i className={"icons cui-circle-x"}></i></span>
+                                                      <UncontrolledTooltip target={`delete-${itemIndex}`}>
+                                                         Delete this Item
                                                    </UncontrolledTooltip>
-                                                </>
+                                                   </>
                                                    : null
                                                 }
                                              </div>
@@ -587,24 +552,22 @@ createHeaders = ()=> {
 
             <Templates isOpen={this.state.modal} addTemplate={this.addTemplate} removeTemplate={this.removeTemplate} toggle={this.toggle} templateData={templateData} getTemplateList={this.props.getTemplateList} inspectionData={this.props.inspectionData} />
 
-            <SendInspection 
-            isOpen={this.state.sentModal} 
-            inspectionData={this.props.inspectionData} 
-            toggle={this.toggleSentInspection} 
-            toggleMessageTemplate={this.toggleMessageTemplate} 
-            getMessageTemplate={this.props.getMessageTemplate} 
-            searchMessageTemplateList={this.props.searchMessageTemplateList}
-            customerData={this.props.customerData}
-            vehicleData={this.props.vehicleData}
-            sendMessageTemplate={this.props.sendMessageTemplate}
+            <SendInspection
+               isOpen={this.state.sentModal}
+               inspectionData={this.props.inspectionData}
+               toggle={this.toggleSentInspection}
+               toggleMessageTemplate={this.toggleMessageTemplate}
+               getMessageTemplate={this.props.getMessageTemplate}
+               searchMessageTemplateList={this.props.searchMessageTemplateList}
+               customerData={this.props.customerData}
+               vehicleData={this.props.vehicleData}
+               sendMessageTemplate={this.props.sendMessageTemplate}
             />
 
             {/* ====== MessageTemplate Modal====== */}
             <MessageTemplate isOpen={this.state.mesageModal} toggle={this.toggleMessageTemplate} inspectionData={this.props.inspectionData} addMessageTemplate={this.props.addMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} updateMessageTemplate={this.props.updateMessageTemplate} deleteMessageTemplate={this.props.deleteMessageTemplate} />
-            
-           
-            {/* <InspectionPdf /> */}
-            
+
+
          </div>
       );
    }

@@ -34,6 +34,8 @@
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
     "js-object-validation": "^1.0.16",
+    "jspdf": "^1.5.3",
+    "jspdf-autotable": "^3.1.1",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "pdfjs": "^2.3.0",

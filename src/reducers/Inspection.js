@@ -8,7 +8,7 @@ const initialState = {
   },
   templateData: [],
   isLoading: true,
-  messageTemplateData:{
+  messageTemplateData: {
     isSuccess: false,
     data: {}
   }
@@ -28,7 +28,7 @@ export const inspectionReducer = handleActions(
       inspectionData: {
         isSuccess: true,
         ...state.userData,
-        data:action.payload,
+        data: action.payload.inspection,
       }
     }),
     [InspectionActions.ADD_INSPCETION_TEMPLATE]: (state, action) => ({
@@ -43,6 +43,20 @@ export const inspectionReducer = handleActions(
       inspectionData: {
         templateData: action.payload,
         isSuccess: true
+      }
+    }),
+    [InspectionActions.GET_INSPECTION_LIST]: (state, action) => ({
+      ...state,
+      inspectionData: {
+        ...state.userData,
+        isSuccess: false
+      }
+    }),
+    [InspectionActions.GET_INSPECTION_LIST_SUCCESS]: (state, action) => ({
+      ...state,
+      inspectionData: {
+        data: action.payload.inspection,
+        isSuccess: false
       }
     }),
     [InspectionActions.GET_TEMPLATE_LIST_SUCCESS]: (state, { payload }) => ({

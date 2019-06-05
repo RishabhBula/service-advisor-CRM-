@@ -41,7 +41,7 @@ const addInspectionLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      // toast.success(result.messages[0]);
       let inspectionIds = []
       result.data.data.map((inspection, index) => {
         inspectionIds.push(inspection._id)

@@ -107,6 +107,14 @@ class Order extends Component {
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
   }
 
+  componentDidUpdate = ({ serviceReducers, inspectionReducer }) => {
+    console.log(inspectionReducer.inspectionData.isSuccess,"inspectionReducer.isSuccess")
+    console.log(this.props.inspectionReducer.inspectionData.isSuccess, "this.props.inspectionReducer.isSuccess")
+    if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
+      this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
+    }
+  }
+
   onTabChange = (activeTab) => {
     this.setState({
       activeTab: activeTab
@@ -147,7 +155,7 @@ class Order extends Component {
       vehicleId: vehicleData ? vehicleData._id : null,
       serviceId: serviceIdData,
       orderName: orderName,
-      customerCommentId: serviceReducers.customerCommentId,
+      customerCommentId: serviceReducers.customerCommentId ? serviceReducers.customerCommentId : null,
       _id: orderId
     }
     logger("*******payload*****", payload)
@@ -188,7 +196,8 @@ class Order extends Component {
       labelReducer,
       getCannedServiceList,
       addNewLabel,
-      sendMessageTemplate } = this.props
+      sendMessageTemplate,
+      orderReducer } = this.props
     logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
@@ -227,6 +236,7 @@ class Order extends Component {
               getVehicleData={getVehicleData}
               customerVehicleData={this.customerVehicleData}
               isError={isError}
+              orderReducer={orderReducer}
             />
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>
