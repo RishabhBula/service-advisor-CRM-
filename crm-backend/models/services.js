@@ -47,6 +47,10 @@ const serviceSchema = new Schema({
       type: Object,
       default: null
    },
+   serviceSubTotalValue:{
+      type: [Number],
+      default:[]
+   },
    isCannedService: {
       type: Boolean,
       default: false
