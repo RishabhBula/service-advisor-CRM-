@@ -99,7 +99,7 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 /*  */
 const confirmationSignUp = async (req, res) => {
@@ -485,7 +485,7 @@ const imageUpload = async (req, res) => {
         if (err) {
           throw err;
         }
-        await imageUpload(originalImagePath)
+        await imagePath(originalImagePath);
         var thumbnailImagePath = path.join(
           __basedir,
           "images-thumbnail",
@@ -496,12 +496,9 @@ const imageUpload = async (req, res) => {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         };
-        const companyLogo = await userModel.findByIdAndUpdate(
-          currentUser.id,
-          {
-            shopLogo: imageUploadData
-          }
-        );
+        const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
+          shopLogo: imageUploadData
+        });
         if (companyLogo) {
           return res.status(200).json({
             responseCode: 200,
@@ -556,13 +553,13 @@ const imageDelete = async (req, res) => {
       var originalImagePath = __basedir + "/images/" + currentUser.id;
       var thumbnailImagePath =
         __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      fs.unlinkSync(originalImagePath, buf, function (err) {
+      fs.unlinkSync(originalImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
@@ -805,8 +802,14 @@ const changePasswordUser = async (req, res) => {
     });
   }
   try {
-    const userData = await userModel.findById(currentUser.id)
-    if (!commonCrypto.verifyPassword(userData.password, body.oldPassword, userData.salt)) {
+    const userData = await userModel.findById(currentUser.id);
+    if (
+      !commonCrypto.verifyPassword(
+        userData.password,
+        body.oldPassword,
+        userData.salt
+      )
+    ) {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
@@ -817,18 +820,17 @@ const changePasswordUser = async (req, res) => {
       var salt = commonCrypto.generateSalt(6);
       body.salt = salt;
       body.newPassword = commonCrypto.hashPassword(body.newPassword, salt);
-      const result = await userModel.findByIdAndUpdate(currentUser.id,
-        {
-          $set: {
-            password: body.newPassword,
-            salt: body.salt,
-          }
-        })
+      const result = await userModel.findByIdAndUpdate(currentUser.id, {
+        $set: {
+          password: body.newPassword,
+          salt: body.salt
+        }
+      });
       if (result) {
         return res.status(200).json({
           message: "Password updated successfully!",
           success: true
-        })
+        });
       }
     }
   } catch (error) {
@@ -841,15 +843,12 @@ const changePasswordUser = async (req, res) => {
 const updateUserData = async (req, res) => {
   try {
     let $data = req.body;
-    let currentUser = req.currentUser
+    let currentUser = req.currentUser;
     let inserList = {
       ...$data,
-      parentId: currentUser.id,
+      parentId: currentUser.id
     };
-    let result = await userModel.findByIdAndUpdate(
-      currentUser.id,
-      inserList
-    );
+    let result = await userModel.findByIdAndUpdate(currentUser.id, inserList);
     return res.status(200).json({
       message: otherMessage.updateUserDataMessage,
       data: result,
@@ -861,7 +860,7 @@ const updateUserData = async (req, res) => {
       success: false
     });
   }
-}
+};
 
 module.exports = {
   signUp,
