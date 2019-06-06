@@ -390,6 +390,8 @@ class CrmInventoryPart extends Component {
     const { partId } = this.state
     const { serviceIndex, services } = this.props
     if (partId) {
+      console.log("!!!!!!!!!!!!!!!!!",services[serviceIndex], serviceIndex,services);
+      
       let servicePartData = services[serviceIndex].serviceItems
       servicePartData.push(partId.partData)
       await this.props.addPartToService(services)

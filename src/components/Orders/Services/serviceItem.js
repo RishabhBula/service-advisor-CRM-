@@ -11,7 +11,8 @@ import {
   UncontrolledPopover,
   PopoverHeader,
   PopoverBody,
-  FormFeedback
+  FormFeedback,
+  UncontrolledTooltip
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound";
 import CrmDiscountBtn from "../../common/CrmDiscountBtn";
@@ -244,7 +245,7 @@ class ServiceItem extends Component {
         break;
     }
     await this.props.modelOperate(modelDetails);
-    this.props.handleServiceModal(serviceType, index)
+    this.props.handleServiceModal(serviceType, index, this.state.services)
   }
 
   handleDiscValue = (e, Mindex, index) => {
@@ -755,6 +756,19 @@ class ServiceItem extends Component {
       services: SeriviceData
     })
   }
+  handleSavedLabelDelete = async (labelData) => {
+    const { value } = await ConfirmBox({
+      text: "you want to remove this label?"
+    });
+    if (!value) {
+      return;
+    }
+    const payload = {
+      _id: labelData._id,
+      isDeleted: true
+    }
+    this.props.deleteLabel(payload)
+  }
   render() {
     const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
@@ -1006,6 +1020,10 @@ class ServiceItem extends Component {
                                                       }} className={"btn-sm btn-block label-btn"} onClick={() => this.handleAddLabelFromList(index, sIndex, data.labelColor, data.labelName)} type="button">
                                                         {data.labelName}
                                                       </Button>
+                                                      <span id={`remove${Lindex}${sIndex}${index}`} className={"pl-2 mt-2"} style={{ cursor: "pointer" }} onClick={() => this.handleSavedLabelDelete(data)}><i className={"icons cui-trash"}></i></span>
+                                                      <UncontrolledTooltip target={`remove${Lindex}${sIndex}${index}`}>
+                                                        Remove {data.labelName}
+                                                      </UncontrolledTooltip>
                                                     </div>
                                                   )
                                                 }) : null

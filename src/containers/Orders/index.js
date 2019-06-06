@@ -11,7 +11,8 @@ import {
   FormGroup,
   Label,
   Row,
-  FormFeedback
+  FormFeedback,
+  ButtonGroup
 } from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
@@ -34,7 +35,8 @@ import {
   addNewLabel,
   getCannedServiceList,
   updateOrderDetailsRequest,
-  getOrderDetailsRequest
+  getOrderDetailsRequest,
+  deleteLabel
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -181,7 +183,8 @@ class Order extends Component {
       labelReducer,
       getCannedServiceList,
       orderReducer,
-      addNewLabel
+      addNewLabel,
+      deleteLabel
     } = this.props;
     logger(customerData, vehicleData);
     return (
@@ -279,6 +282,7 @@ class Order extends Component {
                               customerData={customerData}
                               vehicleData={vehicleData}
                               orderId={orderId}
+                              deleteLabel={deleteLabel}
                             />
                           ) : null}
                           {activeTab === 1 ? <Inspection /> : null}
@@ -291,7 +295,58 @@ class Order extends Component {
                 </Suspense>
               </CardBody>
             </Col>
-            <Col md={"4"} />
+            <Col md={"4"}>
+              <div className={"pb-2"}>
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span><h4>Order Details</h4></span>
+                  <span><h4>(# {typeof this.props.orderReducer.orderId !== "object"
+                    ? this.props.orderReducer.orderId
+                    : null})</h4></span>
+                </div>
+                <hr />
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>Service Writer</span>
+                  <span><Button color={"secondary"} className={"btn btn-sm"}>+ Add</Button></span>
+                </div>
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>Created At</span>
+                  <span>5th June 2019 at 11:42 AM</span>
+                </div>
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>Appointment</span>
+                  <span><Button color={"secondary"} className={"btn btn-sm"}>Schedule</Button></span>
+                </div>
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>PO Number</span>
+                  <span><Button color={"secondary"} className={"btn btn-sm"}>+ Add</Button></span>
+                </div>
+                <hr />
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>Authorization</span>
+                  <span>
+                    <ButtonGroup>
+                      <Button color={"danger"} className={"btn btn-sm"}>Not Authorised</Button>
+                      <Button color={"success"} className={"btn btn-sm"}>Authorised</Button>
+                    </ButtonGroup>
+                  </span>
+                </div>
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>Order Status</span>
+                  <span>
+                    <ButtonGroup>
+                      <Button color={"secondary"} className={"btn btn-sm"}>Estimate</Button>
+                      <Button color={"secondary"} className={"btn btn-sm"}>Invoice</Button>
+                    </ButtonGroup>
+                  </span>
+                </div>
+                <div className={"d-flex justify-content-between pb-2"}>
+                  <span>Workflow</span>
+                  <span>
+                    <Input type={"select"}></Input>
+                  </span>
+                </div>
+              </div>
+            </Col>
           </Row>
         </Card>
         {/* {this.renderModals()} */}
@@ -362,6 +417,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getOrderDetailsRequest: data => {
     dispatch(getOrderDetailsRequest(data));
+  },
+  deleteLabel: data => {
+    dispatch(deleteLabel(data))
   }
 });
 export default connect(
