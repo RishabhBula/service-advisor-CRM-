@@ -41,6 +41,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  normalizedEmail: {
+    type: String,
+    required: true
+  },
   password: {
     type: String,
     default: null
@@ -67,30 +71,6 @@ const userSchema = new Schema({
   userSideActivation: {
     type: Boolean,
     default: false
-  },
-  contactNumber: {
-    type: Number,
-    default: null
-  },
-  address: {
-    type: String,
-    default: null
-  },
-  currency: {
-    type: String,
-    default: null
-  },
-  timeZone: {
-    type: String,
-    default: null
-  },
-  vatNumber: {
-    type: String,
-    default: null
-  },
-  companyNumber: {
-    type: String,
-    default: null
   },
   userSideActivationValue: {
     type: String,
@@ -141,10 +121,12 @@ const userSchema = new Schema({
     ref: "user",
     default: null
   },
-
   rate: {
     type: Number,
     default: null
+  },
+  subdomain: {
+    type: String
   },
   createdAt: {
     type: Date,

@@ -5,10 +5,7 @@ const { validationResult } = require("express-validator/check");
 const commonValidation = require("../../common");
 const commonSmtp = require("../../common/index");
 const commonCrypto = require("../../common/crypto");
-const {
-  validationMessage,
-  otherMessage
-} = require("../../common/validationMessage");
+const { otherMessage } = require("../../common/validationMessage");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const moment = require("moment");
 const fs = require("fs");
@@ -27,47 +24,40 @@ const signUp = async (req, res) => {
         success: false
       });
     }
-    let userFind = await userModel.find({
-      email: req.body.email,
-      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
+    const roleType = await roleModel.findOne({
+      userType: new RegExp("sub-admin", "i")
     });
-    if (userFind.length >= 1) {
-      return res.status(401).json({
-        message: validationMessage.emailAlreadyExist,
-        success: false
-      });
-    } else {
-      var roleType = await roleModel.findOne({ userType: "sub-admin" });
-      var $data = req.body;
-      $data.roleType = roleType._id;
+    let $data = req.body;
+    $data.roleType = roleType._id;
+    $data.permissions =
+      typeof roleType.permissionObject[0] === "object"
+        ? roleType.permissionObject[0]
+        : roleType.permissionObject;
+    $data.firstTimeUser = true;
+    $data.loggedInIp = commonSmtp.getIpAddress(req);
+    var salt = commonCrypto.generateSalt(6);
+    $data.salt = salt;
+    $data.password = commonCrypto.hashPassword($data.password, salt);
+    $data.userSideActivationValue = confirmationNumber;
+    $data.subdomain = $data.workspace;
+    $data.shopLogo = $data.companyLogo;
+    $data.website = $data.companyWebsite;
+    let result = await userModel($data).save();
+    const emailVar = new Email(req);
+    await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.email,
+      userId: result._id,
+      userSideActivationValue: confirmationNumber
+    });
+    await emailVar.sendEmail(result.email);
 
-      $data.permissions =
-        typeof roleType.permissionObject[0] === "object"
-          ? roleType.permissionObject[0]
-          : roleType.permissionObject;
-      $data.firstTimeUser = true;
-      $data.loggedInIp = commonSmtp.getIpAddress(req);
-      var salt = commonCrypto.generateSalt(6);
-      $data.salt = salt;
-      $data.password = commonCrypto.hashPassword($data.password, salt);
-      $data.userSideActivationValue = confirmationNumber;
-      let result = await userModel($data).save();
-      const emailVar = new Email(req);
-      await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-        userId: result._id,
-        userSideActivationValue: confirmationNumber
-      });
-      await emailVar.sendEmail(result.email);
-
-      return res.status(200).json({
-        message: otherMessage.confirmMessage,
-        user: result._id,
-        success: true
-      });
-    }
+    return res.status(200).json({
+      message: otherMessage.confirmMessage,
+      user: result._id,
+      success: true
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
@@ -161,13 +151,12 @@ const confirmationSignUp = async (req, res) => {
     });
   }
 };
-
 const loginApp = async (req, res) => {
   try {
     const { email, password } = req.body;
     const result = await userModel.findOne({
       $and: [
-        { email: email },
+        { normalizedEmail: email },
         { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
       ]
     });
@@ -221,7 +210,8 @@ const loginApp = async (req, res) => {
         email: result.email,
         firstName: result.firstName,
         lastName: result.lastName,
-        parentId: result.parentId
+        parentId: result.parentId,
+        subdomain: result.subdomain
       },
       commonCrypto.secret,
       {
@@ -419,7 +409,8 @@ const userCompanySetup = async (req, res) => {
       website: body.website,
       peopleWork: body.peopleWork,
       serviceOffer: body.servicesOffer,
-      vehicleService: body.vehicleServicesOffer
+      vehicleService: body.vehicleServicesOffer,
+      firstTimeUser: false
     };
     const companySetup = await userModel.findByIdAndUpdate(
       {
