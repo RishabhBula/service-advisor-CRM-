@@ -1808,7 +1808,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .comment-section{
   width: 100%;
 }
-@media(max-width:1220px){
+
 .lable-color {
   list-style: none;
   padding: 0;
@@ -1841,6 +1841,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   right: 5px;
   top: 4px;
 }
+.service-customer-discount .discount-button{
+  display: flex;
+}
+.service-card .labor-discount .input-group{
+  max-width: 115px;
+  margin-right: 10px;
 }
 
 @media (max-width: 1220px) {

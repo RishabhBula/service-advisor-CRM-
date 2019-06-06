@@ -68,14 +68,15 @@ class Services extends Component {
       });
     }
   };
-  handleServiceModal = (serviceType, index) => {
+  handleServiceModal = (serviceType, index, services) => {
     this.setState({
       selectedService: serviceType ? serviceType : "",
-      serviceIndex: index
+      serviceIndex: index,
+      serviceElements: services
     });
   };
   handleOpenModal = () => {
-    const { selectedService, serviceIndex } = this.state;
+    const { selectedService, serviceIndex, serviceElements } = this.state;
     const {
       modelInfoReducer,
       modelOperate,
@@ -83,7 +84,6 @@ class Services extends Component {
       addPartToService,
       addTireToService,
       addInventoryPart,
-      serviceReducers,
       addInventryTire,
       getTireDetails,
       getLaborDetails,
@@ -103,7 +103,7 @@ class Services extends Component {
               getPartDetails={getPartDetails}
               addPartToService={addPartToService}
               addInventoryPart={addInventoryPart}
-              services={serviceReducers.services}
+              services={serviceElements}
               toggle={() =>
                 modelOperate({
                   partAddModalOpen: !partAddModalOpen
@@ -118,7 +118,7 @@ class Services extends Component {
             tyreModalOpen={tireAddModalOpen}
             serviceTireModal={true}
             serviceIndex={serviceIndex}
-            services={serviceReducers.services}
+            services={serviceElements}
             addTier={addInventryTire}
             addTireToService={addTireToService}
             getTireDetails={getTireDetails}
@@ -135,7 +135,7 @@ class Services extends Component {
             tyreModalOpen={tireAddModalOpen}
             serviceLaborModal={true}
             serviceIndex={serviceIndex}
-            services={serviceReducers.services}
+            services={serviceElements}
             addLabour={addLaborInventry}
             getLaborDetails={getLaborDetails}
             addLaborToService={addLaborToService}
@@ -162,7 +162,8 @@ class Services extends Component {
       addNewLabel,
       addNewService,
       getCannedServiceList,
-      orderId
+      orderId,
+      deleteLabel
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
@@ -183,6 +184,7 @@ class Services extends Component {
             addNewService={addNewService}
             getCannedServiceList={getCannedServiceList}
             orderId={orderId}
+            deleteLabel={deleteLabel}
           />
         </div>
         {selectedService ? this.handleOpenModal() : null}

@@ -11,7 +11,8 @@ import {
   UncontrolledPopover,
   PopoverHeader,
   PopoverBody,
-  FormFeedback
+  FormFeedback,
+  UncontrolledTooltip
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound";
 import CrmDiscountBtn from "../../common/CrmDiscountBtn";
@@ -244,7 +245,7 @@ class ServiceItem extends Component {
         break;
     }
     await this.props.modelOperate(modelDetails);
-    this.props.handleServiceModal(serviceType, index)
+    this.props.handleServiceModal(serviceType, index, this.state.services)
   }
 
   handleDiscValue = (e, Mindex, index) => {
@@ -755,6 +756,19 @@ class ServiceItem extends Component {
       services: SeriviceData
     })
   }
+  handleSavedLabelDelete = async (labelData) => {
+    const { value } = await ConfirmBox({
+      text: "you want to remove this label?"
+    });
+    if (!value) {
+      return;
+    }
+    const payload = {
+      _id: labelData._id,
+      isDeleted: true
+    }
+    this.props.deleteLabel(payload)
+  }
   render() {
     const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
@@ -782,8 +796,8 @@ class ServiceItem extends Component {
     }
     return (
       <>
-        <div>
-          <Row className={"comment-section m-0"}>
+        <div className={"w-100"}>
+          <Row className={"comment-section"}>
             <Col md={"6"}>
               <FormGroup>
                 <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Customer Comments"} />
@@ -796,18 +810,21 @@ class ServiceItem extends Component {
             </Col>
           </Row>
           <div className={"pb-2"}>
-            <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
+            {
+              services && services.length ?
+              <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button> : null 
+            }
           </div>
           {
             services && services.length ? services.map((item, index) => {
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
-                    <div className={"custom-form-modal mt-3"}>
+                    <div className={"custom-form-modal"}>
                       <div className={"service-card-header"}>
                       <Row className={"m-0"}>
                         <Col md={"6"}>
-                          <FormGroup>
+                          <FormGroup className={"mb-0"}>
                             <Label htmlFor="name" className="customer-modal-text-style">
                               Service name <span className={"asteric"}>*</span>
                             </Label>
@@ -827,47 +844,49 @@ class ServiceItem extends Component {
                             </div>
                           </FormGroup>
                         </Col>
-                        <Col md={"6"}>
-                          <FormGroup>
-                            <Label htmlFor="name" className="customer-modal-text-style">
-                              Technician
+                          <Col md={"6"}>
+                            <FormGroup>
+                              <Label htmlFor="name" className="customer-modal-text-style">
+                                Technician
                             </Label>
-                            <Async
-                              className={"w-100 form-select"}
-                              placeholder={"Type Technician name"}
-                              loadOptions={this.loadTechnician}
-                              value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
-                              isClearable={item.technician !== '' ? true : false}
-                              noOptionsMessage={() => "Type Technician name"}
-                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
-                            />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Col md="12" className={"pl-0"}>
-                        <FormGroup>
-                          <Label htmlFor="name" className="customer-modal-text-style note-label">
-                            Note
-                          </Label>
-                          <Input
-                            type={"textarea"}
-                            onChange={(e) => this.handleChange(e, index)}
-                            name={"note"}
-                            value={item.note}
-                            maxLength={"200"}
-                            rows={"2"} cols={"3"} />
+                              <Async
+                                className={"w-100 form-select"}
+                                placeholder={"Type Technician name"}
+                                loadOptions={this.loadTechnician}
+                                value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
+                                isClearable={item.technician !== '' ? true : false}
+                                noOptionsMessage={() => "Type Technician name"}
+                                onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
+                              />
+                            </FormGroup>
+                          </Col>
 
-                        </FormGroup>
-                      </Col>
+
+                          <Col md="12" className={"pl-0"}>
+                            <FormGroup>
+                              <Label htmlFor="name" className="customer-modal-text-style note-label">
+                                Note
+                          </Label>
+                              <Input
+                                type={"textarea"}
+                                onChange={(e) => this.handleChange(e, index)}
+                                name={"note"}
+                                value={item.note}
+                                maxLength={"200"}
+                                rows={"2"} cols={"3"} />
+
+                            </FormGroup>
+                          </Col>
+                      </Row>
                       </div>
                       <table className={"table matrix-table"}>
                         <thead>
                           <tr>
-                            <th width="350" className={"text-center"}>DESCRIPTION</th>
+                            <th width="400" className={"text-center"}>DESCRIPTION</th>
                             <th width="150" className={"text-center"}>PRICE</th>
                             <th width="150" className={"text-center"}>QTY</th>
                             <th width="150" className={"text-center"}>HRS</th>
-                            <th width="400" className={"text-center"}>DISC</th>
+                            <th width="300" className={"text-center"}>DISCOUNT</th>
                             <th width="150" className={"text-center"}>SUBTOTAL</th>
                             <th width="200" className={"text-center"}>STATUS</th>
                             <th width="30" className={"text-center"}></th>
@@ -933,13 +952,15 @@ class ServiceItem extends Component {
                                               </Button>
                                             </div> : null}
                                         </InputGroup>
-                                        <CrmDiscountBtn discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
+                                        <div className={"service-customer-discount"}>
+                                          <CrmDiscountBtn discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
+                                        </div>
                                       </div>
                                     </td>
                                     <td>
                                       <InputGroup>
                                         <div className="input-group-prepend">
-                                          <Button disabled color={"secondaty"} size={"sm"}>
+                                          <Button  disabled color={"secondary"} size={"sm"}>
                                             <i className={"fa fa-dollar"}></i>
                                           </Button>
                                         </div>
@@ -1008,6 +1029,10 @@ class ServiceItem extends Component {
                                                       }} className={"btn-sm btn-block label-btn"} onClick={() => this.handleAddLabelFromList(index, sIndex, data.labelColor, data.labelName)} type="button">
                                                         {data.labelName}
                                                       </Button>
+                                                      <span id={`remove${Lindex}${sIndex}${index}`} className={"pl-2 mt-2"} style={{ cursor: "pointer" }} onClick={() => this.handleSavedLabelDelete(data)}><i className={"icons cui-trash"}></i></span>
+                                                      <UncontrolledTooltip target={`remove${Lindex}${sIndex}${index}`}>
+                                                        Remove {data.labelName}
+                                                      </UncontrolledTooltip>
                                                     </div>
                                                   )
                                                 }) : null
