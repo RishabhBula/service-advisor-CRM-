@@ -24,4 +24,13 @@ router.get('/messageTemplateList', token.authorisedUser, msgTempController.getAl
 
 /* update message template */
 router.put("/messageTemplateUpdate", token.authorisedUser, msgTempController.updateMessageTemplate)
+
+/* delete message template */
+router.delete("/messageTemplateDelete", token.authorisedUser, msgTempController.deleteMessageTemplate)
+
+/* send inspection details mail */
+router.post("/sendInspectionDetails", token.authorisedUser, msgTempController.sendMailToCustomer)
+
+/* generate PDF Document */
+router.post("/generatePdfDoc", token.authorisedUser, inspectionController.generatePdfDoc)
 module.exports = router;

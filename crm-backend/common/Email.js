@@ -18,14 +18,17 @@ const AvailiableTemplates = {
   REFUND_ORDER_ADMIN: "refundOrderAdminEmail",
   NEWSLETTER_EMAIL: "newsletterEmail",
   UNSUBSCRIBE_EMAIL: "unSubscribeEmail",
+  INSPECTION_TEMPLATE: "inspectionTemplate"
 };
 class Email {
   constructor(req) {
-    const host = req.headers.referer.split("/");
-    this.host = [host[0], host[1], host[2]].join("/");
+    const host = req.headers && req.headers.referer ? req.headers.referer.split("/") : null;
+    this.host = host ? [host[0], host[1], host[2]].join("/") : null;
     this.body = "";
     this.subject = "";
     this.to = "";
+    this.cc = [];
+    this.attachments = [];
   }
   async setTemplate(templateName, replaceObject = {}) {
     if (!templateName) {
@@ -76,7 +79,9 @@ class Email {
       case AvailiableTemplates.UNSUBSCRIBE_EMAIL:
         this.subject = "[Service Advisor] Unsubscription";
         break;
-
+      case AvailiableTemplates.INSPECTION_TEMPLATE:
+        // this.subject = "[Service Advisor] Unsubscription";
+        break;
       default:
         throw new Error("Invalid template name", 400);
     }
@@ -101,15 +106,24 @@ class Email {
   setBody(body) {
     this.body = body;
   }
+  setAttachements(attachments) {
+    this.attachments = attachments;
+  }
+  setCC(cc) {
+    this.cc = cc;
+  }
   async sendEmail(email) {
     if (!email) {
       throw new Error("Please provide email.");
     }
     const mailOption = {
       from: "Sevice Advisor <test.chapter247@gmail.com>",
-      to: email.split(","),
+      to: this.to || email.split(","),
+      cc: this.cc,
       subject: this.subject,
       html: this.body,
+      debug: true,
+      attachments: this.attachments
     };
     const resp = await commonSmtp.smtpTransport.sendMail(mailOption);
     return resp;

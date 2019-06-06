@@ -16,6 +16,7 @@ export * from "./Tier";
 export * from "./InventoryParts";
 export * from "./InventorySats";
 export * from "./Order";
+export * from "./Inspection";
 export * from "./Service"
 export * from "./Label"
 //

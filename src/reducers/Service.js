@@ -9,7 +9,7 @@ const serviceData = {
             type: "",
             value: false
          },
-         name: "",
+         serviceName: "",
          technician: "",
          note: "",
          serviceItems: [],
@@ -25,11 +25,17 @@ const serviceData = {
             type: "%",
             value: ""
          },
-         serviceSubTotalValue:[],
-         serviceTotal: ""
+         serviceSubTotalValue: [],
+         serviceTotal: "0.00",
+         isError: false,
+         isCannedAdded: false
       }
    ],
+   submittedServiceId: [],
+   customerCommentId: "",
+   cannedServiceList: [],
    isLoading: true,
+   isServiceList: true
 };
 
 export const serviceReducers = handleActions(
@@ -55,7 +61,29 @@ export const serviceReducers = handleActions(
       }),
       [serviceActions.ADD_SERVICE_SUCCESS]: (state, action) => ({
          ...state,
+         isLoading: false,
+         submittedServiceId: action.payload.serviceIds,
+         customerCommentId: action.payload.customerCommentId,
+         services: action.payload.services
+      }),
+      [serviceActions.GET_CANNED_SERVICE_LIST]: (state, action) => ({
+         ...state,
+         isLoading: true
+      }),
+      [serviceActions.GET_CANNED_SERVICE_LIST_SUCCESS]: (state, action) => ({
+         ...state,
+         cannedServiceList: action.payload.cannedServiceList,
          isLoading: false
+      }),
+      [serviceActions.GET_SERVICE_LIST]: (state, action) => ({
+         ...state,
+         isServiceList: true,
+         services:[]
+      }),
+      [serviceActions.GET_SERVICE_LIST_SUCCESS]: (state, action) => ({
+         ...state,
+         services:action.payload.services,
+         isServiceList: false
       }),
    },
    serviceData

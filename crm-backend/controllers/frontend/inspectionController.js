@@ -2,6 +2,7 @@ const Inspection = require("../../models/inspection");
 const commonValidation = require("../../common");
 const mongoose = require("mongoose");
 const { validationResult } = require("express-validator/check");
+var pdf = require('html-pdf');
 
 /* get order number */
 const creteNewInspection = async (req, res) => {
@@ -16,8 +17,8 @@ const creteNewInspection = async (req, res) => {
   try {
     let result = []
     let inspectionContent
-    for (let index = 0; index < body.length; index++) {
-      const element = body[index];
+    for (let index = 0; index < body.inspection.length; index++) {
+      const element = body.inspection[index];
       const inspectionDataModal = {
         inspectionName: element.inspectionName,
         items: element.items,
@@ -33,7 +34,7 @@ const creteNewInspection = async (req, res) => {
     }
     if (result) {
       return res.status(200).json({
-        message: `${body.length} Inspection added successfully!`,
+        message: `${body.inspection.length} Inspection added successfully!`,
         data: result,
         success: true
       })
@@ -160,8 +161,34 @@ const inspectionTemplate = async (req, res) => {
     });
   }
 }
+/* generate PDF document */
+const generatePdfDoc = async (req, res) => {
+  const { body } = req;
+  try {
+    pdf.create(html).toFile([filepath], function (err, res) {
+      console.log(res.filename);
+      if (err) {
+        return res.status(400).json({
+          err,
+          success: false
+        })
+
+      }
+      return res.status(200).json({
+        data: res.filename,
+        success: true
+      })
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
 module.exports = {
   creteNewInspection,
   getInspectionData,
-  inspectionTemplate
+  inspectionTemplate,
+  generatePdfDoc
 };

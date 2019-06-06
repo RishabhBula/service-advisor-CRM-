@@ -8,7 +8,8 @@ const initialState = {
     isLoading: true
   },
   orderStatus: [],
-  isLoading: true
+  orderItems: [],
+  isOrderLoading: true
 };
 
 export const orderReducer = handleActions(
@@ -20,12 +21,11 @@ export const orderReducer = handleActions(
     [orderActions.ADD_ORDER_REQUEST]: (state, { payload }) => ({
       ...state,
       ...payload,
-      orderData: []
     }),
     [orderActions.ADD_ORDER_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
-      orderData: payload.orderData
+      orderItems: payload.result
     }),
     [orderActions.GET_ORDER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -34,7 +34,28 @@ export const orderReducer = handleActions(
         orders: payload.data
       },
       orderStatus: payload.orderStatus
-    })
+    }),
+    [orderActions.UPDATE_ORDER_DETAILS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isLoading: true
+    }),
+    [orderActions.UPDATE_ORDER_DETAILS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isLoading: false
+    }),
+    [orderActions.GET_ORDER_DETAILS_REQUEST]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isOrderLoading: true
+    }),
+    [orderActions.GET_ORDER_DETAILS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      orderItems: payload.order,
+      isOrderLoading: false
+    }),
   },
   initialState
 );

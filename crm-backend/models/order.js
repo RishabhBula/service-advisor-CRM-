@@ -28,9 +28,20 @@ const orderSchema = new Schema({
     default: []
   },
   inspectionId: {
-    type: [Schema.Types.ObjectId],
-    ref: "Inspection",
+    type: [
+      new Schema({
+        inspectionId: {
+          type: Schema.Types.ObjectId,
+          ref: "Inspection"
+        }
+      })
+    ],
     default: []
+  },
+  customerCommentId: {
+    type: Schema.Types.ObjectId,
+    ref: "CustomerAndUser",
+    default: null
   },
   timeClockId: {
     type: Schema.Types.ObjectId,

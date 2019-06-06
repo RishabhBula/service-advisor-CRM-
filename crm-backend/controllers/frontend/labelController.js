@@ -7,7 +7,8 @@ const getAllLabelList = async (req, res) => {
       const isSavedLabel = query.isSavedLabel
       const getAllLabel = await Label.find({
          isSavedLabel: isSavedLabel,
-         userId: currentUser.id
+         userId: currentUser.id,
+         isDeleted: false
       })
       const result = getAllLabel
       return res.status(200).json({
@@ -60,9 +61,30 @@ const addSavedLabel = async (req, res) => {
       });
    }
 }
+/*  update label data */
+const updateLabelData = async (req, res) => {
+   const { body } = req;
+   try {
+      await Label.findByIdAndUpdate(body._id, {
+         $set: body
+      })
+      return res.status(200).json({
+         message: "Label deleted successfully",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is update label error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+
+}
 
 
 module.exports = {
    getAllLabelList,
-   addSavedLabel
+   addSavedLabel,
+   updateLabelData
 }

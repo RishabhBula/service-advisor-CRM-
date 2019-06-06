@@ -82,7 +82,8 @@ const addPartToInventoryLogic = createLogic({
           name: "",
           isAddLabel: false
         }],
-        subTotalValue: ""
+        subTotalValue: "",
+        isItemChecked: true
       })
       dispatch(addPartToService(data.services))
       dispatch(
@@ -171,7 +172,8 @@ const getInventoryPartsListLogic = createLogic({
             name: "",
             isAddLabel: false
           }],
-          subTotalValue: ""
+          subTotalValue: "",
+          isItemChecked: true
         }
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

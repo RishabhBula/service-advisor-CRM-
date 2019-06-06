@@ -8,10 +8,14 @@ import {
   orderActions,
   showLoader,
   hideLoader,
-  addOrderSuccess,
   redirectTo,
   getOrderListSuccess,
-  modelOpenRequest
+  addOrderSuccess,
+  modelOpenRequest,
+  updateOrderDetailsSuccess,
+  getServiceListSuccess,
+  getOrderDetailsSuccess,
+  getInspectionListSuccess,
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -222,6 +226,11 @@ const addOrderLogic = createLogic({
       return;
     } else {
       dispatch(
+        addOrderSuccess({
+          result: result.data.result
+        })
+      );
+      dispatch(
         redirectTo({
           path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
             ":id",
@@ -229,12 +238,6 @@ const addOrderLogic = createLogic({
           )}`
         })
       );
-      dispatch(
-        addOrderSuccess({
-          orderData: result.data.result
-        })
-      );
-      dispatch(hideLoader());
       done();
     }
   }
@@ -242,6 +245,33 @@ const addOrderLogic = createLogic({
 /**
  *
  */
+const updateOrderDetailsLogic = createLogic({
+  type: orderActions.UPDATE_ORDER_DETAILS,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/order",
+      "/updateOrderDetails",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(updateOrderDetailsSuccess());
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
 const deleteOrderLogic = createLogic({
   type: orderActions.DELETE_ORDER_REQUEST,
   async process({ action, getState }, dispatch, done) {
@@ -274,6 +304,55 @@ const deleteOrderLogic = createLogic({
 /**
  *
  */
+const getOrderDetails = createLogic({
+  type: orderActions.GET_ORDER_DETAILS_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/order",
+      "/orderDetails",
+      "GET",
+      true,
+      {
+        search:
+          action.payload && action.payload.input
+            ? action.payload.input
+            : action.payload && action.payload.search
+              ? action.payload.search
+              : null,
+        _id: action.payload && action.payload._id ? action.payload._id : null
+      },
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      dispatch(
+        getServiceListSuccess({
+          services: result.data.serviceResult
+        })
+      );
+      dispatch(getInspectionListSuccess(
+        {
+          inspection: result.data.inspectionResult
+        }
+      ))
+      dispatch(
+        getOrderDetailsSuccess({
+          order: result.data.data[0]
+        })
+      );
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
+
 export const OrderLogic = [
   getOrderId,
   getOrdersLogic,
@@ -282,5 +361,7 @@ export const OrderLogic = [
   updateOrderWorkflowStatusLogic,
   updateOrderOfOrderStatusLogic,
   addOrderLogic,
+  updateOrderDetailsLogic,
+  getOrderDetails,
   deleteOrderLogic
 ];

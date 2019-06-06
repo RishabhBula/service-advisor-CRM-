@@ -9,7 +9,8 @@ const countOrderNumber = async (req, res) => {
     const result = await Orders.countDocuments();
     return res.status(200).json({
       orderId: parseInt(result) + 1,
-      success: true
+      success: true,
+      result
     });
   } catch (error) {
     console.log("this is order count error", error);
@@ -55,8 +56,12 @@ const createNewOrder = async (req, res) => {
     const workflowStatus = orderStatus[0]._id;
     const orderConst = {
       orderName: body.orderName,
-      customerId: mongoose.Types.ObjectId(body.customerId),
-      vehicleId: mongoose.Types.ObjectId(body.vehicleId),
+      customerId: body.customerId
+        ? mongoose.Types.ObjectId(body.customerId)
+        : null,
+      vehicleId: body.vehicleId
+        ? mongoose.Types.ObjectId(body.vehicleId)
+        : null,
       serviceId: body.serviceId,
       inspectionId: body.inspectionId,
       timeClockId: body.timeClockId
@@ -75,6 +80,7 @@ const createNewOrder = async (req, res) => {
 
     return res.status(200).json({
       message: "Order created successfully",
+      result: orderData,
       success: true
     });
   } catch (error) {
@@ -286,6 +292,119 @@ const updateWorkflowStatusOrder = async (req, res) => {
 /**
  *
  */
+const updateOrderDetails = async (req, res) => {
+  const { body } = req;
+  try {
+    await Orders.findByIdAndUpdate(body._id, {
+      $set: body
+    });
+    return res.status(200).json({
+      message: "Order Updated Successfully!",
+      success: true
+    });
+  } catch (error) {
+    console.log("Error while updating orders details", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/* get order details */
+const getOrderDetails = async (req, res) => {
+  const { query, currentUser } = req;
+  try {
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
+    const searchValue = query.search;
+    const orderId = query._id;
+    let condition = {};
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: mongoose.Types.ObjectId(parentId)
+          },
+          {
+            _id: mongoose.Types.ObjectId(orderId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
+            }
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      }
+    ];
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            orderName: {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            _id: mongoose.Types.ObjectId(orderId)
+          }
+        ]
+      });
+    }
+    if (orderId) {
+      condition["$and"].push({
+        $or: [
+          {
+            _id: mongoose.Types.ObjectId(orderId)
+          }
+        ]
+      });
+    }
+    const result2 = await Orders.find(condition).populate(
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId"
+    );
+    const result1 = await Orders.populate(result2,{path:'serviceId.serviceId.technician'})
+    const result = result1;
+    const serviceData = [],
+      inspectionData = [];
+    if (result[0].serviceId.length) {
+      for (let index = 0; index < result[0].serviceId.length; index++) {
+        const element = result[0].serviceId[index];
+        serviceData.push(element.serviceId);
+      }
+    }
+    if (result[0].inspectionId.length) {
+      for (let index = 0; index < result[0].inspectionId.length; index++) {
+        const element = result[0].inspectionId[index];
+        inspectionData.push(element.inspectionId);
+      }
+    }
+    return res.status(200).json({
+      data: result,
+      serviceResult: serviceData,
+      inspectionResult: inspectionData,
+      success: true
+    });
+  } catch (error) {
+    console.log("this is get label error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ *
+ */
 const deleteOrder = async (req, res) => {
   try {
     const { body, currentUser } = req;
@@ -307,10 +426,6 @@ const deleteOrder = async (req, res) => {
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
-    return res.status(500).json({
-      message: error.message ? error.message : "Unexpected error occure.",
-      success: false
-    });
   }
 };
 module.exports = {
@@ -321,5 +436,7 @@ module.exports = {
   addOrderStatus,
   deleteOrderStatus,
   updateWorkflowStatusOrder,
+  updateOrderDetails,
+  getOrderDetails,
   deleteOrder
 };

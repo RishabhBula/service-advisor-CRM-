@@ -11,6 +11,7 @@ import {
    getLabelList,
 } from "./../actions";
 
+/* add new label */
 const addLabelLogic = createLogic({
    type: labelAction.ADD_LABEL,
    async process({ action }, dispatch, done) {
@@ -27,6 +28,7 @@ const addLabelLogic = createLogic({
       );
       if (result.isError) {
          toast.error(result.messages[0]);
+         dispatch(getLabelList());
          dispatch(hideLoader());
          done();
          return;
@@ -40,6 +42,7 @@ const addLabelLogic = createLogic({
    }
 });
 
+/* get saved label */
 const getLabelLogic = createLogic({
    type: labelAction.GET_LABEL_LIST,
    async process({ action }, dispatch, done) {
@@ -81,7 +84,38 @@ const getLabelLogic = createLogic({
    }
 });
 
+/* delete saved label */
+const deleteLabelLogic = createLogic({
+   type: labelAction.DELETE_LABEL,
+   async process({ action }, dispatch, done) {
+      dispatch(showLoader());
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/label",
+         "/updateLabel",
+         "PUT",
+         true,
+         undefined,
+         action.payload
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         dispatch(getLabelList());
+         dispatch(hideLoader());
+         done();
+         return;
+      } else {
+         toast.success(result.messages[0]);
+         dispatch(getLabelList());
+         dispatch(hideLoader());
+         done();
+      }
+   }
+});
+
 export const LabelLogic = [
    addLabelLogic,
-   getLabelLogic
+   getLabelLogic,
+   deleteLabelLogic
 ];

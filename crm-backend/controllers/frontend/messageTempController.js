@@ -1,5 +1,8 @@
 const MessageTemplate = require("../../models/messageTemplate");
 const mongoose = require("mongoose");
+const { Email, AvailiableTemplates } = require("../../common/Email");
+const path = require("path");
+const __basedir = path.join(__dirname, "../../public");
 
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
@@ -9,7 +12,6 @@ const addMessageTemplate = async (req, res) => {
          templateName: body.templateName,
          subject: body.subject,
          messageText: body.messageText,
-         orderId: body.orderId,
          userId: currentUser.id,
          parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
          isDeleted: false,
@@ -98,7 +100,6 @@ const getAllMsgTemplateList = async (req, res) => {
 const getAllMsgTemplateListSearch = async (req, res) => {
    const { query, currentUser } = req;
    try {
-      const orderId = query.orderId
       const id = currentUser.id;
       const parentId = currentUser.parentId || currentUser.id;
       const searchValue = query.search;
@@ -138,13 +139,8 @@ const getAllMsgTemplateListSearch = async (req, res) => {
             ],
          });
       }
-      const result1 = await MessageTemplate.find({
-         ...condition,
-         orderId: mongoose.Types.ObjectId(orderId),
-         userId: currentUser.id
-      }).populate('orderId')
-      const getAllMsgTemp = await MessageTemplate.populate(result1, { path: "orderId.customerId orderId.vehicleId" })
-      const result = getAllMsgTemp
+      const result1 = await MessageTemplate.find(condition)
+      const result = result1
       return res.status(200).json({
          data: result,
          success: true
@@ -178,9 +174,54 @@ const updateMessageTemplate = async (req, res) => {
       });
    }
 }
+/* Delete message template details */
+const deleteMessageTemplate = async (req, res) => {
+   const { body } = req;
+   try {
+      const result = await MessageTemplate.findByIdAndUpdate(mongoose.Types.ObjectId(body._id), {
+         $set: {
+            isDeleted: true
+         }
+      })
+      return res.status(200).json({
+         message: "Message Template Deleted successfully",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is get label error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
+/* send message to custormer with inspection attachment */
+const sendMailToCustomer = async (req, res) => {
+   const { body } = req;
+   try {
+      const emailVar = new Email(body);
+      await emailVar.setSubject("[Service Advisor]" + body.subject + " - Inspection Details");
+      await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+         body: body.message,
+      });
+      await emailVar.sendEmail(body.email);
+      return res.status(200).json({
+         message: "Inspection details send to customer successfully!",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is send mail error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
 module.exports = {
    addMessageTemplate,
    getAllMsgTemplateList,
    getAllMsgTemplateListSearch,
-   updateMessageTemplate
+   updateMessageTemplate,
+   deleteMessageTemplate,
+   sendMailToCustomer
 }
