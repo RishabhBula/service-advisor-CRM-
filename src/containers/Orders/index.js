@@ -342,9 +342,15 @@ class Order extends Component {
                 <div className={"d-flex justify-content-between pb-2"}>
                   <span>Workflow</span>
                   <span>
-                    <Input type={"select"}></Input>
+                    <Input type={"select"} placeholder={"Select workflow status"}>
+                      <option value="">Select workflow status</option>
+                      <option value="estimate">Estimate</option>
+                      <option value="droppedOff">Dropped Off</option>
+                      <option value="inProcess">In Process</option>
+                    </Input>
                   </span>
                 </div>
+                <hr />
               </div>
             </Col>
           </Row>

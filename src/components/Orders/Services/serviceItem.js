@@ -622,17 +622,28 @@ class ServiceItem extends Component {
         isAddLabel: false
       }
       labelData.push(labelConst)
+      this.handleLabelName('', Mindex, sIndex)
     })
   }
   handleLabelName = (e, Mindex, sIndex) => {
-    const { value } = e.target
-    const serviceData = [...this.state.services]
-    const labelLength = serviceData[Mindex].serviceItems[sIndex].label.length
-    const labelData = serviceData[Mindex].serviceItems[sIndex].label
-    labelData[labelLength - 1].name = value
-    this.setState({
-      services: serviceData
-    })
+    if (e) {
+      const { value } = e.target
+      const serviceData = [...this.state.services]
+      const labelLength = serviceData[Mindex].serviceItems[sIndex].label.length
+      const labelData = serviceData[Mindex].serviceItems[sIndex].label
+      labelData[labelLength - 1].name = value
+      this.setState({
+        services: serviceData
+      })
+    } else {
+      const serviceData = [...this.state.services]
+      const labelLength = serviceData[Mindex].serviceItems[sIndex].label.length
+      const labelData = serviceData[Mindex].serviceItems[sIndex].label
+      labelData[labelLength - 1].name = ''
+      this.setState({
+        services: serviceData
+      })
+    }
   }
 
   handleRemoveLabel = (Mindex, sIndex, lIndex) => {
@@ -1000,7 +1011,7 @@ class ServiceItem extends Component {
                                           <PopoverHeader>
                                             <div>
                                               <FormGroup className={"mb-0"}>
-                                                <Input onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
+                                                <Input value={service.label[service.label.length - 1].name} onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
                                                 <ul className={"lable-color"} >
                                                   {LabelColors(index, sIndex)}
                                                 </ul>
