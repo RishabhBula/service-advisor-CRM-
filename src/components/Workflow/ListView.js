@@ -2,6 +2,7 @@ import React from "react";
 import { Table, Nav, NavItem, NavLink } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
+import { AppRoutes } from "../../config/AppRoutes";
 
 class WorkflowListView extends React.Component {
   constructor(props) {
@@ -17,7 +18,20 @@ class WorkflowListView extends React.Component {
     const { activeTab } = this.state;
     return (
       <tr key={index}>
-        <td>{order.name || "Unnamed order"}</td>
+        <td>
+          <span
+            onClick={() =>
+              this.props.redirectTo(
+                `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", order._id)}`
+              )
+            }
+            style={{
+              cursor: "pointer"
+            }}
+          >
+            {order.name || "Unnamed order"}
+          </span>
+        </td>
         <td>
           <i
             className={"fa fa-trash"}

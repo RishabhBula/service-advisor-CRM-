@@ -18,8 +18,10 @@ import CrmDiscountBtn from "../../common/CrmDiscountBtn";
 import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
-import { getSumOfArray, logger } from "../../../helpers"
+import { getSumOfArray } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
+import { ConfirmBox } from "../../../helpers/SweetAlert";
+
 class ServiceItem extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +34,10 @@ class ServiceItem extends Component {
       selectedTechnician: {
         value: "",
         label: "Type to select technician"
+      },
+      technicianData: {
+        label: "",
+        value: ""
       },
       services: [
         {
@@ -71,7 +77,7 @@ class ServiceItem extends Component {
       services
     } = this.props.serviceReducers
     this.setState({
-      services
+      services,
     })
   }
   componentDidUpdate = ({ serviceReducers }) => {
@@ -110,7 +116,6 @@ class ServiceItem extends Component {
             })
             return true
           })
-
           const serviceData = [...this.state.services]
           if (serviceData[index].serviceSubTotalValue) {
             let serviceTotal = serviceData[index].serviceSubTotalValue
@@ -119,9 +124,15 @@ class ServiceItem extends Component {
             serviceData[index].serviceSubTotalValue = serviceTotal
             serviceData[index].serviceTotal = getSumOfArray(services[index].serviceSubTotalValue)
             this.setState({
-              services: serviceData
+              services: serviceData,
             })
           }
+          this.setState({
+            technicianData: {
+              label: item.technician ? `${item.technician.firstName} ${item.technician.lastName}` : 'Type to select technician',
+              value: item.technician ? item.technician._id : ''
+            }
+          })
           return true
         })
       }
@@ -399,9 +410,9 @@ class ServiceItem extends Component {
     })
   }
   handleChange = (e, index) => {
-    const { value } = e.target;
+    const { value, name } = e.target;
     const serviceData = [...this.state.services]
-    serviceData[index].serviceName = value
+    serviceData[index][name] = value
     this.setState({
       services: serviceData
     })
@@ -415,7 +426,7 @@ class ServiceItem extends Component {
       const serviceData = [...this.state.services]
       serviceData[index].technician = e
       this.setState({
-        services: serviceData,
+        services: serviceData
       })
     } else {
       const serviceData = [...this.state.services]
@@ -435,8 +446,7 @@ class ServiceItem extends Component {
       isError: true
     })
     if (this.state.services) {
-      const { serviceReducers } = this.props;
-      const { services } = serviceReducers;
+      const services = [...this.state.services]
       const serviceData = [
         {
           isButtonValue: "",
@@ -468,11 +478,23 @@ class ServiceItem extends Component {
         }
       ]
       services.push(serviceData[0])
+      this.setState({
+        services
+      })
       await this.props.addPartToService(services)
     }
   }
 
-  handleRemoveService = (index) => {
+  handleRemoveService = async (index) => {
+    const { value } = await ConfirmBox({
+      text: "Do you want to remove this service?"
+    });
+    if (!value) {
+      this.setState({
+        selectedVehicles: []
+      });
+      return;
+    }
     const { services } = this.state;
     services[index].isCannedAdded = false
     let t = [...services];
@@ -515,7 +537,6 @@ class ServiceItem extends Component {
     serviceData[index].isConfirmedValue.value = true
     serviceData[index].isConfirmedValue.type = name
     serviceData[index].isButtonValue = ''
-    console.log("*******name******", name, serviceData[index][name].type);
     if (serviceData[index][name].type === "%" && name !== 'discount') {
       let tempServiceTotal
       if (serviceData[index].serviceItems.length) {
@@ -528,9 +549,44 @@ class ServiceItem extends Component {
         tempServiceTotal = getSumOfArray(serviceTotalValue)
       }
       const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(tempServiceTotal)
-      console.log("@@@@@@@@@@@@@@@", TaxedTotalValue);
-
       serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(TaxedTotalValue)
+    } else if (serviceData[index][name].type === "$" && name !== 'discount') {
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(serviceData[index][name].value)
+    } else if (serviceData[index][name].type === "%" && name === 'discount') {
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(tempServiceTotal)
+      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) - parseFloat(TaxedTotalValue)
+    } else {
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(serviceData[index][name].value)
     }
     this.setState({
       services: serviceData
@@ -700,8 +756,8 @@ class ServiceItem extends Component {
     })
   }
   render() {
-    const { addNote, noteIndex, services, selectedTechnician, customerComment,
-      userRecommendations, isServiceSubmitted, openCannedService } = this.state
+    const { services, selectedTechnician, customerComment,
+      userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
     const { labelReducer, getCannedServiceList, serviceReducers } = this.props
     const LabelColors = (index, sIndex) => {
       const labelLength = services[index].serviceItems[sIndex].label.length
@@ -724,11 +780,10 @@ class ServiceItem extends Component {
         })
       )
     }
-    logger("!!!!!!!!!!!!!!!!", services)
     return (
       <>
         <div>
-          <Row>
+          <Row className={"comment-section m-0"}>
             <Col md={"6"}>
               <FormGroup>
                 <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Customer Comments"} />
@@ -746,10 +801,11 @@ class ServiceItem extends Component {
           {
             services && services.length ? services.map((item, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal mt-3"}>
-                      <Row>
+                      <div className={"service-card-header"}>
+                      <Row className={"m-0"}>
                         <Col md={"6"}>
                           <FormGroup>
                             <Label htmlFor="name" className="customer-modal-text-style">
@@ -760,6 +816,7 @@ class ServiceItem extends Component {
                                 placeholder={"Enter a name for this service"}
                                 onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
                                 value={item.serviceName}
+                                maxLength={"100"}
                                 invalid={isServiceSubmitted && item.isError && !item.serviceName}
                               />
                               <FormFeedback>
@@ -779,44 +836,41 @@ class ServiceItem extends Component {
                               className={"w-100 form-select"}
                               placeholder={"Type Technician name"}
                               loadOptions={this.loadTechnician}
-                              value={item.technician === "" ? selectedTechnician : item.technician}
+                              value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
                               isClearable={item.technician !== '' ? true : false}
                               noOptionsMessage={() => "Type Technician name"}
-                              onChange={e => this.handleTechnicianAdd(e, index)}
+                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
                             />
                           </FormGroup>
                         </Col>
                       </Row>
-                      <Col md="12">
+                      <Col md="12" className={"pl-0"}>
                         <FormGroup>
-                          {
-                            addNote && noteIndex === index ?
-                              <>
-                                <Label htmlFor="name" className="customer-modal-text-style">
-                                  Note
-                                </Label>
-                                <Input type={"textarea"} rows={"2"} cols={"3"} />
-                              </>
-                              :
-                              <Label onClick={() => this.setState({
-                                addNote: true,
-                                noteIndex: index
-                              })}>Add Note</Label>
+                          <Label htmlFor="name" className="customer-modal-text-style note-label">
+                            Note
+                          </Label>
+                          <Input
+                            type={"textarea"}
+                            onChange={(e) => this.handleChange(e, index)}
+                            name={"note"}
+                            value={item.note}
+                            maxLength={"200"}
+                            rows={"2"} cols={"3"} />
 
-                          }
                         </FormGroup>
                       </Col>
+                      </div>
                       <table className={"table matrix-table"}>
                         <thead>
                           <tr>
-                            <th width="250" className={"text-center"}>DESCRIPTION</th>
-                            <th width="250" className={"text-center"}>PRICE</th>
-                            <th width="250" className={"text-center"}>QTY</th>
-                            <th width="250" className={"text-center"}>HRS</th>
-                            <th width="250" className={"text-center"}>DISC</th>
-                            <th width="250" className={"text-center"}>SUBTOTAL</th>
-                            <th width="250" className={"text-center"}>STATUS</th>
-                            <th width="250" className={"text-center"}>Action</th>
+                            <th width="350" className={"text-center"}>DESCRIPTION</th>
+                            <th width="150" className={"text-center"}>PRICE</th>
+                            <th width="150" className={"text-center"}>QTY</th>
+                            <th width="150" className={"text-center"}>HRS</th>
+                            <th width="400" className={"text-center"}>DISC</th>
+                            <th width="150" className={"text-center"}>SUBTOTAL</th>
+                            <th width="200" className={"text-center"}>STATUS</th>
+                            <th width="30" className={"text-center"}></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -897,7 +951,7 @@ class ServiceItem extends Component {
                                         />
                                       </InputGroup>
                                     </td>
-                                    <td>
+                                    <td className={"text-center"}>
                                       <div>
                                         {
                                           service.label && service.label.length ?
@@ -927,10 +981,10 @@ class ServiceItem extends Component {
                                             }) :
                                             null
                                         }
-                                        <Button id={`new${sIndex}`} className={"btn-sm"} type="button">
+                                        <Button id={`new${sIndex}${index}`} className={"btn-sm"} type="button">
                                           New +
                                         </Button>
-                                        <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}`}>
+                                        <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}${index}`}>
                                           <PopoverHeader>
                                             <div>
                                               <FormGroup className={"mb-0"}>
@@ -1022,7 +1076,7 @@ class ServiceItem extends Component {
                           }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}</span>&nbsp; &nbsp;
                       </div>
                       <div>
-                        <span>Service Total: ${parseFloat(item.serviceTotal).toFixed(2)}</span>
+                        <span>Service Total: ${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span>
                       </div>
                     </div>
                     <div className={"m-2 d-flex justify-content-end"}>
@@ -1051,7 +1105,7 @@ class ServiceItem extends Component {
                             </Col>
                             <Col md={"4"} lg={"4"} className={"pr-0"}>
                               <div className={"d-flex"}>
-                                <CrmDiscountBtn discountType={item.epa && item.epa.type ? item.epa.type : "%"} handleClickDiscountType={(data) => this.handleClickEpaType(data, index)} />
+                                <CrmDiscountBtn discountType={item.epa && item.epa.type ? item.epa.type : "%"} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "epa")} />
                                 <Button className={"btn-sm ml-2 mr-2"} onClick={() => { this.handleValueConfirmed(index, "epa") }}><i className={"icon-check"} /></Button>
                                 <Button className={"btn-sm mr-2"}
                                   onClick={() => {
@@ -1068,14 +1122,14 @@ class ServiceItem extends Component {
                           <Row className={"m-2"}>
                             <Col md={"2"} lg={"2"} className={"p-0"}>
                               <InputGroup>
-                                {item.epa && item.epa.type === '$' ?
+                                {item.discount && item.discount.type === '$' ?
                                   <div className="input-group-prepend">
                                     <Button color={"primary"} size={"sm"}>
                                       <i className={"fa fa-dollar"}></i>
                                     </Button>
                                   </div> : null}
                                 <Input id="discount" name="discount" onChange={(e) => { this.handleTaxesAdd(e, index, "epa") }} type={"text"} maxLength="5" placeholder={"Discount%"} />
-                                {item.epa && item.epa.type === '%' ?
+                                {item.discount && item.discount.type === '%' ?
                                   <div className="input-group-append">
                                     <Button color={"primary"} size={"sm"}>
                                       <i className={"fa fa-percent"}></i>
@@ -1085,7 +1139,7 @@ class ServiceItem extends Component {
                             </Col>
                             <Col md={"4"} lg={"4"} className={"pr-0"}>
                               <div className={"d-flex"}>
-                                <CrmDiscountBtn discountType={item.epa.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "discount")} />
+                                <CrmDiscountBtn discountType={item.discount.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "discount")} />
                                 <Button className={"btn-sm ml-2 mr-2"}><i className={"icon-check"} onClick={() => { this.handleValueConfirmed(index, "discount") }} /></Button>
                                 <Button className={"btn-sm mr-2"} onClick={() => {
                                   this.handleRemoveTaxes(index)
@@ -1100,14 +1154,14 @@ class ServiceItem extends Component {
                           <Row className={"m-2"}>
                             <Col md={"2"} lg={"2"} className={"p-0"}>
                               <InputGroup>
-                                {item.epa && item.epa.type === '$' ?
+                                {item.taxes && item.taxes.type === '$' ?
                                   <div className="input-group-prepend">
                                     <Button color={"primary"} size={"sm"}>
                                       <i className={"fa fa-dollar"}></i>
                                     </Button>
                                   </div> : null}
                                 <Input name="taxes" onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"Taxes"} />
-                                {item.epa && item.epa.type === '%' ?
+                                {item.taxes && item.taxes.type === '%' ?
                                   <div className="input-group-append">
                                     <Button color={"primary"} size={"sm"}>
                                       <i className={"fa fa-percent"}></i>
@@ -1117,7 +1171,7 @@ class ServiceItem extends Component {
                             </Col>
                             <Col md={"4"} lg={"4"} className={"pr-0"}>
                               <div className={"d-flex"}>
-                                <CrmDiscountBtn discountType={item.epa.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "taxes")} />
+                                <CrmDiscountBtn discountType={item.taxes.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "taxes")} />
                                 <Button className={"btn-sm ml-2 mr-2"}><i className={"icon-check"} onClick={() => { this.handleValueConfirmed(index, "taxes") }} /></Button>
                                 <Button className={"btn-sm mr-2"} onClick={() => {
                                   this.handleRemoveTaxes(index)
@@ -1130,18 +1184,22 @@ class ServiceItem extends Component {
 
                     </div>
                   </Card>
-                </>
+                </React.Fragment>
               )
             }) : null
           }
           <div className="d-flex justify-content-between pb-4">
             <Button color={"primary"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
             <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
-            <Button color={"secondary"} onClick={
-              () => {
-                this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
-              }
-            }>Submit services</Button>
+
+            {
+              this.state.services && this.state.services.length ?
+                <Button color={"secondary"} onClick={
+                  () => {
+                    this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
+                  }
+                }>Submit services</Button> : null
+            }
           </div>
           <CrmCannedServiceModal
             openCannedService={openCannedService}

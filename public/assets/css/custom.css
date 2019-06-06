@@ -1783,7 +1783,31 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   left: 18px;
   top: 12px;
 }
-
+.workflow-section{
+  display: flex;
+}
+.workflow-section .workflow-left {
+  flex: 1;
+}
+.workflow-section .workflow-right {
+  flex: 0 0 300px;
+}
+.custom-form-modal .form-group label.note-label{
+  min-width: 163px;
+}
+.service-card-header{
+  background: #e7e6e6;
+  padding: 20px 20px 1px;
+}
+.order-top-section{
+  max-width: 900px;
+}
+.order-top-section .custom-form-modal .form-group label{
+  min-width: 75px;
+}
+.comment-section{
+  width: 100%;
+}
 @media(max-width:1220px){
 .lable-color {
   list-style: none;

@@ -11,6 +11,7 @@ import {
 
 import { logger } from "../../helpers/Logger";
 import Loader from "../../containers/Loader/Loader";
+import { AppRoutes } from "../../config/AppRoutes";
 
 class WorkflowGridView extends React.Component {
   constructor(props) {
@@ -112,6 +113,14 @@ class WorkflowGridView extends React.Component {
                     {...providedNew.dragHandleProps}
                     ref={providedNew.innerRef}
                     className={"content"}
+                    onClick={() => {
+                      this.props.redirectTo(
+                        `${AppRoutes.WORKFLOW_ORDER.url.replace(
+                          ":id",
+                          task._id
+                        )}`
+                      );
+                    }}
                   >
                     {task.orderName || "Unnamed order"}
                     <i

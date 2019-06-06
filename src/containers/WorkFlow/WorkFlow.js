@@ -16,8 +16,6 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import React, { Component } from "react";
-
-import { AppRoutes } from "../../config/AppRoutes";
 import WorkflowGridView from "../../components/Workflow/GridView";
 
 import {
@@ -57,14 +55,12 @@ class WorkFlow extends Component {
       listView: false
     };
   }
-
+  /**
+   *
+   */
   handleOrder = () => {
     this.props.addOrderRequest();
-    /* const { orderData } = this.props.orderReducer
-    this.props.redirectTo(`${OrderRoutes.path}/id:${orderData._id}`);
-   */
   };
-
   /**
    *
    */
@@ -318,7 +314,8 @@ class WorkFlow extends Component {
     const {
       orderReducer,
       updateOrderStatus,
-      updateOrderOfOrderStatus
+      updateOrderOfOrderStatus,
+      redirectTo
     } = this.props;
     const { orderData, orderStatus } = orderReducer;
     const { listView } = this.state;
@@ -378,18 +375,21 @@ class WorkFlow extends Component {
                     updateOrderStatus={updateOrderStatus}
                     deleteOrderStatus={this.deleteOrderStatus}
                     deleteOrder={this.deleteOrder}
+                    redirectTo={redirectTo}
                   />
                 ) : (
-                    <div style={{ overflowX: "auto" }}>
-                      <WorkflowGridView
-                        orderData={orderData}
-                        orderStatus={orderStatus}
-                        updateOrderStatus={updateOrderStatus}
-                        deleteOrderStatus={this.deleteOrderStatus}
-                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                      />
-                    </div>
-                  )}
+                  <div style={{ overflowX: "auto" }}>
+                    <WorkflowGridView
+                      orderData={orderData}
+                      orderStatus={orderStatus}
+                      updateOrderStatus={updateOrderStatus}
+                      deleteOrderStatus={this.deleteOrderStatus}
+                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                      deleteOrder={this.deleteOrder}
+                      redirectTo={redirectTo}
+                    />
+                  </div>
+                )}
               </Col>
             </Row>
           </CardBody>

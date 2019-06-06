@@ -146,7 +146,7 @@ class SendInspection extends Component {
                         name='name'
                         onChange={(e) => this.handleChange(e)}
                         placeholder='John'
-                        value={customerData.firstName}
+                        value={customerData ? customerData.firstName : ''}
                         maxLength='50'
                         id='recipients'
                         invalid={errors.recipients && !recipients}
