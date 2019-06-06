@@ -16,7 +16,6 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import Templates from "./template";
 import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
-import { logger } from "../../../helpers";
 import * as jsPDF from "jspdf";
 import 'jspdf-autotable';
 

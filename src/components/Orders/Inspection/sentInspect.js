@@ -116,7 +116,7 @@ class SendInspection extends Component {
 
 
   render() {
-    const { templateData, recipients, errors, search, customerData, vehicleData} = this.state
+    const { templateData, recipients, errors, search, customerData} = this.state
     return (
       <>
         <Modal
