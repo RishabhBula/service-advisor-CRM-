@@ -7,4 +7,5 @@ export * from "./Logger";
 export * from "./Object";
 export * from "./Pagination";
 export * from "./SweetAlert";
+export * from "./ParseHtml";
 export * from "./Sum"

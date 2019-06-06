@@ -85,7 +85,7 @@ class CutomerVehicle extends Component {
       } = this.state
       const { isError } = this.props
       return (
-         <Col md={"12"}>
+
             <Row className={"custom-form-modal"}>
                <Col md={"6"}>
                   <FormGroup>
@@ -146,7 +146,6 @@ class CutomerVehicle extends Component {
                   </FormGroup>
                </Col>
             </Row>
-         </Col>
       );
    }
 }

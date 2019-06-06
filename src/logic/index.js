@@ -17,6 +17,8 @@ import { TiersLogic } from "./Tier";
 import { InventoryPartsLogic } from "./InventoryParts";
 import { InventoryStatsLogic } from "./inventoryStat";
 import { OrderLogic } from "./Order";
+import { InspectLogic } from "./Inspection";
+
 import { ServiceLogic } from "./Service"
 import { LabelLogic } from "./Label"
 export const redirectToLogic = createLogic({
@@ -43,6 +45,7 @@ export default [
   ...InventoryPartsLogic,
   ...InventoryStatsLogic,
   ...OrderLogic,
+  ...InspectLogic,
   ...ServiceLogic,
   ...LabelLogic,
   redirectToLogic

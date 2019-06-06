@@ -20,6 +20,15 @@ import {
   getOrderIdRequest,
   customerGetRequest,
   vehicleGetRequest,
+  addNewInspection,
+  addInspectionTemplate,
+  addMessageTemplate,
+  getMessageTemplate,
+  getTemplateList,
+  updateMessageTemplate,
+  deleteMessageTemplate,
+  searchMessageTemplateList,
+  sendMessageTemplate,
   getInventoryPartsList,
   addPartToService,
   addTireToService,
@@ -98,9 +107,10 @@ class Order extends Component {
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
   }
 
-  componentDidUpdate = ({ serviceReducers, orderReducer }) => {
-    if (serviceReducers.isLoading !== this.props.serviceReducers.isLoading) {
-      this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
+  componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
+
+    if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
+      this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
     }
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       const {
@@ -168,10 +178,18 @@ class Order extends Component {
       getVehicleData,
       getCustomerData,
       modelInfoReducer,
+      modelOperate,
+      addNewInspection,
+      addInspectionTemplate,
+      addMessageTemplate,
+      getMessageTemplate,
+      getTemplateList,
+      updateMessageTemplate,
+      deleteMessageTemplate,
+      searchMessageTemplateList,
       getPartDetails,
       addPartToService,
       addTireToService,
-      modelOperate,
       serviceReducers,
       addLaborToService,
       addInventryTire,
@@ -182,16 +200,16 @@ class Order extends Component {
       addNewService,
       labelReducer,
       getCannedServiceList,
-      orderReducer,
       addNewLabel,
-      deleteLabel
-    } = this.props;
-    logger(customerData, vehicleData);
+      deleteLabel,
+      sendMessageTemplate,
+      orderReducer } = this.props
+    logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
-          <Row>
-            <Col md={"8"}>
+          <div className="workflow-section">
+            <div className={"workflow-left"}>
               <CardBody className={"custom-card-body inventory-card"}>
                 <div className={"d-flex justify-content-between pb-4"}>
                   <h3>
@@ -208,41 +226,43 @@ class Order extends Component {
                     Update Order
                   </Button>
                 </div>
-                <div className={"custom-form-modal mt-3"}>
-                  <Row>
-                    <Col md={"8"}>
-                      <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="customer-modal-text-style"
-                        >
-                          Order Name <span className={"asteric"}>*</span>
-                        </Label>
-                        <div className="input-block">
-                          <Input
-                            placeholder={"Enter a order title"}
-                            onChange={e => this.handleChange(e)}
-                            name={"orderName"}
-                            value={orderName}
-                            invalid={isError && !orderName}
-                          />
-                          <FormFeedback>
-                            {isError && !orderName
-                              ? "Order name is required."
-                              : null}
-                          </FormFeedback>
-                        </div>
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                <div className={"order-top-section"}>
+                  <div className={"custom-form-modal mt-3"}>
+                    <Row >
+                      <Col md={"8"}>
+                        <FormGroup>
+                          <Label
+                            htmlFor="name"
+                            className="customer-modal-text-style"
+                          >
+                            Order Name <span className={"asteric"}>*</span>
+                          </Label>
+                          <div className="input-block">
+                            <Input
+                              placeholder={"Enter a order title"}
+                              onChange={e => this.handleChange(e)}
+                              name={"orderName"}
+                              value={orderName}
+                              invalid={isError && !orderName}
+                            />
+                            <FormFeedback>
+                              {isError && !orderName
+                                ? "Order name is required."
+                                : null}
+                            </FormFeedback>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                  <CustomerVehicle
+                    getCustomerData={getCustomerData}
+                    getVehicleData={getVehicleData}
+                    customerVehicleData={this.customerVehicleData}
+                    isError={isError}
+                    orderReducer={orderReducer}
+                  />
                 </div>
-                <CustomerVehicle
-                  getCustomerData={getCustomerData}
-                  getVehicleData={getVehicleData}
-                  customerVehicleData={this.customerVehicleData}
-                  isError={isError}
-                  orderReducer={orderReducer}
-                />
                 <div className={"position-relative"}>
                   <Suspense fallback={"Loading.."}>
                     <OrderTab
@@ -285,7 +305,22 @@ class Order extends Component {
                               deleteLabel={deleteLabel}
                             />
                           ) : null}
-                          {activeTab === 1 ? <Inspection /> : null}
+                          {activeTab === 1 ? 
+                          <Inspection
+                            addNewInspection={addNewInspection}
+                            inspectionData={this.props.inspectionReducer}
+                            addInspectionTemplate={addInspectionTemplate}
+                            getTemplateList={getTemplateList}
+                            addMessageTemplate={addMessageTemplate}
+                            getMessageTemplate={getMessageTemplate}
+                            updateMessageTemplate={updateMessageTemplate}
+                            deleteMessageTemplate={deleteMessageTemplate}
+                            searchMessageTemplateList={searchMessageTemplateList}
+                            customerData={customerData}
+                            vehicleData={vehicleData}
+                            sendMessageTemplate={sendMessageTemplate}
+                            orderId={orderId}
+                          /> : null}
                           {activeTab === 2 ? <TimeClock /> : null}
                           {activeTab === 3 ? <Message /> : null}
                         </React.Fragment>
@@ -294,8 +329,8 @@ class Order extends Component {
                   </Switch>
                 </Suspense>
               </CardBody>
-            </Col>
-            <Col md={"4"}>
+            </div>
+            <div className={"workflow-right"}>
               <div className={"pb-2"}>
                 <div className={"d-flex justify-content-between pb-2"}>
                   <span><h4>Order Details</h4></span>
@@ -352,8 +387,8 @@ class Order extends Component {
                 </div>
                 <hr />
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
         </Card>
         {/* {this.renderModals()} */}
       </div>
@@ -362,6 +397,7 @@ class Order extends Component {
 }
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
+  inspectionReducer: state.inspectionReducer,
   modelInfoReducer: state.modelInfoReducer,
   serviceReducers: state.serviceReducers,
   labelReducer: state.labelReducer
@@ -376,8 +412,32 @@ const mapDispatchToProps = dispatch => ({
   getVehicleData: data => {
     dispatch(vehicleGetRequest(data));
   },
-  getPartDetails: data => {
-    dispatch(getInventoryPartsList(data));
+  addNewInspection: (data) => {
+    dispatch(addNewInspection(data))
+  },
+  addInspectionTemplate: (data) => {
+    dispatch(addInspectionTemplate(data))
+  },
+  getTemplateList: (data) => {
+    dispatch(getTemplateList(data))
+  },
+  addMessageTemplate: (data) => {
+    dispatch(addMessageTemplate(data))
+  },
+  getMessageTemplate: (data) => {
+    dispatch(getMessageTemplate(data))
+  },
+  updateMessageTemplate: (data) => {
+    dispatch(updateMessageTemplate(data))
+  },
+  deleteMessageTemplate: (data) => {
+    dispatch(deleteMessageTemplate(data))
+  },
+  searchMessageTemplateList: (data) => {
+    dispatch(searchMessageTemplateList(data))
+  },
+  getPartDetails: (data) => {
+    dispatch(getInventoryPartsList(data))
   },
   addPartToService: data => {
     dispatch(addPartToService(data));
@@ -418,8 +478,11 @@ const mapDispatchToProps = dispatch => ({
   getCannedServiceList: data => {
     dispatch(getCannedServiceList(data));
   },
-  updateOrderDetails: data => {
-    dispatch(updateOrderDetailsRequest(data));
+  sendMessageTemplate: (data) => {
+    dispatch(sendMessageTemplate(data))
+  },
+  updateOrderDetails: (data) => {
+    dispatch(updateOrderDetailsRequest(data))
   },
   getOrderDetailsRequest: data => {
     dispatch(getOrderDetailsRequest(data));

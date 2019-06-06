@@ -14,7 +14,8 @@ import {
   modelOpenRequest,
   updateOrderDetailsSuccess,
   getServiceListSuccess,
-  getOrderDetailsSuccess
+  getOrderDetailsSuccess,
+  getInspectionListSuccess,
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -319,8 +320,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         _id: action.payload && action.payload._id ? action.payload._id : null
       },
       undefined
@@ -336,6 +337,11 @@ const getOrderDetails = createLogic({
           services: result.data.serviceResult
         })
       );
+      dispatch(getInspectionListSuccess(
+        {
+          inspection: result.data.inspectionResult
+        }
+      ))
       dispatch(
         getOrderDetailsSuccess({
           order: result.data.data[0]

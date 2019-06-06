@@ -807,8 +807,8 @@ class ServiceItem extends Component {
     }
     return (
       <>
-        <div>
-          <Row>
+        <div className={"w-100"}>
+          <Row className={"comment-section"}>
             <Col md={"6"}>
               <FormGroup>
                 <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Customer Comments"} />
@@ -821,17 +821,21 @@ class ServiceItem extends Component {
             </Col>
           </Row>
           <div className={"pb-2"}>
-            <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
+            {
+              services && services.length ?
+              <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button> : null 
+            }
           </div>
           {
             services && services.length ? services.map((item, index) => {
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
-                    <div className={"custom-form-modal mt-3"}>
-                      <Row>
+                    <div className={"custom-form-modal"}>
+                      <div className={"service-card-header"}>
+                      <Row className={"m-0"}>
                         <Col md={"6"}>
-                          <FormGroup>
+                          <FormGroup className={"mb-0"}>
                             <Label htmlFor="name" className="customer-modal-text-style">
                               Service name <span className={"asteric"}>*</span>
                             </Label>
@@ -851,46 +855,49 @@ class ServiceItem extends Component {
                             </div>
                           </FormGroup>
                         </Col>
-                        <Col md={"6"}>
-                          <FormGroup>
-                            <Label htmlFor="name" className="customer-modal-text-style">
-                              Technician
+                          <Col md={"6"}>
+                            <FormGroup>
+                              <Label htmlFor="name" className="customer-modal-text-style">
+                                Technician
                             </Label>
-                            <Async
-                              className={"w-100 form-select"}
-                              placeholder={"Type Technician name"}
-                              loadOptions={this.loadTechnician}
-                              value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
-                              isClearable={item.technician !== '' ? true : false}
-                              noOptionsMessage={() => "Type Technician name"}
-                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
-                            />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Col md="12">
-                        <FormGroup>
-                          <Label htmlFor="name" className="customer-modal-text-style">
-                            Note
-                          </Label>
-                          <Input
-                            type={"textarea"}
-                            onChange={(e) => this.handleChange(e, index)}
-                            name={"note"}
-                            value={item.note}
-                            maxLength={"200"}
-                            rows={"2"} cols={"3"} />
+                              <Async
+                                className={"w-100 form-select"}
+                                placeholder={"Type Technician name"}
+                                loadOptions={this.loadTechnician}
+                                value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
+                                isClearable={item.technician !== '' ? true : false}
+                                noOptionsMessage={() => "Type Technician name"}
+                                onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
+                              />
+                            </FormGroup>
+                          </Col>
 
-                        </FormGroup>
-                      </Col>
+
+                          <Col md="12" className={"pl-0"}>
+                            <FormGroup>
+                              <Label htmlFor="name" className="customer-modal-text-style note-label">
+                                Note
+                          </Label>
+                              <Input
+                                type={"textarea"}
+                                onChange={(e) => this.handleChange(e, index)}
+                                name={"note"}
+                                value={item.note}
+                                maxLength={"200"}
+                                rows={"2"} cols={"3"} />
+
+                            </FormGroup>
+                          </Col>
+                      </Row>
+                      </div>
                       <table className={"table matrix-table"}>
                         <thead>
                           <tr>
-                            <th width="250" className={"text-center"}>DESCRIPTION</th>
-                            <th width="250" className={"text-center"}>PRICE</th>
-                            <th width="250" className={"text-center"}>QTY</th>
-                            <th width="250" className={"text-center"}>HRS</th>
-                            <th width="250" className={"text-center"}>DISC</th>
+                            <th width="400" className={"text-center"}>DESCRIPTION</th>
+                            <th width="150" className={"text-center"}>PRICE</th>
+                            <th width="150" className={"text-center"}>QTY</th>
+                            <th width="150" className={"text-center"}>HRS</th>
+                            <th width="300" className={"text-center"}>DISCOUNT</th>
                             <th width="150" className={"text-center"}>SUBTOTAL</th>
                             <th width="200" className={"text-center"}>STATUS</th>
                             <th width="30" className={"text-center"}></th>
@@ -956,13 +963,15 @@ class ServiceItem extends Component {
                                               </Button>
                                             </div> : null}
                                         </InputGroup>
-                                        <CrmDiscountBtn discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
+                                        <div className={"service-customer-discount"}>
+                                          <CrmDiscountBtn discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
+                                        </div>
                                       </div>
                                     </td>
                                     <td>
                                       <InputGroup>
                                         <div className="input-group-prepend">
-                                          <Button disabled color={"secondaty"} size={"sm"}>
+                                          <Button  disabled color={"secondary"} size={"sm"}>
                                             <i className={"fa fa-dollar"}></i>
                                           </Button>
                                         </div>
@@ -974,7 +983,7 @@ class ServiceItem extends Component {
                                         />
                                       </InputGroup>
                                     </td>
-                                    <td>
+                                    <td className={"text-center"}>
                                       <div>
                                         {
                                           service.label && service.label.length ?
