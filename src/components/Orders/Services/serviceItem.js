@@ -823,7 +823,7 @@ class ServiceItem extends Component {
           <div className={"pb-2"}>
             {
               services && services.length ?
-              <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button> : null 
+                <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button> : null
             }
           </div>
           {
@@ -833,62 +833,57 @@ class ServiceItem extends Component {
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal"}>
                       <div className={"service-card-header"}>
-                      <Row className={"m-0"}>
-                        <Col md={"6"}>
-                          <FormGroup className={"mb-0"}>
-                            <Label htmlFor="name" className="customer-modal-text-style">
-                              Service name <span className={"asteric"}>*</span>
-                            </Label>
-                            <div className="input-block">
-                              <Input
-                                placeholder={"Enter a name for this service"}
-                                onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
-                                value={item.serviceName}
-                                maxLength={"100"}
-                                invalid={isServiceSubmitted && item.isError && !item.serviceName}
-                              />
-                              <FormFeedback>
-                                {item.isError && isServiceSubmitted && !item.serviceName
-                                  ? "Service name is required."
-                                  : null}
-                              </FormFeedback>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                          <Col md={"6"}>
-                            <FormGroup>
+                        <Row className={"m-0"}>
+                          <Col md={"8"}>
+                            <FormGroup className={"mb-0"}>
                               <Label htmlFor="name" className="customer-modal-text-style">
-                                Technician
-                            </Label>
-                              <Async
-                                className={"w-100 form-select"}
-                                placeholder={"Type Technician name"}
-                                loadOptions={this.loadTechnician}
-                                value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
-                                isClearable={item.technician !== '' ? true : false}
-                                noOptionsMessage={() => "Type Technician name"}
-                                onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
-                              />
+                                Service name <span className={"asteric"}>*</span>
+                              </Label>
+                              <div className="input-block">
+                                <Input
+                                  placeholder={"Enter a name for this service"}
+                                  onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
+                                  value={item.serviceName}
+                                  maxLength={"100"}
+                                  invalid={isServiceSubmitted && item.isError && !item.serviceName}
+                                />
+                                <FormFeedback>
+                                  {item.isError && isServiceSubmitted && !item.serviceName
+                                    ? "Service name is required."
+                                    : null}
+                                </FormFeedback>
+                              </div>
                             </FormGroup>
                           </Col>
-
-
-                          <Col md="12" className={"pl-0"}>
-                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style note-label">
-                                Note
-                          </Label>
-                              <Input
-                                type={"textarea"}
-                                onChange={(e) => this.handleChange(e, index)}
-                                name={"note"}
-                                value={item.note}
-                                maxLength={"200"}
-                                rows={"2"} cols={"3"} />
-
-                            </FormGroup>
+                          <Col md={"4"}>
+                            <span className={"pr-2"} id={`tech${index}`}>
+                              <img className={"pb-2"} src={"/assets/img/expert.svg"} width={"50"} alt={"technician"} />
+                            </span>
+                            <span className={"pr-2 pb-2"} id={`note${index}`}>
+                              <img className={"pb-2"} src={"/assets/img/writing .svg"} width={"50"} alt={"Notes"} />
+                            </span>
                           </Col>
-                      </Row>
+                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`tech${index}`}>
+                            <Async
+                              className={"w-100 form-select"}
+                              placeholder={"Type Technician name"}
+                              loadOptions={this.loadTechnician}
+                              value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
+                              isClearable={item.technician !== '' ? true : false}
+                              noOptionsMessage={() => "Type Technician name"}
+                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
+                            />
+                          </UncontrolledPopover>
+                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`note${index}`}>
+                            <Input
+                              type={"textarea"}
+                              onChange={(e) => this.handleChange(e, index)}
+                              name={"note"}
+                              value={item.note}
+                              maxLength={"200"}
+                              rows={"2"} cols={"3"} />
+                          </UncontrolledPopover>
+                        </Row>
                       </div>
                       <table className={"table matrix-table"}>
                         <thead>
@@ -971,7 +966,7 @@ class ServiceItem extends Component {
                                     <td>
                                       <InputGroup>
                                         <div className="input-group-prepend">
-                                          <Button  disabled color={"secondary"} size={"sm"}>
+                                          <Button disabled color={"secondary"} size={"sm"}>
                                             <i className={"fa fa-dollar"}></i>
                                           </Button>
                                         </div>
