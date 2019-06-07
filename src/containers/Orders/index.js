@@ -211,50 +211,41 @@ class Order extends Component {
           <div className="workflow-section">
             <div className={"workflow-left"}>
               <CardBody className={"custom-card-body inventory-card"}>
-                <div className={"d-flex justify-content-between pb-4"}>
-                  <h3>
-                    Order (#
+                <div className={"d-flex order-info-block flex-row justify-content-between pb-2 mb-3"}>
+                  <div className={"order-info-head d-flex"}>
+                    <h3 className={"mr-3 orderId"}>Order (#
                     {typeof this.props.orderReducer.orderId !== "object"
                       ? this.props.orderReducer.orderId
                       : null}
                     )
-                  </h3>
+                    </h3>
+                    <div className="input-block">
+                      <Input
+                        placeholder={"Enter a order title"}
+                        onChange={e => this.handleChange(e)}
+                        name={"orderName"}
+                        value={orderName}
+                        invalid={isError && !orderName}
+                        className={"order-name-input"}
+                      />
+                      <FormFeedback>
+                        {isError && !orderName
+                          ? "Order name is required."
+                          : null}
+                      </FormFeedback>
+                    </div>
+                  </div>
+                  <div>
                   <Button
-                    color={"primary"}
+                    color={""}
                     onClick={() => this.handleEditOrder()}
+                    className={"order-update-btn"}
                   >
                     Update Order
                   </Button>
+                  </div>
                 </div>
                 <div className={"order-top-section"}>
-                  <div className={"custom-form-modal mt-3"}>
-                    <Row >
-                      <Col md={"8"}>
-                        <FormGroup>
-                          <Label
-                            htmlFor="name"
-                            className="customer-modal-text-style"
-                          >
-                            Order Name <span className={"asteric"}>*</span>
-                          </Label>
-                          <div className="input-block">
-                            <Input
-                              placeholder={"Enter a order title"}
-                              onChange={e => this.handleChange(e)}
-                              name={"orderName"}
-                              value={orderName}
-                              invalid={isError && !orderName}
-                            />
-                            <FormFeedback>
-                              {isError && !orderName
-                                ? "Order name is required."
-                                : null}
-                            </FormFeedback>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </div>
                   <CustomerVehicle
                     getCustomerData={getCustomerData}
                     getVehicleData={getVehicleData}

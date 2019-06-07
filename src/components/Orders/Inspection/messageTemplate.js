@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   FormGroup,
-  FormFeedback,
   Label
 } from 'reactstrap';
 import { stripHTML } from "../../../helpers"

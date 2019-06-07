@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   Card,
+  CardFooter,
   Col,
   Input,
   FormGroup,
@@ -821,30 +822,24 @@ class ServiceItem extends Component {
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal"}>
-                      <div className={"service-card-header"}>
-                      <Row className={"m-0"}>
-                        <Col md={"6"}>
-                          <FormGroup className={"mb-0"}>
-                            <Label htmlFor="name" className="customer-modal-text-style">
-                              Service name <span className={"asteric"}>*</span>
-                            </Label>
-                            <div className="input-block">
-                              <Input
-                                placeholder={"Enter a name for this service"}
-                                onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
-                                value={item.serviceName}
-                                maxLength={"100"}
-                                invalid={isServiceSubmitted && item.isError && !item.serviceName}
-                              />
-                              <FormFeedback>
-                                {item.isError && isServiceSubmitted && !item.serviceName
-                                  ? "Service name is required."
-                                  : null}
-                              </FormFeedback>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                          <Col md={"6"}>
+                      <div className={"service-card-header-block d-flex flex-row"}>
+                       <div className={"service-card-header"}>
+                          <Input
+                            placeholder={"Enter a name for this service"}
+                            onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
+                            value={item.serviceName}
+                            maxLength={"100"}
+                            invalid={isServiceSubmitted && item.isError && !item.serviceName}
+                            size={"lg"}
+                          />
+                          <FormFeedback>
+                            {item.isError && isServiceSubmitted && !item.serviceName
+                              ? "Service name is required."
+                              : null}
+                          </FormFeedback>
+                        </div>
+                        <div className={"service-card-btn-block flex-one"}>
+                          <Col md={"6"} className={"d-none"}>
                             <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style">
                                 Technician
@@ -860,29 +855,27 @@ class ServiceItem extends Component {
                               />
                             </FormGroup>
                           </Col>
-
-
-                          <Col md="12" className={"pl-0"}>
+                          <Col md="12" className={"pl-0 d-none"}>
                             <FormGroup>
                               <Label htmlFor="name" className="customer-modal-text-style note-label">
                                 Note
-                          </Label>
-                              <Input
-                                type={"textarea"}
-                                onChange={(e) => this.handleChange(e, index)}
-                                name={"note"}
-                                value={item.note}
-                                maxLength={"200"}
-                                rows={"2"} cols={"3"} />
-
+                              </Label>
+                            <Input
+                              type={"textarea"}
+                              onChange={(e) => this.handleChange(e, index)}
+                              name={"note"}
+                              value={item.note}
+                              maxLength={"200"}
+                              rows={"2"} cols={"3"}
+                            />
                             </FormGroup>
                           </Col>
-                      </Row>
+                       </div>
                       </div>
-                      <table className={"table matrix-table"}>
+                      <table className={"table matrix-table service-table"}>
                         <thead>
-                          <tr>
-                            <th width="400" className={"text-center"}>DESCRIPTION</th>
+                          <tr className={"service-table-head"}>
+                            <th width="400" className={"pl-3"}>DESCRIPTION</th>
                             <th width="150" className={"text-center"}>PRICE</th>
                             <th width="150" className={"text-center"}>QTY</th>
                             <th width="150" className={"text-center"}>HRS</th>
@@ -898,7 +891,7 @@ class ServiceItem extends Component {
                               this.state.services[index].serviceItems.map((service, sIndex) => {
                                 return (
                                   <tr>
-                                    <td className={"text-capitalize"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
+                                    <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
                                     <td>
                                       {
                                         (service.cost !== null || (service.tierSize ? service.tierSize[0].cost !== null : null)) && service.serviceType !== 'labor' ?
@@ -973,7 +966,7 @@ class ServiceItem extends Component {
                                       </InputGroup>
                                     </td>
                                     <td className={"text-center"}>
-                                      <div>
+                                      
                                         {
                                           service.label && service.label.length ?
                                             service.label.map((label, lIndex) => {
@@ -981,13 +974,13 @@ class ServiceItem extends Component {
                                                 <>
                                                   {
                                                     label.isAddLabel ?
-                                                      <div className={"d-flex"}>
+                                                      <div>
                                                         <span key={lIndex} style={{
                                                           background: label.color
-                                                        }} className={"btn-sm label-btn"} type="button">
+                                                        }} className={"status-label-btn"} >
                                                           {label.name}
 
-                                                          <span
+                                                          <span className={"close-icon"}
                                                             onClick={() => this.handleRemoveLabel(index, sIndex, lIndex)}
                                                           >
                                                             <i className="fas fa-times" />
@@ -1023,7 +1016,7 @@ class ServiceItem extends Component {
                                               labelReducer.label && labelReducer.label.length ?
                                                 labelReducer.label.map((data, Lindex) => {
                                                   return (
-                                                    <div className={"d-flex"}>
+                                                    <div className={"d-flex"} key={Lindex}>
                                                       <Button key={Lindex} style={{
                                                         background: data.labelColor
                                                       }} className={"btn-sm btn-block label-btn"} onClick={() => this.handleAddLabelFromList(index, sIndex, data.labelColor, data.labelName)} type="button">
@@ -1039,7 +1032,7 @@ class ServiceItem extends Component {
                                             }
                                           </PopoverBody>
                                         </UncontrolledPopover>
-                                      </div>
+                                      
                                     </td>
                                     <td>
                                       <Button
@@ -1061,52 +1054,31 @@ class ServiceItem extends Component {
                           }
                         </tbody>
                       </table>
-                      <div className={"p-4"}>
-                        <Button
-                          className={"mr-2"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
-                          Add Part
-                        </Button>
-                        <Button
-                          className={"mr-2"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
-                          Add Tire
-                        </Button>
-                        <Button
-                          className={"mr-2"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
-                          Add Labor
-                        </Button>{/* 
-                        <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
-                      </div>
+                      
 
-                      <Button
-                        className="btn-sm btn btn-danger remove-tire-btn"
-                        onClick={() => this.handleRemoveService(index)}
-                      >
-                        <i className="fas fa-times" />
-                      </Button>
+                      
                     </div>
-                    <div className={"p-4 d-flex justify-content-between"}>
-                      <div>
-                        <span onClick={() => {
+                    <div className={"p-2 d-flex justify-content-between calculation-section"}>
+                      <ul className={"calculation-btn-block m-0 p-0"}>
+                        <li onClick={() => {
                           this.handleTaxeButtons(index, "EPA")
-                        }}>EPA {item.epa && item.epa.type === '$' ? item.epa.type : null}{item.epa && item.epa.value ? item.epa.value : 0}{item.epa && item.epa.type === '%' ? item.epa.type : null}</span>&nbsp; &nbsp;
-                      <span onClick={() => {
+                        }}>EPA {item.epa && item.epa.type === '$' ? item.epa.type : null}{item.epa && item.epa.value ? item.epa.value : 0}{item.epa && item.epa.type === '%' ? item.epa.type : null}
+                        </li>
+                        <li onClick={() => {
                           this.handleTaxeButtons(index, "Discount")
-                        }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{item.discount && item.discount.value ? item.discount.value : 0}{item.discount && item.discount.type === '%' ? item.discount.type : null}</span>&nbsp; &nbsp;
-                      <span
+                        }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{item.discount && item.discount.value ? item.discount.value : 0}{item.discount && item.discount.type === '%' ? item.discount.type : null}
+                        </li>
+                        <li
                           onClick={() => {
                             this.handleTaxeButtons(index, "Taxes")
-                          }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}</span>&nbsp; &nbsp;
-                      </div>
+                          }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}
+                        </li>
+                      </ul>
                       <div>
                         <span>Service Total: ${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span>
                       </div>
                     </div>
-                    <div className={"m-2 d-flex justify-content-end"}>
-                      <Button color={"secondary"} onClick={() => this.handleAddCannedService(item, index)}>Save as canned service</Button>
-                    </div>
+                    
                     <div>
                       {
                         item.isButtonValue === 'EPA' ?
@@ -1208,13 +1180,54 @@ class ServiceItem extends Component {
                       }
 
                     </div>
+                   
+                      <div className={"service-card-footer"}>
+                        <div className={"service-utility-btn"}>
+                          <Button
+                            color={""}
+                            size={"sm"}
+                            className={"mr-2 btn-link"}
+                            onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
+                          <i class="nav-icon icons icon-puzzle"></i>&nbsp; Add Part
+                          </Button>
+                          <Button
+                          color={""}
+                            size={"sm"}
+                          className={"mr-2 btn-link"}
+                            onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
+                          <i class="nav-icon icons icon-support"></i>&nbsp; Add Tire
+                          </Button>
+                          <Button
+                          color={""}
+                            size={"sm"}
+                            className={"mr-2 btn-link"}
+                            onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
+                          <i class="nav-icon icons icon-user"></i>&nbsp; Add Labor
+                          </Button>{/* 
+                          <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
+                        </div>
+                        <div >
+                          <Button className={"mr-3 btn-dashed"}  onClick={() => this.handleAddCannedService(item, index)} >Save as canned service</Button>
+                          <Button
+                          className="btn btn-remove btn-outline-danger"
+                            onClick={() => this.handleRemoveService(index)}
+                            id={`remove-service-${index}`}
+                          >
+                            <i className="fa fa-trash" /> &nbsp;Remove
+                          </Button>
+                          <UncontrolledTooltip target={`remove-service-${index}`}>
+                            Click to remove this service 
+                          </UncontrolledTooltip>                          
+                        </div>                    
+                      </div>
+                    
                   </Card>
                 </React.Fragment>
               )
             }) : null
           }
-          <div className="d-flex justify-content-between pb-4">
-            <Button color={"primary"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
+          <div className="d-flex pb-4">
+            <Button color={"primary"} onClick={() => this.handleSeviceAdd()} className={"mr-3"}>+ Add new service</Button>
             <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
 
             {
