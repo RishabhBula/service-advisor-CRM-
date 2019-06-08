@@ -6,11 +6,7 @@ import {
   Card,
   CardBody,
   Button,
-  Col,
   Input,
-  FormGroup,
-  Label,
-  Row,
   FormFeedback,
   ButtonGroup
 } from "reactstrap";
@@ -45,7 +41,11 @@ import {
   getCannedServiceList,
   updateOrderDetailsRequest,
   getOrderDetailsRequest,
-  deleteLabel
+  deleteLabel,
+  getMatrixList,
+  getRateStandardListRequest,
+  rateAddRequest,
+  setRateStandardListStart
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -53,6 +53,7 @@ import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
 import { logger } from "../../helpers";
+
 
 const OrderTab = React.lazy(() => import("../../components/Orders/OrderTab"));
 
@@ -203,7 +204,12 @@ class Order extends Component {
       addNewLabel,
       deleteLabel,
       sendMessageTemplate,
-      orderReducer } = this.props
+      orderReducer,
+      getPriceMatrix,
+      getStdList,
+      addRate,
+      profileInfoReducer,
+      rateStandardListReducer } = this.props
     logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
@@ -211,50 +217,41 @@ class Order extends Component {
           <div className="workflow-section">
             <div className={"workflow-left"}>
               <CardBody className={"custom-card-body inventory-card"}>
-                <div className={"d-flex justify-content-between pb-4"}>
-                  <h3>
-                    Order (#
+                <div className={"d-flex order-info-block flex-row justify-content-between pb-2"}>
+                  <div className={"order-info-head d-flex"}>
+                    <h3 className={"mr-3 orderId"}>Order (#
                     {typeof this.props.orderReducer.orderId !== "object"
                       ? this.props.orderReducer.orderId
                       : null}
                     )
-                  </h3>
+                    </h3>
+                    <div className="input-block">
+                      <Input
+                        placeholder={"Enter a order title"}
+                        onChange={e => this.handleChange(e)}
+                        name={"orderName"}
+                        value={orderName}
+                        invalid={isError && !orderName}
+                        className={"order-name-input"}
+                      />
+                      <FormFeedback>
+                        {isError && !orderName
+                          ? "Order name is required."
+                          : null}
+                      </FormFeedback>
+                    </div>
+                  </div>
+                  <div>
                   <Button
-                    color={"primary"}
+                    color={""}
                     onClick={() => this.handleEditOrder()}
+                    className={"order-update-btn"}
                   >
                     Update Order
                   </Button>
+                  </div>
                 </div>
                 <div className={"order-top-section"}>
-                  <div className={"custom-form-modal mt-3"}>
-                    <Row >
-                      <Col md={"8"}>
-                        <FormGroup>
-                          <Label
-                            htmlFor="name"
-                            className="customer-modal-text-style"
-                          >
-                            Order Name <span className={"asteric"}>*</span>
-                          </Label>
-                          <div className="input-block">
-                            <Input
-                              placeholder={"Enter a order title"}
-                              onChange={e => this.handleChange(e)}
-                              name={"orderName"}
-                              value={orderName}
-                              invalid={isError && !orderName}
-                            />
-                            <FormFeedback>
-                              {isError && !orderName
-                                ? "Order name is required."
-                                : null}
-                            </FormFeedback>
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </div>
                   <CustomerVehicle
                     getCustomerData={getCustomerData}
                     getVehicleData={getVehicleData}
@@ -303,6 +300,11 @@ class Order extends Component {
                               vehicleData={vehicleData}
                               orderId={orderId}
                               deleteLabel={deleteLabel}
+                              getPriceMatrix={getPriceMatrix}
+                              getStdList={getStdList}
+                              addRate={addRate}
+                              profileInfoReducer={profileInfoReducer}
+                              rateStandardListReducer={rateStandardListReducer}
                             />
                           ) : null}
                           {activeTab === 1 ? 
@@ -400,7 +402,9 @@ const mapStateToProps = state => ({
   inspectionReducer: state.inspectionReducer,
   modelInfoReducer: state.modelInfoReducer,
   serviceReducers: state.serviceReducers,
-  labelReducer: state.labelReducer
+  labelReducer: state.labelReducer,
+  profileInfoReducer: state.profileInfoReducer,
+  rateStandardListReducer: state.rateStandardListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -489,7 +493,19 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteLabel: data => {
     dispatch(deleteLabel(data))
-  }
+  },
+  getPriceMatrix: data => {
+    dispatch(getMatrixList(data));
+  },
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  addRate: data => {
+    dispatch(rateAddRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
 });
 export default connect(
   mapStateToProps,

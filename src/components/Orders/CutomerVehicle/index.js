@@ -8,6 +8,8 @@ import {
 } from "reactstrap";
 import Async from "react-select/lib/Async";
 import * as classnames from "classnames";
+import serviceUser from "../../../assets/service-user.png"
+import serviceTyre from "../../../assets/service-car.png"
 
 class CutomerVehicle extends Component {
    constructor(props) {
@@ -86,66 +88,80 @@ class CutomerVehicle extends Component {
       const { isError } = this.props
       return (
 
-            <Row className={"custom-form-modal"}>
-               <Col md={"6"}>
-                  <FormGroup>
-                     <Label htmlFor="name" className="customer-modal-text-style">
-                        Customer <span className={"asteric"}>*</span>
-                     </Label>
-                     <div className={"input-block"}>
-                        <Async
-                           placeholder={"Type Customer name"}
-                           loadOptions={this.loadCustomers}
-                           value={selectedCustomer.value !== '' ? selectedCustomer : customerId}
-                           isClearable={true}
-                           className={classnames("w-100 form-select", {
-                              "is-invalid":
-                                 isError && !customerId
-                           })}
-                           onChange={e => {
-                              this.setState({
-                                 customerId: e
-                              }, () => {
-                                 this.handaleCustomerVehicleSelect(e, 'customer')
-                              });
-                           }}
-                        />
-                        {isError && !customerId ? (
-                           <FormFeedback>Customer data is required.</FormFeedback>
-                        ) : null}
-                     </div>
-                  </FormGroup>
-               </Col>
-               <Col md={"6"}>
-                  <FormGroup>
-                     <Label htmlFor="name" className="customer-modal-text-style">
-                        Vehicle <span className={"asteric"}>*</span>
-                     </Label>
-                     <div className={"input-block"}>
-                        <Async
-                           placeholder={"Type Vehicle name"}
-                           loadOptions={this.loadVehicles}
-                           className={classnames("w-100 form-select", {
-                              "is-invalid":
-                                 isError && !customerId
-                           })}
-                           value={selectedVehicle.value !== '' ? selectedVehicle : vehicleId}
-                           isClearable={true}
-                           onChange={e => {
-                              this.setState({
-                                 vehicleId: e
-                              }, () => {
-                                 this.handaleCustomerVehicleSelect(e, 'vehicle')
-                              });
-                           }}
-                        />
-                        {isError && !customerId ? (
-                           <FormFeedback>Vehicle data is required.</FormFeedback>
-                        ) : null}
-                     </div>
-                  </FormGroup>
-               </Col>
-            </Row>
+         <Row className={"custom-form-modal"}>
+            <Col md={"6"}>
+               <FormGroup>
+                  <Label htmlFor="name" className="customer-modal-text-style">
+                     <span className={"label-block "}>
+                        <img src={serviceUser} alt={"serviceUser"} width={"34"} height={"34"} />
+                        <span className={"label-text position-relative"}>
+                           Customer <span className={"asteric"}>*</span>
+                        </span>
+                     </span>
+                  </Label>
+                  <div className={"input-block"}>
+                     <Async
+                        placeholder={"Type Customer name"}
+                        loadOptions={this.loadCustomers}
+                        value={selectedCustomer.value !== '' ? selectedCustomer : customerId}
+                        isClearable={true}
+                        className={classnames("w-100 form-select", {
+                           "is-invalid":
+                              isError && !customerId
+                        })}
+                        noOptionsMessage={() => "Type customer name"
+                        }
+                        onChange={e => {
+                           this.setState({
+                              customerId: e
+                           }, () => {
+                              this.handaleCustomerVehicleSelect(e, 'customer')
+                           });
+                        }}
+                     />
+                     {isError && !customerId ? (
+                        <FormFeedback>Customer data is required.</FormFeedback>
+                     ) : null}
+                  </div>
+               </FormGroup>
+            </Col>
+            <Col md={"6"}>
+               <FormGroup>
+                  <Label htmlFor="name" className="customer-modal-text-style">
+                     <span className={"label-block"}>
+                        <img src={serviceTyre} alt={"serviceUser"} width={"34"} height={"34"} />
+                        <span className={"label-text position-relative"}>
+                           Vehicle <span className={"asteric"}>*</span>
+                        </span>
+                     </span>
+                  </Label>
+                  <div className={"input-block"}>
+                     <Async
+                        placeholder={"Type Vehicle name"}
+                        loadOptions={this.loadVehicles}
+                        className={classnames("w-100 form-select", {
+                           "is-invalid":
+                              isError && !customerId
+                        })}
+                        value={selectedVehicle.value !== '' ? selectedVehicle : vehicleId}
+                        isClearable={true}
+                        noOptionsMessage={() => "Type Vehicle name"
+                        }
+                        onChange={e => {
+                           this.setState({
+                              vehicleId: e
+                           }, () => {
+                              this.handaleCustomerVehicleSelect(e, 'vehicle')
+                           });
+                        }}
+                     />
+                     {isError && !customerId ? (
+                        <FormFeedback>Vehicle data is required.</FormFeedback>
+                     ) : null}
+                  </div>
+               </FormGroup>
+            </Col>
+         </Row>
       );
    }
 }

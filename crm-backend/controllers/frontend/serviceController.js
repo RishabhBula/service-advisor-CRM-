@@ -29,15 +29,19 @@ const addNewService = async (req, res) => {
                isCannedService = false
             }
             isCannedService = true
-            const CannedServiceData = await Service.find({
-               serviceName: element.serviceName,
-               isCannedService: true
-            })
-            if (CannedServiceData.length) {
-               return res.status(400).json({
-                  message: "Canned service name already exist,enter new name.",
-                  success: false
+            if (!element._id) {
+               const CannedServiceData = await Service.find({
+                  serviceName: element.serviceName,
+                  isCannedService: true,
+                  userId: currentUser.id,
+                  parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
                })
+               if (CannedServiceData.length) {
+                  return res.status(400).json({
+                     message: "Canned service name already exist,enter new name.",
+                     success: false
+                  })
+               }
             }
          }
          serviceData = {
@@ -56,14 +60,14 @@ const addNewService = async (req, res) => {
             status: true,
             isDeleted: false
          }
-         const addedService = await Service.findByIdAndUpdate(element._id,{
+         const addedService = await Service.findByIdAndUpdate(element._id, {
             $set: serviceData
          })
          if (!addedService) {
             const serviceContent = new Service(serviceData);
             const result = await serviceContent.save();
             serviceResultData.push(result)
-         }else{
+         } else {
             const seviceData = await Service.findById(element._id)
             serviceResultData.push(seviceData)
          }

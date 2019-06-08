@@ -372,14 +372,20 @@ class Inspection extends Component {
       const { inspection, templateData } = this.state;
       return (
          <div>
-            <Button onClick={this.toggleSentInspection}>Send</Button>
-            <Button
+            <div className={"mb-3 d-flex"}>
+            {inspection && inspection.length ? <>
+                  <span color={""} className={"print-btn"} onClick={this.toggleSentInspection}>
+                  <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
+            <span
                onClick={this.downloadPDF}
-               color={"primary"}
                id={"add-Appointment"}
+               className={"print-btn"}
             >
-               <i className={"fa fa-plus mr-1"} /> Download PDF
-            </Button>
+                     <i class="icon-printer icons "></i>&nbsp; View or Print
+            </span> </>
+            : null
+            }
+            </div>
             <div className={"inspection-add-block"} id={"inspection-add-block"}>
 
                {inspection && inspection.length ? inspection.map((ele, inspIndex) => {
@@ -515,11 +521,11 @@ class Inspection extends Component {
                               <UncontrolledTooltip target={`add-item-${inspIndex}`}>
                                  Click to add new item in this inspection
                               </UncontrolledTooltip>
-                              <div className={"pull-right"}>
-                                 <Button className={"btn-secondary"} onClick={(e) => this.handleTemplate(e, inspIndex, (ele.templateId))} id={`make-template-${inspIndex}`}> Save as Template</Button>  <UncontrolledTooltip target={`make-template-${inspIndex}`}>
+                              <div className={"pull-right d-flex align-item-center"}>
+                                 <Button className={"btn-dashed"} onClick={(e) => this.handleTemplate(e, inspIndex, (ele.templateId))} id={`make-template-${inspIndex}`}> Save as Template</Button>  <UncontrolledTooltip target={`make-template-${inspIndex}`}>
                                     Click to make this Inspection as Template
                                  </UncontrolledTooltip>&nbsp;&nbsp;
-                                 <Button className={"btn-danger pull-right"} onClick={() => { this.removeInspection(inspIndex) }} id={`delete-${inspIndex}`}> <i className={"fa fa-trash"}></i>
+                                 <Button color={"secondary"} className={"pull-right btn-remove btn-outline-danger"} onClick={() => { this.removeInspection(inspIndex) }} id={`delete-${inspIndex}`}> <i className={"fa fa-trash"}></i>&nbsp; Remove
                                  </Button>
                                  <UncontrolledTooltip target={`delete-${inspIndex}`}>
                                     Delete this Inspection
@@ -532,19 +538,21 @@ class Inspection extends Component {
                }) : null}
 
                {inspection.length ?
-                  <Col md={4} lg={4} className={"mb-3"}>
-                     <Button color={"success"} className={"mr-3 pull-left"} size={"lg"} onClick={this.handleInspection}> Submit Inspection</Button>
-                  </Col>
+                  <div className={"mb-3"}>
+                     <Button color={""} className={"mr-3 pull-right btn-blue"} size={"lg"} onClick={this.handleInspection}> Submit Inspection</Button>
+                  </div>
                   : null
                }
                <div className={"d-flex justify-content-center align-items-center"}>
 
                   <span className={""}>
-                     <Button color={"primary"} onClick={this.addInspectionItem}>New Inspection</Button>
+                     <Button color={""} onClick={this.addInspectionItem} className={"browse-btn"}>
+                        <i class="icon-eye icons"></i> New Inspection
+                     </Button>
                   </span>
                   <span className={"pl-2 pr-2"}><i className={"fa fa-plus"}></i></span>
                   <span>
-                     <Button color={"primary"} onClick={this.toggle}>Add Template</Button>
+                     <Button color={""} onClick={this.toggle} className={"browse-btn"}><i class="icon-plus icons "></i> Add Template</Button>
                   </span>
                </div>
             </div>

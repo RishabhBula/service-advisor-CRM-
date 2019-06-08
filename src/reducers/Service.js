@@ -34,8 +34,10 @@ const serviceData = {
    submittedServiceId: [],
    customerCommentId: "",
    cannedServiceList: [],
+   customerUserComment: {},
    isLoading: true,
-   isServiceList: true
+   isServiceList: true,
+   isAddServiceItem: false
 };
 
 export const serviceReducers = handleActions(
@@ -43,17 +45,20 @@ export const serviceReducers = handleActions(
       [inventoryPartsActions.ADD_SERVICE_PART]: (state, action) => ({
          ...state,
          services: action.payload,
-         isLoading: false
+         isLoading: false,
+         isAddServiceItem: true
       }),
       [tiersActions.ADD_SERVICE_TIRE]: (state, action) => ({
          ...state,
          services: action.payload,
-         isLoading: false
+         isLoading: false,
+         isAddServiceItem: true
       }),
       [labourActions.ADD_SERVICE_LABOR]: (state, action) => ({
          ...state,
          services: action.payload,
-         isLoading: false
+         isLoading: false,
+         isAddServiceItem: true
       }),
       [serviceActions.ADD_SERVICE]: (state, action) => ({
          ...state,
@@ -78,11 +83,12 @@ export const serviceReducers = handleActions(
       [serviceActions.GET_SERVICE_LIST]: (state, action) => ({
          ...state,
          isServiceList: true,
-         services:[]
+         services: []
       }),
       [serviceActions.GET_SERVICE_LIST_SUCCESS]: (state, action) => ({
          ...state,
-         services:action.payload.services,
+         services: action.payload.services,
+         customerUserComment: action.payload.customerCommentData,
          isServiceList: false
       }),
    },

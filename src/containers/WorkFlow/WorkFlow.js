@@ -12,7 +12,8 @@ import {
   DropdownMenu,
   Dropdown,
   InputGroup,
-  FormFeedback
+  FormFeedback,
+  UncontrolledTooltip
 } from "reactstrap";
 import { connect } from "react-redux";
 import React, { Component } from "react";
@@ -177,7 +178,10 @@ class WorkFlow extends Component {
         toggle={this.toggleAddNewOptions}
       >
         <DropdownToggle nav>
-          <button className={"nav-icon icon-plus btn btn-outline-dark"} />
+          <button className={"nav-icon icon-plus btn btn-outline-dark"} id={"modify-order"}/>
+          <UncontrolledTooltip target={"modify-order"} >
+            Select to modify order
+          </UncontrolledTooltip>
         </DropdownToggle>
         <DropdownMenu right>
           <DropdownItem onClick={this.handleOrder}>New Quote</DropdownItem>
@@ -322,8 +326,8 @@ class WorkFlow extends Component {
     return (
       <>
         <Card className={"white-card position-relative"}>
-          <CardBody>
-            <Row className={"mb-4"}>
+          <CardBody className={"custom-card-body"}>
+            <Row className={"mb-4 ml-0"}>
               <Col className={"title-left-section"}>
                 <h4 className={"card-title"}>Workflow</h4>
                 <div className={"workflow-mode"}>
@@ -338,7 +342,11 @@ class WorkFlow extends Component {
                           { active: listView }
                         )}
                         onClick={() => this.setState({ listView: true })}
+                        id={"list-view"}
                       />
+                      <UncontrolledTooltip target={"list-view"} >
+                        Click to view List 
+                      </UncontrolledTooltip>
                     </div>
                     <div className="mode-flow">
                       <button
@@ -350,13 +358,18 @@ class WorkFlow extends Component {
                           { active: !listView }
                         )}
                         onClick={() => this.setState({ listView: false })}
+                        id={"grid-view"}
                       />
+                      <UncontrolledTooltip target={"grid-view"} >
+                        Click to view Grid
+                      </UncontrolledTooltip>
                     </div>
                   </div>
                   {this.renderAddNew()}
                 </div>
               </Col>
-              <Col className={"title-right-section invt-add-btn-block"}>
+              <Col className={"title-right-section"}>
+                <div className={'invt-add-btn-block'}>
                 <Button
                   onClick={this.handleOrder}
                   color={"primary"}
@@ -364,6 +377,10 @@ class WorkFlow extends Component {
                 >
                   <i className={"fa fa-plus mr-1"} /> New Quote
                 </Button>
+                  <UncontrolledTooltip target={"add-Appointment"} >
+                    Add a New Quote
+                  </UncontrolledTooltip>
+                </div>
               </Col>
             </Row>
             <Row>

@@ -370,9 +370,9 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
     );
-    const result1 = await Orders.populate(result2,{path:'serviceId.serviceId.technician'})
+    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician' })
     const result = result1;
     const serviceData = [],
       inspectionData = [];
@@ -392,6 +392,7 @@ const getOrderDetails = async (req, res) => {
       data: result,
       serviceResult: serviceData,
       inspectionResult: inspectionData,
+      customerCommentData: result[0].customerCommentId,
       success: true
     });
   } catch (error) {

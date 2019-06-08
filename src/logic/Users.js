@@ -43,17 +43,11 @@ const getUsersLogic = createLogic({
       done();
       return;
     } else {
-      var defaultOptions = [
-        {
-          value: "",
-          label: "+ Add New Technician"
-        }
-      ];
       const options = result.data.data.map(user => ({
         label: `${user.firstName} ${user.lastName}`,
         value: user._id,
       }));
-      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
+      logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
       dispatch(hideLoader());
       dispatch(
         getUsersListSuccess({

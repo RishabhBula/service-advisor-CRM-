@@ -5,7 +5,6 @@ import {
   Input,
   FormGroup,
   Row,
-  Label,
   Button,
   InputGroup,
   UncontrolledPopover,
@@ -22,6 +21,8 @@ import { LabelColorOptions } from "../../../config/Color"
 import { getSumOfArray } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
+import recommandUser from "../../../assets/recommand-user.png"
+import recommandTech from "../../../assets/recommand-tech.png"
 
 class ServiceItem extends Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class ServiceItem extends Component {
         label: "Type to select technician"
       },
       technicianData: {
-        label: "",
+        label: "Type to select technician",
         value: ""
       },
       services: [
@@ -75,25 +76,32 @@ class ServiceItem extends Component {
   }
   componentDidMount = () => {
     const {
-      services
+      services,
+      customerUserComment
     } = this.props.serviceReducers
     this.setState({
       services,
+      customerComment: customerUserComment ? customerUserComment.customerComment : '',
+      userRecommendations: customerUserComment ? customerUserComment.userRecommendations : ""
     })
   }
   componentDidUpdate = ({ serviceReducers }) => {
     if (serviceReducers !== this.props.serviceReducers) {
       const {
-        services
+        services,
+        customerUserComment
       } = this.props.serviceReducers
       this.setState({
-        services
+        services,
+        customerComment: customerUserComment ? customerUserComment.customerComment : '',
+        userRecommendations: customerUserComment ? customerUserComment.userRecommendations : ""
       }, () => {
         let Sindex
-        this.state.services.map((item, index) => {
-          item.serviceItems.map((sItem, sIndex) => {
+        const serviceList = [...this.state.services]
+        if (serviceList && serviceList.length) {
+
+          serviceList[serviceList.length - 1].serviceItems.map((sItem, sIndex) => {
             Sindex = sIndex
-            const serviceData = [...this.state.services]
             if (sItem) {
               if (
                 (sItem.cost && sItem.quantity) ||
@@ -109,35 +117,37 @@ class ServiceItem extends Component {
                 sItem.subTotalValue = parseFloat(sItem.cost || (sItem.tierSize ? sItem.tierSize[0].cost : 0) || (sItem.hours)) * parseFloat(sItem.quantity || (sItem.tierSize ? sItem.tierSize[0].quantity : 0) || (sItem.rate.hourlyRate))
               }
               else {
-                sItem.subTotalValue = (serviceData[index].serviceItems[sIndex].cost || (serviceData[index].serviceItems[sIndex].hours) || (serviceData[index].serviceItems[sIndex].tierSize ? serviceData[index].serviceItems[sIndex].tierSize[0].cost : null))
+                sItem.subTotalValue = (serviceList[serviceList.length - 1].serviceItems[sIndex].cost || (serviceList[serviceList.length - 1].serviceItems[sIndex].hours) || (serviceList[serviceList.length - 1].serviceItems[sIndex].tierSize ? serviceList[serviceList.length - 1].serviceItems[sIndex].tierSize[0].cost : null))
               }
             }
             this.setState({
-              services: serviceData
+              services: serviceList
             })
             return true
           })
-          const serviceData = [...this.state.services]
-          if (serviceData[index].serviceSubTotalValue) {
-            let serviceTotal = serviceData[index].serviceSubTotalValue
-            const serviceSubTotal = serviceData[index].serviceItems.length ? serviceData[index].serviceItems[Sindex].subTotalValue : null
+          if (serviceList[serviceList.length - 1].serviceSubTotalValue) {
+            let serviceTotal = serviceList[serviceList.length - 1].serviceSubTotalValue
+            const serviceSubTotal = serviceList[serviceList.length - 1].serviceItems.length ? serviceList[serviceList.length - 1].serviceItems[Sindex].subTotalValue : null
             serviceTotal.push(serviceSubTotal)
-            serviceData[index].serviceSubTotalValue = serviceTotal
-            serviceData[index].serviceTotal = getSumOfArray(services[index].serviceSubTotalValue)
+            serviceList[serviceList.length - 1].serviceSubTotalValue = serviceTotal
+            serviceList[serviceList.length - 1].serviceTotal = getSumOfArray(serviceList[serviceList.length - 1].serviceSubTotalValue)
             this.setState({
-              services: serviceData,
+              services: serviceList,
             })
           }
-          this.setState({
-            technicianData: {
-              label: item.technician ? `${item.technician.firstName} ${item.technician.lastName}` : 'Type to select technician',
-              value: item.technician ? item.technician._id : ''
-            }
-          })
-          return true
+          serviceList[serviceList.length - 1].epa.value = ''
+          serviceList[serviceList.length - 1].discount.value = ''
+          serviceList[serviceList.length - 1].taxes.value = ''
+        }
+        this.setState({
+          technicianData: {
+            label: serviceList && serviceList.length ? serviceList[serviceList.length - 1].technician ? `${serviceList[serviceList.length - 1].technician.firstName} ${serviceList[serviceList.length - 1].technician.lastName}` : 'Type to select technician' : '',
+            value: serviceList && serviceList.length ? serviceList[serviceList.length - 1].technician ? serviceList[serviceList.length - 1].technician._id : '' : ''
+          },
+          services: serviceList
         })
-      }
-      )
+        return true
+      })
     }
   }
 
@@ -427,7 +437,11 @@ class ServiceItem extends Component {
       const serviceData = [...this.state.services]
       serviceData[index].technician = e
       this.setState({
-        services: serviceData
+        services: serviceData,
+        selectedTechnician: {
+          label: e.label,
+          value: e.value
+        }
       })
     } else {
       const serviceData = [...this.state.services]
@@ -442,7 +456,7 @@ class ServiceItem extends Component {
     }
   }
 
-  handleSeviceAdd = async () => {
+  handleSeviceAdd = () => {
     this.setState({
       isError: true
     })
@@ -482,7 +496,6 @@ class ServiceItem extends Component {
       this.setState({
         services
       })
-      await this.props.addPartToService(services)
     }
   }
 
@@ -539,55 +552,53 @@ class ServiceItem extends Component {
     serviceData[index].isConfirmedValue.type = name
     serviceData[index].isButtonValue = ''
     if (serviceData[index][name].type === "%" && name !== 'discount') {
-      let tempServiceTotal
-      if (serviceData[index].serviceItems.length) {
-        const serviceTotalValue = []
-        serviceData[index].serviceItems.map((item, index) => {
-          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-          serviceTotalValue.push(parseFloat(serviceSubTotal))
-          return true
-        })
-        tempServiceTotal = getSumOfArray(serviceTotalValue)
-      }
-      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(tempServiceTotal)
-      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(TaxedTotalValue)
+      // if (serviceData[index].serviceItems.length) {
+      //   const serviceTotalValue = []
+      //   serviceData[index].serviceItems.map((item, index) => {
+      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
+      //     return true
+      //   })
+      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
+      // }
+      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(serviceData[index].serviceTotal)
+      serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue)
     } else if (serviceData[index][name].type === "$" && name !== 'discount') {
-      let tempServiceTotal
-      if (serviceData[index].serviceItems.length) {
-        const serviceTotalValue = []
-        serviceData[index].serviceItems.map((item, index) => {
-          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-          serviceTotalValue.push(parseFloat(serviceSubTotal))
-          return true
-        })
-        tempServiceTotal = getSumOfArray(serviceTotalValue)
-      }
-      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(serviceData[index][name].value)
+      // let tempServiceTotal
+      // if (serviceData[index].serviceItems.length) {
+      //   const serviceTotalValue = []
+      //   serviceData[index].serviceItems.map((item, index) => {
+      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
+      //     return true
+      //   })
+      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
+      // }
+      serviceData[index].serviceTotal = parseFloat(serviceData[index][name].value) + parseFloat(serviceData[index][name].value)
     } else if (serviceData[index][name].type === "%" && name === 'discount') {
-      let tempServiceTotal
-      if (serviceData[index].serviceItems.length) {
-        const serviceTotalValue = []
-        serviceData[index].serviceItems.map((item, index) => {
-          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-          serviceTotalValue.push(parseFloat(serviceSubTotal))
-          return true
-        })
-        tempServiceTotal = getSumOfArray(serviceTotalValue)
-      }
-      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(tempServiceTotal)
-      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) - parseFloat(TaxedTotalValue)
+      // if (serviceData[index].serviceItems.length) {
+      //   const serviceTotalValue = []
+      //   serviceData[index].serviceItems.map((item, index) => {
+      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
+      //     return true
+      //   })
+      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
+      // }
+      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(serviceData[index].serviceTotal)
+      serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue)
     } else {
-      let tempServiceTotal
-      if (serviceData[index].serviceItems.length) {
-        const serviceTotalValue = []
-        serviceData[index].serviceItems.map((item, index) => {
-          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-          serviceTotalValue.push(parseFloat(serviceSubTotal))
-          return true
-        })
-        tempServiceTotal = getSumOfArray(serviceTotalValue)
-      }
-      serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(serviceData[index][name].value)
+      // let tempServiceTotal
+      // if (serviceData[index].serviceItems.length) {
+      //   const serviceTotalValue = []
+      //   serviceData[index].serviceItems.map((item, index) => {
+      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
+      //     return true
+      //   })
+      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
+      // }
+      serviceData[index].serviceTotal = parseFloat(serviceData[index][name].value) + parseFloat(serviceData[index][name].value)
     }
     this.setState({
       services: serviceData
@@ -808,22 +819,29 @@ class ServiceItem extends Component {
     return (
       <>
         <div className={"w-100"}>
-          <Row className={"comment-section"}>
-            <Col md={"6"}>
-              <FormGroup>
-                <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Customer Comments"} />
+          <Row className={"comment-section ml-0 mb-4"}>
+            <Col md={"6"} className={"d-flex pl-0 column"}>
+              <span className={"icon"}>
+                <img src={recommandUser} alt={"recommandUser"} />
+              </span>
+              <FormGroup className={"flex-one mb-0"}>
+                <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
               </FormGroup>
             </Col>
-            <Col md={"6"}>
-              <FormGroup>
-                <Input type={"textarea"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Recommendations"} />
+            <Col md={"6"} className={"d-flex pr-0 column"}>
+              <span className={"icon"}>
+                <img src={recommandTech} alt={"recommandTech"} />
+              </span>
+              <FormGroup className={"flex-one mb-0"}>
+                <Input type={"textarea"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
               </FormGroup>
             </Col>
           </Row>
           <div className={"pb-2"}>
             {
               services && services.length ?
-              <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button> : null 
+                <Button color={""} onClick={() => this.handleCannedServiceModal()} className={"browse-btn"}>
+                  <i class="icons cui-settings"></i> Browse service</Button> : null
             }
           </div>
           {
@@ -832,68 +850,74 @@ class ServiceItem extends Component {
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal"}>
-                      <div className={"service-card-header"}>
-                      <Row className={"m-0"}>
-                        <Col md={"6"}>
-                          <FormGroup className={"mb-0"}>
-                            <Label htmlFor="name" className="customer-modal-text-style">
-                              Service name <span className={"asteric"}>*</span>
-                            </Label>
-                            <div className="input-block">
-                              <Input
-                                placeholder={"Enter a name for this service"}
-                                onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
-                                value={item.serviceName}
-                                maxLength={"100"}
-                                invalid={isServiceSubmitted && item.isError && !item.serviceName}
-                              />
-                              <FormFeedback>
-                                {item.isError && isServiceSubmitted && !item.serviceName
-                                  ? "Service name is required."
-                                  : null}
-                              </FormFeedback>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                          <Col md={"6"}>
-                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style">
-                                Technician
-                            </Label>
-                              <Async
-                                className={"w-100 form-select"}
-                                placeholder={"Type Technician name"}
-                                loadOptions={this.loadTechnician}
-                                value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
-                                isClearable={item.technician !== '' ? true : false}
-                                noOptionsMessage={() => "Type Technician name"}
-                                onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
-                              />
-                            </FormGroup>
-                          </Col>
+                      <div className={"service-card-header-block d-flex flex-row"}>
+                        <div className={"service-card-header"}>
+                          <Input
+                            placeholder={"Enter a name for this service"}
+                            onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
+                            value={item && item.serviceName ? item.serviceName : ''}
+                            maxLength={"100"}
+                            invalid={isServiceSubmitted && item.isError && !item.serviceName}
+                            size={"lg"}
+                          />
+                          <FormFeedback>
+                            {item.isError && isServiceSubmitted && !item.serviceName
+                              ? "Service name is required."
+                              : null}
+                          </FormFeedback>
+                        </div>
+                        <div className={"service-card-btn-block flex-one d-flex align-items-center"}>
+                          <div className={((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "pr-2 mr-2 cursor_pointer notValue" : "pr-2 mr-2 cursor_pointer isValue"} id={`tech${index}`}>
+                            <img className={""} src={"/assets/img/expert.svg"} width={"30"} alt={"technician"} />
+                          </div>
+                          <UncontrolledTooltip placement="top" target={`tech${index}`}>
+                            {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "Assign a technician" : "Update technician"}
+                          </UncontrolledTooltip>
+                          <div className={
+                            item.note ? "pr-2 cursor_pointer isValue" : "pr-2 cursor_pointer notValue"
+                          } id={`note${index}`}>
+                            <img className={""} src={"/assets/img/writing .svg"} width={"30"} alt={"Notes"} />
+                          </div>
+                          <UncontrolledTooltip placement="top" target={`note${index}`}>
+                            {item.note ? "Update note" : "Add a note"}
+                          </UncontrolledTooltip>
+                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`tech${index}`} className={"service-note-popover"}>
+                            {
+                              console.log("item.technician item.technician item.technician", item.technician, technicianData)
 
+                            }
+                            <Async
+                              className={"w-100 form-select"}
+                              placeholder={"Type Technician name"}
+                              loadOptions={this.loadTechnician}
+                              value={
+                                technicianData.value !== '' && item.technician !== "" ?
+                                  technicianData :
+                                  selectedTechnician
+                              }
+                              isClearable={item.technician !== '' ? true : false}
+                              noOptionsMessage={() => "Type Technician name"}
+                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
+                            />
+                          </UncontrolledPopover>
+                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`note${index}`} className={"service-note-popover"}>
+                            <Input
+                              type={"textarea"}
+                              onChange={(e) => this.handleChange(e, index)}
+                              name={"note"}
+                              value={item.note}
+                              maxLength={"200"}
+                              rows={"2"} cols={"3"}
+                              placeholder={"Add Note for this service"}
+                            />
+                          </UncontrolledPopover>
 
-                          <Col md="12" className={"pl-0"}>
-                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style note-label">
-                                Note
-                          </Label>
-                              <Input
-                                type={"textarea"}
-                                onChange={(e) => this.handleChange(e, index)}
-                                name={"note"}
-                                value={item.note}
-                                maxLength={"200"}
-                                rows={"2"} cols={"3"} />
-
-                            </FormGroup>
-                          </Col>
-                      </Row>
+                        </div>
                       </div>
-                      <table className={"table matrix-table"}>
+                      <table className={"table matrix-table service-table"}>
                         <thead>
-                          <tr>
-                            <th width="400" className={"text-center"}>DESCRIPTION</th>
+                          <tr className={"service-table-head"}>
+                            <th width="400" className={"pl-3"}>DESCRIPTION</th>
                             <th width="150" className={"text-center"}>PRICE</th>
                             <th width="150" className={"text-center"}>QTY</th>
                             <th width="150" className={"text-center"}>HRS</th>
@@ -909,7 +933,7 @@ class ServiceItem extends Component {
                               this.state.services[index].serviceItems.map((service, sIndex) => {
                                 return (
                                   <tr>
-                                    <td className={"text-capitalize"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
+                                    <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
                                     <td>
                                       {
                                         (service.cost !== null || (service.tierSize ? service.tierSize[0].cost !== null : null)) && service.serviceType !== 'labor' ?
@@ -971,7 +995,7 @@ class ServiceItem extends Component {
                                     <td>
                                       <InputGroup>
                                         <div className="input-group-prepend">
-                                          <Button  disabled color={"secondary"} size={"sm"}>
+                                          <Button disabled color={"secondary"} size={"sm"}>
                                             <i className={"fa fa-dollar"}></i>
                                           </Button>
                                         </div>
@@ -984,73 +1008,73 @@ class ServiceItem extends Component {
                                       </InputGroup>
                                     </td>
                                     <td className={"text-center"}>
-                                      <div>
-                                        {
-                                          service.label && service.label.length ?
-                                            service.label.map((label, lIndex) => {
-                                              return (
-                                                <>
-                                                  {
-                                                    label.isAddLabel ?
-                                                      <div className={"d-flex"}>
-                                                        <span key={lIndex} style={{
-                                                          background: label.color
-                                                        }} className={"btn-sm label-btn"} type="button">
-                                                          {label.name}
 
-                                                          <span
-                                                            onClick={() => this.handleRemoveLabel(index, sIndex, lIndex)}
-                                                          >
-                                                            <i className="fas fa-times" />
-                                                          </span>
+                                      {
+                                        service.label && service.label.length ?
+                                          service.label.map((label, lIndex) => {
+                                            return (
+                                              <>
+                                                {
+                                                  label.isAddLabel ?
+                                                    <div>
+                                                      <span key={lIndex} style={{
+                                                        background: label.color
+                                                      }} className={"status-label-btn"} >
+                                                        {label.name}
+
+                                                        <span className={"close-icon"}
+                                                          onClick={() => this.handleRemoveLabel(index, sIndex, lIndex)}
+                                                        >
+                                                          <i className="fas fa-times" />
                                                         </span>
-                                                      </div>
-                                                      :
-                                                      null
-                                                  }
-                                                </>
-                                              )
-                                            }) :
-                                            null
-                                        }
-                                        <Button id={`new${sIndex}${index}`} className={"btn-sm"} type="button">
-                                          New +
-                                        </Button>
-                                        <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}${index}`}>
-                                          <PopoverHeader>
-                                            <div>
-                                              <FormGroup className={"mb-0"}>
-                                                <Input value={service.label[service.label.length - 1].name} onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
-                                                <ul className={"lable-color"} >
-                                                  {LabelColors(index, sIndex)}
-                                                </ul>
-                                              </FormGroup>
-                                              <Button disabled={(service.label ? !service.label[service.label.length - 1].name : null) && (service.label ? !service.label[service.label.length - 1].isButtonValue : null)} color="secondary" className={"btn-block btn-round"} onClick={() => this.handleLabelAdd(index, sIndex)}>Add Label</Button>
-                                              <Button disabled={(service.label ? !service.label[service.label.length - 1].name : null) && (service.label ? !service.label[service.label.length - 1].isButtonValue : null)} color="secondary" className={"btn-block btn-round"} onClick={() => this.handleSaveLabel(index, sIndex)}>Add To Saved Label</Button>
-                                            </div>
-                                          </PopoverHeader>
-                                          <PopoverBody>
-                                            {
-                                              labelReducer.label && labelReducer.label.length ?
-                                                labelReducer.label.map((data, Lindex) => {
-                                                  return (
-                                                    <div className={"d-flex"}>
-                                                      <Button key={Lindex} style={{
-                                                        background: data.labelColor
-                                                      }} className={"btn-sm btn-block label-btn"} onClick={() => this.handleAddLabelFromList(index, sIndex, data.labelColor, data.labelName)} type="button">
-                                                        {data.labelName}
-                                                      </Button>
-                                                      <span id={`remove${Lindex}${sIndex}${index}`} className={"pl-2 mt-2"} style={{ cursor: "pointer" }} onClick={() => this.handleSavedLabelDelete(data)}><i className={"icons cui-trash"}></i></span>
-                                                      <UncontrolledTooltip target={`remove${Lindex}${sIndex}${index}`}>
-                                                        Remove {data.labelName}
-                                                      </UncontrolledTooltip>
+                                                      </span>
                                                     </div>
-                                                  )
-                                                }) : null
-                                            }
-                                          </PopoverBody>
-                                        </UncontrolledPopover>
-                                      </div>
+                                                    :
+                                                    null
+                                                }
+                                              </>
+                                            )
+                                          }) :
+                                          null
+                                      }
+                                      <Button id={`new${sIndex}${index}`} className={"btn-sm"} type="button">
+                                        New +
+                                        </Button>
+                                      <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}${index}`}>
+                                        <PopoverHeader>
+                                          <div>
+                                            <FormGroup className={"mb-0"}>
+                                              <Input value={service.label[service.label.length - 1].name} onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
+                                              <ul className={"lable-color"} >
+                                                {LabelColors(index, sIndex)}
+                                              </ul>
+                                            </FormGroup>
+                                            <Button disabled={(service.label ? !service.label[service.label.length - 1].name : null) && (service.label ? !service.label[service.label.length - 1].isButtonValue : null)} color="secondary" className={"btn-block btn-round"} onClick={() => this.handleLabelAdd(index, sIndex)}>Add Label</Button>
+                                            <Button disabled={(service.label ? !service.label[service.label.length - 1].name : null) && (service.label ? !service.label[service.label.length - 1].isButtonValue : null)} color="secondary" className={"btn-block btn-round"} onClick={() => this.handleSaveLabel(index, sIndex)}>Add To Saved Label</Button>
+                                          </div>
+                                        </PopoverHeader>
+                                        <PopoverBody>
+                                          {
+                                            labelReducer.label && labelReducer.label.length ?
+                                              labelReducer.label.map((data, Lindex) => {
+                                                return (
+                                                  <div className={"d-flex"} key={Lindex}>
+                                                    <Button key={Lindex} style={{
+                                                      background: data.labelColor
+                                                    }} className={"btn-sm btn-block label-btn"} onClick={() => this.handleAddLabelFromList(index, sIndex, data.labelColor, data.labelName)} type="button">
+                                                      {data.labelName}
+                                                    </Button>
+                                                    <span id={`remove${Lindex}${sIndex}${index}`} className={"pl-2 mt-2"} style={{ cursor: "pointer" }} onClick={() => this.handleSavedLabelDelete(data)}><i className={"icons cui-trash"}></i></span>
+                                                    <UncontrolledTooltip target={`remove${Lindex}${sIndex}${index}`}>
+                                                      Remove {data.labelName}
+                                                    </UncontrolledTooltip>
+                                                  </div>
+                                                )
+                                              }) : null
+                                          }
+                                        </PopoverBody>
+                                      </UncontrolledPopover>
+
                                     </td>
                                     <td>
                                       <Button
@@ -1072,57 +1096,43 @@ class ServiceItem extends Component {
                           }
                         </tbody>
                       </table>
-                      <div className={"p-4"}>
-                        <Button
-                          className={"mr-2"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
-                          Add Part
-                        </Button>
-                        <Button
-                          className={"mr-2"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
-                          Add Tire
-                        </Button>
-                        <Button
-                          className={"mr-2"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
-                          Add Labor
-                        </Button>{/* 
-                        <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
-                      </div>
-
-                      <Button
-                        className="btn-sm btn btn-danger remove-tire-btn"
-                        onClick={() => this.handleRemoveService(index)}
-                      >
-                        <i className="fas fa-times" />
-                      </Button>
                     </div>
-                    <div className={"p-4 d-flex justify-content-between"}>
-                      <div>
-                        <span onClick={() => {
+                    <div className={"p-2 d-flex justify-content-between calculation-section"}>
+                      <ul className={"calculation-btn-block m-0 p-0"}>
+                        <li id={`epa${index}`} onClick={() => {
                           this.handleTaxeButtons(index, "EPA")
-                        }}>EPA {item.epa && item.epa.type === '$' ? item.epa.type : null}{item.epa && item.epa.value ? item.epa.value : 0}{item.epa && item.epa.type === '%' ? item.epa.type : null}</span>&nbsp; &nbsp;
-                      <span onClick={() => {
+                        }}>EPA {item.epa && item.epa.type === '$' ? item.epa.type : null}{item.epa && item.epa.value ? item.epa.value : 0}{item.epa && item.epa.type === '%' ? item.epa.type : null}
+                        </li>
+                        <li id={`disc${index}`} onClick={() => {
                           this.handleTaxeButtons(index, "Discount")
-                        }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{item.discount && item.discount.value ? item.discount.value : 0}{item.discount && item.discount.type === '%' ? item.discount.type : null}</span>&nbsp; &nbsp;
-                      <span
+                        }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{item.discount && item.discount.value ? item.discount.value : 0}{item.discount && item.discount.type === '%' ? item.discount.type : null}
+                        </li>
+                        <li
+                          id={`tax${index}`}
                           onClick={() => {
                             this.handleTaxeButtons(index, "Taxes")
-                          }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}</span>&nbsp; &nbsp;
+                          }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}
+                        </li>
+                      </ul>
+                      <div className={"service-total-block"}>
+                        <h4>Service Total: <span className={"dollor-icon"}>${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span></h4>
                       </div>
-                      <div>
-                        <span>Service Total: ${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span>
-                      </div>
+                      <UncontrolledTooltip placement={"top"} target={`epa${index}`}>
+                        Add EPA to service total
+                      </UncontrolledTooltip>
+                      <UncontrolledTooltip placement={"top"} target={`disc${index}`}>
+                        Add Discount to service total
+                      </UncontrolledTooltip>
+                      <UncontrolledTooltip placement={"top"} target={`tax${index}`}>
+                        Add Taxes to service total
+                      </UncontrolledTooltip>
                     </div>
-                    <div className={"m-2 d-flex justify-content-end"}>
-                      <Button color={"secondary"} onClick={() => this.handleAddCannedService(item, index)}>Save as canned service</Button>
-                    </div>
-                    <div>
+
+                    <div className={"tax-disc-cal"}>
                       {
                         item.isButtonValue === 'EPA' ?
                           <Row className={"m-2"}>
-                            <Col md={"2"} lg={"2"} className={"p-0"}>
+                            <Col md={"4"} lg={"4"} className={"p-0"}>
                               <InputGroup>
                                 {item.epa && item.epa.type === '$' ?
                                   <div className="input-group-prepend">
@@ -1139,15 +1149,19 @@ class ServiceItem extends Component {
                                   </div> : null}
                               </InputGroup>
                             </Col>
-                            <Col md={"4"} lg={"4"} className={"pr-0"}>
+                            <Col md={"8"} lg={"8"} className={"pr-0"}>
                               <div className={"d-flex"}>
                                 <CrmDiscountBtn discountType={item.epa && item.epa.type ? item.epa.type : "%"} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "epa")} />
-                                <Button className={"btn-sm ml-2 mr-2"} onClick={() => { this.handleValueConfirmed(index, "epa") }}><i className={"icon-check"} /></Button>
-                                <Button className={"btn-sm mr-2"}
+                                <Button className={"btn-sm ml-2 mr-2 btn-success"} onClick={() => { this.handleValueConfirmed(index, "epa") }}>
+                                  Submit
+                                </Button>
+                                <Button className={"btn-sm mr-2 btn-danger"}
                                   onClick={() => {
                                     this.handleRemoveTaxes(index)
                                   }}
-                                ><i className="fas fa-times" /></Button>
+                                >
+                                  Cancel
+                                </Button>
                               </div>
                             </Col>
                           </Row> :
@@ -1156,7 +1170,7 @@ class ServiceItem extends Component {
                       {
                         item.isButtonValue === 'Discount' ?
                           <Row className={"m-2"}>
-                            <Col md={"2"} lg={"2"} className={"p-0"}>
+                            <Col md={"4"} lg={"4"} className={"p-0"}>
                               <InputGroup>
                                 {item.discount && item.discount.type === '$' ?
                                   <div className="input-group-prepend">
@@ -1164,7 +1178,7 @@ class ServiceItem extends Component {
                                       <i className={"fa fa-dollar"}></i>
                                     </Button>
                                   </div> : null}
-                                <Input id="discount" name="discount" onChange={(e) => { this.handleTaxesAdd(e, index, "epa") }} type={"text"} maxLength="5" placeholder={"Discount%"} />
+                                <Input id="discount" name="discount" onChange={(e) => { this.handleTaxesAdd(e, index, "epa") }} type={"text"} maxLength="5" placeholder={"Discount"} />
                                 {item.discount && item.discount.type === '%' ?
                                   <div className="input-group-append">
                                     <Button color={"primary"} size={"sm"}>
@@ -1173,13 +1187,15 @@ class ServiceItem extends Component {
                                   </div> : null}
                               </InputGroup>
                             </Col>
-                            <Col md={"4"} lg={"4"} className={"pr-0"}>
+                            <Col md={"8"} lg={"8"} className={"pr-0"}>
                               <div className={"d-flex"}>
                                 <CrmDiscountBtn discountType={item.discount.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "discount")} />
-                                <Button className={"btn-sm ml-2 mr-2"}><i className={"icon-check"} onClick={() => { this.handleValueConfirmed(index, "discount") }} /></Button>
-                                <Button className={"btn-sm mr-2"} onClick={() => {
+                                <Button onClick={() => { this.handleValueConfirmed(index, "discount") }} className={"btn-sm ml-2 mr-2 btn-success"}>
+                                  Submit
+                                </Button>
+                                <Button className={"btn-sm mr-2 btn-danger"} onClick={() => {
                                   this.handleRemoveTaxes(index)
-                                }}><i className="fas fa-times" /></Button>
+                                }}>Cancel</Button>
                               </div>
                             </Col>
                           </Row> :
@@ -1188,7 +1204,7 @@ class ServiceItem extends Component {
                       {
                         item.isButtonValue === 'Taxes' ?
                           <Row className={"m-2"}>
-                            <Col md={"2"} lg={"2"} className={"p-0"}>
+                            <Col md={"4"} lg={"4"} className={"p-0"}>
                               <InputGroup>
                                 {item.taxes && item.taxes.type === '$' ?
                                   <div className="input-group-prepend">
@@ -1205,13 +1221,15 @@ class ServiceItem extends Component {
                                   </div> : null}
                               </InputGroup>
                             </Col>
-                            <Col md={"4"} lg={"4"} className={"pr-0"}>
+                            <Col md={"8"} lg={"8"} className={"pr-0"}>
                               <div className={"d-flex"}>
                                 <CrmDiscountBtn discountType={item.taxes.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "taxes")} />
-                                <Button className={"btn-sm ml-2 mr-2"}><i className={"icon-check"} onClick={() => { this.handleValueConfirmed(index, "taxes") }} /></Button>
-                                <Button className={"btn-sm mr-2"} onClick={() => {
+                                <Button onClick={() => { this.handleValueConfirmed(index, "taxes") }} className={"btn-sm ml-2 mr-2 btn-success"}>
+                                  Submit
+                                </Button>
+                                <Button className={"btn-sm mr-2 btn-danger"} onClick={() => {
                                   this.handleRemoveTaxes(index)
-                                }}><i className="fas fa-times" /></Button>
+                                }}>Cancel</Button>
                               </div>
                             </Col>
                           </Row> :
@@ -1219,22 +1237,73 @@ class ServiceItem extends Component {
                       }
 
                     </div>
+
+                    <div className={"service-card-footer"}>
+                      <div className={"service-utility-btn"}>
+                        <Button
+                          color={""}
+                          size={"sm"}
+                          className={"mr-2 btn-link"}
+                          onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
+                          <i class="nav-icon icons icon-puzzle"></i>&nbsp; Add Part
+                          </Button>
+                        <Button
+                          color={""}
+                          size={"sm"}
+                          className={"mr-2 btn-link"}
+                          onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
+                          <i class="nav-icon icons icon-support"></i>&nbsp; Add Tire
+                          </Button>
+                        <Button
+                          color={""}
+                          size={"sm"}
+                          className={"mr-2 btn-link"}
+                          onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
+                          <i class="nav-icon icons icon-user"></i>&nbsp; Add Labor
+                          </Button>{/* 
+                          <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
+                      </div>
+                      <div >
+                        <Button className={"mr-3 btn-dashed"} onClick={() => this.handleAddCannedService(item, index)} >Save as canned service</Button>
+                        <Button
+                          className="btn btn-remove btn-outline-danger"
+                          onClick={() => this.handleRemoveService(index)}
+                          id={`remove-service-${index}`}
+                        >
+                          <i className="fa fa-trash" /> &nbsp;Remove
+                          </Button>
+                        <UncontrolledTooltip target={`remove-service-${index}`}>
+                          Click to remove this service
+                          </UncontrolledTooltip>
+                      </div>
+                    </div>
+
                   </Card>
                 </React.Fragment>
               )
             }) : null
           }
-          <div className="d-flex justify-content-between pb-4">
-            <Button color={"primary"} onClick={() => this.handleSeviceAdd()}>+ Add new service</Button>
-            <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
-
+          <div className="d-flex pb-4 justify-content-between">
+            <div>
+              <Button color={""} onClick={() => this.handleSeviceAdd()} className={"mr-3 browse-btn"} id={"add-service"}>
+                <i class="icon-plus icons "></i> Add New Service
+            </Button>
+              <UncontrolledTooltip placement="top" target={"add-service"}>
+                Click to Add a new service
+              </UncontrolledTooltip>
+              <Button color={""} onClick={() => this.handleCannedServiceModal()} className={"mr-3 browse-btn"} id={"browse-service"}>
+                <i class="icons cui-settings"></i> Browse service</Button>
+              <UncontrolledTooltip placement="top" target={"browse-service"}>
+                Click to browse canned services
+              </UncontrolledTooltip>
+            </div>
             {
               this.state.services && this.state.services.length ?
-                <Button color={"secondary"} onClick={
+                <Button color={""} className={"btn-blue pull-right"} onClick={
                   () => {
                     this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
                   }
-                }>Submit services</Button> : null
+                }>Submit Services</Button> : null
             }
           </div>
           <CrmCannedServiceModal

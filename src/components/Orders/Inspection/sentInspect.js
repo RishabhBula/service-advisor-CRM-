@@ -13,42 +13,63 @@ import {
   Label
 } from 'reactstrap';
 import { Async } from "react-select";
-
+import Validator from "js-object-validation";
+import { inspectValidations, inspectValidationMessage } from "../../../validations/inspection";
 
 class SendInspection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      recipients:"Rishabh",
-      errors:[],
-      customerData:{},
-      vehicleData:{},
-      orderId:"",
+      recipients: "Rishabh",
+      errors: {},
+      customerData: {},
+      vehicleData: {},
+      orderId: "",
       templateData: [],
+      subject: "",
+      customerEmail: "",
       searchInput: "",
-      search:"",
-      
+      search: "",
+
     };
   }
-  
-  componentDidMount = () =>{
+
+  componentDidMount = () => {
     this.setState({
       customerData: this.props.customerData,
-      vehicleData: this.props.vehicleData
+      vehicleData: this.props.vehicleData,
     })
   }
 
   componentDidUpdate = ({ customerData, vehicleData }) => {
     let propsCustomerData = this.props.customerData
     let propsVehicleData = this.props.vehicleData
-    if ((propsCustomerData && propsCustomerData !== customerData) || (propsVehicleData && propsVehicleData !== vehicleData)){
+    if ((propsCustomerData && propsCustomerData !== customerData) || (propsVehicleData && propsVehicleData !== vehicleData)) {
       this.setState({
         customerData: propsCustomerData,
-        vehicleData: propsVehicleData
+        vehicleData: propsVehicleData,
       })
-      
+
     }
   }
+  handleChangeInput = (e, name) => {
+    const {errors} = this.state
+    if (name === "subject") {
+      errors.subject = ""
+      this.setState({
+        subject: e.target.value,
+      })
+    } else {
+      errors.email = ""
+      this.setState({
+        customerData: {
+          ...this.state.customerData,
+          email: e.target.value,
+        },
+        errors
+      })
+    }
+  };
 
   handleChange = (e) => {
     if (e && e.value) {
@@ -66,33 +87,35 @@ class SendInspection extends Component {
       });
     }
     if (e && e !== "") {
-    let content = e.templateData.messageText;
-    let contentSubject = e.templateData.subject;
-      const { customerData, vehicleData} = this.state;
-      
-    const replaceObj = {  
-      first_name: customerData.firstName,
-      last_name: customerData.lastName,
-      year: vehicleData && vehicleData.year ? vehicleData.year : null,
-      make: vehicleData && vehicleData.make ? vehicleData.make : null,
-      model: vehicleData && vehicleData.model ? vehicleData.model :  null,
-    };
-    for (const key in replaceObj) {
-      if (replaceObj.hasOwnProperty(key)) {
-        const val = replaceObj[key];
-        content = content.replace(new RegExp(`{${key}}`, "g"), val);
-        contentSubject = contentSubject.replace(new RegExp(`{${key}}`, "g"), val);
+      let content = e.templateData.messageText;
+      let contentSubject = e.templateData.subject;
+      const { customerData, vehicleData } = this.state;
+
+      const replaceObj = {
+        first_name: customerData.firstName,
+        last_name: customerData.lastName,
+        year: vehicleData && vehicleData.year ? vehicleData.year : null,
+        make: vehicleData && vehicleData.make ? vehicleData.make : null,
+        model: vehicleData && vehicleData.modal ? vehicleData.modal : null,
+      };
+
+      for (const key in replaceObj) {
+        if (replaceObj.hasOwnProperty(key)) {
+          const val = replaceObj[key];
+          content = content.replace(new RegExp(`{${key}}`, "g"), val);
+          contentSubject = contentSubject.replace(new RegExp(`{${key}}`, "g"), val);
+        }
       }
-    }
-    const data = {
-      messageText: content,
-      subject: contentSubject,
-    }
-    this.state.templateData.push(data)
-    this.setState({
-      templateData: this.state.templateData
-    })
-     
+      const data = {
+        messageText: content,
+        subject: contentSubject,
+      }
+      this.state.templateData.push(data)
+      this.setState({
+        subject: contentSubject,
+        templateData: this.state.templateData
+      })
+
     }
   };
 
@@ -101,22 +124,60 @@ class SendInspection extends Component {
     this.props.searchMessageTemplateList({ search, callback });
   };
 
-  handleSentInspection = () =>{
-    const { templateData, customerData} = this.state
+  handleSentInspection = () => {
+    const { customerData, subject} = this.state
     const customerEmail = customerData.email
-    const MessageData = templateData
+    try{
+    
+    // let errors ={};
+    // let hasErrors = false;
+    // if (customerData.email === ''){
+    //     errors.email = 'Please add a valid email address';
+    //     hasErrors = true
+    // }
+    // else if (subject === ''){
+    //   errors.subject = 'Please add subject for temaplte';
+    //   hasErrors = true
+    // }
+    // if (hasErrors) {
+    //   this.setState({
+    //     errors
+    //   });
+    //   return;
+    // }
+    var messageTextValue = document.getElementById('messageTextSent'),
+      messageTextSent = messageTextValue.innerHTML;
+    //const MessageData = templateData
+      const validData = {
+        subject: subject,
+        email: customerEmail
+      }
+
+      const { isValid, errors } = Validator(validData, inspectValidations, inspectValidationMessage);
+      if (!isValid) {
+        this.setState({
+          errors: errors,
+          isLoading: false
+        });
+
+        return;
+      }
     const payload = {
-      message: MessageData[0].messageText,
-      subject: MessageData[0].subject,
+      message: messageTextSent,
+      subject: subject,
       email: customerEmail
     }
+
     this.props.sendMessageTemplate(payload)
+    }
+    catch (error) { }
   }
 
 
 
   render() {
-    const { templateData, recipients, errors, search, customerData} = this.state
+    const { templateData, recipients, errors, search, customerData } = this.state
+
     return (
       <>
         <Modal
@@ -129,13 +190,13 @@ class SendInspection extends Component {
             <Button className="close" onClick={this.props.toggle}>
               <span aria-hidden="true">×</span>
             </Button>
-            Send Inspection 
+            Send Inspection
             </ModalHeader>
           <ModalBody>
             <Button onClick={this.props.toggleMessageTemplate}>Add template</Button>
             <div className="">
               <Row className='justify-content-center'>
-                <Col md='12'>
+                <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
                       Recipients <span className={"asteric"}>*</span>
@@ -158,6 +219,28 @@ class SendInspection extends Component {
                     </div>
                   </FormGroup>
                 </Col>
+                <Col md='6'>
+                  <FormGroup>
+                    <Label htmlFor='name' className='customer-modal-text-style'>
+                      Email <span className={"asteric"}>*</span>
+                    </Label>
+                    <div className={'input-block'}>
+                      <Input
+                        type='text'
+                        name='customerEmail'
+                        onChange={(e) => this.handleChangeInput(e, "email")}
+                        placeholder='John@gmail.com'
+                        value={customerData && customerData.email ? customerData.email : ''}
+                        maxLength='100'
+                        id='customerEmail'
+                        invalid={errors.email || false}
+                      />
+                      {errors.email ? (
+                        <FormFeedback>{errors.email}</FormFeedback>
+                      ) : null}
+                    </div>
+                  </FormGroup>
+                </Col>
                 <Col md='12'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
@@ -177,8 +260,9 @@ class SendInspection extends Component {
                         }
                       />
                     </div>
+                   
                   </FormGroup>
-                </Col>                
+                </Col>
                 <Col md='12'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
@@ -188,11 +272,16 @@ class SendInspection extends Component {
                       <Input
                         type='text'
                         name='subject'
-                        onChange={(e) => this.handleChange(e)}
+                        onChange={(e) => this.handleChangeInput(e, "subject")}
                         placeholder='Inspection #1000 for your vehicle'
-                        value={templateData && templateData.length ? templateData[0].subject : ''}
-                        id='name'
+                        value={this.state.subject}
+                        id='subject'
+                        maxLength='100'
+                        invalid={errors.subject || false}
                       />
+                      {errors.subject ? (
+                        <FormFeedback>{errors.subject}</FormFeedback>
+                      ) : null}
                     </div>
                   </FormGroup>
                 </Col>
@@ -211,7 +300,7 @@ class SendInspection extends Component {
                       </p>
                     </div>
                   </FormGroup>
-                </Col>              
+                </Col>
               </Row>
             </div>
 
