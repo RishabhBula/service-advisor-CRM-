@@ -48,7 +48,6 @@ class SendInspection extends Component {
       this.setState({
         customerData: propsCustomerData,
         vehicleData: propsVehicleData,
-        customerEmail: customerData.email
       })
 
     }
@@ -126,7 +125,7 @@ class SendInspection extends Component {
   };
 
   handleSentInspection = () => {
-    const { templateData, customerData, subject, errors} = this.state
+    const { customerData, subject} = this.state
     const customerEmail = customerData.email
     try{
     
@@ -177,7 +176,7 @@ class SendInspection extends Component {
 
 
   render() {
-    const { templateData, recipients, errors, search, customerData, customerEmail } = this.state
+    const { templateData, recipients, errors, search, customerData } = this.state
 
     return (
       <>
