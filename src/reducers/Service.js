@@ -36,7 +36,8 @@ const serviceData = {
    cannedServiceList: [],
    customerUserComment: {},
    isLoading: true,
-   isServiceList: true
+   isServiceList: true,
+   isAddServiceItem: false
 };
 
 export const serviceReducers = handleActions(
@@ -44,17 +45,20 @@ export const serviceReducers = handleActions(
       [inventoryPartsActions.ADD_SERVICE_PART]: (state, action) => ({
          ...state,
          services: action.payload,
-         isLoading: false
+         isLoading: false,
+         isAddServiceItem: true
       }),
       [tiersActions.ADD_SERVICE_TIRE]: (state, action) => ({
          ...state,
          services: action.payload,
-         isLoading: false
+         isLoading: false,
+         isAddServiceItem: true
       }),
       [labourActions.ADD_SERVICE_LABOR]: (state, action) => ({
          ...state,
          services: action.payload,
-         isLoading: false
+         isLoading: false,
+         isAddServiceItem: true
       }),
       [serviceActions.ADD_SERVICE]: (state, action) => ({
          ...state,

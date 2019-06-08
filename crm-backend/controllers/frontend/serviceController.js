@@ -29,17 +29,19 @@ const addNewService = async (req, res) => {
                isCannedService = false
             }
             isCannedService = true
-            const CannedServiceData = await Service.find({
-               serviceName: element.serviceName,
-               isCannedService: true,
-               userId: currentUser.id,
-               parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
-            })
-            if (CannedServiceData.length) {
-               return res.status(400).json({
-                  message: "Canned service name already exist,enter new name.",
-                  success: false
+            if (!element._id) {
+               const CannedServiceData = await Service.find({
+                  serviceName: element.serviceName,
+                  isCannedService: true,
+                  userId: currentUser.id,
+                  parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
                })
+               if (CannedServiceData.length) {
+                  return res.status(400).json({
+                     message: "Canned service name already exist,enter new name.",
+                     success: false
+                  })
+               }
             }
          }
          serviceData = {

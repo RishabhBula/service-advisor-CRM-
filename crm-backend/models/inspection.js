@@ -23,11 +23,11 @@ const inspectionSchema = new Schema({
                default: false
             },
             itemImage: {
-               type: [String],
+               type: [Object],
                default: []
             },
             itemImagePreview: {
-               type: [String],
+               type: [Object],
                default: []
             }
          })
