@@ -147,8 +147,8 @@ class MessageTemplate extends Component {
                             <div>Template Name -: {ele.templateName || '-'}</div>
                             <div>Subject -: {ele.subject || '-'}</div>
                             <div>Message -: {ele.messageText ? stripHTML(ele.messageText) : '-'}</div>
+                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={""} className={"btn-delete"}><i class="icons cui-circle-x"></i></Button>
                           </div>
-                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={"danger"}>Delete</Button>
                           </div>
                         )
                       })

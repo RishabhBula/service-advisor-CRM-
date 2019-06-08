@@ -253,8 +253,10 @@
 }
 .workflow-mode {
   border-right: none;
-  width: 100px;
   padding: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
 }
 .workflow-mode .mode-inner {
   display: table;
@@ -266,10 +268,10 @@
   margin: 0 2px;
 }
 .mode-flow button {
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 35px;
   padding: 0px;
-  font-size: 12px;
+  font-size: 21px;
 }
 /* end of workflow css */
 .main .container-fluid {
@@ -1777,6 +1779,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border: 1px solid #a6a7a7;;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  word-break: break-all;
 }
 .message-input{
   display: block;
@@ -1794,6 +1797,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border: 1px solid #a6a7a7;;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  word-break: break-all;
 }
 .tagInput span{
   display: inline-block;
@@ -1813,8 +1817,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   cursor: pointer;
 }
 .template-tile {
+  position: relative;
   flex-flow: column;
-  padding: 5px 10px;
+  padding: 5px 40px 5px 10px;
   border: 1px solid #bfbdc6;
   margin-bottom: 5px;
   border-radius: 4px;
@@ -1825,7 +1830,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .message-template-block{
   max-height: 300px;
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+.message-template-block .btn-delete{
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 24px;
+  color: #ed2424;
+  cursor: pointer;
 }
 .info-icon{
   display: inline-flex;
