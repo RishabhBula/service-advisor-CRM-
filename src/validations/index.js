@@ -10,3 +10,4 @@ export * from "./parts";
 export * from "./Labour";
 export * from "./priceMatrix";
 export * from "./orderStatus";
+export * from "./inspection";

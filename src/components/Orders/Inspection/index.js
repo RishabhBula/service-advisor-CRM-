@@ -374,13 +374,14 @@ class Inspection extends Component {
          <div>
             <div className={"mb-3 d-flex"}>
             {inspection && inspection.length ? <>
-            <Button onClick={this.toggleSentInspection}>Send</Button>
+                  <span color={""} className={"print-btn"} onClick={this.toggleSentInspection}>
+                  <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
             <span
                onClick={this.downloadPDF}
                id={"add-Appointment"}
                className={"print-btn"}
             >
-                     <i class="icon-printer icons "></i> View or Print
+                     <i class="icon-printer icons "></i>&nbsp; View or Print
             </span> </>
             : null
             }
@@ -551,7 +552,7 @@ class Inspection extends Component {
                   </span>
                   <span className={"pl-2 pr-2"}><i className={"fa fa-plus"}></i></span>
                   <span>
-                     <Button color={"primary"} onClick={this.toggle} className={"browse-btn"}><i class="icon-plus icons "></i> Add Template</Button>
+                     <Button color={""} onClick={this.toggle} className={"browse-btn"}><i class="icon-plus icons "></i> Add Template</Button>
                   </span>
                </div>
             </div>

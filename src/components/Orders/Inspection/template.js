@@ -83,7 +83,7 @@ class Templates extends Component {
                 onChange={(e) => this.handleChange(e)}
                 isClearable={true}
                 noOptionsMessage={() =>
-                  search ? "No vendor found" : "Type template title"
+                  search ? "No Template found" : "Type Template Title"
                 }
               />
             </div>
