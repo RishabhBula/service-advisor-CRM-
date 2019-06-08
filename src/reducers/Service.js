@@ -34,6 +34,7 @@ const serviceData = {
    submittedServiceId: [],
    customerCommentId: "",
    cannedServiceList: [],
+   customerUserComment: {},
    isLoading: true,
    isServiceList: true
 };
@@ -78,11 +79,12 @@ export const serviceReducers = handleActions(
       [serviceActions.GET_SERVICE_LIST]: (state, action) => ({
          ...state,
          isServiceList: true,
-         services:[]
+         services: []
       }),
       [serviceActions.GET_SERVICE_LIST_SUCCESS]: (state, action) => ({
          ...state,
-         services:action.payload.services,
+         services: action.payload.services,
+         customerUserComment: action.payload.customerCommentData,
          isServiceList: false
       }),
    },

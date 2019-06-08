@@ -45,7 +45,11 @@ import {
   getCannedServiceList,
   updateOrderDetailsRequest,
   getOrderDetailsRequest,
-  deleteLabel
+  deleteLabel,
+  getMatrixList,
+  getRateStandardListRequest,
+  rateAddRequest,
+  setRateStandardListStart
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -203,7 +207,12 @@ class Order extends Component {
       addNewLabel,
       deleteLabel,
       sendMessageTemplate,
-      orderReducer } = this.props
+      orderReducer,
+      getPriceMatrix,
+      getStdList,
+      addRate,
+      profileInfoReducer,
+      rateStandardListReducer } = this.props
     logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
@@ -243,6 +252,7 @@ class Order extends Component {
                               onChange={e => this.handleChange(e)}
                               name={"orderName"}
                               value={orderName}
+                              maxLength={"100"}
                               invalid={isError && !orderName}
                             />
                             <FormFeedback>
@@ -303,6 +313,11 @@ class Order extends Component {
                               vehicleData={vehicleData}
                               orderId={orderId}
                               deleteLabel={deleteLabel}
+                              getPriceMatrix={getPriceMatrix}
+                              getStdList={getStdList}
+                              addRate={addRate}
+                              profileInfoReducer={profileInfoReducer}
+                              rateStandardListReducer={rateStandardListReducer}
                             />
                           ) : null}
                           {activeTab === 1 ? 
@@ -400,7 +415,9 @@ const mapStateToProps = state => ({
   inspectionReducer: state.inspectionReducer,
   modelInfoReducer: state.modelInfoReducer,
   serviceReducers: state.serviceReducers,
-  labelReducer: state.labelReducer
+  labelReducer: state.labelReducer,
+  profileInfoReducer: state.profileInfoReducer,
+  rateStandardListReducer: state.rateStandardListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -489,7 +506,19 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteLabel: data => {
     dispatch(deleteLabel(data))
-  }
+  },
+  getPriceMatrix: data => {
+    dispatch(getMatrixList(data));
+  },
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  addRate: data => {
+    dispatch(rateAddRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
 });
 export default connect(
   mapStateToProps,

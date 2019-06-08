@@ -75,19 +75,25 @@ class ServiceItem extends Component {
   }
   componentDidMount = () => {
     const {
-      services
+      services,
+      customerUserComment
     } = this.props.serviceReducers
     this.setState({
       services,
+      customerComment:customerUserComment.customerComment,
+      userRecommendations:customerUserComment.userRecommendations
     })
   }
   componentDidUpdate = ({ serviceReducers }) => {
     if (serviceReducers !== this.props.serviceReducers) {
       const {
-        services
+        services,
+        customerUserComment
       } = this.props.serviceReducers
       this.setState({
-        services
+        services,
+        customerComment:customerUserComment.customerComment,
+        userRecommendations:customerUserComment.userRecommendations
       }, () => {
         let Sindex
         this.state.services.map((item, index) => {

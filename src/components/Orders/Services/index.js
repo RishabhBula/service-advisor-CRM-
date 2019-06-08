@@ -3,6 +3,7 @@ import ServiceItem from "./serviceItem";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
 import { CrmTyreModal } from "../../common/Tires/CrmTyreModal";
 import { CrmLabourModal } from "../../common/Labours/CrmLabourModal";
+import { logger } from "../../../helpers";
 
 class Services extends Component {
   constructor(props) {
@@ -68,12 +69,22 @@ class Services extends Component {
       });
     }
   };
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  };
   handleServiceModal = (serviceType, index, services) => {
     this.setState({
       selectedService: serviceType ? serviceType : "",
       serviceIndex: index,
       serviceElements: services
     });
+  };
+  addRate = data => {
+    try {
+      this.props.addRate(data);
+    } catch (error) {
+      logger(error)
+    }
   };
   handleOpenModal = () => {
     const { selectedService, serviceIndex, serviceElements } = this.state;
@@ -88,10 +99,14 @@ class Services extends Component {
       getTireDetails,
       getLaborDetails,
       addLaborToService,
-      addLaborInventry
+      addLaborInventry,
+      getPriceMatrix,
+      getStdList,
+      rateStandardListReducer,
+      profileInfoReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { tireAddModalOpen, partAddModalOpen } = modelDetails;
+    const { tireAddModalOpen, partAddModalOpen, rateAddModalOpen } = modelDetails;
     switch (selectedService) {
       case "part":
         return (
@@ -104,6 +119,7 @@ class Services extends Component {
               addPartToService={addPartToService}
               addInventoryPart={addInventoryPart}
               services={serviceElements}
+              getPriceMatrix={getPriceMatrix}
               toggle={() =>
                 modelOperate({
                   partAddModalOpen: !partAddModalOpen
@@ -122,6 +138,7 @@ class Services extends Component {
             addTier={addInventryTire}
             addTireToService={addTireToService}
             getTireDetails={getTireDetails}
+            getPriceMatrix={getPriceMatrix}
             handleTierModal={() =>
               modelOperate({
                 tireAddModalOpen: !tireAddModalOpen
@@ -139,11 +156,22 @@ class Services extends Component {
             addLabour={addLaborInventry}
             getLaborDetails={getLaborDetails}
             addLaborToService={addLaborToService}
+            addRate={this.addRate}
+            getStdList={getStdList}
+            rateStandardListData={rateStandardListReducer}
+            setDefaultRate={this.setDefaultRate}
             handleLabourModal={() =>
               modelOperate({
                 tireAddModalOpen: !tireAddModalOpen
               })
             }
+            rateAddModalProp={rateAddModalOpen}
+            rateAddModalFun={() =>
+              modelOperate({
+                rateAddModalOpen: !rateAddModalOpen
+              })
+            }
+            profileInfoReducer={profileInfoReducer.profileInfo}
           />
         );
       default:

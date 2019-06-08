@@ -32,7 +32,6 @@ const addServiceLogic = createLogic({
          done();
          return;
       } else {
-         toast.success(result.messages[0]);
          let serviceIds = []
          result.data.serviceResultData.map((service, index) => {
             serviceIds.push(service._id)
@@ -48,7 +47,7 @@ const addServiceLogic = createLogic({
          if (serviceIds.length) {
             let serviceIdData = []
             serviceIds.map((item, index) => {
-               const serviceId = 
+               const serviceId =
                {
                   serviceId: item
                }
@@ -57,7 +56,8 @@ const addServiceLogic = createLogic({
             })
             const payload = {
                serviceId: serviceIdData,
-               _id: action.payload.orderId
+               _id: action.payload.orderId,
+               customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
             }
             dispatch(updateOrderDetailsRequest(payload))
          }

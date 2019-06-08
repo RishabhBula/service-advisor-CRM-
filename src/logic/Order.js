@@ -334,7 +334,8 @@ const getOrderDetails = createLogic({
     } else {
       dispatch(
         getServiceListSuccess({
-          services: result.data.serviceResult
+          services: result.data.serviceResult,
+          customerCommentData: result.data.customerCommentData
         })
       );
       dispatch(getInspectionListSuccess(
