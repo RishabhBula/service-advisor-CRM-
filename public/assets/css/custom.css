@@ -36,6 +36,13 @@
 .table tr td {
   font-size: 14px !important;
 }
+.btn.btn-blue {
+  background: linear-gradient(to bottom, #8358f0, #5c43db);
+  border-color: #5c43db;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
 .btn-theme {
   background-color: #f6b42a !important;
   border-color: #f6b42a !important;
@@ -95,6 +102,22 @@
 }
 .btn-secondary.btn-transparent{
   background: transparent;
+}
+.btn.browse-btn {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #e4daf7;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 4px 10px;
+  color: #5e45dc;
+  background: #f7f4fd;
+  text-transform: capitalize;
+  box-shadow: 0px 1px 1px #c4c1c1;
+}
+.btn.browse-btn .icons{
+  font-size:21px;
+  margin-right: 6px;
 }
 .flex-1 {
   flex: 1;
@@ -1467,9 +1490,6 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   cursor: pointer;
 }
 /* Work-flow START */
-.service-card {
-  max-width: 98%;
-}
 .form-select.is-invalid ~ .invalid-feedback {
   display: block;
 }
@@ -1728,6 +1748,19 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .inspection-card .status-warp .status-checkbox.success:after{
   background:#35e65b; 
 }
+.print-btn{
+  font-size: 14px;
+  font-weight: 600;
+  height: 35px;
+  display: inline-flex;
+  padding: 0 20px;
+  align-items: center;
+  cursor: pointer;
+}
+.print-btn .icons {
+  position: relative;
+  font-size: 21px;
+}
 .tagInput{
   display: flex;
   align-items: center;
@@ -1832,6 +1865,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   color: #0e378c;
   font-size: 21px;
   margin-bottom: 0;
+  line-height: 35px;
 }
 .form-control.order-name-input{
   border-color: #97979700;
@@ -1855,7 +1889,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   color: #fff;
 }
 .order-info-block{
-  border-bottom: 1px dashed #6e6c6c;
+  border-bottom: 2px dashed #bbb9c1;
   margin-top: -8px;
 }
 .custom-form-modal .form-group label.note-label{
@@ -1869,6 +1903,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 5px 10px;
   background-color: #efefef66;
   width: calc(100% - 300px);
+}
+.service-card-btn-block img{
+  opacity: 0.7;
 }
 .service-card-header .form-control {
   border-color: transparent;
@@ -1937,10 +1974,33 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-size: 15px;
 }
 .order-top-section{
-  max-width: 900px;
+  margin-bottom: 30px;
+  height: 80px;
+  background: #eee;
+}
+.order-top-section .custom-form-modal{
+  position: relative;
+  top: 22px;
 }
 .order-top-section .custom-form-modal .form-group label{
   min-width: 75px;
+}
+.order-top-section .customer-modal-text-style{
+  display: flex;
+  flex-flow: column;
+  position: relative;
+}
+.order-top-section .label-text .asteric{
+  top:-2px;
+}
+.order-top-section .label-block{
+  display: block;
+  position: absolute;
+  width: 65px;
+  height: 100%;
+  top: -18px;
+  right: 0;
+  text-align: center;
 }
 .service-table .service-table-head{
   height: 35px;
@@ -1949,6 +2009,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-size: 13px;
   font-family: "Segoe UI";
   font-weight: 600;
+}
+.service-card .service-table .no-data-found{
+  padding: 20px 20px;
 }
 .status-label-btn{
   display: inline-block;
@@ -1988,8 +2051,25 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .service-utility-btn .btn:last-child:after{
   display: none;
 }
+.service-total-block .dollor-icon{
+  font-weight: 800;
+}
 .comment-section{
   width: 100%;
+}
+.comment-section .icon {
+  background: #eeeeee;
+}
+.comment-section .icon img {
+  opacity: 0.7;
+}
+.comment-section textarea {
+  min-height: 80px;
+  color: #000;
+  font-size: 16px;
+}
+.comment-section textarea::placeholder{
+  color: #333;
 }
 .lable-color {
   list-style: none;

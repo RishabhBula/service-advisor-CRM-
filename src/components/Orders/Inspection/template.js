@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   Table,
-  Input,
 } from 'reactstrap';
 import { Async } from "react-select";
 
@@ -59,7 +58,7 @@ class Templates extends Component {
   };
 
   render() {
-    const { templateData, search, searchInput } = this.state
+    const { templateData, search } = this.state
     return (
       <>
         <Modal

@@ -28,6 +28,7 @@ const addLabelLogic = createLogic({
       );
       if (result.isError) {
          toast.error(result.messages[0]);
+         dispatch(getLabelList());
          dispatch(hideLoader());
          done();
          return;
@@ -100,6 +101,7 @@ const deleteLabelLogic = createLogic({
       );
       if (result.isError) {
          toast.error(result.messages[0]);
+         dispatch(getLabelList());
          dispatch(hideLoader());
          done();
          return;

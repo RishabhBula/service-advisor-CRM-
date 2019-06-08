@@ -8,6 +8,8 @@ import {
 } from "reactstrap";
 import Async from "react-select/lib/Async";
 import * as classnames from "classnames";
+import serviceUser from "../../../assets/service-user.png"
+import serviceTyre from "../../../assets/service-car.png"
 
 class CutomerVehicle extends Component {
    constructor(props) {
@@ -90,7 +92,12 @@ class CutomerVehicle extends Component {
                <Col md={"6"}>
                   <FormGroup>
                      <Label htmlFor="name" className="customer-modal-text-style">
-                        Customer <span className={"asteric"}>*</span>
+                        <span className={"label-block "}>
+                           <img src={serviceUser} alt={"serviceUser"} width={"34"} height={"34"}/>
+                        <span className={"label-text position-relative"}>
+                              Customer <span className={"asteric"}>*</span>
+                           </span>
+                        </span>
                      </Label>
                      <div className={"input-block"}>
                         <Async
@@ -119,7 +126,12 @@ class CutomerVehicle extends Component {
                <Col md={"6"}>
                   <FormGroup>
                      <Label htmlFor="name" className="customer-modal-text-style">
-                        Vehicle <span className={"asteric"}>*</span>
+                     <span className={"label-block"}>
+                           <img src={serviceTyre} alt={"serviceUser"} width={"34"} height={"34"} />
+                        <span className={"label-text position-relative"}>
+                              Vehicle <span className={"asteric"}>*</span>
+                           </span>
+                        </span>
                      </Label>
                      <div className={"input-block"}>
                         <Async

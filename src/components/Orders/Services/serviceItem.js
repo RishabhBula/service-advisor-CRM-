@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Card,
-  CardFooter,
   Col,
   Input,
   FormGroup,
@@ -23,6 +22,8 @@ import { LabelColorOptions } from "../../../config/Color"
 import { getSumOfArray } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
+import recommandUser from "../../../assets/recommand-user.png"
+import recommandTech from "../../../assets/recommand-tech.png"
 
 class ServiceItem extends Component {
   constructor(props) {
@@ -623,17 +624,28 @@ class ServiceItem extends Component {
         isAddLabel: false
       }
       labelData.push(labelConst)
+      this.handleLabelName('', Mindex, sIndex)
     })
   }
   handleLabelName = (e, Mindex, sIndex) => {
-    const { value } = e.target
-    const serviceData = [...this.state.services]
-    const labelLength = serviceData[Mindex].serviceItems[sIndex].label.length
-    const labelData = serviceData[Mindex].serviceItems[sIndex].label
-    labelData[labelLength - 1].name = value
-    this.setState({
-      services: serviceData
-    })
+    if (e) {
+      const { value } = e.target
+      const serviceData = [...this.state.services]
+      const labelLength = serviceData[Mindex].serviceItems[sIndex].label.length
+      const labelData = serviceData[Mindex].serviceItems[sIndex].label
+      labelData[labelLength - 1].name = value
+      this.setState({
+        services: serviceData
+      })
+    } else {
+      const serviceData = [...this.state.services]
+      const labelLength = serviceData[Mindex].serviceItems[sIndex].label.length
+      const labelData = serviceData[Mindex].serviceItems[sIndex].label
+      labelData[labelLength - 1].name = ''
+      this.setState({
+        services: serviceData
+      })
+    }
   }
 
   handleRemoveLabel = (Mindex, sIndex, lIndex) => {
@@ -798,22 +810,29 @@ class ServiceItem extends Component {
     return (
       <>
         <div className={"w-100"}>
-          <Row className={"comment-section"}>
-            <Col md={"6"}>
-              <FormGroup>
-                <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Customer Comments"} />
+          <Row className={"comment-section ml-0 mb-4"}>
+            <Col md={"6"} className={"d-flex pl-0 column"}>
+              <span className={"icon"}>
+                <img src={recommandUser} alt={"recommandUser"}/>
+              </span>
+              <FormGroup className={"flex-one mb-0"}>
+                <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
               </FormGroup>
             </Col>
-            <Col md={"6"}>
-              <FormGroup>
-                <Input type={"textarea"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"4"} col={"12"} placeholder={"Recommendations"} />
+            <Col md={"6"} className={"d-flex pr-0 column"}>
+              <span className={"icon"}>
+                <img src={recommandTech} alt={"recommandTech"} />
+              </span>
+              <FormGroup className={"flex-one mb-0"}>
+                <Input type={"textarea"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
               </FormGroup>
             </Col>
           </Row>
           <div className={"pb-2"}>
             {
               services && services.length ?
-              <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button> : null 
+                <Button color={""} onClick={() => this.handleCannedServiceModal()} className={"browse-btn"}>
+                  <i class="icons cui-settings"></i> Browse service</Button> : null
             }
           </div>
           {
@@ -838,38 +857,42 @@ class ServiceItem extends Component {
                               : null}
                           </FormFeedback>
                         </div>
-                        <div className={"service-card-btn-block flex-one"}>
-                          <Col md={"6"} className={"d-none"}>
-                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style">
-                                Technician
-                            </Label>
-                              <Async
-                                className={"w-100 form-select"}
-                                placeholder={"Type Technician name"}
-                                loadOptions={this.loadTechnician}
-                                value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
-                                isClearable={item.technician !== '' ? true : false}
-                                noOptionsMessage={() => "Type Technician name"}
-                                onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="12" className={"pl-0 d-none"}>
-                            <FormGroup>
-                              <Label htmlFor="name" className="customer-modal-text-style note-label">
-                                Note
-                              </Label>
+                        <div className={"service-card-btn-block flex-one d-flex align-items-center"}>
+                            <div className={"pr-2 mr-2 cursor_pointer"} id={`tech${index}`}>
+                              <img className={""} src={"/assets/img/expert.svg"} width={"30"} alt={"technician"} />
+                            </div>
+                          <UncontrolledTooltip placement="top" target={`tech${index}`}>
+                            Assign a technician
+                          </UncontrolledTooltip>
+                            <div className={"pr-2 cursor_pointer"} id={`note${index}`}>
+                              <img className={""} src={"/assets/img/writing .svg"} width={"30"} alt={"Notes"} />
+                            </div>
+                          <UncontrolledTooltip placement="top" target={`note${index}`}>
+                            Add a note
+                          </UncontrolledTooltip>
+                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`tech${index}`} className={"service-note-popover"}>
+                            <Async
+                              className={"w-100 form-select"}
+                              placeholder={"Type Technician name"}
+                              loadOptions={this.loadTechnician}
+                              value={(item.technician !== null && technicianData.label !== '') ? item.technician === "" ? selectedTechnician : technicianData : item.technician}
+                              isClearable={item.technician !== '' ? true : false}
+                              noOptionsMessage={() => "Type Technician name"}
+                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
+                            />
+                          </UncontrolledPopover>
+                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`note${index}`} className={"service-note-popover"}>
                             <Input
                               type={"textarea"}
                               onChange={(e) => this.handleChange(e, index)}
                               name={"note"}
                               value={item.note}
                               maxLength={"200"}
-                              rows={"2"} cols={"3"}
+                              rows={"2"} cols={"3"} 
+                              placeholder={"Add Note for this service"}
                             />
-                            </FormGroup>
-                          </Col>
+                          </UncontrolledPopover>
+                          
                        </div>
                       </div>
                       <table className={"table matrix-table service-table"}>
@@ -953,7 +976,7 @@ class ServiceItem extends Component {
                                     <td>
                                       <InputGroup>
                                         <div className="input-group-prepend">
-                                          <Button  disabled color={"secondary"} size={"sm"}>
+                                          <Button disabled color={"secondary"} size={"sm"}>
                                             <i className={"fa fa-dollar"}></i>
                                           </Button>
                                         </div>
@@ -1002,7 +1025,7 @@ class ServiceItem extends Component {
                                           <PopoverHeader>
                                             <div>
                                               <FormGroup className={"mb-0"}>
-                                                <Input onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
+                                                <Input value={service.label[service.label.length - 1].name} onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
                                                 <ul className={"lable-color"} >
                                                   {LabelColors(index, sIndex)}
                                                 </ul>
@@ -1074,8 +1097,8 @@ class ServiceItem extends Component {
                           }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}
                         </li>
                       </ul>
-                      <div>
-                        <span>Service Total: ${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span>
+                      <div className={"service-total-block"}>
+                        <h4>Service Total: <span className={"dollor-icon"}>${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span></h4>
                       </div>
                     </div>
                     
@@ -1226,17 +1249,27 @@ class ServiceItem extends Component {
               )
             }) : null
           }
-          <div className="d-flex pb-4">
-            <Button color={"primary"} onClick={() => this.handleSeviceAdd()} className={"mr-3"}>+ Add new service</Button>
-            <Button color={"primary"} onClick={() => this.handleCannedServiceModal()}>Browse service</Button>
-
+          <div className="d-flex pb-4 justify-content-between">
+            <div>
+            <Button color={""} onClick={() => this.handleSeviceAdd()} className={"mr-3 browse-btn"} id={"add-service"}>
+                <i class="icon-plus icons "></i> Add New Service
+            </Button>
+              <UncontrolledTooltip placement="top" target={"add-service"}>
+                Click to Add a new service
+              </UncontrolledTooltip>
+              <Button color={""} onClick={() => this.handleCannedServiceModal()} className={"mr-3 browse-btn"} id={"browse-service"}>
+              <i class="icons cui-settings"></i> Browse service</Button>
+              <UncontrolledTooltip placement="top" target={"browse-service"}>
+                Click to browse canned services
+              </UncontrolledTooltip>
+            </div>
             {
               this.state.services && this.state.services.length ?
-                <Button color={"secondary"} onClick={
+                <Button color={""} className={"btn-blue pull-right"} onClick={
                   () => {
                     this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
                   }
-                }>Submit services</Button> : null
+                }>Submit Services</Button> : null
             }
           </div>
           <CrmCannedServiceModal

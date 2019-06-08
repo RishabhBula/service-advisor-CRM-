@@ -54,6 +54,7 @@ import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
 import { logger } from "../../helpers";
 
+
 const OrderTab = React.lazy(() => import("../../components/Orders/OrderTab"));
 
 export const OrderComponents = [
@@ -211,7 +212,7 @@ class Order extends Component {
           <div className="workflow-section">
             <div className={"workflow-left"}>
               <CardBody className={"custom-card-body inventory-card"}>
-                <div className={"d-flex order-info-block flex-row justify-content-between pb-2 mb-3"}>
+                <div className={"d-flex order-info-block flex-row justify-content-between pb-2"}>
                   <div className={"order-info-head d-flex"}>
                     <h3 className={"mr-3 orderId"}>Order (#
                     {typeof this.props.orderReducer.orderId !== "object"
@@ -368,9 +369,15 @@ class Order extends Component {
                 <div className={"d-flex justify-content-between pb-2"}>
                   <span>Workflow</span>
                   <span>
-                    <Input type={"select"}></Input>
+                    <Input type={"select"} placeholder={"Select workflow status"}>
+                      <option value="">Select workflow status</option>
+                      <option value="estimate">Estimate</option>
+                      <option value="droppedOff">Dropped Off</option>
+                      <option value="inProcess">In Process</option>
+                    </Input>
                   </span>
                 </div>
+                <hr />
               </div>
             </div>
           </div>
