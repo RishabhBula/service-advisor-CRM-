@@ -57,8 +57,16 @@ class CutomerVehicle extends Component {
       this.props.getVehicleData({ input, callback });
    };
    handaleCustomerVehicleSelect = (e, name) => {
-      if (e && e.value) {
-         const { customerId, vehicleId } = this.state;
+      const { customerId, vehicleId } = this.state;
+      if (e && e.value && name === 'customer') {
+         this.setState({
+            customerId: e,
+         })
+         this.props.customerVehicleData(customerId, vehicleId)
+      } else if (e && e.value && name === 'vehicle') {
+         this.setState({
+            vehicleId: e,
+         })
          this.props.customerVehicleData(customerId, vehicleId)
       } else if (name === 'customer') {
          this.setState({
@@ -68,7 +76,7 @@ class CutomerVehicle extends Component {
                value: ""
             },
          })
-         this.props.customerVehicleData("", "")
+         this.props.customerVehicleData(customerId, vehicleId)
       } else {
          this.setState({
             vehicleId: "",
@@ -77,7 +85,7 @@ class CutomerVehicle extends Component {
                value: ""
             }
          })
-         this.props.customerVehicleData("", "")
+         this.props.customerVehicleData(customerId, vehicleId)
       }
    }
    render() {
@@ -157,10 +165,6 @@ class CutomerVehicle extends Component {
                            });
                         }}
                      />
-                     {
-                        console.log("^^^^^^^^^^^^^^^^", isError, vehicleId)
-
-                     }
                      {isError && !vehicleId ? (
                         <FormFeedback>Vehicle data is required.</FormFeedback>
                      ) : null}

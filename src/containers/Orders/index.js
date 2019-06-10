@@ -138,10 +138,20 @@ class Order extends Component {
   };
 
   customerVehicleData = (customer, vehicle) => {
-    if (customer || vehicle) {
+    if (customer && vehicle) {
       this.setState({
-        customerData: customer.data,
-        vehicleData: vehicle.data
+        customerData: customer,
+        vehicleData: vehicle
+      });
+    } else if (customer && !vehicle) {
+      this.setState({
+        customerData: customer,
+        vehicleData: ""
+      });
+    } else if (vehicle && !customer) {
+      this.setState({
+        customerData: "",
+        vehicleData: vehicle
       });
     } else {
       this.setState({
@@ -219,7 +229,8 @@ class Order extends Component {
       profileInfoReducer,
       rateStandardListReducer,
       getInventoryPartsVendors } = this.props
-    logger(customerData, vehicleData)
+    console.log("@@@@@@@@@@@@@@@@@@", this.state);
+
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
