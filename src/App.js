@@ -26,7 +26,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <Router history={history} basepath={"/dev"}>
           <React.Suspense fallback={<FullPageLoader />}>
             <AppRoutes />
           </React.Suspense>
