@@ -45,7 +45,8 @@ import {
   getMatrixList,
   getRateStandardListRequest,
   rateAddRequest,
-  setRateStandardListStart
+  setRateStandardListStart,
+  getInventoryPartVendors
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -137,15 +138,22 @@ class Order extends Component {
   };
 
   customerVehicleData = (customer, vehicle) => {
-    this.setState({
-      customerData: customer.data,
-      vehicleData: vehicle.data
-    });
+    if (customer || vehicle) {
+      this.setState({
+        customerData: customer.data,
+        vehicleData: vehicle.data
+      });
+    } else {
+      this.setState({
+        customerData: "",
+        vehicleData: ""
+      });
+    }
   };
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
+    logger("!!!!!!!!!!!!", customerData, vehicleData, orderId, orderName);
     if (!customerData || !vehicleData || !orderName) {
-      logger("!!!!!!!!!!!!", customerData, vehicleData, orderId, orderName);
       this.setState({
         isError: true
       });
@@ -209,7 +217,8 @@ class Order extends Component {
       getStdList,
       addRate,
       profileInfoReducer,
-      rateStandardListReducer } = this.props
+      rateStandardListReducer,
+      getInventoryPartsVendors } = this.props
     logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
@@ -221,9 +230,9 @@ class Order extends Component {
                   <div className={"order-info-head d-flex"}>
                     <h3 className={"mr-3 orderId"}>Order (#
                     {typeof this.props.orderReducer.orderId !== "object"
-                      ? this.props.orderReducer.orderId
-                      : null}
-                    )
+                        ? this.props.orderReducer.orderId
+                        : null}
+                      )
                     </h3>
                     <div className="input-block">
                       <Input
@@ -231,6 +240,7 @@ class Order extends Component {
                         onChange={e => this.handleChange(e)}
                         name={"orderName"}
                         value={orderName}
+                        maxLength={"250"}
                         invalid={isError && !orderName}
                         className={"order-name-input"}
                       />
@@ -242,12 +252,12 @@ class Order extends Component {
                     </div>
                   </div>
                   <div>
-                  <Button
-                    color={""}
-                    onClick={() => this.handleEditOrder()}
-                    className={"order-update-btn"}
-                  >
-                    Update Order
+                    <Button
+                      color={""}
+                      onClick={() => this.handleEditOrder()}
+                      className={"order-update-btn"}
+                    >
+                      Update Order
                   </Button>
                   </div>
                 </div>
@@ -305,24 +315,25 @@ class Order extends Component {
                               addRate={addRate}
                               profileInfoReducer={profileInfoReducer}
                               rateStandardListReducer={rateStandardListReducer}
+                              getInventoryPartsVendors={getInventoryPartsVendors}
                             />
                           ) : null}
-                          {activeTab === 1 ? 
-                          <Inspection
-                            addNewInspection={addNewInspection}
-                            inspectionData={this.props.inspectionReducer}
-                            addInspectionTemplate={addInspectionTemplate}
-                            getTemplateList={getTemplateList}
-                            addMessageTemplate={addMessageTemplate}
-                            getMessageTemplate={getMessageTemplate}
-                            updateMessageTemplate={updateMessageTemplate}
-                            deleteMessageTemplate={deleteMessageTemplate}
-                            searchMessageTemplateList={searchMessageTemplateList}
-                            customerData={customerData}
-                            vehicleData={vehicleData}
-                            sendMessageTemplate={sendMessageTemplate}
-                            orderId={orderId}
-                          /> : null}
+                          {activeTab === 1 ?
+                            <Inspection
+                              addNewInspection={addNewInspection}
+                              inspectionData={this.props.inspectionReducer}
+                              addInspectionTemplate={addInspectionTemplate}
+                              getTemplateList={getTemplateList}
+                              addMessageTemplate={addMessageTemplate}
+                              getMessageTemplate={getMessageTemplate}
+                              updateMessageTemplate={updateMessageTemplate}
+                              deleteMessageTemplate={deleteMessageTemplate}
+                              searchMessageTemplateList={searchMessageTemplateList}
+                              customerData={customerData}
+                              vehicleData={vehicleData}
+                              sendMessageTemplate={sendMessageTemplate}
+                              orderId={orderId}
+                            /> : null}
                           {activeTab === 2 ? <TimeClock /> : null}
                           {activeTab === 3 ? <Message /> : null}
                         </React.Fragment>
@@ -505,6 +516,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setLabourRateDefault: data => {
     dispatch(setRateStandardListStart(data));
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
   },
 });
 export default connect(

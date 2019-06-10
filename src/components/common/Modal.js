@@ -7,6 +7,7 @@ const CRMModal = props => (
   <Modal
     isOpen={props.isOpen}
     toggle={props.toggle}
+    backdrop={"static"}
     className={classNames(
       "customer-modal",
       "custom-form-modal",

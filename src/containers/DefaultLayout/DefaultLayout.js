@@ -110,12 +110,14 @@ class DefaultLayout extends Component {
     this.props.logoutUser();
   }
   renderCompanyDetailsPopup = profileInfo => {
-    const { firstTimeUser, parentId, firstName } = profileInfo;
+    const { firstTimeUser, parentId, firstName, companyName, website } = profileInfo;
     if (firstTimeUser && !parentId) {
       return (
         <CrmWelcomeModel
           modalOpen={true}
           userName={firstName}
+          companyName={companyName}
+          website={website}
           onLogoUpdate={this.props.updateCompanyLogo}
           onCompanyDetailsUdpate={this.props.onCompanyDetailsUdpate}
         />
@@ -165,85 +167,85 @@ class DefaultLayout extends Component {
     return isLoading ? (
       <FullPageLoader />
     ) : (
-      <div className="app">
-        {this.renderCompanyDetailsPopup(profileInfo || {})}
-        <AppHeader fixed>
-          <Suspense fallback={""}>
-            <DefaultHeader
-              onLogout={e => this.signOut(e)}
-              permissions={permissions || {}}
-              shopLogo={
-                shopLogo
-                  ? [AppConfig.IMAGE_ENDPOINT, shopLogo.thumbnailImage].join("")
-                  : null
-              }
-              toggleCustAndVehicle={this.toggleCustAndVehicleProps}
-            />
-          </Suspense>
-        </AppHeader>
-        <div className="app-body">
-          <AppSidebar className="custom-sidebar" fixed display="lg">
-            <AppSidebarHeader />
-            <AppSidebarForm />
-            <Suspense>
-              <AppSidebarNav
-                navConfig={this.navigation(permissions || {})}
-                {...this.props}
+        <div className="app">
+          {this.renderCompanyDetailsPopup(profileInfo || {})}
+          <AppHeader fixed>
+            <Suspense fallback={""}>
+              <DefaultHeader
+                onLogout={e => this.signOut(e)}
+                permissions={permissions || {}}
+                shopLogo={
+                  shopLogo
+                    ? [AppConfig.IMAGE_ENDPOINT, shopLogo.thumbnailImage].join("")
+                    : null
+                }
+                toggleCustAndVehicle={this.toggleCustAndVehicleProps}
               />
             </Suspense>
-            <AppSidebarFooter />
-            <AppSidebarMinimizer />
-          </AppSidebar>
-          <main className="main">
-            <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
-            <Container fluid>
-              {hasAccess ? (
-                <>
-                  <Suspense fallback={<Loader />}>
-                    <Switch>
-                      {routes.map((route, idx) => {
-                        return route.component ? (
-                          <Route
-                            key={idx}
-                            path={route.path}
-                            exact={route.exact}
-                            name={route.name}
-                            render={props => (
-                              <route.component
-                                {...props}
-                                {...this.props}
-                                permissions={permissions || {}}
-                              />
-                            )}
-                          />
-                        ) : null;
-                      })}
-                      <Redirect
-                        from={AppRoutes.HOME.url}
-                        to={AppRoutes.DASHBOARD.url}
-                      />
-                    </Switch>
-                  </Suspense>
-                </>
-              ) : (
-                <NoAccess redirectTo={this.props.redirectTo} />
-              )}
-            </Container>
-          </main>
-          <AppAside fixed>
+          </AppHeader>
+          <div className="app-body">
+            <AppSidebar className="custom-sidebar" fixed display="lg">
+              <AppSidebarHeader />
+              <AppSidebarForm />
+              <Suspense>
+                <AppSidebarNav
+                  navConfig={this.navigation(permissions || {})}
+                  {...this.props}
+                />
+              </Suspense>
+              <AppSidebarFooter />
+              <AppSidebarMinimizer />
+            </AppSidebar>
+            <main className="main">
+              <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
+              <Container fluid>
+                {hasAccess ? (
+                  <>
+                    <Suspense fallback={<Loader />}>
+                      <Switch>
+                        {routes.map((route, idx) => {
+                          return route.component ? (
+                            <Route
+                              key={idx}
+                              path={route.path}
+                              exact={route.exact}
+                              name={route.name}
+                              render={props => (
+                                <route.component
+                                  {...props}
+                                  {...this.props}
+                                  permissions={permissions || {}}
+                                />
+                              )}
+                            />
+                          ) : null;
+                        })}
+                        <Redirect
+                          from={AppRoutes.HOME.url}
+                          to={AppRoutes.DASHBOARD.url}
+                        />
+                      </Switch>
+                    </Suspense>
+                  </>
+                ) : (
+                    <NoAccess redirectTo={this.props.redirectTo} />
+                  )}
+              </Container>
+            </main>
+            <AppAside fixed>
+              <Suspense fallback={""}>
+                <DefaultAside />
+              </Suspense>
+            </AppAside>
+          </div>
+          <AppFooter>
             <Suspense fallback={""}>
-              <DefaultAside />
+              <DefaultFooter />
             </Suspense>
-          </AppAside>
+          </AppFooter>
+          {this.customerAndVehicleModal()}
         </div>
-        <AppFooter>
-          <Suspense fallback={""}>
-            <DefaultFooter />
-          </Suspense>
-        </AppFooter>
-        {this.customerAndVehicleModal()}
-      </div>
-    );
+      );
   }
 }
 

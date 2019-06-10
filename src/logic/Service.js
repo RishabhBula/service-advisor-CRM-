@@ -32,6 +32,9 @@ const addServiceLogic = createLogic({
          done();
          return;
       } else {
+         if (result.messages[0] !== '') {
+            toast.success(result.messages[0]);
+         }
          let serviceIds = []
          result.data.serviceResultData.map((service, index) => {
             serviceIds.push(service._id)
@@ -87,29 +90,20 @@ const getCannedServiceLogic = createLogic({
          dispatch(getCannedServiceListSuccess(
             {
                cannedServiceList: [],
-               isLoading: false
             }
          ))
          done();
          return;
       } else {
-         var defaultOptions = [
-            {
-               value: "",
-               label: "+ Add New Canned Service"
-            }
-         ];
          const options = result.data.data.map(service => ({
             label: service.serviceName,
             value: service._id,
             serviceData: service
          }));
-         logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
-         dispatch(hideLoader());
+         logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
          dispatch(getCannedServiceListSuccess(
             {
                cannedServiceList: result.data.data,
-               isLoading: false
             }
          ))
          done();

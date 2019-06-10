@@ -23,6 +23,7 @@ import {
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
+import { AppConfig } from "../config/AppConfig";
 
 const vehicleAddLogic = createLogic({
   type: vehicleActions.VEHICLES_ADD_REQUEST,
@@ -102,7 +103,11 @@ const getVehiclesLogic = createLogic({
       "/getAllVehicleList",
       "GET",
       true,
-      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null }
+      {
+        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+        sort: action.payload && action.payload.sort ? action.payload.sort : null,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
       dispatch(

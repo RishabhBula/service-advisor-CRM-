@@ -26,6 +26,7 @@ const createNewOrder = async (req, res) => {
   const { body, currentUser } = req;
   try {
     const { id, parentId } = currentUser;
+    const result = await Orders.countDocuments({ userId: currentUser.id, parentId: currentUser.parentId ? currentUser.parentId : currentUser.id });
     const condition = {
       $or: [
         {
@@ -70,6 +71,7 @@ const createNewOrder = async (req, res) => {
       messageId: body.messageId
         ? mongoose.Types.ObjectId(body.messageId)
         : null,
+      orderId: result + 1,
       userId: currentUser.id,
       parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,
       workflowStatus,

@@ -54,6 +54,7 @@ export const orderReducer = handleActions(
       ...state,
       ...payload,
       orderItems: payload.order,
+      orderId: payload.orderId,
       isOrderLoading: false
     }),
   },

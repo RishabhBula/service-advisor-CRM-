@@ -103,7 +103,8 @@ class Services extends Component {
       getPriceMatrix,
       getStdList,
       rateStandardListReducer,
-      profileInfoReducer
+      profileInfoReducer,
+      getInventoryPartsVendors
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { tireAddModalOpen, partAddModalOpen, rateAddModalOpen } = modelDetails;
@@ -120,6 +121,7 @@ class Services extends Component {
               addInventoryPart={addInventoryPart}
               services={serviceElements}
               getPriceMatrix={getPriceMatrix}
+              getInventoryPartsVendors={getInventoryPartsVendors}
               toggle={() =>
                 modelOperate({
                   partAddModalOpen: !partAddModalOpen
@@ -139,6 +141,7 @@ class Services extends Component {
             addTireToService={addTireToService}
             getTireDetails={getTireDetails}
             getPriceMatrix={getPriceMatrix}
+            getInventoryPartsVendors={getInventoryPartsVendors}
             handleTierModal={() =>
               modelOperate({
                 tireAddModalOpen: !tireAddModalOpen

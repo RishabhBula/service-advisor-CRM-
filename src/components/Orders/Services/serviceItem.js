@@ -825,7 +825,7 @@ class ServiceItem extends Component {
                 <img src={recommandUser} alt={"recommandUser"} />
               </span>
               <FormGroup className={"flex-one mb-0"}>
-                <Input type={"textarea"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
+                <Input type={"textarea"} maxLength={"250"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
               </FormGroup>
             </Col>
             <Col md={"6"} className={"d-flex pr-0 column"}>
@@ -833,7 +833,7 @@ class ServiceItem extends Component {
                 <img src={recommandTech} alt={"recommandTech"} />
               </span>
               <FormGroup className={"flex-one mb-0"}>
-                <Input type={"textarea"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
+                <Input type={"textarea"} maxLength={"250"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
               </FormGroup>
             </Col>
           </Row>
