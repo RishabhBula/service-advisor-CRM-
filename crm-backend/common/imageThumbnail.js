@@ -12,7 +12,7 @@ var bucketName = "service-advisor";
 
 const resizeImage = async (sourcePath, destinationPath, width) => {
   return new Promise((resolve, reject) => {
-    Jimp.read(sourcePath, function(err, lenna) {
+    Jimp.read(sourcePath, function (err, lenna) {
       if (err) {
         console.log("*********** Resize Error =>", err);
         reject(new Error(err));
@@ -28,15 +28,16 @@ const resizeImage = async (sourcePath, destinationPath, width) => {
 };
 
 const imagePath = async imageRoute => {
-  console.log("!!!!!!!!!!!!!!!!!!!!!", imageRoute);
+  let imageUrl
   var params = {
     Bucket: bucketName,
     Body: fs.createReadStream(imageRoute),
     Key: "download/" + Date.now() + "_" + path.basename(imageRoute),
     ACL: "public-read"
   };
+
   await new Promise((resolve, reject) => {
-    s3.upload(params, function(err, data) {
+    s3.upload(params, function (err, data) {
       if (err) {
         console.log("====================================");
         console.log(err);
@@ -44,8 +45,10 @@ const imagePath = async imageRoute => {
         reject(new Error(err));
       }
       resolve(data.Location);
+      imageUrl = data.Location
     });
   });
+  return imageUrl
 };
 
 module.exports = {

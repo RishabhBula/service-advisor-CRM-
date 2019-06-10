@@ -30,7 +30,6 @@ import {
 } from "@coreui/react";
 import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
 import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVehicle";
-import { AppConfig } from "../../config/AppConfig";
 import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
@@ -175,8 +174,8 @@ class DefaultLayout extends Component {
                 onLogout={e => this.signOut(e)}
                 permissions={permissions || {}}
                 shopLogo={
-                  shopLogo
-                    ? [AppConfig.IMAGE_ENDPOINT, shopLogo.thumbnailImage].join("")
+                  shopLogo ?
+                    shopLogo
                     : null
                 }
                 toggleCustAndVehicle={this.toggleCustAndVehicleProps}
