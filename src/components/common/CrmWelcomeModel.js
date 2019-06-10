@@ -100,6 +100,29 @@ export class CrmWelcomeModel extends Component {
     this.cropper = React.createRef();
   }
 
+  componentDidMount = () => {
+    const {
+      companyName,
+      website
+    } = this.props
+    this.setState({
+      companyName,
+      website
+    })
+  }
+  componentDidUpdate = ({ companyName, website }) => {
+    if ((companyName !== this.props.companyName) || (website !== this.props.website)) {
+      const {
+        companyName,
+        website
+      } = this.props
+      this.setState({
+        companyName,
+        website
+      })
+    }
+  }
+
   onCropChange = crop => {
     this.setState({ crop });
   };
@@ -122,9 +145,9 @@ export class CrmWelcomeModel extends Component {
         companyLogo: reader.result
       })
     );
-    reader.onloadend = function(as) {
+    reader.onloadend = function (as) {
       var image = new Image();
-      image.onload = function() {
+      image.onload = function () {
         scope.setState({
           companyLogo: reader.result
         });
@@ -262,7 +285,7 @@ export class CrmWelcomeModel extends Component {
         companyName,
         website
       });
-    } catch (error) {}
+    } catch (error) { }
   };
   handleInputChange = e => {
     this.setState({
@@ -315,7 +338,7 @@ export class CrmWelcomeModel extends Component {
                   <Col md="6">
                     <FormGroup>
                       <Label htmlFor="name" className="font-text">
-                        Company Name <span className="asteric">*</span> 
+                        Company Name <span className="asteric">*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Input
@@ -323,6 +346,7 @@ export class CrmWelcomeModel extends Component {
                           placeholder="Service Adviser"
                           onChange={this.handleInputChange}
                           value={companyName}
+                          disabled={companyName}
                           name="companyName"
                           invalid={errors.companyName}
                         />
@@ -337,17 +361,17 @@ export class CrmWelcomeModel extends Component {
                         Website (optional)
                       </Label>
                       <div className={"input-block"}>
-                      <Input
-                        type="text"
-                        placeholder="http://google.com"
-                        onChange={this.handleInputChange}
-                        value={website}
-                        name="website"
-                        invalid={errors.website}
-                      />
-                      <FormFeedback>
-                        {errors.website ? errors.website : null}
-                      </FormFeedback>
+                        <Input
+                          type="text"
+                          placeholder="http://google.com"
+                          onChange={this.handleInputChange}
+                          value={website}
+                          name="website"
+                          invalid={errors.website}
+                        />
+                        <FormFeedback>
+                          {errors.website ? errors.website : null}
+                        </FormFeedback>
                       </div>
                     </FormGroup>
                   </Col>
@@ -388,7 +412,7 @@ export class CrmWelcomeModel extends Component {
                               // zoom={this.state.zoom}
                               aspect={this.state.aspect}
                               onCropChange={this.onCropChange}
-                              // onZoomChange={this.onZoomChange}
+                            // onZoomChange={this.onZoomChange}
                             />
                           </div>
                         </div>

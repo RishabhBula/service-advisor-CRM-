@@ -68,6 +68,7 @@ class CutomerVehicle extends Component {
                value: ""
             },
          })
+         this.props.customerVehicleData("", "")
       } else {
          this.setState({
             vehicleId: "",
@@ -76,6 +77,7 @@ class CutomerVehicle extends Component {
                value: ""
             }
          })
+         this.props.customerVehicleData("", "")
       }
    }
    render() {
@@ -141,7 +143,7 @@ class CutomerVehicle extends Component {
                         loadOptions={this.loadVehicles}
                         className={classnames("w-100 form-select", {
                            "is-invalid":
-                              isError && !customerId
+                              isError && !vehicleId
                         })}
                         value={selectedVehicle.value !== '' ? selectedVehicle : vehicleId}
                         isClearable={true}
@@ -155,7 +157,11 @@ class CutomerVehicle extends Component {
                            });
                         }}
                      />
-                     {isError && !customerId ? (
+                     {
+                        console.log("^^^^^^^^^^^^^^^^", isError, vehicleId)
+
+                     }
+                     {isError && !vehicleId ? (
                         <FormFeedback>Vehicle data is required.</FormFeedback>
                      ) : null}
                   </div>

@@ -75,7 +75,7 @@ const addNewService = async (req, res) => {
       const customerAndUserContent = new CustomerAndUser(cutomerUser);
       const commentResult = await customerAndUserContent.save();
       return res.status(200).json({
-         message: `${body.services.length} ${isCannedService ? 'canned' : " "} Service added successfully`,
+         message: isCannedService ? "Canned Service added successfully" : "",
          serviceResultData,
          commentResult,
          success: true

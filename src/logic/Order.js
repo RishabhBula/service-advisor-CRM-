@@ -345,7 +345,8 @@ const getOrderDetails = createLogic({
       ))
       dispatch(
         getOrderDetailsSuccess({
-          order: result.data.data[0]
+          order: result.data.data[0],
+          orderId: result.data.data[0].orderId
         })
       );
       dispatch(hideLoader());
