@@ -142,21 +142,29 @@ class Order extends Component {
       this.setState({
         customerData: customer,
         vehicleData: vehicle
+      }, () => {
+        this.handleEditOrder()
       });
     } else if (customer && !vehicle) {
       this.setState({
         customerData: customer,
         vehicleData: ""
+      }, () => {
+        this.handleEditOrder()
       });
     } else if (vehicle && !customer) {
       this.setState({
         customerData: "",
         vehicleData: vehicle
+      }, () => {
+        this.handleEditOrder()
       });
     } else {
       this.setState({
         customerData: "",
         vehicleData: ""
+      }, () => {
+        this.handleEditOrder()
       });
     }
   };
@@ -169,9 +177,17 @@ class Order extends Component {
       });
       return;
     }
+    let customerValue, vehicleValue
+    if (customerData.data && vehicleData.data) {
+      customerValue = customerData.data._id
+      vehicleValue = vehicleData.data._id
+    } else {
+      customerValue = customerData._id
+      vehicleValue = vehicleData._id
+    }
     const payload = {
-      customerId: customerData ? customerData._id : null,
-      vehicleId: vehicleData ? vehicleData._id : null,
+      customerId: customerValue ? customerValue : null,
+      vehicleId: vehicleValue ? vehicleValue : null,
       orderName: orderName,
       _id: orderId
     };
@@ -250,6 +266,7 @@ class Order extends Component {
                         name={"orderName"}
                         value={orderName}
                         maxLength={"250"}
+                        onBlur={this.handleEditOrder}
                         invalid={isError && !orderName}
                         className={"order-name-input"}
                       />
@@ -260,7 +277,7 @@ class Order extends Component {
                       </FormFeedback>
                     </div>
                   </div>
-                  <div>
+                  {/* <div>
                     <Button
                       color={""}
                       onClick={() => this.handleEditOrder()}
@@ -268,7 +285,7 @@ class Order extends Component {
                     >
                       Update Order
                   </Button>
-                  </div>
+                  </div> */}
                 </div>
                 <div className={"order-top-section"}>
                   <CustomerVehicle
@@ -276,6 +293,7 @@ class Order extends Component {
                     getVehicleData={getVehicleData}
                     customerVehicleData={this.customerVehicleData}
                     isError={isError}
+                    handleEditOrder={this.handleEditOrder}
                     orderReducer={orderReducer}
                   />
                 </div>
