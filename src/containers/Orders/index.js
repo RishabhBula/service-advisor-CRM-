@@ -204,7 +204,8 @@ class Order extends Component {
       addNewLabel,
       deleteLabel,
       sendMessageTemplate,
-      orderReducer } = this.props
+      orderReducer,
+      profileReducer} = this.props
     logger(customerData, vehicleData)
     return (
       <div className="animated fadeIn">
@@ -312,6 +313,8 @@ class Order extends Component {
                             vehicleData={vehicleData}
                             sendMessageTemplate={sendMessageTemplate}
                             orderId={orderId}
+                            profileReducer={profileReducer}
+                            orderReducer={orderReducer}
                           /> : null}
                           {activeTab === 2 ? <TimeClock /> : null}
                           {activeTab === 3 ? <Message /> : null}
@@ -392,7 +395,8 @@ const mapStateToProps = state => ({
   inspectionReducer: state.inspectionReducer,
   modelInfoReducer: state.modelInfoReducer,
   serviceReducers: state.serviceReducers,
-  labelReducer: state.labelReducer
+  labelReducer: state.labelReducer,
+  profileReducer: state.profileReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {

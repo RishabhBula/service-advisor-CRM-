@@ -245,6 +245,9 @@
 .flex-one{
   flex:1;
 }
+.title-h5{
+  font-size: 16px;
+}
 /* workflow css */
 .page-title {
   display: flex;
@@ -1581,6 +1584,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .inspection-card .block-item:hover{
   background-color: #eee;
 }
+.inspection-card .block-item .form-control{
+  color: #000;
+}
 .inspection-card .block-item .count-block{
   padding-top:5px; 
 }
@@ -1758,10 +1764,18 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 0 20px;
   align-items: center;
   cursor: pointer;
+  border: 1px solid transparent;
+  transition: all ease 0.5s;
+}
+.print-btn:hover {
+  border-color: #474257;
 }
 .print-btn .icons {
   position: relative;
   font-size: 21px;
+}
+.custom-form-modal .form-group label.message-temp-label{
+  min-width: 100px;
 }
 .tagInput{
   display: flex;
@@ -1781,11 +1795,21 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   word-break: break-all;
 }
+.tagInput.is-invalid{
+  border-color: #f86c6b !important;
+}
+.message-input-warp{
+  display: block;
+  max-height: 200px;
+  overflow-y: auto; 
+  border: 1px solid #a6a7a7;;
+  border-radius: 0.25rem;
+}
 .message-input{
   display: block;
   align-items: center;
   width: 100%;
-  min-height: calc(1.5em + 0.75rem + 2px);
+  min-height: 100px;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 400;
@@ -1794,10 +1818,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #fff;
   background-clip: padding-box;
   color: #0c0d1c;
-  border: 1px solid #a6a7a7;;
-  border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   word-break: break-all;
+  margin-bottom: 0px;
+}
+.message-input-warp.is-invalid{
+   border-color: #f86c6b !important;
+}
+.message-input-warp.is-invalid + .invalid-feedback {
+  display: block;
 }
 .tagInput span{
   display: inline-block;
@@ -1824,13 +1853,41 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-bottom: 5px;
   border-radius: 4px;
   cursor: pointer;
+  font-family: 'open sans';
+  font-size: 13px;
+  color: #241e34;
+  background: #fff;
+}
+.template-tile .sub-head{
+  font-weight: 600;
+}
+.template-tile .sub-head span{
+  display: inline-block;
+  padding-bottom: 1px;
+  border-bottom: 1px solid #20a8d8;
+}
+.template-tile h5{
+  font-size: 15px;
+  font-weight: 600;
+  color: #1c2236;
+  max-width: 100%;
+  font-family: 'Segoe UI';
+}
+.template-tile .text-message{
+  color: #2e4249;
+  padding-top: 3px;
+  overflow: hidden;
+  white-space: normal;
+  height: 3em;
+  text-overflow: -o-ellipsis-lastline;
 }
 .template-tile.active{
   border: 1px solid #e65410;
 }
 .message-template-block{
-  max-height: 300px;
+  max-height: 345px;
   overflow-y: auto;
+  min-height: 345px;
 }
 .message-template-block .btn-delete{
   position: absolute;

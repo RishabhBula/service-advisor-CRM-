@@ -174,7 +174,7 @@ class DefaultLayout extends Component {
               permissions={permissions || {}}
               shopLogo={
                 shopLogo
-                  ? [AppConfig.IMAGE_ENDPOINT, shopLogo.thumbnailImage].join("")
+                  ?  shopLogo
                   : null
               }
               toggleCustAndVehicle={this.toggleCustAndVehicleProps}
