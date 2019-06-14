@@ -123,17 +123,25 @@ export class CrmLabourModal extends Component {
       note: "",
       rate: "",
       hours: "",
+      labourId: '',
       errors: {},
       isEditMode: 0,
-      discountType: '$',
-      updatedAt: '',
+      discountType: '',
+      labourInput: "",
       permission: LabourTextDefault,
-      selectedLabourRate: '',
       discount: {
         value: "",
         type: "$"
       },
-      openStadardRateModel: false
+      updatedAt: "",
+      selectedRateOptions: {
+        label: "",
+        value: ""
+      },
+      newServiceLabor: false,
+      openStadardRateModel: false,
+      serviceLaborError: "",
+      laborId: ""
     })
   }
   handleRateAdd = async data => {
@@ -279,7 +287,10 @@ export class CrmLabourModal extends Component {
     if (laborId) {
       let servicePartData = services[serviceIndex].serviceItems
       servicePartData.push(laborId.laborData)
-      await this.props.addLaborToService(services)
+      await this.props.addLaborToService({
+        services,
+        serviceIndex: serviceIndex
+      })
       this.props.handleLabourModal()
     } else {
       this.setState({

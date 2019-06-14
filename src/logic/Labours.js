@@ -45,7 +45,7 @@ const labourAddLogic = createLogic({
         let servicePartData = data.services[data.serviceIndex].serviceItems
         servicePartData.push({
           ...result.data.laborData,
-          serviceType: "Labor",
+          serviceType: "labor",
           discount: {
             value: '',
             type: "%"
@@ -56,9 +56,13 @@ const labourAddLogic = createLogic({
             isAddLabel: false
           }],
           subTotalValue: "",
-          isItemChecked: true
+          isItemChecked: true,
+          unchangebleTotal: 0.00
         })
-        dispatch(addLaborToService(data.services))
+        dispatch(addLaborToService({
+          services: data.services,
+          serviceIndex: data.serviceIndex
+        }))
         dispatch(
           modelOpenRequest({
             modelDetails: {
@@ -134,7 +138,8 @@ const labourListLogic = createLogic({
             isAddLabel: false
           }],
           subTotalValue: "",
-          isItemChecked: true
+          isItemChecked: true,
+          unchangebleTotal: 0.00
         }
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

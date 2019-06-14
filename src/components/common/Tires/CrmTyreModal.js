@@ -474,7 +474,12 @@ export class CrmTyreModal extends Component {
       if (tireId) {
          let servicePartData = services[serviceIndex].serviceItems
          servicePartData.push(tireId.tireData)
-         await this.props.addTireToService(services)
+         await this.props.addTireToService(
+            {
+               services,
+               serviceIndex: serviceIndex
+            }
+         )
          this.props.handleTierModal()
       } else {
          this.setState({

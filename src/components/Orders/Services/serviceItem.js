@@ -71,7 +71,8 @@ class ServiceItem extends Component {
         }
       ],
       isError: false,
-      isServiceSubmitted: false
+      isServiceSubmitted: false,
+      isCannedServiceSumbmit: false
     };
   }
   componentDidMount = () => {
@@ -79,14 +80,16 @@ class ServiceItem extends Component {
       services,
       customerUserComment
     } = this.props.serviceReducers
-    this.setState({
-      services,
-      customerComment: customerUserComment ? customerUserComment.customerComment : '',
-      userRecommendations: customerUserComment ? customerUserComment.userRecommendations : ""
-    })
+    if (!this.state.isCannedServiceSumbmit) {
+      this.setState({
+        services,
+        customerComment: customerUserComment ? customerUserComment.customerComment : '',
+        userRecommendations: customerUserComment ? customerUserComment.userRecommendations : ""
+      })
+    }
   }
   componentDidUpdate = ({ serviceReducers }) => {
-    if (serviceReducers !== this.props.serviceReducers) {
+    if (serviceReducers !== this.props.serviceReducers && !this.state.isCannedServiceSumbmit) {
       const {
         services,
         customerUserComment
@@ -96,56 +99,58 @@ class ServiceItem extends Component {
         customerComment: customerUserComment ? customerUserComment.customerComment : '',
         userRecommendations: customerUserComment ? customerUserComment.userRecommendations : ""
       }, () => {
-        let Sindex
-        const serviceList = [...this.state.services]
-        if (serviceList && serviceList.length) {
-
-          serviceList[serviceList.length - 1].serviceItems.map((sItem, sIndex) => {
-            Sindex = sIndex
-            if (sItem) {
-              if (
-                (sItem.cost && sItem.quantity) ||
-                (
+        if (this.props.serviceReducers.isAddServiceItem) {
+          let serviceItemTotal = []
+          const serviceList = [...this.state.services]
+          if (serviceList && serviceList.length) {
+            serviceList[this.props.serviceReducers.serviceIndex].serviceItems.map((sItem, sIndex) => {
+              if (sItem) {
+                if (
+                  (sItem.cost && sItem.quantity) ||
                   (
-                    (sItem.tierSize ? sItem.tierSize[0].cost : null) &&
-                    (sItem.tierSize ? sItem.tierSize[0].quantity : null)
-                  ) ||
-                  (sItem.hours && (sItem.rate ? sItem.rate.hourlyRate : 0)
+                    (
+                      (sItem.tierSize ? sItem.tierSize[0].cost : null) &&
+                      (sItem.tierSize ? sItem.tierSize[0].quantity : null)
+                    ) ||
+                    (sItem.hours && (sItem.rate ? sItem.rate.hourlyRate : 0)
+                    )
                   )
-                )
-              ) {
-                sItem.subTotalValue = parseFloat(sItem.cost || (sItem.tierSize ? sItem.tierSize[0].cost : 0) || (sItem.hours)) * parseFloat(sItem.quantity || (sItem.tierSize ? sItem.tierSize[0].quantity : 0) || (sItem.rate.hourlyRate))
+                ) {
+                  sItem.subTotalValue = parseFloat(sItem.cost || (sItem.tierSize ? sItem.tierSize[0].cost : 0) || (sItem.hours)) * parseFloat(sItem.quantity || (sItem.tierSize ? sItem.tierSize[0].quantity : 0) || (sItem.rate ? sItem.rate.hourlyRate : 0))
+                  sItem.unchangebleTotal = parseFloat(sItem.cost || (sItem.tierSize ? sItem.tierSize[0].cost : 0) || (sItem.hours)) * parseFloat(sItem.quantity || (sItem.tierSize ? sItem.tierSize[0].quantity : 0) || (sItem.rate ? sItem.rate.hourlyRate : 0))
+                  serviceItemTotal.push(sItem.subTotalValue)
+                }
+                else {
+                  sItem.subTotalValue = (serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].cost || (serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].hours) || (serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].tierSize ? serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].tierSize[0].cost : null))
+                }
               }
-              else {
-                sItem.subTotalValue = (serviceList[serviceList.length - 1].serviceItems[sIndex].cost || (serviceList[serviceList.length - 1].serviceItems[sIndex].hours) || (serviceList[serviceList.length - 1].serviceItems[sIndex].tierSize ? serviceList[serviceList.length - 1].serviceItems[sIndex].tierSize[0].cost : null))
-              }
+              this.setState({
+                services: serviceList
+              })
+              return true
+            })
+            if (serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue) {
+              let serviceTotal = serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue
+              const serviceSubTotal = serviceList[this.props.serviceReducers.serviceIndex].serviceItems.length ? serviceItemTotal : null
+              serviceTotal = serviceSubTotal
+              serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue = serviceTotal
+              serviceList[this.props.serviceReducers.serviceIndex].serviceTotal = getSumOfArray(serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue)
+              this.setState({
+                services: serviceList,
+              })
             }
-            this.setState({
-              services: serviceList
-            })
-            return true
-          })
-          if (serviceList[serviceList.length - 1].serviceSubTotalValue) {
-            let serviceTotal = serviceList[serviceList.length - 1].serviceSubTotalValue
-            const serviceSubTotal = serviceList[serviceList.length - 1].serviceItems.length ? serviceList[serviceList.length - 1].serviceItems[Sindex].subTotalValue : null
-            serviceTotal.push(serviceSubTotal)
-            serviceList[serviceList.length - 1].serviceSubTotalValue = serviceTotal
-            serviceList[serviceList.length - 1].serviceTotal = getSumOfArray(serviceList[serviceList.length - 1].serviceSubTotalValue)
-            this.setState({
-              services: serviceList,
-            })
+            serviceList[this.props.serviceReducers.serviceIndex].epa.value = ''
+            serviceList[this.props.serviceReducers.serviceIndex].discount.value = ''
+            serviceList[this.props.serviceReducers.serviceIndex].taxes.value = ''
           }
-          serviceList[serviceList.length - 1].epa.value = ''
-          serviceList[serviceList.length - 1].discount.value = ''
-          serviceList[serviceList.length - 1].taxes.value = ''
+          this.setState({
+            technicianData: {
+              label: serviceList && serviceList.length ? serviceList[this.props.serviceReducers.serviceIndex].technician ? `${serviceList[this.props.serviceReducers.serviceIndex].technician.firstName} ${serviceList[this.props.serviceReducers.serviceIndex].technician.lastName}` : 'Type to select technician' : '',
+              value: serviceList && serviceList.length ? serviceList[this.props.serviceReducers.serviceIndex].technician ? serviceList[this.props.serviceReducers.serviceIndex].technician._id : '' : ''
+            },
+            services: serviceList
+          })
         }
-        this.setState({
-          technicianData: {
-            label: serviceList && serviceList.length ? serviceList[serviceList.length - 1].technician ? `${serviceList[serviceList.length - 1].technician.firstName} ${serviceList[serviceList.length - 1].technician.lastName}` : 'Type to select technician' : '',
-            value: serviceList && serviceList.length ? serviceList[serviceList.length - 1].technician ? serviceList[serviceList.length - 1].technician._id : '' : ''
-          },
-          services: serviceList
-        })
         return true
       })
     }
@@ -258,16 +263,10 @@ class ServiceItem extends Component {
     this.props.handleServiceModal(serviceType, index, this.state.services)
   }
 
-  handleDiscValue = (e, Mindex, index) => {
+  setDiscountValue = (e, Mindex, index) => {
     const { name, value } = e.target
     let serviceData = [...this.state.services]
     const discountValue = serviceData[Mindex].serviceItems[index].discount
-    let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
-    const costValue = serviceData[Mindex].serviceItems[index].cost
-    const quantityValue = serviceData[Mindex].serviceItems[index].quantity
-    const tiresizeValue = serviceData[Mindex].serviceItems[index].tierSize
-    const hourValue = serviceData[Mindex].serviceItems[index].hours
-    const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
     if (discountValue.type === '%' && value) {
       if (parseFloat(value) > 100) {
         if (!toast.isActive(this.toastId)) {
@@ -278,35 +277,44 @@ class ServiceItem extends Component {
         if (name === 'discount') {
           discountValue.value = value
         }
-        serviceData[Mindex].serviceSubTotalValue = []
-        const calDiscount = (parseFloat(value) / 100) * parseFloat(subTotalValue)
-        subTotalValue = parseFloat(subTotalValue) - calDiscount
       }
-    } else if (discountValue.type === '$' && value) {
+    } else {
       if (name === 'discount') {
         discountValue.value = value
       }
+    }
+    this.setState({
+      services: serviceData
+    })
+  }
+  handleDiscValue = (Mindex, index) => {
+    let serviceData = [...this.state.services]
+    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
+    const discountValue = serviceData[Mindex].serviceItems[index].discount
+    let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
+    const costValue = serviceData[Mindex].serviceItems[index].cost
+    const quantityValue = serviceData[Mindex].serviceItems[index].quantity
+    const tiresizeValue = serviceData[Mindex].serviceItems[index].tierSize
+    const hourValue = serviceData[Mindex].serviceItems[index].hours
+    const unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
+    const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
+    if (discountValue.type === '%' && valueOfDiscount) {
       serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(subTotalValue) - parseFloat(value)
+      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(unChangeabelTotal)
+      subTotalValue = parseFloat(unChangeabelTotal) - calDiscount
+    } else if (discountValue.type === '$' && valueOfDiscount) {
+      serviceData[Mindex].serviceSubTotalValue = []
+      subTotalValue = parseFloat(unChangeabelTotal) - parseFloat(valueOfDiscount)
     } else {
       if ((costValue && quantityValue) || ((tiresizeValue ? tiresizeValue[0].cost : null) && (tiresizeValue ? tiresizeValue[0].quantity : null))) {
-        if (name === 'discount') {
-          discountValue.value = value
-        }
         serviceData[Mindex].serviceSubTotalValue = []
         subTotalValue = parseFloat(costValue || (tiresizeValue ? tiresizeValue[0].cost : 0)) * parseFloat(quantityValue || (tiresizeValue ? tiresizeValue[0].quantity : 0))
       }
       else if (hourValue && rateValue) {
-        if (name === 'discount') {
-          discountValue.value = value
-        }
         serviceData[Mindex].serviceSubTotalValue = []
         subTotalValue = parseFloat(hourValue) * parseFloat(rateValue)
       }
       else {
-        if (name === 'discount') {
-          discountValue.value = value
-        }
         serviceData[Mindex].serviceSubTotalValue = []
         subTotalValue = (costValue || (tiresizeValue ? tiresizeValue[0].cost : null) || hourValue)
       }
@@ -347,16 +355,20 @@ class ServiceItem extends Component {
     }
     serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
     serviceData[Mindex].serviceItems[index].cost = parseFloat(costValue)
+    serviceData[Mindex].serviceItems[index].discount.value = ""
     this.setState({
       services: serviceData
     }, () => {
       let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
+      let unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
       serviceData[Mindex].serviceItems.map((item, Index) => {
         const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+        unChangeabelTotal = item.subTotalValue
         serviceTotalValue.push(parseFloat(serviceSubTotal))
         return true
       })
       serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
+      serviceData[Mindex].serviceItems[index].unchangebleTotal = unChangeabelTotal
       this.setState({
         services: serviceData
       })
@@ -381,16 +393,20 @@ class ServiceItem extends Component {
     }
     serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
     serviceData[Mindex].serviceItems[index].quantity = parseFloat(quantityValue)
+    serviceData[Mindex].serviceItems[index].discount.value = ""
     this.setState({
       services: serviceData
     }, () => {
       let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
+      let unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
       serviceData[Mindex].serviceItems.map((item, Index) => {
         const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
         serviceTotalValue.push(parseFloat(serviceSubTotal))
+        unChangeabelTotal = item.subTotalValue
         return true
       })
       serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
+      serviceData[Mindex].serviceItems[index].unchangebleTotal = unChangeabelTotal
       this.setState({
         services: serviceData
       })
@@ -405,9 +421,11 @@ class ServiceItem extends Component {
     const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
     if (value !== '' && rateValue) {
       hourValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
       subTotalValue = parseFloat(value) * parseFloat(rateValue)
     } else if (value !== '') {
       hourValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
       subTotalValue = parseFloat(value)
     }
     else {
@@ -416,8 +434,23 @@ class ServiceItem extends Component {
     }
     serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
     serviceData[Mindex].serviceItems[index].hours = parseFloat(hourValue)
+    serviceData[Mindex].serviceItems[index].discount.value = ""
     this.setState({
       services: serviceData
+    }, () => {
+      let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
+      let unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
+      serviceData[Mindex].serviceItems.map((item, Index) => {
+        const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+        serviceTotalValue.push(parseFloat(serviceSubTotal))
+        unChangeabelTotal = item.subTotalValue
+        return true
+      })
+      serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
+      serviceData[Mindex].serviceItems[index].unchangebleTotal = unChangeabelTotal
+      this.setState({
+        services: serviceData
+      })
     })
   }
   handleChange = (e, index) => {
@@ -552,53 +585,102 @@ class ServiceItem extends Component {
     serviceData[index].isConfirmedValue.type = name
     serviceData[index].isButtonValue = ''
     if (serviceData[index][name].type === "%" && name !== 'discount') {
-      // if (serviceData[index].serviceItems.length) {
-      //   const serviceTotalValue = []
-      //   serviceData[index].serviceItems.map((item, index) => {
-      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
-      //     return true
-      //   })
-      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
-      // }
-      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(serviceData[index].serviceTotal)
-      serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue)
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      if (name === "epa") {
+        const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(tempServiceTotal)
+        serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(TaxedTotalValue)
+      } else if (serviceData[index].discount.value && serviceData[index].discount.type === '%' && name === 'taxes') {
+        const TaxedTotalValue = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(tempServiceTotal)
+        const TotalValues = parseFloat(tempServiceTotal) - parseFloat(TaxedTotalValue)
+        const TaxedTotalValue1 = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(TotalValues)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue1)
+      } else if (serviceData[index].discount.value && serviceData[index].discount.type === '$' && name === 'taxes') {
+        const TotalValues = parseFloat(tempServiceTotal) - parseFloat(serviceData[index].discount.value)
+        const TaxedTotalValue1 = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(TotalValues)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue1)
+      } else {
+        const TaxedTotalValue1 = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(tempServiceTotal)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue1)
+      }
     } else if (serviceData[index][name].type === "$" && name !== 'discount') {
-      // let tempServiceTotal
-      // if (serviceData[index].serviceItems.length) {
-      //   const serviceTotalValue = []
-      //   serviceData[index].serviceItems.map((item, index) => {
-      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
-      //     return true
-      //   })
-      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
-      // }
-      serviceData[index].serviceTotal = parseFloat(serviceData[index][name].value) + parseFloat(serviceData[index][name].value)
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      if (name === "epa") {
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(serviceData[index][name].value)
+      } else if (serviceData[index].discount.value && serviceData[index].discount.type === '%' && name === 'taxes') {
+        const TaxedTotalValue = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(tempServiceTotal)
+        const TotalValues = parseFloat(tempServiceTotal) - parseFloat(TaxedTotalValue)
+        const TaxedTotalValue1 = parseFloat(TotalValues) - parseFloat(serviceData[index][name].value)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue1)
+      } else if (serviceData[index].discount.value && serviceData[index].discount.type === '$' && name === 'taxes') {
+        const TotalValues = parseFloat(tempServiceTotal) - parseFloat(serviceData[index].discount.value)
+        const TaxedTotalValue1 = parseFloat(TotalValues) - (parseFloat(serviceData[index][name].value))
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(TaxedTotalValue1)
+      } else {
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) + parseFloat(serviceData[index][name].value)
+      }
     } else if (serviceData[index][name].type === "%" && name === 'discount') {
-      // if (serviceData[index].serviceItems.length) {
-      //   const serviceTotalValue = []
-      //   serviceData[index].serviceItems.map((item, index) => {
-      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
-      //     return true
-      //   })
-      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
-      // }
-      const TaxedTotalValue = (parseFloat(serviceData[index][name].value) / 100) * parseFloat(serviceData[index].serviceTotal)
-      serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue)
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      if (serviceData[index].taxes.value && serviceData[index].taxes.type === '%') {
+        const TaxedTotalValue = (parseFloat(serviceData[index].taxes.value) / 100) * parseFloat(tempServiceTotal)
+        const TotalValues = parseFloat(tempServiceTotal) + parseFloat(TaxedTotalValue)
+        const TaxedTotalValue1 = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(TotalValues)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue1)
+      } else if (serviceData[index].taxes.value && serviceData[index].taxes.type === '$') {
+        const TotalValues = parseFloat(tempServiceTotal) + parseFloat(serviceData[index].taxes.value)
+        const TaxedTotalValue = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(TotalValues)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue)
+      } else {
+        const TaxedTotalValue = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(tempServiceTotal)
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue)
+      }
     } else {
-      // let tempServiceTotal
-      // if (serviceData[index].serviceItems.length) {
-      //   const serviceTotalValue = []
-      //   serviceData[index].serviceItems.map((item, index) => {
-      //     const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-      //     serviceTotalValue.push(parseFloat(serviceSubTotal))
-      //     return true
-      //   })
-      //   tempServiceTotal = getSumOfArray(serviceTotalValue)
-      // }
-      serviceData[index].serviceTotal = parseFloat(serviceData[index][name].value) + parseFloat(serviceData[index][name].value)
+      let tempServiceTotal
+      if (serviceData[index].serviceItems.length) {
+        const serviceTotalValue = []
+        serviceData[index].serviceItems.map((item, index) => {
+          const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
+          serviceTotalValue.push(parseFloat(serviceSubTotal))
+          return true
+        })
+        tempServiceTotal = getSumOfArray(serviceTotalValue)
+      }
+      if (serviceData[index].taxes.value && serviceData[index].taxes.type === '%') {
+        const TaxedTotalValue = (parseFloat(serviceData[index].taxes.value) / 100) * parseFloat(tempServiceTotal)
+        const TotalValues = parseFloat(tempServiceTotal) + parseFloat(TaxedTotalValue)
+        serviceData[index].serviceTotal = parseFloat(TotalValues) - parseFloat(serviceData[index].discount.value)
+      } else if (serviceData[index].taxes.value && serviceData[index].taxes.type === '$') {
+        const TotalValues = parseFloat(tempServiceTotal) + parseFloat(serviceData[index].taxes.value)
+        serviceData[index].serviceTotal = parseFloat(TotalValues) - parseFloat(serviceData[index].discount.value)
+      } else {
+        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(serviceData[index].discount.value)
+      }
     }
     this.setState({
       services: serviceData
@@ -718,14 +800,10 @@ class ServiceItem extends Component {
   }
   handleServiceSubmit = (serviceData, customerComment, userRecommendations) => {
     this.setState({
-      isServiceSubmitted: true
+      isServiceSubmitted: true,
+      isCannedServiceSumbmit: false
     })
-    const payload = {
-      services: serviceData,
-      customerComment: customerComment,
-      userRecommendations: userRecommendations,
-      orderId: this.props.orderId
-    }
+
     let ele
     for (let index = 0; index < serviceData.length; index++) {
       const serviceContent = [...this.state.services]
@@ -743,6 +821,13 @@ class ServiceItem extends Component {
       }
     }
     if (ele.serviceName !== '') {
+      const payload = {
+        services: serviceData,
+        customerComment: customerComment,
+        userRecommendations: userRecommendations,
+        orderId: this.props.orderId,
+        isServiceSubmit: true
+      }
       this.props.addNewService(payload)
     }
   }
@@ -757,6 +842,9 @@ class ServiceItem extends Component {
     if (!serviceData.serviceName) {
       services[index].isError = true
     } else {
+      this.setState({
+        isCannedServiceSumbmit: true
+      })
       services[index].isCannedService = true
       const payload =
       {
@@ -882,10 +970,6 @@ class ServiceItem extends Component {
                             {item.note ? "Update note" : "Add a note"}
                           </UncontrolledTooltip>
                           <UncontrolledPopover trigger="legacy" placement="bottom" target={`tech${index}`} className={"service-note-popover"}>
-                            {
-                              console.log("item.technician item.technician item.technician", item.technician, technicianData)
-
-                            }
                             <Async
                               className={"w-100 form-select"}
                               placeholder={"Type Technician name"}
@@ -941,6 +1025,7 @@ class ServiceItem extends Component {
                                             onChange={(e) => this.handleCostChange(e, index, sIndex)}
                                             name={"cost"}
                                             type="text"
+                                            maxLength={"4"}
                                             value={service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0}
                                           /> :
                                           null
@@ -953,6 +1038,7 @@ class ServiceItem extends Component {
                                             type="text"
                                             onChange={(e) => this.handleQuantityChange(e, index, sIndex)}
                                             name={"quantity"}
+                                            maxLength={"4"}
                                             value={service.quantity || (service.tierSize ? service.tierSize[0].quantity : null) || 0}
                                           /> :
                                           null
@@ -964,6 +1050,7 @@ class ServiceItem extends Component {
                                           <Input
                                             type={"text"}
                                             name={"hour"}
+                                            maxLength={"4"}
                                             onChange={(e) => this.handleHourChange(e, index, sIndex)}
                                             value={service.hours || 0}
                                           /> :
@@ -979,7 +1066,10 @@ class ServiceItem extends Component {
                                                 <i className={"fa fa-dollar"}></i>
                                               </Button>
                                             </div> : null}
-                                          <Input id="discount" name="discount" type={"text"} value={service.discount.value} onChange={(e) => this.handleDiscValue(e, index, sIndex)} maxLength="5" placeholder={"Discount"} />
+                                          <Input id="discount" name="discount" type={"text"} value={service.discount.value} onBlur={() => this.handleDiscValue(index, sIndex)}
+                                            onChange={(e) => {
+                                              this.setDiscountValue(e, index, sIndex)
+                                            }} maxLength="5" placeholder={"Discount"} />
                                           {service.discount.type === '%' ?
                                             <div className="input-group-append">
                                               <Button color={"primary"} size={"sm"}>
@@ -1115,6 +1205,12 @@ class ServiceItem extends Component {
                         </li>
                       </ul>
                       <div className={"service-total-block"}>
+                        {/* <div className="text-right">
+                          <span><h6>Epa : 12% +</h6></span>
+                          <span><h6>Discount : 12% -</h6></span>
+                          <span><h6>Taxes : 12% +</h6></span>
+                        </div>
+                        <hr/> */}
                         <h4>Service Total: <span className={"dollor-icon"}>${item.serviceTotal ? parseFloat(item.serviceTotal).toFixed(2) : 0.00}</span></h4>
                       </div>
                       <UncontrolledTooltip placement={"top"} target={`epa${index}`}>
@@ -1301,7 +1397,7 @@ class ServiceItem extends Component {
               this.state.services && this.state.services.length ?
                 <Button color={""} className={"btn-blue pull-right"} onClick={
                   () => {
-                    this.handleServiceSubmit(this.state.services, customerComment, userRecommendations)
+                    this.handleServiceSubmit(services, customerComment, userRecommendations)
                   }
                 }>Submit Services</Button> : null
             }

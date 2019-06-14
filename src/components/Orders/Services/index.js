@@ -194,7 +194,8 @@ class Services extends Component {
       addNewService,
       getCannedServiceList,
       orderId,
-      deleteLabel
+      deleteLabel,
+      orderReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
@@ -216,6 +217,7 @@ class Services extends Component {
             getCannedServiceList={getCannedServiceList}
             orderId={orderId}
             deleteLabel={deleteLabel}
+            orderReducer={orderReducer}
           />
         </div>
         {selectedService ? this.handleOpenModal() : null}

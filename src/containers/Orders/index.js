@@ -229,8 +229,6 @@ class Order extends Component {
       profileInfoReducer,
       rateStandardListReducer,
       getInventoryPartsVendors } = this.props
-    console.log("@@@@@@@@@@@@@@@@@@", this.state);
-
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -327,6 +325,7 @@ class Order extends Component {
                               profileInfoReducer={profileInfoReducer}
                               rateStandardListReducer={rateStandardListReducer}
                               getInventoryPartsVendors={getInventoryPartsVendors}
+                              orderReducer={orderReducer}
                             />
                           ) : null}
                           {activeTab === 1 ?

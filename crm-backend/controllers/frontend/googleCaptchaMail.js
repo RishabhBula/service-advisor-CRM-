@@ -2,10 +2,10 @@ const { Email } = require("../../common/Email");
 
 /* Mail to verify google captcha */
 const mailToVerifyCaptcha = async (req, res) => {
-    const { body } = req;
-    try {
+   const { body } = req;
+   try {
 
-        const $message1 = `
+      const $message1 = `
       <html>
       <head>
         <title>Thank you for filling out your information!</title>
@@ -110,34 +110,45 @@ const mailToVerifyCaptcha = async (req, res) => {
                             style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 13px; line-height: 20px; text-decoration: none;">1(800)232-90-26</a>
                       </font>
                       <div style="height: 35px; line-height: 35px; font-size: 33px;"> </div>
-                      <!--<table cellpadding="0" cellspacing="0" border="0">
-                           <tbody><tr>
-                              <td align="center" valign="top">
-                                 <a href="#" target="_blank" style="display: block; max-width: 19px;">
-                                    <img src="images/soc_1.png" alt="img" width="19" border="0" style="display: block; width: 19px;">
-                                 </a>
-                              </td>
-                              <td width="45" style="width: 45px; max-width: 45px; min-width: 45px;"> </td>
-                              <td align="center" valign="top">
-                                 <a href="#" target="_blank" style="display: block; max-width: 18px;">
-                                    <img src="images/soc_2.png" alt="img" width="18" border="0" style="display: block; width: 18px;">
-                                 </a>
-                              </td>
-                              <td width="45" style="width: 45px; max-width: 45px; min-width: 45px;"> </td>
-                              <td align="center" valign="top">
-                                 <a href="#" target="_blank" style="display: block; max-width: 21px;">
-                                    <img src="images/soc_3.png" alt="img" width="21" border="0" style="display: block; width: 21px;">
-                                 </a>
-                              </td>
-                              <td width="45" style="width: 45px; max-width: 45px; min-width: 45px;"> </td>
-                              <td align="center" valign="top">
-                                 <a href="#" target="_blank" style="display: block; max-width: 25px;">
-                                    <img src="images/soc_4.png" alt="img" width="25" border="0" style="display: block; width: 25px;">
-                                 </a>
-                              </td>
-                           </tr>
-                        </tbody></table>
-                        <div style="height: 35px; line-height: 35px; font-size: 33px;"> </div>-->
+                      <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                      style="width: 100%; background: #fff;padding: 20px 0px;     border-top: 1px solid #dddd;">
+                      <tbody>
+                        <tr>
+                          <td align="center" valign="top">
+                            <div style="height: 34px; line-height: 34px; font-size: 32px;"> </div>-->
+                            <font face="Source Sans Pro, sans-serif" color="#868686">
+                              <span
+                                style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #868686; font-size: 14px; line-height: 20px;">Copyright
+                                © 2019 Service Advisor. All Rights Reserved.</span>
+                            </font>
+                            <div style="height: 5px; line-height: 5px; font-size: 1px;"> </div>
+                            <font face="Source Sans Pro, sans-serif" color="#1a1a1a">
+                              <span
+                                style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 15px; line-height: 20px;"><a
+                                  href="mailto:help@service.com" target="_blank"
+                                  style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 13px; line-height: 20px; text-decoration: none;">help@service.com</a>
+                                | <a href="tele:1(800)232-90-26" target="_blank"
+                                  style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 13px; line-height: 20px; text-decoration: none;">1(800)232-90-26</a>
+                            </font>
+                            <div style="height: 35px; line-height: 35px; font-size: 33px;"> </div>
+                              <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                  <tr>
+                                    <td align="center" valign="top">
+                                      <a href="#" target="_blank" style="display: block; max-width: 19px;">
+                                          <img src="http://serviceadvisor.io/images/soc_2.png" alt="img" width="19" border="0" style="display: block; width: 19px;">
+                                      </a>
+                                    </td>
+                                    <td width="45" style="width: 45px; max-width: 45px; min-width: 45px;"> </td>
+                                    <td align="center" valign="top">
+                                      <a href="#" target="_blank" style="display: block; max-width: 18px;">
+                                          <img src="http://serviceadvisor.io/images/soc_3.png" alt="img" width="18" border="0" style="display: block; width: 18px;">
+                                      </a>
+                                    </td>
+                                </tr>
+                              </tbody>
+                          </table>    
+                        <div style="height: 35px; line-height: 35px; font-size: 33px;"> </div>
                     </td>
                   </tr>
                 </tbody>
@@ -146,7 +157,7 @@ const mailToVerifyCaptcha = async (req, res) => {
           </div>
         </body>
         </html>`
-        const $messageToAdmin = `<html>
+      const $messageToAdmin = `<html>
 
       <head>
         <title>Form Details</title>
@@ -189,8 +200,8 @@ const mailToVerifyCaptcha = async (req, res) => {
                         <font face="Source Sans Pro, sans-serif" color="#1a1a1a">
                           <span
                             style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 16px; line-height: 24px; text-decoration: none; white-space: nowrap; font-weight: normal;">${
-            body.fname1
-            }</span>
+                            body.fname1
+                            }</span>
                         </font>
                       </a>
                     </td>
@@ -219,8 +230,8 @@ const mailToVerifyCaptcha = async (req, res) => {
                         <font face="Source Sans Pro, sans-serif" color="#1a1a1a" st>
                           <span
                             style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 16px; line-height: 24px; text-decoration: none; white-space: nowrap; font-weight: normal;">${
-            body.lname1
-            }</span>
+                            body.lname1
+                            }</span>
                         </font>
                       </a>
                     </td>
@@ -261,43 +272,6 @@ const mailToVerifyCaptcha = async (req, res) => {
               <tbody>
                 <tr>
                   <td align="center" valign="top">
-                    <!--<table cellpadding="0" cellspacing="0" border="0" width="78%" style="min-width: 300px;">
-                          <tbody>
-                            <tr>
-                            <td align="center" valign="top" width="23%">                                             
-                                <a href="#" target="_blank" style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; font-weight: bold;">
-                                  <font face="Source Sans Pro, sans-serif" color="#1a1a1a" >
-                                      <span style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; font-weight: bold;">HELP CENTER</span>
-                                  </font>
-                                </a>
-                            </td>
-                            <td align="center" valign="top" width="10%">
-                                <font face="Source Sans Pro, sans-serif" color="#1a1a1a" >
-                                  <span style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 17px; line-height: 17px; font-weight: bold;">•</span>
-                                </font>
-                            </td>
-                            <td align="center" valign="top" width="23%">
-                                <a href="#" target="_blank" style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; font-weight: bold;">
-                                  <font face="Source Sans Pro, sans-serif" color="#1a1a1a" >
-                                      <span style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; font-weight: bold;">SUPPORT 24/7</span>
-                                  </font>
-                                </a>
-                            </td>
-                            <td align="center" valign="top" width="10%">
-                                <font face="Source Sans Pro, sans-serif" color="#1a1a1a" >
-                                  <span style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 17px; line-height: 17px; font-weight: bold;">•</span>
-                                </font>
-                            </td>
-                            <td align="center" valign="top" width="23%">
-                                <a href="#" target="_blank" style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; font-weight: bold;">
-                                  <font face="Source Sans Pro, sans-serif" color="#1a1a1a" >
-                                      <span style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; font-weight: bold;">FAQ</span>
-                                  </font>
-                                </a>
-                            </td>
-                          </tr>
-                      </tbody>
-                    </table>
                     <div style="height: 34px; line-height: 34px; font-size: 32px;"> </div>-->
                     <font face="Source Sans Pro, sans-serif" color="#868686">
                       <span
@@ -314,6 +288,23 @@ const mailToVerifyCaptcha = async (req, res) => {
                           style="font-family: Source Sans Pro, Arial, Tahoma, Geneva, sans-serif; color: #1a1a1a; font-size: 13px; line-height: 20px; text-decoration: none;">1(800)232-90-26</a>
                     </font>
                     <div style="height: 35px; line-height: 35px; font-size: 33px;"> </div>
+                      <table cellpadding="0" cellspacing="0" border="0">
+                        <tbody>
+                          <tr>
+                            <td align="center" valign="top">
+                              <a href="#" target="_blank" style="display: block; max-width: 19px;">
+                                  <img src="http://serviceadvisor.io/images/soc_2.png" alt="img" width="19" border="0" style="display: block; width: 19px;">
+                              </a>
+                            </td>
+                            <td width="45" style="width: 45px; max-width: 45px; min-width: 45px;"> </td>
+                            <td align="center" valign="top">
+                              <a href="#" target="_blank" style="display: block; max-width: 18px;">
+                                  <img src="http://serviceadvisor.io/images/soc_3.png" alt="img" width="18" border="0" style="display: block; width: 18px;">
+                              </a>
+                            </td>
+                        </tr>
+                      </tbody>
+                  </table>                    
                   </td>
                 </tr>
               </tbody>
@@ -323,32 +314,32 @@ const mailToVerifyCaptcha = async (req, res) => {
       </body>
       
       </html>`;
-
-        const $email_to_adnmin = "damini@chapter247.com";
-        const emailVar = new Email(body);
-        await emailVar.setSubject(
-            "[Service Advisor]" + body.$subject + " - Verification Link"
-        );
-        await emailVar.setBody($messageToAdmin);
-        await emailVar.sendEmail($email_to_adnmin);
-        const email1Var = new Email(body);
-        await email1Var.setSubject(
-            "[Service Advisor]" + "Thankyou for subscribing"
-        );
-        await email1Var.setBody($message1);
-        await email1Var.sendEmail(body.email1);
-        return res.status(200).json({
-            message: "Verification link send successfully!",
-            success: true
-        });
-    } catch (error) {
-        console.log("this is send mail error", error);
-        return res.status(500).json({
-            message: error.message ? error.message : "Unexpected error occure.",
-            success: false
-        });
-    }
+      
+      const $email_to_adnmin = "jsabellico@jlouis.com";
+      const emailVar = new Email(body);
+      await emailVar.setSubject(
+         "[Service Advisor]" + body.$subject + " - Verification Link"
+      );
+      await emailVar.setBody($messageToAdmin);
+      await emailVar.sendEmail($email_to_adnmin);
+      const email1Var = new Email(body);
+      await email1Var.setSubject(
+         "[Service Advisor]" + "Thankyou for subscribing"
+      );
+      await email1Var.setBody($message1);
+      await email1Var.sendEmail(body.email1);
+      return res.status(200).json({
+         message: "Verification link send successfully!",
+         success: true
+      });
+   } catch (error) {
+      console.log("this is send mail error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
 };
 module.exports = {
-    mailToVerifyCaptcha
+   mailToVerifyCaptcha
 };
