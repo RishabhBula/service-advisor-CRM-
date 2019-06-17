@@ -1,27 +1,26 @@
 import { createLogic } from "redux-logic";
-
 import { ApiHelper } from "../helpers/ApiHelper";
-
 import {
   profileInfoActions,
   profileInfoStarted,
   profileInfoSuccess,
+  redirectTo,
   updateCompanyLogoSuccess,
+  updatePasswordSuccess,
+  updatePasswordFailed,
+  profileSettingUpdateSuccess,
+  profileSettingUpdateFailed,
   showLoader,
-  hideLoader,
-  logOutRequest
+  hideLoader
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
-/**
- *
- */
+
 const profileInfoLogic = createLogic({
   type: profileInfoActions.PROFILE_INFO_REQUEST,
   cancelType: profileInfoActions.PROFILE_INFO_FAILED,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
     dispatch(
       profileInfoStarted({
         profileInfo: {},
@@ -31,30 +30,26 @@ const profileInfoLogic = createLogic({
     let api = new ApiHelper();
     let result = await api.FetchFromServer("/user", "/getProfile", "GET", true);
     if (result.isError) {
-      dispatch(logOutRequest());
+      dispatch(
+        redirectTo({
+          path: "/login"
+        })
+      );
+      localStorage.removeItem("token");
       done();
       return;
-    }
-    const hostname = window.location.hostname.split(".");
-    const subdomain = hostname[0];
-    if (subdomain === result.data.data.subdomain) {
+    } else {
       dispatch(
         profileInfoSuccess({
           profileInfo: result.data.data,
           isLoading: false
         })
       );
-      dispatch(hideLoader());
       done();
-      return;
     }
-    dispatch(logOutRequest());
-    done();
   }
 });
-/**
- *
- */
+
 const updateCompanyLogoLogic = createLogic({
   type: profileInfoActions.UPDATE_COMPANY_LOGO,
   async process({ action }, dispatch, done) {
@@ -77,6 +72,7 @@ const updateCompanyLogoLogic = createLogic({
       done();
       return;
     } else {
+      // toast.success(result.messages[0]);
       dispatch(
         updateCompanyLogoSuccess({
           shopLogo: result.data.imageUploadData
@@ -86,9 +82,7 @@ const updateCompanyLogoLogic = createLogic({
     }
   }
 });
-/**
- *
- */
+
 const updateCompanyDetailsLogic = createLogic({
   type: profileInfoActions.UPDATE_COMPANY_DETAILS,
   async process({ action, getState }, dispatch, done) {
@@ -124,8 +118,74 @@ const updateCompanyDetailsLogic = createLogic({
     }
   }
 });
+
+const updatePasswordLogic = createLogic({
+  type: profileInfoActions.UPDATE_PASSWORD_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    // dispatch(updatePasswordRequest())
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/change-password",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(updatePasswordFailed())
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(updatePasswordSuccess());
+      done();
+    }
+  }
+})
+
+const profileSettingUpdate = createLogic({
+  type: profileInfoActions.PROFILE_SETTING_UPDATE_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    // dispatch(updatePasswordRequest())
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/update-user",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(profileSettingUpdateFailed())
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(
+        profileSettingUpdateSuccess({
+          profileInfo: result.data.data,
+          isLoading: false
+        })
+        );
+      }
+    done();
+  }
+})
+
 export const ProfileInfoLogic = [
   profileInfoLogic,
   updateCompanyLogoLogic,
-  updateCompanyDetailsLogic
+  updateCompanyDetailsLogic,
+  updatePasswordLogic,
+  profileSettingUpdate
 ];

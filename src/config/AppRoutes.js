@@ -113,5 +113,10 @@ export const AppRoutes = {
     url: "/settings",
     name: "Settings",
     exact: true
+  },
+  PROFILE: {
+    url: "/profile",
+    name: "Profile",
+    exact: true
   }
 };
