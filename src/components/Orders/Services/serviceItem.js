@@ -1078,7 +1078,7 @@ class ServiceItem extends Component {
                                             </div> : null}
                                         </InputGroup>
                                         <div className={"service-customer-discount"}>
-                                          <CrmDiscountBtn discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
+                                          <CrmDiscountBtn index={index} sIndex={sIndex} discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
                                         </div>
                                       </div>
                                     </td>
@@ -1129,7 +1129,10 @@ class ServiceItem extends Component {
                                       }
                                       <Button id={`new${sIndex}${index}`} className={"btn-sm"} type="button">
                                         New +
-                                        </Button>
+                                      </Button>
+                                      <UncontrolledTooltip target={`new${sIndex}${index}`}>
+                                        Add Label For {`${service.serviceType}`}
+                                      </UncontrolledTooltip>
                                       <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}${index}`}>
                                         <PopoverHeader>
                                           <div>
@@ -1169,11 +1172,15 @@ class ServiceItem extends Component {
                                     <td>
                                       <Button
                                         size={"sm"}
+                                        id={`Delete${index}${sIndex}`}
                                         onClick={() => { this.handleRemoveServiceItems(index, sIndex) }}
                                         className={"btn-theme-transparent"}
                                       >
                                         <i className={"icons cui-trash"}></i>
                                       </Button>
+                                      <UncontrolledTooltip target={`Delete${index}${sIndex}`}>
+                                        Remove {`${service.serviceType}`}
+                                      </UncontrolledTooltip>
                                     </td>
                                   </tr>
                                 )
