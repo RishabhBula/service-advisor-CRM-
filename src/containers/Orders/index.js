@@ -98,6 +98,7 @@ class Order extends Component {
       orderName: "",
       isOrderSubbmited: false
     };
+    this.orderNameRef = React.createRef();
   }
   componentDidMount() {
     this.props.getOrderId();
@@ -107,7 +108,9 @@ class Order extends Component {
       orderId: this.props.match.params.id
     });
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
+    this.orderNameRef.focus();
   }
+  
 
   componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
 
@@ -266,6 +269,7 @@ class Order extends Component {
                         name={"orderName"}
                         value={orderName}
                         maxLength={"250"}
+                        ref={(input) => { this.orderNameRef = input; }} 
                         onBlur={this.handleEditOrder}
                         invalid={isError && !orderName}
                         className={"order-name-input"}

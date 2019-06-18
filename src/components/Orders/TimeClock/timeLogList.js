@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import TimeLogList from "./timeLogList"
 
-class TimeClock extends Component {
+class TimeLogList extends Component {
    constructor(props) {
       super(props);
       this.state = {};
@@ -9,11 +8,10 @@ class TimeClock extends Component {
    render() {
       return (
          <div>
-            TimeClock Data!!
-            <TimeLogList />
+            Time Log List Data!!
          </div>
       );
    }
 }
 
-export default TimeClock;
+export default TimeLogList;
