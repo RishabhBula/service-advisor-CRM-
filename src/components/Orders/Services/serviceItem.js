@@ -793,7 +793,8 @@ class ServiceItem extends Component {
       services[index].isCannedService = true
       const payload =
       {
-        services: [services[index]]
+        services: [services[index]],
+        thisIsCannedService: true
       }
 
       this.props.addNewService(payload)
@@ -970,7 +971,6 @@ class ServiceItem extends Component {
                                 const servicesSubTotal = (parseFloat(service.subTotalValue) - parseFloat(subDiscount)).toFixed(2);
                                 mainserviceTotal.push(parseFloat(servicesSubTotal))
                                 serviceTotal = getSumOfArray(mainserviceTotal)
-                                console.log("Total Value Total Value Total Value Total Value Total Value Total Value",getSumOfArray(mainserviceTotal))
                                 return (
                                   <tr>
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
@@ -1049,10 +1049,9 @@ class ServiceItem extends Component {
                                         <Input
                                           disabled
                                           value={
-                                            servicesSubTotal
+                                            !isNaN(servicesSubTotal) ? servicesSubTotal : 0
                                             // service.subTotalValue - calculateValues(service.subTotalValue || 0,
                                             // service.discount.value || 0, service.discount.type)
-
                                           }
                                         />
                                       </InputGroup>
@@ -1144,7 +1143,7 @@ class ServiceItem extends Component {
                                     </td>
                                   </tr>
                                 )
-                              }):
+                              }) :
                               <tr>
                                 <td className={"text-center"} colSpan={12}>
                                   <NoDataFound showAddButton={false} message={"Currently there are no Service details added."} />
@@ -1193,7 +1192,7 @@ class ServiceItem extends Component {
                           <span><h6>Taxes : 12% +</h6></span>
                         </div>
                         <hr/> */}
-                        <h4>Service Total: <span className={"dollor-icon"}>${serviceTotal}</span></h4>
+                        <h4>Service Total: <span className={"dollor-icon"}>${!isNaN(serviceTotal) ? serviceTotal : 0}</span></h4>
                       </div>
                       <UncontrolledTooltip placement={"top"} target={`epa${index}`}>
                         Add EPA to service total

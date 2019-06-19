@@ -57,12 +57,15 @@ const addServiceLogic = createLogic({
                serviceIdData.push(serviceId)
                return true
             })
-            const payload = {
-               serviceId: serviceIdData,
-               _id: action.payload.orderId,
-               customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
+
+            if (!action.payload.thisIsCannedService) {
+               const payload = {
+                  serviceId: serviceIdData,
+                  _id: action.payload.orderId,
+                  customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
+               }
+               dispatch(updateOrderDetailsRequest(payload))
             }
-            dispatch(updateOrderDetailsRequest(payload))
          }
          dispatch(getCannedServiceList())
          dispatch(hideLoader());
