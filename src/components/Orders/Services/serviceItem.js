@@ -880,6 +880,7 @@ class ServiceItem extends Component {
           </div>
           {
             services && services.length ? services.map((item, index) => {
+              let mainserviceTotal = []
               const epa = calculateValues(item.serviceTotal || 0, item.epa.value || 0, item.epa.type);
               const discount = calculateValues(item.serviceTotal || 0, item.discount.value || 0, item.discount.type);
               const tax = calculateValues(item.serviceTotal || 0, item.taxes.value || 0, item.taxes.type);
@@ -967,6 +968,9 @@ class ServiceItem extends Component {
                               this.state.services[index].serviceItems.map((service, sIndex) => {
                                 const subDiscount = calculateValues(service.subTotalValue || 0, service.discount.value || 0, service.discount.type);
                                 const servicesSubTotal = (parseFloat(service.subTotalValue) - parseFloat(subDiscount)).toFixed(2);
+                                mainserviceTotal.push(parseFloat(servicesSubTotal))
+                                serviceTotal = getSumOfArray(mainserviceTotal)
+                                console.log("Total Value Total Value Total Value Total Value Total Value Total Value",getSumOfArray(mainserviceTotal))
                                 return (
                                   <tr>
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
@@ -1140,7 +1144,7 @@ class ServiceItem extends Component {
                                     </td>
                                   </tr>
                                 )
-                              }) :
+                              }):
                               <tr>
                                 <td className={"text-center"} colSpan={12}>
                                   <NoDataFound showAddButton={false} message={"Currently there are no Service details added."} />
@@ -1152,10 +1156,6 @@ class ServiceItem extends Component {
                     </div>
                     <div className={"p-2 d-flex justify-content-between calculation-section"}>
                       <ul className={"calculation-btn-block m-0 p-0"}>
-                        {
-                          console.log("$$$$$###############$$$$$$$$", item.epa.isConfirmedValue)
-
-                        }
                         <li id={`epa${index}`} onClick={() => {
                           this.handleTaxeButtons(index, "EPA")
                         }}>EPA
