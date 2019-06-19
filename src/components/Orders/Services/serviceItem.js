@@ -44,25 +44,24 @@ class ServiceItem extends Component {
       services: [
         {
           isButtonValue: "",
-          isConfirmedValue: {
-            type: "",
-            value: false
-          },
           serviceName: "",
           technician: "",
           note: "",
           serviceItems: [],
           epa: {
             type: "%",
-            value: ""
+            value: "",
+            isConfirmedValue: false
           },
           discount: {
             type: "%",
             value: "",
+            isConfirmedValue: false
           },
           taxes: {
             type: "%",
-            value: ""
+            value: "",
+            isConfirmedValue: false
           },
           serviceSubTotalValue: [],
           serviceTotal: "0.00",
@@ -498,25 +497,24 @@ class ServiceItem extends Component {
       const serviceData = [
         {
           isButtonValue: "",
-          isConfirmedValue: {
-            type: "",
-            value: false
-          },
           serviceName: "",
           technician: "",
           note: "",
           serviceItems: [],
           epa: {
             type: "%",
-            value: ""
+            value: "",
+            isConfirmedValue: false
           },
           discount: {
             type: "%",
             value: "",
+            isConfirmedValue: false
           },
           taxes: {
             type: "%",
-            value: ""
+            value: "",
+            isConfirmedValue: false
           },
           serviceSubTotalValue: [],
           serviceTotal: "0.00",
@@ -572,17 +570,20 @@ class ServiceItem extends Component {
   handleTaxesAdd = (e, index) => {
     const { name, value } = e.target
     const serviceData = [...this.state.services]
-    serviceData[index][name].value = value
-    if (serviceData[index].isConfirmedValue ? (serviceData[index].isConfirmedValue.value && serviceData[index].isConfirmedValue.type === name) : null) {
-      this.setState({
-        services: serviceData
-      })
+    if ((parseFloat(value) >= 100) && (serviceData[index].epa.type === '%' || serviceData[index].discount.type === '%' || serviceData[index].taxes.type === '%')) {
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error("Enter percentage less than 100");
+      }
+      return
     }
+    serviceData[index][name].value = value
+    this.setState({
+      services: serviceData
+    })
   }
   handleValueConfirmed = (index, name) => {
     const serviceData = [...this.state.services]
-    serviceData[index].isConfirmedValue.value = true
-    serviceData[index].isConfirmedValue.type = name
+    serviceData[index][name].isConfirmedValue = true
     serviceData[index].isButtonValue = ''
     if (serviceData[index][name].type === "%" && name !== 'discount') {
       let tempServiceTotal
@@ -656,9 +657,11 @@ class ServiceItem extends Component {
         const TotalValues = parseFloat(tempServiceTotal) + parseFloat(serviceData[index].taxes.value)
         const TaxedTotalValue = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(TotalValues)
         serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue)
+      } else if (serviceData[index].epa.value && serviceData[index].epa.type === '%' && !serviceData[index].discount.value) {
+        const TaxedValue = (parseFloat(serviceData[index].epa.value) / 100) * parseFloat(tempServiceTotal)
+        serviceData[index].serviceTotal = parseFloat(tempServiceTotal) + parseFloat(TaxedValue)
       } else {
-        const TaxedTotalValue = (parseFloat(serviceData[index].discount.value) / 100) * parseFloat(tempServiceTotal)
-        serviceData[index].serviceTotal = parseFloat(serviceData[index].serviceTotal) - parseFloat(TaxedTotalValue)
+        serviceData[index].serviceTotal = tempServiceTotal
       }
     } else {
       let tempServiceTotal
@@ -683,7 +686,7 @@ class ServiceItem extends Component {
       }
     }
     this.setState({
-      services: serviceData
+      services: serviceData,
     })
   }
   handleOnChange = (e) => {
@@ -1196,19 +1199,38 @@ class ServiceItem extends Component {
                     </div>
                     <div className={"p-2 d-flex justify-content-between calculation-section"}>
                       <ul className={"calculation-btn-block m-0 p-0"}>
+                        {
+                          console.log("$$$$$###############$$$$$$$$", item.epa.isConfirmedValue)
+
+                        }
                         <li id={`epa${index}`} onClick={() => {
                           this.handleTaxeButtons(index, "EPA")
-                        }}>EPA {item.epa && item.epa.type === '$' ? item.epa.type : null}{item.epa && item.epa.value ? item.epa.value : 0}{item.epa && item.epa.type === '%' ? item.epa.type : null}
+                        }}>EPA
+                        {item.epa && item.epa.type === '$' ? item.epa.type : null}
+                          {(item.epa.isConfirmedValue) &&
+                            item.epa &&
+                            item.epa.value ?
+                            item.epa.value : 0}
+                          {item.epa && item.epa.type === '%' ? item.epa.type : null}
                         </li>
                         <li id={`disc${index}`} onClick={() => {
                           this.handleTaxeButtons(index, "Discount")
-                        }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{item.discount && item.discount.value ? item.discount.value : 0}{item.discount && item.discount.type === '%' ? item.discount.type : null}
+                        }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{
+                            (item.discount.isConfirmedValue) &&
+                              item.discount &&
+                              item.discount.value ?
+                              item.discount.value : 0}{
+                            item.discount && item.discount.type === '%' ? item.discount.type : null
+                          }
                         </li>
                         <li
                           id={`tax${index}`}
                           onClick={() => {
                             this.handleTaxeButtons(index, "Taxes")
-                          }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}
+                          }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}
+                          {
+                            item.taxes.isConfirmedValue &&
+                              item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}
                         </li>
                       </ul>
                       <div className={"service-total-block"}>
@@ -1243,7 +1265,7 @@ class ServiceItem extends Component {
                                       <i className={"fa fa-dollar"}></i>
                                     </Button>
                                   </div> : null}
-                                <Input id="EPA" name="epa" onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"EPA"} />
+                                <Input id="EPA" value={item.epa.value} name="epa" onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"EPA"} />
                                 {item.epa && item.epa.type === '%' ?
                                   <div className="input-group-append">
                                     <Button color={"primary"} size={"sm"}>
@@ -1281,7 +1303,7 @@ class ServiceItem extends Component {
                                       <i className={"fa fa-dollar"}></i>
                                     </Button>
                                   </div> : null}
-                                <Input id="discount" name="discount" onChange={(e) => { this.handleTaxesAdd(e, index, "epa") }} type={"text"} maxLength="5" placeholder={"Discount"} />
+                                <Input id="discount" value={item.discount.value} name="discount" onChange={(e) => { this.handleTaxesAdd(e, index, "epa") }} type={"text"} maxLength="5" placeholder={"Discount"} />
                                 {item.discount && item.discount.type === '%' ?
                                   <div className="input-group-append">
                                     <Button color={"primary"} size={"sm"}>
@@ -1315,7 +1337,7 @@ class ServiceItem extends Component {
                                       <i className={"fa fa-dollar"}></i>
                                     </Button>
                                   </div> : null}
-                                <Input name="taxes" onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"Taxes"} />
+                                <Input name="taxes" value={item.taxes.value} onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"Taxes"} />
                                 {item.taxes && item.taxes.type === '%' ?
                                   <div className="input-group-append">
                                     <Button color={"primary"} size={"sm"}>
