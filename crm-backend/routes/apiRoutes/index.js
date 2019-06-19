@@ -14,5 +14,6 @@ module.exports = {
   order: require("./orderRoutes"),
   service: require("./serviceRoutes"),
   inspection: require("./inspectionRoutes"),
-  label: require("./labelRoutes")
+  label: require("./labelRoutes"),
+  googleCaptcha: require("./googleCaptchaRoutes")
 };

@@ -24,14 +24,17 @@ const addNewService = async (req, res) => {
                success: false
             })
          }
-         if (element.isCannedService && !element.isCannedAdded) {
+         console.log("#############", element.isCannedService);
+         if (element.isCannedService && !body.isServiceSubmit) {
             if (body.services.length > 1) {
                isCannedService = false
             }
             isCannedService = true
             const CannedServiceData = await Service.find({
                serviceName: element.serviceName,
-               isCannedService: true
+               isCannedService: true,
+               userId: currentUser.id,
+               parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
             })
             if (CannedServiceData.length) {
                return res.status(400).json({
@@ -56,14 +59,14 @@ const addNewService = async (req, res) => {
             status: true,
             isDeleted: false
          }
-         const addedService = await Service.findByIdAndUpdate(element._id,{
+         const addedService = await Service.findByIdAndUpdate(element._id, {
             $set: serviceData
          })
          if (!addedService) {
             const serviceContent = new Service(serviceData);
             const result = await serviceContent.save();
             serviceResultData.push(result)
-         }else{
+         } else {
             const seviceData = await Service.findById(element._id)
             serviceResultData.push(seviceData)
          }
@@ -71,7 +74,7 @@ const addNewService = async (req, res) => {
       const customerAndUserContent = new CustomerAndUser(cutomerUser);
       const commentResult = await customerAndUserContent.save();
       return res.status(200).json({
-         message: `${body.services.length} ${isCannedService ? 'canned' : " "} Service added successfully`,
+         message: isCannedService ? "Canned Service added successfully" : "",
          serviceResultData,
          commentResult,
          success: true

@@ -113,16 +113,17 @@ class WorkflowGridView extends React.Component {
                     {...providedNew.dragHandleProps}
                     ref={providedNew.innerRef}
                     className={"content"}
-                    onClick={() => {
+                  >
+                    <span onClick={() => {
                       this.props.redirectTo(
                         `${AppRoutes.WORKFLOW_ORDER.url.replace(
                           ":id",
                           task._id
                         )}`
                       );
-                    }}
-                  >
-                    {task.orderName || "Unnamed order"}
+                    }}>
+                      {task.orderName || "Unnamed order"}
+                    </span>
                     <i
                       className={"fa fa-trash pull-right"}
                       onClick={() => {

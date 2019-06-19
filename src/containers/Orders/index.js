@@ -6,11 +6,7 @@ import {
   Card,
   CardBody,
   Button,
-  Col,
   Input,
-  FormGroup,
-  Label,
-  Row,
   FormFeedback,
   ButtonGroup
 } from "reactstrap";
@@ -45,7 +41,12 @@ import {
   getCannedServiceList,
   updateOrderDetailsRequest,
   getOrderDetailsRequest,
-  deleteLabel
+  deleteLabel,
+  getMatrixList,
+  getRateStandardListRequest,
+  rateAddRequest,
+  setRateStandardListStart,
+  getInventoryPartVendors
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -113,7 +114,7 @@ class Order extends Component {
     if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
     }
-    if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
+    if ((orderReducer.orderItems !== this.props.orderReducer.orderItems) || orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading) {
       const {
         orderName,
         customerId,
@@ -137,23 +138,48 @@ class Order extends Component {
   };
 
   customerVehicleData = (customer, vehicle) => {
-    this.setState({
-      customerData: customer.data,
-      vehicleData: vehicle.data
-    });
+    if (customer && vehicle) {
+      this.setState({
+        customerData: customer,
+        vehicleData: vehicle
+      });
+    } else if (customer && !vehicle) {
+      this.setState({
+        customerData: customer,
+        vehicleData: ""
+      });
+    } else if (vehicle && !customer) {
+      this.setState({
+        customerData: "",
+        vehicleData: vehicle
+      });
+    } else {
+      this.setState({
+        customerData: "",
+        vehicleData: ""
+      });
+    }
   };
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
+    logger("!!!!!!!!!!!!", customerData, vehicleData, orderId, orderName);
     if (!customerData || !vehicleData || !orderName) {
-      logger("!!!!!!!!!!!!", customerData, vehicleData, orderId, orderName);
       this.setState({
         isError: true
       });
       return;
     }
+    let customerValue, vehicleValue
+    if (customerData.data && vehicleData.data) {
+      customerValue = customerData.data._id
+      vehicleValue = vehicleData.data._id
+    } else {
+      customerValue = customerData._id
+      vehicleValue = vehicleData._id
+    }
     const payload = {
-      customerId: customerData ? customerData._id : null,
-      vehicleId: vehicleData ? vehicleData._id : null,
+      customerId: customerValue ? customerValue : null,
+      vehicleId: vehicleValue ? vehicleValue : null,
       orderName: orderName,
       _id: orderId
     };
@@ -205,8 +231,12 @@ class Order extends Component {
       deleteLabel,
       sendMessageTemplate,
       orderReducer,
-      profileReducer} = this.props
-    logger(customerData, vehicleData)
+      getPriceMatrix,
+      getStdList,
+      addRate,
+      profileInfoReducer,
+      rateStandardListReducer,
+      getInventoryPartsVendors } = this.props
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -217,9 +247,9 @@ class Order extends Component {
                   <div className={"order-info-head d-flex"}>
                     <h3 className={"mr-3 orderId"}>Order (#
                     {typeof this.props.orderReducer.orderId !== "object"
-                      ? this.props.orderReducer.orderId
-                      : null}
-                    )
+                        ? this.props.orderReducer.orderId
+                        : null}
+                      )
                     </h3>
                     <div className="input-block">
                       <Input
@@ -227,6 +257,7 @@ class Order extends Component {
                         onChange={e => this.handleChange(e)}
                         name={"orderName"}
                         value={orderName}
+                        maxLength={"250"}
                         invalid={isError && !orderName}
                         className={"order-name-input"}
                       />
@@ -237,25 +268,39 @@ class Order extends Component {
                       </FormFeedback>
                     </div>
                   </div>
-                  <div>
-                  <Button
-                    color={""}
-                    onClick={() => this.handleEditOrder()}
-                    className={"order-update-btn"}
-                  >
-                    Update Order
+                  {/* <div>
+                    <Button
+                      color={""}
+                      onClick={() => this.handleEditOrder()}
+                      className={"order-update-btn"}
+                    >
+                      Update Order
                   </Button>
-                  </div>
+                  </div> */}
                 </div>
+                
                 <div className={"order-top-section"}>
                   <CustomerVehicle
                     getCustomerData={getCustomerData}
                     getVehicleData={getVehicleData}
                     customerVehicleData={this.customerVehicleData}
                     isError={isError}
+                    handleEditOrder={this.handleEditOrder}
                     orderReducer={orderReducer}
                   />
                 </div>
+                <div className={"position-relative fdsfdsfdsf"}>
+                  {console.log(this.props.orderReducer.orderItems.orderName, "fjdhsfkdshfkjdshfkjdhk")}
+                  {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.orderName  ?
+                  
+                    <div className={"service-overlay"}>
+                      <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"}/>
+                      <h3>
+                        Please Add Order Details first 
+                      </h3>
+                    </div>  
+                    : null
+                }
                 <div className={"position-relative"}>
                   <Suspense fallback={"Loading.."}>
                     <OrderTab
@@ -264,10 +309,11 @@ class Order extends Component {
                       onTabChange={this.onTabChange}
                     />
                   </Suspense>
+                </div>
                   {/* <div className={"invt-add-btn-block"}>
                 {this.renderAddNewButton()}
               </div> */}
-                </div>
+                
                 <Suspense fallback={<Loader />}>
                   <Switch>
                     {OrderComponents.map((route, idx) => {
@@ -296,6 +342,13 @@ class Order extends Component {
                               vehicleData={vehicleData}
                               orderId={orderId}
                               deleteLabel={deleteLabel}
+                              getPriceMatrix={getPriceMatrix}
+                              getStdList={getStdList}
+                              addRate={addRate}
+                              profileInfoReducer={profileInfoReducer}
+                              rateStandardListReducer={rateStandardListReducer}
+                              getInventoryPartsVendors={getInventoryPartsVendors}
+                              orderReducer={orderReducer}
                             />
                           ) : null}
                           {activeTab === 1 ? 
@@ -313,7 +366,7 @@ class Order extends Component {
                             vehicleData={vehicleData}
                             sendMessageTemplate={sendMessageTemplate}
                             orderId={orderId}
-                            profileReducer={profileReducer}
+                            profileReducer={profileInfoReducer}
                             orderReducer={orderReducer}
                           /> : null}
                           {activeTab === 2 ? <TimeClock /> : null}
@@ -323,7 +376,8 @@ class Order extends Component {
                     })}
                   </Switch>
                 </Suspense>
-              </CardBody>
+                
+                </div></CardBody>
             </div>
             <div className={"workflow-right"}>
               <div className={"pb-2"}>
@@ -396,7 +450,8 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   serviceReducers: state.serviceReducers,
   labelReducer: state.labelReducer,
-  profileReducer: state.profileReducer
+  profileInfoReducer: state.profileInfoReducer,
+  rateStandardListReducer: state.rateStandardListReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -485,7 +540,22 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteLabel: data => {
     dispatch(deleteLabel(data))
-  }
+  },
+  getPriceMatrix: data => {
+    dispatch(getMatrixList(data));
+  },
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  addRate: data => {
+    dispatch(rateAddRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
+  getInventoryPartsVendors: data => {
+    dispatch(getInventoryPartVendors(data));
+  },
 });
 export default connect(
   mapStateToProps,

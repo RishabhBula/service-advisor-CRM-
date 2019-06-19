@@ -42,8 +42,6 @@ class PriceMatrixComponent extends Component {
       matrixModalOpen,
       handleMatrixModal
     } = this.props;
-    console.log("!!!!!!!!Matrix Add Open!!!!!!!", matrixModalOpen);
-
     return (
       <>{
         addNewMatrix || isEditMatrix ?

@@ -26,6 +26,7 @@ const createNewOrder = async (req, res) => {
   const { body, currentUser } = req;
   try {
     const { id, parentId } = currentUser;
+    const result = await Orders.countDocuments({ userId: currentUser.id, parentId: currentUser.parentId ? currentUser.parentId : currentUser.id });
     const condition = {
       $or: [
         {
@@ -70,6 +71,7 @@ const createNewOrder = async (req, res) => {
       messageId: body.messageId
         ? mongoose.Types.ObjectId(body.messageId)
         : null,
+      orderId: result + 1,
       userId: currentUser.id,
       parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,
       workflowStatus,
@@ -370,9 +372,9 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
     );
-    const result1 = await Orders.populate(result2,{path:'serviceId.serviceId.technician'})
+    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician' })
     const result = result1;
     const serviceData = [],
       inspectionData = [];
@@ -392,6 +394,7 @@ const getOrderDetails = async (req, res) => {
       data: result,
       serviceResult: serviceData,
       inspectionResult: inspectionData,
+      customerCommentData: result[0].customerCommentId,
       success: true
     });
   } catch (error) {

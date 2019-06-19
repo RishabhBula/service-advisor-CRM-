@@ -17,7 +17,10 @@ const addMessageTemplate = async (req, res) => {
          isDeleted: false,
       }
       const existingMsgTemp = await MessageTemplate.find({
-         templateName: body.templateName
+         templateName: body.templateName,
+         userId: currentUser.id,
+         parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
+         isDeleted: false
       })
       if (existingMsgTemp.length) {
          return res.status(400).json({

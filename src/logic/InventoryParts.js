@@ -83,9 +83,14 @@ const addPartToInventoryLogic = createLogic({
           isAddLabel: false
         }],
         subTotalValue: "",
-        isItemChecked: true
+        isItemChecked: true,
+        unchangebleTotal: 0.00
       })
-      dispatch(addPartToService(data.services))
+      dispatch(addPartToService({
+        services: data.services,
+        serviceIndex: data.serviceIndex
+      }
+      ))
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -173,7 +178,8 @@ const getInventoryPartsListLogic = createLogic({
             isAddLabel: false
           }],
           subTotalValue: "",
-          isItemChecked: true
+          isItemChecked: true,
+          unchangebleTotal: 0.00
         }
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

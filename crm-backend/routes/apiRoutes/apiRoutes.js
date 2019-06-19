@@ -17,7 +17,8 @@ const {
   order,
   service,
   inspection,
-  label
+  label,
+  googleCaptcha
 } = require("./index");
 
 router.use("/auth", auth);
@@ -36,4 +37,5 @@ router.use("/order", order);
 router.use("/service", service);
 router.use("/inspection", inspection);
 router.use("/label", label)
+router.use("", googleCaptcha)
 module.exports = router;

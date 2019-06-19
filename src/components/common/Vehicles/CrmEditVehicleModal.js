@@ -24,6 +24,7 @@ import {
 import Validator from "js-object-validation";
 import LastUpdated from "../../common/LastUpdated";
 import * as classnames from "classnames";
+import { logger } from "../../../helpers";
 
 class CustomOption extends Component {
   render() {
@@ -295,9 +296,7 @@ export class CrmEditVehicleModal extends Component {
       }
       this.props.submitUpdateVehicleFun(data);
     } catch (error) {
-      console.log("====================================");
-      console.log(error);
-      console.log("====================================");
+      logger(error)
     }
   };
 
@@ -318,7 +317,6 @@ export class CrmEditVehicleModal extends Component {
       prodYearError,
       notes
     } = this.state;
-    console.log("##################", drivetrainSelected);
     return (
       <>
         <Modal
@@ -626,7 +624,7 @@ export class CrmEditVehicleModal extends Component {
                     type="select"
                     className=""
                     onChange={this.handleSelectedChange}
-                    name="transmission"
+                    name="transmissionSelected"
                     id="matrixId"
                   >
                     <option value={""}>Select</option>
@@ -699,7 +697,7 @@ export class CrmEditVehicleModal extends Component {
                     type="textarea"
                     placeholder="Enter a note..."
                     id="name"
-                    maxLength={"100"}
+                    maxLength={"300"}
                     value={this.state.notes}
                     onChange={this._onInputChange}
                   />

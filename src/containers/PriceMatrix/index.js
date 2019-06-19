@@ -121,6 +121,9 @@ class PriceMatrix extends Component {
 
   handleChange = (index, e) => {
     const { name, value } = e.target
+    if (isNaN(value) && name !== "matrixName") {
+      return
+    }
     if (name === 'matrixName') {
       this.setState({
         [name]: value

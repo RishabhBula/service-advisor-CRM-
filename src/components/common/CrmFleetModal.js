@@ -69,7 +69,8 @@ export class CrmFleetModal extends Component {
       selectedPriceMatrix: { value: "", label: "Type to select" },
       vendorValue: "",
       percentageError: "",
-      openStadardRateModel: false
+      openStadardRateModel: false,
+      inCorrectNumber: []
     };
   }
 
@@ -206,7 +207,8 @@ export class CrmFleetModal extends Component {
       vendorValue: "",
       error: {},
       openStadardRateModel: false,
-      percentageError: ""
+      percentageError: "",
+      inCorrectNumber: []
     });
   }
 
@@ -231,6 +233,17 @@ export class CrmFleetModal extends Component {
     const { value } = event.target;
     if (isNaN(value)) {
       return
+    }
+    const IncorrectNumber = [...this.state.inCorrectNumber]
+    if (parseInt(value.length) < 10) {
+      IncorrectNumber[index] = true
+      this.setState({
+        inCorrectNumber: IncorrectNumber
+      })
+    } else {
+      this.setState({
+        inCorrectNumber: []
+      })
     }
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
@@ -313,7 +326,8 @@ export class CrmFleetModal extends Component {
       if (
         (!isValid && fleetData.email !== "") ||
         Object.keys(this.state.phoneErrors).length ||
-        fleetData.companyName === "" || this.state.percentageError
+        fleetData.companyName === "" || this.state.percentageError ||
+        this.state.inCorrectNumber.length
       ) {
         this.setState({
           errors,
@@ -520,8 +534,8 @@ export class CrmFleetModal extends Component {
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
                                           "is-invalid":
-                                            this.state.phoneErrors[index] !== "" &&
-                                            !item.value
+                                            (this.state.phoneErrors[index] !== "" &&
+                                              !item.value) || (this.state.inCorrectNumber[index])
                                         })}
                                         size="20"
                                         value={item.value}
@@ -532,6 +546,9 @@ export class CrmFleetModal extends Component {
                                       />
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
+                                        {
+                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                        }
                                       </FormFeedback>
                                     </div>
                                   ) : (
@@ -589,8 +606,8 @@ export class CrmFleetModal extends Component {
                                           placeholder="(555) 055-0555"
                                           className={classnames("form-control", {
                                             "is-invalid":
-                                              this.state.phoneErrors[index] !== ""
-                                              && !item.value
+                                              (this.state.phoneErrors[index] !== "" &&
+                                                !item.value) || (this.state.inCorrectNumber[index])
                                           })}
                                           size="20"
                                           value={item.value}
@@ -601,6 +618,9 @@ export class CrmFleetModal extends Component {
                                         />
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
+                                          {
+                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          }
                                         </FormFeedback>
                                         {/* <p className='text-danger'>
                                         {this.state.phoneErrors[index]}
@@ -612,8 +632,8 @@ export class CrmFleetModal extends Component {
                                           name="phoneDetail"
                                           className={classnames("form-control", {
                                             "is-invalid":
-                                              this.state.phoneErrors[index] !== ""
-                                              && !item.value
+                                              (this.state.phoneErrors[index] !== "" &&
+                                                !item.value) || (this.state.inCorrectNumber[index])
                                           })}
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
@@ -625,6 +645,9 @@ export class CrmFleetModal extends Component {
                                         />
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
+                                          {
+                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          }
                                         </FormFeedback>
                                       </div>
                                     )}

@@ -22,54 +22,54 @@ import { isValidURL } from "../../helpers/Object";
 const allVehicleServices = [
   {
     key: "Cars",
-    icon: "/assets/img/carLogo.svg"
+    icon: "./assets/img/carLogo.svg"
   },
   {
     key: "Semi & Heavy Duty",
-    icon: "/assets/img/trukLogo.svg"
+    icon: "./assets/img/trukLogo.svg"
   },
   {
     key: "RV's",
-    icon: "/assets/img/vanLogo.svg"
+    icon: ",/assets/img/vanLogo.svg"
   },
   {
     key: "Trailers",
-    icon: "/assets/img/trailerLogo.svg"
+    icon: "./assets/img/trailerLogo.svg"
   },
   {
     key: "Motorcycles",
-    icon: "/assets/img/motorcycleLogo.svg"
+    icon: "./assets/img/motorcycleLogo.svg"
   },
   {
     key: "Boats",
-    icon: "/assets/img/boatLogo.svg"
+    icon: "./assets/img/boatLogo.svg"
   },
   {
     key: "Bicycles",
-    icon: "/assets/img/cycleLogo.svg"
+    icon: "./assets/img/cycleLogo.svg"
   },
   {
     key: "Others",
-    icon: "/assets/img/list-dots.svg"
+    icon: "./assets/img/list-dots.svg"
   }
 ];
 const allPeopleArray = ["1-2", "3-6", "7-10", "11+"];
 const allServices = [
   {
     key: "Repair & Maintenance",
-    icon: "/assets/img/repairing-car.svg"
+    icon: "./assets/img/repairing-car.svg"
   },
   {
     key: "Detail, Wrap & Film",
-    icon: "/assets/img/carPaintingLogo.svg"
+    icon: "./assets/img/carPaintingLogo.svg"
   },
   {
     key: "Restoration & Custom Builds",
-    icon: "/assets/img/carChachisLogo.svg"
+    icon: "./assets/img/carChachisLogo.svg"
   },
   {
     key: "Others",
-    icon: "/assets/img/list-dots.svg"
+    icon: "./assets/img/list-dots.svg"
   }
 ];
 export class CrmWelcomeModel extends Component {
@@ -100,6 +100,29 @@ export class CrmWelcomeModel extends Component {
     this.cropper = React.createRef();
   }
 
+  componentDidMount = () => {
+    const {
+      companyName,
+      website
+    } = this.props
+    this.setState({
+      companyName,
+      website
+    })
+  }
+  componentDidUpdate = ({ companyName, website }) => {
+    if ((companyName !== this.props.companyName) || (website !== this.props.website)) {
+      const {
+        companyName,
+        website
+      } = this.props
+      this.setState({
+        companyName,
+        website
+      })
+    }
+  }
+
   onCropChange = crop => {
     this.setState({ crop });
   };
@@ -122,9 +145,9 @@ export class CrmWelcomeModel extends Component {
         companyLogo: reader.result
       })
     );
-    reader.onloadend = function(as) {
+    reader.onloadend = function (as) {
       var image = new Image();
-      image.onload = function() {
+      image.onload = function () {
         scope.setState({
           companyLogo: reader.result
         });
@@ -262,7 +285,7 @@ export class CrmWelcomeModel extends Component {
         companyName,
         website
       });
-    } catch (error) {}
+    } catch (error) { }
   };
   handleInputChange = e => {
     this.setState({
@@ -315,7 +338,7 @@ export class CrmWelcomeModel extends Component {
                   <Col md="6">
                     <FormGroup>
                       <Label htmlFor="name" className="font-text">
-                        Company Name <span className="asteric">*</span> 
+                        Company Name <span className="asteric">*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Input
@@ -323,6 +346,7 @@ export class CrmWelcomeModel extends Component {
                           placeholder="Service Adviser"
                           onChange={this.handleInputChange}
                           value={companyName}
+                          disabled={companyName}
                           name="companyName"
                           invalid={errors.companyName}
                         />
@@ -337,17 +361,17 @@ export class CrmWelcomeModel extends Component {
                         Website (optional)
                       </Label>
                       <div className={"input-block"}>
-                      <Input
-                        type="text"
-                        placeholder="http://google.com"
-                        onChange={this.handleInputChange}
-                        value={website}
-                        name="website"
-                        invalid={errors.website}
-                      />
-                      <FormFeedback>
-                        {errors.website ? errors.website : null}
-                      </FormFeedback>
+                        <Input
+                          type="text"
+                          placeholder="http://google.com"
+                          onChange={this.handleInputChange}
+                          value={website}
+                          name="website"
+                          invalid={errors.website}
+                        />
+                        <FormFeedback>
+                          {errors.website ? errors.website : null}
+                        </FormFeedback>
                       </div>
                     </FormGroup>
                   </Col>
@@ -388,7 +412,7 @@ export class CrmWelcomeModel extends Component {
                               // zoom={this.state.zoom}
                               aspect={this.state.aspect}
                               onCropChange={this.onCropChange}
-                              // onZoomChange={this.onZoomChange}
+                            // onZoomChange={this.onZoomChange}
                             />
                           </div>
                         </div>

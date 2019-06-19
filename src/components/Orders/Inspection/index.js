@@ -290,6 +290,16 @@ class Inspection extends Component {
     *
     */
    onDrop = async (files, inspIndex, itemIndex) => {
+      const { inspection } = this.state;
+      let count = 5 - inspection[inspIndex].items[itemIndex].itemImagePreview.length
+      if (files.length > count) {
+          await ConfirmBox({
+            text: "",
+            title: "Can not upload more than 5 images",
+            showCancelButton:false,
+            confirmButtonText:"Ok"
+         });
+      } else { 
       files.map(async (k, i) => {
          let picReader = new FileReader();
          let file = files[i];
@@ -304,6 +314,7 @@ class Inspection extends Component {
          });
          await picReader.readAsDataURL(file);
       })
+      }
    };
    /**
    *
@@ -385,7 +396,6 @@ class Inspection extends Component {
       doc.text(customerData.email, 40, 83);
       doc.text(customerData.phoneDetail[0].value, 40, 97);
 
-
       const vehicleData = this.state.vehicleData;
       const vehicalName = vehicleData.make + ' ' + vehicleData.modal + ' ' + vehicleData.year
       doc.setFontSize(12)
@@ -414,8 +424,8 @@ class Inspection extends Component {
             columnStyles: {
                'Item Tile': { columnWidth: 100 },
                'Note': { columnWidth: 90 },
-               'Status': { columnWidth: 60 },
-               'Image': { columnWidth: 130 ,textColor:'#ffffff'},
+               'Status': { columnWidth: 60, textColor: '#ffffff' },
+               'Image': { columnWidth: 130 ,textColor:'#ffffff',fontSize:8},
             },
             
             styles: {
@@ -424,7 +434,6 @@ class Inspection extends Component {
             didParseCell:  data => {
                for (let j = 0; j < inspectData[index].items.length; j++) {
                   if (data.row.section !== "head" && data.row.raw.Image > 0) {
-                     //data.cell.styles.fontStyle = 'bold';
                      if (data.row.raw.Image > 3){
                         data.row.height = 130
                      }
@@ -441,7 +450,7 @@ class Inspection extends Component {
                   for (let j = 0; j < 1; j++) {
                      var itemsJ = inspectData[index].items[count];
                      var xAxis = data.cell.x;
-                     var yAxis = data.cell.y;
+                     var yAxis = data.cell.y + 5;
                      count++;
                      for (let k = 0; k < itemsJ.itemImagePreview.length; k++) {
                         var base64Img = itemsJ.itemImagePreview[k];
@@ -452,18 +461,58 @@ class Inspection extends Component {
                         }
                         else{
                            doc.addImage(base64Img, 'JPEG', xAxis + (50 * k) + 5, yAxis , 50, 50);
-                           data.cell.styles.minCellHeight = '100px'
                         }
                      }
                   }
                }
+               if (data.section === 'body' && data.column.dataKey === 'Status') {
+                  console.log(data.cell.text[0], "data.row.raw.Status")
+                  var str = data.cell.text[0];
+                  var result = str.split(" ");
+                  data.cell.styles.fontSize = 8;
+                  if(result[0] === 'true' ){
+                     doc.setDrawColor(77, 189, 116);
+                     doc.setFillColor(255, 255, 255);
+                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD'); 
+                     doc.setTextColor(77, 189, 116);
+                     doc.text("Approved", data.cell.x + 11, data.cell.y + 35);
+                  }
+                  else {
+                     doc.setDrawColor(204, 204, 204);
+                     doc.setFillColor(255, 255, 255);
+                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD');
+                     doc.setTextColor(126, 126, 126);
+                     doc.text("UnApproved", data.cell.x + 5, data.cell.y + 35);
+                  }
+                  switch (result[1]) {
+                     default:
+                        doc.text("Not Selected", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(204, 204, 204);
+                        break;
+                     case 'default':
+                        doc.text("Orange", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(248, 188, 24);
+                        break;
+                     case 'danger':
+                        doc.text("Red", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(243, 65, 65);
+                        break;
+                     case 'success':
+                        doc.text("Green", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(53, 230, 91);
+                  }
+                  doc.setDrawColor(204);
+                  doc.circle(data.cell.x + 8, data.cell.y + 10, 4, 'FD');
+                  console.log(result, "result result result")
+               }
+               console.log(data, "data data")
             },
          };
 
          var columns = [
             { title: "Item Tile", dataKey: "Item Tile" },
             { title: "Note", dataKey: "Note" },
-            { title: "Status", dataKey: "status" },
+            { title: "Status", dataKey: "Status" },
             { title: "Image", dataKey: "Image" }
          ];
          const rows = []
@@ -473,7 +522,7 @@ class Inspection extends Component {
             rows.push({
                'Item Tile': Index.items[j].name,
                Note: Index.items[j].note,
-               Status: inspectData[0].items[0].aprovedStatus,
+               Status: Index.items[j].aprovedStatus + ' ' + Index.items[j].color,
                Image: imgLength > 0 ? imgLength : 0
             })
          }
@@ -488,6 +537,7 @@ class Inspection extends Component {
 
    render() {
       const { inspection, templateData } = this.state;
+      console.log(inspection, "inspection inspection")
       return (
          <div>
             <div className={"mb-3 d-flex"}>
@@ -591,16 +641,22 @@ class Inspection extends Component {
                                           </Col>
                                           <Col lg={3} md={3} className={"mt-2 p-0"}>
                                              <div className={"d-flex flex-row"}>
-                                                <Dropzone onDrop={(files) => this.onDrop(files, inspIndex, itemIndex)}>
+                                                <Dropzone onDrop={(files) => this.onDrop(files, inspIndex, itemIndex)} >
                                                    {({ getRootProps, getInputProps }) => (
+                                                      <>
                                                       <section className="drop-image-block">
                                                          <div {...getRootProps({ className: 'dropzone' })}>
                                                             <input {...getInputProps()} />
                                                             <i className="icon-picture icons"></i>
                                                          </div>
                                                       </section>
+                                                         <div className={"drop-image-text"}>
+                                                            Max limit 5 images
+                                                         </div>
+                                                      </>
                                                    )}
                                                 </Dropzone>
+                                                
                                                 {itemIndex >= 1 ?
                                                    <>
                                                       <span onClick={() => { this.removeItem(inspIndex, itemIndex) }} color={"danger"} className={"delete-icon"} id={`delete-${itemIndex}`}><i className={"icons cui-circle-x"}></i></span>
@@ -614,7 +670,7 @@ class Inspection extends Component {
                                           </Col>
                                           <Col lg={12} md={12}>
                                              {val.itemImagePreview && val.itemImagePreview.length ?
-                                                <ul className={"preview-group d-flex p-0"}>
+                                                <ul className={"preview-group  p-0"}>
                                                    {
                                                       val.itemImagePreview.map((file, previewindx) => {
                                                          return (

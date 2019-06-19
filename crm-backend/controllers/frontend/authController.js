@@ -476,7 +476,8 @@ const imageUpload = async (req, res) => {
         if (err) {
           throw err;
         }
-        await imagePath(originalImagePath);
+        const imageUrl = await imagePath(originalImagePath);
+
         var thumbnailImagePath = path.join(
           __basedir,
           "images-thumbnail",
@@ -488,7 +489,7 @@ const imageUpload = async (req, res) => {
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         };
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
-          shopLogo: imageUploadData
+          shopLogo: imageUrl
         });
         if (companyLogo) {
           return res.status(200).json({
