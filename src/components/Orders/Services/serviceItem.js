@@ -295,15 +295,14 @@ class ServiceItem extends Component {
     const quantityValue = serviceData[Mindex].serviceItems[index].quantity
     const tiresizeValue = serviceData[Mindex].serviceItems[index].tierSize
     const hourValue = serviceData[Mindex].serviceItems[index].hours
-    const unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
     const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
     if (discountValue.type === '%' && valueOfDiscount) {
       serviceData[Mindex].serviceSubTotalValue = []
-      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(unChangeabelTotal)
-      subTotalValue = parseFloat(unChangeabelTotal) - calDiscount
+      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(subTotalValue)
+      subTotalValue = parseFloat(subTotalValue) - calDiscount
     } else if (discountValue.type === '$' && valueOfDiscount) {
       serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(unChangeabelTotal) - parseFloat(valueOfDiscount)
+      subTotalValue = parseFloat(subTotalValue) - parseFloat(valueOfDiscount)
     } else {
       if ((costValue && quantityValue) || ((tiresizeValue ? tiresizeValue[0].cost : null) && (tiresizeValue ? tiresizeValue[0].quantity : null))) {
         serviceData[Mindex].serviceSubTotalValue = []
@@ -338,14 +337,27 @@ class ServiceItem extends Component {
   handleCostChange = (e, Mindex, index) => {
     const { value } = e.target
     const serviceData = [...this.state.services]
+    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
+    const discountValue = serviceData[Mindex].serviceItems[index].discount
     let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
     let costValue = serviceData[Mindex].serviceItems[index].cost
     const quantityValue = serviceData[Mindex].serviceItems[index].quantity
     const tireSizeValue = serviceData[Mindex].serviceItems[index].tierSize
-    if ((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) {
+    if (((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) && (!valueOfDiscount || !discountValue)) {
       costValue = value
       serviceData[Mindex].serviceSubTotalValue = []
       subTotalValue = parseFloat(value) * parseFloat(quantityValue || (tireSizeValue ? tireSizeValue[0].quantity : 0))
+    } else if (((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) && (valueOfDiscount && discountValue.type === '%')) {
+      costValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      const costValuCal = parseFloat(value) * parseFloat(quantityValue || (tireSizeValue ? tireSizeValue[0].quantity : 0))
+      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(costValuCal)
+      subTotalValue = costValuCal - calDiscount
+    } else if (((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) && (valueOfDiscount && discountValue.type === '$')) {
+      costValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      const costValuCal = parseFloat(value) * parseFloat(quantityValue || (tireSizeValue ? tireSizeValue[0].quantity : 0))
+      subTotalValue = costValuCal - valueOfDiscount
     }
     else {
       costValue = 0
@@ -354,7 +366,6 @@ class ServiceItem extends Component {
     }
     serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
     serviceData[Mindex].serviceItems[index].cost = parseFloat(costValue)
-    serviceData[Mindex].serviceItems[index].discount.value = ""
     this.setState({
       services: serviceData
     }, () => {
@@ -377,13 +388,26 @@ class ServiceItem extends Component {
     const { value } = e.target
     const serviceData = [...this.state.services]
     let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
+    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
+    const discountValue = serviceData[Mindex].serviceItems[index].discount
     const costValue = serviceData[Mindex].serviceItems[index].cost
     let quantityValue = serviceData[Mindex].serviceItems[index].quantity
     const tireSizeValue = serviceData[Mindex].serviceItems[index].tierSize
-    if ((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) {
+    if (((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) && (!valueOfDiscount || !discountValue)) {
       quantityValue = value
       serviceData[Mindex].serviceSubTotalValue = []
       subTotalValue = parseFloat(value) * parseFloat(costValue || (tireSizeValue ? tireSizeValue[0].cost : 0))
+    } else if (((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) && (valueOfDiscount && discountValue.type === '%')) {
+      quantityValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      const quantValuCal = parseFloat(value) * parseFloat(costValue || (tireSizeValue ? tireSizeValue[0].cost : 0))
+      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(quantValuCal)
+      subTotalValue = quantValuCal - calDiscount
+    } else if (((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) && (valueOfDiscount && discountValue.type === '$')) {
+      quantityValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      const quantValuCal = parseFloat(value) * parseFloat(costValue || (tireSizeValue ? tireSizeValue[0].cost : 0))
+      subTotalValue = quantValuCal - valueOfDiscount
     }
     else {
       quantityValue = 0
@@ -392,7 +416,6 @@ class ServiceItem extends Component {
     }
     serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
     serviceData[Mindex].serviceItems[index].quantity = parseFloat(quantityValue)
-    serviceData[Mindex].serviceItems[index].discount.value = ""
     this.setState({
       services: serviceData
     }, () => {
@@ -416,16 +439,42 @@ class ServiceItem extends Component {
     const { value } = e.target
     const serviceData = [...this.state.services]
     let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
+    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
+    const discountValue = serviceData[Mindex].serviceItems[index].discount
     let hourValue = serviceData[Mindex].serviceItems[index].hours
     const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
-    if (value !== '' && rateValue) {
+    if ((value !== '' && rateValue) && (!valueOfDiscount || !discountValue)) {
       hourValue = value
       serviceData[Mindex].serviceSubTotalValue = []
       subTotalValue = parseFloat(value) * parseFloat(rateValue)
-    } else if (value !== '') {
+    } else if ((value !== '') && (!valueOfDiscount || !discountValue)) {
       hourValue = value
       serviceData[Mindex].serviceSubTotalValue = []
       subTotalValue = parseFloat(value)
+    } else if (((value !== '' && rateValue)) && (valueOfDiscount && discountValue.type === '%')) {
+      hourValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      subTotalValue = parseFloat(value) * parseFloat(rateValue)
+      const hourValuCal = parseFloat(value) * parseFloat(rateValue)
+      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(hourValuCal)
+      subTotalValue = hourValuCal - calDiscount
+    } else if (((value !== '' && rateValue)) && (valueOfDiscount && discountValue.type === '$')) {
+      hourValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      subTotalValue = parseFloat(value) * parseFloat(rateValue)
+      const hourValuCal = parseFloat(value) * parseFloat(rateValue)
+      subTotalValue = hourValuCal - valueOfDiscount
+    } else if ((value !== '') && (valueOfDiscount && discountValue.type === '%')) {
+      hourValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      const hourValuCal = parseFloat(value)
+      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(hourValuCal)
+      subTotalValue = hourValuCal - calDiscount
+    } else if ((value !== '') && (valueOfDiscount && discountValue.type === '$')) {
+      hourValue = value
+      serviceData[Mindex].serviceSubTotalValue = []
+      const hourValuCal = parseFloat(value)
+      subTotalValue = hourValuCal - valueOfDiscount
     }
     else {
       hourValue = 0
