@@ -21,3 +21,7 @@ export const calculateValues = (total, value, type = "%") => {
       return value;
   }
 };
+
+export const calculateSubTotal = (cost, quantity, hour, rate) => {
+  return (parseFloat(cost || hour) * parseFloat(quantity|| rate))
+}

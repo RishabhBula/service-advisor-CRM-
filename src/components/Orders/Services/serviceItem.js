@@ -18,7 +18,7 @@ import CrmDiscountBtn from "../../common/CrmDiscountBtn";
 import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
-import { getSumOfArray, calculateValues, logger } from "../../../helpers"
+import { getSumOfArray, calculateValues, calculateSubTotal } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import recommandUser from "../../../assets/recommand-user.png"
@@ -138,9 +138,6 @@ class ServiceItem extends Component {
                 services: serviceList,
               })
             }
-            serviceList[this.props.serviceReducers.serviceIndex].epa.value = ''
-            serviceList[this.props.serviceReducers.serviceIndex].discount.value = ''
-            serviceList[this.props.serviceReducers.serviceIndex].taxes.value = ''
           }
           this.setState({
             technicianData: {
@@ -286,220 +283,30 @@ class ServiceItem extends Component {
       services: serviceData
     })
   }
-  handleDiscValue = (Mindex, index) => {
-    let serviceData = [...this.state.services]
-    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
-    const discountValue = serviceData[Mindex].serviceItems[index].discount
-    let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
-    const costValue = serviceData[Mindex].serviceItems[index].cost
-    const quantityValue = serviceData[Mindex].serviceItems[index].quantity
-    const unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
-    const tiresizeValue = serviceData[Mindex].serviceItems[index].tierSize
-    const hourValue = serviceData[Mindex].serviceItems[index].hours
-    const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
-    if (discountValue.type === '%' && valueOfDiscount) {
-      serviceData[Mindex].serviceSubTotalValue = []
-      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(unChangeabelTotal)
-      subTotalValue = parseFloat(subTotalValue) - calDiscount
-    } else if (discountValue.type === '$' && valueOfDiscount) {
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(subTotalValue) - parseFloat(valueOfDiscount)
-    } else {
-      if ((costValue && quantityValue) || ((tiresizeValue ? tiresizeValue[0].cost : null) && (tiresizeValue ? tiresizeValue[0].quantity : null))) {
-        serviceData[Mindex].serviceSubTotalValue = []
-        subTotalValue = parseFloat(costValue || (tiresizeValue ? tiresizeValue[0].cost : 0)) * parseFloat(quantityValue || (tiresizeValue ? tiresizeValue[0].quantity : 0))
-      }
-      else if (hourValue && rateValue) {
-        serviceData[Mindex].serviceSubTotalValue = []
-        subTotalValue = parseFloat(hourValue) * parseFloat(rateValue)
-      }
-      else {
-        serviceData[Mindex].serviceSubTotalValue = []
-        subTotalValue = (costValue || (tiresizeValue ? tiresizeValue[0].cost : null) || hourValue)
-      }
-    }
-    serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
-    this.setState({
-      services: serviceData
-    }, () => {
-      let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
-      serviceData[Mindex].serviceItems.map((item, Index) => {
-        const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-        serviceTotalValue.push(parseFloat(serviceSubTotal))
-        return true
-      })
-      serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
-      this.setState({
-        services: serviceData
-      })
-    })
-  }
 
   handleCostChange = (e, Mindex, index) => {
-    const { value } = e.target
     const serviceData = [...this.state.services]
-    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
-    const discountValue = serviceData[Mindex].serviceItems[index].discount
-    let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
-    let costValue = serviceData[Mindex].serviceItems[index].cost
-    const quantityValue = serviceData[Mindex].serviceItems[index].quantity
-    const tireSizeValue = serviceData[Mindex].serviceItems[index].tierSize
-    if (((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) && (valueOfDiscount === '' || !discountValue)) {
-      costValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(value) * parseFloat(quantityValue || (tireSizeValue ? tireSizeValue[0].quantity : 0))
-    } else if (((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) && (valueOfDiscount && discountValue.type === '%')) {
-      costValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      const costValuCal = parseFloat(value) * parseFloat(quantityValue || (tireSizeValue ? tireSizeValue[0].quantity : 0))
-      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(costValuCal)
-      subTotalValue = costValuCal - calDiscount
-    } else if (((value !== '' && quantityValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].quantity !== '' : null))) && (valueOfDiscount && discountValue.type === '$')) {
-      costValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      const costValuCal = parseFloat(value) * parseFloat(quantityValue || (tireSizeValue ? tireSizeValue[0].quantity : 0))
-      subTotalValue = costValuCal - valueOfDiscount
-    }
-    else {
-      costValue = 0
-      subTotalValue = 0
-      serviceData[Mindex].serviceSubTotalValue = []
-    }
-    serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
-    serviceData[Mindex].serviceItems[index].cost = parseFloat(costValue)
+    const { value } = e.target
+    serviceData[Mindex].serviceItems[index].cost = value
     this.setState({
       services: serviceData
-    }, () => {
-      let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
-      let unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
-      serviceData[Mindex].serviceItems.map((item, Index) => {
-        const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-        unChangeabelTotal = item.subTotalValue
-        serviceTotalValue.push(parseFloat(serviceSubTotal))
-        return true
-      })
-      serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
-      serviceData[Mindex].serviceItems[index].unchangebleTotal = unChangeabelTotal
-      this.setState({
-        services: serviceData
-      })
     })
   }
   handleQuantityChange = (e, Mindex, index) => {
-    const { value } = e.target
     const serviceData = [...this.state.services]
-    let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
-    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
-    const discountValue = serviceData[Mindex].serviceItems[index].discount
-    const costValue = serviceData[Mindex].serviceItems[index].cost
-    let quantityValue = serviceData[Mindex].serviceItems[index].quantity
-    const tireSizeValue = serviceData[Mindex].serviceItems[index].tierSize
-    if (((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) && (valueOfDiscount === '' || !discountValue)) {
-      quantityValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(value) * parseFloat(costValue || (tireSizeValue ? tireSizeValue[0].cost : 0))
-    } else if (((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) && (valueOfDiscount && discountValue.type === '%')) {
-      quantityValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      const quantValuCal = parseFloat(value) * parseFloat(costValue || (tireSizeValue ? tireSizeValue[0].cost : 0))
-      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(quantValuCal)
-      subTotalValue = quantValuCal - calDiscount
-    } else if (((value !== '' && costValue !== '') || (value !== '' && (tireSizeValue ? tireSizeValue[0].cost !== '' : null))) && (valueOfDiscount && discountValue.type === '$')) {
-      quantityValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      const quantValuCal = parseFloat(value) * parseFloat(costValue || (tireSizeValue ? tireSizeValue[0].cost : 0))
-      subTotalValue = quantValuCal - valueOfDiscount
-    }
-    else {
-      quantityValue = 0
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = 0
-    }
-    serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
-    serviceData[Mindex].serviceItems[index].quantity = parseFloat(quantityValue)
+    const { value } = e.target
+    serviceData[Mindex].serviceItems[index].quantity = value
     this.setState({
       services: serviceData
-    }, () => {
-      let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
-      let unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
-      serviceData[Mindex].serviceItems.map((item, Index) => {
-        const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-        serviceTotalValue.push(parseFloat(serviceSubTotal))
-        unChangeabelTotal = item.subTotalValue
-        return true
-      })
-      serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
-      serviceData[Mindex].serviceItems[index].unchangebleTotal = unChangeabelTotal
-      this.setState({
-        services: serviceData
-      })
     })
   }
 
   handleHourChange = (e, Mindex, index) => {
-    const { value } = e.target
     const serviceData = [...this.state.services]
-    let subTotalValue = serviceData[Mindex].serviceItems[index].subTotalValue
-    const valueOfDiscount = serviceData[Mindex].serviceItems[index].discount.value
-    const discountValue = serviceData[Mindex].serviceItems[index].discount
-    let hourValue = serviceData[Mindex].serviceItems[index].hours
-    const rateValue = serviceData[Mindex].serviceItems[index].rate ? serviceData[Mindex].serviceItems[index].rate.hourlyRate : 0
-    if ((value !== '' && rateValue) && (valueOfDiscount === '' || !discountValue)) {
-      hourValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(value) * parseFloat(rateValue)
-    } else if ((value !== '') && (!valueOfDiscount || !discountValue)) {
-      hourValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(value)
-    } else if (((value !== '' && rateValue)) && (valueOfDiscount && discountValue.type === '%')) {
-      hourValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(value) * parseFloat(rateValue)
-      const hourValuCal = parseFloat(value) * parseFloat(rateValue)
-      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(hourValuCal)
-      subTotalValue = hourValuCal - calDiscount
-    } else if (((value !== '' && rateValue)) && (valueOfDiscount && discountValue.type === '$')) {
-      hourValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      subTotalValue = parseFloat(value) * parseFloat(rateValue)
-      const hourValuCal = parseFloat(value) * parseFloat(rateValue)
-      subTotalValue = hourValuCal - valueOfDiscount
-    } else if ((value !== '') && (valueOfDiscount && discountValue.type === '%')) {
-      hourValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      const hourValuCal = parseFloat(value)
-      const calDiscount = (parseFloat(valueOfDiscount) / 100) * parseFloat(hourValuCal)
-      subTotalValue = hourValuCal - calDiscount
-    } else if ((value !== '') && (valueOfDiscount && discountValue.type === '$')) {
-      hourValue = value
-      serviceData[Mindex].serviceSubTotalValue = []
-      const hourValuCal = parseFloat(value)
-      subTotalValue = hourValuCal - valueOfDiscount
-    }
-    else {
-      hourValue = 0
-      subTotalValue = 0
-    }
-    serviceData[Mindex].serviceItems[index].subTotalValue = parseFloat(subTotalValue).toFixed(2)
-    serviceData[Mindex].serviceItems[index].hours = parseFloat(hourValue)
-    serviceData[Mindex].serviceItems[index].discount.value = ""
+    const { value } = e.target
+    serviceData[Mindex].serviceItems[index].hours = value
     this.setState({
       services: serviceData
-    }, () => {
-      let serviceTotalValue = serviceData[Mindex].serviceSubTotalValue
-      let unChangeabelTotal = serviceData[Mindex].serviceItems[index].unchangebleTotal
-      serviceData[Mindex].serviceItems.map((item, Index) => {
-        const serviceSubTotal = parseFloat(item.subTotalValue).toFixed(2)
-        serviceTotalValue.push(parseFloat(serviceSubTotal))
-        unChangeabelTotal = item.subTotalValue
-        return true
-      })
-      serviceData[Mindex].serviceTotal = getSumOfArray(serviceTotalValue)
-      serviceData[Mindex].serviceItems[index].unchangebleTotal = unChangeabelTotal
-      this.setState({
-        services: serviceData
-      })
     })
   }
   handleChange = (e, index) => {
@@ -882,9 +689,6 @@ class ServiceItem extends Component {
           {
             services && services.length ? services.map((item, index) => {
               let mainserviceTotal = [], serviceTotal
-              const epa = calculateValues(item.serviceTotal || 0, item.epa.value || 0, item.epa.type);
-              const discount = calculateValues(item.serviceTotal || 0, item.discount.value || 0, item.discount.type);
-              const tax = calculateValues(item.serviceTotal || 0, item.taxes.value || 0, item.taxes.type);
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
@@ -966,13 +770,15 @@ class ServiceItem extends Component {
                           {
                             this.state.services[index] && this.state.services[index].serviceItems.length ?
                               this.state.services[index].serviceItems.map((service, sIndex) => {
-                                const subDiscount = calculateValues(service.subTotalValue || 0, service.discount.value || 0, service.discount.type);
-                                const servicesSubTotal = (parseFloat(service.subTotalValue) - parseFloat(subDiscount)).toFixed(2);
+                                const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.quantity || (service.tierSize ? service.tierSize[0].quantity : null) || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
+                                const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
+                                const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
                                 mainserviceTotal.push(parseFloat(servicesSubTotal))
-                                logger("%%%%%%%%%%%%%%%Service total%%%%%%%%%%%%%%",getSumOfArray(mainserviceTotal),serviceTotal);
-                                 const serviceTotalArray = getSumOfArray(mainserviceTotal)
+                                const serviceTotalArray = getSumOfArray(mainserviceTotal)
+                                const epa = calculateValues(serviceTotalArray || 0, item.epa.value || 0, item.epa.type);
+                                const discount = calculateValues(serviceTotalArray || 0, item.discount.value || 0, item.discount.type);
+                                const tax = calculateValues(serviceTotalArray || 0, item.taxes.value || 0, item.taxes.type);
                                 serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
-                                logger("%%%%%%%%%%%%%%%Service total Final%%%%%%%%%%%%%%",serviceTotal);       
                                 return (
                                   <tr>
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
@@ -1397,5 +1203,4 @@ class ServiceItem extends Component {
     );
   }
 }
-
 export default ServiceItem;
