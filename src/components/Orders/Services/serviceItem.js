@@ -18,7 +18,7 @@ import CrmDiscountBtn from "../../common/CrmDiscountBtn";
 import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
-import { getSumOfArray, calculateValues } from "../../../helpers"
+import { getSumOfArray, calculateValues, logger } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import recommandUser from "../../../assets/recommand-user.png"
@@ -881,11 +881,10 @@ class ServiceItem extends Component {
           </div>
           {
             services && services.length ? services.map((item, index) => {
-              let mainserviceTotal = []
+              let mainserviceTotal = [], serviceTotal
               const epa = calculateValues(item.serviceTotal || 0, item.epa.value || 0, item.epa.type);
               const discount = calculateValues(item.serviceTotal || 0, item.discount.value || 0, item.discount.type);
               const tax = calculateValues(item.serviceTotal || 0, item.taxes.value || 0, item.taxes.type);
-              let serviceTotal = (parseFloat(item.serviceTotal) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
@@ -970,7 +969,10 @@ class ServiceItem extends Component {
                                 const subDiscount = calculateValues(service.subTotalValue || 0, service.discount.value || 0, service.discount.type);
                                 const servicesSubTotal = (parseFloat(service.subTotalValue) - parseFloat(subDiscount)).toFixed(2);
                                 mainserviceTotal.push(parseFloat(servicesSubTotal))
-                                serviceTotal = getSumOfArray(mainserviceTotal)
+                                logger("%%%%%%%%%%%%%%%Service total%%%%%%%%%%%%%%",getSumOfArray(mainserviceTotal),serviceTotal);
+                                 const serviceTotalArray = getSumOfArray(mainserviceTotal)
+                                serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
+                                logger("%%%%%%%%%%%%%%%Service total Final%%%%%%%%%%%%%%",serviceTotal);       
                                 return (
                                   <tr>
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
@@ -1192,7 +1194,7 @@ class ServiceItem extends Component {
                           <span><h6>Taxes : 12% +</h6></span>
                         </div>
                         <hr/> */}
-                        <h4>Service Total: <span className={"dollor-icon"}>${!isNaN(serviceTotal) ? serviceTotal : 0}</span></h4>
+                        <h4>Service Total: <span className={"dollor-icon"}>${!isNaN(serviceTotal) ? parseFloat(serviceTotal).toFixed(2) : 0}</span></h4>
                       </div>
                       <UncontrolledTooltip placement={"top"} target={`epa${index}`}>
                         Add EPA to service total
