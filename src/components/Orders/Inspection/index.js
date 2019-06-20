@@ -374,13 +374,14 @@ class Inspection extends Component {
       doc.text('D-Company', 40, 30);
 
       const orderDetail = this.state.orderDetails
+      console.log(orderDetail, "orderDetail orderDetailorderDetail")
       doc.setFontSize(14)
       doc.text('Inspection', 430, 25);
       doc.setTextColor('black');
       doc.text('# ' + orderDetail.orderId, 500, 25);
       doc.setFontSize(12);
       doc.setTextColor('gray');
-      doc.text(orderDetail.orderName ? orderDetail.orderName : orderDetail.order.orderName, 430, 42);
+      doc.text(orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName : orderDetail.order.orderName, 430, 42);
 
       doc.setTextColor('black');
       doc.setDrawColor(187, 185, 193);

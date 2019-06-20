@@ -98,6 +98,7 @@ class Order extends Component {
       orderName: "",
       isOrderSubbmited: false
     };
+    this.orderNameRef = React.createRef();
   }
   componentDidMount() {
     this.props.getOrderId();
@@ -108,6 +109,7 @@ class Order extends Component {
     });
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
   }
+  
 
   componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
 
