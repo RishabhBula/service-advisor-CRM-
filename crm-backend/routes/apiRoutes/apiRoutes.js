@@ -45,4 +45,5 @@ router.use("/inspection", inspection);
 router.use("/label", label);
 router.use("", googleCaptcha);
 router.use("/message", messageChat);
+
 module.exports = router;
