@@ -7,8 +7,6 @@ const { validationResult } = require("express-validator/check");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
-    console.log("**************", $data.searchValue);
-
     let condition = {
       name: new RegExp($data.searchValue, "i")
     };

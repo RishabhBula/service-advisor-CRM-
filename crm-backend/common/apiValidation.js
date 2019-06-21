@@ -365,6 +365,10 @@ const userChangePasswordValidation = [
     .withMessage("New password is required.")
     .trim()
 ];
+const messageChatValidations = [
+  body("receiverId").not().isEmpty().withMessage("Reciver id is required").trim(),
+  body("messageData").not().isEmpty().withMessage("Message can not be empty").trim()
+]
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -386,5 +390,6 @@ module.exports = {
   updateTierValidation,
   createNewMatrixValidation,
   UpdateMatrixValidation,
-  userChangePasswordValidation
+  userChangePasswordValidation,
+  messageChatValidations
 };

@@ -110,8 +110,6 @@ class Order extends Component {
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     this.orderNameRef.focus();
   }
-  
-
   componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
 
     if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
