@@ -476,7 +476,6 @@ export class CrmTyreModal extends Component {
       const { serviceIndex, services } = this.props
       if (tireId) {
          let servicePartData = services[serviceIndex].serviceItems
-         console.log(this.state.selectedTireSize, "this.state.selectedTireSize")
          if (this.state.selectedTireSize ){
          servicePartData.push(tireId.tireData)
          await this.props.addTireToService(
@@ -504,7 +503,6 @@ export class CrmTyreModal extends Component {
    }
    handleServiceTireSize = (e,size, index) => {
       const {checked} = e.target
-      console.log(checked, "value")
       this.setState({
          tireId: {
             ...this.state.tireId,

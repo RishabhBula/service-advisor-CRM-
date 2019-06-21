@@ -2209,6 +2209,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-bottom: 30px;
   height: 80px;
   background: #eee;
+  position: relative;
+  z-index: 9;
 }
 .order-top-section .custom-form-modal{
   position: relative;

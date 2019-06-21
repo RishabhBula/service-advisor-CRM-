@@ -6,7 +6,6 @@ import {
   FormGroup,
   Row,
   Button,
-  InputGroup,
   UncontrolledPopover,
   PopoverHeader,
   PopoverBody,
