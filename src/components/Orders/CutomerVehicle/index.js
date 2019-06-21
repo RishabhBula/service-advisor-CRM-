@@ -173,7 +173,7 @@ class CutomerVehicle extends Component {
                </FormGroup>
             </Col>
             <Col md={"2"}>
-               <Button color={"secondary"} size={"sm"} onClick={this.props.handleEditOrder}>Update Order</Button>
+               <Button color={"secondary"} size={"sm"} className={"mt-1"} onClick={this.props.handleEditOrder}>Update Order</Button>
             </Col>
          </Row>
       );

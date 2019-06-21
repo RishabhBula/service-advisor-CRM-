@@ -108,11 +108,14 @@ class Order extends Component {
       orderId: this.props.match.params.id
     });
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
+
+    setTimeout(() => {
+      this.orderNameRef.current.focus();
+    }, 10);
   }
   
 
   componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
-
     if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
     }
@@ -262,6 +265,8 @@ class Order extends Component {
                         maxLength={"250"}
                         invalid={isError && !orderName}
                         className={"order-name-input"}
+                        ref={this.orderNameRef}
+                        autoFocus
                       />
                       <FormFeedback>
                         {isError && !orderName
@@ -292,7 +297,6 @@ class Order extends Component {
                   />
                 </div>
                 <div className={"position-relative fdsfdsfdsf"}>
-                  {console.log(this.props.orderReducer.orderItems.orderName, "fjdhsfkdshfkjdshfkjdhk")}
                   {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.orderName  ?
                   
                     <div className={"service-overlay"}>

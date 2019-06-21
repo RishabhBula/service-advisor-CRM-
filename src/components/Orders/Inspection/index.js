@@ -368,20 +368,22 @@ class Inspection extends Component {
    }
 
    downloadPDF = () => {
+
       var doc = new jsPDF('p', 'pt');
       doc.setFontSize(12)
       doc.setTextColor(51, 47, 62);
       doc.text('D-Company', 40, 30);
 
       const orderDetail = this.state.orderDetails
-      console.log(orderDetail, "orderDetail orderDetailorderDetail")
       doc.setFontSize(14)
       doc.text('Inspection', 430, 25);
       doc.setTextColor('black');
       doc.text('# ' + orderDetail.orderId, 500, 25);
       doc.setFontSize(12);
       doc.setTextColor('gray');
-      doc.text(orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName : orderDetail.order.orderName, 430, 42);
+      var textOrderId = orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName : orderDetail.order.orderName;
+      let  textOrderIdDetail =  doc.splitTextToSize(textOrderId);
+      doc.text(textOrderIdDetail, 430, 42);
 
       doc.setTextColor('black');
       doc.setDrawColor(187, 185, 193);
@@ -433,6 +435,9 @@ class Inspection extends Component {
                1: {rowHeight: 100},
             },
             didParseCell:  data => {
+               if (data.row.section !== "head"){
+                  data.row.height = 50
+               }
                for (let j = 0; j < inspectData[index].items.length; j++) {
                   if (data.row.section !== "head" && data.row.raw.Image > 0) {
                      if (data.row.raw.Image > 3){
@@ -455,19 +460,20 @@ class Inspection extends Component {
                      count++;
                      for (let k = 0; k < itemsJ.itemImagePreview.length; k++) {
                         var base64Img = itemsJ.itemImagePreview[k];
-                        if(k > 2){
-                           yAxis = yAxis + 60
-                           xAxis = xAxis + 5
-                           doc.addImage(base64Img, 'JPEG', xAxis, yAxis, 50, 50);
+                        if (k < 3) {
+                           doc.addImage(base64Img, 'JPEG', xAxis + (50 * k) + 5, yAxis, 50, 50);
                         }
-                        else{
-                           doc.addImage(base64Img, 'JPEG', xAxis + (50 * k) + 5, yAxis , 50, 50);
+                        if(k === 3){
+                           doc.addImage(base64Img, 'JPEG', xAxis + 5, yAxis + 60, 50, 50);
+                        }
+                        if (k === 4) {
+                           doc.addImage(base64Img, 'JPEG', xAxis + 60, yAxis + 60, 50, 50);
                         }
                      }
                   }
                }
                if (data.section === 'body' && data.column.dataKey === 'Status') {
-                  console.log(data.cell.text[0], "data.row.raw.Status")
+
                   var str = data.cell.text[0];
                   var result = str.split(" ");
                   data.cell.styles.fontSize = 8;
@@ -504,9 +510,9 @@ class Inspection extends Component {
                   }
                   doc.setDrawColor(204);
                   doc.circle(data.cell.x + 8, data.cell.y + 10, 4, 'FD');
-                  console.log(result, "result result result")
+                  
                }
-               console.log(data, "data data")
+             
             },
          };
 
@@ -521,9 +527,9 @@ class Inspection extends Component {
             var Index = inspectData[index]
             var imgLength = Index.items[j].itemImagePreview.length
             rows.push({
-               'Item Tile': Index.items[j].name,
-               Note: Index.items[j].note,
-               Status: Index.items[j].aprovedStatus + ' ' + Index.items[j].color,
+               'Item Tile': Index.items[j].name || 'Untitled Item',
+               Note: Index.items[j].note || '-',
+               Status: Index.items[j].aprovedStatus + ' ' + Index.items[j].color || '-',
                Image: imgLength > 0 ? imgLength : 0
             })
          }
@@ -538,7 +544,7 @@ class Inspection extends Component {
 
    render() {
       const { inspection, templateData } = this.state;
-      console.log(inspection, "inspection inspection")
+  
       return (
          <div>
             <div className={"mb-3 d-flex"}>

@@ -139,8 +139,8 @@ export class CrmCannedServiceModal extends Component {
                            serviceData && serviceData.length ?
                               serviceData.map((item, index) => {
                                  return (
-                                    <>
-                                       <div key={index} onClick={() => this.handleServiceCollaps(index)} className={activeIndex === index ? 'services-list-block active' : 'services-list-block'}>
+                                    <div key={index}>
+                                       <div  onClick={() => this.handleServiceCollaps(index)} className={activeIndex === index ? 'services-list-block active' : 'services-list-block'}>
                                           {
                                              item.serviceItems && item.serviceItems.length ?
                                                 isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-down arrow"></i> : <i className="icons arrow icon-arrow-right"></i> : <i className="icons arrow icon-arrow-right"></i>
@@ -180,7 +180,7 @@ export class CrmCannedServiceModal extends Component {
                                              null
 
                                        }
-                                    </>
+                                    </div>
                                  )
                               }) :
                               <div>

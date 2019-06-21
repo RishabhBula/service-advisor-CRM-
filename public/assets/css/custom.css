@@ -1537,7 +1537,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   max-width: 800px;
 }
 .preview-group {
-  margin-top: 9px;
+  margin-top: 18px;
   margin-left: -8px;
   margin-bottom: 0px;
 }
@@ -1801,7 +1801,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #fff;
   background-clip: padding-box;
   color: #0c0d1c;
-  border: 1px solid #a6a7a7;;
+  /* border: 1px solid #a6a7a7;; */
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   word-break: break-all;
@@ -1932,8 +1932,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   cursor: pointer;
 }
 .services-list-block:hover,.services-list-block.active{
-  background-color: #645d7a;
-  color: #fff;
+  background-color: #d0d0d0;
+  color: #080808;
 }
 .services-list-block i.arrow{
   position: absolute;
@@ -2009,10 +2009,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-size: 20px;
   color: #160446;
 }
-.form-control.order-name-input:focus{
+/* .form-control.order-name-input:focus{
   box-shadow: none;
   outline: none;
-}
+} */
 .btn.order-update-btn{
   font-size: 16px;
   font-weight: 700;
@@ -2129,7 +2129,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   display: flex;
 }
 .tax-calculate-block .tax-block {
-  min-width: 165px;
+  min-width: 125px;
   position: relative;
   padding: 2px 5px;
   display: flex;
@@ -2152,9 +2152,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   right: 0;
   opacity: 0;
 }
-.tax-calculate-block .discount-button{
+.tax-calculate-block .tax-input-block .discount-button{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  top: -26px;
   opacity: 0;
-  display: none;
+}
+.tax-calculate-block .tax-input-block:hover .discount-button{
+  opacity: 1;
 }
 .tax-calculate-block .action-btn-block .btn {
   width: 21px;
@@ -2163,7 +2169,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border-radius: 50%;
 }
 .tax-calculate-block .tax-input-block .input{
-  width: 100px;
+  width: 80px;
   position: relative;
   text-align: center;
 }
@@ -2174,7 +2180,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .tax-calculate-block .tax-input-block .dollor-icon{
   position: absolute;
-  left: 2px;
+  left: 6px;
 }
 .tax-calculate-block .tax-input-block .percent-icons{
   position: absolute;
@@ -2182,10 +2188,16 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .tax-calculate-block .discount-button .btn {
   padding: 2px;
-  width: 20px;
-  height: 34px;
-  background-color: transparent !important;
-  border-color: transparent !important;
+  width: 50%;
+  height: 25px;
+}
+.tax-calculate-block .discount-button .btn.active{
+  color: #ffffff !important;
+  background-color: #7f6cb8 !important;
+  border-color: #7f6cb8 !important;
+}
+.service-card-btn-block{
+  background: #efefef66;
 }
 .service-card-btn-block .isValue {
   border-bottom: 3px solid green;
@@ -2232,6 +2244,30 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .service-card .service-table .no-data-found{
   padding: 20px 20px;
+}
+.service-table .form-control{
+  color: #000;
+  font-size: 15px;
+  text-align: center;
+}
+.service-table .form-control::placeholder{
+  color: #222;
+  text-align: center;
+}
+.service-table .service-customer-discount{
+  position: absolute;
+  right: -12px;
+  display: none;
+}
+.service-table .labor-discount:hover .service-customer-discount{
+  display: block;
+}
+.service-table .hours-block{
+  max-width: 70px;
+  margin: 0 auto;
+}
+.service-table .hours-block .no-value{
+  cursor: not-allowed;
 }
 .status-label-btn{
   display: inline-block;
@@ -2346,6 +2382,28 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .service-card .labor-discount .input-group{
   max-width: 115px;
   margin-right: 10px;
+}
+.labor-discount-input{
+  position: relative;
+  display: flex;
+}
+.labor-discount-input .form-control {
+  max-width: 60px;
+  margin: 0 3px;
+}
+.labor-discount-input .input-icon{
+  position: absolute;
+  color: #696969;
+  font-weight: normal;
+  font-size: 14px;
+  top: 5px;
+  display: inline-block;
+}
+.labor-discount-input .dollar{
+  left: -7px;
+}
+.labor-discount-input .percent {
+  right: -12px;
 }
 .service-overlay{
   position: absolute;

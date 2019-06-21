@@ -170,6 +170,14 @@ class SendInspection extends Component {
     this.setState({
       messageTextSentError : ''
     });
+
+  }
+  handleFocus = (id) =>{
+    document.getElementById(id).addEventListener("paste", function (e) {
+      e.preventDefault();
+      var text = e.clipboardData.getData("text/plain");
+      document.execCommand("insertHTML", false, text);
+    });
   }
 
   clearForm =()=>{
@@ -310,6 +318,7 @@ class SendInspection extends Component {
                               className={"message-input"}
                               id={'messageTextSent'}
                               dangerouslySetInnerHTML={templateData && templateData.length ? { __html: templateData[0].messageText } : null}
+                              onClick={(e) => this.handleFocus("messageTextSent")}
                             >
                             </p>
                           </div>

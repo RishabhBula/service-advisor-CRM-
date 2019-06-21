@@ -105,6 +105,11 @@ class MessageTemplate extends Component {
     this.setState({
       eleId: id
     })
+    document.getElementById(id).addEventListener("paste", function (e) {
+      e.preventDefault();
+      var text = e.clipboardData.getData("text/plain");
+      document.execCommand("insertHTML", false, text);
+    });
   }
 
   handelTag = (e, label) => {
@@ -166,7 +171,7 @@ class MessageTemplate extends Component {
 
   render() {
     const { templateListData, errors, isEditMode, singleTemplateData, activeIndex} = this.state;
-
+   
     return (
       <>
         <Modal
@@ -255,8 +260,10 @@ class MessageTemplate extends Component {
                           Subject <span className={"asteric"}>*</span>
                         </Label>
                         <div className={'input-block'}>
+                          <div className={'input-block message-input-warp'}>
                           <p contentEditable={"true"} onKeyPress={(e) => this.onKeyPress(e)} className={errors && errors.subject ? "tagInput mb-0 is-invalid" : "tagInput mb-0"} id={"tagInput"} onClick={(e) => this.handleFocus("tagInput")} dangerouslySetInnerHTML={singleTemplateData.subject ? { __html: singleTemplateData.subject } : null}>
                           </p>
+                          </div>
                           {errors && errors.subject ? <p className={"text-danger font-italic"}>{errors.subject}</p> : null}
                         </div>
                       </FormGroup>
