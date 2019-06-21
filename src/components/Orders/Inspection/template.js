@@ -92,7 +92,7 @@ class Templates extends Component {
                 <tr>
                   <th>#</th>
                   <th>Template Title</th>
-                  <th>Items</th>
+                  <th className={"text-center"}>Items</th>
                   <th></th>
                 </tr>
               </thead>
@@ -101,8 +101,8 @@ class Templates extends Component {
                   return (
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
-                      <td>{data.inspectionName || '-'}</td>
-                      <td>{data.items.length || 0}</td>
+                      <td width={"150"}>{data.inspectionName || '-'}</td>
+                      <td className={"text-center"}>{data.items.length || 0}</td>
                       <td>
                         <span>
                           <Button onClick={() => this.props.addTemplate(data)} >Add</Button>

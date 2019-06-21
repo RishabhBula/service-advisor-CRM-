@@ -14,6 +14,7 @@ const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 const PriceMatrix = React.lazy(() => import("./containers/PriceMatrix"));
 const Order = React.lazy(() => import("./containers/Orders"))
+const Profile = React.lazy(() => import("./containers/Profile"))
 const routes = [
   {
     path: AppRoutes.HOME.url,
@@ -91,6 +92,12 @@ const routes = [
     exact: AppRoutes.PRICEMATRIX.exact,
     name: AppRoutes.PRICEMATRIX.name,
     component: PriceMatrix
+  },
+  {
+    path: AppRoutes.PROFILE.url,
+    exact: AppRoutes.PROFILE.exact,
+    name: AppRoutes.PROFILE.name,
+    component: Profile
   },
   { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];
@@ -185,6 +192,11 @@ export const BreadCrumbRoutes = [
     path: AppRoutes.PRICEMATRIX.url,
     exact: AppRoutes.PRICEMATRIX.exact,
     name: AppRoutes.PRICEMATRIX.name
+  },
+  {
+    path: AppRoutes.PROFILE.url,
+    exact: AppRoutes.PROFILE.exact,
+    name: AppRoutes.PROFILE.name
   }
 ];
 

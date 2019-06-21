@@ -161,6 +161,7 @@ const addMessageTemplateLogic = createLogic({
     if (result.isError) {
       toast.error(result.messages[0]);
       dispatch(hideLoader());
+      dispatch(getMessageTemplate());
       done();
       return;
     } else {

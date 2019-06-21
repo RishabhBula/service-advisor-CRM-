@@ -12,6 +12,8 @@ import {
 import { logger } from "../../helpers/Logger";
 import Loader from "../../containers/Loader/Loader";
 import { AppRoutes } from "../../config/AppRoutes";
+import serviceUser from "../../assets/service-user.png"
+import serviceTyre from "../../assets/service-car.png"
 
 class WorkflowGridView extends React.Component {
   constructor(props) {
@@ -113,26 +115,55 @@ class WorkflowGridView extends React.Component {
                     {...providedNew.dragHandleProps}
                     ref={providedNew.innerRef}
                     className={"content"}
-                    onClick={() => {
-                      this.props.redirectTo(
-                        `${AppRoutes.WORKFLOW_ORDER.url.replace(
-                          ":id",
-                          task._id
-                        )}`
-                      );
-                    }}
                   >
-                    {task.orderName || "Unnamed order"}
-                    <i
-                      className={"fa fa-trash pull-right"}
-                      onClick={() => {
-                        this.props.deleteOrder({
-                          statusId: status._id,
-                          index,
-                          id: task._id
-                        });
-                      }}
-                    />
+                    <div>
+                      <h5>
+                        <span>{task.orderId ?
+                          `(#${task.orderId})` : null
+                        }</span>
+                        {'  '}
+                        <span onClick={() => {
+                          this.props.redirectTo(
+                            `${AppRoutes.WORKFLOW_ORDER.url.replace(
+                              ":id",
+                              task._id
+                            )}`
+                          );
+                        }}>
+                          {task.orderName || "Unnamed order"}
+                        </span>
+                      </h5>
+                    </div>
+                    <hr />
+                    <div>
+                      <span>
+                        <i
+                          className={"fa fa-trash pull-right"}
+                          onClick={() => {
+                            this.props.deleteOrder({
+                              statusId: status._id,
+                              index,
+                              id: task._id
+                            });
+                          }}
+                        />
+                      </span>
+                    </div>
+                    <div>
+                      <span>
+                        <img src={serviceUser} alt={"serviceUser"} width={"18"} height={"18"} />
+                        {"  "}
+                        {task.customerId ? `${task.customerId.firstName} ${' '} ${task.customerId.lastName}` : "No Customer"}
+                      </span>
+                      {" "}
+                    </div>
+                    <div>
+                      <span>
+                        <img src={serviceTyre} alt={"serviceUser"} width={"18"} height={"18"} />
+                        {"  "}
+                        {task.vehicleId ? `${task.vehicleId.make} ${' '} ${task.vehicleId.modal}` : "No Vehicle"}
+                      </span>
+                    </div>
                   </div>
                 )}
               </Draggable>

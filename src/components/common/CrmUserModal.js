@@ -40,7 +40,7 @@ export class CrmUserModal extends Component {
       lastName: "",
       email: "",
       phone: "",
-      roleType: "",
+      roleType: "5ca3473d70537232f13ff1f9",
       rate: "",
       permissions: AdminDefaultPermissions,
       errors: {},

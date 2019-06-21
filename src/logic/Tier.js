@@ -40,6 +40,7 @@ const addTireLogic = createLogic({
             servicePartData.push({
                ...result.data.tierData,
                serviceType: "Tire",
+               qty: 1,
                discount: {
                   value: '',
                   type: "%"
@@ -48,11 +49,15 @@ const addTireLogic = createLogic({
                   color: "",
                   name: "",
                   isAddLabel: false
-                }],
+               }],
                subTotalValue: "",
-               isItemChecked: true
+               isItemChecked: true,
+               unchangebleTotal: 0.00
             })
-            dispatch(addTireToService(data.services))
+            dispatch(addTireToService({
+               services: data.services,
+               serviceIndex: data.serviceIndex
+            }))
             dispatch(
                modelOpenRequest({
                   modelDetails: {
@@ -125,6 +130,7 @@ const getTiresLogic = createLogic({
             value: tire._id,
             tireData: {
                ...tire,
+               qty: 1,
                serviceType: 'tire',
                discount: {
                   value: '',
@@ -134,9 +140,10 @@ const getTiresLogic = createLogic({
                   color: "",
                   name: "",
                   isAddLabel: false
-                }],
+               }],
                subTotalValue: "",
-               isItemChecked: true
+               isItemChecked: true,
+               unchangebleTotal: 0.00
             }
          }));
          logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

@@ -175,5 +175,9 @@ export const ValidatedRoutes = [
   {
     url: AppRoutes.PRICEMATRIX.url,
     authKey: "isAllowedCompanySettings"
-  }
+  },
+  {
+    url: AppRoutes.PROFILE.url,
+    authKey: "isAllowedCompanySettings"
+  },
 ];

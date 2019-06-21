@@ -12,6 +12,8 @@ import {
    FormFeedback,
    FormGroup,
    Label,
+   CustomInput,
+   Table,
    Input
 } from "reactstrap";
 import {
@@ -35,6 +37,7 @@ import {
 } from "../../../helpers/Sales";
 import LastUpdated from "../../common/LastUpdated";
 import * as classnames from "classnames";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
 
 export class CrmTyreModal extends Component {
    constructor(props) {
@@ -473,16 +476,33 @@ export class CrmTyreModal extends Component {
       const { serviceIndex, services } = this.props
       if (tireId) {
          let servicePartData = services[serviceIndex].serviceItems
+         if (this.state.selectedTireSize ){
          servicePartData.push(tireId.tireData)
-         await this.props.addTireToService(services)
-         this.props.handleTierModal()
+         await this.props.addTireToService(
+            {
+               services,
+               serviceIndex: serviceIndex
+            }
+         )
+            this.props.handleTierModal()
+         }
+         else{
+            await ConfirmBox({
+               text: "",
+               title: "Please select a Tire size",
+               showCancelButton: false,
+               confirmButtonText: "Ok"
+            });
+         }
+         
       } else {
          this.setState({
-            serviceTireError: "Tire is required."
+            serviceTireError: "Tire selection is required."
          })
       }
    }
-   handleServiceTireSize = (size, index) => {
+   handleServiceTireSize = (e,size, index) => {
+      const {checked} = e.target
       this.setState({
          tireId: {
             ...this.state.tireId,
@@ -491,7 +511,7 @@ export class CrmTyreModal extends Component {
                tierSize: [size]
             }
          },
-         selectedTireSize: false,
+         selectedTireSize: checked,
          selectedTireIndex: index
       })
    }
@@ -520,12 +540,12 @@ export class CrmTyreModal extends Component {
                backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
-               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update tire details`}{" "}{isEditMode ? <LastUpdated updatedAt={tireData.updatedAt} /> : null}</ModalHeader>
+               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update Tire Details`}{" "}{isEditMode ? <LastUpdated updatedAt={tireData.updatedAt} /> : null}</ModalHeader>
                <ModalBody>
                   {
                      serviceTireModal && !newServiceTire ?
                         <>
-                           <div className={"text-center"}>
+                           <div className={""}>
                               <Col md={"12"}>
                                  <FormGroup className={"fleet-block"}>
                                     <Label htmlFor="name" className="customer-modal-text-style">
@@ -560,34 +580,38 @@ export class CrmTyreModal extends Component {
                            {
                               tireId && tireId.tireData && tireId.tireData.tierSize.length ?
                                  <div>
-                                    <table className={"table"}>
+                                    <Table className={"table"}>
                                        <thead>
-                                          <td>Base Info</td>
-                                          <td>Cost</td>
-                                          <td>Retail Price</td>
-                                          <td>Quantity</td>
-                                          <td>Select</td>
+                                          <tr>
+                                             <th width={"300"}>Base Info</th>
+                                             <th className={"text-center"}>Tire Cost</th>
+                                             <th className={"text-center"}>Retail Price</th>
+                                             <th className={"text-center"}>Quantity</th>
+                                             <th width={"80"} className={"text-center"}>Action</th>
+                                          </tr>
                                        </thead>
                                        <tbody>
                                           {
                                              tireId && tireId.tireData && tireId.tireData.tierSize ? tireId.tireData.tierSize.map((size, index) => {
                                                 return (
                                                    <tr key={index}>
-                                                      <td>{size.baseInfo || "-"}</td>
-                                                      <td>{size.cost || "$0.00"}</td>
-                                                      <td>{size.retailPrice || "$0.00"}</td>
-                                                      <td>{size.quantity || 0}</td>
-                                                      <td>
-                                                         <Input
+                                                      <td ><h5>{size.baseInfo || "-"}</h5></td>
+                                                      <td className={"text-center"}><h5>{size.cost || "$0.00"}</h5></td>
+                                                      <td className={"text-center"}><h5>{size.retailPrice || "$0.00"}</h5></td>
+                                                      <td className={"text-center"}><h5>{size.quantity || <span className={"text-danger"}>0</span>}</h5></td>
+                                                      <td className={"text-center"}>
+                                                         <CustomInput type="checkbox" id={`item-${index}`} size={"md"} label="" onChange={(e) => this.handleServiceTireSize(e,size, index)}/>
+                                                         {/* <Input
                                                             type={"checkbox"}
-                                                            onChange={() => this.handleServiceTireSize(size, index)}
-                                                         /></td>
+                                                             onChange={(e) => this.handleServiceTireSize(e,size, index)}
+                                                         /> */}
+                                                      </td>
                                                    </tr>
                                                 )
                                              }) : null
                                           }
                                        </tbody>
-                                    </table>
+                                    </Table>
                                  </div> :
                                  null
                            }
@@ -958,7 +982,7 @@ export class CrmTyreModal extends Component {
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleAddTire()}>
-                     {!isEditMode ? "Add New Tire" : `Update tire details`}
+                     {!isEditMode ? serviceTireModal && !newServiceTire ? "Add to Service" : "Add New Tire" : `Update Tire`}
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel

@@ -118,6 +118,7 @@ export const AdminDefaultPermissions = {
   isNotifyChangeAppointmentStatus: true
 };
 
+export const allPeopleArray = ["1-2", "3-6", "7-10", "11+"];
 export const CustomerPermissionsText = [
   { key: "isCorporateFleetTaxExempt", text: "Is this customer tax exempt?" },
   {
@@ -200,11 +201,11 @@ export const LabourPermission = {
 }
 export const LabourPermissionText = {
   isShowHours: "Display hours on quote & invoice",
-  showNoteOnQuotesInvoices: "Display note on quote & invoice" 
+  showNoteOnQuotesInvoices: "Display note on quote & invoice"
 }
 export const tierPermission = {
-   showNoteOnQuotesInvoices: false
- }
+  showNoteOnQuotesInvoices: false
+}
 export const tierPermissionText = {
   showNoteOnQuotesInvoices: "Display note on quote & invoice"
 };
@@ -219,7 +220,7 @@ export const LabourText = [
     key: "showNoteOnQuotesInvoices",
     text: "Display note on quote & invoice",
   },
- ];
+];
 
 export const LabourTextDefault = {
   isShowHours: false,
@@ -241,6 +242,141 @@ export const CreatePartOptions = [
   {
     key: "showNoteOnQuoteAndInvoice",
     text: "Display note on quote & invoice"
+  }
+];
+export const countryWithTimezone = [
+  {
+    timezones: [
+      'America/St_Johns',
+      'America/Halifax',
+      'America/Glace_Bay',
+      'America/Moncton',
+      'America/Goose_Bay',
+      'America/Blanc-Sablon',
+      'America/Toronto',
+      'America/Nipigon',
+      'America/Thunder_Bay',
+      'America/Iqaluit',
+      'America/Pangnirtung',
+      'America/Atikokan',
+      'America/Winnipeg',
+      'America/Rainy_River',
+      'America/Resolute',
+      'America/Rankin_Inlet',
+      'America/Regina',
+      'America/Swift_Current',
+      'America/Edmonton',
+      'America/Cambridge_Bay',
+      'America/Yellowknife',
+      'America/Inuvik',
+      'America/Creston',
+      'America/Dawson_Creek',
+      'America/Fort_Nelson',
+      'America/Vancouver',
+      'America/Whitehorse',
+      'America/Dawson',
+    ],
+    latlng: [60, -95],
+    name: 'Canada',
+    country_code: 'CA',
+    capital: 'Ottawa',
+  },
+  {
+    timezones: ['Europe/London'],
+    latlng: [54, -2],
+    name: 'United Kingdom',
+    country_code: 'GB',
+    capital: 'London',
+  },
+  {
+    timezones: [
+      'America/New_York',
+      'America/Detroit',
+      'America/Kentucky/Louisville',
+      'America/Kentucky/Monticello',
+      'America/Indiana/Indianapolis',
+      'America/Indiana/Vincennes',
+      'America/Indiana/Winamac',
+      'America/Indiana/Marengo',
+      'America/Indiana/Petersburg',
+      'America/Indiana/Vevay',
+      'America/Chicago',
+      'America/Indiana/Tell_City',
+      'America/Indiana/Knox',
+      'America/Menominee',
+      'America/North_Dakota/Center',
+      'America/North_Dakota/New_Salem',
+      'America/North_Dakota/Beulah',
+      'America/Denver',
+      'America/Boise',
+      'America/Phoenix',
+      'America/Los_Angeles',
+      'America/Anchorage',
+      'America/Juneau',
+      'America/Sitka',
+      'America/Metlakatla',
+      'America/Yakutat',
+      'America/Nome',
+      'America/Adak',
+      'Pacific/Honolulu',
+    ],
+    latlng: [38, -97],
+    name: 'United States',
+    country_code: 'US',
+    capital: 'Washington D.C.',
+  },
+];
+export const allServices = [
+  {
+    key: "Repair & Maintenance",
+    icon: "/assets/img/repairing-car.svg"
+  },
+  {
+    key: "Detail, Wrap & Film",
+    icon: "/assets/img/carPaintingLogo.svg"
+  },
+  {
+    key: "Restoration & Custom Builds",
+    icon: "/assets/img/carChachisLogo.svg"
+  },
+  {
+    key: "Others",
+    icon: "/assets/img/list-dots.svg"
+  }
+];
+
+export const allVehicleServices = [
+  {
+    key: "Cars",
+    icon: "/assets/img/carLogo.svg"
+  },
+  {
+    key: "Semi & Heavy Duty",
+    icon: "/assets/img/trukLogo.svg"
+  },
+  {
+    key: "RV's",
+    icon: "/assets/img/vanLogo.svg"
+  },
+  {
+    key: "Trailers",
+    icon: "/assets/img/trailerLogo.svg"
+  },
+  {
+    key: "Motorcycles",
+    icon: "/assets/img/motorcycleLogo.svg"
+  },
+  {
+    key: "Boats",
+    icon: "/assets/img/boatLogo.svg"
+  },
+  {
+    key: "Bicycles",
+    icon: "/assets/img/cycleLogo.svg"
+  },
+  {
+    key: "Others",
+    icon: "/assets/img/list-dots.svg"
   }
 ];
 
@@ -288,7 +424,7 @@ export const DefaultErrorMessage =
   "We are having some issues while completing your request. Please try after some time.";
 
 export const notExist = "-"
-export const WildCardRoutes = ["/profile"];
+export const WildCardRoutes = [];
 
 export const CustomerSheetHeaderToJSONKey = {
   "First Name": "firstName",

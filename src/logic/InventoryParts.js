@@ -72,6 +72,7 @@ const addPartToInventoryLogic = createLogic({
       let servicePartData = data.services[data.serviceIndex].serviceItems
       servicePartData.push({
         ...result.data.result,
+        qty: 1,
         serviceType: "Part",
         discount: {
           value: '',
@@ -83,9 +84,14 @@ const addPartToInventoryLogic = createLogic({
           isAddLabel: false
         }],
         subTotalValue: "",
-        isItemChecked: true
+        isItemChecked: true,
+        unchangebleTotal: 0.00
       })
-      dispatch(addPartToService(data.services))
+      dispatch(addPartToService({
+        services: data.services,
+        serviceIndex: data.serviceIndex
+      }
+      ))
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -162,6 +168,7 @@ const getInventoryPartsListLogic = createLogic({
         value: part._id,
         partData: {
           ...part,
+          qty: 1,
           serviceType: 'part',
           discount: {
             value: '',
@@ -173,7 +180,8 @@ const getInventoryPartsListLogic = createLogic({
             isAddLabel: false
           }],
           subTotalValue: "",
-          isItemChecked: true
+          isItemChecked: true,
+          unchangebleTotal: 0.00
         }
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)

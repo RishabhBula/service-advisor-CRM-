@@ -7,8 +7,6 @@ const { validationResult } = require("express-validator/check");
 const getAllStandardRate = async (req, res) => {
   try {
     let $data = req.query;
-    console.log("**************", $data.searchValue);
-
     let condition = {
       name: new RegExp($data.searchValue, "i")
     };
@@ -138,12 +136,12 @@ const createNewLabour = async (req, res) => {
       parentId: currentUser.parentId
     };
     const labourData = new labourModel(addNewLabour);
-    labourData.save();
-
+    await labourData.save();
+    const result = await labourModel.findById(labourData._id).populate("rate")
     return res.status(200).json({
       responsecode: 200,
       message: "Labor added successfully!",
-      laborData: labourData,
+      laborData: result,
       success: true
     });
   } catch (error) {

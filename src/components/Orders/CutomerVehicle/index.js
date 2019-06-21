@@ -4,7 +4,8 @@ import {
    Row,
    FormGroup,
    Label,
-   FormFeedback
+   FormFeedback,
+   Button
 } from "reactstrap";
 import Async from "react-select/lib/Async";
 import * as classnames from "classnames";
@@ -99,7 +100,7 @@ class CutomerVehicle extends Component {
       return (
 
          <Row className={"custom-form-modal"}>
-            <Col md={"6"}>
+            <Col md={"5"}>
                <FormGroup>
                   <Label htmlFor="name" className="customer-modal-text-style">
                      <span className={"label-block "}>
@@ -135,7 +136,7 @@ class CutomerVehicle extends Component {
                   </div>
                </FormGroup>
             </Col>
-            <Col md={"6"}>
+            <Col md={"5"}>
                <FormGroup>
                   <Label htmlFor="name" className="customer-modal-text-style">
                      <span className={"label-block"}>
@@ -170,6 +171,9 @@ class CutomerVehicle extends Component {
                      ) : null}
                   </div>
                </FormGroup>
+            </Col>
+            <Col md={"2"}>
+               <Button color={"secondary"} size={"sm"} className={"mt-1"} onClick={this.props.handleEditOrder}>Update Order</Button>
             </Col>
          </Row>
       );

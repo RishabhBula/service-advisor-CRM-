@@ -245,6 +245,9 @@
 .flex-one{
   flex:1;
 }
+.title-h5{
+  font-size: 16px;
+}
 /* workflow css */
 .page-title {
   display: flex;
@@ -1103,6 +1106,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background: #f3f3f3;
   border-radius: 0px !important;
   border: 1px solid #c5c5c5;
+  cursor: pointer;
 }
 .inventory-nav li a:hover {
   background-color: #dedede;
@@ -1533,7 +1537,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   max-width: 800px;
 }
 .preview-group {
-  margin-top: 9px;
+  margin-top: 18px;
   margin-left: -8px;
   margin-bottom: 0px;
 }
@@ -1550,6 +1554,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   width: 120px;
   margin: 3px 8px;
   position: relative;
+  vertical-align: top;
 }
 .preview-group li img{
   max-width: 100%;
@@ -1575,11 +1580,14 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   opacity: 1;
 }
 .inspection-card .block-item{
-  padding: 10px 20px;
+  padding: 10px 20px 20px;
   transition: all ease 0.3s;
 }
 .inspection-card .block-item:hover{
   background-color: #eee;
+}
+.inspection-card .block-item .form-control{
+  color: #000;
 }
 .inspection-card .block-item .count-block{
   padding-top:5px; 
@@ -1651,6 +1659,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   box-shadow: none;
   outline: none;
 }
+.drop-image-text{
+  position: absolute;
+  bottom: -15px;
+  left: -10px;
+  font-size: 12px;
+  color: #a3a3a3;
+  text-align: center;
+  line-height: 10px;
+}
 .inspection-card .block-item:hover .drop-image-block{
   border-color:#b9b9b9;
 }
@@ -1663,7 +1680,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   align-items: center;
   width: 35px;
   height: 35px;
-  margin: 35px 30px;
+  margin: 30px;
   border-radius: 50%;
   font-size: 35px;
   color: #f1c9c9;
@@ -1758,10 +1775,18 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   padding: 0 20px;
   align-items: center;
   cursor: pointer;
+  border: 1px solid transparent;
+  transition: all ease 0.5s;
+}
+.print-btn:hover {
+  border-color: #474257;
 }
 .print-btn .icons {
   position: relative;
   font-size: 21px;
+}
+.custom-form-modal .form-group label.message-temp-label{
+  min-width: 100px;
 }
 .tagInput{
   display: flex;
@@ -1776,16 +1801,26 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #fff;
   background-clip: padding-box;
   color: #0c0d1c;
-  border: 1px solid #a6a7a7;;
+  /* border: 1px solid #a6a7a7;; */
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   word-break: break-all;
+}
+.tagInput.is-invalid{
+  border-color: #f86c6b !important;
+}
+.message-input-warp{
+  display: block;
+  max-height: 200px;
+  overflow-y: auto; 
+  border: 1px solid #a6a7a7;;
+  border-radius: 0.25rem;
 }
 .message-input{
   display: block;
   align-items: center;
   width: 100%;
-  min-height: calc(1.5em + 0.75rem + 2px);
+  min-height: 100px;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 400;
@@ -1794,10 +1829,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-color: #fff;
   background-clip: padding-box;
   color: #0c0d1c;
-  border: 1px solid #a6a7a7;;
-  border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   word-break: break-all;
+  margin-bottom: 0px;
+}
+.message-input-warp.is-invalid{
+   border-color: #f86c6b !important;
+}
+.message-input-warp.is-invalid + .invalid-feedback {
+  display: block;
 }
 .tagInput span{
   display: inline-block;
@@ -1824,13 +1864,41 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-bottom: 5px;
   border-radius: 4px;
   cursor: pointer;
+  font-family: 'open sans';
+  font-size: 13px;
+  color: #241e34;
+  background: #fff;
+}
+.template-tile .sub-head{
+  font-weight: 600;
+}
+.template-tile .sub-head span{
+  display: inline-block;
+  padding-bottom: 1px;
+  border-bottom: 1px solid #20a8d8;
+}
+.template-tile h5{
+  font-size: 15px;
+  font-weight: 600;
+  color: #1c2236;
+  max-width: 100%;
+  font-family: 'Segoe UI';
+}
+.template-tile .text-message{
+  color: #2e4249;
+  padding-top: 3px;
+  overflow: hidden;
+  white-space: normal;
+  height: 3em;
+  text-overflow: -o-ellipsis-lastline;
 }
 .template-tile.active{
   border: 1px solid #e65410;
 }
 .message-template-block{
-  max-height: 300px;
+  max-height: 345px;
   overflow-y: auto;
+  min-height: 345px;
 }
 .message-template-block .btn-delete{
   position: absolute;
@@ -1851,10 +1919,64 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-left: 5px;
   font-size: 19px;
 }
-.arrow-icon i.arrow{
+.services-list-block{
+  position: relative;
+  font-size: 16px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 2px 5px 38px;
+  border-bottom: 1px solid #ddd;
+  color: #011930;
+  font-family: 'open sans';
+  cursor: pointer;
+}
+.services-list-block:hover,.services-list-block.active{
+  background-color: #d0d0d0;
+  color: #080808;
+}
+.services-list-block i.arrow{
   position: absolute;
   left: 18px;
-  top: 12px;
+  top: 15px;
+  font-size: 13px;
+}
+.service-toggel-block{
+  padding: 4px 2px 4px 65px;
+  font-size: 14px;
+  background: #eee;
+  font-weight: 500;
+  border-bottom: 1px solid #ddd;
+}
+.service-toggel-check input{
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.service-toggel-check label:after {
+  content: "\e080";
+  font-family: simple-line-icons;
+  speak: none;
+  font-style: normal;
+  font-weight: 600;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  top: 0.15625rem;
+  left: -1.7rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  font-size: 16px;
+}
+.service-toggel-check label {
+    margin-bottom: 2px;
+    position: relative;
+    font-size: 14px;
 }
 .workflow-section{
   display: flex;
@@ -1887,10 +2009,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-size: 20px;
   color: #160446;
 }
-.form-control.order-name-input:focus{
+/* .form-control.order-name-input:focus{
   box-shadow: none;
   outline: none;
-}
+} */
 .btn.order-update-btn{
   font-size: 16px;
   font-weight: 700;
@@ -2003,20 +2125,92 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-size: 15px;
   cursor: pointer;
 }
-.tax-disc-cal{
-  background: #eee;
-  max-width: 359px;
+.tax-calculate-block{
+  display: flex;
+}
+.tax-calculate-block .tax-block {
+  min-width: 125px;
+  position: relative;
+  padding: 2px 5px;
+  display: flex;
+  align-items: center;
+}
+.tax-calculate-block .tax-block .title{
+  margin-right: 10px;
+  font-weight: 700;
+}
+.tax-calculate-block .tax-block .form-control{
+  text-align: center;
+  padding: 0.375rem 18px;
+}
+.tax-calculate-block .tax-input-block {
+  display: flex;
+}
+.tax-calculate-block .action-btn-block {
+  position: absolute;
+  top: -6px;
+  right: 0;
+  opacity: 0;
+}
+.tax-calculate-block .tax-input-block .discount-button{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  top: -26px;
+  opacity: 0;
+}
+.tax-calculate-block .tax-input-block:hover .discount-button{
+  opacity: 1;
+}
+.tax-calculate-block .action-btn-block .btn {
+  width: 21px;
+  height: 21px;
+  padding: 0;
+  border-radius: 50%;
+}
+.tax-calculate-block .tax-input-block .input{
+  width: 80px;
+  position: relative;
+  text-align: center;
+}
+.tax-calculate-block .tax-input-block .icon{
+  position: absolute;
+  top: 7px;
+  color: #858f9b;
+}
+.tax-calculate-block .tax-input-block .dollor-icon{
+  position: absolute;
+  left: 6px;
+}
+.tax-calculate-block .tax-input-block .percent-icons{
+  position: absolute;
+  right: 7px;
+}
+.tax-calculate-block .discount-button .btn {
+  padding: 2px;
+  width: 50%;
+  height: 25px;
+}
+.tax-calculate-block .discount-button .btn.active{
+  color: #ffffff !important;
+  background-color: #7f6cb8 !important;
+  border-color: #7f6cb8 !important;
+}
+.service-card-btn-block{
+  background: #efefef66;
 }
 .service-card-btn-block .isValue {
   border-bottom: 3px solid green;
 }
 .service-card-btn-block .notValue {
-  border-bottom: transparent;
+  border-bottom: 3px solid transparent;
 }
 .order-top-section{
   margin-bottom: 30px;
   height: 80px;
   background: #eee;
+  position: relative;
+  z-index: 9;
 }
 .order-top-section .custom-form-modal{
   position: relative;
@@ -2053,6 +2247,30 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .service-card .service-table .no-data-found{
   padding: 20px 20px;
 }
+.service-table .form-control{
+  color: #000;
+  font-size: 15px;
+  text-align: center;
+}
+.service-table .form-control::placeholder{
+  color: #222;
+  text-align: center;
+}
+.service-table .service-customer-discount{
+  position: absolute;
+  right: -12px;
+  display: none;
+}
+.service-table .labor-discount:hover .service-customer-discount{
+  display: block;
+}
+.service-table .hours-block{
+  max-width: 70px;
+  margin: 0 auto;
+}
+.service-table .hours-block .no-value{
+  cursor: not-allowed;
+}
 .status-label-btn{
   display: inline-block;
   padding: 2px 20px 2px 8px;
@@ -2067,6 +2285,14 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   position: absolute;
   right: 5px;
   color: #323131;
+}
+.service-utility-btn.no-service-data{
+  position: relative;
+  top: -22px;
+  padding-top: 10px;
+  max-width: 412px;
+  margin: 0 auto;
+  border-top: 1px solid #ddd;
 }
 .service-utility-btn .btn {
   font-size: 16px;
@@ -2090,6 +2316,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .service-utility-btn .btn:last-child:after{
   display: none;
+}
+.service-total-block .title{
+  display: inline-block;
+  min-width: 100px;
+}
+.service-total-block .value{
+  display: inline-block;
+  min-width: 40px;
+  text-align: left;
 }
 .service-total-block .dollor-icon{
   font-weight: 800;
@@ -2150,7 +2385,58 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   max-width: 115px;
   margin-right: 10px;
 }
-
+.labor-discount-input{
+  position: relative;
+  display: flex;
+}
+.labor-discount-input .form-control {
+  max-width: 60px;
+  margin: 0 3px;
+}
+.labor-discount-input .input-icon{
+  position: absolute;
+  color: #696969;
+  font-weight: normal;
+  font-size: 14px;
+  top: 5px;
+  display: inline-block;
+}
+.labor-discount-input .dollar{
+  left: -7px;
+}
+.labor-discount-input .percent {
+  right: -12px;
+}
+.service-overlay{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #f9f9f9bf;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  font-size: 24px;
+  color: #fff;
+}
+.service-overlay h3{
+  color: #4f4f4f;
+}
+.service-overlay img{
+  height: 75px;
+  transform: rotate(270deg);
+  margin-bottom: 50px;
+  width: 100px;
+}
+.canned-service-header{
+  background: #f1f1f1;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'open sans';
+}
 @media (max-width: 1220px) {
   .table {
     min-width: 1000px;

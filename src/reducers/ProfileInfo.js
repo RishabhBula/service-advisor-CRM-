@@ -35,7 +35,31 @@ export const profileInfoReducer = handleActions(
         shopLogo: action.payload.shopLogo
       },
       companyLogoUpdated: true
-    })
+    }),
+    [profileInfoActions.UPDATE_PASSWORD_REQUEST]: (state, action) => ({
+      ...state,
+      isSuccess: false
+    }),
+    [profileInfoActions.UPDATE_PASSWORD_SUCCESS]: (state, action) => ({
+      ...state,
+      isSuccess: true
+    }),
+    [profileInfoActions.UPDATE_PASSWORD_FAILED]: (state, action) => ({
+      ...state,
+      isSuccess: false
+    }),
+    [profileInfoActions.PROFILE_SETTING_UPDATE_REQUEST]: (state, action) => ({
+      ...state,
+      isSuccess: false
+    }),
+    [profileInfoActions.PROFILE_SETTING_UPDATE_SUCCESS]: (state, action) => ({
+      ...state,
+      isSuccess: true
+    }),
+    [profileInfoActions.PROFILE_SETTING_UPDATE_FAILED]: (state, action) => ({
+      ...state,
+      isSuccess: false
+    }),
   },
   initialAuthState
 );
