@@ -14,7 +14,7 @@ import AppReducer from "./reducers";
 import AppRoutes from "./routes/";
 import "react-toastify/dist/ReactToastify.css";
 const logicMiddleware = createLogicMiddleware(arrLogic);
-const history = createBrowserHistory();
+const history = createBrowserHistory({ basename: "/dev" });
 const middlewares = [logicMiddleware, routerMiddleware(history)];
 if (mode === EnviornmentTypes.DEV) {
   middlewares.push(logger);

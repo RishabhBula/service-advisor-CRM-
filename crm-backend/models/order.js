@@ -53,9 +53,15 @@ const orderSchema = new Schema({
     default: null
   },
   messageId: {
-    type: Schema.Types.ObjectId,
-    ref: "Message",
-    default: null
+    type: [
+      new Schema({
+        messageId: {
+          type: Schema.Types.ObjectId,
+          ref: "Message"
+        }
+      })
+    ],
+    default: []
   },
   userId: {
     type: Schema.Types.ObjectId,

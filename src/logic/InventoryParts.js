@@ -72,6 +72,7 @@ const addPartToInventoryLogic = createLogic({
       let servicePartData = data.services[data.serviceIndex].serviceItems
       servicePartData.push({
         ...result.data.result,
+        qty: 1,
         serviceType: "Part",
         discount: {
           value: '',
@@ -167,6 +168,7 @@ const getInventoryPartsListLogic = createLogic({
         value: part._id,
         partData: {
           ...part,
+          qty: 1,
           serviceType: 'part',
           discount: {
             value: '',

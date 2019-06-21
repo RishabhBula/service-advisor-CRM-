@@ -5,8 +5,7 @@ import { logger } from "./Logger";
  */
 export const getSumOfArray = arr => {
   logger("*******This is fuction array******", arr);
-
-  return arr.reduce((total, num) => total + num);
+  return arr.length ? arr.reduce((total, num) => total + num) : 0;
 };
 
 /**
@@ -22,3 +21,7 @@ export const calculateValues = (total, value, type = "%") => {
       return value;
   }
 };
+
+export const calculateSubTotal = (cost, quantity, hour, rate) => {
+  return (parseFloat(cost || hour) * parseFloat(quantity|| rate))
+}

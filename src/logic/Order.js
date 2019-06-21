@@ -12,6 +12,7 @@ import {
   getOrderListSuccess,
   addOrderSuccess,
   modelOpenRequest,
+  getOrderDetailsRequest,
   updateOrderDetailsSuccess,
   getServiceListSuccess,
   getOrderDetailsSuccess,
@@ -249,7 +250,7 @@ const updateOrderDetailsLogic = createLogic({
   type: orderActions.UPDATE_ORDER_DETAILS,
   async process({ action }, dispatch, done) {
     dispatch(showLoader());
-    logger(action.payload);
+    logger(action.aypload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/order",
@@ -266,6 +267,9 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
+      dispatch(getOrderDetailsRequest({
+        _id: action.payload && action.payload._id ? action.payload._id : null
+      }));
       dispatch(updateOrderDetailsSuccess());
       dispatch(hideLoader());
       done();

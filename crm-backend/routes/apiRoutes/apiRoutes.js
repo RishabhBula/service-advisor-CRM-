@@ -18,7 +18,8 @@ const {
   service,
   inspection,
   label,
-  googleCaptcha
+  googleCaptcha,
+  messageChat
 } = require("./index");
 router.post("/github-webhook", async (req, res) => {
   console.log(req.body);
@@ -43,4 +44,5 @@ router.use("/service", service);
 router.use("/inspection", inspection);
 router.use("/label", label);
 router.use("", googleCaptcha);
+router.use("/message", messageChat);
 module.exports = router;

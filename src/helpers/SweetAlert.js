@@ -14,7 +14,7 @@ export const ConfirmBox = async obj => {
   } = obj;
   return await Swal.fire({
     title: title || "Are you sure?",
-    text: text || "You want to be able to revert this!",
+    text: text !== null ? text : "You want to be able to revert this!",
     type: type || "warning",
     showCancelButton: typeof showCancelButton == 'undefined' ? true : showCancelButton,
     confirmButtonColor: confirmButtonColor || "#3085d6",
