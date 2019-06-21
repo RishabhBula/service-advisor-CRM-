@@ -21,6 +21,7 @@ export class CrmCannedServiceModal extends Component {
          serviceData: [],
          serviceIndex: -1,
          isToggelOpen: false,
+         activeIndex: '',
       };
    }
    componentDidUpdate = ({ serviceReducers }) => {
@@ -62,6 +63,9 @@ export class CrmCannedServiceModal extends Component {
             isToggelOpen: true
          })
       }
+      this.setState({
+         activeIndex: index
+      })
    }
    handleAddToService = (service, index) => {
       const ServiceData = [...this.state.serviceData]
@@ -89,16 +93,17 @@ export class CrmCannedServiceModal extends Component {
       })
 
    }
+
    render() {
       const { openCannedService, handleCannedServiceModal } = this.props
-      const { serviceId, serviceData, serviceIndex, isToggelOpen } = this.state
+      const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex } = this.state
       logger(serviceData)
       return (
          <>
             <Modal
                isOpen={openCannedService}
                toggle={handleCannedServiceModal}
-               className='customer-modal custom-form-modal custom-modal-lg'
+               className='customer-modal custom-form-modal modal-lg'
                backdrop={"static"}
             >
                <ModalHeader toggle={handleCannedServiceModal}>Canned Services</ModalHeader>
@@ -124,45 +129,58 @@ export class CrmCannedServiceModal extends Component {
                         </div>
                      </FormGroup>
                   </Col>
-                  <div className={"table matrix-table d-flex flex-column"}>
-                     <div className={"p-2 mb-0 border-secondary border d-flex justify-content-between"}>
-                        <span width="250" className={"text-center"}>SERVICE NAME</span>
-                        <span width="250" className={"text-center"}>Action</span>
+                  <div className={"d-flex flex-column"}>
+                     <div className={"p-2 mb-0 border-secondary border-top border-bottom d-flex justify-content-between canned-service-header"}>
+                        <span width="250" className={"text-center pl-2"}>Service Name</span>
+                        <span width="250" className={"text-center pl-2 pr-5"}>Action</span>
                      </div>
                      <div>
                         {
                            serviceData && serviceData.length ?
                               serviceData.map((item, index) => {
                                  return (
-                                    <>
-                                       <div key={index} onClick={() => this.handleServiceCollaps(index)} className={"p-2 pl-5 mb-0 border-secondary border position-relative arrow-icon"}>
+                                    <div key={index}>
+                                       <div  onClick={() => this.handleServiceCollaps(index)} className={activeIndex === index ? 'services-list-block active' : 'services-list-block'}>
                                           {
                                              item.serviceItems && item.serviceItems.length ?
-                                                isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-up arrow ml-2"></i> : <i className="icons arrow icon-arrow-down ml-2"></i> : null
+                                                isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-down arrow"></i> : <i className="icons arrow icon-arrow-right"></i> : <i className="icons arrow icon-arrow-right"></i>
                                           }
-                                          <div className={"d-flex justify-content-between"}>
-                                             <span>{item.serviceName}</span>
-                                             <span><Button color={"primary"} disabled={item.isCannedAdded} className={"btn btn-round"} onClick={() => this.handleAddToService(item, index)}>
+
+                                          <span>{item.serviceName}</span>
+                                          <span><Button size={"sm"} color={""} disabled={item.isCannedAdded} className={"btn btn-theme"} onClick={() => this.handleAddToService(item, index)}>
+                                             +
                                              {
                                                 item.isCannedAdded ?
-                                                <>Service Added <i className={"fa fa-check"} /></>
-                                                 : "Add to service"
+                                                   <>Service Added <i className={"fa fa-check"} /></>
+                                                   : "Add to service"
                                              }
-                                             </Button></span>
-                                          </div>
+                                          </Button></span>
+
                                        </div>
                                        {
-                                          item.serviceItems && item.serviceItems.length && (serviceIndex === index) && isToggelOpen ?
-                                             item.serviceItems.map((serviceItem, sIndex) => {
-                                                return (
-                                                   <div key={index} className={"pl-3 p-2 mb-0 border-secondary border d-flex justify-content-between"}>
-                                                      <Input type="checkbox" checked={serviceItem.isItemChecked} value={serviceItem.isItemChecked} onChange={(e) => this.handleServiceItems(e, serviceItem, index, sIndex)} className={"ml-0"} />
-                                                      <span className={"pl-3"}>{serviceItem.description || serviceItem.brandName || serviceItem.discription || '-'}</span>
+                                          (serviceIndex === index) && isToggelOpen ?
+                                             item.serviceItems && item.serviceItems.length ?
+                                                item.serviceItems.map((serviceItem, sIndex) => {
+                                                   return (
+                                                      <>
+                                                         <div key={index} className={'service-toggel-block'}>
+                                                            <div className={"service-toggel-check"} >
+                                                               <Input type="checkbox" id={sIndex} checked={serviceItem.isItemChecked} value={serviceItem.isItemChecked} onChange={(e) => this.handleServiceItems(e, serviceItem, index, sIndex)} className={""} />
+                                                               <label htmlFor={sIndex} className={""}>{serviceItem.description || serviceItem.brandName || serviceItem.discription || '-'}</label>
+                                                            </div>
+                                                         </div>
+
+
+                                                      </>
+                                                   )
+                                                }) : <div key={index} className={'service-toggel-block text-center'}>
+                                                   No any Service Item Added
                                                    </div>
-                                                )
-                                             }) : null
+                                             :
+                                             null
+
                                        }
-                                    </>
+                                    </div>
                                  )
                               }) :
                               <div>

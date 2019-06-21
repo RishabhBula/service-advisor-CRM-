@@ -108,14 +108,16 @@ class Order extends Component {
       orderId: this.props.match.params.id
     });
     this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
-    this.orderNameRef.focus();
+
+    setTimeout(() => {
+      this.orderNameRef.current.focus();
+    }, 10);
   }
   componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
-
     if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
     }
-    if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
+    if ((orderReducer.orderItems !== this.props.orderReducer.orderItems) || orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading) {
       const {
         orderName,
         customerId,
@@ -143,29 +145,21 @@ class Order extends Component {
       this.setState({
         customerData: customer,
         vehicleData: vehicle
-      }, () => {
-        this.handleEditOrder()
       });
     } else if (customer && !vehicle) {
       this.setState({
         customerData: customer,
         vehicleData: ""
-      }, () => {
-        this.handleEditOrder()
       });
     } else if (vehicle && !customer) {
       this.setState({
         customerData: "",
         vehicleData: vehicle
-      }, () => {
-        this.handleEditOrder()
       });
     } else {
       this.setState({
         customerData: "",
         vehicleData: ""
-      }, () => {
-        this.handleEditOrder()
       });
     }
   };
@@ -267,10 +261,10 @@ class Order extends Component {
                         name={"orderName"}
                         value={orderName}
                         maxLength={"250"}
-                        ref={(input) => { this.orderNameRef = input; }} 
-                        onBlur={this.handleEditOrder}
                         invalid={isError && !orderName}
                         className={"order-name-input"}
+                        ref={this.orderNameRef}
+                        autoFocus
                       />
                       <FormFeedback>
                         {isError && !orderName
@@ -289,6 +283,7 @@ class Order extends Component {
                   </Button>
                   </div> */}
                 </div>
+                
                 <div className={"order-top-section"}>
                   <CustomerVehicle
                     getCustomerData={getCustomerData}
@@ -299,6 +294,17 @@ class Order extends Component {
                     orderReducer={orderReducer}
                   />
                 </div>
+                <div className={"position-relative fdsfdsfdsf"}>
+                  {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.orderName  ?
+                  
+                    <div className={"service-overlay"}>
+                      <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"}/>
+                      <h3>
+                        Please Add Order Details first 
+                      </h3>
+                    </div>  
+                    : null
+                }
                 <div className={"position-relative"}>
                   <Suspense fallback={"Loading.."}>
                     <OrderTab
@@ -307,10 +313,11 @@ class Order extends Component {
                       onTabChange={this.onTabChange}
                     />
                   </Suspense>
+                </div>
                   {/* <div className={"invt-add-btn-block"}>
                 {this.renderAddNewButton()}
               </div> */}
-                </div>
+                
                 <Suspense fallback={<Loader />}>
                   <Switch>
                     {OrderComponents.map((route, idx) => {
@@ -348,22 +355,24 @@ class Order extends Component {
                               orderReducer={orderReducer}
                             />
                           ) : null}
-                          {activeTab === 1 ?
-                            <Inspection
-                              addNewInspection={addNewInspection}
-                              inspectionData={this.props.inspectionReducer}
-                              addInspectionTemplate={addInspectionTemplate}
-                              getTemplateList={getTemplateList}
-                              addMessageTemplate={addMessageTemplate}
-                              getMessageTemplate={getMessageTemplate}
-                              updateMessageTemplate={updateMessageTemplate}
-                              deleteMessageTemplate={deleteMessageTemplate}
-                              searchMessageTemplateList={searchMessageTemplateList}
-                              customerData={customerData}
-                              vehicleData={vehicleData}
-                              sendMessageTemplate={sendMessageTemplate}
-                              orderId={orderId}
-                            /> : null}
+                          {activeTab === 1 ? 
+                          <Inspection
+                            addNewInspection={addNewInspection}
+                            inspectionData={this.props.inspectionReducer}
+                            addInspectionTemplate={addInspectionTemplate}
+                            getTemplateList={getTemplateList}
+                            addMessageTemplate={addMessageTemplate}
+                            getMessageTemplate={getMessageTemplate}
+                            updateMessageTemplate={updateMessageTemplate}
+                            deleteMessageTemplate={deleteMessageTemplate}
+                            searchMessageTemplateList={searchMessageTemplateList}
+                            customerData={customerData}
+                            vehicleData={vehicleData}
+                            sendMessageTemplate={sendMessageTemplate}
+                            orderId={orderId}
+                            profileReducer={profileInfoReducer}
+                            orderReducer={orderReducer}
+                          /> : null}
                           {activeTab === 2 ? <TimeClock /> : null}
                           {activeTab === 3 ? <Message /> : null}
                         </React.Fragment>
@@ -371,7 +380,8 @@ class Order extends Component {
                     })}
                   </Switch>
                 </Suspense>
-              </CardBody>
+                
+                </div></CardBody>
             </div>
             <div className={"workflow-right"}>
               <div className={"pb-2"}>

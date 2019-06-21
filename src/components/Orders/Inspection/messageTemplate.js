@@ -9,16 +9,16 @@ import {
   Row,
   Col,
   FormGroup,
-  Label
+  Label,
 } from 'reactstrap';
 import { stripHTML } from "../../../helpers"
+import { ConfirmBox } from "../../../helpers/SweetAlert";
 
 class MessageTemplate extends Component {
   constructor(props) {
     super(props);
     this.state = {
       recipients: "Rishabh",
-      errors: false,
       isEditMode: false,
       eleId: "",
       templateListData: [],
@@ -28,7 +28,8 @@ class MessageTemplate extends Component {
         subject: "",
         messages: "",
       },
-      activeIndex: '' 
+      activeIndex: '' ,
+      errors:{}
     };
   }
 
@@ -46,16 +47,17 @@ class MessageTemplate extends Component {
   }
 
   handleChange = e => {
-
     this.setState({
       singleTemplateData:{
         ...this.state.singleTemplateData,
         [e.target.name]: e.target.value,
       },
-      errors: false
+      errors:{
+        ...this.state.errors,
+        [e.target.name]:''
+      }
     });
   };
-
 
   handleAddtemplate = (e) => {
     e.preventDefault();
@@ -64,39 +66,65 @@ class MessageTemplate extends Component {
     var messageTextValue = document.getElementById('messageText'),
       messageText = messageTextValue.innerHTML;
     const { singleTemplateData} = this.state;
-  
-    const payload = {
-      templateName : singleTemplateData.templateName ,
-      subject,
-      messageText,
-    }
-    if (payload.templateName  === '') {
-      this.setState({
-        errors: true
-      })
-    }
-    else {
+    try{
+      let errors = {};
+      let hasErrors = false;
+      
+      if (singleTemplateData.templateName === '') {
+        errors.templateName = "Please enter template name.";
+        hasErrors = true;
+      }
+      if (!subject) {
+        errors.subject = "Please enter subject for template.";
+        hasErrors = true;
+      } 
+      if (hasErrors) {
+        this.setState({
+          errors
+        });
+        return;
+      }
+      const payload = {
+        templateName: singleTemplateData.templateName,
+        subject,
+        messageText,
+      }
       if(!this.state.isEditMode){
-       this.props.addMessageTemplate(payload)
-
+        this.props.addMessageTemplate(payload)
+        this.clearMessageForm()
       }
       else{
         payload._id = singleTemplateData._id
         this.props.updateMessageTemplate(payload)
       }
-    }
+      
+    } catch (error) { }
   }
 
   handleFocus = (id) => {
     this.setState({
       eleId: id
     })
+    document.getElementById(id).addEventListener("paste", function (e) {
+      e.preventDefault();
+      var text = e.clipboardData.getData("text/plain");
+      document.execCommand("insertHTML", false, text);
+    });
   }
 
   handelTag = (e, label) => {
     let id = this.state.eleId
     var tagInput = document.getElementById(id)
     tagInput.appendChild(document.createTextNode(label));
+  }
+
+  onKeyPress = (e) =>{
+    this.setState({
+      errors: {
+        ...this.state.errors,
+        subject: ''
+      }
+    });
   }
 
   handleEditTemplate = (e, id, index) => {
@@ -113,12 +141,37 @@ class MessageTemplate extends Component {
     }
   }
 
-  handelTemplateDelete = (e,id) =>{
+  handelTemplateDelete =async (e,id) =>{
+    const { value } = await ConfirmBox({
+      text: "Do you want to delete this Template"
+    });
+    if (!value) {
+      return;
+    }
+
     this.props.deleteMessageTemplate(id)
+    this.clearMessageForm()
+  }
+
+  clearMessageForm = () =>{
+    var subjectValue = document.getElementById('tagInput');
+    var messageTextValue = document.getElementById('messageText');
+    this.setState({
+      singleTemplateData: {
+        templateName: "",
+        subject: "",
+        messages: "",
+      },
+      isEditMode: false,
+      activeIndex:null
+    })
+    subjectValue.textContent = '';
+    messageTextValue.textContent = "";
   }
 
   render() {
     const { templateListData, errors, isEditMode, singleTemplateData, activeIndex} = this.state;
+   
     return (
       <>
         <Modal
@@ -135,20 +188,20 @@ class MessageTemplate extends Component {
           </ModalHeader>
           <ModalBody>
             <div className="">
-              <Row className='justify-content-center'>
-                <Col md={"6"} sm={"6"}>
-                  <h5>Template List</h5>
+              <Row className='justify-content-center ml-0'>
+                <Col md={"5"} sm={"5"}>
+                  <h5 className={"pb-2 border-bottom title-h5"}>Template List</h5>
                   <div className={"message-template-block"}>
                     {templateListData && templateListData.length ?
                       templateListData.map((ele, index) => {
                         return (
-                          <div key={index}>
-                          <div  className={activeIndex === index ? 'template-tile d-flex active' : 'template-tile d-flex'} onClick={(e) => this.handleEditTemplate(e, ele._id, index)}>
-                            <div>Template Name -: {ele.templateName || '-'}</div>
-                            <div>Subject -: {ele.subject || '-'}</div>
-                            <div>Message -: {ele.messageText ? stripHTML(ele.messageText) : '-'}</div>
-                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={""} className={"btn-delete"}><i class="icons cui-circle-x"></i></Button>
+                          <div key={index} className={"position-relative"}>
+                            <div className={activeIndex === index ? 'template-tile d-flex active' : 'template-tile d-flex'} onClick={(e) => this.handleEditTemplate(e, ele._id, index)}>
+                            <h5 className={"text-capitalize"}>{ele.templateName || '-'}</h5>
+                              <div className={"sub-head"}><span>Subject</span> -: {ele.subject || '-'}</div>
+                              <div className={"text-message"}>{ele.messageText ? stripHTML(ele.messageText.substring(0, 500)) : '-'}</div>
                           </div>
+                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={""} className={"btn-delete"}><i class="icons cui-circle-x"></i></Button>
                           </div>
                         )
                       })
@@ -157,9 +210,9 @@ class MessageTemplate extends Component {
                     }
                   </div>
                 </Col>
-                <Col md={"6"} sm={"6"}>
-                  <h5 className={"text-center mb-4"}>
-                    {!isEditMode ? "Add New Message Template" : "Edit template"}
+                <Col md={"7"} sm={"7"}>
+                  <h5 className={"text-center mb-4 title-h5"}>
+                    {!isEditMode ? "Add New Message Template" : "Edit Message Template"}
                     {isEditMode ? <Button
                       color={"warning"} 
                       size={"sm"}
@@ -171,7 +224,8 @@ class MessageTemplate extends Component {
                             subject: "",
                             messages: "",
                           },
-                          isEditMode:false
+                          isEditMode:false,
+                          activeIndex:''
                         })
                       }>
                         Add New
@@ -182,9 +236,9 @@ class MessageTemplate extends Component {
                   <Row className='justify-content-center m-0'>
                     <Col md='12'>
                       <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
+                        <Label htmlFor='name' className='message-temp-label'>
                           Template Name <span className={"asteric"}>*</span>
-                        </Label>
+                          </Label>
                         <div className={'input-block'}>
                           <Input
                             type='text'
@@ -192,32 +246,35 @@ class MessageTemplate extends Component {
                             onChange={(e) => this.handleChange(e)}
                             placeholder='ex.Invoice Default'
                             value={singleTemplateData.templateName}
-                            maxLength='120'
+                            maxLength='55'
                             id='recipients'
-                            invalid={errors && !errors !== ""}
+                            invalid={errors && errors.templateName ? true : false}
                           />
-                          {errors && errors !== "" ? <p className={"text-danger mb-0"}>Please enter a Template Name</p> : null}
+                          {errors && errors.templateName ? <p className={"text-danger font-italic"}>{errors.templateName}</p> : null}
                         </div>
                       </FormGroup>
                     </Col>
                     <Col md='12'>
                       <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
-                          Subject
-                    </Label>
+                        <Label htmlFor='name' className='message-temp-label'>
+                          Subject <span className={"asteric"}>*</span>
+                        </Label>
                         <div className={'input-block'}>
-                          <p contentEditable={"true"} className={"tagInput mb-0"} id={"tagInput"} onClick={(e) => this.handleFocus("tagInput")} dangerouslySetInnerHTML={singleTemplateData.subject ? { __html: singleTemplateData.subject } : null}>
+                          <div className={'input-block message-input-warp'}>
+                          <p contentEditable={"true"} onKeyPress={(e) => this.onKeyPress(e)} className={errors && errors.subject ? "tagInput mb-0 is-invalid" : "tagInput mb-0"} id={"tagInput"} onClick={(e) => this.handleFocus("tagInput")} dangerouslySetInnerHTML={singleTemplateData.subject ? { __html: singleTemplateData.subject } : null}>
                           </p>
+                          </div>
+                          {errors && errors.subject ? <p className={"text-danger font-italic"}>{errors.subject}</p> : null}
                         </div>
                       </FormGroup>
                     </Col>
 
                     <Col md='12'>
                       <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
+                        <Label htmlFor='name' className='message-temp-label'>
                           Message
                         </Label>
-                        <div className={'input-block'}>
+                        <div className={'input-block message-input-warp'}>
                           <p
                             suppressContentEditableWarning contentEditable={"true"}
                             className={"message-input"}
@@ -230,7 +287,7 @@ class MessageTemplate extends Component {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <div className={"tagging-warp"}>
+                  <div className={"tagging-warp text-right"}>
                     <span onClick={(e) => this.handelTag(e, '{first_name}')} className={"tags"}>Firstname</span>
                     <span onClick={(e) => this.handelTag(e, '{last_name}')} className={"tags"}>Lastname</span>
                     <span onClick={(e) => this.handelTag(e, '{vehicle}')} className={"tags"}>Vehicle</span>
@@ -255,7 +312,7 @@ class MessageTemplate extends Component {
             >
               {!isEditMode ? "Add New Template " : "Update Template"}
             </Button>{' '}
-            <Button color='secondary' onClick={this.props.toggle}>
+            <Button color='secondary' onClick={(e) => { this.props.toggle(); this.clearMessageForm()}}>
               Cancel
             </Button>
           </ModalFooter>

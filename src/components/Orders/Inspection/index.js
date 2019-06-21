@@ -18,16 +18,21 @@ import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import * as jsPDF from "jspdf";
 import 'jspdf-autotable';
+import { async } from "rxjs/internal/scheduler/async";
+import { element } from "prop-types";
+import { logger } from "../../../helpers";
 
 class Inspection extends Component {
    constructor(props) {
       super(props);
       this.state = {
          inspection: [],
+         inspectionStatus: false,
          modal: false,
          sentModal: false,
          mesageModal: false,
          templateData: [],
+         orderDetails: '',
          colorIndex: '',
          selectedOption: '',
          showPDF: false
@@ -37,13 +42,15 @@ class Inspection extends Component {
    componentDidMount = () => {
       this.setState({
          customerData: this.props.customerData,
-         vehicleData: this.props.vehicleData
+         vehicleData: this.props.vehicleData,
+         orderDetails: this.props.orderReducer
       })
    }
 
-   componentDidUpdate = ({ inspectionData, customerData }) => {
+   componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
       let propdata = this.props.inspectionData;
-      if (propdata && propdata.inspectionData && propdata.inspectionData.data && inspectionData !== propdata) {
+      const { inspectionStatus } = this.state
+      if (propdata && propdata.inspectionData && propdata.inspectionData.data && inspectionData !== propdata && !inspectionStatus) {
          this.setState({
             inspection: propdata.inspectionData.data,
          })
@@ -54,6 +61,12 @@ class Inspection extends Component {
          this.setState({
             customerData: propsCustomerData,
             vehicleData: propsVehicleData
+         })
+      }
+      let orderdata = this.props.orderReducer
+      if (orderdata && orderdata !== orderReducer) {
+         this.setState({
+            orderDetails: orderdata
          })
       }
    }
@@ -140,7 +153,13 @@ class Inspection extends Component {
    /**
    *
    */
-   removeImage = (previewindx, itemIndex, inspIndex) => {
+   removeImage = async (previewindx, itemIndex, inspIndex) => {
+      const { value } = await ConfirmBox({
+         text: "You want to delete this image"
+      });
+      if (!value) {
+         return;
+      }
       const { inspection } = this.state
       let itemImagePreview = inspection[inspIndex].items[itemIndex].itemImagePreview;
       let itemImage = inspection[inspIndex].items[itemIndex].itemImage;
@@ -177,7 +196,8 @@ class Inspection extends Component {
          if (!ele.error) {
             this.props.addNewInspection(payload)
             this.setState({
-               inspection: []
+               inspection: [],
+               inspectionStatus: false
             })
          }
       }
@@ -204,7 +224,15 @@ class Inspection extends Component {
       e.preventDefault();
       try {
          var inspectionArray = [...this.state.inspection];
-         // To remove _id form object
+         let ele;
+         ele = inspectionArray[inspIndex];
+         if (ele.hasOwnProperty('inspectionName') && ele.inspectionName === '') {
+            ele.error = true;
+            this.setState({
+               inspectionArray
+            });
+         }
+         // To remove _id form object before sent it as payload to API for new template 
          let i;
          for (i = 0; i < inspectionArray.length; i++) {
             if (inspectionArray[i]._id) {
@@ -214,6 +242,9 @@ class Inspection extends Component {
          // To set isTemplate value true
          inspectionArray[inspIndex].isTemplate = true
          const payload = [inspectionArray[inspIndex]]
+         this.setState({
+            inspectionStatus: true
+         })
          this.props.addInspectionTemplate(payload)
 
       }
@@ -259,6 +290,16 @@ class Inspection extends Component {
     *
     */
    onDrop = async (files, inspIndex, itemIndex) => {
+      const { inspection } = this.state;
+      let count = 5 - inspection[inspIndex].items[itemIndex].itemImagePreview.length
+      if (files.length > count) {
+          await ConfirmBox({
+            text: "",
+            title: "Can not upload more than 5 images",
+            showCancelButton:false,
+            confirmButtonText:"Ok"
+         });
+      } else { 
       files.map(async (k, i) => {
          let picReader = new FileReader();
          let file = files[i];
@@ -273,6 +314,7 @@ class Inspection extends Component {
          });
          await picReader.readAsDataURL(file);
       })
+      }
    };
    /**
    *
@@ -326,43 +368,175 @@ class Inspection extends Component {
    }
 
    downloadPDF = () => {
-      var doc = new jsPDF();
-      doc.setProperties({
-         title: "Title",
-         subject: "This is the subject",
-         author: "Chapter247",
-         keywords: "React, JavaScript, NodeJS",
-         creator: "Sonu Bamniya"
-      });
 
-      
+      var doc = new jsPDF('p', 'pt');
+      doc.setFontSize(12)
+      doc.setTextColor(51, 47, 62);
+      doc.text('D-Company', 40, 30);
 
-      // let header = function (data) {
-      //    doc.setFontSize(18);
-      //    doc.setTextColor(40);
-      //    doc.setFontStyle('normal');
-      //    doc.text("Testing Report", data.settings.margin.left, 50);
-      // };
+      const orderDetail = this.state.orderDetails
+      doc.setFontSize(14)
+      doc.text('Inspection', 430, 25);
+      doc.setTextColor('black');
+      doc.text('# ' + orderDetail.orderId, 500, 25);
+      doc.setFontSize(12);
+      doc.setTextColor('gray');
+      var textOrderId = orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName : orderDetail.order.orderName;
+      let  textOrderIdDetail =  doc.splitTextToSize(textOrderId);
+      doc.text(textOrderIdDetail, 430, 42);
 
-      // let options = {
-      //    beforePageContent: header,
-      //    margin: {
-      //       top: 80
-      //    },
-      //    startY: doc.autoTableEndPosY() + 20
-      // };
-      const inspectData = this.state.inspection
+      doc.setTextColor('black');
+      doc.setDrawColor(187, 185, 193);
+      doc.setLineWidth(0);
+      doc.line(0, 50, 600, 50);
+
+      const customerData = this.state.customerData;
+
+      const fullName = customerData.firstName + ' ' + customerData.lastName
+      doc.setFontSize(12)
+      doc.text(fullName, 40, 70);
+      doc.setTextColor(126, 126, 126);
+      doc.text(customerData.email, 40, 83);
+      doc.text(customerData.phoneDetail[0].value, 40, 97);
+
+      const vehicleData = this.state.vehicleData;
+      const vehicalName = vehicleData.make + ' ' + vehicleData.modal + ' ' + vehicleData.year
+      doc.setFontSize(12)
+      doc.setTextColor(0, 0, 0);
+      doc.text(vehicalName, 340, 70);
+
+      const inspectData = this.state.inspection;
+
       for (let index = 0; index < inspectData.length; index++) {
-         const itemArray = []
+         let count = 0;
+         let finalY = doc.previousAutoTable.finalY ? doc.previousAutoTable.finalY + 15 : 45
+         var header = (data) => {
+            doc.setFontSize(14);
+            doc.setTextColor(40);
+            doc.setFontStyle('normal');
+            doc.text(inspectData[index].inspectionName, 40, index === 0 ? 130 : finalY + 10);
+         };
+
+         var options = {
+            theme:'grid',
+            beforePageContent: header,
+            margin: {
+               top: finalY
+            },
+            startY: index === 0 ? 140 : finalY + 20,
+            columnStyles: {
+               'Item Tile': { columnWidth: 100 },
+               'Note': { columnWidth: 90 },
+               'Status': { columnWidth: 60, textColor: '#ffffff' },
+               'Image': { columnWidth: 130 ,textColor:'#ffffff',fontSize:8},
+            },
+            
+            styles: {
+               1: {rowHeight: 100},
+            },
+            didParseCell:  data => {
+               if (data.row.section !== "head"){
+                  data.row.height = 50
+               }
+               for (let j = 0; j < inspectData[index].items.length; j++) {
+                  if (data.row.section !== "head" && data.row.raw.Image > 0) {
+                     if (data.row.raw.Image > 3){
+                        data.row.height = 130
+                     }
+                     else{
+                        data.row.height = 60
+                     }
+                     
+                  }
+               }
+
+            },
+            didDrawCell:async  data => {
+               if (data.section === 'body' && data.column.dataKey === 'Image') {
+                  for (let j = 0; j < 1; j++) {
+                     var itemsJ = inspectData[index].items[count];
+                     var xAxis = data.cell.x;
+                     var yAxis = data.cell.y + 5;
+                     count++;
+                     for (let k = 0; k < itemsJ.itemImagePreview.length; k++) {
+                        var base64Img = itemsJ.itemImagePreview[k];
+                        if (k < 3) {
+                           doc.addImage(base64Img, 'JPEG', xAxis + (50 * k) + 5, yAxis, 50, 50);
+                        }
+                        if(k === 3){
+                           doc.addImage(base64Img, 'JPEG', xAxis + 5, yAxis + 60, 50, 50);
+                        }
+                        if (k === 4) {
+                           doc.addImage(base64Img, 'JPEG', xAxis + 60, yAxis + 60, 50, 50);
+                        }
+                     }
+                  }
+               }
+               if (data.section === 'body' && data.column.dataKey === 'Status') {
+
+                  var str = data.cell.text[0];
+                  var result = str.split(" ");
+                  data.cell.styles.fontSize = 8;
+                  if(result[0] === 'true' ){
+                     doc.setDrawColor(77, 189, 116);
+                     doc.setFillColor(255, 255, 255);
+                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD'); 
+                     doc.setTextColor(77, 189, 116);
+                     doc.text("Approved", data.cell.x + 11, data.cell.y + 35);
+                  }
+                  else {
+                     doc.setDrawColor(204, 204, 204);
+                     doc.setFillColor(255, 255, 255);
+                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD');
+                     doc.setTextColor(126, 126, 126);
+                     doc.text("UnApproved", data.cell.x + 5, data.cell.y + 35);
+                  }
+                  switch (result[1]) {
+                     default:
+                        doc.text("Not Selected", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(204, 204, 204);
+                        break;
+                     case 'default':
+                        doc.text("Orange", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(248, 188, 24);
+                        break;
+                     case 'danger':
+                        doc.text("Red", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(243, 65, 65);
+                        break;
+                     case 'success':
+                        doc.text("Green", data.cell.x + 21, data.cell.y + 15);
+                        doc.setFillColor(53, 230, 91);
+                  }
+                  doc.setDrawColor(204);
+                  doc.circle(data.cell.x + 8, data.cell.y + 10, 4, 'FD');
+                  
+               }
+             
+            },
+         };
+
+         var columns = [
+            { title: "Item Tile", dataKey: "Item Tile" },
+            { title: "Note", dataKey: "Note" },
+            { title: "Status", dataKey: "Status" },
+            { title: "Image", dataKey: "Image" }
+         ];
+         const rows = []
          for (let j = 0; j < inspectData[index].items.length; j++) {
-            itemArray.push([inspectData[index].items[j].name, inspectData[index].items[j].note])
+            var Index = inspectData[index]
+            var imgLength = Index.items[j].itemImagePreview.length
+            rows.push({
+               'Item Tile': Index.items[j].name || 'Untitled Item',
+               Note: Index.items[j].note || '-',
+               Status: Index.items[j].aprovedStatus + ' ' + Index.items[j].color || '-',
+               Image: imgLength > 0 ? imgLength : 0
+            })
          }
-         
-         doc.autoTable({
-            head: [['Item Tile', 'Note', 'status']],
-            body: itemArray,
-         });
+
+         doc.autoTable(columns, rows, options);
       }
+
       window.open(doc.output("bloburl"), "_blank");
    };
 
@@ -370,21 +544,22 @@ class Inspection extends Component {
 
    render() {
       const { inspection, templateData } = this.state;
+  
       return (
          <div>
             <div className={"mb-3 d-flex"}>
-            {inspection && inspection.length ? <>
+               {inspection && inspection.length ? <>
                   <span color={""} className={"print-btn"} onClick={this.toggleSentInspection}>
-                  <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
-            <span
-               onClick={this.downloadPDF}
-               id={"add-Appointment"}
-               className={"print-btn"}
-            >
+                     <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
+                  <span
+                     onClick={this.downloadPDF}
+                     id={"add-Appointment"}
+                     className={"print-btn"}
+                  >
                      <i class="icon-printer icons "></i>&nbsp; View or Print
             </span> </>
-            : null
-            }
+                  : null
+               }
             </div>
             <div className={"inspection-add-block"} id={"inspection-add-block"}>
 
@@ -401,6 +576,7 @@ class Inspection extends Component {
                               placeholder={"Please Enter a name for this inspection"}
                               onChange={(e) => this.handleChange(e, inspIndex)}
                               invalid={ele.error}
+                              maxLength={75}
                            />
                            {ele.error ? <p className={"text-danger mb-0"}>Please enter title of Inspection</p> : null}
                         </div>
@@ -455,6 +631,7 @@ class Inspection extends Component {
                                                    name={"name"}
                                                    value={val.name}
                                                    placeholder={"Item Title"}
+                                                   maxLength={"75"}
                                                    onChange={e => this.handleItemChange(itemIndex, e, inspIndex)}
                                                 />
                                              </div>
@@ -463,6 +640,7 @@ class Inspection extends Component {
                                                    type="text"
                                                    name={"note"}
                                                    value={val.note}
+                                                   maxLength={"75"}
                                                    placeholder={"Enter Notes and Recommendation"}
                                                    onChange={(e) => this.handleItemChange(itemIndex, e, inspIndex)}
                                                 />
@@ -470,22 +648,28 @@ class Inspection extends Component {
                                           </Col>
                                           <Col lg={3} md={3} className={"mt-2 p-0"}>
                                              <div className={"d-flex flex-row"}>
-                                                <Dropzone onDrop={(files) => this.onDrop(files, inspIndex, itemIndex)}>
+                                                <Dropzone onDrop={(files) => this.onDrop(files, inspIndex, itemIndex)} >
                                                    {({ getRootProps, getInputProps }) => (
+                                                      <>
                                                       <section className="drop-image-block">
                                                          <div {...getRootProps({ className: 'dropzone' })}>
                                                             <input {...getInputProps()} />
                                                             <i className="icon-picture icons"></i>
                                                          </div>
                                                       </section>
+                                                         <div className={"drop-image-text"}>
+                                                            Max limit 5 images
+                                                         </div>
+                                                      </>
                                                    )}
                                                 </Dropzone>
+                                                
                                                 {itemIndex >= 1 ?
                                                    <>
                                                       <span onClick={() => { this.removeItem(inspIndex, itemIndex) }} color={"danger"} className={"delete-icon"} id={`delete-${itemIndex}`}><i className={"icons cui-circle-x"}></i></span>
                                                       <UncontrolledTooltip target={`delete-${itemIndex}`}>
                                                          Delete this Item
-                                                   </UncontrolledTooltip>
+                                                      </UncontrolledTooltip>
                                                    </>
                                                    : null
                                                 }
@@ -493,7 +677,7 @@ class Inspection extends Component {
                                           </Col>
                                           <Col lg={12} md={12}>
                                              {val.itemImagePreview && val.itemImagePreview.length ?
-                                                <ul className={"preview-group d-flex p-0"}>
+                                                <ul className={"preview-group  p-0"}>
                                                    {
                                                       val.itemImagePreview.map((file, previewindx) => {
                                                          return (
@@ -501,7 +685,9 @@ class Inspection extends Component {
                                                                <span onClick={(e) => { this.removeImage(previewindx, itemIndex, inspIndex) }} className={"remove-preview"}>
                                                                   <i class="icon-close icons"></i>
                                                                </span>
+
                                                                <img src={file} alt={file} />
+
                                                             </li>
                                                          )
                                                       })
