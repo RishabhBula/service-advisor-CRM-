@@ -91,12 +91,11 @@ export class CrmCannedServiceModal extends Component {
             })
          }
       })
-
    }
-
    render() {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex } = this.state
+      const cannedServiceUrl = "/workflow/canned-service"
       logger(serviceData)
       return (
          <>
@@ -140,7 +139,7 @@ export class CrmCannedServiceModal extends Component {
                               serviceData.map((item, index) => {
                                  return (
                                     <div key={index}>
-                                       <div  onClick={() => this.handleServiceCollaps(index)} className={activeIndex === index ? 'services-list-block active' : 'services-list-block'}>
+                                       <div onClick={() => this.handleServiceCollaps(index)} className={activeIndex === index ? 'services-list-block active' : 'services-list-block'}>
                                           {
                                              item.serviceItems && item.serviceItems.length ?
                                                 isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-down arrow"></i> : <i className="icons arrow icon-arrow-right"></i> : <i className="icons arrow icon-arrow-right"></i>
@@ -154,8 +153,17 @@ export class CrmCannedServiceModal extends Component {
                                                    <>Service Added <i className={"fa fa-check"} /></>
                                                    : "Add to service"
                                              }
-                                          </Button></span>
-
+                                          </Button>
+                                             <Button
+                                                size={"sm"}
+                                                id={`${index}Edit`}
+                                                onClick={() => {
+                                                   this.props.history.push(`${cannedServiceUrl}`)
+                                                }}
+                                                className={"btn-theme-transparent"}>
+                                                <i className={"icons cui-pencil"} />
+                                             </Button>
+                                          </span>
                                        </div>
                                        {
                                           (serviceIndex === index) && isToggelOpen ?
@@ -169,8 +177,6 @@ export class CrmCannedServiceModal extends Component {
                                                                <label htmlFor={sIndex} className={""}>{serviceItem.description || serviceItem.brandName || serviceItem.discription || '-'}</label>
                                                             </div>
                                                          </div>
-
-
                                                       </>
                                                    )
                                                 }) : <div key={index} className={'service-toggel-block text-center'}>
@@ -178,7 +184,6 @@ export class CrmCannedServiceModal extends Component {
                                                    </div>
                                              :
                                              null
-
                                        }
                                     </div>
                                  )

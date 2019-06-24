@@ -333,6 +333,7 @@ class Order extends Component {
                                 rateStandardListReducer={rateStandardListReducer}
                                 getInventoryPartsVendors={getInventoryPartsVendors}
                                 orderReducer={orderReducer}
+                                {...this.props}
                               />
                             ) : null}
                             {activeTab === 1 ?
@@ -353,7 +354,11 @@ class Order extends Component {
                                 profileReducer={profileInfoReducer}
                                 orderReducer={orderReducer}
                               /> : null}
-                            {activeTab === 2 ? <TimeClock /> : null}
+                            {activeTab === 2 ?
+                              <TimeClock
+                                modelInfoReducer={modelInfoReducer}
+                                modelOperate={modelOperate}
+                              /> : null}
                             {activeTab === 3 ? <Message /> : null}
                           </React.Fragment>
                         ) : null;

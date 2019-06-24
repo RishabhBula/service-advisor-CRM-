@@ -119,7 +119,7 @@ const listOrders = async (req, res) => {
       parentId: parentId ? parentId : id
     };
     const result = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
     let orderStatus = await OrderStatus.find(condition, {
       name: 1,
@@ -372,12 +372,13 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
     const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician' })
     const result = result1;
     const serviceData = [],
-      inspectionData = [];
+      inspectionData = [],
+      messageData = [];
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
         const element = result[0].serviceId[index];
@@ -390,10 +391,22 @@ const getOrderDetails = async (req, res) => {
         inspectionData.push(element.inspectionId);
       }
     }
+    if (result[0].messageId && result[0].messageId.length) {
+      for (let index = 0; index < result[0].messageId.length; index++) {
+        const element = result[0].messageId[index];
+        if (element.messageId && element.messageId.receiverId == currentUser.id) {
+          element.messageId.isSender = false
+        }
+        messageData.push(
+          element.messageId,
+        );
+      }
+    }
     return res.status(200).json({
       data: result,
       serviceResult: serviceData,
       inspectionResult: inspectionData,
+      messageResult: messageData,
       customerCommentData: result[0].customerCommentId,
       success: true
     });

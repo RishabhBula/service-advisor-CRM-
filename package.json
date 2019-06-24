@@ -6,7 +6,7 @@
   "copyright": "C",
   "license": "",
   "private": true,
-  "homepage":"http://serviceadvisor.io/dev",
+  "homepage": "http://serviceadvisor.io/dev",
   "repository": {
     "type": "git",
     "url": ""
@@ -51,6 +51,7 @@
     "react-color": "^2.17.3",
     "react-cropper": "^1.2.0",
     "react-currency-input": "^1.3.6",
+    "react-dates": "^20.2.4",
     "react-dom": "^16.8.5",
     "react-dropzone": "^10.1.0",
     "react-easy-crop": "^1.10.0",

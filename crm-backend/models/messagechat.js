@@ -18,7 +18,7 @@ const messageSchema = new Schema({
         default: null
     },
     messageData: {
-        type: [Object],
+        type: String,
         default: null
     },
     messageTemplate: {
@@ -34,6 +34,10 @@ const messageSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "user",
         default: null
+    },
+    isSender:{
+        type: Boolean,
+        default: true
     },
     status: {
         type: Boolean,

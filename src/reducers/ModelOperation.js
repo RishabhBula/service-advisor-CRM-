@@ -23,7 +23,8 @@ const initialAuthState = {
     showImportModal: false,
     matrixAddModalOpen: false,
     matrixEditModalOpen: false,
-    addOrderStatusModalOpen: false
+    addOrderStatusModalOpen: false,
+    timeClockModalOpen: false
   }
 };
 

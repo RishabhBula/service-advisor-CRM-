@@ -486,7 +486,7 @@ class ServiceItem extends Component {
         labelData.push(labelConst)
       })
   }
-  handleRemoveServiceItems = async(Mindex, sIndex) => {
+  handleRemoveServiceItems = async (Mindex, sIndex) => {
     const { value } = await ConfirmBox({
       text: "you want to remove this item?"
     });
@@ -797,7 +797,6 @@ class ServiceItem extends Component {
                                               <i className={"fa fa-dollar"}></i>
                                             </div> : null}
                                           <Input id="discount" name="discount" type={"text"} value={service.discount.value}
-                                            // onBlur={() => this.handleDiscValue(index, sIndex)}
                                             onChange={(e) => {
                                               this.setDiscountValue(e, index, sIndex)
                                             }} maxLength="5" placeholder={"0"} />
@@ -813,23 +812,6 @@ class ServiceItem extends Component {
                                     </td>
                                     <td className={"text-center"}>
                                       <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(servicesSubTotal) ? servicesSubTotal : 0}</span>
-                                      {/*<InputGroup>
-                                        <div className="input-group-prepend">
-                                          <Button disabled color={"secondary"} size={"sm"}>
-                                            <i className={"fa fa-dollar"}></i>
-                                          </Button>
-                                        </div>
-                                         <Input
-                                          disabled
-                                          value={
-                                            !isNaN(servicesSubTotal) ? servicesSubTotal : 0
-                                            // service.subTotalValue - calculateValues(service.subTotalValue || 0,
-                                            // service.discount.value || 0, service.discount.type)
-                                          }
-                                        />
-                                         {!isNaN(servicesSubTotal) ? servicesSubTotal : 0}
-                                      </InputGroup>
-                                       */}
                                     </td>
                                     <td className={"text-center"}>
 
@@ -929,22 +911,21 @@ class ServiceItem extends Component {
                                       className={"mr-2 btn-link"}
                                       onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
                                       <i className="nav-icon icons icon-puzzle"></i>&nbsp; Add Part
-                          </Button>
+                                    </Button>
                                     <Button
                                       color={""}
                                       size={"sm"}
                                       className={"mr-2 btn-link"}
                                       onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
                                       <i className="nav-icon icons icon-support"></i>&nbsp; Add Tire
-                          </Button>
+                                    </Button>
                                     <Button
                                       color={""}
                                       size={"sm"}
                                       className={"mr-2 btn-link"}
                                       onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
                                       <i className="nav-icon icons icon-user"></i>&nbsp; Add Labor
-                          </Button>{/* 
-                          <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
+                                  </Button>
                                   </div>
                                 </td>
                               </tr>
@@ -954,34 +935,7 @@ class ServiceItem extends Component {
                     </div>
                     <div className={"p-2 d-flex justify-content-between calculation-section"}>
                       <div className={"position-relative d-flex align-items-end"}>
-                        {/* <ul className={"calculation-btn-block m-0 p-0"}>
-                          <li id={`epa${index}`} onClick={() => {
-                            this.handleTaxeButtons(index, "EPA")
-                          }}>EPA {item.epa && item.epa.type === '$' ? item.epa.type : null}{item.epa && item.epa.value ? item.epa.value : 0}{item.epa && item.epa.type === '%' ? item.epa.type : null}
-                          </li>
-                          <li id={`disc${index}`} onClick={() => {
-                            this.handleTaxeButtons(index, "Discount")
-                          }} >Discount {item.discount && item.discount.type === '$' ? item.discount.type : null}{item.discount && item.discount.value ? item.discount.value : 0}{item.discount && item.discount.type === '%' ? item.discount.type : null}
-                          </li>
-                          <li
-                            id={`tax${index}`}
-                            onClick={() => {
-                              this.handleTaxeButtons(index, "Taxes")
-                            }}>Taxes {item.taxes && item.taxes.type === '$' ? item.taxes.type : null}{item.taxes && item.taxes.value ? item.taxes.value : 0}{item.taxes && item.taxes.type === '%' ? item.taxes.type : null}
-                          </li>
-                        </ul> 
-                        <UncontrolledTooltip placement={"top"} target={`epa${index}`}>
-                          Add EPA to service total
-                      </UncontrolledTooltip>
-                        <UncontrolledTooltip placement={"top"} target={`disc${index}`}>
-                          Add Discount to service total
-                      </UncontrolledTooltip>
-                        <UncontrolledTooltip placement={"top"} target={`tax${index}`}>
-                          Add Taxes to service total
-                      </UncontrolledTooltip> */}
                         <div className={"tax-calculate-block"}>
-                          {/* {
-                            item.isButtonValue === 'EPA' ? */}
                           <div className={"tax-block"} >
                             <span className={"title"}>EPA</span>
                             <div className={"tax-input-block"}>
@@ -999,15 +953,7 @@ class ServiceItem extends Component {
                                 <CrmDiscountBtn discountType={item.epa && item.epa.type ? item.epa.type : "%"} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "epa")} index={`EPA-${index}`} />
                               </div>
                             </div>
-
-
-
                           </div>
-                          {/* :
-                              null
-                          }
-                          {
-                            item.isButtonValue === 'Discount' ? */}
                           <div className={"tax-block"}>
                             <span className={"title"}>Discount</span>
                             <div className={"tax-input-block"}>
@@ -1026,11 +972,6 @@ class ServiceItem extends Component {
                             </div>
 
                           </div>
-                          {/* :
-                              null
-                          }
-                          {
-                            item.isButtonValue === 'Taxes' ? */}
                           <div className={"tax-block"}>
                             <span className={"title"}>Tax</span>
                             <div className={"tax-input-block"}>
@@ -1048,16 +989,9 @@ class ServiceItem extends Component {
                                 <CrmDiscountBtn discountType={item.taxes.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "taxes")} index={`TAX-${index}`} />
                               </div>
                             </div>
-
-
                           </div>
-                          {/* :
-                              null
-                          } */}
-
                         </div>
                       </div>
-
                       <div className={"service-total-block"}>
                         <div className="text-right">
                           <h6><span className={"title"}>Epa :&nbsp;</span>
@@ -1103,8 +1037,7 @@ class ServiceItem extends Component {
                           className={"mr-2 btn-link"}
                           onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
                           <i className="nav-icon icons icon-user"></i>&nbsp; Add Labor
-                        </Button>{/* 
-                          <Button className={"mr-2"} onClick={() => this.handleServiceModalOpenAdd(index, 'subContract')}>Add Subcontract</Button> */}
+                        </Button>
                       </div>
                       <div >
                         <Button className={"mr-3 btn-dashed"} onClick={() => this.handleAddCannedService(item, index)} >Save as canned service</Button>
@@ -1120,7 +1053,6 @@ class ServiceItem extends Component {
                           </UncontrolledTooltip>
                       </div>
                     </div>
-
                   </Card>
                 </React.Fragment>
               )
@@ -1155,6 +1087,7 @@ class ServiceItem extends Component {
             getCannedServiceList={getCannedServiceList}
             serviceReducers={serviceReducers}
             handleAddToService={this.handleCannedAddToService}
+            {...this.props}
           />
         </div>
       </>
