@@ -388,6 +388,7 @@ class Order extends Component {
                           modelInfoReducer={modelInfoReducer}
                           modelOperate={modelOperate}
                           orderId={orderId}
+                          orderItems={orderReducer.orderItems}
                         />
                       ) : null}
                       {activeTab === 3 ? <Message /> : null}

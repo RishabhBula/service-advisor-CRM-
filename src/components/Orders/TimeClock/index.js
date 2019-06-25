@@ -22,12 +22,12 @@ class TimeClock extends Component {
    *
    */
   render() {
-    const { modelInfoReducer, orderId } = this.props;
+    const { modelInfoReducer, orderId, orderItems } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
     return (
       <div>
-        <Timers orderId={orderId} />
+        <Timers orderId={orderId} orderItems={orderItems.serviceId} />
         <span
           className={"text-primary cursor_pointer"}
           onClick={this.handleTimeClockModal}
