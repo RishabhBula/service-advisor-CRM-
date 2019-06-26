@@ -24,11 +24,13 @@ class Timers extends Component {
     const technicians = [];
     const services = [];
     orderItems.forEach(service => {
+      if (!service.serviceId.technician) {
+        service.serviceId.technician = {};
+      }
       const ind = technicians.findIndex(
         d => d._id === service.serviceId.technician._id
       );
-      logger(ind, service.serviceId.technician._id);
-      if (ind === -1) {
+      if (ind === -1 && service.serviceId.technician._id) {
         technicians.push(service.serviceId.technician);
       }
       services.push(service.serviceId);
