@@ -22,6 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.4.20",
+    "node-cron": "^2.0.3",
     "nodemailer": "^6.0.0",
     "normalize-email": "^1.1.1",
     "path": "^0.12.7"
