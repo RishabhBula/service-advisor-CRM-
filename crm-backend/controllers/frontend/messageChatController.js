@@ -3,6 +3,8 @@ const OrderModal = require("../../models/order");
 const mongoose = require("mongoose");
 const commonValidation = require("../../common");
 const { validationResult } = require("express-validator/check");
+const { Email, AvailiableTemplates } = require("../../common/Email");
+const commonCrypto = require("../../common/crypto");
 
 const sendMessageChat = async (req, res) => {
    const { body, currentUser } = req;
@@ -15,17 +17,35 @@ const sendMessageChat = async (req, res) => {
    }
    try {
       const messageData = {
-         senderId: mongoose.Types.ObjectId(currentUser.id),
+         senderId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
          receiverId: mongoose.Types.ObjectId(body.receiverId),
          orderId: mongoose.Types.ObjectId(body.orderId),
+         messageAttachment: body.messageAttachment,
          messageData: body.messageData,
-         userId: mongoose.Types.ObjectId(currentUser.id),
-         parentId: currentUser.parentId ? mongoose.Types.ObjectId(currentUser.parentId) : mongoose.Types.ObjectId(currentUser.id),
+         userId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
+         parentId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
          status: true,
          isDeleted: false
       }
       const messageElements = new MessageChat(messageData);
       await messageElements.save();
+
+      if (currentUser.id) {
+         const encryptedOrderId = commonCrypto.encrypt(body.orderId);
+         const encrypteCustomerId = commonCrypto.encrypt(body.customerId);
+         const emailVar = new Email(body);
+         const subject = `${currentUser.subdomain}`
+         const emailMsgBody = `<div><b>${messageElements.messageData}</b></div><div><p><a href="http://d-company.localhost:3000/order-summary?order=${encryptedOrderId}&customer=${encrypteCustomerId}"
+         style="display:inline-block;background:green;color:#fff;padding:6px 30px;font-size:16px;text-decoration:none;border-radius:4px;margin:15px 0px"
+         target="_blank">Check Now</a>
+         </p></div>`
+         await emailVar.setSubject("[Service Advisor]" + subject + " -  send you a message");
+         await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+            body: emailMsgBody,
+         });
+         await emailVar.sendEmail(body.email);
+      }
+
       const result2 = await OrderModal.find({
          _id: body.orderId
       })
@@ -47,7 +67,7 @@ const sendMessageChat = async (req, res) => {
       })
 
       return res.status(200).json({
-         data: messageData,
+         data: messageElements,
          success: true
       })
    } catch (error) {
@@ -58,7 +78,42 @@ const sendMessageChat = async (req, res) => {
       });
    }
 }
+const verifyUserMessageLink = async (req, res) => {
+   const { body } = req;
+   try {
+      const decryptedOrderId = commonCrypto.decrypt(body.order);
+      const decryptedCustomerId = commonCrypto.decrypt(body.customer)
+      const orderDetails = await OrderModal.findById(decryptedOrderId).populate("customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId")
+      if (orderDetails.messageId) {
+         for (let index = 0; index < orderDetails.messageId.length; index++) {
+            const element = orderDetails.messageId[index];
+            if (element.messageId && element.messageId.receiverId == decryptedCustomerId) {
+               element.messageId.isSender = false
+            }
+         }
+      }
+      if (orderDetails) {
+         return res.status(200).json({
+            data: orderDetails,
+            message: "Message Link Verified Successfully.",
+            success: true
+         })
+      } else {
+         return res.status(400).json({
+            message: "Link expiered or unautherised user!",
+            success: false
+         })
+      }
+   } catch (error) {
+      console.log("this is verify message error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
 
 module.exports = {
-   sendMessageChat
+   sendMessageChat,
+   verifyUserMessageLink
 }

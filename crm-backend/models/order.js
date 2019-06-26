@@ -48,9 +48,15 @@ const orderSchema = new Schema({
     default: null
   },
   timeClockId: {
-    type: Schema.Types.ObjectId,
-    ref: "TimeClock",
-    default: null
+    type: [
+      new Schema({
+        timeClockId: {
+          type: Schema.Types.ObjectId,
+          ref: "TimeClock"
+        }
+      })
+    ],
+    default:[]
   },
   messageId: {
     type: [
