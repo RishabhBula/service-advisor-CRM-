@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from "react";
 import { Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter ,Link} from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -46,7 +46,8 @@ import {
   getRateStandardListRequest,
   rateAddRequest,
   setRateStandardListStart,
-  getInventoryPartVendors
+  getInventoryPartVendors,
+  sendMessage
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -115,8 +116,8 @@ class Order extends Component {
   }
   
 
-  componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
-    if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
+  componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer, messageReducer }) => {
+    if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess) || (messageReducer.messageData.isSuccess !== this.props.messageReducer.messageData.isSuccess)) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
     }
     if ((orderReducer.orderItems !== this.props.orderReducer.orderItems) || orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading) {
@@ -241,7 +242,10 @@ class Order extends Component {
       addRate,
       profileInfoReducer,
       rateStandardListReducer,
-      getInventoryPartsVendors } = this.props
+      getInventoryPartsVendors,
+      sendMessage,
+      messageReducer
+     } = this.props
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -296,7 +300,7 @@ class Order extends Component {
                     orderReducer={orderReducer}
                   />
                 </div>
-                <div className={"position-relative fdsfdsfdsf"}>
+                <div className={"position-relative"}>
                   {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.orderName  ?
                   
                     <div className={"service-overlay"}>
@@ -307,6 +311,7 @@ class Order extends Component {
                     </div>  
                     : null
                 }
+                  <span><Link to={`/order-summary/${this.props.orderReducer.orderItems._id}`} target="_blank">View</Link></span>
                 <div className={"position-relative"}>
                   <Suspense fallback={"Loading.."}>
                     <OrderTab
@@ -376,7 +381,16 @@ class Order extends Component {
                             orderReducer={orderReducer}
                           /> : null}
                           {activeTab === 2 ? <TimeClock /> : null}
-                          {activeTab === 3 ? <Message /> : null}
+                          {activeTab === 3 ? 
+                          <Message 
+                            searchMessageTemplateList={searchMessageTemplateList}
+                            customerData={customerData}
+                            vehicleData={vehicleData}
+                            sendMessage={sendMessage}
+                            profileReducer={profileInfoReducer}
+                            orderId={orderId}
+                              messageReducer={messageReducer}
+                          /> : null}
                         </React.Fragment>
                       ) : null;
                     })}
@@ -458,6 +472,7 @@ const mapStateToProps = state => ({
   labelReducer: state.labelReducer,
   profileInfoReducer: state.profileInfoReducer,
   rateStandardListReducer: state.rateStandardListReducer,
+  messageReducer: state.messageReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -562,6 +577,10 @@ const mapDispatchToProps = dispatch => ({
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
   },
+  sendMessage :data =>{
+    dispatch(sendMessage(data));
+  }
+  
 });
 export default connect(
   mapStateToProps,

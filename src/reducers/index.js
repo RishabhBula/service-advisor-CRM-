@@ -21,6 +21,7 @@ import { inspectionReducer } from "./Inspection";
 
 import { serviceReducers } from "./Service"
 import { labelReducer } from "./Label"
+import { messageReducer } from "./Message"
 
 export const mainReducer = handleActions(
   {
@@ -57,6 +58,7 @@ const AppReducer = combineReducers({
   inspectionReducer,
   serviceReducers,
   labelReducer,
+  messageReducer,
   routing: routerReducer
 });
 

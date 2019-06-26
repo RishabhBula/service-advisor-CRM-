@@ -18,9 +18,7 @@ import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import * as jsPDF from "jspdf";
 import 'jspdf-autotable';
-import { async } from "rxjs/internal/scheduler/async";
-import { element } from "prop-types";
-import { logger } from "../../../helpers";
+
 
 class Inspection extends Component {
    constructor(props) {
@@ -755,6 +753,7 @@ class Inspection extends Component {
                customerData={this.props.customerData}
                vehicleData={this.props.vehicleData}
                sendMessageTemplate={this.props.sendMessageTemplate}
+               
             />
 
             {/* ====== MessageTemplate Modal====== */}

@@ -17,6 +17,7 @@ import {
   getServiceListSuccess,
   getOrderDetailsSuccess,
   getInspectionListSuccess,
+  getMessageListSuccess,
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -345,6 +346,11 @@ const getOrderDetails = createLogic({
       dispatch(getInspectionListSuccess(
         {
           inspection: result.data.inspectionResult
+        }
+      ))
+      dispatch(getMessageListSuccess(
+        {
+          messages: result.data.messageResult
         }
       ))
       dispatch(

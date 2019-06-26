@@ -21,6 +21,10 @@ import { InspectLogic } from "./Inspection";
 
 import { ServiceLogic } from "./Service"
 import { LabelLogic } from "./Label"
+
+import { MessageLogic } from"./Message"
+import { OrderSummaryLogic } from "./OrderSummary"
+  import { from } from "rxjs";
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
   async process({ action }, dispatch, done) {
@@ -48,5 +52,7 @@ export default [
   ...InspectLogic,
   ...ServiceLogic,
   ...LabelLogic,
+  ...MessageLogic,
+  ...OrderSummaryLogic,
   redirectToLogic
 ];
