@@ -996,17 +996,17 @@ class ServiceItem extends Component {
                         <div className="text-right">
                           <h6><span className={"title"}>Epa :&nbsp;</span>
                             <span className={"value"}>
-                              <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{parseFloat(epa).toFixed(2)}</span>
+                              <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(epa) ? parseFloat(epa).toFixed(2) : 0}</span>
                             </span>
                           </h6>
                           <h6>
                             <span className={"title"}>Discount :&nbsp;</span>
-                            <span className={"value"}> <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{parseFloat(discount).toFixed(2)}</span>
+                            <span className={"value"}> <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(discount) ? parseFloat(discount).toFixed(2) : 0}</span>
                             </span>
                           </h6>
                           <h6>
                             <span className={"title"}>Taxes :&nbsp;</span>
-                            <span className={"value"}> <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{parseFloat(tax).toFixed(2)}</span>
+                            <span className={"value"}> <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(tax) ? parseFloat(tax).toFixed(2) : 0}</span>
                             </span>
                           </h6>
                         </div>
