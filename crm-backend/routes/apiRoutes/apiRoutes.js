@@ -19,7 +19,8 @@ const {
   inspection,
   label,
   googleCaptcha,
-  messageChat
+  messageChat,
+  timeClock
 } = require("./index");
 
 router.use("/auth", auth);
@@ -39,5 +40,6 @@ router.use("/service", service);
 router.use("/inspection", inspection);
 router.use("/label", label);
 router.use("", googleCaptcha);
-router.use("/message", messageChat)
+router.use("/message", messageChat),
+router.use("/timeClock",timeClock)
 module.exports = router;

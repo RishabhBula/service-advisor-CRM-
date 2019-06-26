@@ -27,7 +27,7 @@ class Timers extends Component {
       const ind = technicians.findIndex(
         d => d._id === service.serviceId.technician._id
       );
-      logger(ind, service.serviceId.technician._id);
+      // logger(ind, service.serviceId.technician._id);
       if (ind === -1) {
         technicians.push(service.serviceId.technician);
       }
@@ -37,9 +37,9 @@ class Timers extends Component {
       <div>
         <h4>Timers</h4>
         <div className={"timeclock-container"}>
-          {technicians.map((tech, index) => {
+          {technicians && technicians.length && technicians[0] !== null ? technicians.map((tech, index) => {
             const technicianServices = services.filter(
-              d => d.technician._id === tech._id
+              d => tech && tech._id ? d.technician._id === tech._id : null
             );
             return (
               <Row key={index} className={"timeclock-row"}>
@@ -72,7 +72,8 @@ class Timers extends Component {
                 </Col>
               </Row>
             );
-          })}
+          }) : null
+          }
         </div>
       </div>
     );
