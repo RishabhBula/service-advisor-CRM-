@@ -139,6 +139,10 @@ const userSchema = new Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  isWorking: {
+    type: Boolean,
+    default: false
   }
 });
 

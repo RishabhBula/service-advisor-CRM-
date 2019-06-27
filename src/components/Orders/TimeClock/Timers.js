@@ -36,7 +36,7 @@ class Timers extends Component {
       services.push(service.serviceId);
     });
     return (
-      <div>
+      <>
         <h4>Timers</h4>
         <div className={"timeclock-container"}>
           {technicians && technicians.length && technicians[0] !== null
@@ -78,7 +78,7 @@ class Timers extends Component {
               })
             : null}
         </div>
-      </div>
+      </>
     );
   }
 }

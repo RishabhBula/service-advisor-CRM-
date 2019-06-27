@@ -1,4 +1,5 @@
 const TimeClock = require("../../models/timeClock");
+const UserModel = require("../../models/user");
 const OrderModal = require("../../models/order");
 const mongoose = require("mongoose");
 const commonValidation = require("../../common");
@@ -87,6 +88,16 @@ const startTimer = async (req, res) => {
     orderId,
     startDateTime: Date.now()
   });
+  await UserModel.updateOne(
+    {
+      _id: technicianId
+    },
+    {
+      $set: {
+        isWorking: true
+      }
+    }
+  );
   timeClocks[`${technicianId}-${serviceId}`] = cron.schedule(
     "* * * * * *",
     async () => {
