@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import { logger } from "../../../helpers";
 import "./index.scss";
 import { Row, Col, Input, Button } from "reactstrap";
+import classNames from "classnames";
 class Timers extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedServices: []
+    };
   }
   /**
    *
@@ -16,8 +19,39 @@ class Timers extends Component {
   /**
    *
    */
+  onServiceChange = ({ target }, index) => {
+    const { selectedServices } = this.state;
+    selectedServices[index] = target.value;
+    this.setState({ selectedServices });
+  };
+  /**
+   *
+   */
+  startTimer = (index, tech, orderId) => {
+    const { selectedServices } = this.state;
+    const serviceId = selectedServices[index];
+    this.props.startTimer({
+      serviceId,
+      technicianId: tech && tech._id ? tech._id : null,
+      orderId
+    });
+  };
+  /**
+   *
+   */
+  stopTimer = (index, tech, orderId) => {
+    const { selectedServices } = this.state;
+    this.props.stopTimer({
+      serviceId: selectedServices[index],
+      technicianId: tech && tech._id ? tech._id : null,
+      orderId
+    });
+  };
+  /**
+   *
+   */
   render() {
-    let { orderItems } = this.props;
+    let { orderItems, orderId } = this.props;
     if (!orderItems) {
       orderItems = [];
     }
@@ -35,6 +69,7 @@ class Timers extends Component {
       }
       services.push(service.serviceId);
     });
+    const { selectedServices } = this.state;
     return (
       <>
         <h4>Timers</h4>
@@ -44,8 +79,17 @@ class Timers extends Component {
                 const technicianServices = services.filter(d =>
                   tech && tech._id ? d.technician._id === tech._id : null
                 );
+                const isWorking =
+                  tech && tech.currentlyWorking && tech.currentlyWorking.orderId
+                    ? true
+                    : false;
                 return (
-                  <Row key={index} className={"timeclock-row"}>
+                  <Row
+                    key={index}
+                    className={classNames("timeclock-row", {
+                      "work-in-progress": isWorking
+                    })}
+                  >
                     <Col sm={"4"}>
                       <div className={"technician-name"}>
                         {[tech.firstName, tech.lastName].join(" ")}
@@ -53,16 +97,25 @@ class Timers extends Component {
                     </Col>
                     <Col sm={"4"}>
                       <div className={"service-name-dropdown"}>
-                        <Input type="select">
-                          <option>Select Service</option>
-                          {technicianServices.map((service, ind) => {
-                            return (
-                              <option key={`${index}-${ind}`}>
-                                {service.serviceName}
-                              </option>
-                            );
-                          })}
-                        </Input>
+                        {!isWorking ? (
+                          <Input
+                            type="select"
+                            value={selectedServices[index]}
+                            onChange={e => this.onServiceChange(e, index)}
+                          >
+                            <option>Select Service</option>
+                            {technicianServices.map((service, ind) => {
+                              return (
+                                <option
+                                  key={`${index}-${ind}`}
+                                  value={service._id}
+                                >
+                                  {service.serviceName}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        ) : null}
                       </div>
                     </Col>
                     <Col sm={"2"} className={"text-right"}>
@@ -70,7 +123,23 @@ class Timers extends Component {
                     </Col>
                     <Col sm={"2"} className={"text-right"}>
                       <div className={"clock-button"}>
-                        <Button color={"primary"}>Clock In</Button>
+                        {!isWorking ? (
+                          <Button
+                            color={"primary"}
+                            onClick={() =>
+                              this.startTimer(index, tech, orderId)
+                            }
+                          >
+                            Clock In
+                          </Button>
+                        ) : (
+                          <Button
+                            color={"primary"}
+                            onClick={() => this.stopTimer(index, tech, orderId)}
+                          >
+                            Clock Out
+                          </Button>
+                        )}
                       </div>
                     </Col>
                   </Row>

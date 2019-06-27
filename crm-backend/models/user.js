@@ -140,9 +140,22 @@ const userSchema = new Schema({
     type: Boolean,
     default: false
   },
-  isWorking: {
-    type: Boolean,
-    default: false
+  currentlyWorking: {
+    type: new Schema({
+      serviceId: {
+        type: mongoose.Types.ObjectId,
+        ref: "service"
+      },
+      orderId: {
+        type: mongoose.Types.ObjectId,
+        ref: "order"
+      },
+      startTime: {
+        type: Date,
+        default: Date.now
+      }
+    }),
+    default: {}
   }
 });
 

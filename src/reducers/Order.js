@@ -9,7 +9,7 @@ const initialState = {
   },
   orderStatus: [],
   orderItems: [],
-  data:[],
+  data: [],
   isOrderLoading: true
 };
 
@@ -21,7 +21,7 @@ export const orderReducer = handleActions(
     }),
     [orderActions.ADD_ORDER_REQUEST]: (state, { payload }) => ({
       ...state,
-      ...payload,
+      ...payload
     }),
     [orderActions.ADD_ORDER_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -53,7 +53,7 @@ export const orderReducer = handleActions(
       orderItems: payload.order,
       orderId: payload.orderId,
       isOrderLoading: false
-    }),
+    })
   },
   initialState
 );

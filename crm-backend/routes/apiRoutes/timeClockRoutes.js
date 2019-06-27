@@ -15,6 +15,11 @@ router.post(
   token.authorisedUser,
   timeClockController.startTimer
 );
+router.post(
+  "/stop-time-clock",
+  token.authorisedUser,
+  timeClockController.stopTimer
+);
 router.get(
   "/get-time-log",
   token.authorisedUser,
