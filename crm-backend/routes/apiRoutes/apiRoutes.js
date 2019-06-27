@@ -40,6 +40,7 @@ router.use("/service", service);
 router.use("/inspection", inspection);
 router.use("/label", label);
 router.use("", googleCaptcha);
-router.use("/message", messageChat),
-router.use("/timeClock",timeClock)
+router.use("/message", messageChat);
+router.use("/timeClock", timeClock);
+
 module.exports = router;

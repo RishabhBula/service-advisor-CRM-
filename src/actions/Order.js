@@ -9,8 +9,8 @@ export const orderActions = {
   ADD_ORDER_SUCCESS: "Order add success!",
   UPDATE_ORDER_REQUEST: "Order update request!",
   UPDATE_ORDER_SUCCESS: "Order update success!",
-  UPDATE_ORDER_DETAILS:"Order detials update request",
-  UPDATE_ORDER_DETAILS_SUCCESS:"Order detials update success",
+  UPDATE_ORDER_DETAILS: "Order detials update request",
+  UPDATE_ORDER_DETAILS_SUCCESS: "Order detials update success",
   DELETE_ORDER_REQUEST: "Order delete request!",
   DELETE_ORDER_SUCCESS: "Order delete success!",
   GET_ORDER_ID_REQUEST: "Order id Requested",
@@ -20,8 +20,8 @@ export const orderActions = {
   ADD_ORDER_STATUS: "Request for add new order status!",
   DELTE_ORDER_STATUS: "Request for delete existing order status!",
   UPDATE_ORDER_OF_ORDER_STATUS: "Request for order update of order status!",
-  GET_ORDER_DETAILS_REQUEST:"Get order details request",
-  GET_ORDER_DETAILS_SUCCESS:"Get order details success"
+  GET_ORDER_DETAILS_REQUEST: "Get order details request",
+  GET_ORDER_DETAILS_SUCCESS: "Get order details success"
 };
 
 export const getOrderList = createAction(orderActions.GET_ORDER_LIST_REQUEST);
@@ -66,8 +66,15 @@ export const deleteOrderStatusRequest = createAction(
 export const updateOrderOfOrderStatus = createAction(
   orderActions.UPDATE_ORDER_OF_ORDER_STATUS
 );
-export const updateOrderDetailsRequest = createAction(orderActions.UPDATE_ORDER_DETAILS);
-export const updateOrderDetailsSuccess = createAction(orderActions.UPDATE_ORDER_DETAILS_SUCCESS);
-export const getOrderDetailsRequest = createAction(orderActions.GET_ORDER_DETAILS_REQUEST);
-export const getOrderDetailsSuccess = createAction(orderActions.GET_ORDER_DETAILS_SUCCESS)
-
+export const updateOrderDetailsRequest = createAction(
+  orderActions.UPDATE_ORDER_DETAILS
+);
+export const updateOrderDetailsSuccess = createAction(
+  orderActions.UPDATE_ORDER_DETAILS_SUCCESS
+);
+export const getOrderDetailsRequest = createAction(
+  orderActions.GET_ORDER_DETAILS_REQUEST
+);
+export const getOrderDetailsSuccess = createAction(
+  orderActions.GET_ORDER_DETAILS_SUCCESS
+);

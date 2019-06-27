@@ -17,8 +17,9 @@ export * from "./InventoryParts";
 export * from "./InventorySats";
 export * from "./Order";
 export * from "./Inspection";
-export * from "./Service"
-export * from "./Label"
+export * from "./Service";
+export * from "./Label";
+export * from "./TimeLog";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //
