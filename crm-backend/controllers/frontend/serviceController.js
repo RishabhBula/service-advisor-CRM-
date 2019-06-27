@@ -24,7 +24,6 @@ const addNewService = async (req, res) => {
                success: false
             })
          }
-         console.log("#############", element.isCannedService);
          if (element.isCannedService && !body.isServiceSubmit) {
             if (body.services.length > 1) {
                isCannedService = false

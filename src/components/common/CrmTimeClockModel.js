@@ -11,13 +11,13 @@ import {
   Label,
   Row
 } from "reactstrap";
-import { Async } from "react-select";
+import Select from "react-select";
 import "react-dates/initialize";
 import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
 import TimeInput from 'react-time-input';
-import CrmTimeMaridonBtn from "../common/CrmTimeMaridonBtn";
+// import CrmTimeMaridonBtn from "../common/CrmTimeMaridonBtn";
 
 export class CrmTimeClockModal extends Component {
   constructor(props) {
@@ -27,7 +27,11 @@ export class CrmTimeClockModal extends Component {
       timetype: "AM",
       timeIn: '00:00',
       timeOut: '00:00',
-      duration: "0"
+      duration: "0",
+      selectedTechnician: {
+        label: "Type to select technician",
+        value: ""
+      },
     };
   }
   onTimeInChangeHandler = (value) => {
@@ -54,7 +58,6 @@ export class CrmTimeClockModal extends Component {
       .duration(moment(ts2)
         .diff(moment(ts1))
       ).asHours();
-    console.log("*******Time*******", ts1, ts2, hours);
     this.setState({
       duration: hours.toFixed(2)
     })
@@ -64,9 +67,42 @@ export class CrmTimeClockModal extends Component {
       timeType: value
     })
   }
+  loadTechnician = (input, callback) => {
+    const type = "5ca3473d70537232f13ff1fa"
+    this.props.getUserData({ input, type, callback });
+  };
+  handleTechnicianAdd = (e) => {
+    if (e && e.value) {
+      this.setState({
+        selectedTechnician: {
+          label: e.label,
+          value: e.value
+        }
+      })
+    } else {
+      this.setState({
+        selectedTechnician: {
+          label: "Type to select technician",
+          value: ""
+        },
+      })
+    }
+  }
   render() {
-    const { openTimeClockModal, handleTimeClockModal } = this.props;
-    const { timeIn, timeOut } = this.state
+    const { openTimeClockModal, handleTimeClockModal, orderReducer } = this.props;
+    const { timeIn, timeOut, selectedTechnician } = this.state
+    let technicianData = []
+    if (orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length) {
+      orderReducer.orderItems.serviceId.map((serviceData, index) => {
+        if (serviceData.serviceId.technician) {
+          technicianData.push({
+            label: `${serviceData.serviceId.technician.firstName} ${serviceData.serviceId.technician.lastName}`,
+            value: serviceData.serviceId.technician._id
+          })
+        }
+        return true
+      })
+    }
     return (
       <>
         <Modal
@@ -85,11 +121,14 @@ export class CrmTimeClockModal extends Component {
                   Technician <span className="asteric">*</span>
                 </Label>
                 <div className={"input-block"}>
-                  <Async
+                  <Select
                     placeholder={"Type to select technician from the list"}
                     className={"w-100 form-select"}
-                    isClearable={true}
-                    noOptionsMessage={() => "Type Technician name"}
+                    isClearable={selectedTechnician.value !== '' ? true : false}
+                    value={selectedTechnician}
+                    options={technicianData}
+                    onChange={e => this.handleTechnicianAdd(e)}
+                    noOptionsMessage={() => "Technician not assigned"}
                   />
                 </div>
               </FormGroup>
@@ -106,7 +145,7 @@ export class CrmTimeClockModal extends Component {
                         initTime={timeIn}
                         ref="TimeInputWrapper"
                         className='form-control'
-                        mountFocus='true'
+                        //mountFocus='true'
                         name={"timeIn"}
                         onTimeChange={this.onTimeInChangeHandler}
                       />
@@ -124,7 +163,7 @@ export class CrmTimeClockModal extends Component {
                         initTime={timeOut}
                         ref="TimeInputWrapper"
                         className='form-control'
-                        mountFocus='true'
+                        //mountFocus='true'
                         name={"timeOut"}
                         onTimeChange={this.onTimeOutChangeHandler}
                       />
@@ -157,11 +196,9 @@ export class CrmTimeClockModal extends Component {
                   Activity <span className="asteric">*</span>
                 </Label>
                 <div className={"input-block"}>
-                  <Async
-                    placeholder={"Type to select Activity from the list"}
-                    className={"w-100 form-select"}
-                    isClearable={true}
-                    noOptionsMessage={() => "Type Activity name"}
+                  <Input
+                    value={`Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}`}
+                    disabled
                   />
                 </div>
               </FormGroup>

@@ -23,11 +23,11 @@ class Timers extends Component {
     }
     const technicians = [];
     const services = [];
+
     orderItems.forEach(service => {
       const ind = technicians.findIndex(
-        d => d._id === service.serviceId.technician._id
+        d => service.serviceId.technician && service.serviceId.technician._id ? d._id === service.serviceId.technician._id : null
       );
-      // logger(ind, service.serviceId.technician._id);
       if (ind === -1) {
         technicians.push(service.serviceId.technician);
       }
@@ -39,13 +39,13 @@ class Timers extends Component {
         <div className={"timeclock-container"}>
           {technicians && technicians.length && technicians[0] !== null ? technicians.map((tech, index) => {
             const technicianServices = services.filter(
-              d => tech && tech._id ? d.technician._id === tech._id : null
+              d => tech && tech._id && d.technician ? d.technician._id === tech._id : null
             );
             return (
               <Row key={index} className={"timeclock-row"}>
                 <Col sm={"4"}>
                   <div className={"technician-name"}>
-                    {[tech.firstName, tech.lastName].join(" ")}
+                    {tech ? [tech.firstName, tech.lastName].join(" ") : null}
                   </div>
                 </Col>
                 <Col sm={"4"}>

@@ -11,7 +11,6 @@ import {
 } from "reactstrap";
 import Async from "react-select/lib/Async";
 import NoDataFound from "./NoFound";
-import { logger } from "../../helpers";
 
 export class CrmCannedServiceModal extends Component {
    constructor(props) {
@@ -96,7 +95,6 @@ export class CrmCannedServiceModal extends Component {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex } = this.state
       const cannedServiceUrl = "/workflow/canned-service"
-      logger(serviceData)
       return (
          <>
             <Modal

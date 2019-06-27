@@ -1,10 +1,4 @@
-import { logger } from "./Logger";
-
-/**
- *
- */
 export const getSumOfArray = arr => {
-  logger("*******This is fuction array******", arr);
   return arr.length ? arr.reduce((total, num) => total + num) : 0;
 };
 

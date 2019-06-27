@@ -22,7 +22,7 @@ class TimeClock extends Component {
    *
    */
   render() {
-    const { modelInfoReducer, orderId, orderItems } = this.props;
+    const { modelInfoReducer, orderId, orderItems, getUserData, orderReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
     return (
@@ -37,6 +37,8 @@ class TimeClock extends Component {
         <TimeLogList />
         <CrmTimeClockModal
           openTimeClockModal={timeClockModalOpen}
+          getUserData={getUserData}
+          orderReducer={orderReducer}
           handleTimeClockModal={this.handleTimeClockModal}
         />
       </div>
