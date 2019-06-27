@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import TimeLogList from "./timeLogList";
+
 import { CrmTimeClockModal } from "../../common/CrmTimeClockModel";
+import TimeLogList from "./timeLogList";
 import Timers from "./Timers";
+
 class TimeClock extends Component {
   constructor(props) {
     super(props);

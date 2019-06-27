@@ -1,9 +1,11 @@
-import React, { Component, Suspense } from "react";
+import { Card, CardBody, Button, Input, ButtonGroup } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Card, CardBody, Button, Input, ButtonGroup } from "reactstrap";
+import React, { Component, Suspense } from "react";
+
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
+
 import {
   getOrderIdRequest,
   customerGetRequest,

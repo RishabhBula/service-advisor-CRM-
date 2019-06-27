@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 const timeClockController = require("../../controllers/frontend/timeClockController");
 const token = require("../../common/token");

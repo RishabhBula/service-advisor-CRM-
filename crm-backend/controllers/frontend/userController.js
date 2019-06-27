@@ -1,6 +1,7 @@
 const userModel = require("../../models/user");
 const otherMessage = require("./../../common/validationMessage");
 const mongoose = require("mongoose");
+
 /* ----------------Grt All User List------------ */
 const getAllUserList = async (req, res) => {
   const { query, currentUser } = req;
@@ -86,14 +87,14 @@ const getAllUserList = async (req, res) => {
     }
 
     if (typeof status !== "undefined") {
-      if (status === '1') {
+      if (status === "1") {
         condition["$and"].push({ status: true });
       } else {
         condition["$and"].push({ status: false });
       }
     }
     if (typeof invitaionStatus !== "undefined") {
-      if (invitaionStatus === '1') {
+      if (invitaionStatus === "1") {
         condition["$and"].push({ userSideActivation: true });
       } else {
         condition["$and"].push({ userSideActivation: false });

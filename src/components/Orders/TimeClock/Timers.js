@@ -1,8 +1,11 @@
-import React, { Component } from "react";
-import { logger } from "../../../helpers";
-import "./index.scss";
 import { Row, Col, Input, Button } from "reactstrap";
 import classNames from "classnames";
+import React, { Component } from "react";
+
+import { logger } from "../../../helpers";
+
+import "./index.scss";
+
 class Timers extends Component {
   constructor(props) {
     super(props);

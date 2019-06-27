@@ -26,7 +26,10 @@ const createNewOrder = async (req, res) => {
   const { body, currentUser } = req;
   try {
     const { id, parentId } = currentUser;
-    const result = await Orders.countDocuments({ userId: currentUser.id, parentId: currentUser.parentId ? currentUser.parentId : currentUser.id });
+    const result = await Orders.countDocuments({
+      userId: currentUser.id,
+      parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
+    });
     const condition = {
       $or: [
         {
@@ -374,7 +377,9 @@ const getOrderDetails = async (req, res) => {
     const result2 = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
-    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician' })
+    const result1 = await Orders.populate(result2, {
+      path: "serviceId.serviceId.technician"
+    });
     const result = result1;
     const serviceData = [],
       inspectionData = [],
@@ -394,12 +399,13 @@ const getOrderDetails = async (req, res) => {
     if (result[0].messageId && result[0].messageId.length) {
       for (let index = 0; index < result[0].messageId.length; index++) {
         const element = result[0].messageId[index];
-        if (element.messageId && element.messageId.receiverId == currentUser.id) {
-          element.messageId.isSender = false
+        if (
+          element.messageId &&
+          element.messageId.receiverId == currentUser.id
+        ) {
+          element.messageId.isSender = false;
         }
-        messageData.push(
-          element.messageId,
-        );
+        messageData.push(element.messageId);
       }
     }
     return res.status(200).json({

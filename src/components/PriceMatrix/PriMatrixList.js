@@ -1,11 +1,23 @@
-import React, { Component } from "react";
-import { Col, Button, UncontrolledTooltip, Label, InputGroup, Table, Form, Row, FormGroup, Badge } from "reactstrap";
-import { AppConfig } from "../../config/AppConfig";
-import * as qs from "query-string";
+import {
+  Col,
+  Button,
+  UncontrolledTooltip,
+  Label,
+  InputGroup,
+  Table,
+  Form,
+  Row,
+  FormGroup,
+  Badge
+} from "reactstrap";
 import { withRouter } from "react-router-dom";
-import moment from 'moment';
-import NoDataFound from "../common/NoFound";
+import * as qs from "query-string";
+import moment from "moment";
+import React, { Component } from "react";
+
+import { AppConfig } from "../../config/AppConfig";
 import Loader from "../../containers/Loader/Loader";
+import NoDataFound from "../common/NoFound";
 
 class PriMatrixList extends Component {
   constructor(props) {
@@ -40,10 +52,10 @@ class PriMatrixList extends Component {
       const { page, search } = qs.parse(lSearch);
       this.setState({
         page: parseInt(page) || 1,
-        search: search || "",
+        search: search || ""
       });
     }
-  }
+  };
 
   handleChange = e => {
     this.setState({
@@ -75,15 +87,19 @@ class PriMatrixList extends Component {
     });
     this.props.onSearch({});
   };
-  handleMatrixOpen = (index) => {
+  handleMatrixOpen = index => {
     this.setState({
-      isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index,
-    })
-  }
+      isTireSizeOpen: this.state.isTireSizeOpen === index ? -1 : index
+    });
+  };
   render() {
-    const { matrixList, handleUpdateMatrix, handleMatrixDelete,
-      isLoading } = this.props;
-    const { page, search, isTireSizeOpen, filterApplied } = this.state
+    const {
+      matrixList,
+      handleUpdateMatrix,
+      handleMatrixDelete,
+      isLoading
+    } = this.props;
+    const { page, search, isTireSizeOpen, filterApplied } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -91,7 +107,6 @@ class PriMatrixList extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
-
                   <InputGroup className="mb-2">
                     <input
                       type="text"
@@ -143,129 +158,192 @@ class PriMatrixList extends Component {
         <Table responsive className={"matrix-table"}>
           <thead>
             <tr>
-              <th className={"text-center"} width={"60"}>S No.</th>
-              <th width={"320"}><i className={"fas fa-hand-holding-usd"}></i> Matrix Name</th>
-              <th width={"550"} colSpan={"3"} >
+              <th className={"text-center"} width={"60"}>
+                S No.
+              </th>
+              <th width={"320"}>
+                <i className={"fas fa-hand-holding-usd"} /> Matrix Name
+              </th>
+              <th width={"550"} colSpan={"3"}>
                 <div className={"d-flex matrix-range-th"}>
-                  <span><i className={"fa fa-dollar"}></i> Cost Range</span>
-                  <span><i className={"fa fa-line-chart"}></i> Margin</span>
-                  <span><i className={"fa fa-money"}></i> Markup</span>
+                  <span>
+                    <i className={"fa fa-dollar"} /> Cost Range
+                  </span>
+                  <span>
+                    <i className={"fa fa-line-chart"} /> Margin
+                  </span>
+                  <span>
+                    <i className={"fa fa-money"} /> Markup
+                  </span>
                 </div>
               </th>
-              <th width={"200"}><i class="fa fa-clock-o"></i> Created At</th>
+              <th width={"200"}>
+                <i class="fa fa-clock-o" /> Created At
+              </th>
               {/*<th width={"200"}>Markup</th> */}
               {/* <th width={"200"}>Creted At</th> */}
-              <th width={"140"} className={"text-center"}>Action</th>
+              <th width={"140"} className={"text-center"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
-            {!isLoading ?
-              (matrixList && matrixList.length ? matrixList.map((matrix, index) => {
-                return (
-                  <tr key={index}>
-                    <td>
-                      <div className='checkbox-custom checkbox-default coloum-checkbox'>
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
-                      </div>
-                    </td>
-                    <td>{matrix.matrixName || "-"}</td>
-                    <td colSpan={"3"}>
-                      {matrix.matrixRange && matrix.matrixRange.length ? <div>
-                        <div className={"d-flex matrix-range-th"}>
-                          <span className={"p-1"}>
-                            <span class="dollar-price">
-                              <i class="fa fa-dollar dollar-icon"></i>
-                              {matrix.matrixRange[0].lower}</span> &nbsp;-&nbsp;
-                              <span class="dollar-price">
-                              {matrix.matrixRange[0].upper !== 'beyond' ? <i class="fa fa-dollar dollar-icon"></i> : null}
-                              {matrix.matrixRange[0].upper}
-                            </span>
-                          </span>
-                          <span className={"p-1"}>{matrix.matrixRange[0].margin}</span>
-                          <span className={"p-1"}>{matrix.matrixRange[0].markup}</span>
+            {!isLoading ? (
+              matrixList && matrixList.length ? (
+                matrixList.map((matrix, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <div className="checkbox-custom checkbox-default coloum-checkbox">
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
                         </div>
-                        <div className={isTireSizeOpen === index ? 'active' : 'inactive'}>
-                          {
-                            matrix.matrixRange && matrix.matrixRange.length ? matrix.matrixRange.map((range, i) => {
-                              return (i === 0 ? null :
-                                <div key={i} className={"d-flex matrix-range-th "}>
-                                  <span className={"p-1"}>
-                                    <span class="dollar-price">
-                                      <i class="fa fa-dollar dollar-icon"></i>{range.lower}
-                                    </span> &nbsp;-&nbsp;
-                              <span class="dollar-price">{range.upper !== 'beyond' ? <i class="fa fa-dollar dollar-icon"></i> : null}{range.upper}
-                                    </span>
-                                  </span>
-                                  <span className={"p-1"}>{range.margin}</span>
-                                  <span className={"p-1"}>{range.markup}</span>
-                                </div>
-                              )
-                            }) :
-                              null
-                          }
+                      </td>
+                      <td>{matrix.matrixName || "-"}</td>
+                      <td colSpan={"3"}>
+                        {matrix.matrixRange && matrix.matrixRange.length ? (
+                          <div>
+                            <div className={"d-flex matrix-range-th"}>
+                              <span className={"p-1"}>
+                                <span class="dollar-price">
+                                  <i class="fa fa-dollar dollar-icon" />
+                                  {matrix.matrixRange[0].lower}
+                                </span>{" "}
+                                &nbsp;-&nbsp;
+                                <span class="dollar-price">
+                                  {matrix.matrixRange[0].upper !== "beyond" ? (
+                                    <i class="fa fa-dollar dollar-icon" />
+                                  ) : null}
+                                  {matrix.matrixRange[0].upper}
+                                </span>
+                              </span>
+                              <span className={"p-1"}>
+                                {matrix.matrixRange[0].margin}
+                              </span>
+                              <span className={"p-1"}>
+                                {matrix.matrixRange[0].markup}
+                              </span>
+                            </div>
+                            <div
+                              className={
+                                isTireSizeOpen === index ? "active" : "inactive"
+                              }
+                            >
+                              {matrix.matrixRange && matrix.matrixRange.length
+                                ? matrix.matrixRange.map((range, i) => {
+                                    return i === 0 ? null : (
+                                      <div
+                                        key={i}
+                                        className={"d-flex matrix-range-th "}
+                                      >
+                                        <span className={"p-1"}>
+                                          <span class="dollar-price">
+                                            <i class="fa fa-dollar dollar-icon" />
+                                            {range.lower}
+                                          </span>{" "}
+                                          &nbsp;-&nbsp;
+                                          <span class="dollar-price">
+                                            {range.upper !== "beyond" ? (
+                                              <i class="fa fa-dollar dollar-icon" />
+                                            ) : null}
+                                            {range.upper}
+                                          </span>
+                                        </span>
+                                        <span className={"p-1"}>
+                                          {range.margin}
+                                        </span>
+                                        <span className={"p-1"}>
+                                          {range.markup}
+                                        </span>
+                                      </div>
+                                    );
+                                  })
+                                : null}
+                            </div>
+                            {matrix.matrixRange &&
+                            matrix.matrixRange.length &&
+                            matrix.matrixRange[1] ? (
+                              <span className={"m-1 d-block"}>
+                                <Badge
+                                  onClick={() => this.handleMatrixOpen(index)}
+                                  className={"cursor_pointer"}
+                                >
+                                  {isTireSizeOpen === index
+                                    ? "View Less"
+                                    : "View More"}
+                                </Badge>
+                              </span>
+                            ) : null}
+                          </div>
+                        ) : null}
+                      </td>
+
+                      <td>
+                        <div>
+                          {moment(matrix.createdAt).format("MMM Do YYYY")}
                         </div>
-                        {matrix.matrixRange && matrix.matrixRange.length && matrix.matrixRange[1] ?
-                          <span className={"m-1 d-block"}>
-                            <Badge onClick={(() => this.handleMatrixOpen(index))} className={"cursor_pointer"}>
-                              {isTireSizeOpen === index ? 'View Less' : 'View More'}</Badge>
-                          </span> : null}
-                      </div> : null
-                      }
-                    </td>
+                        <div>{moment(matrix.createdAt).format("h:mm a")}</div>
+                      </td>
 
-                    <td>
-                      <div>{moment(matrix.createdAt).format("MMM Do YYYY")}</div>
-                      <div>{moment(matrix.createdAt).format("h:mm a")}</div>
-                    </td>
-
-                    <td width={"140"} className={"text-center"}>
-                      <span className="mr-2">
+                      <td width={"140"} className={"text-center"}>
+                        <span className="mr-2">
+                          <Button
+                            color={"secondary"}
+                            size={"sm"}
+                            onClick={() => handleUpdateMatrix(matrix)}
+                            className={"btn-theme-transparent"}
+                            id={`Tooltip-1${matrix._id}`}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>
+                          <UncontrolledTooltip
+                            target={`Tooltip-1${matrix._id}`}
+                          >
+                            Edit
+                          </UncontrolledTooltip>
+                        </span>
                         <Button
                           color={"secondary"}
                           size={"sm"}
-                          onClick={() => handleUpdateMatrix(matrix)}
                           className={"btn-theme-transparent"}
-                          id={`Tooltip-1${matrix._id}`}
+                          onClick={() => handleMatrixDelete(matrix._id)}
+                          id={`Tooltip-${matrix._id}`}
                         >
-                          <i className={"icons cui-pencil"} />
+                          <i className={"icons cui-trash"} />
                         </Button>
-                        <UncontrolledTooltip target={`Tooltip-1${matrix._id}`}>
-                          Edit
-                      </UncontrolledTooltip>
-                      </span>
-                      <Button
-                        color={"secondary"}
-                        size={"sm"}
-                        className={"btn-theme-transparent"}
-                        onClick={() => handleMatrixDelete(matrix._id)
-                        }
-                        id={`Tooltip-${matrix._id}`}
-                      >
-                        <i className={"icons cui-trash"} />
-                      </Button>
-                      <UncontrolledTooltip target={`Tooltip-${matrix._id}`}>
-                        Delete
-                      </UncontrolledTooltip>
-                    </td>
-                  </tr>
-                )
-              }) :
-                (
-                  <tr>
-                    <td className={"text-center"} colSpan={12}>
-                      {filterApplied ? <NoDataFound message={"No Matrix details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Matrix details added."} onAddClick={this.props.onClick} />}
-                    </td>
-                  </tr>
-                )
-              ) :
-              (
+                        <UncontrolledTooltip target={`Tooltip-${matrix._id}`}>
+                          Delete
+                        </UncontrolledTooltip>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
                 <tr>
-                  <td className={"text-center"} colSpan={10}>
-                    <Loader />
+                  <td className={"text-center"} colSpan={12}>
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={
+                          "No Matrix details found related to your search"
+                        }
+                        noResult
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={"Currently there are no Matrix details added."}
+                        onAddClick={this.props.onClick}
+                      />
+                    )}
                   </td>
                 </tr>
               )
-            }
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={10}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
       </>

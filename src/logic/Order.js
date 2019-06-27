@@ -16,7 +16,7 @@ import {
   updateOrderDetailsSuccess,
   getServiceListSuccess,
   getOrderDetailsSuccess,
-  getInspectionListSuccess,
+  getInspectionListSuccess
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -267,9 +267,11 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(getOrderDetailsRequest({
-        _id: action.payload && action.payload._id ? action.payload._id : null
-      }));
+      dispatch(
+        getOrderDetailsRequest({
+          _id: action.payload && action.payload._id ? action.payload._id : null
+        })
+      );
       dispatch(updateOrderDetailsSuccess());
       dispatch(hideLoader());
       done();
@@ -324,8 +326,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-              ? action.payload.search
-              : null,
+            ? action.payload.search
+            : null,
         _id: action.payload && action.payload._id ? action.payload._id : null
       },
       undefined
@@ -342,11 +344,11 @@ const getOrderDetails = createLogic({
           customerCommentData: result.data.customerCommentData
         })
       );
-      dispatch(getInspectionListSuccess(
-        {
+      dispatch(
+        getInspectionListSuccess({
           inspection: result.data.inspectionResult
-        }
-      ))
+        })
+      );
       dispatch(
         getOrderDetailsSuccess({
           order: result.data.data[0],

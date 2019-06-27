@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
 const { validationResult } = require("express-validator/check");
@@ -89,7 +90,7 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 /*  */
 const confirmationSignUp = async (req, res) => {
@@ -545,13 +546,13 @@ const imageDelete = async (req, res) => {
       var originalImagePath = __basedir + "/images/" + currentUser.id;
       var thumbnailImagePath =
         __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      fs.unlinkSync(originalImagePath, buf, function (err) {
+      fs.unlinkSync(originalImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
@@ -602,7 +603,7 @@ const imageDelete = async (req, res) => {
 /*----------------User create by admin------------------ */
 const createUser = async (req, res) => {
   try {
-    const { currentUser } = req
+    const { currentUser } = req;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({
