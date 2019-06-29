@@ -38,7 +38,9 @@ import {
   getRateStandardListRequest,
   rateAddRequest,
   setRateStandardListStart,
-  getInventoryPartVendors
+  getInventoryPartVendors,
+  addTimeLogRequest,
+  updateTimeLogRequest
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -129,7 +131,7 @@ class Order extends Component {
     if (
       serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
       inspectionReducer.inspectionData.isSuccess !==
-        this.props.inspectionReducer.inspectionData.isSuccess
+      this.props.inspectionReducer.inspectionData.isSuccess
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     }
@@ -263,7 +265,10 @@ class Order extends Component {
       addRate,
       profileInfoReducer,
       rateStandardListReducer,
-      getInventoryPartsVendors
+      getInventoryPartsVendors,
+      addTimeLogRequest,
+      timelogReducer,
+      updateTimeLogRequest
     } = this.props;
     return (
       <div className="animated fadeIn">
@@ -311,15 +316,15 @@ class Order extends Component {
                 </div>
                 <div className={"position-relative fdsfdsfdsf"}>
                   {this.props.orderReducer.orderItems &&
-                  !this.props.orderReducer.orderItems.customerId ? (
-                    <div className={"service-overlay"}>
-                      <img
-                        src="https://gramener.com/schoolminutes/img/arrow.png"
-                        alt={"arrow"}
-                      />
-                      <h3>Please Add Order Details first</h3>
-                    </div>
-                  ) : null}
+                    !this.props.orderReducer.orderItems.customerId ? (
+                      <div className={"service-overlay"}>
+                        <img
+                          src="https://gramener.com/schoolminutes/img/arrow.png"
+                          alt={"arrow"}
+                        />
+                        <h3>Please Add Order Details first</h3>
+                      </div>
+                    ) : null}
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
                       <OrderTab
@@ -391,6 +396,9 @@ class Order extends Component {
                           getUserData={getUserData}
                           orderItems={orderReducer.orderItems}
                           orderReducer={orderReducer}
+                          addTimeLogRequest={addTimeLogRequest}
+                          timelogReducer={timelogReducer}
+                          editTimeLogRequest={updateTimeLogRequest}
                         />
                       ) : null}
                       {activeTab === 3 ? <Message /> : null}
@@ -501,7 +509,8 @@ const mapStateToProps = state => ({
   serviceReducers: state.serviceReducers,
   labelReducer: state.labelReducer,
   profileInfoReducer: state.profileInfoReducer,
-  rateStandardListReducer: state.rateStandardListReducer
+  rateStandardListReducer: state.rateStandardListReducer,
+  timelogReducer: state.timelogReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -605,6 +614,12 @@ const mapDispatchToProps = dispatch => ({
   },
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
+  },
+  addTimeLogRequest: data => {
+    dispatch(addTimeLogRequest(data))
+  },
+  updateTimeLogRequest: (data) => {
+    dispatch(updateTimeLogRequest(data))
   }
 });
 export default connect(

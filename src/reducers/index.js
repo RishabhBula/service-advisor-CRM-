@@ -18,9 +18,9 @@ import { inventoryPartsReducers } from "./InventoryParts";
 import { inventoryStatsReducer } from "./InventorySats";
 import { orderReducer } from "./Order";
 import { inspectionReducer } from "./Inspection";
-
 import { serviceReducers } from "./Service"
 import { labelReducer } from "./Label"
+import { timelogReducer } from "./TimeLog"
 
 export const mainReducer = handleActions(
   {
@@ -57,6 +57,7 @@ const AppReducer = combineReducers({
   inspectionReducer,
   serviceReducers,
   labelReducer,
+  timelogReducer,
   routing: routerReducer
 });
 

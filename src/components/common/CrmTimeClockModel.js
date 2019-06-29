@@ -9,7 +9,8 @@ import {
   FormGroup,
   Input,
   Label,
-  Row
+  Row,
+  FormFeedback
 } from "reactstrap";
 import Select from "react-select";
 import "react-dates/initialize";
@@ -17,6 +18,8 @@ import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
 import TimeInput from 'react-time-input';
+import * as classnames from "classnames";
+import { calculateDurationFromSeconds } from "../../helpers/Sum"
 // import CrmTimeMaridonBtn from "../common/CrmTimeMaridonBtn";
 
 export class CrmTimeClockModal extends Component {
@@ -32,8 +35,40 @@ export class CrmTimeClockModal extends Component {
         label: "Type to select technician",
         value: ""
       },
+      technicianData: "",
+      notes: "",
+      isError: false,
+      isEditTimeClock: false
     };
   }
+  componentDidUpdate = ({ timeLogEle }) => {
+    if (timeLogEle !== this.props.timeLogEle) {
+      console.log("########################", this.props.timeLogEle);
+      const {
+        date,
+        startDateTime,
+        endDateTime,
+        duration,
+        technicianId,
+      } = this.props.timeLogEle
+      const startDateTime1 = moment(startDateTime).format("HH:mm")
+      const endDateTime1 = moment(endDateTime).format("HH:mm")
+      const calDuration = calculateDurationFromSeconds(duration)
+      this.setState({
+        date,
+        timeIn: startDateTime1,
+        timeOut: endDateTime1,
+        duration: calDuration,
+        technicianData: technicianId,
+        selectedTechnician: {
+          label: technicianId ? `${technicianId.firstName} ${technicianId.lastName}` : "Type to select technician",
+          value: technicianId ? technicianId._id : ""
+        },
+        isEditTimeClock: true
+      })
+    }
+  }
+
   onTimeInChangeHandler = (value) => {
     this.setState({
       timeIn: value
@@ -50,16 +85,24 @@ export class CrmTimeClockModal extends Component {
       this.handleTimeDuration();
     }
   }
+  handleChange = e => {
+    const { value } = e.target;
+    this.setState({
+      notes: value
+    })
+  }
   handleTimeDuration = () => {
     const { timeIn, timeOut } = this.state;
-    var ts1 = moment(`06/26/2019 ${timeIn}`, "M/D/YYYY H:mm").valueOf();
-    var ts2 = moment(`06/26/2019 ${timeOut}`, "M/D/YYYY H:mm").valueOf();
-    var hours = moment
+    var ts1 = moment(`06/26/2019 ${timeIn}`, "M/D/YYYY HH:mm").valueOf();
+    var ts2 = moment(`06/26/2019 ${timeOut}`, "M/D/YYYY HH:mm").valueOf();
+    var Seconds = moment
       .duration(moment(ts2)
         .diff(moment(ts1))
-      ).asHours();
+      ).asSeconds()
+    const duration = calculateDurationFromSeconds(Seconds)
+
     this.setState({
-      duration: hours.toFixed(2)
+      duration: duration
     })
   }
   handleClickTimeType = (value) => {
@@ -67,17 +110,14 @@ export class CrmTimeClockModal extends Component {
       timeType: value
     })
   }
-  loadTechnician = (input, callback) => {
-    const type = "5ca3473d70537232f13ff1fa"
-    this.props.getUserData({ input, type, callback });
-  };
   handleTechnicianAdd = (e) => {
     if (e && e.value) {
       this.setState({
         selectedTechnician: {
           label: e.label,
           value: e.value
-        }
+        },
+        technicianData: e.technician
       })
     } else {
       this.setState({
@@ -88,16 +128,47 @@ export class CrmTimeClockModal extends Component {
       })
     }
   }
+  handleAddTimeLogs = () => {
+    const { selectedTechnician, timeIn, timeOut, duration, technicianData, date, notes } = this.state
+    if (!timeIn || !timeOut || !duration || !selectedTechnician.value) {
+      this.setState({
+        isError: true
+      })
+      return
+    } else {
+      const { orderReducer, timeLogEle } = this.props
+      const totalValue = parseFloat(duration) * parseFloat(technicianData.rate)
+      const payload = {
+        type: "Manual",
+        technicianId: selectedTechnician.value,
+        startDateTime: timeIn,
+        endDateTime: timeOut,
+        activity: `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}`,
+        duration: duration,
+        date: date,
+        orderId: orderReducer.orderItems._id,
+        total: totalValue || "0",
+        notes: notes,
+        _id: timeLogEle ? timeLogEle._id : null
+      }
+      if (this.state.isEditTimeClock) {
+        this.props.editTimeLogRequest(payload)
+      } else {
+        this.props.addTimeLogRequest(payload)
+      }
+    }
+  }
   render() {
     const { openTimeClockModal, handleTimeClockModal, orderReducer } = this.props;
-    const { timeIn, timeOut, selectedTechnician } = this.state
+    const { timeIn, timeOut, selectedTechnician, duration, isError, isEditTimeClock, notes } = this.state
     let technicianData = []
     if (orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length) {
       orderReducer.orderItems.serviceId.map((serviceData, index) => {
-        if (serviceData.serviceId.technician) {
+        if (serviceData.serviceId.technician && serviceData.serviceId.technician._id) {
           technicianData.push({
             label: `${serviceData.serviceId.technician.firstName} ${serviceData.serviceId.technician.lastName}`,
-            value: serviceData.serviceId.technician._id
+            value: serviceData.serviceId.technician._id,
+            technician: serviceData.serviceId.technician
           })
         }
         return true
@@ -112,7 +183,9 @@ export class CrmTimeClockModal extends Component {
           backdrop={"static"}
         >
           <ModalHeader toggle={handleTimeClockModal}>
-            Add Time Manually
+            {
+              isEditTimeClock ? "Edit Time Logs" : "Add Time Manually"
+            }
           </ModalHeader>
           <ModalBody>
             <Col md="12">
@@ -123,13 +196,21 @@ export class CrmTimeClockModal extends Component {
                 <div className={"input-block"}>
                   <Select
                     placeholder={"Type to select technician from the list"}
-                    className={"w-100 form-select"}
+                    className={classnames("w-100 form-select", {
+                      "is-invalid":
+                        isError && !selectedTechnician.value
+                    })}
                     isClearable={selectedTechnician.value !== '' ? true : false}
                     value={selectedTechnician}
                     options={technicianData}
                     onChange={e => this.handleTechnicianAdd(e)}
                     noOptionsMessage={() => "Technician not assigned"}
                   />
+                  {
+                    isError && !selectedTechnician.value ?
+                      <FormFeedback>Technician is required</FormFeedback> :
+                      null
+                  }
                 </div>
               </FormGroup>
             </Col>
@@ -144,11 +225,19 @@ export class CrmTimeClockModal extends Component {
                       <TimeInput
                         initTime={timeIn}
                         ref="TimeInputWrapper"
-                        className='form-control'
+                        className={classnames("form-control", {
+                          "is-invalid":
+                            isError && !timeIn
+                        })}
                         //mountFocus='true'
                         name={"timeIn"}
                         onTimeChange={this.onTimeInChangeHandler}
                       />
+                      {
+                        isError && !timeIn ?
+                          <FormFeedback>Time in is required</FormFeedback> :
+                          null
+                      }
                     </div>
                     {/* <CrmTimeMaridonBtn handleClickTimeType={this.handleClickTimeType} timeType={timeType} /> */}
                   </FormGroup>
@@ -162,11 +251,19 @@ export class CrmTimeClockModal extends Component {
                       <TimeInput
                         initTime={timeOut}
                         ref="TimeInputWrapper"
-                        className='form-control'
+                        className={classnames("form-control", {
+                          "is-invalid":
+                            isError && !timeOut
+                        })}
                         //mountFocus='true'
                         name={"timeOut"}
                         onTimeChange={this.onTimeOutChangeHandler}
                       />
+                      {
+                        isError && !timeOut ?
+                          <FormFeedback>Time out is required</FormFeedback> :
+                          null
+                      }
                     </div>
                     {/* <CrmTimeMaridonBtn handleClickTimeType={this.handleClickTimeType} timeType={timeType} /> */}
                   </FormGroup>
@@ -180,7 +277,7 @@ export class CrmTimeClockModal extends Component {
                       <Input
                         type="text"
                         name="hourRate"
-                        value={this.state.duration}
+                        value={duration}
                         placeholder="0"
                         id="make"
                         disabled
@@ -225,14 +322,14 @@ export class CrmTimeClockModal extends Component {
                   Notes
                 </Label>
                 <div className={"input-block"}>
-                  <Input type={"textarea"} cols={"10"} rows={"3"} />
+                  <Input value={notes} onChange={this.handleChange} type={"textarea"} cols={"10"} rows={"3"} />
                 </div>
               </FormGroup>
             </Col>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.handleSubmit}>
-              Add Time Logs
+            <Button color="primary" onClick={this.handleAddTimeLogs}>
+              {isEditTimeClock ? "Edit Time Log" : "Add Time Log"}
             </Button>{" "}
             <Button color="secondary" onClick={handleTimeClockModal}>
               Cancel

@@ -372,13 +372,15 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId, timeClockId.timeClockId"
     );
-    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician' })
-    const result = result1;
+    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician timeClockId.timeClockId.technicianId timeClockId.timeClockId.orderId' })
+    const resultExtended = await Orders.populate(result1, { path: 'timeClockId.timeClockId.orderId.vehicleId' })
+    const result = resultExtended;
     const serviceData = [],
       inspectionData = [],
-      messageData = [];
+      messageData = [],
+      timeLogData = [];
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
         const element = result[0].serviceId[index];
@@ -402,11 +404,22 @@ const getOrderDetails = async (req, res) => {
         );
       }
     }
+    if (result[0].timeClockId && result[0].timeClockId.length) {
+      for (let index = 0; index < result[0].timeClockId.length; index++) {
+        const element = result[0].timeClockId[index];
+        if (element.timeClockId !== null) {
+          timeLogData.push(
+            element.timeClockId,
+          );
+        }
+      }
+    }
     return res.status(200).json({
       data: result,
       serviceResult: serviceData,
       inspectionResult: inspectionData,
       messageResult: messageData,
+      timeClockResult: timeLogData,
       customerCommentData: result[0].customerCommentId,
       success: true
     });

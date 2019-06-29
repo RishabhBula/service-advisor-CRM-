@@ -24,7 +24,9 @@ const initialAuthState = {
     matrixAddModalOpen: false,
     matrixEditModalOpen: false,
     addOrderStatusModalOpen: false,
-    timeClockModalOpen: false
+    timeClockModalOpen: false,
+    timeClockEditModalOpen: false
+
   }
 };
 

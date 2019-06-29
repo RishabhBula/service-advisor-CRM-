@@ -1,5 +1,6 @@
 const MessageChat = require("../../models/messagechat");
 const UserModal = require("../../models/user");
+const CustomerModal = require("../../models/customer");
 const OrderModal = require("../../models/order");
 const mongoose = require("mongoose");
 const commonValidation = require("../../common");
@@ -18,20 +19,20 @@ const sendMessageChat = async (req, res) => {
    }
    try {
       const messageData = {
-         senderId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
+         senderId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
          receiverId: mongoose.Types.ObjectId(body.receiverId),
          orderId: mongoose.Types.ObjectId(body.orderId),
          messageAttachment: body.messageAttachment,
          messageData: body.messageData,
-         userId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
-         parentId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
+         userId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
+         parentId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
          status: true,
          isDeleted: false
       }
       const messageElements = new MessageChat(messageData);
       await messageElements.save();
 
-      if (currentUser.id) {
+      if (!body.notToken) {
          const encryptedOrderId = commonCrypto.encrypt(body.orderId);
          const encrypteCustomerId = commonCrypto.encrypt(body.customerId);
          const encrypteUserId = commonCrypto.encrypt(body.userId)
@@ -56,13 +57,18 @@ const sendMessageChat = async (req, res) => {
             messageId: messageElements._id
          }]
       }
-      if (result2[0].messageId && result2[0].messageId.length) {
+      if (result2.length && result2[0].messageId && result2[0].messageId.length) {
          for (let index = 0; index < result2[0].messageId.length; index++) {
             const element = result2[0].messageId[index];
             payload.messageId.push({
                messageId: element.messageId
             })
          }
+      } else {
+         return res.status(400).json({
+            message: "Order data not found",
+            success: false
+         })
       }
       await OrderModal.findByIdAndUpdate(body.orderId, {
          $set: payload
@@ -84,7 +90,7 @@ const sendMessageChat = async (req, res) => {
 const verifyUserMessageLink = async (req, res) => {
    const { body } = req;
    try {
-      let orderDetails, userData
+      let orderDetails, userData, messageData = []
       if (body.order && body.customer) {
          const decryptedOrderId = commonCrypto.decrypt(body.order);
          const decryptedCustomerId = commonCrypto.decrypt(body.customer);
@@ -97,23 +103,27 @@ const verifyUserMessageLink = async (req, res) => {
                if (element.messageId && element.messageId.receiverId == decryptedCustomerId) {
                   element.messageId.isSender = false
                }
+               messageData.push(element.messageId)
             }
          }
       } else {
          orderDetails = await OrderModal.findById(body.orderId).populate("customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId")
+         userData = await UserModal.findById(body.companyIDurl);
          if (orderDetails.messageId) {
             for (let index = 0; index < orderDetails.messageId.length; index++) {
                const element = orderDetails.messageId[index];
                if (element.messageId && element.messageId.receiverId == body.customerId) {
                   element.messageId.isSender = false
                }
+               messageData.push(element.messageId)
             }
          }
       }
       if (orderDetails) {
          return res.status(200).json({
             data: orderDetails,
-            userData: userData,
+            messageData: messageData,
+            companyData: userData,
             message: "Message Link Verified Successfully.",
             success: true
          })

@@ -19,8 +19,9 @@ import { InventoryStatsLogic } from "./inventoryStat";
 import { OrderLogic } from "./Order";
 import { InspectLogic } from "./Inspection";
 
-import { ServiceLogic } from "./Service"
-import { LabelLogic } from "./Label"
+import { ServiceLogic } from "./Service";
+import { LabelLogic } from "./Label";
+import { TimeClockLogic } from "./TimeLog";
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
   async process({ action }, dispatch, done) {
@@ -48,5 +49,6 @@ export default [
   ...InspectLogic,
   ...ServiceLogic,
   ...LabelLogic,
+  ...TimeClockLogic,
   redirectToLogic
 ];
