@@ -377,8 +377,13 @@ const getOrderDetails = async (req, res) => {
     const result2 = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId, timeClockId.timeClockId"
     );
-    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician timeClockId.timeClockId.technicianId timeClockId.timeClockId.orderId' })
-    const resultExtended = await Orders.populate(result1, { path: 'timeClockId.timeClockId.orderId.vehicleId' })
+    const result1 = await Orders.populate(result2, {
+      path:
+        "serviceId.serviceId.technician timeClockId.timeClockId.technicianId timeClockId.timeClockId.orderId"
+    });
+    const resultExtended = await Orders.populate(result1, {
+      path: "timeClockId.timeClockId.orderId.vehicleId"
+    });
     const result = resultExtended;
     const serviceData = [],
       inspectionData = [],
@@ -401,7 +406,7 @@ const getOrderDetails = async (req, res) => {
         const element = result[0].messageId[index];
         if (
           element.messageId &&
-          element.messageId.receiverId == currentUser.id
+          element.messageId.receiverId === currentUser.id
         ) {
           element.messageId.isSender = false;
         }
@@ -412,9 +417,7 @@ const getOrderDetails = async (req, res) => {
       for (let index = 0; index < result[0].timeClockId.length; index++) {
         const element = result[0].timeClockId[index];
         if (element.timeClockId !== null) {
-          timeLogData.push(
-            element.timeClockId,
-          );
+          timeLogData.push(element.timeClockId);
         }
       }
     }

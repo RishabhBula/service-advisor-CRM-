@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const commonValidation = require("../../common");
 const { validationResult } = require("express-validator/check");
 const cron = require("node-cron");
-const moment = require('moment');
+const moment = require("moment");
 const timeClocks = {};
 /**
  *
@@ -21,21 +21,24 @@ const addTimeLogs = async (req, res) => {
     });
   }
   try {
-    let startTime = body.startDateTime.split(':')
+    let startTime = body.startDateTime.split(":");
     let dateDuration;
     dateDuration = new Date(body.date);
     dateDuration.setHours(parseInt(startTime[0]));
     dateDuration.setMinutes(parseInt(startTime[1]));
     const startDate = dateDuration.toISOString();
 
-    let endTime = body.endDateTime.split(':')
+    let endTime = body.endDateTime.split(":");
     let dateDurationEnd;
     dateDurationEnd = new Date(body.date);
     dateDurationEnd.setHours(parseInt(endTime[0]));
     dateDurationEnd.setMinutes(parseInt(endTime[1]));
     const endDate = dateDurationEnd.toISOString();
 
-    const duration = moment(body.duration, 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
+    const duration = moment(body.duration, "HH:mm:ss: A").diff(
+      moment().startOf("day"),
+      "seconds"
+    );
     const timeLogsData = {
       type: body.type,
       technicianId: mongoose.Types.ObjectId(body.technicianId),
@@ -58,19 +61,11 @@ const addTimeLogs = async (req, res) => {
     const result2 = await OrderModal.find({
       _id: body.orderId
     });
-    const payload = {
-      timeClockId: [
-        {
-          timeClockId: timeLogElements._id
-        }
-      ]
-    };
+    const payload = [timeLogElements._id];
     if (result2[0].timeClockId && result2[0].timeClockId.length) {
       for (let index = 0; index < result2[0].timeClockId.length; index++) {
         const element = result2[0].timeClockId[index];
-        payload.timeClockId.push({
-          timeClockId: element.timeClockId
-        });
+        payload.timeClockId.push(element.timeClockId);
       }
     }
     await OrderModal.findByIdAndUpdate(body.orderId, {
@@ -145,14 +140,14 @@ const startTimer = async (req, res) => {
  */
 const stopTimer = async (req, res) => {
   const { body } = req;
-  const { technicianId, serviceId } = body;
+  const { technicianId, serviceId, orderId } = body;
   if (timeClocks[`${technicianId}`]) {
     // return res.status(400).json({
     //   message: "This technician is not working on any task."
     // });
     timeClocks[`${technicianId}`].destroy();
   }
-  await TimeClock.updateOne(
+  const result = await TimeClock.findOneAndUpdate(
     {
       technicianId,
       serviceId
@@ -163,6 +158,7 @@ const stopTimer = async (req, res) => {
       }
     }
   );
+  console.log(result);
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -173,6 +169,18 @@ const stopTimer = async (req, res) => {
       }
     }
   );
+  if (result) {
+    await OrderModal.updateOne(
+      {
+        _id: orderId
+      },
+      {
+        $push: {
+          timeClockId: result._id
+        }
+      }
+    );
+  }
   return res.status(200).json({
     message: "Timer log stopped successfully!"
   });
@@ -188,7 +196,7 @@ const getTimeLogByTechnician = async (req, res) => {
     const result = await TimeClock.findOne({
       technicianId,
       serviceId,
-      orderId,
+      orderId
     });
     return res.status(200).json({
       message: "Timer get success!",
@@ -293,25 +301,28 @@ const switchService = async (req, res) => {
 };
 
 const updateTimeLogOfTechnician = async (req, res) => {
-  const { body, currentUser } = req
+  const { body, currentUser } = req;
   try {
-    let timeLogsData
+    let timeLogsData;
     if (body.startDateTime) {
-      let startTime = body.startDateTime.split(':')
+      let startTime = body.startDateTime.split(":");
       let dateDuration;
       dateDuration = new Date(body.date);
       dateDuration.setHours(parseInt(startTime[0]));
       dateDuration.setMinutes(parseInt(startTime[1]));
       const startDate = dateDuration.toISOString();
 
-      let endTime = body.endDateTime.split(':')
+      let endTime = body.endDateTime.split(":");
       let dateDurationEnd;
       dateDurationEnd = new Date(body.date);
       dateDurationEnd.setHours(parseInt(endTime[0]));
       dateDurationEnd.setMinutes(parseInt(endTime[1]));
       const endDate = dateDurationEnd.toISOString();
 
-      const duration = moment(body.duration, 'HH:mm:ss: A').diff(moment().startOf('day'), 'seconds');
+      const duration = moment(body.duration, "HH:mm:ss: A").diff(
+        moment().startOf("day"),
+        "seconds"
+      );
       timeLogsData = {
         type: body.type,
         technicianId: mongoose.Types.ObjectId(body.technicianId),
@@ -332,15 +343,15 @@ const updateTimeLogOfTechnician = async (req, res) => {
     } else {
       timeLogsData = {
         isDeleted: body.isDeleted
-      }
+      };
     }
     await TimeClock.findByIdAndUpdate(body._id, {
       $set: timeLogsData
-    })
+    });
     return res.status(200).json({
       message: "Time log updated successfully",
       success: true
-    })
+    });
   } catch (error) {
     console.log("this is update timelog error", error);
     return res.status(500).json({
@@ -348,7 +359,7 @@ const updateTimeLogOfTechnician = async (req, res) => {
       success: false
     });
   }
-}
+};
 /**
  *
  */
