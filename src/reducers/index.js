@@ -1,25 +1,24 @@
-import { routerReducer } from "react-router-redux";
 import { combineReducers } from "redux";
-
 import { handleActions } from "redux-actions";
+import { routerReducer } from "react-router-redux";
 
-import { usersReducer } from "./Users";
-import { tiresReducer } from "./Tires";
-import { profileInfoReducer } from "./ProfileInfo";
-import { matrixListReducer } from "./MatrixList";
-import { fleetReducer } from "./FleetList";
-import { labourReducer } from "./Labours";
-import { rateStandardListReducer } from "./RateStandard";
 import { customerInfoReducer, customerListReducer } from "./Customer";
-import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
-import { modelInfoReducer } from "./ModelOperation";
-import { vendorsReducer } from "./Vendors"
+import { fleetReducer } from "./FleetList";
+import { inspectionReducer } from "./Inspection";
 import { inventoryPartsReducers } from "./InventoryParts";
 import { inventoryStatsReducer } from "./InventorySats";
+import { labelReducer } from "./Label";
+import { labourReducer } from "./Labours";
+import { matrixListReducer } from "./MatrixList";
+import { modelInfoReducer } from "./ModelOperation";
 import { orderReducer } from "./Order";
-import { inspectionReducer } from "./Inspection";
-import { serviceReducers } from "./Service"
-import { labelReducer } from "./Label"
+import { profileInfoReducer } from "./ProfileInfo";
+import { rateStandardListReducer } from "./RateStandard";
+import { serviceReducers } from "./Service";
+import { tiresReducer } from "./Tires";
+import { usersReducer } from "./Users";
+import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
+import { vendorsReducer } from "./Vendors";
 import { timelogReducer } from "./TimeLog"
 
 export const mainReducer = handleActions(

@@ -1,8 +1,9 @@
-import React, { Component, Suspense } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { Card, UncontrolledTooltip, CardBody, Button } from "reactstrap";
+import { connect } from "react-redux";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import React, { Component, Suspense } from "react";
+
 import {
   getRateStandardListRequest,
   setRateStandardListStart,

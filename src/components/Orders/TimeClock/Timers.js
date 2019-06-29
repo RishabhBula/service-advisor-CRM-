@@ -1,11 +1,22 @@
-import React, { Component } from "react";
-import { logger } from "../../../helpers";
-import "./index.scss";
 import { Row, Col, Input, Button } from "reactstrap";
+import classNames from "classnames";
+import React, { Component } from "react";
+
+import { logger, SecondsToHHMMSS } from "../../../helpers";
+
+import "./index.scss";
+import moment from "moment";
+
 class Timers extends Component {
+  timer;
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedServices: [],
+      showSwitchTask: [],
+      duration: []
+    };
+    this.timer = [];
   }
   /**
    *
@@ -16,8 +27,63 @@ class Timers extends Component {
   /**
    *
    */
+  onServiceChange = ({ target }, index) => {
+    const { selectedServices } = this.state;
+    selectedServices[index] = target.value;
+    this.setState({ selectedServices });
+  };
+  /**
+   *
+   */
+  startTimer = (index, tech, orderId) => {
+    const { selectedServices } = this.state;
+    const serviceId = selectedServices[index];
+    this.props.startTimer({
+      serviceId,
+      technicianId: tech && tech._id ? tech._id : null,
+      orderId
+    });
+  };
+  /**
+   *
+   */
+  stopTimer = (index, tech, orderId) => {
+    const { selectedServices } = this.state;
+    this.props.stopTimer({
+      serviceId: selectedServices[index],
+      technicianId: tech && tech._id ? tech._id : null,
+      orderId
+    });
+  };
+  /**
+   *
+   */
+  toggleSwitchTask = index => {
+    const { showSwitchTask } = this.state;
+    showSwitchTask[index] = !showSwitchTask[index];
+    this.setState({ showSwitchTask });
+  };
+  /**
+   *
+   */
+  startTempTimer = (index, startTime) => {
+    if (this.timer[index]) {
+      clearInterval(this.timer[index]);
+    }
+    const { duration } = this.state;
+    this.timer[index] = setInterval(() => {
+      duration[index] = moment().diff(moment(startTime), "seconds");
+      this.setState({
+        duration
+      });
+    }, 1000);
+  };
+  /**
+   *
+   */
   render() {
-    let { orderItems } = this.props;
+    const { props, state } = this;
+    let { orderItems, orderId, switchTimer } = props;
     if (!orderItems) {
       orderItems = [];
     }
@@ -36,50 +102,166 @@ class Timers extends Component {
       }
       services.push(service.serviceId);
     });
+    const { selectedServices, showSwitchTask, duration } = state;
     return (
-      <div>
+      <>
         <h4>Timers</h4>
         <div className={"timeclock-container"}>
           {technicians && technicians.length && technicians[0] !== null
             ? technicians.map((tech, index) => {
-              const technicianServices = services.filter(d =>
-                tech && tech._id && d.technician ? d.technician._id === tech._id : null
-              );
-              return (
-                <Row key={index} className={"timeclock-row"}>
-                  <Col sm={"4"}>
-                    <div className={"technician-name"}>
-                      {tech ? [tech.firstName, tech.lastName].join(" ") : null}
-                    </div>
-                  </Col>
-                  <Col sm={"4"}>
-                    <div className={"service-name-dropdown"}>
-                      <Input type="select">
-                        <option>Select Service</option>
-                        {technicianServices.map((service, ind) => {
-                          return (
-                            <option key={`${index}-${ind}`}>
-                              {service.serviceName}
-                            </option>
-                          );
-                        })}
-                      </Input>
-                    </div>
-                  </Col>
-                  <Col sm={"2"} className={"text-right"}>
-                    <div className={"timer-running-time"}>{"--:--"}</div>
-                  </Col>
-                  <Col sm={"2"} className={"text-right"}>
-                    <div className={"clock-button"}>
-                      <Button color={"primary"}>Clock In</Button>
-                    </div>
-                  </Col>
-                </Row>
-              );
-            })
+                const technicianServices = services.filter(d =>
+                  tech && tech._id ? d.technician._id === tech._id : null
+                );
+                const isWorking =
+                  tech && tech.currentlyWorking && tech.currentlyWorking.orderId
+                    ? true
+                    : false;
+                const workingId = isWorking
+                  ? technicianServices[
+                      technicianServices.findIndex(
+                        d => d._id === tech.currentlyWorking.serviceId
+                      )
+                    ]
+                  : null;
+                const startTime =
+                  workingId &&
+                  workingId.technician &&
+                  workingId.technician.currentlyWorking &&
+                  workingId.technician.currentlyWorking.startTime
+                    ? workingId.technician.currentlyWorking.startTime
+                    : false;
+                return (
+                  <Row
+                    key={index}
+                    className={classNames("timeclock-row", {
+                      "work-in-progress": isWorking
+                    })}
+                  >
+                    <Col sm={"4"}>
+                      <div className={"technician-name"}>
+                        {[tech.firstName, tech.lastName].join(" ")}
+                      </div>
+                    </Col>
+                    <Col sm={"4"}>
+                      <div className={"service-name-dropdown"}>
+                        {!isWorking ? (
+                          <Input
+                            type="select"
+                            value={selectedServices[index]}
+                            onChange={e => this.onServiceChange(e, index)}
+                          >
+                            <option>Select Service</option>
+                            {technicianServices.map((service, ind) => {
+                              return (
+                                <option
+                                  key={`${index}-${ind}`}
+                                  value={service._id}
+                                >
+                                  {service.serviceName}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                        ) : (
+                          <>
+                            {showSwitchTask[index] ? (
+                              <>
+                                <Input
+                                  type="select"
+                                  value={selectedServices[index]}
+                                  onChange={e => this.onServiceChange(e, index)}
+                                  className={"switch-select-box"}
+                                >
+                                  <option>Select Service</option>
+                                  {technicianServices.map((service, ind) => {
+                                    return (
+                                      <React.Fragment key={`${index}-${ind}`}>
+                                        {workingId._id !== service._id ? (
+                                          <option value={service._id}>
+                                            {service.serviceName}
+                                          </option>
+                                        ) : null}
+                                      </React.Fragment>
+                                    );
+                                  })}
+                                </Input>
+                                &nbsp;&nbsp;
+                                <a
+                                  href={"/"}
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    this.toggleSwitchTask(index);
+                                    const serviceId = selectedServices[index];
+                                    switchTimer({
+                                      serviceId,
+                                      technicianId:
+                                        tech && tech._id ? tech._id : null,
+                                      orderId,
+                                      oldService: workingId._id
+                                    });
+                                  }}
+                                >
+                                  Update
+                                </a>
+                              </>
+                            ) : (
+                              <>
+                                {workingId.serviceName} &nbsp;&nbsp;
+                                <a
+                                  href={"/"}
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    this.toggleSwitchTask(index);
+                                  }}
+                                >
+                                  Switch
+                                </a>
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </Col>
+                    <Col sm={"2"} className={"text-right"}>
+                      <div className={"timer-running-time"}>
+                        {isWorking ? (
+                          <>
+                            {this.startTempTimer(index, startTime)}
+                            {SecondsToHHMMSS(
+                              duration[index] ||
+                                moment().diff(moment(startTime), "seconds")
+                            )}
+                          </>
+                        ) : null}
+                      </div>
+                    </Col>
+                    <Col sm={"2"} className={"text-right"}>
+                      <div className={"clock-button"}>
+                        {!isWorking ? (
+                          <Button
+                            color={"primary"}
+                            onClick={() =>
+                              this.startTimer(index, tech, orderId)
+                            }
+                          >
+                            Clock In
+                          </Button>
+                        ) : (
+                          <Button
+                            color={"danger"}
+                            onClick={() => this.stopTimer(index, tech, orderId)}
+                          >
+                            Clock Out
+                          </Button>
+                        )}
+                      </div>
+                    </Col>
+                  </Row>
+                );
+              })
             : null}
         </div>
-      </div>
+      </>
     );
   }
 }

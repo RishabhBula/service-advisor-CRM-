@@ -1,7 +1,9 @@
-import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
+import { toast } from "react-toastify";
+
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
+
 import {
   loginActions,
   redirectTo,

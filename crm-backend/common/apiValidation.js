@@ -366,9 +366,17 @@ const userChangePasswordValidation = [
     .trim()
 ];
 const messageChatValidations = [
-  body("receiverId").not().isEmpty().withMessage("Reciver id is required").trim(),
-  body("messageData").not().isEmpty().withMessage("Message can not be empty").trim()
-]
+  body("receiverId")
+    .not()
+    .isEmpty()
+    .withMessage("Reciver id is required")
+    .trim(),
+  body("messageData")
+    .not()
+    .isEmpty()
+    .withMessage("Message can not be empty")
+    .trim()
+];
 module.exports = {
   signupValidation,
   signupConfirmation,

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import {
   Row,
   Col,
@@ -16,7 +17,7 @@ import {
 } from "reactstrap";
 import LastUpdated from "../common/LastUpdated";
 import shortUp from "../../assets/img/short-up.svg";
-import shortDown from "../../assets/img/short-down.svg"
+import shortDown from "../../assets/img/short-down.svg";
 
 class PriceMatrixComponent extends Component {
   constructor(props) {
@@ -43,8 +44,8 @@ class PriceMatrixComponent extends Component {
       handleMatrixModal
     } = this.props;
     return (
-      <>{
-        addNewMatrix || isEditMatrix ?
+      <>
+        {addNewMatrix || isEditMatrix ? (
           <>
             <Modal
               isOpen={matrixModalOpen}
@@ -53,30 +54,32 @@ class PriceMatrixComponent extends Component {
               className="customer-modal custom-form-modal custom-modal-lg"
             >
               <ModalHeader toggle={handleMatrixModal}>
-                {!isEditMatrix ? "Add New Pricing Matrix" : "Update Pricing Matrix"}
+                {!isEditMatrix
+                  ? "Add New Pricing Matrix"
+                  : "Update Pricing Matrix"}
                 {isEditMatrix ? <LastUpdated updatedAt={updateDate} /> : null}
               </ModalHeader>
               <ModalBody>
-
                 <Row>
-                  <Col md={"12"} >
+                  <Col md={"12"}>
                     <div className={"matrix-input"}>
                       <FormGroup className={"matrix-name-input"}>
-                        <Label>Matrix Name<span class="asteric">*</span> </Label>
+                        <Label>
+                          Matrix Name<span class="asteric">*</span>{" "}
+                        </Label>
                         <div className={"input-block"}>
                           <Input
                             name="matrixName"
                             value={matrixName}
-                            onChange={(e) => handleChange(0, e)}
+                            onChange={e => handleChange(0, e)}
                             maxLength={"40"}
                             placeholder={"Example Matrix A"}
-                            invalid={errors.matrixName && !matrixName} />
+                            invalid={errors.matrixName && !matrixName}
+                          />
                           <FormFeedback>
-                            {
-                              errors && errors.matrixName && !matrixName ?
-                                errors.matrixName :
-                                null
-                            }
+                            {errors && errors.matrixName && !matrixName
+                              ? errors.matrixName
+                              : null}
                           </FormFeedback>
                         </div>
                         {/* {
@@ -95,150 +98,186 @@ class PriceMatrixComponent extends Component {
                 <table className={"table matrix-table"}>
                   <thead>
                     <tr>
-                      <th width="250" className={"text-center"}>Cost</th>
-                      <th width="250" className={"text-center"}>Markup</th>
-                      <th width="250" className={"text-center"}>Margin</th>
+                      <th width="250" className={"text-center"}>
+                        Cost
+                      </th>
+                      <th width="250" className={"text-center"}>
+                        Markup
+                      </th>
+                      <th width="250" className={"text-center"}>
+                        Margin
+                      </th>
                       <th className={"text-center"}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {matrixRange && matrixRange.length
                       ? matrixRange.map((item, index) => {
-                        return (
-                          <React.Fragment key={index}>
-                            <tr key={index}>
-                              <td className={"justify-content-center"}>
-                                <div
-                                  className={
-                                    "d-flex align-items-center matrix-input-control"
-                                  }
-                                >
-                                  <div className={"d-inline-block"}>
-                                    <Input
-                                      className={"form-control text-center cost-input"}
-                                      name={"costPrice1"}
-                                      value={item.lower}
-                                      onChange={e => handleCostChange(index, e)}
-                                      disabled={item.lower === "0.00"}
-                                    />
-                                  </div>
-                                  <span className={"value-sprate"}>
-                                    <i className="far fa-window-minimize" />
-                                  </span>
-                                  <div className={"d-inline-block"}>
-                                    <Input
-                                      className={"form-control text-center cost-input"}
-                                      onChange={e => handleCostChange(index, e)}
-                                      name={"costPrice2"}
-                                      value={item.upper}
-                                      maxLength="6"
-                                      placeholder={"0.00"}
-                                      disabled={item.upper === "beyond"}
-                                    />
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <div
-                                  className={
-                                    "d-flex justify-content-center matrix-input-control"
-                                  }
-                                >
-                                  <InputGroup className={"markup-input"}>
-                                    <Input
-                                      className={"form-control text-center "}
-                                      value={item.markup}
-                                      name="markup"
-                                      maxLength="6"
-                                      onChange={(e) => handleChange(index, e)}
-                                      placeholder={"100.00"}
-                                    />
-                                    <div class="input-group-append">
-                                      <span class="input-group-text">
-                                        <i class="fa fa-percent"></i>
-                                      </span>
+                          return (
+                            <React.Fragment key={index}>
+                              <tr key={index}>
+                                <td className={"justify-content-center"}>
+                                  <div
+                                    className={
+                                      "d-flex align-items-center matrix-input-control"
+                                    }
+                                  >
+                                    <div className={"d-inline-block"}>
+                                      <Input
+                                        className={
+                                          "form-control text-center cost-input"
+                                        }
+                                        name={"costPrice1"}
+                                        value={item.lower}
+                                        onChange={e =>
+                                          handleCostChange(index, e)
+                                        }
+                                        disabled={item.lower === "0.00"}
+                                      />
                                     </div>
-                                  </InputGroup>
-                                </div>
-                              </td>
-                              <td>
-                                <div
-                                  className={
-                                    "d-flex justify-content-center matrix-input-control"
-                                  }
-                                >
-                                  <InputGroup className={"markup-input"}>
-                                    <Input
-                                      className={"form-control text-center"}
-                                      value={item.margin}
-                                      name="margin"
-                                      maxLength={"6"}
-                                      onChange={(e) => handleChange(index, e)}
-                                      placeholder={"100.00"}
-                                    />
-                                    <div class="input-group-append">
-                                      <span class="input-group-text">
-                                        <i class="fa fa-percent"></i>
-                                      </span>
+                                    <span className={"value-sprate"}>
+                                      <i className="far fa-window-minimize" />
+                                    </span>
+                                    <div className={"d-inline-block"}>
+                                      <Input
+                                        className={
+                                          "form-control text-center cost-input"
+                                        }
+                                        onChange={e =>
+                                          handleCostChange(index, e)
+                                        }
+                                        name={"costPrice2"}
+                                        value={item.upper}
+                                        maxLength="6"
+                                        placeholder={"0.00"}
+                                        disabled={item.upper === "beyond"}
+                                      />
                                     </div>
-                                  </InputGroup>
-                                </div>
-                              </td>
-                              <td className={"text-center"}>
-                                <div className={"d-flex justify-content-center"}>
-                                  <span className={"matrix-drop-down"}>
-                                    {index >= 1 ? (
+                                  </div>
+                                </td>
+                                <td>
+                                  <div
+                                    className={
+                                      "d-flex justify-content-center matrix-input-control"
+                                    }
+                                  >
+                                    <InputGroup className={"markup-input"}>
+                                      <Input
+                                        className={"form-control text-center "}
+                                        value={item.markup}
+                                        name="markup"
+                                        maxLength="6"
+                                        onChange={e => handleChange(index, e)}
+                                        placeholder={"100.00"}
+                                      />
+                                      <div class="input-group-append">
+                                        <span class="input-group-text">
+                                          <i class="fa fa-percent" />
+                                        </span>
+                                      </div>
+                                    </InputGroup>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div
+                                    className={
+                                      "d-flex justify-content-center matrix-input-control"
+                                    }
+                                  >
+                                    <InputGroup className={"markup-input"}>
+                                      <Input
+                                        className={"form-control text-center"}
+                                        value={item.margin}
+                                        name="margin"
+                                        maxLength={"6"}
+                                        onChange={e => handleChange(index, e)}
+                                        placeholder={"100.00"}
+                                      />
+                                      <div class="input-group-append">
+                                        <span class="input-group-text">
+                                          <i class="fa fa-percent" />
+                                        </span>
+                                      </div>
+                                    </InputGroup>
+                                  </div>
+                                </td>
+                                <td className={"text-center"}>
+                                  <div
+                                    className={"d-flex justify-content-center"}
+                                  >
+                                    <span className={"matrix-drop-down"}>
+                                      {index >= 1 ? (
+                                        <span
+                                          onClick={() =>
+                                            handleAddBelowMatrixRange(
+                                              index,
+                                              "above"
+                                            )
+                                          }
+                                          id={`tooltip-1-${index}`}
+                                        >
+                                          <span
+                                            className={"icon cursor_pointer"}
+                                          >
+                                            <img
+                                              src={shortUp}
+                                              width={"20"}
+                                              alt={"shortUp"}
+                                            />
+                                            <UncontrolledTooltip
+                                              target={`tooltip-1-${index}`}
+                                            >
+                                              Add range above
+                                            </UncontrolledTooltip>
+                                          </span>
+                                        </span>
+                                      ) : null}
+
                                       <span
                                         onClick={() =>
                                           handleAddBelowMatrixRange(
                                             index,
-                                            "above"
+                                            "below"
                                           )
                                         }
-                                        id={`tooltip-1-${index}`}
+                                        id={`tooltip-2-${index + 1}`}
                                       >
                                         <span className={"icon cursor_pointer"}>
-                                          <img src={shortUp} width={"20"} alt={"shortUp"} />
-                                          <UncontrolledTooltip target={`tooltip-1-${index}`}>
-                                            Add range above
-                                        </UncontrolledTooltip>
+                                          <img
+                                            src={shortDown}
+                                            width={"20"}
+                                            alt={"shortUp"}
+                                          />
+                                          <UncontrolledTooltip
+                                            target={`tooltip-2-${index + 1}`}
+                                          >
+                                            Add range below
+                                          </UncontrolledTooltip>
                                         </span>
                                       </span>
-                                    ) : null}
-
-                                    <span
-                                      onClick={() =>
-                                        handleAddBelowMatrixRange(index, "below")
-                                      }
-                                      id={`tooltip-2-${index + 1}`}
-                                    >
-                                      <span className={"icon cursor_pointer"}>
-                                        <img src={shortDown} width={"20"} alt={"shortUp"} />
-                                        <UncontrolledTooltip target={`tooltip-2-${index + 1}`}>
-                                          Add range below
-                                        </UncontrolledTooltip>
-                                      </span>
-                                    </span>
-                                    {index >= 1 ? (
-                                      <span className={"icon cursor_pointer"} >
-                                        <span
-                                          className={"btn btn-theme-transparent btn-secondary"}
-                                          size={"sm"}
-                                          onClick={() =>
-                                            handleRemoveMatrixRange(index)
-                                          }
-                                          id={`tooltip-3-${index + 1}`}
-                                        >
-                                          <i className="icons cui-trash" />
+                                      {index >= 1 ? (
+                                        <span className={"icon cursor_pointer"}>
+                                          <span
+                                            className={
+                                              "btn btn-theme-transparent btn-secondary"
+                                            }
+                                            size={"sm"}
+                                            onClick={() =>
+                                              handleRemoveMatrixRange(index)
+                                            }
+                                            id={`tooltip-3-${index + 1}`}
+                                          >
+                                            <i className="icons cui-trash" />
+                                          </span>
+                                          <UncontrolledTooltip
+                                            target={`tooltip-3-${index + 1}`}
+                                          >
+                                            Delete
+                                          </UncontrolledTooltip>
                                         </span>
-                                        <UncontrolledTooltip target={`tooltip-3-${index + 1}`}>
-                                          Delete
-                                        </UncontrolledTooltip>
-                                      </span>
-                                    ) :
-                                      null}
+                                      ) : null}
 
-                                    {/* 
+                                      {/* 
                                     <UncontrolledDropdown>
                                        <DropdownToggle >
                                         <i className="fas fa-ellipsis-h" />
@@ -278,13 +317,13 @@ class PriceMatrixComponent extends Component {
                                         ) : null}
                                       </DropdownMenu>
                                     </UncontrolledDropdown> */}
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                          </React.Fragment>
-                        );
-                      })
+                                    </span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </React.Fragment>
+                          );
+                        })
                       : null}
                     <tr>
                       <td colSpan="5">
@@ -295,36 +334,29 @@ class PriceMatrixComponent extends Component {
                               className="customer-add-phone customer-anchor-text customer-click-btn"
                             >
                               Add Range
-                          </span>
+                            </span>
                           </Col>
                         </Row>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-
               </ModalBody>
               <ModalFooter>
                 <div class="flex-1">
                   <div class="required-fields">*Fields are Required.</div>
                 </div>
 
-                <Button
-                  color={"primary"}
-                  onClick={() => handleAddMatrix()}
-                >
-                  {
-                    isEditMatrix ? "Update Matrix" : "Add Matrix"
-                  }
+                <Button color={"primary"} onClick={() => handleAddMatrix()}>
+                  {isEditMatrix ? "Update Matrix" : "Add Matrix"}
                 </Button>
                 <Button color="secondary" onClick={handleMatrixModal}>
                   Cancel
                 </Button>
               </ModalFooter>
             </Modal>
-          </> :
-          null
-      }
+          </>
+        ) : null}
       </>
     );
   }

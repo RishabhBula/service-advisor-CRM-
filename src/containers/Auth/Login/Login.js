@@ -1,7 +1,9 @@
-import React, { Component } from "react";
 import { connect } from "react-redux";
+import React, { Component } from "react";
+
 import { loginRequest } from "../../../actions";
 import LoginPage from "../../../components/LoginPage";
+
 class Login extends Component {
   componentDidMount() {
     if (localStorage.getItem("token")) {
@@ -18,7 +20,10 @@ const mapDispatchToProps = dispatch => {
   return {
     onLogin: data => {
       dispatch(loginRequest(data));
-    },
+    }
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

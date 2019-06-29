@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import TimeLogList from "./timeLogList";
+
 import { CrmTimeClockModal } from "../../common/CrmTimeClockModel";
+import TimeLogList from "./timeLogList";
 import Timers from "./Timers";
+
 class TimeClock extends Component {
   constructor(props) {
     super(props);
@@ -31,12 +33,21 @@ class TimeClock extends Component {
       orderReducer,
       editTimeLogRequest,
       addTimeLogRequest,
-      timelogReducer } = this.props;
+      timelogReducer,
+      startTimer,
+      stopTimer,
+      switchTimer} = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
     return (
       <div>
-        <Timers orderId={orderId} orderItems={orderItems.serviceId} />
+        <Timers
+          orderId={orderId}
+          orderItems={orderItems.serviceId}
+          startTimer={startTimer}
+          stopTimer={stopTimer}
+          switchTimer={switchTimer}
+        />
         <span
           className={"text-primary cursor_pointer"}
           onClick={this.handleTimeClockModal}

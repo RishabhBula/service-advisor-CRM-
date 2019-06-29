@@ -72,16 +72,16 @@ export class CrmTimeClockModal extends Component {
   onTimeInChangeHandler = (value) => {
     this.setState({
       timeIn: value
-    })
-    if (this.state.timeOut !== '00:00') {
+    });
+    if (this.state.timeOut !== "00:00") {
       this.handleTimeDuration();
     }
-  }
-  onTimeOutChangeHandler = (value) => {
+  };
+  onTimeOutChangeHandler = value => {
     this.setState({
       timeOut: value
-    })
-    if (this.state.timeIn !== '00:00') {
+    });
+    if (this.state.timeIn !== "00:00") {
       this.handleTimeDuration();
     }
   }

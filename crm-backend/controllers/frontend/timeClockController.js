@@ -1,6 +1,8 @@
 const TimeClock = require("../../models/timeClock");
+const UserModel = require("../../models/user");
 const OrderModal = require("../../models/order");
 const mongoose = require("mongoose");
+
 const commonValidation = require("../../common");
 const { validationResult } = require("express-validator/check");
 const cron = require("node-cron");
@@ -93,37 +95,86 @@ const addTimeLogs = async (req, res) => {
 const startTimer = async (req, res) => {
   const { body } = req;
   const { technicianId, serviceId, orderId } = body;
-  if (timeClocks[`${technicianId}-${serviceId}`]) {
+  if (timeClocks[`${technicianId}`]) {
     return res.status(400).json({
-      message: "This user is already working on something else"
+      message: "This technician is already working on something else."
     });
   }
   await TimeClock.create({
+    type: "timeclock",
     technicianId,
     serviceId,
     orderId,
     startDateTime: Date.now()
   });
-  timeClocks[`${technicianId}-${serviceId}`] = cron.schedule(
-    "* * * * * *",
-    async () => {
-      console.log("running a task every minute");
-      await TimeClock.updateOne(
-        {
-          technicianId,
+  await UserModel.updateOne(
+    {
+      _id: technicianId
+    },
+    {
+      $set: {
+        currentlyWorking: {
           serviceId,
           orderId
-        },
-        {
-          duration: {
-            $inc: 1
-          }
         }
-      );
+      }
+    }
+  );
+  timeClocks[`${technicianId}`] = cron.schedule("* * * * * *", async () => {
+    console.log("running a task every seond");
+    await TimeClock.updateOne(
+      {
+        technicianId,
+        serviceId,
+        orderId
+      },
+      {
+        $inc: {
+          duration: 1
+        }
+      }
+    );
+  });
+  return res.status(200).json({
+    message: "Timer log started successfully!"
+  });
+};
+
+/**
+ *
+ */
+const stopTimer = async (req, res) => {
+  const { body } = req;
+  const { technicianId, serviceId } = body;
+  if (timeClocks[`${technicianId}`]) {
+    // return res.status(400).json({
+    //   message: "This technician is not working on any task."
+    // });
+    timeClocks[`${technicianId}`].destroy();
+  }
+  await TimeClock.updateOne(
+    {
+      technicianId,
+      serviceId
+    },
+    {
+      $set: {
+        endDateTime: Date.now()
+      }
+    }
+  );
+  await UserModel.updateOne(
+    {
+      _id: technicianId
+    },
+    {
+      $set: {
+        currentlyWorking: {}
+      }
     }
   );
   return res.status(200).json({
-    message: "Timer log started successfully!"
+    message: "Timer log stopped successfully!"
   });
 };
 
@@ -154,6 +205,93 @@ const getTimeLogByTechnician = async (req, res) => {
 /**
  *
  */
+const getTimeLogByOrderId = async (req, res) => {
+  try {
+    const { query } = req;
+    const { orderId } = query;
+    const result = await TimeClock.find({
+      orderId
+    });
+    return res.status(200).json({
+      message: "Timer get success!",
+      data: result || []
+    });
+  } catch (error) {
+    console.log("this is add", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ *
+ */
+const switchService = async (req, res) => {
+  try {
+    const { body } = req;
+    const { technicianId, serviceId, orderId, oldService } = body;
+    if (timeClocks[`${technicianId}`]) {
+      timeClocks[`${technicianId}`].destroy();
+    }
+    await TimeClock.updateOne(
+      {
+        technicianId,
+        oldService
+      },
+      {
+        $set: {
+          endDateTime: Date.now()
+        }
+      }
+    );
+    await TimeClock.create({
+      type: "timeclock",
+      technicianId,
+      serviceId,
+      orderId,
+      startDateTime: Date.now()
+    });
+    await UserModel.updateOne(
+      {
+        _id: technicianId
+      },
+      {
+        $set: {
+          currentlyWorking: {
+            serviceId,
+            orderId
+          }
+        }
+      }
+    );
+    timeClocks[`${technicianId}`] = cron.schedule("* * * * * *", async () => {
+      console.log("running a task every seond");
+      await TimeClock.updateOne(
+        {
+          technicianId,
+          serviceId,
+          orderId
+        },
+        {
+          $inc: {
+            duration: 1
+          }
+        }
+      );
+    });
+    return res.status(200).json({
+      message: "Techinician Service Changed success!"
+    });
+  } catch (error) {
+    console.log("this is add", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
 const updateTimeLogOfTechnician = async (req, res) => {
   const { body, currentUser } = req
   try {
@@ -218,5 +356,8 @@ module.exports = {
   addTimeLogs,
   startTimer,
   getTimeLogByTechnician,
-  updateTimeLogOfTechnician
+  updateTimeLogOfTechnician,
+  getTimeLogByOrderId,
+  stopTimer,
+  switchService
 };

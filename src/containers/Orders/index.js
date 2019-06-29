@@ -1,9 +1,11 @@
-import React, { Component, Suspense } from "react";
+import { Card, CardBody, Button, Input, ButtonGroup } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Card, CardBody, Button, Input, ButtonGroup } from "reactstrap";
+import React, { Component, Suspense } from "react";
+
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
+
 import {
   getOrderIdRequest,
   customerGetRequest,
@@ -40,7 +42,10 @@ import {
   setRateStandardListStart,
   getInventoryPartVendors,
   addTimeLogRequest,
-  updateTimeLogRequest
+  updateTimeLogRequest,
+  startTimer,
+  stopTimer,
+  switchTask
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -268,7 +273,10 @@ class Order extends Component {
       getInventoryPartsVendors,
       addTimeLogRequest,
       timelogReducer,
-      updateTimeLogRequest
+      updateTimeLogRequest,
+      startTimer,
+      stopTimer,
+      switchTimer
     } = this.props;
     return (
       <div className="animated fadeIn">
@@ -399,6 +407,9 @@ class Order extends Component {
                           addTimeLogRequest={addTimeLogRequest}
                           timelogReducer={timelogReducer}
                           editTimeLogRequest={updateTimeLogRequest}
+                          startTimer={startTimer}
+                          stopTimer={stopTimer}
+                          switchTimer={switchTimer}
                         />
                       ) : null}
                       {activeTab === 3 ? <Message /> : null}
@@ -620,7 +631,10 @@ const mapDispatchToProps = dispatch => ({
   },
   updateTimeLogRequest: (data) => {
     dispatch(updateTimeLogRequest(data))
-  }
+  },
+  startTimer: data => dispatch(startTimer(data)),
+  stopTimer: data => dispatch(stopTimer(data)),
+  switchTimer: data => dispatch(switchTask(data))
 });
 export default connect(
   mapStateToProps,
