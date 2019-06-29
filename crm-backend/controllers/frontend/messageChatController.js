@@ -1,4 +1,6 @@
 const MessageChat = require("../../models/messagechat");
+const UserModal = require("../../models/user");
+const CustomerModal = require("../../models/customer");
 const OrderModal = require("../../models/order");
 const mongoose = require("mongoose");
 const commonValidation = require("../../common");
@@ -17,25 +19,26 @@ const sendMessageChat = async (req, res) => {
    }
    try {
       const messageData = {
-         senderId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
+         senderId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
          receiverId: mongoose.Types.ObjectId(body.receiverId),
          orderId: mongoose.Types.ObjectId(body.orderId),
          messageAttachment: body.messageAttachment,
          messageData: body.messageData,
-         userId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
-         parentId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.userId,
+         userId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
+         parentId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
          status: true,
          isDeleted: false
       }
       const messageElements = new MessageChat(messageData);
       await messageElements.save();
 
-      if (currentUser.id) {
+      if (!body.notToken) {
          const encryptedOrderId = commonCrypto.encrypt(body.orderId);
          const encrypteCustomerId = commonCrypto.encrypt(body.customerId);
+         const encrypteUserId = commonCrypto.encrypt(body.userId)
          const emailVar = new Email(body);
          const subject = `${currentUser.subdomain}`
-         const emailMsgBody = `<div><b>${messageElements.messageData}</b></div><div><p><a href="http://d-company.localhost:3000/order-summary?order=${encryptedOrderId}&customer=${encrypteCustomerId}"
+         const emailMsgBody = `<div><b>${messageElements.messageData}</b></div><div><p><a href="http://d-company.localhost:3000/order-summary?order=${encryptedOrderId}&customer=${encrypteCustomerId}&user=${encrypteUserId}"
          style="display:inline-block;background:green;color:#fff;padding:6px 30px;font-size:16px;text-decoration:none;border-radius:4px;margin:15px 0px"
          target="_blank">Check Now</a>
          </p></div>`
@@ -54,13 +57,18 @@ const sendMessageChat = async (req, res) => {
             messageId: messageElements._id
          }]
       }
-      if (result2[0].messageId && result2[0].messageId.length) {
+      if (result2.length && result2[0].messageId && result2[0].messageId.length) {
          for (let index = 0; index < result2[0].messageId.length; index++) {
             const element = result2[0].messageId[index];
             payload.messageId.push({
                messageId: element.messageId
             })
          }
+      } else {
+         return res.status(400).json({
+            message: "Order data not found",
+            success: false
+         })
       }
       await OrderModal.findByIdAndUpdate(body.orderId, {
          $set: payload
@@ -68,6 +76,7 @@ const sendMessageChat = async (req, res) => {
 
       return res.status(200).json({
          data: messageElements,
+         message: "Message send successfully!",
          success: true
       })
    } catch (error) {
@@ -81,20 +90,40 @@ const sendMessageChat = async (req, res) => {
 const verifyUserMessageLink = async (req, res) => {
    const { body } = req;
    try {
-      const decryptedOrderId = commonCrypto.decrypt(body.order);
-      const decryptedCustomerId = commonCrypto.decrypt(body.customer)
-      const orderDetails = await OrderModal.findById(decryptedOrderId).populate("customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId")
-      if (orderDetails.messageId) {
-         for (let index = 0; index < orderDetails.messageId.length; index++) {
-            const element = orderDetails.messageId[index];
-            if (element.messageId && element.messageId.receiverId == decryptedCustomerId) {
-               element.messageId.isSender = false
+      let orderDetails, userData, messageData = []
+      if (body.order && body.customer) {
+         const decryptedOrderId = commonCrypto.decrypt(body.order);
+         const decryptedCustomerId = commonCrypto.decrypt(body.customer);
+         const decryptedUserId = commonCrypto.decrypt(body.user);
+         userData = await UserModal.findById(decryptedUserId);
+         orderDetails = await OrderModal.findById(decryptedOrderId).populate("customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId")
+         if (orderDetails.messageId) {
+            for (let index = 0; index < orderDetails.messageId.length; index++) {
+               const element = orderDetails.messageId[index];
+               if (element.messageId && element.messageId.receiverId == decryptedCustomerId) {
+                  element.messageId.isSender = false
+               }
+               messageData.push(element.messageId)
+            }
+         }
+      } else {
+         orderDetails = await OrderModal.findById(body.orderId).populate("customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId")
+         userData = await UserModal.findById(body.companyIDurl);
+         if (orderDetails.messageId) {
+            for (let index = 0; index < orderDetails.messageId.length; index++) {
+               const element = orderDetails.messageId[index];
+               if (element.messageId && element.messageId.receiverId == body.customerId) {
+                  element.messageId.isSender = false
+               }
+               messageData.push(element.messageId)
             }
          }
       }
       if (orderDetails) {
          return res.status(200).json({
             data: orderDetails,
+            messageData: messageData,
+            companyData: userData,
             message: "Message Link Verified Successfully.",
             success: true
          })

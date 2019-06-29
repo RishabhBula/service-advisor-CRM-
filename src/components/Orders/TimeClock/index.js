@@ -26,12 +26,17 @@ class TimeClock extends Component {
   render() {
     const {
       modelInfoReducer,
+      modelOperate,
       orderId,
       orderItems,
+      getUserData,
+      orderReducer,
+      editTimeLogRequest,
+      addTimeLogRequest,
+      timelogReducer,
       startTimer,
       stopTimer,
-      switchTimer
-    } = this.props;
+      switchTimer} = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
     return (
@@ -49,10 +54,22 @@ class TimeClock extends Component {
         >
           Add Time Manually
         </span>
-        <TimeLogList />
+        <TimeLogList
+          timeLogData={timelogReducer.timeLogData}
+          handleTimeClockModal={this.handleTimeClockModal}
+          getUserData={getUserData}
+          orderReducer={orderReducer}
+          editTimeLogRequest={editTimeLogRequest}
+          modelOperate={modelOperate}
+          modelInfoReducer={modelInfoReducer}
+          timeClockModalOpen={timeClockModalOpen}
+        />
         <CrmTimeClockModal
           openTimeClockModal={timeClockModalOpen}
+          getUserData={getUserData}
+          orderReducer={orderReducer}
           handleTimeClockModal={this.handleTimeClockModal}
+          addTimeLogRequest={addTimeLogRequest}
         />
       </div>
     );

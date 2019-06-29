@@ -19,6 +19,7 @@ import { tiresReducer } from "./Tires";
 import { usersReducer } from "./Users";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { vendorsReducer } from "./Vendors";
+import { timelogReducer } from "./TimeLog"
 
 export const mainReducer = handleActions(
   {
@@ -55,6 +56,7 @@ const AppReducer = combineReducers({
   inspectionReducer,
   serviceReducers,
   labelReducer,
+  timelogReducer,
   routing: routerReducer
 });
 

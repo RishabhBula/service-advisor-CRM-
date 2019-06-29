@@ -23,16 +23,19 @@ const timeClockSchema = new Schema({
     default: null
   },
   startDateTime: {
-    type: Date,
+    type: String,
     default: null
   },
   endDateTime: {
-    type: Date,
+    type: String,
+    default: null
+  },
+  notes: {
+    type: String,
     default: null
   },
   activity: {
-    type: Schema.Types.ObjectId,
-    ref: "Order",
+    type: String,
     default: null
   },
   duration: {
@@ -50,6 +53,10 @@ const timeClockSchema = new Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  date: {
+    type: Date,
+    default: Date.now
   },
   createdAt: {
     type: Date,

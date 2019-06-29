@@ -41,6 +41,8 @@ import {
   rateAddRequest,
   setRateStandardListStart,
   getInventoryPartVendors,
+  addTimeLogRequest,
+  updateTimeLogRequest,
   startTimer,
   stopTimer,
   switchTask
@@ -134,7 +136,7 @@ class Order extends Component {
     if (
       serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
       inspectionReducer.inspectionData.isSuccess !==
-        this.props.inspectionReducer.inspectionData.isSuccess
+      this.props.inspectionReducer.inspectionData.isSuccess
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     }
@@ -269,7 +271,9 @@ class Order extends Component {
       profileInfoReducer,
       rateStandardListReducer,
       getInventoryPartsVendors,
-      // timers
+      addTimeLogRequest,
+      timelogReducer,
+      updateTimeLogRequest,
       startTimer,
       stopTimer,
       switchTimer
@@ -320,15 +324,15 @@ class Order extends Component {
                 </div>
                 <div className={"position-relative fdsfdsfdsf"}>
                   {this.props.orderReducer.orderItems &&
-                  !this.props.orderReducer.orderItems.customerId ? (
-                    <div className={"service-overlay"}>
-                      <img
-                        src="https://gramener.com/schoolminutes/img/arrow.png"
-                        alt={"arrow"}
-                      />
-                      <h3>Please Add Order Details first</h3>
-                    </div>
-                  ) : null}
+                    !this.props.orderReducer.orderItems.customerId ? (
+                      <div className={"service-overlay"}>
+                        <img
+                          src="https://gramener.com/schoolminutes/img/arrow.png"
+                          alt={"arrow"}
+                        />
+                        <h3>Please Add Order Details first</h3>
+                      </div>
+                    ) : null}
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
                       <OrderTab
@@ -397,7 +401,12 @@ class Order extends Component {
                           modelInfoReducer={modelInfoReducer}
                           modelOperate={modelOperate}
                           orderId={orderId}
+                          getUserData={getUserData}
                           orderItems={orderReducer.orderItems}
+                          orderReducer={orderReducer}
+                          addTimeLogRequest={addTimeLogRequest}
+                          timelogReducer={timelogReducer}
+                          editTimeLogRequest={updateTimeLogRequest}
                           startTimer={startTimer}
                           stopTimer={stopTimer}
                           switchTimer={switchTimer}
@@ -511,7 +520,8 @@ const mapStateToProps = state => ({
   serviceReducers: state.serviceReducers,
   labelReducer: state.labelReducer,
   profileInfoReducer: state.profileInfoReducer,
-  rateStandardListReducer: state.rateStandardListReducer
+  rateStandardListReducer: state.rateStandardListReducer,
+  timelogReducer: state.timelogReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -615,6 +625,12 @@ const mapDispatchToProps = dispatch => ({
   },
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
+  },
+  addTimeLogRequest: data => {
+    dispatch(addTimeLogRequest(data))
+  },
+  updateTimeLogRequest: (data) => {
+    dispatch(updateTimeLogRequest(data))
   },
   startTimer: data => dispatch(startTimer(data)),
   stopTimer: data => dispatch(stopTimer(data)),
