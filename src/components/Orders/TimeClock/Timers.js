@@ -161,7 +161,7 @@ class Timers extends Component {
                               );
                             })}
                           </Input>
-                        ) : (
+                        ) : workingId ? (
                           <>
                             {showSwitchTask[index] ? (
                               <>
@@ -202,6 +202,16 @@ class Timers extends Component {
                                 >
                                   Update
                                 </a>
+                                &nbsp;&nbsp;
+                                <a
+                                  href={"/"}
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    this.toggleSwitchTask(index);
+                                  }}
+                                >
+                                  Cancel
+                                </a>
                               </>
                             ) : (
                               <>
@@ -218,7 +228,7 @@ class Timers extends Component {
                               </>
                             )}
                           </>
-                        )}
+                        ) : null}
                       </div>
                     </Col>
                     <Col sm={"2"} className={"text-right"}>

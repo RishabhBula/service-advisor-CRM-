@@ -2,6 +2,7 @@ import { createLogic } from "redux-logic";
 
 import { ApiHelper } from "../helpers/ApiHelper";
 import { timelogActions, getOrderIdSuccess } from "../actions";
+import { toast } from "react-toastify";
 /**
  *
  */
@@ -84,6 +85,10 @@ const switchTaskLogic = createLogic({
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
     const { technicianId, serviceId, orderId, oldService } = action.payload;
+    if (!serviceId || oldService === serviceId) {
+      toast.error("Please select a service.");
+      return;
+    }
     const technicians = mainServices.filter(
       d => d.serviceId.technician._id === technicianId
     );
