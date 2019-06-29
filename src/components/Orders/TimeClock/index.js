@@ -29,7 +29,8 @@ class TimeClock extends Component {
       orderId,
       orderItems,
       startTimer,
-      stopTimer
+      stopTimer,
+      switchTimer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
@@ -40,6 +41,7 @@ class TimeClock extends Component {
           orderItems={orderItems.serviceId}
           startTimer={startTimer}
           stopTimer={stopTimer}
+          switchTimer={switchTimer}
         />
         <span
           className={"text-primary cursor_pointer"}

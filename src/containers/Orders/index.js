@@ -42,7 +42,8 @@ import {
   setRateStandardListStart,
   getInventoryPartVendors,
   startTimer,
-  stopTimer
+  stopTimer,
+  switchTask
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -268,8 +269,10 @@ class Order extends Component {
       profileInfoReducer,
       rateStandardListReducer,
       getInventoryPartsVendors,
+      // timers
       startTimer,
-      stopTimer
+      stopTimer,
+      switchTimer
     } = this.props;
     return (
       <div className="animated fadeIn">
@@ -397,6 +400,7 @@ class Order extends Component {
                           orderItems={orderReducer.orderItems}
                           startTimer={startTimer}
                           stopTimer={stopTimer}
+                          switchTimer={switchTimer}
                         />
                       ) : null}
                       {activeTab === 3 ? <Message /> : null}
@@ -613,7 +617,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getInventoryPartVendors(data));
   },
   startTimer: data => dispatch(startTimer(data)),
-  stopTimer: data => dispatch(stopTimer(data))
+  stopTimer: data => dispatch(stopTimer(data)),
+  switchTimer: data => dispatch(switchTask(data))
 });
 export default connect(
   mapStateToProps,

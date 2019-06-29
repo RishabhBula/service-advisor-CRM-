@@ -16,6 +16,11 @@ router.post(
   token.authorisedUser,
   timeClockController.startTimer
 );
+router.patch(
+  "/switch-task",
+  token.authorisedUser,
+  timeClockController.switchService
+);
 router.post(
   "/stop-time-clock",
   token.authorisedUser,

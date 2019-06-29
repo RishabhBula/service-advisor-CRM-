@@ -16,8 +16,7 @@ import "react-dates/initialize";
 import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
-import TimeInput from 'react-time-input';
-import CrmTimeMaridonBtn from "../common/CrmTimeMaridonBtn";
+import TimeInput from "react-time-input";
 
 export class CrmTimeClockModal extends Component {
   constructor(props) {
@@ -25,48 +24,45 @@ export class CrmTimeClockModal extends Component {
     this.state = {
       date: new Date(),
       timetype: "AM",
-      timeIn: '00:00',
-      timeOut: '00:00',
+      timeIn: "00:00",
+      timeOut: "00:00",
       duration: "0"
     };
   }
-  onTimeInChangeHandler = (value) => {
+  onTimeInChangeHandler = value => {
     this.setState({
       timeIn: value
-    })
-    if (this.state.timeOut !== '00:00') {
+    });
+    if (this.state.timeOut !== "00:00") {
       this.handleTimeDuration();
     }
-  }
-  onTimeOutChangeHandler = (value) => {
+  };
+  onTimeOutChangeHandler = value => {
     this.setState({
       timeOut: value
-    })
-    if (this.state.timeIn !== '00:00') {
+    });
+    if (this.state.timeIn !== "00:00") {
       this.handleTimeDuration();
     }
-  }
+  };
   handleTimeDuration = () => {
     const { timeIn, timeOut } = this.state;
     var ts1 = moment(`06/26/2019 ${timeIn}`, "M/D/YYYY H:mm").valueOf();
     var ts2 = moment(`06/26/2019 ${timeOut}`, "M/D/YYYY H:mm").valueOf();
-    var hours = moment
-      .duration(moment(ts2)
-        .diff(moment(ts1))
-      ).asHours();
+    var hours = moment.duration(moment(ts2).diff(moment(ts1))).asHours();
     console.log("*******Time*******", ts1, ts2, hours);
     this.setState({
       duration: hours.toFixed(2)
-    })
-  }
-  handleClickTimeType = (value) => {
+    });
+  };
+  handleClickTimeType = value => {
     this.setState({
       timeType: value
-    })
-  }
+    });
+  };
   render() {
     const { openTimeClockModal, handleTimeClockModal } = this.props;
-    const { timeIn, timeOut } = this.state
+    const { timeIn, timeOut } = this.state;
     return (
       <>
         <Modal
@@ -105,8 +101,8 @@ export class CrmTimeClockModal extends Component {
                       <TimeInput
                         initTime={timeIn}
                         ref="TimeInputWrapper"
-                        className='form-control'
-                        mountFocus='true'
+                        className="form-control"
+                        mountFocus="true"
                         name={"timeIn"}
                         onTimeChange={this.onTimeInChangeHandler}
                       />
@@ -123,8 +119,8 @@ export class CrmTimeClockModal extends Component {
                       <TimeInput
                         initTime={timeOut}
                         ref="TimeInputWrapper"
-                        className='form-control'
-                        mountFocus='true'
+                        className="form-control"
+                        mountFocus="true"
                         name={"timeOut"}
                         onTimeChange={this.onTimeOutChangeHandler}
                       />

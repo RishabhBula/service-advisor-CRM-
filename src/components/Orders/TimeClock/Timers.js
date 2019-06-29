@@ -2,16 +2,21 @@ import { Row, Col, Input, Button } from "reactstrap";
 import classNames from "classnames";
 import React, { Component } from "react";
 
-import { logger } from "../../../helpers";
+import { logger, SecondsToHHMMSS } from "../../../helpers";
 
 import "./index.scss";
+import moment from "moment";
 
 class Timers extends Component {
+  timer;
   constructor(props) {
     super(props);
     this.state = {
-      selectedServices: []
+      selectedServices: [],
+      showSwitchTask: [],
+      duration: []
     };
+    this.timer = [];
   }
   /**
    *
@@ -53,8 +58,32 @@ class Timers extends Component {
   /**
    *
    */
+  toggleSwitchTask = index => {
+    const { showSwitchTask } = this.state;
+    showSwitchTask[index] = !showSwitchTask[index];
+    this.setState({ showSwitchTask });
+  };
+  /**
+   *
+   */
+  startTempTimer = (index, startTime) => {
+    if (this.timer[index]) {
+      clearInterval(this.timer[index]);
+    }
+    const { duration } = this.state;
+    this.timer[index] = setInterval(() => {
+      duration[index] = moment().diff(moment(startTime), "seconds");
+      this.setState({
+        duration
+      });
+    }, 1000);
+  };
+  /**
+   *
+   */
   render() {
-    let { orderItems, orderId } = this.props;
+    const { props, state } = this;
+    let { orderItems, orderId, switchTimer } = props;
     if (!orderItems) {
       orderItems = [];
     }
@@ -72,7 +101,7 @@ class Timers extends Component {
       }
       services.push(service.serviceId);
     });
-    const { selectedServices } = this.state;
+    const { selectedServices, showSwitchTask, duration } = state;
     return (
       <>
         <h4>Timers</h4>
@@ -85,6 +114,20 @@ class Timers extends Component {
                 const isWorking =
                   tech && tech.currentlyWorking && tech.currentlyWorking.orderId
                     ? true
+                    : false;
+                const workingId = isWorking
+                  ? technicianServices[
+                      technicianServices.findIndex(
+                        d => d._id === tech.currentlyWorking.serviceId
+                      )
+                    ]
+                  : null;
+                const startTime =
+                  workingId &&
+                  workingId.technician &&
+                  workingId.technician.currentlyWorking &&
+                  workingId.technician.currentlyWorking.startTime
+                    ? workingId.technician.currentlyWorking.startTime
                     : false;
                 return (
                   <Row
@@ -118,11 +161,78 @@ class Timers extends Component {
                               );
                             })}
                           </Input>
-                        ) : null}
+                        ) : (
+                          <>
+                            {showSwitchTask[index] ? (
+                              <>
+                                <Input
+                                  type="select"
+                                  value={selectedServices[index]}
+                                  onChange={e => this.onServiceChange(e, index)}
+                                  className={"switch-select-box"}
+                                >
+                                  <option>Select Service</option>
+                                  {technicianServices.map((service, ind) => {
+                                    return (
+                                      <React.Fragment key={`${index}-${ind}`}>
+                                        {workingId._id !== service._id ? (
+                                          <option value={service._id}>
+                                            {service.serviceName}
+                                          </option>
+                                        ) : null}
+                                      </React.Fragment>
+                                    );
+                                  })}
+                                </Input>
+                                &nbsp;&nbsp;
+                                <a
+                                  href={"/"}
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    this.toggleSwitchTask(index);
+                                    const serviceId = selectedServices[index];
+                                    switchTimer({
+                                      serviceId,
+                                      technicianId:
+                                        tech && tech._id ? tech._id : null,
+                                      orderId,
+                                      oldService: workingId._id
+                                    });
+                                  }}
+                                >
+                                  Update
+                                </a>
+                              </>
+                            ) : (
+                              <>
+                                {workingId.serviceName} &nbsp;&nbsp;
+                                <a
+                                  href={"/"}
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    this.toggleSwitchTask(index);
+                                  }}
+                                >
+                                  Switch
+                                </a>
+                              </>
+                            )}
+                          </>
+                        )}
                       </div>
                     </Col>
                     <Col sm={"2"} className={"text-right"}>
-                      <div className={"timer-running-time"}>{"--:--"}</div>
+                      <div className={"timer-running-time"}>
+                        {isWorking ? (
+                          <>
+                            {this.startTempTimer(index, startTime)}
+                            {SecondsToHHMMSS(
+                              duration[index] ||
+                                moment().diff(moment(startTime), "seconds")
+                            )}
+                          </>
+                        ) : null}
+                      </div>
                     </Col>
                     <Col sm={"2"} className={"text-right"}>
                       <div className={"clock-button"}>
@@ -137,7 +247,7 @@ class Timers extends Component {
                           </Button>
                         ) : (
                           <Button
-                            color={"primary"}
+                            color={"danger"}
                             onClick={() => this.stopTimer(index, tech, orderId)}
                           >
                             Clock Out

@@ -129,12 +129,12 @@ const startTimer = async (req, res) => {
 const stopTimer = async (req, res) => {
   const { body } = req;
   const { technicianId, serviceId } = body;
-  if (!timeClocks[`${technicianId}`]) {
-    return res.status(400).json({
-      message: "This technician is not working on any task."
-    });
+  if (timeClocks[`${technicianId}`]) {
+    // return res.status(400).json({
+    //   message: "This technician is not working on any task."
+    // });
+    timeClocks[`${technicianId}`].destroy();
   }
-  timeClocks[`${technicianId}`].destroy();
   await TimeClock.updateOne(
     {
       technicianId,
@@ -197,7 +197,74 @@ const getTimeLogByOrderId = async (req, res) => {
     });
     return res.status(200).json({
       message: "Timer get success!",
-      data: result || {}
+      data: result || []
+    });
+  } catch (error) {
+    console.log("this is add", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ *
+ */
+const switchService = async (req, res) => {
+  try {
+    const { body } = req;
+    const { technicianId, serviceId, orderId, oldService } = body;
+    if (timeClocks[`${technicianId}`]) {
+      timeClocks[`${technicianId}`].destroy();
+    }
+    await TimeClock.updateOne(
+      {
+        technicianId,
+        oldService
+      },
+      {
+        $set: {
+          endDateTime: Date.now()
+        }
+      }
+    );
+    await TimeClock.create({
+      type: "timeclock",
+      technicianId,
+      serviceId,
+      orderId,
+      startDateTime: Date.now()
+    });
+    await UserModel.updateOne(
+      {
+        _id: technicianId
+      },
+      {
+        $set: {
+          currentlyWorking: {
+            serviceId,
+            orderId
+          }
+        }
+      }
+    );
+    timeClocks[`${technicianId}`] = cron.schedule("* * * * * *", async () => {
+      console.log("running a task every seond");
+      await TimeClock.updateOne(
+        {
+          technicianId,
+          serviceId,
+          orderId
+        },
+        {
+          $inc: {
+            duration: 1
+          }
+        }
+      );
+    });
+    return res.status(200).json({
+      message: "Techinician Service Changed success!"
     });
   } catch (error) {
     console.log("this is add", error);
@@ -215,5 +282,6 @@ module.exports = {
   startTimer,
   getTimeLogByTechnician,
   getTimeLogByOrderId,
-  stopTimer
+  stopTimer,
+  switchService
 };
