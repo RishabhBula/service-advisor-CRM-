@@ -70,10 +70,8 @@ const createNewOrder = async (req, res) => {
       inspectionId: body.inspectionId,
       timeClockId: body.timeClockId
         ? mongoose.Types.ObjectId(body.timeClockId)
-        : null,
-      messageId: body.messageId
-        ? mongoose.Types.ObjectId(body.messageId)
-        : null,
+        : [],
+      messageId: body.messageId ? mongoose.Types.ObjectId(body.messageId) : [],
       orderId: result + 1,
       userId: currentUser.id,
       parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,

@@ -47,11 +47,12 @@ const orderSchema = new Schema({
     ref: "CustomerAndUser",
     default: null
   },
-  timeClockId: {
-    type: [Schema.Types.ObjectId],
-    ref:"TimeClock",
-    default: []
-  },
+  timeClockId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "TimeClock"
+    }
+  ],
   messageId: {
     type: [
       new Schema({

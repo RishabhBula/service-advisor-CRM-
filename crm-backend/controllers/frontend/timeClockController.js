@@ -59,24 +59,15 @@ const addTimeLogs = async (req, res) => {
     const timeLogElements = new TimeClock(timeLogsData);
     await timeLogElements.save();
     const payload = [timeLogElements._id];
-    console.log("***********Payload", payload);
 
-    const result2 = await OrderModal.update(
+    await OrderModal.update(
       { _id: body.orderId },
       {
         $push: {
           timeClockId: payload
         }
-      });
-    // if (result2[0].timeClockId && result2[0].timeClockId.length) {
-    //   for (let index = 0; index < result2[0].timeClockId.length; index++) {
-    //     const element = result2[0].timeClockId[index];
-    //     payload.timeClockId.push(element.timeClockId);
-    //   }
-    // }
-    // await OrderModal.findByIdAndUpdate(body.orderId, {
-    //   $set: payload
-    // });
+      }
+    );
     return res.status(200).json({
       message: "Time log added successfully!",
       success: true
