@@ -158,7 +158,6 @@ const stopTimer = async (req, res) => {
       }
     }
   );
-  console.log(result);
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -242,7 +241,7 @@ const switchService = async (req, res) => {
     if (timeClocks[`${technicianId}`]) {
       timeClocks[`${technicianId}`].destroy();
     }
-    await TimeClock.updateOne(
+    const result = await TimeClock.findOneAndUpdate(
       {
         technicianId,
         oldService
@@ -273,6 +272,18 @@ const switchService = async (req, res) => {
         }
       }
     );
+    if (result) {
+      await OrderModal.updateOne(
+        {
+          _id: orderId
+        },
+        {
+          $push: {
+            timeClockId: result._id
+          }
+        }
+      );
+    }
     timeClocks[`${technicianId}`] = cron.schedule("* * * * * *", async () => {
       console.log("running a task every seond");
       await TimeClock.updateOne(
