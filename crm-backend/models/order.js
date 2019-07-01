@@ -48,7 +48,9 @@ const orderSchema = new Schema({
     default: null
   },
   timeClockId: {
-    type: [Schema.Types.ObjectId]
+    type: [Schema.Types.ObjectId],
+    ref:"TimeClock",
+    default: []
   },
   messageId: {
     type: [
@@ -58,7 +60,8 @@ const orderSchema = new Schema({
           ref: "Message"
         }
       })
-    ]
+    ],
+    default: []
   },
   userId: {
     type: Schema.Types.ObjectId,

@@ -375,14 +375,14 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId, timeClockId.timeClockId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId"
     );
     const result1 = await Orders.populate(result2, {
       path:
-        "serviceId.serviceId.technician timeClockId.timeClockId.technicianId timeClockId.timeClockId.orderId"
+        "serviceId.serviceId.technician timeClockId.technicianId timeClockId.orderId"
     });
     const resultExtended = await Orders.populate(result1, {
-      path: "timeClockId.timeClockId.orderId.vehicleId"
+      path: "timeClockId.orderId.vehicleId"
     });
     const result = resultExtended;
     const serviceData = [],
