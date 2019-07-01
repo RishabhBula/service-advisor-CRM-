@@ -57,7 +57,7 @@ const sendMessageChat = async (req, res) => {
             messageId: messageElements._id
          }]
       }
-      if (result2.length && result2[0].messageId && result2[0].messageId.length) {
+      if (result2.length && result2[0].messageId) {
          for (let index = 0; index < result2[0].messageId.length; index++) {
             const element = result2[0].messageId[index];
             payload.messageId.push({
