@@ -46,6 +46,7 @@ const labourAddLogic = createLogic({
         servicePartData.push({
           ...result.data.laborData,
           serviceType: "labor",
+          qty: 1,
           discount: {
             value: '',
             type: "%"

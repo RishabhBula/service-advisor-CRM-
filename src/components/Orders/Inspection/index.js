@@ -19,7 +19,6 @@ import MessageTemplate from "./messageTemplate";
 import * as jsPDF from "jspdf";
 import 'jspdf-autotable';
 
-
 class Inspection extends Component {
    constructor(props) {
       super(props);

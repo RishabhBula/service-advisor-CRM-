@@ -6,10 +6,11 @@ Built on Top of ReactJS 16.8.
 
 > yarn install
 
+
 ### For devlopment
 
 > yarn start
 
-### For create build
+### For create production build
 
 > yarn build

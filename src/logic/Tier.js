@@ -40,6 +40,7 @@ const addTireLogic = createLogic({
             servicePartData.push({
                ...result.data.tierData,
                serviceType: "Tire",
+               qty: 1,
                discount: {
                   value: '',
                   type: "%"
@@ -129,6 +130,7 @@ const getTiresLogic = createLogic({
             value: tire._id,
             tireData: {
                ...tire,
+               qty: 1,
                serviceType: 'tire',
                discount: {
                   value: '',

@@ -2,12 +2,12 @@ import React, { Component, Suspense } from "react";
 import { Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { withRouter ,Link} from "react-router-dom";
+
 import {
   Card,
   CardBody,
   Button,
   Input,
-  FormFeedback,
   ButtonGroup
 } from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
@@ -47,13 +47,16 @@ import {
   rateAddRequest,
   setRateStandardListStart,
   getInventoryPartVendors,
-  sendMessage
+  sendMessage,
+  deleteNotes,
+  deleteNotesSuccess
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
 import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
+import OrderDetails from "../../components/Orders/OrderDetails"
 import { logger } from "../../helpers";
 
 
@@ -139,6 +142,7 @@ class Order extends Component {
       activeTab: activeTab
     });
   };
+
   addInventoryPart = data => {
     this.props.addInventoryPart({ data });
   };
@@ -169,7 +173,7 @@ class Order extends Component {
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
     logger("!!!!!!!!!!!!", customerData, vehicleData, orderId, orderName);
-    if (!customerData || !vehicleData || !orderName) {
+    if (!customerData || !vehicleData) {
       this.setState({
         isError: true
       });
@@ -198,6 +202,28 @@ class Order extends Component {
       [name]: value
     });
   };
+
+  orderStatus = (type,value) => {
+    const {profileInfoReducer} = this.props
+    const comapnyId = profileInfoReducer.profileInfo._id
+    const { orderReducer } = this.props
+    let payload ={}
+    if (type === 'authorizStatus'){
+       payload = {
+        status: value,
+        _id: orderReducer.orderItems._id,
+        authorizerId: comapnyId,
+      }
+    }
+    else{
+      payload = {
+        isInvoice: value,
+        _id: orderReducer.orderItems._id,
+      }
+    }
+    this.props.updateOrderDetails(payload)
+  }
+
   render() {
     const {
       activeTab,
@@ -244,8 +270,17 @@ class Order extends Component {
       rateStandardListReducer,
       getInventoryPartsVendors,
       sendMessage,
-      messageReducer
+      messageReducer,
+      deleteNotes
      } = this.props
+
+    const orderIDurl = orderReducer.orderItems ? orderReducer.orderItems._id : '';
+    const companyIDurl = orderReducer.orderItems ? orderReducer.orderItems.userId : '';
+    const customerIDurl = orderReducer.orderItems && orderReducer.orderItems.customerId ? orderReducer.orderItems.customerId._id:'';
+    
+
+   
+    
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -267,29 +302,14 @@ class Order extends Component {
                         name={"orderName"}
                         value={orderName}
                         maxLength={"250"}
-                        invalid={isError && !orderName}
                         className={"order-name-input"}
                         ref={this.orderNameRef}
                         autoFocus
                       />
-                      <FormFeedback>
-                        {isError && !orderName
-                          ? "Order name is required."
-                          : null}
-                      </FormFeedback>
                     </div>
                   </div>
-                  {/* <div>
-                    <Button
-                      color={""}
-                      onClick={() => this.handleEditOrder()}
-                      className={"order-update-btn"}
-                    >
-                      Update Order
-                  </Button>
-                  </div> */}
                 </div>
-                
+
                 <div className={"order-top-section"}>
                   <CustomerVehicle
                     getCustomerData={getCustomerData}
@@ -301,165 +321,119 @@ class Order extends Component {
                   />
                 </div>
                 <div className={"position-relative"}>
-                  {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.orderName  ?
-                  
+                  {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.customerId ?
+
                     <div className={"service-overlay"}>
-                      <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"}/>
+                      <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"} />
                       <h3>
-                        Please Add Order Details first 
+                        Please Add Order Details first
                       </h3>
-                    </div>  
+                    </div>
                     : null
-                }
-                  <span><Link to={`/order-summary/${this.props.orderReducer.orderItems._id}`} target="_blank">View</Link></span>
-                <div className={"position-relative"}>
-                  <Suspense fallback={"Loading.."}>
-                    <OrderTab
-                      tabs={OrderTabs}
-                      activeTab={activeTab}
-                      onTabChange={this.onTabChange}
-                    />
-                  </Suspense>
-                </div>
-                  {/* <div className={"invt-add-btn-block"}>
-                {this.renderAddNewButton()}
-              </div> */}
-                
-                <Suspense fallback={<Loader />}>
-                  <Switch>
-                    {OrderComponents.map((route, idx) => {
-                      return route.component ? (
-                        <React.Fragment key={idx}>
-                          {activeTab === 0 ? (
-                            <Services
-                              modelInfoReducer={modelInfoReducer}
-                              modelOperate={modelOperate}
-                              addPartToService={addPartToService}
-                              addTireToService={addTireToService}
-                              getPartDetails={getPartDetails}
-                              addInventoryPart={this.addInventoryPart}
-                              addInventryTire={addInventryTire}
-                              serviceReducers={serviceReducers}
-                              getTireDetails={getTireDetails}
-                              addLaborInventry={addLaborInventry}
-                              addLaborToService={addLaborToService}
-                              getLaborDetails={getLaborDetails}
-                              getUserData={getUserData}
-                              addNewService={addNewService}
-                              labelReducer={labelReducer}
-                              addNewLabel={addNewLabel}
-                              getCannedServiceList={getCannedServiceList}
+                  }
+                  <div className={"order-activity"}>
+                    <span color="" className="print-btn">
+                      <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link>
+                    </span>
+                    <span id="add-Appointment" className="print-btn"><i className="icon-printer icons "></i>&nbsp; Print</span>
+                  </div> 
+                  <div className={"position-relative"}>
+                    <Suspense fallback={"Loading.."}>
+                      <OrderTab
+                        tabs={OrderTabs}
+                        activeTab={activeTab}
+                        onTabChange={this.onTabChange}
+                      />
+                    </Suspense>
+                  </div>
+                  <Suspense fallback={<Loader />}>
+                    <Switch>
+                      {OrderComponents.map((route, idx) => {
+                        return route.component ? (
+                          <React.Fragment key={idx}>
+                            {activeTab === 0 ? (
+                              <Services
+                                modelInfoReducer={modelInfoReducer}
+                                modelOperate={modelOperate}
+                                addPartToService={addPartToService}
+                                addTireToService={addTireToService}
+                                getPartDetails={getPartDetails}
+                                addInventoryPart={this.addInventoryPart}
+                                addInventryTire={addInventryTire}
+                                serviceReducers={serviceReducers}
+                                getTireDetails={getTireDetails}
+                                addLaborInventry={addLaborInventry}
+                                addLaborToService={addLaborToService}
+                                getLaborDetails={getLaborDetails}
+                                getUserData={getUserData}
+                                addNewService={addNewService}
+                                labelReducer={labelReducer}
+                                addNewLabel={addNewLabel}
+                                getCannedServiceList={getCannedServiceList}
+                                customerData={customerData}
+                                vehicleData={vehicleData}
+                                orderId={orderId}
+                                deleteLabel={deleteLabel}
+                                getPriceMatrix={getPriceMatrix}
+                                getStdList={getStdList}
+                                addRate={addRate}
+                                profileInfoReducer={profileInfoReducer}
+                                rateStandardListReducer={rateStandardListReducer}
+                                getInventoryPartsVendors={getInventoryPartsVendors}
+                                orderReducer={orderReducer}
+                              />
+                            ) : null}
+                            {activeTab === 1 ?
+                              <Inspection
+                                addNewInspection={addNewInspection}
+                                inspectionData={this.props.inspectionReducer}
+                                addInspectionTemplate={addInspectionTemplate}
+                                getTemplateList={getTemplateList}
+                                addMessageTemplate={addMessageTemplate}
+                                getMessageTemplate={getMessageTemplate}
+                                updateMessageTemplate={updateMessageTemplate}
+                                deleteMessageTemplate={deleteMessageTemplate}
+                                searchMessageTemplateList={searchMessageTemplateList}
+                                customerData={customerData}
+                                vehicleData={vehicleData}
+                                sendMessageTemplate={sendMessageTemplate}
+                                orderId={orderId}
+                                profileReducer={profileInfoReducer}
+                                orderReducer={orderReducer}
+                              /> : null}
+                            {activeTab === 2 ? <TimeClock /> : null}
+                            {activeTab === 3 ? <Message
+                              searchMessageTemplateList={searchMessageTemplateList}
                               customerData={customerData}
                               vehicleData={vehicleData}
+                              sendMessage={sendMessage}
+                              profileReducer={profileInfoReducer}
                               orderId={orderId}
-                              deleteLabel={deleteLabel}
-                              getPriceMatrix={getPriceMatrix}
-                              getStdList={getStdList}
-                              addRate={addRate}
-                              profileInfoReducer={profileInfoReducer}
-                              rateStandardListReducer={rateStandardListReducer}
-                              getInventoryPartsVendors={getInventoryPartsVendors}
                               orderReducer={orderReducer}
-                            />
-                          ) : null}
-                          {activeTab === 1 ? 
-                          <Inspection
-                            addNewInspection={addNewInspection}
-                            inspectionData={this.props.inspectionReducer}
-                            addInspectionTemplate={addInspectionTemplate}
-                            getTemplateList={getTemplateList}
-                            addMessageTemplate={addMessageTemplate}
-                            getMessageTemplate={getMessageTemplate}
-                            updateMessageTemplate={updateMessageTemplate}
-                            deleteMessageTemplate={deleteMessageTemplate}
-                            searchMessageTemplateList={searchMessageTemplateList}
-                            customerData={customerData}
-                            vehicleData={vehicleData}
-                            sendMessageTemplate={sendMessageTemplate}
-                            orderId={orderId}
-                            profileReducer={profileInfoReducer}
-                            orderReducer={orderReducer}
-                          /> : null}
-                          {activeTab === 2 ? <TimeClock /> : null}
-                          {activeTab === 3 ? 
-                          <Message 
-                            searchMessageTemplateList={searchMessageTemplateList}
-                            customerData={customerData}
-                            vehicleData={vehicleData}
-                            sendMessage={sendMessage}
-                            profileReducer={profileInfoReducer}
-                            orderId={orderId}
                               messageReducer={messageReducer}
-                          /> : null}
-                        </React.Fragment>
-                      ) : null;
-                    })}
-                  </Switch>
-                </Suspense>
-                
+                              inspectionData={this.props.inspectionReducer}
+                              addMessageTemplate={addMessageTemplate}
+                              getMessageTemplate={getMessageTemplate}
+                              updateMessageTemplate={updateMessageTemplate}
+                              deleteMessageTemplate={deleteMessageTemplate}
+                              deleteNotes={deleteNotes}
+                              isSummary={false}
+                            /> : null}
+                          </React.Fragment>
+                        ) : null;
+                      })}
+                    </Switch>
+                  </Suspense>
+
                 </div></CardBody>
             </div>
-            <div className={"workflow-right"}>
-              <div className={"pb-2"}>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span><h4>Order Details</h4></span>
-                  <span><h4>(# {typeof this.props.orderReducer.orderId !== "object"
-                    ? this.props.orderReducer.orderId
-                    : null})</h4></span>
-                </div>
-                <hr />
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Service Writer</span>
-                  <span><Button color={"secondary"} className={"btn btn-sm"}>+ Add</Button></span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Created At</span>
-                  <span>5th June 2019 at 11:42 AM</span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Appointment</span>
-                  <span><Button color={"secondary"} className={"btn btn-sm"}>Schedule</Button></span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>PO Number</span>
-                  <span><Button color={"secondary"} className={"btn btn-sm"}>+ Add</Button></span>
-                </div>
-                <hr />
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Authorization</span>
-                  <span>
-                    <ButtonGroup>
-                      <Button color={"danger"} className={"btn btn-sm"}>Not Authorised</Button>
-                      <Button color={"success"} className={"btn btn-sm"}>Authorised</Button>
-                    </ButtonGroup>
-                  </span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Order Status</span>
-                  <span>
-                    <ButtonGroup>
-                      <Button color={"secondary"} className={"btn btn-sm"}>Estimate</Button>
-                      <Button color={"secondary"} className={"btn btn-sm"}>Invoice</Button>
-                    </ButtonGroup>
-                  </span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Workflow</span>
-                  <span>
-                    <Input type={"select"} placeholder={"Select workflow status"}>
-                      <option value="">Select workflow status</option>
-                      <option value="estimate">Estimate</option>
-                      <option value="droppedOff">Dropped Off</option>
-                      <option value="inProcess">In Process</option>
-                    </Input>
-                  </span>
-                </div>
-                <hr />
-              </div>
-            </div>
+           <OrderDetails
+            profileReducer = {profileInfoReducer}
+            orderReducer = {orderReducer}
+            orderStatus={this.orderStatus}
+           />
           </div>
         </Card>
-        {/* {this.renderModals()} */}
       </div>
     );
   }
@@ -579,8 +553,10 @@ const mapDispatchToProps = dispatch => ({
   },
   sendMessage :data =>{
     dispatch(sendMessage(data));
+  },
+  deleteNotes:data =>{
+    dispatch(deleteNotes(data))
   }
-  
 });
 export default connect(
   mapStateToProps,

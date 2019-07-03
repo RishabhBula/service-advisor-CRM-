@@ -15,5 +15,6 @@ module.exports = {
   service: require("./serviceRoutes"),
   inspection: require("./inspectionRoutes"),
   label: require("./labelRoutes"),
-  googleCaptcha: require("./googleCaptchaRoutes")
+  googleCaptcha: require("./googleCaptchaRoutes"),
+  messageChat: require("./messageChatRoutes")
 };

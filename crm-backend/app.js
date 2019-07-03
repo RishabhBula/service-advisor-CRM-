@@ -14,13 +14,13 @@ if (mode === "development") {
     origin: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
-    exposedHeaders: ["x-auth-token", "authorization"],
+    exposedHeaders: ["x-auth-token", "authorization"]
   };
   app.use(cors(corsOption));
 }
 app.use(express.static(path.join(__dirname, "build")));
 let url = "mongodb://localhost:27017/crm360";
-MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
+MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
   if (err) throw err;
 });
 
@@ -29,6 +29,7 @@ app.use("/api", apiApiRoutes);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
+
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

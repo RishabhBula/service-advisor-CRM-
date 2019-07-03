@@ -12,9 +12,7 @@ const initialState = {
 export const messageReducer = handleActions(
   {
     [MessageAction.SEND_MESSAGE]: (state, action) => ({
-      ...state,
       messageData: {
-        ...state.data,
         isSuccess: false
       }
     }),

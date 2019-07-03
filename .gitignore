@@ -4,6 +4,8 @@
 /node_modules
 package-lock.json
 /crm-backend/node_modules
+/crm-backend/build
+/crm-backend/public
 
 # testing
 /coverage

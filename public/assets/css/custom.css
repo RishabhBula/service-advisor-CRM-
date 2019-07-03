@@ -1980,15 +1980,21 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .workflow-section{
   display: flex;
+  position: relative;
 }
 .workflow-section .workflow-left {
   flex: 1;
+  margin-right: 350px;
 }
-.workflow-section .workflow-right {
-  flex: 0 0 350px;
-  background: #eee;
-  padding: 10px;
-  margin-right: 10px;
+.order-activity{
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+}
+.order-activity .print-btn a{
+  color:#23282c;
+  display:inline-flex;
+  text-decoration: none;
 }
 .order-info-block{
   border-bottom: 1px dashed #666;
@@ -2209,6 +2215,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   margin-bottom: 30px;
   height: 80px;
   background: #eee;
+  position: relative;
+  z-index: 9;
 }
 .order-top-section .custom-form-modal{
   position: relative;
@@ -2436,196 +2444,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-family: 'open sans';
 }
 
-/*=======Messages Section======*/
-.message-sent-block .user-name {
-  left: 14px;
-  top: 8px;
-}
-.message-sent-block .message-input{
-  background: #efefef;
-}
-.message-tile{
-  padding: 0 60px;
-  position: relative;
-  align-items: center;
-}
-.message-tile .user-name{
-  width: 40px;
-  height: 40px;
-  background-color: #56545f;
-  border-radius: 50%;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 15px;
-  font-size: 21px;
-  color: #fff;
-  font-weight: 600;
-  bottom: 8px;
-}
-.message-tile .user-name{
-  position: absolute;
-}
-.message-tile.send .user-name{
-  left: 10px;
-}
-.message-tile.recive .user-name{
-  right: -5px;
-}
-.message-tile .message-input:after{
-  content: "";
-  display: block;
-  background: #eee;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.message-tile.recive .message-input-block{
-  background: #eee;
-  border-radius:8px;
-  position: relative;
-}
-.message-tile.recive .message-input{
-  background: #eee;
-}
-.message-tile.recive .message-input-block:after{
-  content: "";
-  display: block;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 0 8px 10px;
-  border-color: transparent transparent transparent #c8ced3;
-  position: absolute;
-  right: -10px;
-  bottom: 18px;
-}
-.message-tile.recive .message-input-block:before{
-  content: "";
-  display: block;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 0 8px 10px;
-  border-color: transparent transparent transparent #eee;
-  position: absolute;
-  right: -9px;
-  bottom: 18px;
-  z-index: 1;
-}
-.message-tile.send .message-input-block {
-  border-radius: 8px;
-  position: relative;
-}
-.message-tile.send .message-input-block:after{
-  content: "";
-  display: block;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 10px 8px 0;
-  border-color: transparent #c8ced3  transparent transparent;
-  position: absolute;
-  left: -10px;
-  bottom: 18px;
-}
-.message-tile.send .message-input-block:before{
-  content: "";
-  display: block;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 10px 8px 0;
-  border-color: transparent #fff transparent transparent;
-  position: absolute;
-  left: -9px;
-  bottom: 18px;
-  z-index: 1;
-}
-.message-list .message-input{
-  min-height: 50px;
-}
-.chat-block{
-  border:1px solid #ccc;
-  padding: 5px;
-}
-.attachment-preview-group{
-  list-style: none;
-  float: left;
-  width: 100%;
-}
-.attachment-preview-group li{
-  float: left;
-  margin: 0 15px 0px 0px;
-  position: relative;
-  cursor: pointer;
-}
-.attachment-preview-group .remove-block{
-  display: none;
-  width: 100%;
-  position: absolute;
-  height: 30px;
-  background: #fb3e3edb;
-  bottom: 0px;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  font-size: 14px;
-  z-index: 1;
-  transition: all ease 0.5s;
-}
-.attachment-preview-group li:hover .remove-block{
-  display: flex;
-}
-.attachment-preview-group li .img-block{
-  padding: 2px;
-  box-shadow: 0 0 1px 1px #e0e0e0;
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  flex-flow: column;
-}
-.attachment-preview-group li .pdf-img{
-  padding: 2px 2px 20px;
-  box-shadow: 0 0 1px 1px #d6d6d6;
-  width: 100px;
-  height: 100px;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.attachment-preview-group li .pdf-img .file-name {
-  font-size: 12px;
-  color: #080808;
-  position: absolute;
-  bottom: 1px;
-  display: block;
-  width: 100%;
-  text-align: center;
-  max-width: 99%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.attachment-preview-group li .pdf-img .fa {
-  font-size: 48px;
-  color: #9e99a9;
-}
-.attachment-preview-group li .img-block img{
-  max-width: 100%;
-  max-height: 100%;
-}
 
 /*=========Order Summary Page css======*/
-.summary-warp{
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 10px;
-}
+
 @media (max-width: 1220px) {
   .table {
     min-width: 1000px;

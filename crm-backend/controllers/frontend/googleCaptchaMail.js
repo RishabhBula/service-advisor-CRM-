@@ -1,7 +1,9 @@
+
 const { Email } = require("../../common/Email");
 
 /* Mail to verify google captcha */
 const mailToVerifyCaptcha = async (req, res) => {
+
    const { body } = req;
    try {
 

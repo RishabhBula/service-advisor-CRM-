@@ -209,7 +209,6 @@ class SendInspection extends Component {
   }
   render() {
     const { templateData, recipients, errors, search, customerData, messageTextSentError } = this.state
-
     return (
       <>
         <Modal

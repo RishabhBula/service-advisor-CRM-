@@ -98,46 +98,7 @@ class ServiceItem extends Component {
         userRecommendations: customerUserComment ? customerUserComment.userRecommendations : ""
       }, () => {
         if (this.props.serviceReducers.isAddServiceItem) {
-          let serviceItemTotal = []
           const serviceList = [...this.state.services]
-          if (serviceList && serviceList.length) {
-            serviceList[this.props.serviceReducers.serviceIndex].serviceItems.map((sItem, sIndex) => {
-              if (sItem) {
-                if (
-                  (sItem.cost && sItem.quantity) ||
-                  (
-                    (
-                      (sItem.tierSize ? sItem.tierSize[0].cost : null) &&
-                      (sItem.tierSize ? sItem.tierSize[0].quantity : null)
-                    ) ||
-                    (sItem.hours && (sItem.rate ? sItem.rate.hourlyRate : 0)
-                    )
-                  )
-                ) {
-                  sItem.subTotalValue = parseFloat(sItem.cost || (sItem.tierSize ? sItem.tierSize[0].cost : 0) || (sItem.hours)) * parseFloat(sItem.quantity || (sItem.tierSize ? sItem.tierSize[0].quantity : 0) || (sItem.rate ? sItem.rate.hourlyRate : 0))
-                  sItem.unchangebleTotal = parseFloat(sItem.cost || (sItem.tierSize ? sItem.tierSize[0].cost : 0) || (sItem.hours)) * parseFloat(sItem.quantity || (sItem.tierSize ? sItem.tierSize[0].quantity : 0) || (sItem.rate ? sItem.rate.hourlyRate : 0))
-                  serviceItemTotal.push(sItem.subTotalValue)
-                }
-                else {
-                  sItem.subTotalValue = (serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].cost || (serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].hours) || (serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].tierSize ? serviceList[this.props.serviceReducers.serviceIndex].serviceItems[sIndex].tierSize[0].cost : null))
-                }
-              }
-              this.setState({
-                services: serviceList
-              })
-              return true
-            })
-            if (serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue) {
-              let serviceTotal = serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue
-              const serviceSubTotal = serviceList[this.props.serviceReducers.serviceIndex].serviceItems.length ? serviceItemTotal : null
-              serviceTotal = serviceSubTotal
-              serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue = serviceTotal
-              serviceList[this.props.serviceReducers.serviceIndex].serviceTotal = getSumOfArray(serviceList[this.props.serviceReducers.serviceIndex].serviceSubTotalValue)
-              this.setState({
-                services: serviceList,
-              })
-            }
-          }
           this.setState({
             technicianData: {
               label: serviceList && serviceList.length ? serviceList[this.props.serviceReducers.serviceIndex].technician ? `${serviceList[this.props.serviceReducers.serviceIndex].technician.firstName} ${serviceList[this.props.serviceReducers.serviceIndex].technician.lastName}` : 'Type to select technician' : '',
@@ -294,7 +255,7 @@ class ServiceItem extends Component {
   handleQuantityChange = (e, Mindex, index) => {
     const serviceData = [...this.state.services]
     const { value } = e.target
-    serviceData[Mindex].serviceItems[index].quantity = value
+    serviceData[Mindex].serviceItems[index].qty = value
     this.setState({
       services: serviceData
     })
@@ -775,7 +736,7 @@ class ServiceItem extends Component {
                           {
                             this.state.services[index] && this.state.services[index].serviceItems.length ?
                               this.state.services[index].serviceItems.map((service, sIndex) => {
-                                const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.quantity || (service.tierSize ? service.tierSize[0].quantity : null) || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
+                                const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
                                 const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
                                 const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
                                 mainserviceTotal.push(parseFloat(servicesSubTotal))
@@ -808,7 +769,7 @@ class ServiceItem extends Component {
                                             onChange={(e) => this.handleQuantityChange(e, index, sIndex)}
                                             name={"quantity"}
                                             maxLength={"4"}
-                                            value={service.quantity || (service.tierSize ? service.tierSize[0].quantity : null) || 0}
+                                            value={service.qty || 0}
                                           /> :
                                           null
                                       }

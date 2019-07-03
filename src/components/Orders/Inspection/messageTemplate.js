@@ -201,7 +201,7 @@ class MessageTemplate extends Component {
                               <div className={"sub-head"}><span>Subject</span> -: {ele.subject || '-'}</div>
                               <div className={"text-message"}>{ele.messageText ? stripHTML(ele.messageText.substring(0, 500)) : '-'}</div>
                           </div>
-                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={""} className={"btn-delete"}><i class="icons cui-circle-x"></i></Button>
+                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={""} className={"btn-delete"}><i className="icons cui-circle-x"></i></Button>
                           </div>
                         )
                       })

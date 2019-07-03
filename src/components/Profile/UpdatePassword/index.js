@@ -11,16 +11,16 @@ import {
 } from "reactstrap";
 import { logger } from "../../../helpers/Logger";
 import Validator from "js-object-validation";
-import { ProfileValidations, ProfileValidationsMessaages} from "../../../validations/profile.js";
+import { ProfileValidations, ProfileValidationsMessaages } from "../../../validations/profile.js";
 
 class UpdatePassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       errors: "",
-      oldPassword:"",
-      newPassword:"",
-      confirmPassword:""
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: ""
     };
   }
   // componentDidUpdate = ({profileInfoReducer}) =>{
@@ -43,10 +43,9 @@ class UpdatePassword extends Component {
         [name]: null
       }
     });
-    console.log(value)
   };
 
-  handleSubmit = e=>{
+  handleSubmit = e => {
     e.preventDefault();
     try {
       const {
@@ -75,7 +74,7 @@ class UpdatePassword extends Component {
         });
         return;
       }
-      else{
+      else {
         this.props.updatePassword(payload)
         this.setState({
           oldPassword: "",
@@ -99,9 +98,9 @@ class UpdatePassword extends Component {
           <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
-                  <Label htmlFor={"old password"} className="customer-modal-text-style">
-                    Old Password <span className="asteric">*</span>
-                  </Label>
+                <Label htmlFor={"old password"} className="customer-modal-text-style">
+                  Old Password <span className="asteric">*</span>
+                </Label>
                 <div className="input-block">
                   <Input
                     type="password"
@@ -114,7 +113,7 @@ class UpdatePassword extends Component {
                   <FormFeedback>
                     {errors.oldPassword ? errors.oldPassword : null}
                   </FormFeedback>
-                  </div>
+                </div>
               </FormGroup>
               <FormGroup>
                 <Label htmlFor={"old password"} className="customer-modal-text-style">
@@ -151,8 +150,8 @@ class UpdatePassword extends Component {
                     {errors.confirmPassword ? errors.confirmPassword : null}
                   </FormFeedback>
                 </div>
-              </FormGroup>          
-             
+              </FormGroup>
+
               <Row className={"m-0"}>
                 <Col xs="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
                   <FormGroup>
@@ -169,8 +168,8 @@ class UpdatePassword extends Component {
                         Update
                     </Button>
                     </div>
-                  </FormGroup>       
-            
+                  </FormGroup>
+
                 </Col>
               </Row>
 

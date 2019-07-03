@@ -71,7 +71,6 @@ export class ApiHelper {
       return data.data;
     } catch (err) {
       if (Axios.isCancel(err) || !err.response) {
-        console.log("%s Req Cancelled", err);
         return {
           isError: true,
           error: "Request cancelled",

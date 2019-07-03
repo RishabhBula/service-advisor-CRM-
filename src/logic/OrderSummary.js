@@ -1,14 +1,13 @@
-import { toast } from "react-toastify";
+//import { toast } from "react-toastify";
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import {
   SummaryActions,
-  getOrderDetailsSuccess,
+  getOrderSummary,
   showLoader,
   hideLoader,
-  redirectTo
+  redirectTo,
 } from "./../actions";
-import { DefaultErrorMessage } from "../config/Constants";
 
 const verifyLinkLogic = createLogic({
   type: SummaryActions.VERIFY_LINK_REQUEST,
@@ -25,7 +24,6 @@ const verifyLinkLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       dispatch(
         redirectTo({
@@ -37,11 +35,13 @@ const verifyLinkLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(
-        getOrderDetailsSuccess({
+        getOrderSummary({
           order: result.data.data,
-          orderId: result.data.data.orderId
+          user: result.data.companyData,
+          message: result.data.messageData
         })
       );
+
       done();
     }
   }

@@ -12,8 +12,13 @@ const messageSchema = new Schema({
         ref: "user",
         default: null,
     },
+    orderId: {
+        type: Schema.Types.ObjectId,
+        ref: "Order",
+        default: null
+    },
     messageData: {
-        type: String,
+        type: [Object],
         default: null
     },
     messageTemplate: {

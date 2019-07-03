@@ -176,8 +176,6 @@ class CompanySettings extends Component {
   vehicleServicesAction = event => {
     let vehicleService = this.state.vehicleService;
     if (vehicleService.selectedVehicleServices.length) {
-      console.log(vehicleService.selectedVehicleServices, 'vehicleService.selectedVehicleServices')
-      console.log(event.key, 'item.key')
       let checkVehicleExistence = vehicleService.selectedVehicleServices.some(
         item =>
           item === event.key
@@ -299,7 +297,6 @@ class CompanySettings extends Component {
         return;
       }
       else {
-        console.log(payload)
         this.props.updateProfileSetting(payload)
       }
     }

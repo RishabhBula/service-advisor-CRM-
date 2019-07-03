@@ -464,3 +464,102 @@ body {
     padding: 20px 10px;
   }
 }
+
+/*======order Details Right Side==========*/
+ .workflow-section .workflow-right {
+    width: 345px;
+    height: 100%;
+    -webkit-flex: 0 0 350px;
+    flex: 0 0 350px;
+    padding: 10px 10px 75px 0;
+    margin-top: -11px;
+    position: fixed;
+    top: 65px;
+    right: 0;
+    background: #fff;
+    box-shadow: -5px 0 5px -5px #c7c7c7;
+    // border-left: 2px solid #cccad2;
+    border-top: 1px solid #c8ced3;
+    overflow: auto;
+    .name-label{
+      font-weight: 600;
+    }
+    .service-warp{
+      font-size: 16px;
+      font-weight: 600;
+      .grand-total {
+        font-size: 18px;
+        font-weight: 700;
+        .dollar-price{
+          font-size: 18px;
+        }
+        .fa.dollar-icon{
+          font-size: 18px;
+        }
+      }
+      .dollar-price{
+        font-size: 16px;
+      }
+      .fa.dollar-icon{
+        font-size: 14px;
+      }
+    }
+    .authoris-block {
+      .btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #99979f;
+        font-size: 13px;
+        font-weight: 600;
+        min-width: 105px;
+        background: #eee;
+        color: #989797;
+        &.active{
+          background: #fff;
+          color: #000;
+        }
+        &:focus{
+          box-shadow: none;
+        }
+      }
+      .authoris-dot{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+    }
+  }
+/*===========Order Summary========*/
+.summary-warp{
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  .service-warp{
+    .service-head{
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .entity{
+      color: #707070;
+      font-size: 15px;
+    }
+    .order-total-block{
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'open sans';
+      .grand-total{
+        font-weight: 800;
+        font-size: 18px;
+        .dollar-price{
+          font-size: 18px;
+          .fa.dollar-icon{
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}

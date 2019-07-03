@@ -119,7 +119,7 @@ const listOrders = async (req, res) => {
       parentId: parentId ? parentId : id
     };
     const result = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId inspectionId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
     );
     let orderStatus = await OrderStatus.find(condition, {
       name: 1,

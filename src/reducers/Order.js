@@ -8,7 +8,7 @@ const initialState = {
     isLoading: true
   },
   orderStatus: [],
-  orderItems: [],
+  orderItems: {},
   data:[],
   isOrderLoading: true
 };
