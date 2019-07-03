@@ -20,6 +20,7 @@ export * from "./Inspection";
 export * from "./Service";
 export * from "./Label";
 export * from "./TimeLog";
+export * from "./Activity"
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

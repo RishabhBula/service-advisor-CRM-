@@ -78,6 +78,7 @@ const stopTimerLogic = createLogic({
         serviceId: mainServices
       })
     );
+    dispatch(getOrderDetailsRequest({ _id: orderId }))
     done();
   }
 });

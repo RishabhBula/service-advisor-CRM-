@@ -12,6 +12,10 @@ const messageSchema = new Schema({
         ref: "user",
         default: null,
     },
+    isInternalNotes: {
+        type: Boolean,
+        default: false
+    },
     orderId: {
         type: Schema.Types.ObjectId,
         ref: "Order",

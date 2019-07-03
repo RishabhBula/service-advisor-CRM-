@@ -47,7 +47,7 @@ const addTimeLogs = async (req, res) => {
       activity: body.activity,
       duration: duration,
       date: body.date,
-      total: body.total,
+      total: body.total || 0,
       orderId: mongoose.Types.ObjectId(body.orderId),
       userId: mongoose.Types.ObjectId(currentUser.id),
       parentId: currentUser.parentId
@@ -97,7 +97,7 @@ const startTimer = async (req, res) => {
     technicianId,
     serviceId,
     orderId,
-    startDateTime: Date.now()
+    startDateTime: new Date
   });
   await UserModel.updateOne(
     {
@@ -144,17 +144,20 @@ const stopTimer = async (req, res) => {
     // });
     timeClocks[`${technicianId}`].destroy();
   }
-  const result = await TimeClock.findOneAndUpdate(
+  const result = await TimeClock.findOne(
     {
-      technicianId,
-      serviceId
+      technicianId: technicianId,
+      serviceId: serviceId
     },
-    {
-      $set: {
-        endDateTime: Date.now()
-      }
+  ).populate("technicianId orderId");
+  const convertedDuration = result.duration / 3600
+  await TimeClock.findByIdAndUpdate(result._id, {
+    $set: {
+      endDateTime: new Date,
+      total: parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) || 0,
+      activity:`Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`
     }
-  );
+  })
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -165,14 +168,15 @@ const stopTimer = async (req, res) => {
       }
     }
   );
+  const payload = [result._id];
   if (result) {
-    await OrderModal.updateOne(
+    await OrderModal.update(
       {
         _id: orderId
       },
       {
         $push: {
-          timeClockId: result._id
+          timeClockId: payload
         }
       }
     );

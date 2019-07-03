@@ -86,6 +86,10 @@ const orderSchema = new Schema({
     type: Boolean,
     default: false
   },
+  isInvoice: {
+    type: Boolean,
+    default: false
+  },
   isDeleted: {
     type: Boolean,
     default: false

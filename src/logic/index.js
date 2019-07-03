@@ -20,6 +20,7 @@ import { TimeClockLogic } from "./TimeLog";
 import { UsersLogic } from "./Users";
 import { VehicleLogic } from "./Vehicles";
 import { VendorLogic } from "./Vendor";
+import { ActivityLogic } from "./Activity"
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -49,5 +50,6 @@ export default [
   ...ServiceLogic,
   ...LabelLogic,
   ...TimeClockLogic,
+  ...ActivityLogic,
   redirectToLogic
 ];

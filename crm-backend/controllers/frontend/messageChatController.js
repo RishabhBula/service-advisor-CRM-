@@ -24,6 +24,7 @@ const sendMessageChat = async (req, res) => {
          orderId: mongoose.Types.ObjectId(body.orderId),
          messageAttachment: body.messageAttachment,
          messageData: body.messageData,
+         isInternalNotes: body.isInternalNotes || false,
          userId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
          parentId: currentUser.id ? mongoose.Types.ObjectId(currentUser.id) : body.senderId,
          status: true,
@@ -32,7 +33,7 @@ const sendMessageChat = async (req, res) => {
       const messageElements = new MessageChat(messageData);
       await messageElements.save();
 
-      if (!body.notToken) {
+      if (!body.notToken && !body.isInternalNotes) {
          const encryptedOrderId = commonCrypto.encrypt(body.orderId);
          const encrypteCustomerId = commonCrypto.encrypt(body.customerId);
          const encrypteUserId = commonCrypto.encrypt(body.userId)
@@ -141,8 +142,31 @@ const verifyUserMessageLink = async (req, res) => {
       });
    }
 }
+const updateInternalNotes = async (req, res) => {
+   const { body } = req;
+   try {
+      await MessageChat.findOneAndUpdate({
+         _id: body.messageId,
+         isInternalNotes: true
+      }, {
+            $set: body
+      })
+
+      return res.status(200).json({
+         message: "Notes Deleted successfully",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is verify message error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      })
+   }
+}
 
 module.exports = {
    sendMessageChat,
-   verifyUserMessageLink
+   verifyUserMessageLink,
+   updateInternalNotes
 }

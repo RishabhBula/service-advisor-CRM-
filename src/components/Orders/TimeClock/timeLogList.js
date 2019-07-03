@@ -39,19 +39,18 @@ class TimeLogList extends Component {
     });
   };
 
-  handleTimeLogdelete = async(timeLogId) => {
+  handleTimeLogdelete = async (timeLogId) => {
     const { value } = await ConfirmBox({
       text: "You want to delete this time log?"
     });
     if (!value) {
       return;
-    } else {
-      const paylod = {
-        isDeleted: true,
-        _id: timeLogId._id
-      }
-      this.props.editTimeLogRequest(paylod)
     }
+    const paylod = {
+      isDeleted: true,
+      _id: timeLogId
+    }
+    this.props.editTimeLogRequest(paylod)
   }
 
   render() {
@@ -160,7 +159,7 @@ class TimeLogList extends Component {
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td>{timeLog.type}</td>
                     <td>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
-                    <td>{`${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}`}</td>
+                    <td>{timeLog.orderId && timeLog.orderId.vehicleId ? `${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}` : "-"}</td>
                     <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
                     <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>

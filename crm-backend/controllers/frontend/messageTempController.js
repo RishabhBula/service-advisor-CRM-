@@ -1,8 +1,6 @@
 const MessageTemplate = require("../../models/messageTemplate");
 const mongoose = require("mongoose");
 const { Email, AvailiableTemplates } = require("../../common/Email");
-const path = require("path");
-const __basedir = path.join(__dirname, "../../public");
 
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {

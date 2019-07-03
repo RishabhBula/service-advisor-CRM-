@@ -21,7 +21,8 @@ const {
   label,
   googleCaptcha,
   messageChat,
-  timeClock
+  timeClock,
+  userActivity
 } = require("./index");
 
 router.use("/auth", auth);
@@ -43,5 +44,5 @@ router.use("/label", label);
 router.use("", googleCaptcha);
 router.use("/message", messageChat);
 router.use("/timeClock", timeClock);
-
+router.use("/activity", userActivity)
 module.exports = router;

@@ -17,7 +17,9 @@ import {
   getServiceListSuccess,
   getOrderDetailsSuccess,
   getInspectionListSuccess,
-  getTimeLogsSuccess
+  getTimeLogsSuccess,
+  addNewActivity,
+  getActivityList
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -68,7 +70,6 @@ const getOrdersLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer("/order", "/getOrders", "GET", true);
-
     if (!result.isError) {
       dispatch(getOrderListSuccess(result.data));
     }
@@ -232,6 +233,12 @@ const addOrderLogic = createLogic({
           result: result.data.result
         })
       );
+      const data = {
+        name: "Created new order",
+        type: "NEW_ORDER",
+        orderId: result.data.result._id
+      }
+      dispatch(addNewActivity(data))
       dispatch(
         redirectTo({
           path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
@@ -327,8 +334,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         _id: action.payload && action.payload._id ? action.payload._id : null
       },
       undefined
@@ -346,10 +353,15 @@ const getOrderDetails = createLogic({
         })
       );
       dispatch(
+        getActivityList({
+          orderId: action.payload._id
+        })
+      )
+      dispatch(
         getInspectionListSuccess({
           inspection: result.data.inspectionResult
         }
-      ))
+        ))
       dispatch(getTimeLogsSuccess(
         {
           timeLog: result.data.timeClockResult

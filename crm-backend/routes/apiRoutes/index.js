@@ -17,5 +17,6 @@ module.exports = {
   label: require("./labelRoutes"),
   googleCaptcha: require("./googleCaptchaRoutes"),
   messageChat: require("./messageChatRoutes"),
-  timeClock: require("./timeClockRoutes")
+  timeClock: require("./timeClockRoutes"),
+  userActivity: require("./userActivityRoutes")
 };

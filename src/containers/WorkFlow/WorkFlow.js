@@ -26,7 +26,7 @@ import {
   addOrderStatus,
   updateOrderOfOrderStatus,
   addOrderRequest,
-  deleteOrderRequest
+  deleteOrderRequest,
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -178,7 +178,7 @@ class WorkFlow extends Component {
         toggle={this.toggleAddNewOptions}
       >
         <DropdownToggle nav>
-          <button className={"nav-icon icon-plus btn btn-outline-dark"} id={"modify-order"}/>
+          <button className={"nav-icon icon-plus btn btn-outline-dark"} id={"modify-order"} />
           <UncontrolledTooltip target={"modify-order"} >
             Select to modify order
           </UncontrolledTooltip>
@@ -345,7 +345,7 @@ class WorkFlow extends Component {
                         id={"list-view"}
                       />
                       <UncontrolledTooltip target={"list-view"} >
-                        Click to view List 
+                        Click to view List
                       </UncontrolledTooltip>
                     </div>
                     <div className="mode-flow">
@@ -370,12 +370,12 @@ class WorkFlow extends Component {
               </Col>
               <Col className={"title-right-section"}>
                 <div className={'invt-add-btn-block'}>
-                <Button
-                  onClick={this.handleOrder}
-                  color={"primary"}
-                  id={"add-Appointment"}
-                >
-                  <i className={"fa fa-plus mr-1"} /> New Quote
+                  <Button
+                    onClick={this.handleOrder}
+                    color={"primary"}
+                    id={"add-Appointment"}
+                  >
+                    <i className={"fa fa-plus mr-1"} /> New Quote
                 </Button>
                   <UncontrolledTooltip target={"add-Appointment"} >
                     Add a New Quote
@@ -395,18 +395,18 @@ class WorkFlow extends Component {
                     redirectTo={redirectTo}
                   />
                 ) : (
-                  <div style={{ overflowX: "auto" }}>
-                    <WorkflowGridView
-                      orderData={orderData}
-                      orderStatus={orderStatus}
-                      updateOrderStatus={updateOrderStatus}
-                      deleteOrderStatus={this.deleteOrderStatus}
-                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                      deleteOrder={this.deleteOrder}
-                      redirectTo={redirectTo}
-                    />
-                  </div>
-                )}
+                    <div style={{ overflowX: "auto" }}>
+                      <WorkflowGridView
+                        orderData={orderData}
+                        orderStatus={orderStatus}
+                        updateOrderStatus={updateOrderStatus}
+                        deleteOrderStatus={this.deleteOrderStatus}
+                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                        deleteOrder={this.deleteOrder}
+                        redirectTo={redirectTo}
+                      />
+                    </div>
+                  )}
               </Col>
             </Row>
           </CardBody>
@@ -427,7 +427,7 @@ const mapDispatchToProps = dispatch => ({
   deleteOrderStatus: data => dispatch(deleteOrderStatusRequest(data)),
   addOrderStatus: data => dispatch(addOrderStatus(data)),
   updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data)),
-  deleteOrder: data => dispatch(deleteOrderRequest(data))
+  deleteOrder: data => dispatch(deleteOrderRequest(data)),
 });
 export default connect(
   mapStateToProps,

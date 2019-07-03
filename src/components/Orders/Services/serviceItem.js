@@ -283,6 +283,7 @@ class ServiceItem extends Component {
   };
   handleTechnicianAdd = (e, index) => {
     if (e && e.value) {
+
       const serviceData = [...this.state.services]
       serviceData[index].technician = e
       this.setState({
@@ -696,7 +697,7 @@ class ServiceItem extends Component {
                               placeholder={"Type Technician name"}
                               loadOptions={this.loadTechnician}
                               value={
-                                technicianData.value !== '' && item.technician !== "" ?
+                                technicianData.value !== '' || item.technician !== "" ?
                                   technicianData :
                                   selectedTechnician
                               }
@@ -970,7 +971,6 @@ class ServiceItem extends Component {
                                 <CrmDiscountBtn discountType={item.discount.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "discount")} index={`DISC-${index}`} />
                               </div>
                             </div>
-
                           </div>
                           <div className={"tax-block"}>
                             <span className={"title"}>Tax</span>

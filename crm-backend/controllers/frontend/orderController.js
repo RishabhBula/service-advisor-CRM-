@@ -80,7 +80,6 @@ const createNewOrder = async (req, res) => {
     };
     const orderData = new Orders(orderConst);
     await orderData.save();
-
     return res.status(200).json({
       message: "Order created successfully",
       result: orderData,
@@ -386,6 +385,7 @@ const getOrderDetails = async (req, res) => {
     const serviceData = [],
       inspectionData = [],
       messageData = [],
+      messageNotes = [],
       timeLogData = [];
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
@@ -408,14 +408,17 @@ const getOrderDetails = async (req, res) => {
         ) {
           element.messageId.isSender = false;
         }
+        if (element.messageId.isInternalNotes && !element.messageId.isDeleted) {
+          messageNotes.push(element.messageId)
+        }
         messageData.push(element.messageId);
       }
     }
     if (result[0].timeClockId && result[0].timeClockId.length) {
       for (let index = 0; index < result[0].timeClockId.length; index++) {
         const element = result[0].timeClockId[index];
-        if (element.timeClockId !== null) {
-          timeLogData.push(element.timeClockId);
+        if (!element.isDeleted) {
+          timeLogData.push(element);
         }
       }
     }
@@ -424,6 +427,7 @@ const getOrderDetails = async (req, res) => {
       serviceResult: serviceData,
       inspectionResult: inspectionData,
       messageResult: messageData,
+      messageNotes: messageNotes,
       timeClockResult: timeLogData,
       customerCommentData: result[0].customerCommentId,
       success: true
