@@ -1,7 +1,8 @@
 import React, { Component, Suspense } from "react";
 import { Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter ,Link} from "react-router-dom";
+
 import {
   Card,
   CardBody,
@@ -45,13 +46,17 @@ import {
   getRateStandardListRequest,
   rateAddRequest,
   setRateStandardListStart,
-  getInventoryPartVendors
+  getInventoryPartVendors,
+  sendMessage,
+  deleteNotes,
+  deleteNotesSuccess
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
 import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
+import OrderDetails from "../../components/Orders/OrderDetails"
 import { logger } from "../../helpers";
 
 
@@ -112,8 +117,10 @@ class Order extends Component {
       this.orderNameRef.current.focus();
     }, 10);
   }
-  componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer }) => {
-    if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess)) {
+  
+
+  componentDidUpdate = ({ serviceReducers, inspectionReducer, orderReducer, messageReducer }) => {
+    if ((serviceReducers.isLoading !== this.props.serviceReducers.isLoading) || (inspectionReducer.inspectionData.isSuccess !== this.props.inspectionReducer.inspectionData.isSuccess) || (messageReducer.messageData.isSuccess !== this.props.messageReducer.messageData.isSuccess)) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id })
     }
     if ((orderReducer.orderItems !== this.props.orderReducer.orderItems) || orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading) {
@@ -135,6 +142,7 @@ class Order extends Component {
       activeTab: activeTab
     });
   };
+
   addInventoryPart = data => {
     this.props.addInventoryPart({ data });
   };
@@ -194,6 +202,28 @@ class Order extends Component {
       [name]: value
     });
   };
+
+  orderStatus = (type,value) => {
+    const {profileInfoReducer} = this.props
+    const comapnyId = profileInfoReducer.profileInfo._id
+    const { orderReducer } = this.props
+    let payload ={}
+    if (type === 'authorizStatus'){
+       payload = {
+        status: value,
+        _id: orderReducer.orderItems._id,
+        authorizerId: comapnyId,
+      }
+    }
+    else{
+      payload = {
+        isInvoice: value,
+        _id: orderReducer.orderItems._id,
+      }
+    }
+    this.props.updateOrderDetails(payload)
+  }
+
   render() {
     const {
       activeTab,
@@ -238,7 +268,19 @@ class Order extends Component {
       addRate,
       profileInfoReducer,
       rateStandardListReducer,
-      getInventoryPartsVendors } = this.props
+      getInventoryPartsVendors,
+      sendMessage,
+      messageReducer,
+      deleteNotes
+     } = this.props
+
+    const orderIDurl = orderReducer.orderItems ? orderReducer.orderItems._id : '';
+    const companyIDurl = orderReducer.orderItems ? orderReducer.orderItems.userId : '';
+    const customerIDurl = orderReducer.orderItems && orderReducer.orderItems.customerId ? orderReducer.orderItems.customerId._id:'';
+    
+
+   
+    
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -278,7 +320,7 @@ class Order extends Component {
                     orderReducer={orderReducer}
                   />
                 </div>
-                <div className={"position-relative fdsfdsfdsf"}>
+                <div className={"position-relative"}>
                   {this.props.orderReducer.orderItems && !this.props.orderReducer.orderItems.customerId ?
 
                     <div className={"service-overlay"}>
@@ -289,6 +331,12 @@ class Order extends Component {
                     </div>
                     : null
                   }
+                  <div className={"order-activity"}>
+                    <span color="" className="print-btn">
+                      <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link>
+                    </span>
+                    <span id="add-Appointment" className="print-btn"><i className="icon-printer icons "></i>&nbsp; Print</span>
+                  </div> 
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
                       <OrderTab
@@ -354,7 +402,23 @@ class Order extends Component {
                                 orderReducer={orderReducer}
                               /> : null}
                             {activeTab === 2 ? <TimeClock /> : null}
-                            {activeTab === 3 ? <Message /> : null}
+                            {activeTab === 3 ? <Message
+                              searchMessageTemplateList={searchMessageTemplateList}
+                              customerData={customerData}
+                              vehicleData={vehicleData}
+                              sendMessage={sendMessage}
+                              profileReducer={profileInfoReducer}
+                              orderId={orderId}
+                              orderReducer={orderReducer}
+                              messageReducer={messageReducer}
+                              inspectionData={this.props.inspectionReducer}
+                              addMessageTemplate={addMessageTemplate}
+                              getMessageTemplate={getMessageTemplate}
+                              updateMessageTemplate={updateMessageTemplate}
+                              deleteMessageTemplate={deleteMessageTemplate}
+                              deleteNotes={deleteNotes}
+                              isSummary={false}
+                            /> : null}
                           </React.Fragment>
                         ) : null;
                       })}
@@ -363,64 +427,11 @@ class Order extends Component {
 
                 </div></CardBody>
             </div>
-            <div className={"workflow-right"}>
-              <div className={"pb-2"}>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span><h4>Order Details</h4></span>
-                  <span><h4>(# {typeof this.props.orderReducer.orderId !== "object"
-                    ? this.props.orderReducer.orderId
-                    : null})</h4></span>
-                </div>
-                <hr />
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Service Writer</span>
-                  <span><Button color={"secondary"} className={"btn btn-sm"}>+ Add</Button></span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Created At</span>
-                  <span>5th June 2019 at 11:42 AM</span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Appointment</span>
-                  <span><Button color={"secondary"} className={"btn btn-sm"}>Schedule</Button></span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>PO Number</span>
-                  <span><Button color={"secondary"} className={"btn btn-sm"}>+ Add</Button></span>
-                </div>
-                <hr />
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Authorization</span>
-                  <span>
-                    <ButtonGroup>
-                      <Button color={"danger"} className={"btn btn-sm"}>Not Authorised</Button>
-                      <Button color={"success"} className={"btn btn-sm"}>Authorised</Button>
-                    </ButtonGroup>
-                  </span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Order Status</span>
-                  <span>
-                    <ButtonGroup>
-                      <Button color={"secondary"} className={"btn btn-sm"}>Estimate</Button>
-                      <Button color={"secondary"} className={"btn btn-sm"}>Invoice</Button>
-                    </ButtonGroup>
-                  </span>
-                </div>
-                <div className={"d-flex justify-content-between pb-2"}>
-                  <span>Workflow</span>
-                  <span>
-                    <Input type={"select"} placeholder={"Select workflow status"}>
-                      <option value="">Select workflow status</option>
-                      <option value="estimate">Estimate</option>
-                      <option value="droppedOff">Dropped Off</option>
-                      <option value="inProcess">In Process</option>
-                    </Input>
-                  </span>
-                </div>
-                <hr />
-              </div>
-            </div>
+           <OrderDetails
+            profileReducer = {profileInfoReducer}
+            orderReducer = {orderReducer}
+            orderStatus={this.orderStatus}
+           />
           </div>
         </Card>
       </div>
@@ -435,6 +446,7 @@ const mapStateToProps = state => ({
   labelReducer: state.labelReducer,
   profileInfoReducer: state.profileInfoReducer,
   rateStandardListReducer: state.rateStandardListReducer,
+  messageReducer: state.messageReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -539,6 +551,12 @@ const mapDispatchToProps = dispatch => ({
   getInventoryPartsVendors: data => {
     dispatch(getInventoryPartVendors(data));
   },
+  sendMessage :data =>{
+    dispatch(sendMessage(data));
+  },
+  deleteNotes:data =>{
+    dispatch(deleteNotes(data))
+  }
 });
 export default connect(
   mapStateToProps,

@@ -27,6 +27,10 @@ const VerifyLoginForWildcard = React.lazy(() =>
   import("../containers/Auth/VerifyLoginForWildcard")
 );
 
+const OrderSummary = React.lazy(() =>
+  import("../containers/OrderSummary")
+);
+
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
 const Routes = [
@@ -80,10 +84,17 @@ const Routes = [
   },
   {
     exact: false,
+    path: "/order-summary/",
+    name: "OrderSummary",
+    component: OrderSummary
+  },
+  {
+    exact: false,
     path: "/",
     name: "Home",
     component: DefaultLayout
-  }
+  },
+
 ];
 
 class AppRoutes extends Component {

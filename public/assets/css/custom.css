@@ -1980,15 +1980,21 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .workflow-section{
   display: flex;
+  position: relative;
 }
 .workflow-section .workflow-left {
   flex: 1;
+  margin-right: 350px;
 }
-.workflow-section .workflow-right {
-  flex: 0 0 350px;
-  background: #eee;
-  padding: 10px;
-  margin-right: 10px;
+.order-activity{
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+}
+.order-activity .print-btn a{
+  color:#23282c;
+  display:inline-flex;
+  text-decoration: none;
 }
 .order-info-block{
   border-bottom: 1px dashed #666;
@@ -2437,6 +2443,10 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   font-weight: 700;
   font-family: 'open sans';
 }
+
+
+/*=========Order Summary Page css======*/
+
 @media (max-width: 1220px) {
   .table {
     min-width: 1000px;

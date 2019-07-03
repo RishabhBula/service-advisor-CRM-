@@ -17,6 +17,8 @@ import {
   getServiceListSuccess,
   getOrderDetailsSuccess,
   getInspectionListSuccess,
+  getMessageListSuccess,
+  verifyLinkRequest
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -267,10 +269,17 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(getOrderDetailsRequest({
-        _id: action.payload && action.payload._id ? action.payload._id : null
-      }));
+      if (!action.payload.isSummary) {
+        dispatch(getOrderDetailsRequest({
+          _id: action.payload && action.payload._id ? action.payload._id : null
+        }));
+      }
+      else{
+        dispatch(verifyLinkRequest(action.payload.query))
+      }
+
       dispatch(updateOrderDetailsSuccess());
+
       dispatch(hideLoader());
       done();
     }
@@ -345,6 +354,11 @@ const getOrderDetails = createLogic({
       dispatch(getInspectionListSuccess(
         {
           inspection: result.data.inspectionResult
+        }
+      ))
+      dispatch(getMessageListSuccess(
+        {
+          messages: result.data.messageResult
         }
       ))
       dispatch(
