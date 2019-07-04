@@ -140,7 +140,7 @@ class TimeLogList extends Component {
             <tr>
               <th width='50px'>S No.</th>
               <th width={"60px"}>Type</th>
-              <th width={"120px"}><i class="fa fa-user"></i> Technician</th>
+              <th width={"120px"}><i className="fa fa-user"></i> Technician</th>
               <th>Vehicle</th>
               <th> Start Date Time</th>
               <th> End Date Time</th>

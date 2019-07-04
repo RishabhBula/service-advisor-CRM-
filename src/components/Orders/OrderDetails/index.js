@@ -161,9 +161,9 @@ class OrderDetails extends Component {
                 <div>Total Tires : <Dollor value={totalTires.toFixed(2)} /></div>
                 <div>Total Labor : <Dollor value={totalLabor.toFixed(2)} /></div>
                 <div className={"pt-2 border-top mt-2"}>Sub Total: <Dollor value={orderSubTotal.toFixed(2)} /></div>
-                <div>Total Tax : <Dollor value={totalTax.toFixed(2)} /></div>
-                <div>Total Discount : <Dollor value={totalDiscount.toFixed(2)} /></div>
-                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={orderGandTotal.toFixed(2)} /></div>
+                <div>Total Tax : <Dollor value={!isNaN(totalTax)?totalTax.toFixed(2):0.00} /></div>
+                <div>Total Discount : <Dollor value={!isNaN(totalDiscount)?totalDiscount.toFixed(2):0.00} /></div>
+                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={!isNaN(orderGandTotal)? orderGandTotal.toFixed(2):0.00} /></div>
               </div>
               <div className={"clearfix"}></div>
             </>

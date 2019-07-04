@@ -16,7 +16,7 @@ const NoDataFound = props => {
           <div className={"pt-3"}>
             {props.showAddButton || typeof props.showAddButton === undefined ? (
               <Button className="btn-theme-line" onClick={props.onAddClick}>
-                <i class="fa fa-plus" /> Add New
+                <i className="fa fa-plus" /> Add New
               </Button>
             ) : null}
           </div>
