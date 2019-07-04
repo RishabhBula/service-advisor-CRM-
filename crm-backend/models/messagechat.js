@@ -12,13 +12,21 @@ const messageSchema = new Schema({
         ref: "user",
         default: null,
     },
+    isInternalNotes: {
+        type: Boolean,
+        default: false
+    },
     orderId: {
         type: Schema.Types.ObjectId,
         ref: "Order",
         default: null
     },
     messageData: {
-        type: [Object],
+        type: String,
+        default: null
+    },
+    messageAttachment: {
+        type: Object,
         default: null
     },
     messageTemplate: {
@@ -34,6 +42,10 @@ const messageSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "user",
         default: null
+    },
+    isSender: {
+        type: Boolean,
+        default: true
     },
     status: {
         type: Boolean,

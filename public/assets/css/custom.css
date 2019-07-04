@@ -2447,6 +2447,39 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 
 /*=========Order Summary Page css======*/
 
+/*=========Payment Page css======*/
+.payment-body .box-contain{
+  width: 100%;
+  margin-bottom: 20px;
+  box-shadow: inset 0px 0px 0px 1px #a7afb1;
+  border-radius: 4px;
+  padding: 15px 10px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  position: relative;
+}
+.payment-method .box-contain{
+  width: 100%;
+  margin-bottom: 20px;
+  box-shadow: inset 0px 0px 0px 1px #a7afb1;
+  border-radius: 4px;
+  padding: 15px 10px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  position: relative;
+}
+/*=========Payment Page css======*/
+
 @media (max-width: 1220px) {
   .table {
     min-width: 1000px;

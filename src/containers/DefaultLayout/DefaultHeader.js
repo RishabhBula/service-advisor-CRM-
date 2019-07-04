@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 import React, { Component } from "react";
 
 // import logo from '../../assets/img/brand/logo.svg';
@@ -69,7 +68,7 @@ class DefaultHeader extends Component {
             {permissions.isAllowedCalendar ? (
               <NavItem className="px-3">
                 <NavLink to="/calender" className="nav-link">
-                  <i className={"icons icon-calendar"}/> Calender
+                  <i className={"icons icon-calendar"} /> Calender
                 </NavLink>
               </NavItem>
             ) : null}

@@ -1,0 +1,32 @@
+.activity-block{
+    position: relative;
+    border-left: 2px solid #e0eaec;
+    margin-left: 2rem;
+    padding-left: 2rem;
+    padding-bottom: 2rem;
+    .activity-icon{
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        position: absolute;
+        left: -13px;
+        top: 14px;
+    }
+    .activity-message{
+        background: #4aa9f0!important;
+        font-size: 15px;
+    }
+    .activity-set{
+        background: #00c786;
+        color: #fff;
+        text-align: center;
+    }
+    .activity-set i{
+        top: 5px;
+        position: absolute;
+        right: 5px;
+    }
+    .activity-date{
+        font-size: 12px
+    }
+}

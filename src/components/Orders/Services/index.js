@@ -218,6 +218,7 @@ class Services extends Component {
             orderId={orderId}
             deleteLabel={deleteLabel}
             orderReducer={orderReducer}
+            {...this.props}
           />
         </div>
         {selectedService ? this.handleOpenModal() : null}

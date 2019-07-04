@@ -1,19 +1,79 @@
 import React, { Component } from "react";
-import TimeLogList from "./timeLogList"
+
+import { CrmTimeClockModal } from "../../common/CrmTimeClockModel";
+import TimeLogList from "./timeLogList";
+import Timers from "./Timers";
 
 class TimeClock extends Component {
-   constructor(props) {
-      super(props);
-      this.state = {};
-   }
-   render() {
-      return (
-         <div>
-            TimeClock Data!!
-            <TimeLogList />
-         </div>
-      );
-   }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  /**
+   *
+   */
+  handleTimeClockModal = () => {
+    const { modelInfoReducer, modelOperate } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { timeClockModalOpen } = modelDetails;
+    modelOperate({
+      timeClockModalOpen: !timeClockModalOpen
+    });
+  };
+  /**
+   *
+   */
+  render() {
+    const {
+      modelInfoReducer,
+      modelOperate,
+      orderId,
+      orderItems,
+      getUserData,
+      orderReducer,
+      editTimeLogRequest,
+      addTimeLogRequest,
+      timelogReducer,
+      startTimer,
+      stopTimer,
+      switchTimer} = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { timeClockModalOpen } = modelDetails;
+    return (
+      <div>
+        <Timers
+          orderId={orderId}
+          orderItems={orderItems.serviceId}
+          startTimer={startTimer}
+          stopTimer={stopTimer}
+          switchTimer={switchTimer}
+        />
+        <span
+          className={"text-primary cursor_pointer"}
+          onClick={this.handleTimeClockModal}
+        >
+          Add Time Manually
+        </span>
+        <TimeLogList
+          timeLogData={timelogReducer.timeLogData}
+          handleTimeClockModal={this.handleTimeClockModal}
+          getUserData={getUserData}
+          orderReducer={orderReducer}
+          editTimeLogRequest={editTimeLogRequest}
+          modelOperate={modelOperate}
+          modelInfoReducer={modelInfoReducer}
+          timeClockModalOpen={timeClockModalOpen}
+        />
+        <CrmTimeClockModal
+          openTimeClockModal={timeClockModalOpen}
+          getUserData={getUserData}
+          orderReducer={orderReducer}
+          handleTimeClockModal={this.handleTimeClockModal}
+          addTimeLogRequest={addTimeLogRequest}
+        />
+      </div>
+    );
+  }
 }
 
 export default TimeClock;

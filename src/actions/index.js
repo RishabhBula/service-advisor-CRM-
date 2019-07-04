@@ -17,10 +17,12 @@ export * from "./InventoryParts";
 export * from "./InventorySats";
 export * from "./Order";
 export * from "./Inspection";
-export * from "./Service"
-export * from "./Label"
-export * from "./Message"
-export * from "./OrderSummary"
+export * from "./Service";
+export * from "./Label";
+export * from "./TimeLog";
+export * from "./Activity";
+export * from "./Message";
+export * from "./OrderSummary";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

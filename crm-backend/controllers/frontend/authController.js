@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 const userModel = require("../../models/user");
 const roleModel = require("../../models/role");
 const { validationResult } = require("express-validator/check");
@@ -602,6 +603,7 @@ const imageDelete = async (req, res) => {
 /*----------------User create by admin------------------ */
 const createUser = async (req, res) => {
   try {
+    const { currentUser } = req;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({
@@ -615,6 +617,7 @@ const createUser = async (req, res) => {
     $data.userSideActivationValue = confirmationNumber;
     let inserList = {
       ...$data,
+      subdomain: currentUser.subdomain,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
       rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)

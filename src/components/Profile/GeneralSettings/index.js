@@ -328,8 +328,6 @@ class GenralSettings extends Component {
         return <option key={index} value={item}>{item}</option>
       });
 
-
-
     return (
       <div>
         <Row>

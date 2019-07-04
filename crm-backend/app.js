@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const MongoClient = require("mongoose");
 const { mode } = require("./config/app");
 const path = require("path");
+
+global.timeClocks = {};
+
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
 

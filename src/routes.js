@@ -13,8 +13,10 @@ const Fleet = React.lazy(() => import("./containers/Fleet"));
 const Customers = React.lazy(() => import("./containers/Customers"));
 const CommonPage = React.lazy(() => import("./containers/CommonPage"));
 const PriceMatrix = React.lazy(() => import("./containers/PriceMatrix"));
-const Order = React.lazy(() => import("./containers/Orders"))
-const Profile = React.lazy(() => import("./containers/Profile"))
+const Order = React.lazy(() => import("./containers/Orders"));
+const Profile = React.lazy(() => import("./containers/Profile"));
+const CannedService = React.lazy(() => import("./components/Orders/Services/cannedService"));
+
 const routes = [
   {
     path: AppRoutes.HOME.url,
@@ -98,6 +100,12 @@ const routes = [
     exact: AppRoutes.PROFILE.exact,
     name: AppRoutes.PROFILE.name,
     component: Profile
+  },
+  {
+    path: AppRoutes.CANNED_SERVICE.url,
+    exact: AppRoutes.CANNED_SERVICE.exact,
+    name: AppRoutes.CANNED_SERVICE.name,
+    component: CannedService
   },
   { path: "/common", exact: true, name: "Common", component: CommonPage }
 ];
@@ -197,6 +205,11 @@ export const BreadCrumbRoutes = [
     path: AppRoutes.PROFILE.url,
     exact: AppRoutes.PROFILE.exact,
     name: AppRoutes.PROFILE.name
+  },
+  {
+    path: AppRoutes.CANNED_SERVICE.url,
+    exact: AppRoutes.CANNED_SERVICE.exact,
+    name: AppRoutes.CANNED_SERVICE.name
   }
 ];
 

@@ -24,7 +24,6 @@ const addNewService = async (req, res) => {
                success: false
             })
          }
-         console.log("#############", element.isCannedService);
          if (element.isCannedService && !body.isServiceSubmit) {
             if (body.services.length > 1) {
                isCannedService = false
@@ -49,7 +48,7 @@ const addNewService = async (req, res) => {
             serviceItems: element.serviceItems,
             epa: element.epa,
             discount: element.discount,
-            technician: element.technician ? element.technician.value : null,
+            technician: element.technician ? element.technician._id : null,
             taxes: element.taxes,
             isCannedService: isCannedService ? isCannedService : false,
             isConfirmedValue: element.isConfirmedValue,

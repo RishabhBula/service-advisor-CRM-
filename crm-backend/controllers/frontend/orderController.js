@@ -26,7 +26,10 @@ const createNewOrder = async (req, res) => {
   const { body, currentUser } = req;
   try {
     const { id, parentId } = currentUser;
-    const result = await Orders.countDocuments({ userId: currentUser.id, parentId: currentUser.parentId ? currentUser.parentId : currentUser.id });
+    const result = await Orders.countDocuments({
+      userId: currentUser.id,
+      parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
+    });
     const condition = {
       $or: [
         {
@@ -67,10 +70,8 @@ const createNewOrder = async (req, res) => {
       inspectionId: body.inspectionId,
       timeClockId: body.timeClockId
         ? mongoose.Types.ObjectId(body.timeClockId)
-        : null,
-      messageId: body.messageId
-        ? mongoose.Types.ObjectId(body.messageId)
-        : null,
+        : [],
+      messageId: body.messageId ? mongoose.Types.ObjectId(body.messageId) : [],
       orderId: result + 1,
       userId: currentUser.id,
       parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,
@@ -79,7 +80,6 @@ const createNewOrder = async (req, res) => {
     };
     const orderData = new Orders(orderConst);
     await orderData.save();
-
     return res.status(200).json({
       message: "Order created successfully",
       result: orderData,
@@ -119,7 +119,7 @@ const listOrders = async (req, res) => {
       parentId: parentId ? parentId : id
     };
     const result = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
     let orderStatus = await OrderStatus.find(condition, {
       name: 1,
@@ -372,12 +372,21 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId customerCommentId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId"
     );
-    const result1 = await Orders.populate(result2, { path: 'serviceId.serviceId.technician' })
-    const result = result1;
+    const result1 = await Orders.populate(result2, {
+      path:
+        "serviceId.serviceId.technician timeClockId.technicianId timeClockId.orderId"
+    });
+    const resultExtended = await Orders.populate(result1, {
+      path: "timeClockId.orderId.vehicleId"
+    });
+    const result = resultExtended;
     const serviceData = [],
-      inspectionData = [];
+      inspectionData = [],
+      messageData = [],
+      messageNotes = [],
+      timeLogData = [];
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
         const element = result[0].serviceId[index];
@@ -390,10 +399,36 @@ const getOrderDetails = async (req, res) => {
         inspectionData.push(element.inspectionId);
       }
     }
+    if (result[0].messageId && result[0].messageId.length) {
+      for (let index = 0; index < result[0].messageId.length; index++) {
+        const element = result[0].messageId[index];
+        if (
+          element.messageId &&
+          element.messageId.receiverId === currentUser.id
+        ) {
+          element.messageId.isSender = false;
+        }
+        if (element.messageId.isInternalNotes && !element.messageId.isDeleted) {
+          messageNotes.push(element.messageId)
+        }
+        messageData.push(element.messageId);
+      }
+    }
+    if (result[0].timeClockId && result[0].timeClockId.length) {
+      for (let index = 0; index < result[0].timeClockId.length; index++) {
+        const element = result[0].timeClockId[index];
+        if (!element.isDeleted) {
+          timeLogData.push(element);
+        }
+      }
+    }
     return res.status(200).json({
       data: result,
       serviceResult: serviceData,
       inspectionResult: inspectionData,
+      messageResult: messageData,
+      messageNotes: messageNotes,
+      timeClockResult: timeLogData,
       customerCommentData: result[0].customerCommentId,
       success: true
     });

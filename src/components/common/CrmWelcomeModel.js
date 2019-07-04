@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import {
   Button,
   Modal,
@@ -101,27 +102,24 @@ export class CrmWelcomeModel extends Component {
   }
 
   componentDidMount = () => {
-    const {
-      companyName,
-      website
-    } = this.props
+    const { companyName, website } = this.props;
     this.setState({
       companyName,
       website
-    })
-  }
+    });
+  };
   componentDidUpdate = ({ companyName, website }) => {
-    if ((companyName !== this.props.companyName) || (website !== this.props.website)) {
-      const {
-        companyName,
-        website
-      } = this.props
+    if (
+      companyName !== this.props.companyName ||
+      website !== this.props.website
+    ) {
+      const { companyName, website } = this.props;
       this.setState({
         companyName,
         website
-      })
+      });
     }
-  }
+  };
 
   onCropChange = crop => {
     this.setState({ crop });
@@ -145,9 +143,9 @@ export class CrmWelcomeModel extends Component {
         companyLogo: reader.result
       })
     );
-    reader.onloadend = function (as) {
+    reader.onloadend = function(as) {
       var image = new Image();
-      image.onload = function () {
+      image.onload = function() {
         scope.setState({
           companyLogo: reader.result
         });
@@ -285,7 +283,7 @@ export class CrmWelcomeModel extends Component {
         companyName,
         website
       });
-    } catch (error) { }
+    } catch (error) {}
   };
   handleInputChange = e => {
     this.setState({
@@ -412,7 +410,7 @@ export class CrmWelcomeModel extends Component {
                               // zoom={this.state.zoom}
                               aspect={this.state.aspect}
                               onCropChange={this.onCropChange}
-                            // onZoomChange={this.onZoomChange}
+                              // onZoomChange={this.onZoomChange}
                             />
                           </div>
                         </div>
@@ -476,7 +474,8 @@ export class CrmWelcomeModel extends Component {
               </div>
               <div className="pb-3">
                 <h4 className="pb-2 section-head position-relative">
-                  2. How many people work in your shop? <span className="asteric">*</span>
+                  2. How many people work in your shop?{" "}
+                  <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -506,7 +505,8 @@ export class CrmWelcomeModel extends Component {
               </div>
               <div className="pb-3">
                 <h4 className="pb-2 section-head position-relative">
-                  3. What kinds of services do you offer? <span className="asteric">*</span>
+                  3. What kinds of services do you offer?{" "}
+                  <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">
@@ -548,7 +548,8 @@ export class CrmWelcomeModel extends Component {
               </div>
               <div className="pb-3">
                 <h4 className="pb-2 section-head position-relative">
-                  4. What types of vehicles do you service? <span className="asteric">*</span>
+                  4. What types of vehicles do you service?{" "}
+                  <span className="asteric">*</span>
                 </h4>
                 <div className="justify-content-center error-block-contain">
                   <div className="d-flex box-space">

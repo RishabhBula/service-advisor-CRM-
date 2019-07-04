@@ -180,4 +180,8 @@ export const ValidatedRoutes = [
     url: AppRoutes.PROFILE.url,
     authKey: "isAllowedCompanySettings"
   },
+  {
+    url: AppRoutes.CANNED_SERVICE.url,
+    authKey: "isAllowedCompanySettings"
+  },
 ];

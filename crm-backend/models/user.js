@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const Schema = mongoose.Schema;
 
 const UserPermissions = new Schema({
@@ -139,6 +140,23 @@ const userSchema = new Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  currentlyWorking: {
+    type: new Schema({
+      serviceId: {
+        type: mongoose.Types.ObjectId,
+        ref: "service"
+      },
+      orderId: {
+        type: mongoose.Types.ObjectId,
+        ref: "order"
+      },
+      startTime: {
+        type: Date,
+        default: Date.now
+      }
+    }),
+    default: {}
   }
 });
 

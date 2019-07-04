@@ -47,11 +47,12 @@ const orderSchema = new Schema({
     ref: "CustomerAndUser",
     default: null
   },
-  timeClockId: {
-    type: Schema.Types.ObjectId,
-    ref: "TimeClock",
-    default: null
-  },
+  timeClockId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "TimeClock"
+    }
+  ],
   messageId: {
     type: [
       new Schema({
@@ -83,7 +84,11 @@ const orderSchema = new Schema({
   },
   status: {
     type: Boolean,
-    default: true
+    default: false
+  },
+  isInvoice: {
+    type: Boolean,
+    default: false
   },
   isDeleted: {
     type: Boolean,

@@ -10,7 +10,6 @@ export const CustomerSheetData = {
     "City",
     "State",
     "Zip Code",
-    "Notes",
     "Refral Source",
     "Is Tax Exempt",
     "Is Receive A Discount?"
@@ -27,7 +26,6 @@ export const CustomerSheetData = {
       City: "Indore",
       State: "MP",
       "Zip Code": "452001",
-      Notes: "test note",
       "Refral Source": "Google",
       "Is Tax Exempt": "yes/no",
       "Is Receive A Discount?": "yes/no"

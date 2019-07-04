@@ -7,6 +7,8 @@ import {
 } from "reactstrap";
 import { getSumOfArray, calculateValues, calculateSubTotal } from "../../../helpers"
 import Dollor from "../../common/Dollor"
+import "./index.scss";
+import { CrmPaymentModel } from "../../common/CrmPaymentModal";
 
 class OrderDetails extends Component {
   constructor(props) {
@@ -14,19 +16,43 @@ class OrderDetails extends Component {
     this.state = {
       orderId: "",
       query: "",
-      orderStatus: false
+      orderStatus: false,
+      activityLogs: []
     };
   }
+  componentDidMount = () => {
+    const { activityReducer } = this.props;
+    this.setState({
+      activityLogs: activityReducer.activity
+    })
+  }
+  componentDidUpdate = ({ activityReducer }) => {
+    const activityData = this.props.activityReducer
+    if (activityReducer !== activityData) {
+      this.setState({
+        activityLogs: activityData.activity
+      })
+    }
+  }
+  handlePaymentModal = () => {
+    const { modelInfoReducer, modelOperate } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { paymentModalOpen } = modelDetails;
+    modelOperate({
+      paymentModalOpen: !paymentModalOpen
+    });
+  }
   render() {
-    const { orderReducer, profileReducer} = this.props
+    const { orderReducer, profileReducer, modelInfoReducer, modelOperate } = this.props
+    const { modelDetails } = modelInfoReducer;
+    const { paymentModalOpen } = modelDetails
+    const { activityLogs } = this.state
     const createdDate = orderReducer.orderItems ? moment(orderReducer.orderItems.createdAt || '').format("MMM Do YYYY LT") : '';
     const isInvoice = orderReducer.orderItems ? orderReducer.orderItems.isInvoice : '';
-    const serviceWriter = profileReducer.profileInfo.firstName +' ' +profileReducer.profileInfo.lastName
+    const serviceWriter = profileReducer.profileInfo.firstName + ' ' + profileReducer.profileInfo.lastName
     const serviceData = orderReducer.orderItems ? orderReducer.orderItems.serviceId : ""
     let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
       totalTax = 0, totalDiscount = 0;
-
-
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -135,15 +161,54 @@ class OrderDetails extends Component {
                 <div>Total Tires : <Dollor value={totalTires.toFixed(2)} /></div>
                 <div>Total Labor : <Dollor value={totalLabor.toFixed(2)} /></div>
                 <div className={"pt-2 border-top mt-2"}>Sub Total: <Dollor value={orderSubTotal.toFixed(2)} /></div>
-                <div>Total Tax : <Dollor value={totalTax.toFixed(2)} /></div>
-                <div>Total Discount : <Dollor value={totalDiscount.toFixed(2)} /></div>
-                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={orderGandTotal.toFixed(2)} /></div>
+                <div>Total Tax : <Dollor value={!isNaN(totalTax)?totalTax.toFixed(2):0.00} /></div>
+                <div>Total Discount : <Dollor value={!isNaN(totalDiscount)?totalDiscount.toFixed(2):0.00} /></div>
+                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={!isNaN(orderGandTotal)? orderGandTotal.toFixed(2):0.00} /></div>
               </div>
               <div className={"clearfix"}></div>
             </>
             : ''
           }
-        </div> 
+        </div>
+        <hr />
+        <div className={"text-center payment-section"}>
+          <h6 className={orderGandTotal === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={orderGandTotal.toFixed(2)} /></h6>
+          <Button size={"block"} onClick={this.handlePaymentModal} className={"btn btn-success btn-rounded"}>New Payment</Button>
+        </div>
+        <hr />
+        <div className={"activity-logs"}>
+          {
+            activityLogs && activityLogs.length ?
+              <h5 className={"mb-2 p-2 text-left"}>Activity</h5> :
+              null
+          }
+          {activityLogs && activityLogs.length ? activityLogs.slice(0).reverse().map((activity, index) => {
+            return (
+              <div className={"activity-block p-3"}>
+                <div className={"pr-3 text-left"} key={index}>
+                  <span>{activity.activityPerson.firstName}{" "}{activity.activityPerson.lastName}{" "}{activity.type !== "NEW_ORDER" ? "changed" : null}{" "}{activity.name}</span>
+                </div>
+                <div className={"text-left activity-date"}>
+                  <span>{moment(activity.createdAt).format("MMM Do YYYY, h:mm A")}</span>
+                </div>
+                <span className={activity.type === 'MESSAGE' ? "activity-icon activity-message" : "activity-icon activity-set"}>
+                  {
+                    activity.type !== "NEW_ORDER" ?
+                      <i className={"fa fa-check"} /> :
+                      null
+                  }
+                </span>
+              </div>
+            )
+          }) : ""}
+        </div>
+        <CrmPaymentModel
+          openPaymentModel={paymentModalOpen}
+          handlePaymentModal={this.handlePaymentModal}
+          payableAmmount={orderGandTotal}
+          modelDetails={modelDetails}
+          modelOperate={modelOperate}
+        />
       </div>
     )
   }

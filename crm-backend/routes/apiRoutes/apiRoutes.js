@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const {
@@ -19,7 +20,9 @@ const {
   inspection,
   label,
   googleCaptcha,
-  messageChat
+  messageChat,
+  timeClock,
+  userActivity
 } = require("./index");
 router.post("/github-webhook", async (req, res) => {
   console.log(req.body);
@@ -45,5 +48,6 @@ router.use("/inspection", inspection);
 router.use("/label", label);
 router.use("", googleCaptcha);
 router.use("/message", messageChat);
-
+router.use("/timeClock", timeClock);
+router.use("/activity", userActivity)
 module.exports = router;

@@ -17,6 +17,9 @@ import {
   getServiceListSuccess,
   getOrderDetailsSuccess,
   getInspectionListSuccess,
+  getTimeLogsSuccess,
+  addNewActivity,
+  getActivityList,
   getMessageListSuccess,
   verifyLinkRequest
 } from "./../actions";
@@ -69,7 +72,6 @@ const getOrdersLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer("/order", "/getOrders", "GET", true);
-
     if (!result.isError) {
       dispatch(getOrderListSuccess(result.data));
     }
@@ -233,6 +235,12 @@ const addOrderLogic = createLogic({
           result: result.data.result
         })
       );
+      const data = {
+        name: "Created new order",
+        type: "NEW_ORDER",
+        orderId: result.data.result._id
+      }
+      dispatch(addNewActivity(data))
       dispatch(
         redirectTo({
           path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
@@ -251,7 +259,9 @@ const addOrderLogic = createLogic({
 const updateOrderDetailsLogic = createLogic({
   type: orderActions.UPDATE_ORDER_DETAILS,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    if (!action.payload.isChangedOrderStatus) {
+      dispatch(showLoader());
+    }
     logger(action.aypload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -264,17 +274,37 @@ const updateOrderDetailsLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
+      if (!action.payload.isChangedOrderStatus) {
+        dispatch(hideLoader());
+      }
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!action.payload.isChangedOrderStatus) {
+        toast.success(result.messages[0]);
+      }
+      if (action.payload.status === true) {
+        const data = {
+          name: "Order status changed to authorised",
+          type: "AUTHORISED_ORDER",
+          orderId: action.payload._id
+        }
+        dispatch(addNewActivity(data))
+      }
+      if (action.payload.status === false) {
+        const data = {
+          name: "Order status changed to Unauthorised",
+          type: "UNAUTHORISED_ORDER",
+          orderId: action.payload._id
+        }
+        dispatch(addNewActivity(data))
+      }
       if (!action.payload.isSummary) {
         dispatch(getOrderDetailsRequest({
           _id: action.payload && action.payload._id ? action.payload._id : null
         }));
       }
-      else{
+      else {
         dispatch(verifyLinkRequest(action.payload.query))
       }
 
@@ -351,9 +381,19 @@ const getOrderDetails = createLogic({
           customerCommentData: result.data.customerCommentData
         })
       );
-      dispatch(getInspectionListSuccess(
-        {
+      dispatch(
+        getActivityList({
+          orderId: action.payload._id
+        })
+      )
+      dispatch(
+        getInspectionListSuccess({
           inspection: result.data.inspectionResult
+        }
+        ))
+      dispatch(getTimeLogsSuccess(
+        {
+          timeLog: result.data.timeClockResult
         }
       ))
       dispatch(getMessageListSuccess(

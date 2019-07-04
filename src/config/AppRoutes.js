@@ -118,5 +118,10 @@ export const AppRoutes = {
     url: "/profile",
     name: "Profile",
     exact: true
+  },
+  CANNED_SERVICE: {
+    url: "/workflow/canned-service",
+    name: "Canned Service",
+    exact: true
   }
 };
