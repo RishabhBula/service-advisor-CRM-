@@ -329,54 +329,54 @@ export const countryWithTimezone = [
 export const allServices = [
   {
     key: "Repair & Maintenance",
-    icon: "/assets/img/repairing-car.svg"
+    icon: "./assets/img/repairing-car.svg"
   },
   {
     key: "Detail, Wrap & Film",
-    icon: "/assets/img/carPaintingLogo.svg"
+    icon: "./assets/img/carPaintingLogo.svg"
   },
   {
     key: "Restoration & Custom Builds",
-    icon: "/assets/img/carChachisLogo.svg"
+    icon: "./assets/img/carChachisLogo.svg"
   },
   {
     key: "Others",
-    icon: "/assets/img/list-dots.svg"
+    icon: "./assets/img/list-dots.svg"
   }
 ];
 
 export const allVehicleServices = [
   {
     key: "Cars",
-    icon: "/assets/img/carLogo.svg"
+    icon: "./assets/img/carLogo.svg"
   },
   {
     key: "Semi & Heavy Duty",
-    icon: "/assets/img/trukLogo.svg"
+    icon: "./assets/img/trukLogo.svg"
   },
   {
     key: "RV's",
-    icon: "/assets/img/vanLogo.svg"
+    icon: "./assets/img/vanLogo.svg"
   },
   {
     key: "Trailers",
-    icon: "/assets/img/trailerLogo.svg"
+    icon: "./assets/img/trailerLogo.svg"
   },
   {
     key: "Motorcycles",
-    icon: "/assets/img/motorcycleLogo.svg"
+    icon: "./assets/img/motorcycleLogo.svg"
   },
   {
     key: "Boats",
-    icon: "/assets/img/boatLogo.svg"
+    icon: "./assets/img/boatLogo.svg"
   },
   {
     key: "Bicycles",
-    icon: "/assets/img/cycleLogo.svg"
+    icon: "./assets/img/cycleLogo.svg"
   },
   {
     key: "Others",
-    icon: "/assets/img/list-dots.svg"
+    icon: "./assets/img/list-dots.svg"
   }
 ];
 
