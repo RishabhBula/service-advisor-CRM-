@@ -48,7 +48,7 @@ const addNewService = async (req, res) => {
             serviceItems: element.serviceItems,
             epa: element.epa,
             discount: element.discount,
-            technician: element.technician ? element.technician.value : null,
+            technician: element.technician ? element.technician._id : null,
             taxes: element.taxes,
             isCannedService: isCannedService ? isCannedService : false,
             isConfirmedValue: element.isConfirmedValue,

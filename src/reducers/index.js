@@ -21,6 +21,8 @@ import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { vendorsReducer } from "./Vendors";
 import { timelogReducer } from "./TimeLog"
 import { activityReducer } from "./Activity"
+import { messageReducer } from "./Message"
+import { summaryReducer} from "./OrderSummary"
 
 export const mainReducer = handleActions(
   {
@@ -59,6 +61,8 @@ const AppReducer = combineReducers({
   labelReducer,
   timelogReducer,
   activityReducer,
+  messageReducer,
+  summaryReducer,
   routing: routerReducer
 });
 

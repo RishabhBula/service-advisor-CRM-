@@ -193,9 +193,22 @@ class SendInspection extends Component {
 
   }
 
+  handleAddtoMessage = () =>{
+    var messageTextValue = document.getElementById('messageTextSent'),
+      messageTextSent = messageTextValue.innerHTML;
+      this.props.messsageTemplateData(messageTextSent)
+      // close and clear modal form 
+      this.props.toggle()
+      this.setState({
+        search: '',
+        templateData: [
+          { messageText: '' }
+        ]
+      })
+   
+  }
   render() {
     const { templateData, recipients, errors, search, customerData, messageTextSentError } = this.state
-
     return (
       <>
         <Modal
@@ -216,6 +229,7 @@ class SendInspection extends Component {
               <Row className='justify-content-center'>
                 <Col md='8'>
                   <Row className='justify-content-center'>
+                    {!this.props.isMessage  ? <>
                     <Col md='12'>
                       <FormGroup>
                         <Label htmlFor='name' className='customer-modal-text-style'>
@@ -261,6 +275,7 @@ class SendInspection extends Component {
                         </div>
                       </FormGroup>
                     </Col>
+                   </> : null}
                     <Col md='12'>
                       <FormGroup>
                         <Label htmlFor='name' className='customer-modal-text-style'>
@@ -283,6 +298,7 @@ class SendInspection extends Component {
 
                       </FormGroup>
                     </Col>
+                  {!this.props.isMessage ? 
                     <Col md='12'>
                       <FormGroup>
                         <Label htmlFor='name' className='customer-modal-text-style'>
@@ -305,6 +321,7 @@ class SendInspection extends Component {
                         </div>
                       </FormGroup>
                     </Col>
+                    : null}
                     <Col md='12'>
                       <FormGroup>
                         <Label htmlFor='name' className='customer-modal-text-style'>
@@ -338,9 +355,12 @@ class SendInspection extends Component {
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
             </div>
+            {!this.props.isMessage ? 
             <Button color='primary' onClick={this.handleSentInspection}>
               Sent Inspection
-            </Button>{' '}
+            </Button> : <Button color='primary' onClick={this.handleAddtoMessage}>
+                Add to message
+            </Button> }{' '}
             <Button color='secondary' onClick={(e) => { this.props.toggle(); this.clearForm()}}>
               Cancel
             </Button>

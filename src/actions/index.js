@@ -20,7 +20,9 @@ export * from "./Inspection";
 export * from "./Service";
 export * from "./Label";
 export * from "./TimeLog";
-export * from "./Activity"
+export * from "./Activity";
+export * from "./Message";
+export * from "./OrderSummary";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

@@ -752,6 +752,7 @@ class Inspection extends Component {
                customerData={this.props.customerData}
                vehicleData={this.props.vehicleData}
                sendMessageTemplate={this.props.sendMessageTemplate}
+               
             />
 
             {/* ====== MessageTemplate Modal====== */}

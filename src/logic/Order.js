@@ -19,7 +19,9 @@ import {
   getInspectionListSuccess,
   getTimeLogsSuccess,
   addNewActivity,
-  getActivityList
+  getActivityList,
+  getMessageListSuccess,
+  verifyLinkRequest
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -257,7 +259,9 @@ const addOrderLogic = createLogic({
 const updateOrderDetailsLogic = createLogic({
   type: orderActions.UPDATE_ORDER_DETAILS,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    if (!action.payload.isChangedOrderStatus) {
+      dispatch(showLoader());
+    }
     logger(action.aypload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -270,17 +274,42 @@ const updateOrderDetailsLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
+      if (!action.payload.isChangedOrderStatus) {
+        dispatch(hideLoader());
+      }
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
-      dispatch(
-        getOrderDetailsRequest({
+      if (!action.payload.isChangedOrderStatus) {
+        toast.success(result.messages[0]);
+      }
+      if (action.payload.status === true) {
+        const data = {
+          name: "Order status changed to authorised",
+          type: "AUTHORISED_ORDER",
+          orderId: action.payload._id
+        }
+        dispatch(addNewActivity(data))
+      }
+      if (action.payload.status === false) {
+        const data = {
+          name: "Order status changed to Unauthorised",
+          type: "UNAUTHORISED_ORDER",
+          orderId: action.payload._id
+        }
+        dispatch(addNewActivity(data))
+      }
+      if (!action.payload.isSummary) {
+        dispatch(getOrderDetailsRequest({
           _id: action.payload && action.payload._id ? action.payload._id : null
-        })
-      );
+        }));
+      }
+      else {
+        dispatch(verifyLinkRequest(action.payload.query))
+      }
+
       dispatch(updateOrderDetailsSuccess());
+
       dispatch(hideLoader());
       done();
     }
@@ -365,6 +394,11 @@ const getOrderDetails = createLogic({
       dispatch(getTimeLogsSuccess(
         {
           timeLog: result.data.timeClockResult
+        }
+      ))
+      dispatch(getMessageListSuccess(
+        {
+          messages: result.data.messageResult
         }
       ))
       dispatch(

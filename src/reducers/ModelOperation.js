@@ -25,8 +25,9 @@ const initialAuthState = {
     matrixEditModalOpen: false,
     addOrderStatusModalOpen: false,
     timeClockModalOpen: false,
-    timeClockEditModalOpen: false
-
+    timeClockEditModalOpen: false,
+    paymentModalOpen: false,
+    paymentCardModalOpen: false
   }
 };
 

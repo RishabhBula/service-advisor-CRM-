@@ -24,7 +24,12 @@ const {
   timeClock,
   userActivity
 } = require("./index");
-
+router.post("/github-webhook", async (req, res) => {
+  console.log(req.body);
+  res.send({
+    body: req.body
+  });
+});
 router.use("/auth", auth);
 router.use("/user", user);
 router.use("/role", role);

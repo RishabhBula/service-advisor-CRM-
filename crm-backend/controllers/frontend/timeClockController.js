@@ -155,7 +155,7 @@ const stopTimer = async (req, res) => {
     $set: {
       endDateTime: new Date,
       total: parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) || 0,
-      activity:`Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`
+      activity: `Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`
     }
   })
   await UserModel.updateOne(

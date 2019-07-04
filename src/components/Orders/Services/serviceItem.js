@@ -283,9 +283,10 @@ class ServiceItem extends Component {
   };
   handleTechnicianAdd = (e, index) => {
     if (e && e.value) {
-
+      console.log("$$$$$$$$$$$$$$$$$$", e);
+      
       const serviceData = [...this.state.services]
-      serviceData[index].technician = e
+      serviceData[index].technician = e.data
       this.setState({
         services: serviceData,
         selectedTechnician: {
@@ -656,6 +657,10 @@ class ServiceItem extends Component {
           {
             services && services.length ? services.map((item, index) => {
               let mainserviceTotal = [], serviceTotal, epa, discount, tax
+              const technicianEle = {
+                "label":item.technician?`${item.technician.firstName} ${item.technician.lastName}`:"type to select technician",
+                "value": item.technician? item.technician._id: ""
+              }
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
@@ -697,11 +702,11 @@ class ServiceItem extends Component {
                               placeholder={"Type Technician name"}
                               loadOptions={this.loadTechnician}
                               value={
-                                technicianData.value !== '' || item.technician !== "" ?
-                                  technicianData :
-                                  selectedTechnician
+                                item.technician ?
+                                  technicianEle
+                                  : selectedTechnician
                               }
-                              isClearable={item.technician !== '' ? true : false}
+                              isClearable={technicianEle.value !== '' ? true : false}
                               noOptionsMessage={() => "Type Technician name"}
                               onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
                             />
