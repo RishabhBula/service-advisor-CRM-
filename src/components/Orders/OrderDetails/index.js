@@ -97,10 +97,10 @@ class OrderDetails extends Component {
               <ButtonGroup>
                 <Button color={""} className={!isInvoice ? "btn btn-sm active" : "btn btn-sm"} onClick={(e) => this.props.orderStatus('invoiceStatus', false)}>
                   Estimate
-                      </Button>
+                </Button>
                 <Button color={""} className={isInvoice ? "btn btn-sm active" : "btn btn-sm"} onClick={(e) => this.props.orderStatus('invoiceStatus', true)}>
                   Invoice
-                      </Button>
+                </Button>
               </ButtonGroup>
             </span>
           </div>
@@ -161,9 +161,9 @@ class OrderDetails extends Component {
                 <div>Total Tires : <Dollor value={totalTires.toFixed(2)} /></div>
                 <div>Total Labor : <Dollor value={totalLabor.toFixed(2)} /></div>
                 <div className={"pt-2 border-top mt-2"}>Sub Total: <Dollor value={orderSubTotal.toFixed(2)} /></div>
-                <div>Total Tax : <Dollor value={!isNaN(totalTax)?totalTax.toFixed(2):0.00} /></div>
-                <div>Total Discount : <Dollor value={!isNaN(totalDiscount)?totalDiscount.toFixed(2):0.00} /></div>
-                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={!isNaN(orderGandTotal)? orderGandTotal.toFixed(2):0.00} /></div>
+                <div>Total Tax : <Dollor value={!isNaN(totalTax) ? totalTax.toFixed(2) : 0.00} /></div>
+                <div>Total Discount : <Dollor value={!isNaN(totalDiscount) ? totalDiscount.toFixed(2) : 0.00} /></div>
+                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={!isNaN(orderGandTotal) ? orderGandTotal.toFixed(2) : 0.00} /></div>
               </div>
               <div className={"clearfix"}></div>
             </>
@@ -173,7 +173,7 @@ class OrderDetails extends Component {
         <hr />
         <div className={"text-center payment-section"}>
           <h6 className={orderGandTotal === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={orderGandTotal.toFixed(2)} /></h6>
-          <Button size={"block"} onClick={this.handlePaymentModal} className={"btn btn-success btn-rounded"}>New Payment</Button>
+          <Button size={"sm"} onClick={this.handlePaymentModal} className={"btn btn-success btn-rounded"}>New Payment</Button>
         </div>
         <hr />
         <div className={"activity-logs"}>
@@ -184,8 +184,8 @@ class OrderDetails extends Component {
           }
           {activityLogs && activityLogs.length ? activityLogs.slice(0).reverse().map((activity, index) => {
             return (
-              <div className={"activity-block p-3"}>
-                <div className={"pr-3 text-left"} key={index}>
+              <div key={index} className={"activity-block p-3"}>
+                <div className={"pr-3 text-left"}>
                   <span>{activity.activityPerson.firstName}{" "}{activity.activityPerson.lastName}{" "}{activity.type !== "NEW_ORDER" ? "changed" : null}{" "}{activity.name}</span>
                 </div>
                 <div className={"text-left activity-date"}>
@@ -208,6 +208,7 @@ class OrderDetails extends Component {
           payableAmmount={orderGandTotal}
           modelDetails={modelDetails}
           modelOperate={modelOperate}
+          paymentType={""}
         />
       </div>
     )

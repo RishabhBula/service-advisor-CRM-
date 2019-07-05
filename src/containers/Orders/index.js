@@ -1,6 +1,6 @@
 import { Card, CardBody, Input } from "reactstrap";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import React, { Component, Suspense } from "react";
 
 import { AppRoutes } from "../../config/AppRoutes";
@@ -310,7 +310,7 @@ class Order extends Component {
       deleteNotes,
       activityReducer
     } = this.props;
-    const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
+    // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
       <div className="animated fadeIn">
         <Card className="white-card">
@@ -367,12 +367,12 @@ class Order extends Component {
                     </div>
                     : null
                   }
-                  <div className={"order-activity"}>
+                  {/* <div className={"order-activity"}>
                     <span color="" className="print-btn">
                       <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link>
                     </span>
                     <span id="add-Appointment" className="print-btn"><i className="icon-printer icons "></i>&nbsp; Print</span>
-                  </div>
+                  </div> */}
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
                       <OrderTab
