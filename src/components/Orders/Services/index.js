@@ -199,7 +199,7 @@ class Services extends Component {
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
-      <div>
+      <>
         <div className={"d-flex justify-content-between pb-4"}>
           <ServiceItem
             servicesData={servicesData}
@@ -222,7 +222,7 @@ class Services extends Component {
           />
         </div>
         {selectedService ? this.handleOpenModal() : null}
-      </div>
+      </>
     );
   }
 }

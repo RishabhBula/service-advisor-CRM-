@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Modal, ModalBody, ModalHeader, Input } from "reactstrap";
+import { CrmPaymentCardType } from "./CrmPaymentCardType"
 const paymentMethod = [
    {
       icon: "/assets/img/credit-card.svg",
@@ -19,8 +20,18 @@ export class CrmPaymentModel extends Component {
       super(props);
       this.state = {
          remainingAmmount: 0,
-         paymentType: ""
+         paymentType: "",
+         showRemainingAmt: false
       };
+   }
+   componentDidUpdate = ({ openPaymentModel }) => {
+      if (openPaymentModel !== this.props.openPaymentModel) {
+         this.setState({
+            remainingAmmount: 0,
+            paymentType: "",
+            showRemainingAmt: false
+         })
+      }
    }
    handlePaymentType = (name) => {
       this.setState({
@@ -33,6 +44,7 @@ export class CrmPaymentModel extends Component {
          handlePaymentModal,
          payableAmmount,
       } = this.props
+      const { paymentType } = this.state;
       return (
          <>
             <Modal
@@ -43,30 +55,40 @@ export class CrmPaymentModel extends Component {
             >
                <ModalHeader toggle={handlePaymentModal}>New Payment</ModalHeader>
                <ModalBody>
-                  <div className={"text-center payment-body"}>
-                     <div className={"box-contain"}>
-                        <div className={"justify-content-center"}>
-                           <Input className={"text-success"} onChange={this.handleChange} value={`$${parseFloat(payableAmmount).toFixed(2)}`} />
-                        </div>
-                     </div>
-                     <span className={"text-primary cursor_pointer"}>Remaining Due</span>
-                  </div>
-                  <div className={"d-flex m-3 payment-method"}>
-                     {
-                        paymentMethod.map((item, index) => {
-                           return (
-                              <div key={index} onClick={() => this.handlePaymentType(item.value)} className={"box-contain"}>
+                  {
+                     paymentType === "" ?
+                        <>
+                           <div className={"text-center payment-body"}>
+                              <div className={"box-contain"}>
                                  <div className={"justify-content-center"}>
-                                    <img src={item.icon} alt="" />
-                                    <div className={"welcome-service-text"}>
-                                       {item.value}
-                                    </div>
+                                    <Input className={"text-success"} onChange={this.handleChange} value={`$${parseFloat(payableAmmount).toFixed(2)}`} />
                                  </div>
                               </div>
-                           )
-                        })
-                     }
-                  </div>
+                              <span className={"text-primary cursor_pointer"}>Remaining Due</span>
+                           </div>
+                           <div className={"d-flex m-3 payment-method"}>
+                              {
+                                 paymentMethod.map((item, index) => {
+                                    return (
+                                       <div key={index} onClick={() => this.handlePaymentType(item.value)} className={"box-contain"}>
+                                          <div className={"justify-content-center"}>
+                                             <img src={item.icon} alt="" />
+                                             <div className={"welcome-service-text"}>
+                                                {item.value}
+                                             </div>
+                                          </div>
+                                       </div>
+                                    )
+                                 })
+                              }
+                           </div>
+                        </> :
+                        null
+                  }
+                  {
+                     paymentType === "Card" ?
+                        <CrmPaymentCardType /> : null
+                  }
                </ModalBody>
                {/* <ModalFooter>
                   <Button color="primary" onClick={this.handleSubmit}>
@@ -77,10 +99,6 @@ export class CrmPaymentModel extends Component {
                   </Button>
                </ModalFooter> */}
             </Modal>
-            {/* <CrmPaymentCardType
-               paymentCardModalOpen={paymentCardModalOpen}
-               handleCardModal={this.handleCardModal}
-            /> */}
          </>
       );
    }

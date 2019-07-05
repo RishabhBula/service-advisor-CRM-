@@ -683,7 +683,7 @@ class ServiceItem extends Component {
                         </div>
                         <div className={"service-card-btn-block flex-one d-flex align-items-center"}>
                           <div className={((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue" : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue"} id={`tech${index}`}>
-                            <img className={""} src={"./assets/img/expert.svg"} width={"30"} alt={"technician"} />
+                            <img className={""} src={"../../assets/img/expert.svg"} width={"30"} alt={"technician"} />
                           </div>
                           <UncontrolledTooltip placement="top" target={`tech${index}`}>
                             {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "Assign a technician" : "Update technician"}
@@ -691,7 +691,7 @@ class ServiceItem extends Component {
                           <div className={
                             item.note ? "pb-1 cursor_pointer isValue" : "pb-1 cursor_pointer notValue"
                           } id={`note${index}`}>
-                            <img className={""} src={"./assets/img/writing .svg"} width={"30"} alt={"Notes"} />
+                            <img className={""} src={"../../assets/img/writing.svg"} width={"30"} alt={"Notes"} />
                           </div>
                           <UncontrolledTooltip placement="top" target={`note${index}`}>
                             {item.note ? "Update note" : "Add a note"}
