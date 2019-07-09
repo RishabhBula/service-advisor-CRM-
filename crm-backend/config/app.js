@@ -2,14 +2,19 @@ const mode = "development"; // test, production, development
 const isDev = mode !== "production";
 const webURL = "http://192.168.2.119:3000/";
 const s3Key = {
-  "key": "iIkoc2HZhl+JEMSUFZA2flh/YNtBMCUa3CE/GSbg",
-  "keyId": "AKIAIBVWQL2OGVIO6D7Q",
-  "acl": "public-read",
-}
+  key: "iIkoc2HZhl+JEMSUFZA2flh/YNtBMCUa3CE/GSbg",
+  keyId: "AKIAIBVWQL2OGVIO6D7Q",
+  acl: "public-read"
+};
+
+const StripeAPIKey = isDev
+  ? "sk_test_zCSjOxiIHTNmPJUBdg4hFQAZ"
+  : "sk_test_zCSjOxiIHTNmPJUBdg4hFQAZ";
 
 module.exports = {
   mode,
   isDev,
   webURL,
-  s3Key
+  s3Key,
+  StripeAPIKey
 };
