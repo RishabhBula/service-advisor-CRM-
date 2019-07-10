@@ -22,7 +22,8 @@ const {
   googleCaptcha,
   messageChat,
   timeClock,
-  userActivity
+  userActivity,
+  memberShipRoutes
 } = require("./index");
 router.post("/github-webhook", async (req, res) => {
   console.log(req.body);
@@ -49,5 +50,7 @@ router.use("/label", label);
 router.use("", googleCaptcha);
 router.use("/message", messageChat);
 router.use("/timeClock", timeClock);
-router.use("/activity", userActivity)
+router.use("/activity", userActivity);
+router.use("/membership-plan", memberShipRoutes);
+
 module.exports = router;
