@@ -51,6 +51,6 @@ router.use("", googleCaptcha);
 router.use("/message", messageChat);
 router.use("/timeClock", timeClock);
 router.use("/activity", userActivity);
-router.use("/membership", memberShipRoutes);
+router.use("/membership-plan", memberShipRoutes);
 
 module.exports = router;

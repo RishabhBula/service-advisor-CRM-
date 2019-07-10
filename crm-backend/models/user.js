@@ -122,6 +122,21 @@ const userSchema = new Schema({
     ref: "user",
     default: null
   },
+  stripeCustomerId: {
+    type: String
+  },
+  planId: {
+    type: mongoose.Types.ObjectId,
+    ref: "plan"
+  },
+  planExiprationDate: {
+    type: Date,
+    default: Date.now
+  },
+  isInTrialPeriod: {
+    type: Boolean,
+    default: true
+  },
   rate: {
     type: Number,
     default: null
