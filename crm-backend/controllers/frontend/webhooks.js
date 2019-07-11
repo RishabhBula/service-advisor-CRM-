@@ -49,7 +49,7 @@ const paymentSuccess = async (req, data) => {
           .unix(period_start)
           .format("YYYY-MM-DD")} - ${moment
           .unix(period_end)
-          .format("YYYY-MM-DD")}`,
+          .format("YYYY-MM-DD")}.pdf`,
         path: invoice_pdf
       }
     ]);
