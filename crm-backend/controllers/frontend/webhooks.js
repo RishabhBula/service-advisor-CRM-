@@ -96,11 +96,6 @@ const paymentFailed = async (req, data) => {
 const subscriptionUpdated = async (req, res) => {
   try {
     const { body } = req;
-    return res.status(200).json({
-      message: "Subscription updated successfully.",
-      body
-    });
-    /* 
     const { data: tempData, type } = body;
     const { object: data } = tempData;
     const { object: event } = data;
@@ -151,7 +146,7 @@ const subscriptionUpdated = async (req, res) => {
     return res.status(200).json({
       message: "Subscription updated successfully.",
       body
-    }); */
+    });
   } catch (error) {
     console.log("Error in subscription handler", error);
     return res.status(500).json({
