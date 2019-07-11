@@ -21,7 +21,8 @@ import {
   addNewActivity,
   getActivityList,
   getMessageListSuccess,
-  verifyLinkRequest
+  verifyLinkRequest,
+  getPaymentSuccess
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -399,6 +400,11 @@ const getOrderDetails = createLogic({
       dispatch(getMessageListSuccess(
         {
           messages: result.data.messageResult
+        }
+      ))
+      dispatch(getPaymentSuccess(
+        {
+          payment: result.data.paymentResult
         }
       ))
       dispatch(

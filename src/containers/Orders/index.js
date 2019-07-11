@@ -2,7 +2,6 @@ import { Card, CardBody, Input } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import React, { Component, Suspense } from "react";
-
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 
@@ -47,7 +46,9 @@ import {
   stopTimer,
   switchTask,
   sendMessage,
-  deleteNotes
+  deleteNotes,
+  addPaymentRequest,
+  addNewCannedService
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -308,7 +309,10 @@ class Order extends Component {
       sendMessage,
       messageReducer,
       deleteNotes,
-      activityReducer
+      activityReducer,
+      addPaymentRequest,
+      paymentReducer,
+      addNewCannedService
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -414,6 +418,7 @@ class Order extends Component {
                           rateStandardListReducer={rateStandardListReducer}
                           getInventoryPartsVendors={getInventoryPartsVendors}
                           orderReducer={orderReducer}
+                          addNewCannedService={addNewCannedService}
                           {...this.props}
                         />
                       ) : null}
@@ -481,6 +486,8 @@ class Order extends Component {
               activityReducer={activityReducer}
               modelInfoReducer={modelInfoReducer}
               modelOperate={modelOperate}
+              addPaymentRequest={addPaymentRequest}
+              paymentReducer={paymentReducer}
             />
           </div>
         </Card>
@@ -498,7 +505,8 @@ const mapStateToProps = state => ({
   rateStandardListReducer: state.rateStandardListReducer,
   timelogReducer: state.timelogReducer,
   messageReducer: state.messageReducer,
-  activityReducer: state.activityReducer
+  activityReducer: state.activityReducer,
+  paymentReducer: state.paymentReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -617,6 +625,12 @@ const mapDispatchToProps = dispatch => ({
   },
   deleteNotes: data => {
     dispatch(deleteNotes(data))
+  },
+  addPaymentRequest: data =>{
+    dispatch(addPaymentRequest(data))
+  },
+  addNewCannedService: data =>{
+    dispatch(addNewCannedService(data))
   }
 });
 export default connect(

@@ -25,7 +25,8 @@ import {
   updateCustomerStatus,
   getCustomerFleetListRequest,
   importCustomers,
-  exportCustomers
+  exportCustomers,
+  getCustomerDetailsRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
@@ -174,7 +175,8 @@ class Customers extends Component {
       customerListReducer,
       rateStandardListReducer,
       customerFleetReducer,
-      getMatrix
+      getMatrix,
+      getCustomerDetailsRequest
     } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
@@ -236,7 +238,10 @@ class Customers extends Component {
               onStatusUpdate={this.onStatusUpdate}
               updateModel={this.toggleUpdateModal}
               onAddClick={this.onAddClick}
+              handleCustomerView={this.handleCustomerView}
               customerModalOpen={modelDetails.customerModel}
+              getCustomerDetailsRequest={getCustomerDetailsRequest}
+              {...this.props}
             />
           </CardBody>
         </Card>
@@ -322,6 +327,9 @@ const mapDispatchToProps = dispatch => ({
   },
   exportCustomer: data => {
     dispatch(exportCustomers(data));
+  },
+  getCustomerDetailsRequest: () => {
+    dispatch(getCustomerDetailsRequest())
   }
 });
 

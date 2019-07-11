@@ -204,6 +204,11 @@
   background-color: #dedede;
   border-color: #dedede;
 }
+.custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff !important;
+  background-color: #7f6cb9 !important;
+  border-color: #7f6cb9 !important;
+}
 .pagination .page-item.active .page-link:focus {
   box-shadow: none;
 }
@@ -2539,6 +2544,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   align-items: center;
   background-color: #fff;
   position: relative;
+}
+.remaining-amount-section{
+  background: rgba(189, 186, 195, 0.17);
+  min-height: 211px;
+  padding: 15px;
+}
+.payment-debit-card input{
+  top: 6px;
+  right: 31px;
 }
 /*=========Payment Page css======*/
 

@@ -14,7 +14,7 @@ const addNewService = async (req, res) => {
          status: true,
          isDeleted: false
       }
-      let serviceData, isCannedService, serviceResultData = []
+      let serviceData, serviceResultData = []
       for (let index = 0; index < body.services.length; index++) {
 
          const element = body.services[index];
@@ -24,24 +24,6 @@ const addNewService = async (req, res) => {
                success: false
             })
          }
-         if (element.isCannedService && !body.isServiceSubmit) {
-            if (body.services.length > 1) {
-               isCannedService = false
-            }
-            isCannedService = true
-            const CannedServiceData = await Service.find({
-               serviceName: element.serviceName,
-               isCannedService: true,
-               userId: currentUser.id,
-               parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
-            })
-            if (CannedServiceData.length) {
-               return res.status(400).json({
-                  message: "Canned service name already exist,enter new name.",
-                  success: false
-               })
-            }
-         }
          serviceData = {
             serviceName: element.serviceName,
             note: element.note,
@@ -50,7 +32,7 @@ const addNewService = async (req, res) => {
             discount: element.discount,
             technician: element.technician ? element.technician._id : null,
             taxes: element.taxes,
-            isCannedService: isCannedService ? isCannedService : false,
+            isCannedService: false,
             isConfirmedValue: element.isConfirmedValue,
             serviceTotal: element.serviceTotal,
             userId: currentUser.id,
@@ -73,7 +55,6 @@ const addNewService = async (req, res) => {
       const customerAndUserContent = new CustomerAndUser(cutomerUser);
       const commentResult = await customerAndUserContent.save();
       return res.status(200).json({
-         message: isCannedService ? "Canned Service added successfully" : "",
          serviceResultData,
          commentResult,
          success: true
@@ -81,6 +62,71 @@ const addNewService = async (req, res) => {
 
    } catch (error) {
       console.log("this is add service error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
+/* add new canned service */
+const addNewCannedService = async (req, res) => {
+   const { body, currentUser } = req;
+   try {
+      let serviceData, serviceResultData = []
+      for (let index = 0; index < body.services.length; index++) {
+         const element = body.services[index];
+         if (!element.serviceName) {
+            return res.status(400).json({
+               message: "Service Name is required",
+               success: false
+            })
+         }
+         const CannedServiceData = await Service.find({
+            serviceName: element.serviceName,
+            isCannedService: true,
+            userId: currentUser.id,
+            parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
+         })
+         if (CannedServiceData.length) {
+            return res.status(400).json({
+               message: "Canned service name already exist,enter new name.",
+               success: false
+            })
+         }
+         serviceData = {
+            serviceName: element.serviceName,
+            note: element.note,
+            serviceItems: element.serviceItems,
+            epa: element.epa,
+            discount: element.discount,
+            technician: element.technician ? element.technician._id : null,
+            taxes: element.taxes,
+            isCannedService: true,
+            isConfirmedValue: element.isConfirmedValue,
+            serviceTotal: element.serviceTotal,
+            userId: currentUser.id,
+            parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
+            status: true,
+            isDeleted: false
+         }
+         const addedService = await Service.findByIdAndUpdate(element._id, {
+            $set: serviceData
+         })
+         if (!addedService) {
+            const serviceContent = new Service(serviceData);
+            const result = await serviceContent.save();
+            serviceResultData.push(result)
+         } else {
+            const seviceData = await Service.findById(element._id)
+            serviceResultData.push(seviceData)
+         }
+      }
+      return res.status(200).json({
+         message: "Canned Service added successfully",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is add canned service error", error);
       return res.status(500).json({
          message: error.message ? error.message : "Unexpected error occure.",
          success: false
@@ -141,5 +187,6 @@ const getAllCannedServices = async (req, res) => {
 }
 module.exports = {
    addNewService,
-   getAllCannedServices
+   getAllCannedServices,
+   addNewCannedService
 };

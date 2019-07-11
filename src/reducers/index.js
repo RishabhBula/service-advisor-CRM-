@@ -22,8 +22,8 @@ import { vendorsReducer } from "./Vendors";
 import { timelogReducer } from "./TimeLog"
 import { activityReducer } from "./Activity"
 import { messageReducer } from "./Message"
-import { summaryReducer} from "./OrderSummary"
-
+import { summaryReducer } from "./OrderSummary"
+import { paymentReducer } from "./Payment"
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -63,6 +63,7 @@ const AppReducer = combineReducers({
   activityReducer,
   messageReducer,
   summaryReducer,
+  paymentReducer,
   routing: routerReducer
 });
 

@@ -502,3 +502,18 @@ body {
     }
   }
 }
+
+/*===========Subscription Modal========*/
+.subscription-modal{
+  box-shadow: 1px 2px 7px -1px;
+  .card-body{
+    min-height: 280px;
+    ul{
+      text-align: center;
+      li{
+        width: 145px;
+        margin: 15px auto;
+      }
+    }
+  }
+}

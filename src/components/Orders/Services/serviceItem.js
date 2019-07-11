@@ -283,8 +283,6 @@ class ServiceItem extends Component {
   };
   handleTechnicianAdd = (e, index) => {
     if (e && e.value) {
-      console.log("$$$$$$$$$$$$$$$$$$", e);
-      
       const serviceData = [...this.state.services]
       serviceData[index].technician = e.data
       this.setState({
@@ -572,7 +570,7 @@ class ServiceItem extends Component {
         thisIsCannedService: true
       }
 
-      this.props.addNewService(payload)
+      this.props.addNewCannedService(payload)
     }
     this.setState({
       isServiceSubmitted: true,
@@ -691,7 +689,7 @@ class ServiceItem extends Component {
                           <div className={
                             item.note ? "pb-1 cursor_pointer isValue" : "pb-1 cursor_pointer notValue"
                           } id={`note${index}`}>
-                            <img className={""} src={"../../assets/img/writing.svg"} width={"30"} alt={"Notes"} />
+                            <img className={""} src={"../../assets/img/writing .svg"} width={"30"} alt={"Notes"} />
                           </div>
                           <UncontrolledTooltip placement="top" target={`note${index}`}>
                             {item.note ? "Update note" : "Add a note"}
@@ -752,7 +750,7 @@ class ServiceItem extends Component {
                                 tax = calculateValues(serviceTotalArray || 0, item.taxes.value || 0, item.taxes.type);
                                 serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
                                 return (
-                                  <tr>
+                                  <tr key={sIndex}>
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
                                     <td>
                                       {

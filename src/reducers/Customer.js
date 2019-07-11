@@ -9,6 +9,7 @@ const listCustomerState = {
   isLoading: false,
   customers: [],
   totalUsers: [],
+  getCustomerDetails: false,
   importError: undefined
 };
 
@@ -53,6 +54,14 @@ export const customerListReducer = handleActions(
     [customersAddActions.IMPORT_CUSTOMER_REQ_UPDATE]: (state, action) => ({
       ...state,
       ...action.payload
+    }),
+    [customersAddActions.CUSTOMER_DETAILS_REQUEST]: (state, action) => ({
+      ...state,
+      getCustomerDetails: false
+    }),
+    [customersAddActions.CUSTOMER_DETAILS_SUCCESS]: (state, action) => ({
+      ...state,
+      getCustomerDetails: true
     })
   },
   listCustomerState

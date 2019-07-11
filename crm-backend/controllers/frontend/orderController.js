@@ -372,7 +372,7 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId"
+      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId paymentId"
     );
     const result1 = await Orders.populate(result2, {
       path:
@@ -386,7 +386,8 @@ const getOrderDetails = async (req, res) => {
       inspectionData = [],
       messageData = [],
       messageNotes = [],
-      timeLogData = [];
+      timeLogData = [],
+      paymentData = [];
     if (result[0].serviceId.length) {
       for (let index = 0; index < result[0].serviceId.length; index++) {
         const element = result[0].serviceId[index];
@@ -422,6 +423,14 @@ const getOrderDetails = async (req, res) => {
         }
       }
     }
+    if (result[0].paymentId && result[0].paymentId.length) {
+      for (let index = 0; index < result[0].paymentId.length; index++) {
+        const element = result[0].paymentId[index];
+        if (!element.isDeleted) {
+          paymentData.push(element);
+        }
+      }
+    }
     return res.status(200).json({
       data: result,
       serviceResult: serviceData,
@@ -429,6 +438,7 @@ const getOrderDetails = async (req, res) => {
       messageResult: messageData,
       messageNotes: messageNotes,
       timeClockResult: timeLogData,
+      paymentResult: paymentData,
       customerCommentData: result[0].customerCommentId,
       success: true
     });
