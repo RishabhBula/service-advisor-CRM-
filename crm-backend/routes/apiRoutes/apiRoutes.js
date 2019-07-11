@@ -23,7 +23,8 @@ const {
   messageChat,
   timeClock,
   userActivity,
-  memberShipRoutes
+  memberShipRoutes,
+  webhookRoutes
 } = require("./index");
 router.post("/github-webhook", async (req, res) => {
   console.log(req.body);
@@ -52,5 +53,6 @@ router.use("/message", messageChat);
 router.use("/timeClock", timeClock);
 router.use("/activity", userActivity);
 router.use("/membership-plan", memberShipRoutes);
+router.use("/webhooks", webhookRoutes);
 
 module.exports = router;

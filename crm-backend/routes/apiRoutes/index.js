@@ -19,5 +19,6 @@ module.exports = {
   messageChat: require("./messageChatRoutes"),
   timeClock: require("./timeClockRoutes"),
   userActivity: require("./userActivityRoutes"),
-  memberShipRoutes: require("./membership")
+  memberShipRoutes: require("./membership"),
+  webhookRoutes: require("./webhook")
 };
