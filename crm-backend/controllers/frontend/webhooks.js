@@ -103,8 +103,7 @@ const subscriptionUpdated = async (req, res) => {
     if (event.toString() !== "invoice") {
       console.log("Event", event);
       return res.status(400).json({
-        message: "Oopps! we doesn't support other events then invoice.",
-        body
+        message: "Oopps! we doesn't support other events then invoice."
       });
     }
 
@@ -117,8 +116,7 @@ const subscriptionUpdated = async (req, res) => {
           return res.status(400).json({
             message:
               event.message ||
-              "Oopps! We are having issue while update user details.",
-            body
+              "Oopps! We are having issue while update user details."
           });
         }
         break;
@@ -130,22 +128,19 @@ const subscriptionUpdated = async (req, res) => {
           return res.status(400).json({
             message:
               event.message ||
-              "Oopps! We are having issue while update user details.",
-            body
+              "Oopps! We are having issue while update user details."
           });
         }
         break;
       default:
         console.log("Event type", type);
         return res.status(400).json({
-          message: "Oopps! we doesn't support other events then invoice.",
-          body
+          message: "Oopps! we doesn't support other events then invoice."
         });
     }
 
     return res.status(200).json({
-      message: "Subscription updated successfully.",
-      body
+      message: "Subscription updated successfully."
     });
   } catch (error) {
     console.log("Error in subscription handler", error);
