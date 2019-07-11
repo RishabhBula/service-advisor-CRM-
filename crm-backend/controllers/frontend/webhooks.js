@@ -64,6 +64,35 @@ const paymentSuccess = async (req, data) => {
 /**
  *
  */
+const paymentFailed = async (req, data) => {
+  const { customer, customer_email } = data;
+
+  const userData = await UserModel.findOne({
+    $or: [
+      {
+        stripeCustomerId: customer
+      },
+      {
+        email: customer_email
+      }
+    ],
+    isDeleted: false
+  });
+
+  try {
+    const email = new Email(req);
+    email.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION);
+    email.sendEmail(userData.email);
+    console.log("Email Sent success for success invoice.");
+  } catch (error) {
+    console.log("Send email error", error.message);
+    throw new Error("Oopps! there is an error sending email.");
+  }
+  return true;
+};
+/**
+ *
+ */
 const subscriptionUpdated = async (req, res) => {
   try {
     const { body } = req;
@@ -91,7 +120,18 @@ const subscriptionUpdated = async (req, res) => {
           });
         }
         break;
-
+      case "invoice.payment_failed":
+        try {
+          await paymentFailed(req, data);
+        } catch (error) {
+          console.log("Error in updating and sending email", event.message);
+          return res.status(400).json({
+            message:
+              event.message ||
+              "Oopps! We are having issue while update user details."
+          });
+        }
+        break;
       default:
         console.log("Event type", type);
         return res.status(400).json({
