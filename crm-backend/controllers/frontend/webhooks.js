@@ -96,14 +96,20 @@ const paymentFailed = async (req, data) => {
 const subscriptionUpdated = async (req, res) => {
   try {
     const { body } = req;
-    const { data: tempData } = body;
-    const { object: data, type } = tempData;
+    return res.status(200).json({
+      message: "Subscription updated successfully.",
+      body
+    });
+    /* 
+    const { data: tempData, type } = body;
+    const { object: data } = tempData;
     const { object: event } = data;
 
     if (event.toString() !== "invoice") {
       console.log("Event", event);
       return res.status(400).json({
-        message: "Oopps! we doesn't support other events then invoice."
+        message: "Oopps! we doesn't support other events then invoice.",
+        body
       });
     }
 
@@ -116,7 +122,8 @@ const subscriptionUpdated = async (req, res) => {
           return res.status(400).json({
             message:
               event.message ||
-              "Oopps! We are having issue while update user details."
+              "Oopps! We are having issue while update user details.",
+            body
           });
         }
         break;
@@ -128,20 +135,23 @@ const subscriptionUpdated = async (req, res) => {
           return res.status(400).json({
             message:
               event.message ||
-              "Oopps! We are having issue while update user details."
+              "Oopps! We are having issue while update user details.",
+            body
           });
         }
         break;
       default:
         console.log("Event type", type);
         return res.status(400).json({
-          message: "Oopps! we doesn't support other events then invoice."
+          message: "Oopps! we doesn't support other events then invoice.",
+          body
         });
     }
 
     return res.status(200).json({
-      message: "Subscription updated successfully."
-    });
+      message: "Subscription updated successfully.",
+      body
+    }); */
   } catch (error) {
     console.log("Error in subscription handler", error);
     return res.status(500).json({
