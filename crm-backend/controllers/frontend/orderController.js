@@ -320,6 +320,7 @@ const getOrderDetails = async (req, res) => {
     const parentId = currentUser.parentId || currentUser.id;
     const searchValue = query.search;
     const orderId = query._id;
+    const customerId = query.customerId
     let condition = {};
     condition["$and"] = [
       {
@@ -371,6 +372,15 @@ const getOrderDetails = async (req, res) => {
         ]
       });
     }
+    if (customerId) {
+      condition["$and"].push({
+        $or: [
+          {
+            customerId: mongoose.Types.ObjectId(customerId)
+          }
+        ]
+      });
+    }
     const result2 = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId paymentId"
     );
@@ -388,46 +398,48 @@ const getOrderDetails = async (req, res) => {
       messageNotes = [],
       timeLogData = [],
       paymentData = [];
-    if (result[0].serviceId.length) {
-      for (let index = 0; index < result[0].serviceId.length; index++) {
-        const element = result[0].serviceId[index];
-        serviceData.push(element.serviceId);
-      }
-    }
-    if (result[0].inspectionId.length) {
-      for (let index = 0; index < result[0].inspectionId.length; index++) {
-        const element = result[0].inspectionId[index];
-        inspectionData.push(element.inspectionId);
-      }
-    }
-    if (result[0].messageId && result[0].messageId.length) {
-      for (let index = 0; index < result[0].messageId.length; index++) {
-        const element = result[0].messageId[index];
-        if (
-          element.messageId &&
-          element.messageId.receiverId === currentUser.id
-        ) {
-          element.messageId.isSender = false;
-        }
-        if (element.messageId.isInternalNotes && !element.messageId.isDeleted) {
-          messageNotes.push(element.messageId)
-        }
-        messageData.push(element.messageId);
-      }
-    }
-    if (result[0].timeClockId && result[0].timeClockId.length) {
-      for (let index = 0; index < result[0].timeClockId.length; index++) {
-        const element = result[0].timeClockId[index];
-        if (!element.isDeleted) {
-          timeLogData.push(element);
+    if (result[0]) {
+      if (result[0].serviceId && result[0].serviceId.length) {
+        for (let index = 0; index < result[0].serviceId.length; index++) {
+          const element = result[0].serviceId[index];
+          serviceData.push(element.serviceId);
         }
       }
-    }
-    if (result[0].paymentId && result[0].paymentId.length) {
-      for (let index = 0; index < result[0].paymentId.length; index++) {
-        const element = result[0].paymentId[index];
-        if (!element.isDeleted) {
-          paymentData.push(element);
+      if (result[0].inspectionId && result[0].inspectionId.length) {
+        for (let index = 0; index < result[0].inspectionId.length; index++) {
+          const element = result[0].inspectionId[index];
+          inspectionData.push(element.inspectionId);
+        }
+      }
+      if (result[0].messageId && result[0].messageId.length) {
+        for (let index = 0; index < result[0].messageId.length; index++) {
+          const element = result[0].messageId[index];
+          if (
+            element.messageId &&
+            element.messageId.receiverId === currentUser.id
+          ) {
+            element.messageId.isSender = false;
+          }
+          if (element.messageId.isInternalNotes && !element.messageId.isDeleted) {
+            messageNotes.push(element.messageId)
+          }
+          messageData.push(element.messageId);
+        }
+      }
+      if (result[0].timeClockId && result[0].timeClockId.length) {
+        for (let index = 0; index < result[0].timeClockId.length; index++) {
+          const element = result[0].timeClockId[index];
+          if (!element.isDeleted) {
+            timeLogData.push(element);
+          }
+        }
+      }
+      if (result[0].paymentId && result[0].paymentId.length) {
+        for (let index = 0; index < result[0].paymentId.length; index++) {
+          const element = result[0].paymentId[index];
+          if (!element.isDeleted) {
+            paymentData.push(element);
+          }
         }
       }
     }
@@ -439,7 +451,7 @@ const getOrderDetails = async (req, res) => {
       messageNotes: messageNotes,
       timeClockResult: timeLogData,
       paymentResult: paymentData,
-      customerCommentData: result[0].customerCommentId,
+      customerCommentData: result[0] ? result[0].customerCommentId : [],
       success: true
     });
   } catch (error) {

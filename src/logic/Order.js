@@ -366,7 +366,8 @@ const getOrderDetails = createLogic({
             : action.payload && action.payload.search
               ? action.payload.search
               : null,
-        _id: action.payload && action.payload._id ? action.payload._id : null
+        _id: action.payload && action.payload._id ? action.payload._id : null,
+        customerId: action.payload && action.payload.customerId ? action.payload.customerId : null
       },
       undefined
     );
@@ -410,7 +411,8 @@ const getOrderDetails = createLogic({
       dispatch(
         getOrderDetailsSuccess({
           order: result.data.data[0],
-          orderId: result.data.data[0].orderId
+          orderId: result.data.data[0] ? result.data.data[0].orderId : null,
+          customerOrders: result.data.data
         })
       );
       dispatch(hideLoader());
