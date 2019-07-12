@@ -112,6 +112,7 @@ class CustomerView extends Component {
               {activeTab === 0 ? (
                 <CustomerOrders
                   customerOrders={customerOrders}
+                  {...this.props}
                 />) : null}
               {activeTab === 1 ?
                 (<CustomerVehicles
