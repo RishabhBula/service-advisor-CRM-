@@ -377,6 +377,19 @@ const messageChatValidations = [
     .withMessage("Message can not be empty")
     .trim()
 ];
+/**
+ *
+ */
+const SubscribeMembershipValidations = [
+  body("planId")
+    .not()
+    .isEmpty()
+    .withMessage("Please choose plan which need.")
+    .trim()
+];
+/**
+ *
+ */
 module.exports = {
   signupValidation,
   signupConfirmation,
@@ -399,5 +412,6 @@ module.exports = {
   createNewMatrixValidation,
   UpdateMatrixValidation,
   userChangePasswordValidation,
-  messageChatValidations
+  messageChatValidations,
+  SubscribeMembershipValidations
 };
