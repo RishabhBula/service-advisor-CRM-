@@ -94,24 +94,43 @@ class OrderSummary extends Component {
                     totalLabor += parseFloat(servicesSubTotal)
                   }
                   orderSubTotal += (parseFloat(servicesSubTotal))
+                  
                   return (
                     <div key={sIndex} className={"pb-2 border-bottom"}>
-                      <div className={"pb-1 service-head pl-2 pr-2"}>{service.description || service.brandName || service.discription}</div>
+                      <div className={"pb-1 service-head pl-2 pr-2"}>
+                        {service.description || service.brandName || service.discription}
+
+                        {service.serviceType === 'part' && service.partOptions  && service.partOptions.showNumberOnQuoteAndInvoice && service.partNumber !== '' ? <span className="part-number"> ({ service.partNumber})</span>: ''} 
+                        {service.serviceType === 'part' && service.partOptions && service.partOptions.showNoteOnQuoteAndInvoice ? <div className={"part-note"}>{service.note}</div> :''}
+
+                        {service.serviceType === 'tire' && service.tierPermission && service.tierPermission.showNoteOnQuotesInvoices && service.tierSize[0].notes !== '' ? <div className={"part-note"}> ({service.tierSize[0].notes})</div> : ''}
+
+                        {service.serviceType === 'labor' && service.permission && service.permission.showNoteOnQuotesInvoices && service.notes !== '' ? <div className={"part-note"}> ({service.notes})</div> : ''}
+
+                      </div>
                       {
                         service.serviceType !== 'labor' ?
                           <div className={"d-flex pl-2 pr-2 entity"}>
-                            <span className={"pr-3"}>Price : <Dollor value={service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0} /></span>
-                            <span className={"pr-3"}>QTY : {service.qty}</span>
+                            {service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? 
+                              <><span className={"pr-3"}>Price : <Dollor value={service.cost || 0} /></span> 
+                              <span className={"pr-3"}>QTY : {service.qty}</span></> : 
+                              ''
+                            }
+                            {service.serviceType === "tire" ? <><span className={"pr-3"}>Price : <Dollor value={(service.tierSize ? service.tierSize[0].cost : null) || 0} /></span> <span className={"pr-3"}>QTY : {service.qty}</span> </>: ''
+                            }
+                            {/* <span className={"pr-3"}>QTY : {service.qty}</span> */}
                             <span>Discount : {service.discount.value || 0}</span>
                             <span className={"pull-right ml-auto"}>Sub Total : <Dollor value={servicesSubTotal} /></span>
                           </div> :
                           <div className={"d-flex pl-2 pr-2 entity"}>
-                            <span className={"pr-3"}>Hours : {service.hours || 0}</span>
+                            {service.serviceType === "labor" && service.permission && service.permission.isShowHours ? 
+                            <span className={"pr-3"}>Hours : {service.hours || 0}</span> : ''}  
                             <span className={"pr-3"}>Rate : {(service.rate ? service.rate.hourlyRate : 1)}</span>
                             <span>Discount : {service.discount.value || 0}</span>
                             <span className={"pull-right ml-auto"}> Sub Total : <Dollor value={calSubTotal} /></span>
                           </div>
                       }
+                      
                     </div>
                   )
                 }) : ''

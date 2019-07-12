@@ -106,19 +106,19 @@ export const ValidatedRoutes = [
   },
   {
     url: AppRoutes.WORKFLOW.url,
-    authKey: "isAllowedCalendar"
+    authKey: "isAllowedWorkflow"
   },
   {
     url: AppRoutes.WORKFLOW_ORDER.url,
-    authKey: "isAllowedCalendar"
+    authKey: "isAllowedWorkflow"
   },
   {
     url: AppRoutes.WORKFLOW_ORDER_SERVICES.url,
-    authKey: "isAllowedCalendar"
+    authKey: "isAllowedWorkflow"
   },
   {
     url: AppRoutes.WORKFLOW_ORDER_INSPECTION.url,
-    authKey: "isAllowedCalendar"
+    authKey: "isAllowedWorkflow"
   },
   {
     url: AppRoutes.WORKFLOW_ORDER_TIME_CLOCK.url,
@@ -182,6 +182,6 @@ export const ValidatedRoutes = [
   },
   {
     url: AppRoutes.CANNED_SERVICE.url,
-    authKey: "isAllowedCompanySettings"
+    authKey: "isAllowedCannedJobs"
   },
 ];

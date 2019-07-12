@@ -480,10 +480,26 @@ body {
     .service-head{
       font-size: 16px;
       font-weight: 600;
+      .part-number{
+        font-size: 14px;
+        color: #9ba0a5;
+      }
+      .part-note{
+        font-size: 13px;
+        font-style: italic;
+        background: transparent;
+        border: 0;
+        display: block;
+        max-width: 75%;
+        color: #4c5558;
+        font-weight: 400;
+        margin-bottom: 5px;
+      }
     }
     .entity{
-      color: #707070;
-      font-size: 15px;
+      color: #4d515d;
+      font-size: 14px;
+      font-weight: 500;
     }
     .order-total-block{
       font-size: 14px;
