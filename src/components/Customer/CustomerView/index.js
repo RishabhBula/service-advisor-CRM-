@@ -100,7 +100,10 @@ class CustomerView extends Component {
           <Suspense fallback={<Loader />}>
             <React.Fragment>
               {activeTab === 0 ? (<CustomerOrders />) : null}
-              {activeTab === 1 ? (<CustomerVehicles />) : null}
+              {activeTab === 1 ?
+                (<CustomerVehicles
+                  customerVehicles={customerDetails[0] ? customerDetails[0].vehicles : []}
+                />) : null}
               {activeTab === 2 ? (<CustomerInfo />) : null}
             </React.Fragment>
           </Suspense>

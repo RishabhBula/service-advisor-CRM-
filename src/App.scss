@@ -517,3 +517,15 @@ body {
     }
   }
 }
+/*===========Customer details========*/
+.card-body{
+  position: relative;
+  .vehicle-details{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f0ab2447;
+    left: 0;
+    top: 0;
+  }
+}

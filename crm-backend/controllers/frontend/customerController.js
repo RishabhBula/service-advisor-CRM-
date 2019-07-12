@@ -153,7 +153,7 @@ const getAllCustomerList = async (req, res) => {
       .skip(offset)
       .limit(limit);
     const getAllCustomer = await customerModel.populate(users, {
-      path: "fleet"
+      path: "fleet vehicles"
     });
     const getAllCustomerCount = await customerModel.aggregate([
       { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
