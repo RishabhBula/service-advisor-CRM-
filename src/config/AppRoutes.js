@@ -104,6 +104,11 @@ export const AppRoutes = {
     name: "Customers",
     exact: true
   },
+  CUSTOMER_DETAILS: {
+    url: "/customers/details/:id",
+    name: "Customers Details",
+    exact: true
+  },
   PRICEMATRIX: {
     url: "/settings/pricematrix",
     name: "Price Matrix",

@@ -5,6 +5,8 @@ export const serviceActions = {
     GET_SERVICE_LIST_SUCCESS: "Service list success!",
     ADD_SERVICE: "Add new service Requested!",
     ADD_SERVICE_SUCCESS: "Add new service Success!",
+    ADD_CANNED_SERVICE: "Add new canned service Requested!",
+    ADD_CANNED_SERVICE_SUCCESS: "Add new canned service Success!",
     EDIT_SERVICE: "Edit service Requested!",
     EDIT_SERVICE_SUCCESS: "Edit service Success!",
     DELETE_SERVICE: "Delete service Requested!",
@@ -23,3 +25,5 @@ export const editServiceSuccess = createAction(serviceActions.EDIT_SERVICE_SUCCE
 export const deleteService = createAction(serviceActions.DELETE_SERVICE);
 export const getCannedServiceList = createAction(serviceActions.GET_CANNED_SERVICE_LIST);
 export const getCannedServiceListSuccess = createAction(serviceActions.GET_CANNED_SERVICE_LIST_SUCCESS);
+export const addNewCannedService = createAction(serviceActions.ADD_CANNED_SERVICE);
+export const addCannedServiceSuccess = createAction(serviceActions.ADD_CANNED_SERVICE_SUCCESS);

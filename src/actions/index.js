@@ -23,6 +23,7 @@ export * from "./TimeLog";
 export * from "./Activity";
 export * from "./Message";
 export * from "./OrderSummary";
+export * from "./Payment"
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

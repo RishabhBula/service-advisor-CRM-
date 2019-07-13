@@ -75,16 +75,18 @@ class OrderDetails extends Component {
   // }
 
   render() {
-    const { orderReducer, profileReducer, modelInfoReducer, modelOperate, isPrint } = this.props
+    const { orderReducer, profileReducer, modelInfoReducer, modelOperate, addPaymentRequest, paymentReducer,isPrint } = this.props
     const { modelDetails } = modelInfoReducer;
     const { paymentModalOpen } = modelDetails
-    const { activityLogs, activeService } = this.state
+    const paymentList = paymentReducer.paymentData.length ? paymentReducer.paymentData : []
+    const payedAmountList = paymentList && paymentList.length && paymentList[0].payedAmount && paymentList[0].payedAmount.length ? paymentList[0].payedAmount : null
+    const { activityLogs,activeService } = this.state
     const createdDate = orderReducer.orderItems ? moment(orderReducer.orderItems.createdAt || '').format("MMM Do YYYY LT") : '';
     const isInvoice = orderReducer.orderItems ? orderReducer.orderItems.isInvoice : '';
     const serviceWriter = profileReducer.profileInfo.firstName + ' ' + profileReducer.profileInfo.lastName
     const serviceData = orderReducer.orderItems ? orderReducer.orderItems.serviceId : ""
     let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
-      totalTax = 0, totalDiscount = 0;
+      totalTax = 0, totalDiscount = 0, totalPaiedAmount = 0;
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -179,7 +181,6 @@ class OrderDetails extends Component {
 
                   return true
                 }) : ''
-
                 }
                 
 
@@ -191,6 +192,12 @@ class OrderDetails extends Component {
           })
             : ''
           }
+          {
+            paymentList && paymentList.length ? paymentList.map((paymentData) => {
+              totalPaiedAmount += paymentData.payedAmount[paymentData.payedAmount.length - 1].amount
+              return true
+            }) : null
+          }
           {serviceData && serviceData.length ?
             <>
               <div className={"w-100 text-right pull-right pr-2 order-total-block"}>
@@ -201,6 +208,7 @@ class OrderDetails extends Component {
                 <div>Total Tax : <Dollor value={!isNaN(totalTax) ? totalTax.toFixed(2) : 0.00} /></div>
                 <div>Total Discount : <Dollor value={!isNaN(totalDiscount) ? totalDiscount.toFixed(2) : 0.00} /></div>
                 <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={!isNaN(orderGandTotal) ? orderGandTotal.toFixed(2) : 0.00} /></div>
+                <div className={"pt-2"}>Total Paid Amount : <Dollor value={parseFloat(totalPaiedAmount).toFixed(2)} /></div>
               </div>
               <div className={"clearfix"}></div>
             </>
@@ -209,8 +217,32 @@ class OrderDetails extends Component {
         </div>
         <hr />
         <div className={"text-center payment-section"}>
-          <h6 className={orderGandTotal === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={orderGandTotal.toFixed(2)} /></h6>
+          <h6 className={orderGandTotal - totalPaiedAmount === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)} /></h6>
           <Button size={"sm"} onClick={this.handlePaymentModal} className={"btn btn-success btn-rounded"}>New Payment</Button>
+        </div>
+        <div className={"activity-logs"}>
+          {
+            activityLogs && activityLogs.length ?
+              <h5 className={"mb-2 p-2 text-left"}>Payments</h5> :
+              null
+          }
+          {
+            paymentList && paymentList.length ? paymentList.slice(0).reverse().map((paymentData, pIndex) => {
+              return (
+                <div key={pIndex} className={"activity-block p-3"}>
+                  <div className={"pr-3 text-left"}>
+                    <span>{`Paid $${paymentData.payedAmount[paymentData.payedAmount.length - 1].amount.toFixed(2)} viea ${paymentData.paymentType} on date`}</span>
+                  </div>
+                  <div className={"text-left activity-date"}>
+                    <span>{moment(paymentData.payedAmount[paymentData.payedAmount.length - 1].date).format("MMM Do YYYY, h:mm A")}</span>
+                  </div>
+                  <span className={"activity-icon payment-set"}>
+                    <i className={"fa fa-dollar-sign"} />
+                  </span>
+                </div>
+              )
+            }) : null
+          }
         </div>
         <hr />
         <div className={"activity-logs"}>
@@ -223,16 +255,20 @@ class OrderDetails extends Component {
             return (
               <div key={index} className={"activity-block p-3"}>
                 <div className={"pr-3 text-left"}>
-                  <span>{activity.activityPerson.firstName}{" "}{activity.activityPerson.lastName}{" "}{activity.type !== "NEW_ORDER" ? "changed" : null}{" "}{activity.name}</span>
+                  <span>{activity.activityPerson.firstName}{" "}{activity.activityPerson.lastName}{" "}{activity.type !== "NEW_ORDER" && activity.type !== "ADD_PAYMENT" ? "changed" : null}{" "}{activity.name}</span>
                 </div>
                 <div className={"text-left activity-date"}>
                   <span>{moment(activity.createdAt).format("MMM Do YYYY, h:mm A")}</span>
                 </div>
                 <span className={activity.type === 'MESSAGE' ? "activity-icon activity-message" : "activity-icon activity-set"}>
                   {
-                    activity.type !== "NEW_ORDER" ?
+                    activity.type !== "NEW_ORDER" && activity.type !== "ADD_PAYMENT" ?
                       <i className={"fa fa-check"} /> :
                       null
+                  }
+                  {
+                    activity.type === "ADD_PAYMENT" ?
+                      <i className={"fa fa-dollar-sign"} /> : null
                   }
                 </span>
               </div>
@@ -247,7 +283,12 @@ class OrderDetails extends Component {
           payableAmmount={orderGandTotal}
           modelDetails={modelDetails}
           modelOperate={modelOperate}
-          paymentType={""}
+          isPaymentChange={false}
+          profileReducer={profileReducer}
+          orderReducer={orderReducer}
+          payedAmountList={payedAmountList}
+          addPaymentRequest={addPaymentRequest}
+          totalPaiedAmount={totalPaiedAmount}
         />
         <div>
           {/* {

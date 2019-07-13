@@ -83,7 +83,7 @@ class WorkflowGridView extends React.Component {
         }}
       >
         <DropdownToggle nav>
-          <i className="fas fa-ellipsis-h text-white" />
+          <i className="fas fa-ellipsis-h icon" />
         </DropdownToggle>
         <DropdownMenu right>
           <DropdownItem
@@ -117,41 +117,25 @@ class WorkflowGridView extends React.Component {
                     ref={providedNew.innerRef}
                     className={"content"}
                   >
-                    <div>
-                      <h5>
+                    <div onClick={() => {
+                      this.props.redirectTo(
+                        `${AppRoutes.WORKFLOW_ORDER.url.replace(
+                          ":id",
+                          task._id
+                        )}`
+                      );
+                    }}>
+                      <h5 className={"mb-0 "}>
                         <span>
                           {task.orderId ? `(#${task.orderId})` : null}
                         </span>
                         {"  "}
                         <span
-                          onClick={() => {
-                            this.props.redirectTo(
-                              `${AppRoutes.WORKFLOW_ORDER.url.replace(
-                                ":id",
-                                task._id
-                              )}`
-                            );
-                          }}
+                         
                         >
                           {task.orderName || "Unnamed order"}
                         </span>
                       </h5>
-                    </div>
-                    <hr />
-                    <div>
-                      <span>
-                        <i
-                          className={"fa fa-trash pull-right"}
-                          onClick={() => {
-                            this.props.deleteOrder({
-                              statusId: status._id,
-                              index,
-                              id: task._id
-                            });
-                          }}
-                        />
-                      </span>
-                    </div>
                     <div>
                       <span>
                         <img
@@ -184,6 +168,19 @@ class WorkflowGridView extends React.Component {
                           : "No Vehicle"}
                       </span>
                     </div>
+                    </div>
+                    <span className={"delete-icon"}>
+                      <i
+                        className={"fa fa-trash pull-right"}
+                        onClick={() => {
+                          this.props.deleteOrder({
+                            statusId: status._id,
+                            index,
+                            id: task._id
+                          });
+                        }}
+                      />
+                    </span>
                   </div>
                 )}
               </Draggable>
@@ -228,10 +225,12 @@ class WorkflowGridView extends React.Component {
                             {...provided.dragHandleProps}
                             className={"title"}
                           >
-                            <Row>
-                              <Col sm={"10"}>{status.name}</Col>
-                              <Col sm={"2"}>
-                                {this.renderActions(status, index)}
+                            <Row className={"m-0"}>
+                              <Col sm={"12"}>
+                                <div className={"workflow-heads"}>
+                                  <h5>{status.name}</h5>
+                                  <span>{this.renderActions(status, index)}</span>
+                                </div>
                               </Col>
                             </Row>
                           </div>

@@ -3,6 +3,8 @@ import { Table, Nav, NavItem, NavLink } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
 import { AppRoutes } from "../../config/AppRoutes";
+import serviceUser from "../../assets/service-user.png";
+import serviceTyre from "../../assets/service-car.png";
 
 class WorkflowListView extends React.Component {
   constructor(props) {
@@ -18,8 +20,9 @@ class WorkflowListView extends React.Component {
     const { activeTab } = this.state;
     return (
       <tr key={index}>
-        <td>
-          <span
+        <td className={""} width={450}>
+          <div> <span className={"pr-2"}>{order.isInvoice ? 'Invoice' : 'Estimate'}</span>  #{order.orderId || "---"}</div>
+          <div
             onClick={() =>
               this.props.redirectTo(
                 `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", order._id)}`
@@ -29,8 +32,29 @@ class WorkflowListView extends React.Component {
               cursor: "pointer"
             }}
           >
-            {order.name || "Unnamed order"}
-          </span>
+            {console.log(order, "order order")}
+            {order.orderName || "Unnamed order"}
+          </div>
+        </td>
+        <td>
+          <div className={"pb-2"}>
+            <img
+              src={serviceUser}
+              alt={"serviceUser"}
+              width={"18"}
+              height={"18"}
+            />
+            {order.customerId.firstName} {order.customerId.lastName}
+          </div>
+          <div>
+            <img
+              src={serviceTyre}
+              alt={"serviceTyre"}
+              width={"18"}
+              height={"18"}
+            />
+            {order.vehicleId.make} {order.vehicleId.modal}            
+          </div>
         </td>
         <td>
           <i
@@ -82,10 +106,11 @@ class WorkflowListView extends React.Component {
               })
             : null}
         </Nav>
-        <Table responsive>
+        <Table responsive className={"workflow-table"}>
           <thead>
             <tr>
               <th>Order Name</th>
+              <th />
               <th />
             </tr>
           </thead>

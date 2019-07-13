@@ -34,13 +34,93 @@ body {
   .row {
     width: 100%;
   }
+  &.header-fixed .app-body{
+    margin-top:0px;
+  }
+  &.header-fixed .app-header{
+    width: calc(100% - 200px);
+    right: 0;
+  }
+  &.sidebar-minimized.header-fixed {
+    .app-header{
+      width: calc(100% - 50px);
+      right: 0;
+    } 
+    .provider-logo{
+      display: block;
+      width: 50px;
+      height: 50px;
+      margin: 0;
+      padding: 22px;
+    }
+    .company-logo{
+      display: none;
+    }
+    .sidebar{
+      .nav-footer-logo{
+        position: absolute;
+        bottom: 60px;
+        left: 5px;
+        width: 40px;
+        height: 40px;
+        overflow: hidden;
+        justify-content: flex-start;
+        img{
+          width: 40px;
+        }
+      }
+    }
+  }
+  .app-header{
+    background-color: #8157ef;
+    border-bottom: 0px;
+  }
+  .provider-logo{
+    display: inline-flex;
+    flex-flow: column;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border:3px solid #fff;
+    margin: 10px auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  &.sidebar-fixed {
+    .app-header + .app-body .sidebar{
+      height: calc(100vh);
+      padding-top: 15px;
+    }
+  }
+  .app-body{ 
+    .main{
+      padding-top:55px; 
+    }
+    .company-logo{
+      padding-bottom: 5px;
+      border-bottom: 1px solid #fff;
+      text-align: center;
+      font-size: 15px;
+    }
+  }
   .sidebar {
     .nav-dropdown-items {
       .nav-link {
         padding: 7px 7px 7px 38px;
       }
     }
-
+    .nav-footer-logo{
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        line-height: 17px;
+        .powered-by-line{
+          font-size:11px;
+        }
+    }
   }
   .brand-logo {
     display: inline-block;
@@ -357,13 +437,39 @@ body {
       border-bottom-left-radius: 0;
     }
   }
+  .workflow-heads{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-align-items: center;
+    align-items: center;
+     h5 {
+      margin-bottom: 0;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      font-family: "FrutigerNeueLTPro-Medium";
+      color: #000;
+      color: #403b4e;
+    }
+    .icon{
+      color: #6d6d6d;
+      font-size: 18px;
+    }
+    .dropdown{
+      position: relative;
+      left: 20px;
+    }
+  }
   .workflow-grid-card {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 15px;
-    border-radius: 5px;
-    width: 250px;
+    background: #f1f1f1;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-top: 0px;
+    // padding: 1px;
+    margin: 15px 0px;
+    // border-radius: 5px;
+    width: 270px;
     display: inline-block;
     height: 500px;
     overflow-y: auto;
@@ -374,17 +480,37 @@ body {
       overflow-x: hidden;
     }
     .title {
-      background: #8157ef;
       padding: 5px;
       text-align: center;
-      color: #fff;
+      color: #464646;
+      margin: 0;
+      background: #fff;
+      display: block;
+      border-top: 1px solid #b5b1b1;
+      border-bottom: 1px solid #b5b1b1;
     }
     .content {
-      width: 100%;
+      width: calc(100% - 6px);
       min-height: 50px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
-      margin: 10px 0;
-      padding: 10px;
+      margin: 6px auto;
+      padding: 7px 10px;
+      border: 1px solid #dcdade;
+      background: #fff;
+      position: relative;
+      h5{
+        font-size: 15px;
+        // font-weight: 600;
+        padding-bottom: 6px;
+        color: #1862d4;
+         font-family: "FrutigerNeueLTPro-Regular";
+      }
+      .delete-icon{
+        position: absolute;
+        top: 6px;
+        right: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
     }
   }
   .tax-popover {
@@ -395,6 +521,11 @@ body {
   }
   .workflow-grid-container {
     width: max-content;
+  }
+  .workflow-table{
+    td,th{
+      padding: 5px 10px;
+    }
   }
   /*==============*/
   .popover.service-note-popover {
@@ -516,5 +647,32 @@ body {
         }
       }
     }
+  }
+}
+
+/*===========Subscription Modal========*/
+.subscription-modal{
+  box-shadow: 1px 2px 7px -1px;
+  .card-body{
+    min-height: 280px;
+    ul{
+      text-align: center;
+      li{
+        width: 145px;
+        margin: 15px auto;
+      }
+    }
+  }
+}
+/*===========Customer details========*/
+.card-body{
+  position: relative;
+  .vehicle-details{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f0ab2447;
+    left: 0;
+    top: 0;
   }
 }

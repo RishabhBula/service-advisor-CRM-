@@ -35,6 +35,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
 import { WildCardRoutes } from "../../config/Constants";
 import { isValidObjectId } from "../../helpers";
+import { AppNavbarBrand } from "@coreui/react";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -169,6 +170,7 @@ class DefaultLayout extends Component {
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions, shopLogo } = profileInfo;
     const { hasAccess } = this.state;
+    const providerCompanyName = profileInfoReducer.profileInfo.companyName || 'Service Advisor' 
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -186,14 +188,36 @@ class DefaultLayout extends Component {
         </AppHeader>
         <div className="app-body">
           <AppSidebar className="custom-sidebar" fixed display="lg">
+              <div className={"provider-logo"} style={{ backgroundImage: `url(${shopLogo || "/assets/img/logo-white.svg"})`}}>
+              </div>
+              <div className={"company-logo"}>{providerCompanyName}</div>
+                {/* <AppNavbarBrand
+                full={{
+                  src: shopLogo || "/assets/img/logo-white.svg",
+                  alt: "Service Adviser",
+                }}
+                minimized={{
+                  src: shopLogo || "/assets/img/logo-white.svg",
+                  width: 50,
+                  height: 50,
+                  alt: "Service Adviser"
+                }}
+              /> */}
+             
             <AppSidebarHeader />
             <AppSidebarForm />
+            
             <Suspense>
               <AppSidebarNav
                 navConfig={this.navigation(permissions || {})}
                 {...this.props}
               />
             </Suspense>
+              <div className={"text-center nav-footer-logo"}>
+                <img src={"/assets/img/logo-white.svg"} alt={"service-advisor"} width={70}/>
+                <div>Service Adviser</div>
+                {/* <span className={"powered-by-line"}>Powered by</span> */}
+              </div>
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>

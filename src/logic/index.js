@@ -21,9 +21,9 @@ import { UsersLogic } from "./Users";
 import { VehicleLogic } from "./Vehicles";
 import { VendorLogic } from "./Vendor";
 import { ActivityLogic } from "./Activity";
-import { MessageLogic } from"./Message"
+import { MessageLogic } from "./Message"
 import { OrderSummaryLogic } from "./OrderSummary"
-
+import { PaymentLogic } from "./Payment"
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
   async process({ action }, dispatch, done) {
@@ -55,5 +55,6 @@ export default [
   ...ActivityLogic,
   ...MessageLogic,
   ...OrderSummaryLogic,
+  ...PaymentLogic,
   redirectToLogic
 ];

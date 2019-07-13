@@ -43,7 +43,6 @@ export class CrmTimeClockModal extends Component {
   }
   componentDidUpdate = ({ timeLogEle }) => {
     if (timeLogEle !== this.props.timeLogEle) {
-      console.log("########################", this.props.timeLogEle);
       const {
         date,
         startDateTime,
