@@ -1,16 +1,32 @@
 import React, { Component } from "react";
 import { Card, CardBody, CardFooter, Row, Col } from "reactstrap";
 import VehicleIcons from "../../../containers/Icons/Vehicles"
+import { CrmVehicleModal } from "../../common/Vehicles/CrmVehicleModal";
 export class CustomerVehicles extends Component {
   constructor(props) {
     super(props);
     this.state = {
     };
   }
+  handleVehicleModal = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      vehicleModel: !modelDetails.vehicleModel,
+      vehicleEditModel: false
+    };
+    this.props.modelOperate(data);
+  }
+  submitCreateVehicle = data => {
+    const payload = {
+      ...data,
+      isCustomerDetails: true,
+      customerId: this.props.customerId
+    }
+    this.props.vehicleAddAction(payload);
+  };
   render() {
-    const { customerVehicles } = this.props
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", customerVehicles);
-
+    const { customerVehicles, modelInfoReducer } = this.props
+    const { modelDetails } = modelInfoReducer;
     return (
       <>
         <Row>
@@ -39,7 +55,28 @@ export class CustomerVehicles extends Component {
               )
             }) : null
           }
+          <Col md={"4"}>
+            <Card>
+              <CardBody className={"d-flex justify-content-center add-vehicle cursor_pointer"}>
+                <div onClick={this.handleVehicleModal}>
+                  <div>
+                    <h5><small><i className={"icon-plus icons"} /></small>{" "}Add new vehicle</h5>
+                  </div>
+                  <div className={"vehicle-type-img d-inline-block d-flex justify-content-center"}>
+                    <VehicleIcons
+                      type={"sedan"}
+                    />
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
         </Row>
+        <CrmVehicleModal
+          vehicleModalOpen={modelDetails.vehicleModel}
+          handleVehicleModal={this.handleVehicleModal}
+          submitCreateVehicleFun={this.submitCreateVehicle}
+        />
       </>
     );
   }

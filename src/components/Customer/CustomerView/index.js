@@ -1,6 +1,12 @@
 import React, { Component, Suspense } from "react";
 import { connect } from "react-redux";
-import { getCustomerDetailsSuccess, customerGetRequest } from "../../../actions"
+import {
+  getCustomerDetailsSuccess,
+  customerGetRequest,
+  modelOpenRequest,
+  vehicleAddRequest,
+  getOrderDetailsRequest
+} from "../../../actions"
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
 import Loader from "../../../containers/Loader/Loader";
@@ -34,6 +40,8 @@ class CustomerView extends Component {
     this.props.getCustomerDetailsSuccess();
     this.props.customerGetRequest()
     const query = qs.parse(this.props.location.search);
+    const customerId = this.props.match.params.id
+    this.props.getOrderDetailsRequest({ customerId: customerId })
     this.setState({
       customerId: this.props.match.params.id,
       activeTab: query.tab
@@ -67,6 +75,8 @@ class CustomerView extends Component {
   };
   render() {
     const { customerData, customerId, activeTab } = this.state;
+    const { modelOperate, modelInfoReducer, vehicleAddAction, orderReducer } = this.props
+    const { customerOrders } = orderReducer;
     let customerDetails = {}
     if (customerData && customerData.length) {
       customerDetails = customerData.filter(customer => customer._id === customerId)
@@ -99,10 +109,18 @@ class CustomerView extends Component {
           </div>
           <Suspense fallback={<Loader />}>
             <React.Fragment>
-              {activeTab === 0 ? (<CustomerOrders />) : null}
+              {activeTab === 0 ? (
+                <CustomerOrders
+                  customerOrders={customerOrders}
+                  {...this.props}
+                />) : null}
               {activeTab === 1 ?
                 (<CustomerVehicles
                   customerVehicles={customerDetails[0] ? customerDetails[0].vehicles : []}
+                  modelOperate={modelOperate}
+                  modelInfoReducer={modelInfoReducer}
+                  vehicleAddAction={vehicleAddAction}
+                  customerId={customerDetails[0] ? customerDetails[0]._id : null}
                 />) : null}
               {activeTab === 2 ? (<CustomerInfo />) : null}
             </React.Fragment>
@@ -114,6 +132,8 @@ class CustomerView extends Component {
 }
 const mapStateToProps = state => ({
   customerListReducer: state.customerListReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  orderReducer: state.orderReducer,
 });
 const mapDispatchToProps = dispatch => ({
   getCustomerDetailsSuccess: () => {
@@ -121,6 +141,15 @@ const mapDispatchToProps = dispatch => ({
   },
   customerGetRequest: () => {
     dispatch(customerGetRequest())
+  },
+  modelOperate: data => {
+    dispatch(modelOpenRequest({ modelDetails: data }));
+  },
+  vehicleAddAction: data => {
+    dispatch(vehicleAddRequest(data));
+  },
+  getOrderDetailsRequest: data => {
+    dispatch(getOrderDetailsRequest(data))
   }
 })
 export default connect(
