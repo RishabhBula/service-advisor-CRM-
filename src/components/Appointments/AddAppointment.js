@@ -98,6 +98,25 @@ export default class AddAppointment extends Component {
   /**
    *
    */
+  resetState = () => {
+    this.setState({
+      customerId: "",
+      appointmentDate: this.props.date || new Date(),
+      errors: {},
+      selectedCustomer: null,
+      selectedVehicle: null,
+      startTime: moment().format("HH:mm"),
+      endTime: moment()
+        .add(1, "hour")
+        .format("HH:mm"),
+      appointmentTitle: "",
+      note: "",
+      selectedColor: ""
+    });
+  };
+  /**
+   *
+   */
   render() {
     const {
       selectedCustomer,
@@ -133,7 +152,10 @@ export default class AddAppointment extends Component {
       >
         <CRMModal
           isOpen={isOpen}
-          toggle={toggleAddAppointModal}
+          toggle={e => {
+            this.resetState();
+            toggleAddAppointModal(e);
+          }}
           headerText={headerText}
           footerButtons={buttons}
         >
