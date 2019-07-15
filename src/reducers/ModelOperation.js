@@ -27,7 +27,7 @@ const initialAuthState = {
     timeClockModalOpen: false,
     timeClockEditModalOpen: false,
     paymentModalOpen: false,
-    paymentCardModalOpen: false
+    showAddAppointmentModal: false
   }
 };
 

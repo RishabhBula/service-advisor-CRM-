@@ -13,6 +13,11 @@ import arrLogic from "./logic";
 import AppReducer from "./reducers";
 import AppRoutes from "./routes/";
 import "react-toastify/dist/ReactToastify.css";
+import "react-day-picker/lib/style.css";
+
+/**
+ *
+ */
 const logicMiddleware = createLogicMiddleware(arrLogic);
 const history = createBrowserHistory({ basename: "/dev" });
 const middlewares = [logicMiddleware, routerMiddleware(history)];

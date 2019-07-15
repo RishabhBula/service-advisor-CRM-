@@ -54,7 +54,7 @@ import Inspection from "../../components/Orders/Inspection";
 import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
-import OrderDetails from "../../components/Orders/OrderDetails"
+import OrderDetails from "../../components/Orders/OrderDetails";
 import { logger } from "../../helpers";
 import qs from "query-string";
 const OrderTab = React.lazy(() => import("../../components/Orders/OrderTab"));
@@ -140,13 +140,15 @@ class Order extends Component {
     if (
       serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
       inspectionReducer.inspectionData.isSuccess !==
-      this.props.inspectionReducer.inspectionData.isSuccess
+        this.props.inspectionReducer.inspectionData.isSuccess
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     }
     if (
       orderReducer.orderItems !== this.props.orderReducer.orderItems ||
-      orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading || (messageReducer.messageData.isSuccess !== this.props.messageReducer.messageData.isSuccess)
+      orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
+      messageReducer.messageData.isSuccess !==
+        this.props.messageReducer.messageData.isSuccess
     ) {
       const {
         orderName,
@@ -233,26 +235,25 @@ class Order extends Component {
   };
 
   orderStatus = (type, value) => {
-    const { profileInfoReducer } = this.props
-    const comapnyId = profileInfoReducer.profileInfo._id
-    const { orderReducer } = this.props
-    let payload = {}
-    if (type === 'authorizStatus') {
+    const { profileInfoReducer } = this.props;
+    const comapnyId = profileInfoReducer.profileInfo._id;
+    const { orderReducer } = this.props;
+    let payload = {};
+    if (type === "authorizStatus") {
       payload = {
         status: value,
         _id: orderReducer.orderItems._id,
         authorizerId: comapnyId,
         isChangedOrderStatus: true
-      }
-    }
-    else {
+      };
+    } else {
       payload = {
         isInvoice: value,
-        _id: orderReducer.orderItems._id,
-      }
+        _id: orderReducer.orderItems._id
+      };
     }
-    this.props.updateOrderDetails(payload)
-  }
+    this.props.updateOrderDetails(payload);
+  };
 
   render() {
     const {
@@ -357,16 +358,15 @@ class Order extends Component {
                 </div>
                 <div className={"position-relative"}>
                   {this.props.orderReducer.orderItems &&
-                    !this.props.orderReducer.orderItems.customerId ?
-
+                  !this.props.orderReducer.orderItems.customerId ? (
                     <div className={"service-overlay"}>
-                      <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"} />
-                      <h3>
-                        Please Add Order Details first
-                      </h3>
+                      <img
+                        src="https://gramener.com/schoolminutes/img/arrow.png"
+                        alt={"arrow"}
+                      />
+                      <h3>Please Add Order Details first</h3>
                     </div>
-                    : null
-                  }
+                  ) : null}
                   {/* <div className={"order-activity"}>
                     <span color="" className="print-btn">
                       <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link>
@@ -452,23 +452,25 @@ class Order extends Component {
                           switchTimer={switchTimer}
                         />
                       ) : null}
-                      {activeTab === 3 ? <Message
-                        searchMessageTemplateList={searchMessageTemplateList}
-                        customerData={customerData}
-                        vehicleData={vehicleData}
-                        sendMessage={sendMessage}
-                        profileReducer={profileInfoReducer}
-                        orderId={orderId}
-                        orderReducer={orderReducer}
-                        messageReducer={messageReducer}
-                        inspectionData={this.props.inspectionReducer}
-                        addMessageTemplate={addMessageTemplate}
-                        getMessageTemplate={getMessageTemplate}
-                        updateMessageTemplate={updateMessageTemplate}
-                        deleteMessageTemplate={deleteMessageTemplate}
-                        deleteNotes={deleteNotes}
-                        isSummary={false}
-                      /> : null}
+                      {activeTab === 3 ? (
+                        <Message
+                          searchMessageTemplateList={searchMessageTemplateList}
+                          customerData={customerData}
+                          vehicleData={vehicleData}
+                          sendMessage={sendMessage}
+                          profileReducer={profileInfoReducer}
+                          orderId={orderId}
+                          orderReducer={orderReducer}
+                          messageReducer={messageReducer}
+                          inspectionData={this.props.inspectionReducer}
+                          addMessageTemplate={addMessageTemplate}
+                          getMessageTemplate={getMessageTemplate}
+                          updateMessageTemplate={updateMessageTemplate}
+                          deleteMessageTemplate={deleteMessageTemplate}
+                          deleteNotes={deleteNotes}
+                          isSummary={false}
+                        />
+                      ) : null}
                     </React.Fragment>
                   </Suspense>
                 </div>
@@ -604,10 +606,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getInventoryPartVendors(data));
   },
   addTimeLogRequest: data => {
-    dispatch(addTimeLogRequest(data))
+    dispatch(addTimeLogRequest(data));
   },
-  updateTimeLogRequest: (data) => {
-    dispatch(updateTimeLogRequest(data))
+  updateTimeLogRequest: data => {
+    dispatch(updateTimeLogRequest(data));
   },
   startTimer: data => dispatch(startTimer(data)),
   stopTimer: data => dispatch(stopTimer(data)),
@@ -616,7 +618,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(sendMessage(data));
   },
   deleteNotes: data => {
-    dispatch(deleteNotes(data))
+    dispatch(deleteNotes(data));
   }
 });
 export default connect(
