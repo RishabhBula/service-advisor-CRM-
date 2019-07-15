@@ -359,34 +359,34 @@ export default class AddAppointment extends Component {
                     </div>
                   </FormGroup>
                 </Col>
+                <Col md={"12"}>
+                  <FormGroup>
+                    <Label htmlFor="name" className="customer-modal-text-style">
+                      Select Order
+                    </Label>
+                    <div className={"input-block"}>
+                      <Async
+                        placeholder={"Type Vehicle name"}
+                        loadOptions={this.loadVehicles}
+                        className={classnames("w-100 form-select", {
+                          "is-invalid": errors.selectedVehicle
+                        })}
+                        value={selectedVehicle}
+                        isClearable={true}
+                        noOptionsMessage={() => "No vehicle found"}
+                        onChange={e => {
+                          this.setState({
+                            selectedVehicle: e
+                          });
+                        }}
+                      />
+                      {errors.selectedVehicle ? (
+                        <FormFeedback>{errors.selectedVehicle}</FormFeedback>
+                      ) : null}
+                    </div>
+                  </FormGroup>
+                </Col>
               </Row>
-            </Col>
-            <Col md={"12"}>
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Select Order
-                </Label>
-                <div className={"input-block"}>
-                  <Async
-                    placeholder={"Type Vehicle name"}
-                    loadOptions={this.loadVehicles}
-                    className={classnames("w-100 form-select", {
-                      "is-invalid": errors.selectedVehicle
-                    })}
-                    value={selectedVehicle}
-                    isClearable={true}
-                    noOptionsMessage={() => "No vehicle found"}
-                    onChange={e => {
-                      this.setState({
-                        selectedVehicle: e
-                      });
-                    }}
-                  />
-                  {errors.selectedVehicle ? (
-                    <FormFeedback>{errors.selectedVehicle}</FormFeedback>
-                  ) : null}
-                </div>
-              </FormGroup>
             </Col>
             <Col sm={"4"} />
           </Row>
