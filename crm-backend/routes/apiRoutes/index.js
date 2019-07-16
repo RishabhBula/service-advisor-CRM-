@@ -20,5 +20,6 @@ module.exports = {
   timeClock: require("./timeClockRoutes"),
   userActivity: require("./userActivityRoutes"),
   memberShipRoutes: require("./membership"),
-  webhookRoutes: require("./webhook")
+  webhookRoutes: require("./webhook"),
+  appointmentRoutes: require("./appointments")
 };

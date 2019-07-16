@@ -25,7 +25,34 @@ export default class Appointments extends Component {
   /**
    *
    */
+  onEventClick = info => {
+    this.props.onEventClick(info.event.id);
+  };
+  /**
+   *
+   */
   render() {
+    let { data } = this.props;
+    if (!data) {
+      data = [];
+    }
+    const events = data.map(event => {
+      const startHours = moment(event.startTime).format("HH");
+      const endHours = moment(event.endTime).format("HH");
+      const startMin = moment(event.startTime).format("HH");
+      const endMin = moment(event.endTime).format("HH");
+
+      return {
+        id: event._id,
+        title: event.appointmentTitle,
+        start: new Date(
+          new Date(event.appointmentDate).setUTCHours(startHours)
+        ).setUTCMinutes(startMin),
+        end: new Date(
+          new Date(event.appointmentDate).setUTCHours(endHours)
+        ).setUTCMinutes(endMin)
+      };
+    });
     return (
       <FullCalendar
         header={{
@@ -35,12 +62,9 @@ export default class Appointments extends Component {
         }}
         defaultView="dayGridMonth"
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        weekends={false}
-        timeZone={"UTC"}
-        events={[
-          { title: "event 1", date: "2019-04-01" },
-          { title: "event 2", date: "2019-04-02" }
-        ]}
+        weekends={true}
+        events={events}
+        eventClick={this.onEventClick}
         dateClick={this.onDateClick}
       />
     );

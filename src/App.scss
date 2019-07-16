@@ -499,28 +499,58 @@ body {
       }
     }
   }
-  .appointment-colors {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    float: left;
-    margin: 0 0.32em;
-    cursor: pointer;
-    position: relative;
-    &.selected {
-      i {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        font-size: 20px;
-      }
-    }
-    &:hover {
-      transition: opacity 0.4s cubic-bezier(0.3, 1, 0.4, 1);
-      opacity: 0.6;
-    }
-  }
   .fc td {
     cursor: pointer;
+  }
+  .add-appointment-form {
+    .appointment-color-container {
+      margin: 10px 20px;
+      display: flex;
+      align-items: center;
+
+      .appointment-colors {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        float: left;
+        margin: 0 0.32em;
+        cursor: pointer;
+        position: relative;
+        &.selected {
+          i {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 20px;
+          }
+        }
+        &:hover {
+          transition: opacity 0.4s cubic-bezier(0.3, 1, 0.4, 1);
+          opacity: 0.6;
+        }
+      }
+    }
+    label {
+      min-width: 20% !important;
+    }
+    .phone-field {
+      label {
+        min-width: 41% !important;
+      }
+    }
+    .is-invalid {
+      .css-vj8t7z {
+        border: 1px solid #f86c6b !important;
+        padding: 0;
+      }
+    }
+  }
+  /* React Select Design  */
+  .css-11unzgr {
+    .css-1gl4k7y,
+    .css-wqgs6e {
+      padding: 0px 5px;
+      text-align: left;
+    }
   }
 }

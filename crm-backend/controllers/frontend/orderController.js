@@ -103,9 +103,10 @@ const createNewOrder = async (req, res) => {
  */
 const listOrders = async (req, res) => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
+    const { search: searchValue, customerId } = query;
     const { id, parentId } = currentUser;
-    const condition = {
+    const orderStatusCondition = {
       $or: [
         {
           isDeleted: false
@@ -118,10 +119,43 @@ const listOrders = async (req, res) => {
       ],
       parentId: parentId ? parentId : id
     };
+    const condition = {
+      $and: [
+        {
+          $or: [
+            {
+              isDeleted: false
+            },
+            {
+              isDeleted: {
+                $exists: false
+              }
+            }
+          ]
+        },
+        { parentId: parentId ? parentId : id }
+      ]
+    };
+    if (customerId) {
+      condition["$and"].push({
+        customerId: mongoose.Types.ObjectId(customerId)
+      });
+    }
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            orderName: {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
     const result = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
-    let orderStatus = await OrderStatus.find(condition, {
+    let orderStatus = await OrderStatus.find(orderStatusCondition, {
       name: 1,
       isInvoice: 1
     }).sort({ orderIndex: "asc" });
@@ -409,7 +443,7 @@ const getOrderDetails = async (req, res) => {
           element.messageId.isSender = false;
         }
         if (element.messageId.isInternalNotes && !element.messageId.isDeleted) {
-          messageNotes.push(element.messageId)
+          messageNotes.push(element.messageId);
         }
         messageData.push(element.messageId);
       }

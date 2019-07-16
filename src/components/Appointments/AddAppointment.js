@@ -17,9 +17,19 @@ import React, { Component } from "react";
 import { logger } from "../../helpers";
 import CRMModal from "../common/Modal";
 import moment from "moment";
-import { AppointmentColors } from "../../config/Constants";
+import { AppointmentColors, DefaultErrorMessage } from "../../config/Constants";
+import Validator from "js-object-validation";
+import {
+  AddAppointmentValidations,
+  AddAppointmentMessages
+} from "../../validations";
+import { toast } from "react-toastify";
 
 export default class AddAppointment extends Component {
+  isCustomerReqSent;
+  isVehicleReqSent;
+  isOrderReqSent;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,23 +38,84 @@ export default class AddAppointment extends Component {
       errors: {},
       selectedCustomer: null,
       selectedVehicle: null,
-      startTime: moment().format("HH:mm"),
-      endTime: moment()
+      startTime: moment()
         .add(1, "hour")
-        .format("HH:mm"),
+        .format("HH:00"),
+      endTime: moment()
+        .add(2, "hours")
+        .format("HH:00"),
       appointmentTitle: "",
       note: "",
-      selectedColor: ""
+      selectedColor: AppointmentColors[0].value,
+      selectedOrder: null,
+      email: "",
+      phone: ""
     };
+    this.isCustomerReqSent = false;
+    this.isVehicleReqSent = false;
+    this.isOrderReqSent = false;
   }
   /**
    *
    */
-  componentDidUpdate({ date: prevDate }) {
-    const { date } = this.props;
+  componentDidUpdate({ date: prevDate, editData: oldEditData }) {
+    const { date, editData } = this.props;
     if (date !== prevDate) {
       this.setState({
         appointmentDate: date
+      });
+    }
+    /**
+     *
+     */
+    if (
+      editData &&
+      editData._id &&
+      oldEditData &&
+      oldEditData._id !== editData._id
+    ) {
+      logger(editData);
+      const {
+        email,
+        phone,
+        appointmentColor,
+        appointmentDate,
+        appointmentTitle,
+        note,
+        endTime,
+        startTime,
+        customerId,
+        vehicleId,
+        orderId
+      } = editData;
+      this.setState({
+        appointmentTitle,
+        note,
+        email,
+        phone,
+        selectedColor: appointmentColor,
+        appointmentDate: new Date(appointmentDate),
+        endTime: moment(endTime).format("HH:mm"),
+        startTime: moment(startTime).format("HH:mm"),
+        selectedCustomer: {
+          data: customerId,
+          label: `${customerId.firstName} ${customerId.lastName}`,
+          value: customerId._id
+        },
+        selectedVehicle: vehicleId
+          ? {
+              data: vehicleId,
+              label: `${vehicleId.make}`,
+              value: vehicleId._id
+            }
+          : null,
+        selectedOrder: orderId
+          ? {
+              data: orderId,
+              label: `${orderId.orderName}`,
+              value: orderId._id
+            }
+          : null
       });
     }
   }
@@ -54,28 +125,37 @@ export default class AddAppointment extends Component {
   handleInputChange = e => {
     logger(e.target.value);
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+      errors: {
+        ...this.state.errors,
+        [e.target.name]: null
+      }
     });
   };
   /**
    *
    */
   onDayChange = appointmentDate => {
-    logger(appointmentDate);
     this.setState({
-      appointmentDate
+      appointmentDate,
+      errors: {
+        ...this.state.errors,
+        appointmentDate: null
+      }
     });
   };
   /**
    *
    */
   loadCustomers = (input, callback) => {
+    this.isCustomerReqSent = input !== "";
     this.props.getCustomerData({ input, callback });
   };
   /**
    *
    */
   loadVehicles = (input, callback) => {
+    this.isVehicleReqSent = input !== "";
     const { selectedCustomer } = this.state;
     if (!selectedCustomer) {
       return callback([]);
@@ -90,9 +170,29 @@ export default class AddAppointment extends Component {
   /**
    *
    */
+  loadOrders = (input, callback) => {
+    this.isOrderReqSent = input !== "";
+    const { selectedCustomer } = this.state;
+    if (!selectedCustomer) {
+      return callback([]);
+    }
+
+    this.props.getOrders({
+      input,
+      callback,
+      customerId: selectedCustomer.value
+    });
+  };
+  /**
+   *
+   */
   onTimeChange = (time, type) => {
     this.setState({
-      [type]: time
+      [type]: time,
+      errors: {
+        ...this.state.errors,
+        [type]: null
+      }
     });
   };
   /**
@@ -105,14 +205,80 @@ export default class AddAppointment extends Component {
       errors: {},
       selectedCustomer: null,
       selectedVehicle: null,
-      startTime: moment().format("HH:mm"),
-      endTime: moment()
+      startTime: moment()
         .add(1, "hour")
+        .format("HH:mm"),
+      endTime: moment()
+        .add(2, "hours")
         .format("HH:mm"),
       appointmentTitle: "",
       note: "",
-      selectedColor: ""
+      selectedColor: AppointmentColors[0].value,
+      selectedOrder: null,
+      email: "",
+      phone: ""
     });
+  };
+  /**
+   *
+   */
+  addAppointment = e => {
+    e.preventDefault();
+    this.setState({
+      errors: {}
+    });
+    try {
+      const {
+        selectedColor,
+        note,
+        email,
+        phone,
+        selectedCustomer,
+        selectedOrder,
+        selectedVehicle,
+        appointmentDate,
+        appointmentTitle,
+        startTime,
+        endTime
+      } = this.state;
+      const data = {
+        selectedColor,
+        note,
+        email,
+        phone,
+        selectedCustomer:
+          selectedCustomer && selectedCustomer.value
+            ? selectedCustomer.value.toString()
+            : "",
+        selectedOrder:
+          selectedOrder && selectedOrder.value
+            ? selectedOrder.value.toString()
+            : "",
+        selectedVehicle:
+          selectedVehicle && selectedVehicle.value
+            ? selectedVehicle.value.toString()
+            : "",
+        appointmentDate: appointmentDate.toISOString(),
+        appointmentTitle,
+        startTime,
+        endTime
+      };
+      const { errors, isValid } = Validator(
+        data,
+        AddAppointmentValidations,
+        AddAppointmentMessages
+      );
+      if (!isValid) {
+        this.setState({
+          errors
+        });
+        return;
+      }
+      this.props.addAppointment(data);
+    } catch (error) {
+      logger(error);
+      toast.error(error.message || DefaultErrorMessage);
+    }
   };
   /**
    *
@@ -127,7 +293,10 @@ export default class AddAppointment extends Component {
       endTime,
       appointmentTitle,
       note,
-      selectedColor
+      selectedColor,
+      selectedOrder,
+      email,
+      phone
     } = this.state;
     const { toggleAddAppointModal, isOpen, isEditMode } = this.props;
     const headerText = isEditMode
@@ -137,30 +306,34 @@ export default class AddAppointment extends Component {
       {
         text: isEditMode ? "Update Appointment" : "Add Appointment",
         color: "primary",
-        type: "submit"
+        type: "submit",
+        onClick: this.addAppointment
       },
       {
         text: "Cancel",
-        onClick: toggleAddAppointModal,
+        onClick: e => {
+          this.resetState();
+          toggleAddAppointModal(e);
+        },
         type: "button"
       }
     ];
     return (
-      <Form
-        onSubmit={this.addPart}
-        className={classnames("add-appointment-form")}
+      <CRMModal
+        isOpen={isOpen}
+        toggle={e => {
+          this.resetState();
+          toggleAddAppointModal(e);
+        }}
+        headerText={headerText}
+        footerButtons={buttons}
       >
-        <CRMModal
-          isOpen={isOpen}
-          toggle={e => {
-            this.resetState();
-            toggleAddAppointModal(e);
-          }}
-          headerText={headerText}
-          footerButtons={buttons}
+        <Form
+          onSubmit={this.addAppointment}
+          className={classnames("add-appointment-form")}
         >
           <Row>
-            <Col sm={"12"}>
+            <Col sm={"12"} className={"appointment-color-container"}>
               <Label className={"float-left"}>Appointment Label</Label>
               <div>
                 {AppointmentColors.map((color, index) => {
@@ -171,9 +344,7 @@ export default class AddAppointment extends Component {
                         backgroundColor: color.value
                       }}
                       className={classnames("appointment-colors", {
-                        selected:
-                          selectedColor === color.value ||
-                          (!selectedColor && index === 0)
+                        selected: selectedColor === color.value
                       })}
                       onClick={() =>
                         this.setState({
@@ -181,8 +352,7 @@ export default class AddAppointment extends Component {
                         })
                       }
                     >
-                      {selectedColor === color.value ||
-                      (!selectedColor && index === 0) ? (
+                      {selectedColor === color.value ? (
                         <i className={"fa fa-check text-white"} />
                       ) : null}
                     </div>
@@ -209,7 +379,7 @@ export default class AddAppointment extends Component {
                     <div className={"input-block"}>
                       <Input
                         type="text"
-                        placeholder="John"
+                        placeholder="Meeting with John"
                         name="appointmentTitle"
                         onChange={this.handleInputChange}
                         value={appointmentTitle}
@@ -286,23 +456,53 @@ export default class AddAppointment extends Component {
                 <Col sm={"12"}>
                   <FormGroup className={"fleet-block"}>
                     <Label htmlFor="name" className="customer-modal-text-style">
-                      Customer
+                      Customer <span className="asteric">*</span>
                     </Label>
                     <div className={"input-block"}>
                       <Async
-                        placeholder={"Type to select customer from the list"}
+                        placeholder={"Type customer name"}
                         loadOptions={this.loadCustomers}
                         className={classnames("w-100 form-select", {
                           "is-invalid": errors.selectedCustomer
                         })}
                         value={selectedCustomer}
                         onChange={e => {
+                          if (!e) {
+                            e = {
+                              data: {}
+                            };
+                          }
+                          const customer = e.data;
+                          const { phoneDetail } = customer;
+                          let phone = "";
+                          if (phoneDetail && phoneDetail.length) {
+                            const tempPhone = phoneDetail.filter(
+                              d => d.phone === "mobile"
+                            );
+                            if (tempPhone.length) {
+                              phone = tempPhone[0].value;
+                            }
+                          }
+
                           this.setState({
-                            selectedCustomer: e
+                            selectedCustomer: e,
+                            email: customer.email || "",
+                            phone,
+                            errors: {
+                              ...this.state.errors,
+                              selectedCustomer: null,
+                              email: null,
+                              phone: null
+                            }
                           });
                         }}
                         isClearable={true}
-                        noOptionsMessage={() => "No customer found"}
+                        noOptionsMessage={() =>
+                          this.isCustomerReqSent
+                            ? "No customer found"
+                            : "Type customer name"
+                        }
+                        // menuIsOpen={true}
                       />
                       {errors.selectedCustomer ? (
                         <FormFeedback>{errors.selectedCustomer}</FormFeedback>
@@ -311,25 +511,34 @@ export default class AddAppointment extends Component {
                   </FormGroup>
                 </Col>
                 <Col md={"12"}>
-                  <FormGroup>
+                  <FormGroup className={"fleet-block"}>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Vehicle
                     </Label>
                     <div className={"input-block"}>
                       <Async
-                        placeholder={"Type Vehicle name"}
+                        placeholder={"Type vehicle name"}
                         loadOptions={this.loadVehicles}
                         className={classnames("w-100 form-select", {
                           "is-invalid": errors.selectedVehicle
                         })}
                         value={selectedVehicle}
                         isClearable={true}
-                        noOptionsMessage={() => "No vehicle found"}
+                        noOptionsMessage={() =>
+                          this.isVehicleReqSent
+                            ? "No vehicle found"
+                            : "Type vehicle name"
+                        }
                         onChange={e => {
                           this.setState({
-                            selectedVehicle: e
+                            selectedVehicle: e,
+                            errors: {
+                              ...this.state.errors,
+                              selectedVehicle: null
+                            }
                           });
                         }}
+                        isDisabled={!selectedCustomer}
                       />
                       {errors.selectedVehicle ? (
                         <FormFeedback>{errors.selectedVehicle}</FormFeedback>
@@ -338,7 +547,7 @@ export default class AddAppointment extends Component {
                   </FormGroup>
                 </Col>
                 <Col md={"6"}>
-                  <FormGroup>
+                  <FormGroup className={"phone-field"}>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Phone Number
                     </Label>
@@ -349,7 +558,7 @@ export default class AddAppointment extends Component {
                           "is-invalid": errors.phone
                         })}
                         name={"phone"}
-                        value={note}
+                        value={phone}
                         placeholder={"Phone"}
                         onChange={this.handleInputChange}
                       />
@@ -371,7 +580,7 @@ export default class AddAppointment extends Component {
                           "is-invalid": errors.phone
                         })}
                         name={"email"}
-                        value={note}
+                        value={email}
                         placeholder={"Email"}
                         onChange={this.handleInputChange}
                       />
@@ -382,28 +591,33 @@ export default class AddAppointment extends Component {
                   </FormGroup>
                 </Col>
                 <Col md={"12"}>
-                  <FormGroup>
+                  <FormGroup className={"fleet-block"}>
                     <Label htmlFor="name" className="customer-modal-text-style">
                       Select Order
                     </Label>
                     <div className={"input-block"}>
                       <Async
-                        placeholder={"Type Vehicle name"}
-                        loadOptions={this.loadVehicles}
+                        placeholder={"Type order name or number"}
+                        loadOptions={this.loadOrders}
                         className={classnames("w-100 form-select", {
-                          "is-invalid": errors.selectedVehicle
+                          "is-invalid": errors.selectedOrder
                         })}
-                        value={selectedVehicle}
+                        value={selectedOrder}
                         isClearable={true}
-                        noOptionsMessage={() => "No vehicle found"}
+                        noOptionsMessage={() =>
+                          this.isOrderReqSent
+                            ? "No order found"
+                            : "Type order name or number"
+                        }
                         onChange={e => {
                           this.setState({
-                            selectedVehicle: e
+                            selectedOrder: e
                           });
                         }}
+                        isDisabled={!selectedCustomer}
                       />
-                      {errors.selectedVehicle ? (
-                        <FormFeedback>{errors.selectedVehicle}</FormFeedback>
+                      {errors.selectedOrder ? (
+                        <FormFeedback>{errors.selectedOrder}</FormFeedback>
                       ) : null}
                     </div>
                   </FormGroup>
@@ -412,8 +626,8 @@ export default class AddAppointment extends Component {
             </Col>
             <Col sm={"4"} />
           </Row>
-        </CRMModal>
-      </Form>
+        </Form>
+      </CRMModal>
     );
   }
 }

@@ -24,14 +24,20 @@ const {
   timeClock,
   userActivity,
   memberShipRoutes,
-  webhookRoutes
+  webhookRoutes,
+  appointmentRoutes
 } = require("./index");
+/**
+ *
+ */
 router.post("/github-webhook", async (req, res) => {
-  console.log(req.body);
   res.send({
     body: req.body
   });
 });
+/**
+ *
+ */
 router.use("/auth", auth);
 router.use("/user", user);
 router.use("/role", role);
@@ -54,5 +60,9 @@ router.use("/timeClock", timeClock);
 router.use("/activity", userActivity);
 router.use("/membership-plan", memberShipRoutes);
 router.use("/webhooks", webhookRoutes);
+router.use("/appointment", appointmentRoutes);
 
+/**
+ *
+ */
 module.exports = router;

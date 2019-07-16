@@ -67,11 +67,73 @@ const getOrderId = createLogic({
 /**
  *
  */
+let orderListSelectReq;
+
+const getOrdersForSelectLogic = createLogic({
+  type: orderActions.GET_ORDER_LIST_FOR_SELECT_REQUEST,
+  async process({ action }, dispatch, done) {
+    const { payload: req } = action;
+    const payload = Object.assign({}, req);
+    delete req.callback;
+    delete req.input;
+    const { customerId, input: search } = payload;
+    if (orderListSelectReq) {
+      orderListSelectReq.cancelRequest();
+    }
+    orderListSelectReq = new ApiHelper();
+    let result = await orderListSelectReq.FetchFromServer(
+      "/order",
+      "/getOrders",
+      "GET",
+      true,
+      {
+        customerId,
+        search
+      }
+    );
+    if (!result.isError) {
+      const { data } = result.data;
+      const options = [];
+      for (const k in data) {
+        if (data.hasOwnProperty(k)) {
+          const element = data[k];
+          element.forEach(e => {
+            options.push({
+              label: `#${e.orderId} - ${e.orderName}`,
+              value: e._id,
+              data: e
+            });
+          });
+        }
+      }
+      payload.callback(options);
+    }
+    logger(result);
+    done();
+  }
+});
+/**
+ *
+ */
+let orderListReq;
+
 const getOrdersLogic = createLogic({
   type: orderActions.GET_ORDER_LIST_REQUEST,
   async process({ action }, dispatch, done) {
-    let api = new ApiHelper();
-    let result = await api.FetchFromServer("/order", "/getOrders", "GET", true);
+    const { payload: req } = action;
+    const payload = Object.assign({}, req);
+    delete payload.callback;
+    if (orderListReq) {
+      orderListReq.cancelRequest();
+    }
+    orderListReq = new ApiHelper();
+    let result = await orderListReq.FetchFromServer(
+      "/order",
+      "/getOrders",
+      "GET",
+      true,
+      req
+    );
     if (!result.isError) {
       dispatch(getOrderListSuccess(result.data));
     }
@@ -239,8 +301,8 @@ const addOrderLogic = createLogic({
         name: "Created new order",
         type: "NEW_ORDER",
         orderId: result.data.result._id
-      }
-      dispatch(addNewActivity(data))
+      };
+      dispatch(addNewActivity(data));
       dispatch(
         redirectTo({
           path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
@@ -288,24 +350,26 @@ const updateOrderDetailsLogic = createLogic({
           name: "Order status changed to authorised",
           type: "AUTHORISED_ORDER",
           orderId: action.payload._id
-        }
-        dispatch(addNewActivity(data))
+        };
+        dispatch(addNewActivity(data));
       }
       if (action.payload.status === false) {
         const data = {
           name: "Order status changed to Unauthorised",
           type: "UNAUTHORISED_ORDER",
           orderId: action.payload._id
-        }
-        dispatch(addNewActivity(data))
+        };
+        dispatch(addNewActivity(data));
       }
       if (!action.payload.isSummary) {
-        dispatch(getOrderDetailsRequest({
-          _id: action.payload && action.payload._id ? action.payload._id : null
-        }));
-      }
-      else {
-        dispatch(verifyLinkRequest(action.payload.query))
+        dispatch(
+          getOrderDetailsRequest({
+            _id:
+              action.payload && action.payload._id ? action.payload._id : null
+          })
+        );
+      } else {
+        dispatch(verifyLinkRequest(action.payload.query));
       }
 
       dispatch(updateOrderDetailsSuccess());
@@ -363,8 +427,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-              ? action.payload.search
-              : null,
+            ? action.payload.search
+            : null,
         _id: action.payload && action.payload._id ? action.payload._id : null
       },
       undefined
@@ -385,22 +449,22 @@ const getOrderDetails = createLogic({
         getActivityList({
           orderId: action.payload._id
         })
-      )
+      );
       dispatch(
         getInspectionListSuccess({
           inspection: result.data.inspectionResult
-        }
-        ))
-      dispatch(getTimeLogsSuccess(
-        {
+        })
+      );
+      dispatch(
+        getTimeLogsSuccess({
           timeLog: result.data.timeClockResult
-        }
-      ))
-      dispatch(getMessageListSuccess(
-        {
+        })
+      );
+      dispatch(
+        getMessageListSuccess({
           messages: result.data.messageResult
-        }
-      ))
+        })
+      );
       dispatch(
         getOrderDetailsSuccess({
           order: result.data.data[0],
@@ -423,5 +487,6 @@ export const OrderLogic = [
   addOrderLogic,
   updateOrderDetailsLogic,
   getOrderDetails,
-  deleteOrderLogic
+  deleteOrderLogic,
+  getOrdersForSelectLogic
 ];
