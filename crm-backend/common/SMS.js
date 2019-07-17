@@ -31,7 +31,9 @@ const sendSMS = async (mobile, message, userId) => {
   });
   return result;
 };
-
+/**
+ *
+ */
 module.exports = {
   sendSMS
 };

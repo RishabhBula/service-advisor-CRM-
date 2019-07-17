@@ -93,6 +93,25 @@ const AppointmentDetails = props => (
             {props.data.email}
           </a>
         </Col>
+        <Col sm={"6"}>
+          Techinicians:{" "}
+          {props.data.techinicians && props.data.techinicians.length
+            ? props.data.techinicians.map((tech, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <a
+                      href={`/`}
+                      onClick={e => {
+                        e.preventDefault();
+                        // window.open(`${AppRoutes.STAFF_MEMBERS}`)
+                      }}
+                    >{`${tech.firstName} ${tech.lastName}`}</a>
+                    {index !== props.data.techinicians.length - 1 ? ", " : null}
+                  </React.Fragment>
+                );
+              })
+            : "N/A"}
+        </Col>
       </Row>
     )}
   </CRMModal>

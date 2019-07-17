@@ -53,6 +53,9 @@ class Calender extends Component {
         selectedDate: new Date()
       });
     }
+    this.setState({
+      editData: {}
+    });
   };
   /**
    *

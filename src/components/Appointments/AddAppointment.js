@@ -60,73 +60,76 @@ export default class AddAppointment extends Component {
   /**
    *
    */
-  componentDidUpdate({ date: prevDate, editData: oldEditData }) {
-    const { date, editData } = this.props;
+  componentDidUpdate({
+    date: prevDate,
+    editData: oldEditData,
+    isOpen: oldIsOpen
+  }) {
+    const { isOpen, date, editData } = this.props;
     if (date !== prevDate) {
       this.setState({
         appointmentDate: date
       });
     }
+    if (isOpen !== oldIsOpen) {
+      this.resetState();
+    }
     /**
      *
      */
-    if (
-      editData &&
-      editData._id &&
-      oldEditData &&
-      oldEditData._id !== editData._id
-    ) {
-      logger(editData);
-      const {
-        email,
-        phone,
-        appointmentColor,
-        appointmentDate,
-        appointmentTitle,
-        note,
-        endTime,
-        startTime,
-        customerId,
-        vehicleId,
-        orderId,
-        techinicians
-      } = editData;
-      this.setState({
-        appointmentTitle,
-        note,
-        email,
-        phone,
-        selectedColor: appointmentColor,
-        appointmentDate: new Date(appointmentDate),
-        endTime: moment(endTime).format("HH:mm"),
-        startTime: moment(startTime).format("HH:mm"),
-        selectedCustomer: {
-          data: customerId,
-          label: `${customerId.firstName} ${customerId.lastName}`,
-          value: customerId._id
-        },
-        selectedVehicle: vehicleId
-          ? {
-              data: vehicleId,
-              label: `${vehicleId.make}`,
-              value: vehicleId._id
-            }
-          : null,
-        selectedOrder: orderId
-          ? {
-              data: orderId,
-              label: `${orderId.orderName}`,
-              value: orderId._id
-            }
-          : null,
-        selectedTechincians: techinicians.map(tech => {
-          return {
-            data: tech,
-            label: `${tech.firstName} ${tech.lastName}`,
-            value: tech._id
-          };
-        })
-      });
+    if (editData && editData._id && oldEditData) {
+      if (oldEditData._id !== editData._id) {
+        const {
+          email,
+          phone,
+          appointmentColor,
+          appointmentDate,
+          appointmentTitle,
+          note,
+          endTime,
+          startTime,
+          customerId,
+          vehicleId,
+          orderId,
+          techinicians
+        } = editData;
+        this.setState({
+          appointmentTitle,
+          note,
+          email,
+          phone,
+          selectedColor: appointmentColor,
+          appointmentDate: new Date(appointmentDate),
+          endTime: moment(endTime).format("HH:mm"),
+          startTime: moment(startTime).format("HH:mm"),
+          selectedCustomer: {
+            data: customerId,
+            label: `${customerId.firstName} ${customerId.lastName}`,
+            value: customerId._id
+          },
+          selectedVehicle: vehicleId
+            ? {
+                data: vehicleId,
+                label: `${vehicleId.make}`,
+                value: vehicleId._id
+              }
+            : null,
+          selectedOrder: orderId
+            ? {
+                data: orderId,
+                label: `${orderId.orderName}`,
+                value: orderId._id
+              }
+            : null,
+          selectedTechincians: techinicians.map(tech => {
+            return {
+              data: tech,
+              label: `${tech.firstName} ${tech.lastName}`,
+              value: tech._id
+            };
+          })
+        });
+      }
     }
   }
   /**
@@ -233,7 +236,8 @@ export default class AddAppointment extends Component {
       selectedColor: AppointmentColors[0].value,
       selectedOrder: null,
       email: "",
-      phone: ""
+      phone: "",
+      selectedTechincians: []
     });
   };
   /**
@@ -397,6 +401,12 @@ export default class AddAppointment extends Component {
                 <Col sm={"6"}>
                   <DayPicker
                     selectedDays={appointmentDate}
+                    month={
+                      new Date(
+                        moment(appointmentDate).format("YYYY"),
+                        moment(appointmentDate).format("MM") - 1
+                      )
+                    }
                     onDayClick={this.onDayChange}
                     disabledDays={{
                       before: new Date()
