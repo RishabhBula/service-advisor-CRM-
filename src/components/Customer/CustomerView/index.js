@@ -158,6 +158,7 @@ class CustomerView extends Component {
                   getStdList={getStdList}
                   setLabourRateDefault={setLabourRateDefault}
                   getCustomerFleetListActions={getCustomerFleetListActions}
+                  {...this.props}
                 />
               ) : null}
             </React.Fragment>

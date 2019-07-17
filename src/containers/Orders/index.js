@@ -6,7 +6,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
 import moment from "moment";
 import * as jsPDF from "jspdf";
-import 'jspdf-autotable';
+import "jspdf-autotable";
 
 import {
   getOrderIdRequest,
@@ -58,10 +58,15 @@ import Inspection from "../../components/Orders/Inspection";
 import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
-import OrderDetails from "../../components/Orders/OrderDetails"
-import SendInspection from "../../components/Orders/Inspection/sentInspect"
-import MessageTemplate from "../../components/Orders/Inspection/messageTemplate"
-import { logger, calculateSubTotal, getSumOfArray, calculateValues } from "../../helpers";
+import OrderDetails from "../../components/Orders/OrderDetails";
+import SendInspection from "../../components/Orders/Inspection/sentInspect";
+import MessageTemplate from "../../components/Orders/Inspection/messageTemplate";
+import {
+  logger,
+  calculateSubTotal,
+  getSumOfArray,
+  calculateValues
+} from "../../helpers";
 import qs from "query-string";
 const OrderTab = React.lazy(() => import("../../components/Orders/OrderTab"));
 
@@ -105,10 +110,10 @@ class Order extends Component {
       orderName: "",
       isPrint: false,
       isOrderSubbmited: false,
-      serviceData: '',
+      serviceData: "",
       sentModal: false,
       mesageModal: false,
-      pdfBlob: ''
+      pdfBlob: ""
     };
     this.orderNameRef = React.createRef();
   }
@@ -151,13 +156,15 @@ class Order extends Component {
     if (
       serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
       inspectionReducer.inspectionData.isSuccess !==
-      this.props.inspectionReducer.inspectionData.isSuccess
+        this.props.inspectionReducer.inspectionData.isSuccess
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     }
     if (
       orderReducer.orderItems !== this.props.orderReducer.orderItems ||
-      orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading || (messageReducer.messageData.isSuccess !== this.props.messageReducer.messageData.isSuccess)
+      orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
+      messageReducer.messageData.isSuccess !==
+        this.props.messageReducer.messageData.isSuccess
     ) {
       const {
         orderName,
@@ -229,8 +236,7 @@ class Order extends Component {
     } else if (customerData.data && !vehicleData.data) {
       customerValue = customerData.data._id;
       vehicleValue = vehicleData._id;
-    }
-    else {
+    } else {
       customerValue = customerData._id;
       vehicleValue = vehicleData._id;
     }
@@ -251,66 +257,76 @@ class Order extends Component {
   };
 
   orderStatus = (type, value) => {
-    const { profileInfoReducer } = this.props
-    const comapnyId = profileInfoReducer.profileInfo._id
-    const { orderReducer } = this.props
-    let payload = {}
-    if (type === 'authorizStatus') {
+    const { profileInfoReducer } = this.props;
+    const comapnyId = profileInfoReducer.profileInfo._id;
+    const { orderReducer } = this.props;
+    let payload = {};
+    if (type === "authorizStatus") {
       payload = {
         status: value,
         _id: orderReducer.orderItems._id,
         authorizerId: comapnyId,
         isChangedOrderStatus: true
-      }
-    }
-    else {
+      };
+    } else {
       payload = {
         isInvoice: value,
-        _id: orderReducer.orderItems._id,
-      }
+        _id: orderReducer.orderItems._id
+      };
     }
-    this.props.updateOrderDetails(payload)
-  }
+    this.props.updateOrderDetails(payload);
+  };
 
   handelTemplateModal = () => {
     this.setState({
       sentModal: !this.state.sentModal
     });
-    this.printInvoice({ "sentinvoice": true })
-  }
+    this.printInvoice({ sentinvoice: true });
+  };
 
-  toggleMessageTemplate = (ele) => {
+  toggleMessageTemplate = ele => {
     this.setState({
-      mesageModal: !this.state.mesageModal,
+      mesageModal: !this.state.mesageModal
     });
-  }
+  };
 
-  printInvoice = (sentinvoice) => {
+  printInvoice = sentinvoice => {
     const orderData = this.props.orderReducer.orderItems;
-    const customerData = orderData.customerId
+    const customerData = orderData.customerId;
     const serviceData = this.props.orderReducer.orderItems.serviceId;
-    const comapnyInfo = this.props.profileInfoReducer.profileInfo
-    const vehilceInfo = orderData.vehicleId.year + ' ' + orderData.vehicleId.make + ' ' + orderData.vehicleId.modal
-    var doc = new jsPDF('p', 'pt');
-    var pdfWidth = doc.internal.pageSize.getWidth()
-    doc.setFontSize(15)
+    const comapnyInfo = this.props.profileInfoReducer.profileInfo;
+    const vehilceInfo =
+      orderData.vehicleId.year +
+      " " +
+      orderData.vehicleId.make +
+      " " +
+      orderData.vehicleId.modal;
+    var doc = new jsPDF("p", "pt");
+    var pdfWidth = doc.internal.pageSize.getWidth();
+    doc.setFontSize(15);
     doc.setTextColor(51, 47, 62);
-    doc.text('Invoice -: #' + orderData.orderId + '', 20, 40);
+    doc.text("Invoice -: #" + orderData.orderId + "", 20, 40);
     doc.setFontSize(10);
-    doc.text('Created -: ' + moment(orderData.createdAt || '').format("MMM Do YYYY") + '', 20, 54);
+    doc.text(
+      "Created -: " +
+        moment(orderData.createdAt || "").format("MMM Do YYYY") +
+        "",
+      20,
+      54
+    );
 
-    doc.setFontSize(15)
+    doc.setFontSize(15);
     doc.setFontStyle("bold");
-    var nameWidth = doc.getTextDimensions(comapnyInfo.companyName)
+    var nameWidth = doc.getTextDimensions(comapnyInfo.companyName);
     doc.text(comapnyInfo.companyName, pdfWidth - (nameWidth.w + 25), 45);
     doc.setFontStyle("normal");
 
-    doc.setLineWidth(0.1)
+    doc.setLineWidth(0.1);
     doc.setDrawColor(187, 185, 193);
     doc.line(20, 60, 570, 60);
 
     doc.setFontSize(12);
-    doc.text(customerData.firstName + ' ' + customerData.lastName, 20, 78);
+    doc.text(customerData.firstName + " " + customerData.lastName, 20, 78);
     doc.setFontSize(10);
     doc.text(customerData.email, 20, 95);
 
@@ -320,16 +336,29 @@ class Order extends Component {
     doc.setFontSize(12);
     doc.text(vehilceInfo, 320, 78);
 
-    doc.setLineWidth(0.1)
+    doc.setLineWidth(0.1);
     doc.setDrawColor(187, 185, 193);
     doc.line(20, 100, 570, 100);
 
-    let epa = 0, epaType = '', serviceDiscount = 0, serviceDiscountType = "", serviceTax = 0, serviceTaxType = "", totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray, totalTax = 0, totalDiscount = 0;
+    let epa = 0,
+      epaType = "",
+      serviceDiscount = 0,
+      serviceDiscountType = "",
+      serviceTax = 0,
+      serviceTaxType = "",
+      totalParts = 0,
+      totalTires = 0,
+      totalLabor = 0,
+      orderSubTotal = 0,
+      orderGandTotal = 0,
+      serviceTotalArray,
+      totalTax = 0,
+      totalDiscount = 0;
 
     let columnHeight = 110;
     let itemHeight = columnHeight;
     for (let i = 0; i < serviceData.length; i++) {
-      epa = serviceData[i].serviceId.epa.value || 0
+      epa = serviceData[i].serviceId.epa.value || 0;
       epaType = serviceData[i].serviceId.epa.type;
       serviceDiscount = serviceData[i].serviceId.discount.value || 0;
       serviceDiscountType = serviceData[i].serviceId.discount.type;
@@ -337,12 +366,16 @@ class Order extends Component {
       serviceTaxType = serviceData[i].serviceId.taxes.type || 0;
       doc.setDrawColor(187, 185, 193);
       doc.setFillColor(240, 243, 245);
-      doc.rect(20, columnHeight, 550, 20, 'FD');
-      doc.setTextColor(0, 0, 0)
+      doc.rect(20, columnHeight, 550, 20, "FD");
+      doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
       doc.text(serviceData[i].serviceId.serviceName, 25, columnHeight + 14);
 
-      let mainserviceTotal = [], serviceTotal, discount, tax, calSubTotal = 0;
+      let mainserviceTotal = [],
+        serviceTotal,
+        discount,
+        tax,
+        calSubTotal = 0;
 
       var columns = [
         { title: "Service Tile", dataKey: "Service Tile" },
@@ -352,16 +385,16 @@ class Order extends Component {
         { title: "Sub total", dataKey: "Sub total" }
       ];
       var rows = [];
-      var options = {}
+      var options = {};
       options = {
         margin: { left: 20 },
         startY: columnHeight + 21,
         tableWidth: pdfWidth - 45,
         columnStyles: {
-          'Price': { halign: 'left' },
-          'Qty': { halign: 'left' },
-          'Discount': { halign: 'left' },
-          'Sub total': { halign: 'left' },
+          Price: { halign: "left" },
+          Qty: { halign: "left" },
+          Discount: { halign: "left" },
+          "Sub total": { halign: "left" }
         },
         styles: {
           // minCellHeight: 5,
@@ -371,97 +404,173 @@ class Order extends Component {
           lineColor: 200,
           lineWidth: 0.1,
           lineHeight: 0,
-          fontStyle: 'normal', // normal, bold, italic, bolditalic
-          overflow: 'ellipsize', // visible, hidden, ellipsize or linebreak
+          fontStyle: "normal", // normal, bold, italic, bolditalic
+          overflow: "ellipsize", // visible, hidden, ellipsize or linebreak
           fillColor: 255,
           textColor: 20,
-          halign: 'left', // left, center, right
-          valign: 'middle', // top, middle, bottom
-          fillStyle: 'F', // 'S', 'F' or 'DF' (stroke, fill or fill then stroke)
-          cellWidth: 'auto', // 'auto', 'wrap' or a number
-          minCellHeight: 20,
-        },
-      }
+          halign: "left", // left, center, right
+          valign: "middle", // top, middle, bottom
+          fillStyle: "F", // 'S', 'F' or 'DF' (stroke, fill or fill then stroke)
+          cellWidth: "auto", // 'auto', 'wrap' or a number
+          minCellHeight: 20
+        }
+      };
       for (let j = 0; j < serviceData[i].serviceId.serviceItems.length; j++) {
         let service = serviceData[i].serviceId.serviceItems[j];
-        var val = service.description || service.brandName || service.discription;
+        var val =
+          service.description || service.brandName || service.discription;
         // var serviceType = service.serviceType;
-        var qty = service.qty || '';
+        var qty = service.qty || "";
         var hours = service.hours;
-        var hourlyRate = (service.rate ? service.rate.hourlyRate : 0)
-        var cost = service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0;
+        var hourlyRate = service.rate ? service.rate.hourlyRate : 0;
+        var cost =
+          service.cost ||
+          (service.tierSize ? service.tierSize[0].cost : null) ||
+          0;
 
-        calSubTotal = calculateSubTotal(cost, qty || 0, hours || 0, hourlyRate).toFixed(2)
-        const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
-        const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
-        mainserviceTotal.push(parseFloat(servicesSubTotal))
-        serviceTotalArray = getSumOfArray(mainserviceTotal)
-        epa = calculateValues(serviceTotalArray || 0, epa || 0, epa ? epaType : '$');
-        discount = calculateValues(serviceTotalArray || 0, serviceDiscount || 0, serviceDiscount ? serviceDiscountType : '$');
-        tax = calculateValues(serviceTotalArray || 0, serviceTax || 0, serviceTax ? serviceTaxType : '$');
-        serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
-        if (service.serviceType === 'part') {
-          totalParts += parseFloat(servicesSubTotal)
+        calSubTotal = calculateSubTotal(
+          cost,
+          qty || 0,
+          hours || 0,
+          hourlyRate
+        ).toFixed(2);
+        const subDiscount = calculateValues(
+          calSubTotal || 0,
+          service.discount.value || 0,
+          service.discount.type
+        );
+        const servicesSubTotal = (
+          parseFloat(calSubTotal) - parseFloat(subDiscount)
+        ).toFixed(2);
+        mainserviceTotal.push(parseFloat(servicesSubTotal));
+        serviceTotalArray = getSumOfArray(mainserviceTotal);
+        epa = calculateValues(
+          serviceTotalArray || 0,
+          epa || 0,
+          epa ? epaType : "$"
+        );
+        discount = calculateValues(
+          serviceTotalArray || 0,
+          serviceDiscount || 0,
+          serviceDiscount ? serviceDiscountType : "$"
+        );
+        tax = calculateValues(
+          serviceTotalArray || 0,
+          serviceTax || 0,
+          serviceTax ? serviceTaxType : "$"
+        );
+        serviceTotal = (
+          parseFloat(serviceTotalArray) +
+          parseFloat(epa) +
+          parseFloat(tax) -
+          parseFloat(discount)
+        ).toFixed(2);
+        if (service.serviceType === "part") {
+          totalParts += parseFloat(servicesSubTotal);
         }
-        if (service.serviceType === 'tire') {
-          totalTires += parseFloat(servicesSubTotal)
+        if (service.serviceType === "tire") {
+          totalTires += parseFloat(servicesSubTotal);
         }
-        if (service.serviceType === 'labor') {
-          totalLabor += parseFloat(servicesSubTotal)
+        if (service.serviceType === "labor") {
+          totalLabor += parseFloat(servicesSubTotal);
         }
-        orderSubTotal += (parseFloat(servicesSubTotal))
+        orderSubTotal += parseFloat(servicesSubTotal);
 
-        var discountType = service.discount.type
-        var discountValue = service.discount.value || 0
-        var discountMainVal = ''
-        discountMainVal = discountValue > 0 ? discountType === '%' ? (discountValue + '%') : ('$' + discountValue) : 0;
+        var discountType = service.discount.type;
+        var discountValue = service.discount.value || 0;
+        var discountMainVal = "";
+        discountMainVal =
+          discountValue > 0
+            ? discountType === "%"
+              ? discountValue + "%"
+              : "$" + discountValue
+            : 0;
 
         rows.push({
-          'Service Tile': val,
-          Price: cost || '-',
-          Qty: qty || '-',
+          "Service Tile": val,
+          Price: cost || "-",
+          Qty: qty || "-",
           Discount: discountMainVal,
-          'Sub total': '$' + servicesSubTotal + ''
-        })
-
+          "Sub total": "$" + servicesSubTotal + ""
+        });
       }
 
       doc.autoTable(columns, rows, options);
 
-      orderGandTotal += parseFloat(serviceTotal)
-      totalTax += parseFloat(epa) + parseFloat(tax)
-      totalDiscount += parseFloat(discount)
+      orderGandTotal += parseFloat(serviceTotal);
+      totalTax += parseFloat(epa) + parseFloat(tax);
+      totalDiscount += parseFloat(discount);
 
-      var rowCount = serviceData[i].serviceId.serviceItems.length
-      var rowHeight = ((rowCount + 1) * 22)
-      var finalY = doc.autoTable.previous.finalY
+      var rowCount = serviceData[i].serviceId.serviceItems.length;
+      var rowHeight = (rowCount + 1) * 22;
+      var finalY = doc.autoTable.previous.finalY;
 
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(10);
-      doc.text('EPA : $' + parseFloat(epa).toFixed(2) + '', 180, columnHeight + rowHeight + 28);
-      doc.text('Discount : $' + parseFloat(discount).toFixed(2) + '', 250, columnHeight + rowHeight + 28);
-      doc.text('Tax : $' + parseFloat(tax).toFixed(2) + '', 335, columnHeight + rowHeight + 28);
-      doc.text('Service Total : $' + calSubTotal + '', 455, columnHeight + rowHeight + 28);
+      doc.text(
+        "EPA : $" + parseFloat(epa).toFixed(2) + "",
+        180,
+        columnHeight + rowHeight + 28
+      );
+      doc.text(
+        "Discount : $" + parseFloat(discount).toFixed(2) + "",
+        250,
+        columnHeight + rowHeight + 28
+      );
+      doc.text(
+        "Tax : $" + parseFloat(tax).toFixed(2) + "",
+        335,
+        columnHeight + rowHeight + 28
+      );
+      doc.text(
+        "Service Total : $" + calSubTotal + "",
+        455,
+        columnHeight + rowHeight + 28
+      );
 
-      //  to plus and increase columnHeight for next item 
+      //  to plus and increase columnHeight for next item
       columnHeight = columnHeight + rowHeight + 40;
       // Last row  EPA DISCOUNT
     }
     itemHeight = finalY + 30;
 
     doc.setFontSize(12);
-    doc.text('Total Parts  : $' + totalParts.toFixed(2) + '', 450, itemHeight + 30);
-    doc.text('Total Tires  : $' + totalTires.toFixed(2) + '', 450, itemHeight + 45);
-    doc.text('Total Labor  : $' + totalLabor.toFixed(2) + '', 450, itemHeight + 60);
-    doc.text('Sub Total : $' + orderSubTotal.toFixed(2) + '', 450, itemHeight + 75);
-    doc.text('Total Tax  : $' + totalTax.toFixed(2) + '', 450, itemHeight + 90);
-    doc.text('Total Discount : $' + totalDiscount.toFixed(2) + '', 450, itemHeight + 105);
+    doc.text(
+      "Total Parts  : $" + totalParts.toFixed(2) + "",
+      450,
+      itemHeight + 30
+    );
+    doc.text(
+      "Total Tires  : $" + totalTires.toFixed(2) + "",
+      450,
+      itemHeight + 45
+    );
+    doc.text(
+      "Total Labor  : $" + totalLabor.toFixed(2) + "",
+      450,
+      itemHeight + 60
+    );
+    doc.text(
+      "Sub Total : $" + orderSubTotal.toFixed(2) + "",
+      450,
+      itemHeight + 75
+    );
+    doc.text("Total Tax  : $" + totalTax.toFixed(2) + "", 450, itemHeight + 90);
+    doc.text(
+      "Total Discount : $" + totalDiscount.toFixed(2) + "",
+      450,
+      itemHeight + 105
+    );
     doc.setDrawColor(187, 185, 193);
     doc.line(570, itemHeight + 110, 350, itemHeight + 110); // horizontal line
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
     doc.setFontStyle("bold");
-    doc.text('Grand Total  : $' + orderGandTotal.toFixed(2) + '', 430, itemHeight + 127);
+    doc.text(
+      "Grand Total  : $" + orderGandTotal.toFixed(2) + "",
+      430,
+      itemHeight + 127
+    );
 
     if (itemHeight > 750) {
       doc.addPage();
@@ -475,7 +584,7 @@ class Order extends Component {
         pdfBlob: file
       });
     }
-  }
+  };
 
   render() {
     const {
@@ -485,7 +594,7 @@ class Order extends Component {
       isError,
       orderName,
       orderId,
-      pdfBlob,
+      pdfBlob
     } = this.state;
     const {
       getVehicleData,
@@ -584,23 +693,33 @@ class Order extends Component {
                 </div>
                 <div className={"position-relative"}>
                   {this.props.orderReducer.orderItems &&
-                    (!this.props.orderReducer.orderItems.customerId || !this.props.orderReducer.orderItems.vehicleId) ?
-
+                  (!this.props.orderReducer.orderItems.customerId ||
+                    !this.props.orderReducer.orderItems.vehicleId) ? (
                     <div className={"service-overlay"}>
-                      <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"} />
-                      <h3>
-                        Please Add Order Details first
-                      </h3>
+                      <img
+                        src="https://gramener.com/schoolminutes/img/arrow.png"
+                        alt={"arrow"}
+                      />
+                      <h3>Please Add Order Details first</h3>
                     </div>
-                    : null
-                  }
+                  ) : null}
                   <div className={"order-activity"}>
-                    <span color="" className="print-btn" onClick={this.handelTemplateModal}>
+                    <span
+                      color=""
+                      className="print-btn"
+                      onClick={this.handelTemplateModal}
+                    >
                       {/* <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link> */}
-                      <i className="icons cui-cursor"></i>&nbsp; Sent
+                      <i className="icons cui-cursor" />
+                      &nbsp; Sent
                     </span>
-                    <span id="add-Appointment" className="print-btn" onClick={() => this.printInvoice(false)}>
-                      <i className="icon-printer icons "></i>&nbsp; Print
+                    <span
+                      id="add-Appointment"
+                      className="print-btn"
+                      onClick={() => this.printInvoice(false)}
+                    >
+                      <i className="icon-printer icons " />
+                      &nbsp; Print
                     </span>
                   </div>
                   <div className={"position-relative"}>
@@ -683,23 +802,25 @@ class Order extends Component {
                           switchTimer={switchTimer}
                         />
                       ) : null}
-                      {activeTab === 3 ? <Message
-                        searchMessageTemplateList={searchMessageTemplateList}
-                        customerData={customerData}
-                        vehicleData={vehicleData}
-                        sendMessage={sendMessage}
-                        profileReducer={profileInfoReducer}
-                        orderId={orderId}
-                        orderReducer={orderReducer}
-                        messageReducer={messageReducer}
-                        inspectionData={this.props.inspectionReducer}
-                        addMessageTemplate={addMessageTemplate}
-                        getMessageTemplate={getMessageTemplate}
-                        updateMessageTemplate={updateMessageTemplate}
-                        deleteMessageTemplate={deleteMessageTemplate}
-                        deleteNotes={deleteNotes}
-                        isSummary={false}
-                      /> : null}
+                      {activeTab === 3 ? (
+                        <Message
+                          searchMessageTemplateList={searchMessageTemplateList}
+                          customerData={customerData}
+                          vehicleData={vehicleData}
+                          sendMessage={sendMessage}
+                          profileReducer={profileInfoReducer}
+                          orderId={orderId}
+                          orderReducer={orderReducer}
+                          messageReducer={messageReducer}
+                          inspectionData={this.props.inspectionReducer}
+                          addMessageTemplate={addMessageTemplate}
+                          getMessageTemplate={getMessageTemplate}
+                          updateMessageTemplate={updateMessageTemplate}
+                          deleteMessageTemplate={deleteMessageTemplate}
+                          deleteNotes={deleteNotes}
+                          isSummary={false}
+                        />
+                      ) : null}
                     </React.Fragment>
                   </Suspense>
                 </div>
@@ -858,10 +979,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getInventoryPartVendors(data));
   },
   addTimeLogRequest: data => {
-    dispatch(addTimeLogRequest(data))
+    dispatch(addTimeLogRequest(data));
   },
-  updateTimeLogRequest: (data) => {
-    dispatch(updateTimeLogRequest(data))
+  updateTimeLogRequest: data => {
+    dispatch(updateTimeLogRequest(data));
   },
   startTimer: data => dispatch(startTimer(data)),
   stopTimer: data => dispatch(stopTimer(data)),
@@ -870,13 +991,13 @@ const mapDispatchToProps = dispatch => ({
     dispatch(sendMessage(data));
   },
   deleteNotes: data => {
-    dispatch(deleteNotes(data))
+    dispatch(deleteNotes(data));
   },
   addPaymentRequest: data => {
-    dispatch(addPaymentRequest(data))
+    dispatch(addPaymentRequest(data));
   },
   addNewCannedService: data => {
-    dispatch(addNewCannedService(data))
+    dispatch(addNewCannedService(data));
   }
 });
 export default connect(

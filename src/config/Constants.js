@@ -1,4 +1,3 @@
-
 export const UserPermissions = [
   { key: "isAllowedDashboard", text: "Allow access to Dashboard?" },
   { key: "isAllowedWorkflow", text: "Allow access to Workflow?" },
@@ -199,14 +198,14 @@ export const Drivetrain = [
 export const LabourPermission = {
   isShowHours: false,
   showNoteOnQuotesInvoices: false
-}
+};
 export const LabourPermissionText = {
   isShowHours: "Display hours on quote & invoice",
   showNoteOnQuotesInvoices: "Display note on quote & invoice"
-}
+};
 export const tierPermission = {
   showNoteOnQuotesInvoices: false
-}
+};
 export const tierPermissionText = {
   showNoteOnQuotesInvoices: "Display note on quote & invoice"
 };
@@ -219,13 +218,13 @@ export const LabourText = [
   { key: "isShowHours", text: "Display hours on quote & invoice" },
   {
     key: "showNoteOnQuotesInvoices",
-    text: "Display note on quote & invoice",
-  },
+    text: "Display note on quote & invoice"
+  }
 ];
 
 export const LabourTextDefault = {
   isShowHours: false,
-  showNoteOnQuotesInvoices: false,
+  showNoteOnQuotesInvoices: false
 };
 export const CreatePartOptions = [
   {
@@ -248,84 +247,84 @@ export const CreatePartOptions = [
 export const countryWithTimezone = [
   {
     timezones: [
-      'America/St_Johns',
-      'America/Halifax',
-      'America/Glace_Bay',
-      'America/Moncton',
-      'America/Goose_Bay',
-      'America/Blanc-Sablon',
-      'America/Toronto',
-      'America/Nipigon',
-      'America/Thunder_Bay',
-      'America/Iqaluit',
-      'America/Pangnirtung',
-      'America/Atikokan',
-      'America/Winnipeg',
-      'America/Rainy_River',
-      'America/Resolute',
-      'America/Rankin_Inlet',
-      'America/Regina',
-      'America/Swift_Current',
-      'America/Edmonton',
-      'America/Cambridge_Bay',
-      'America/Yellowknife',
-      'America/Inuvik',
-      'America/Creston',
-      'America/Dawson_Creek',
-      'America/Fort_Nelson',
-      'America/Vancouver',
-      'America/Whitehorse',
-      'America/Dawson',
+      "America/St_Johns",
+      "America/Halifax",
+      "America/Glace_Bay",
+      "America/Moncton",
+      "America/Goose_Bay",
+      "America/Blanc-Sablon",
+      "America/Toronto",
+      "America/Nipigon",
+      "America/Thunder_Bay",
+      "America/Iqaluit",
+      "America/Pangnirtung",
+      "America/Atikokan",
+      "America/Winnipeg",
+      "America/Rainy_River",
+      "America/Resolute",
+      "America/Rankin_Inlet",
+      "America/Regina",
+      "America/Swift_Current",
+      "America/Edmonton",
+      "America/Cambridge_Bay",
+      "America/Yellowknife",
+      "America/Inuvik",
+      "America/Creston",
+      "America/Dawson_Creek",
+      "America/Fort_Nelson",
+      "America/Vancouver",
+      "America/Whitehorse",
+      "America/Dawson"
     ],
     latlng: [60, -95],
-    name: 'Canada',
-    country_code: 'CA',
-    capital: 'Ottawa',
+    name: "Canada",
+    country_code: "CA",
+    capital: "Ottawa"
   },
   {
-    timezones: ['Europe/London'],
+    timezones: ["Europe/London"],
     latlng: [54, -2],
-    name: 'United Kingdom',
-    country_code: 'GB',
-    capital: 'London',
+    name: "United Kingdom",
+    country_code: "GB",
+    capital: "London"
   },
   {
     timezones: [
-      'America/New_York',
-      'America/Detroit',
-      'America/Kentucky/Louisville',
-      'America/Kentucky/Monticello',
-      'America/Indiana/Indianapolis',
-      'America/Indiana/Vincennes',
-      'America/Indiana/Winamac',
-      'America/Indiana/Marengo',
-      'America/Indiana/Petersburg',
-      'America/Indiana/Vevay',
-      'America/Chicago',
-      'America/Indiana/Tell_City',
-      'America/Indiana/Knox',
-      'America/Menominee',
-      'America/North_Dakota/Center',
-      'America/North_Dakota/New_Salem',
-      'America/North_Dakota/Beulah',
-      'America/Denver',
-      'America/Boise',
-      'America/Phoenix',
-      'America/Los_Angeles',
-      'America/Anchorage',
-      'America/Juneau',
-      'America/Sitka',
-      'America/Metlakatla',
-      'America/Yakutat',
-      'America/Nome',
-      'America/Adak',
-      'Pacific/Honolulu',
+      "America/New_York",
+      "America/Detroit",
+      "America/Kentucky/Louisville",
+      "America/Kentucky/Monticello",
+      "America/Indiana/Indianapolis",
+      "America/Indiana/Vincennes",
+      "America/Indiana/Winamac",
+      "America/Indiana/Marengo",
+      "America/Indiana/Petersburg",
+      "America/Indiana/Vevay",
+      "America/Chicago",
+      "America/Indiana/Tell_City",
+      "America/Indiana/Knox",
+      "America/Menominee",
+      "America/North_Dakota/Center",
+      "America/North_Dakota/New_Salem",
+      "America/North_Dakota/Beulah",
+      "America/Denver",
+      "America/Boise",
+      "America/Phoenix",
+      "America/Los_Angeles",
+      "America/Anchorage",
+      "America/Juneau",
+      "America/Sitka",
+      "America/Metlakatla",
+      "America/Yakutat",
+      "America/Nome",
+      "America/Adak",
+      "Pacific/Honolulu"
     ],
     latlng: [38, -97],
-    name: 'United States',
-    country_code: 'US',
-    capital: 'Washington D.C.',
-  },
+    name: "United States",
+    country_code: "US",
+    capital: "Washington D.C."
+  }
 ];
 export const allServices = [
   {
@@ -424,7 +423,7 @@ export const MarginChangeValues = [
 export const DefaultErrorMessage =
   "We are having some issues while completing your request. Please try after some time.";
 
-export const notExist = "-"
+export const notExist = "-";
 export const WildCardRoutes = [
   // AppRoutes.PROFILE.url
 ];
@@ -444,7 +443,41 @@ export const CustomerSheetHeaderToJSONKey = {
   "Is Receive A Discount?": "shouldReceiveDiscount"
 };
 
-
-export const currencyFormatter = new Intl.NumberFormat('en-US', {
+export const currencyFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2
-})
+});
+
+export const AppointmentColors = [
+  {
+    label: "Blue",
+    value: "#4aa9f0"
+  },
+  {
+    label: "Green",
+    value: "#00c286"
+  },
+  {
+    label: "Turquoise",
+    value: "#51c7d5"
+  },
+  {
+    label: "Sandy Brown",
+    value: "#fea33f"
+  },
+  {
+    label: "Salmon",
+    value: "#ff6475"
+  },
+  {
+    label: "Dim Gray",
+    value: "#52606a"
+  },
+  {
+    label: "Purple",
+    value: "#9a68e5"
+  },
+  {
+    label: "Brown",
+    value: "#82675F"
+  }
+];

@@ -2,6 +2,7 @@ import { createAction } from "redux-actions";
 
 export const orderActions = {
   GET_ORDER_LIST_REQUEST: "Order list Requested!",
+  GET_ORDER_LIST_FOR_SELECT_REQUEST: "Order list for select Requested!",
   GET_ORDER_LIST_SUCCESS: "Order list success!",
   GET_ORDER_LIST_FAILED: "Order list failed!",
   ADD_ORDER_REQUEST: "Order add request!",
@@ -25,6 +26,9 @@ export const orderActions = {
 };
 
 export const getOrderList = createAction(orderActions.GET_ORDER_LIST_REQUEST);
+export const getOrderListForSelect = createAction(
+  orderActions.GET_ORDER_LIST_FOR_SELECT_REQUEST
+);
 export const getOrderListSuccess = createAction(
   orderActions.GET_ORDER_LIST_SUCCESS
 );

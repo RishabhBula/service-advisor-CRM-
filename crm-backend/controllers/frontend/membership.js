@@ -102,7 +102,7 @@ const subscribe = async (req, res) => {
               _id: userId
             },
             {
-              $set: { stripeCustomerId: customerId }
+              $set: { stripeCustomerId: customerId, planId: plan._id }
             }
           );
         } catch (error) {

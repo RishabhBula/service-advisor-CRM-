@@ -151,5 +151,7 @@ const subscriptionUpdated = async (req, res) => {
     });
   }
 };
-
+/**
+ *
+ */
 module.exports = { subscriptionUpdated };
