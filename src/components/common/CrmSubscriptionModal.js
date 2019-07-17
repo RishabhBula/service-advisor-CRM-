@@ -3,9 +3,7 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  CardFooter,
   Row,
-  Col,
   Button
 } from "reactstrap";
 import { CrmSubPaymentModalModel } from "../../components/common/CrmSubPaymentModal"
@@ -41,7 +39,7 @@ export class CrmSubscriptionModel extends Component {
 
   render() {
     const { openSubscriptionModel, openSubPayementModel, addSubscriptionRequest } = this.props
-    const { subscriptionData, planId } = this.state
+    const {  planId } = this.state
     return (
       <>
         <Modal

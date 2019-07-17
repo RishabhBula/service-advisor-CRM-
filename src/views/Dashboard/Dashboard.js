@@ -26,12 +26,12 @@ class Dashboard extends Component {
     this.state = {};
   }
   componentDidMount = () => {
-    const { modelInfoReducer, modelOperate } = this.props
-    const { modelDetails } = modelInfoReducer;
-    const { openSubscriptionModel } = modelDetails
-    modelOperate({
-      openSubscriptionModel: !openSubscriptionModel
-    })
+    // const { modelInfoReducer, modelOperate } = this.props
+    // const { modelDetails } = modelInfoReducer;
+    // const { openSubscriptionModel } = modelDetails
+    // modelOperate({
+    //   openSubscriptionModel: !openSubscriptionModel
+    // })
   }
 
   render() {
