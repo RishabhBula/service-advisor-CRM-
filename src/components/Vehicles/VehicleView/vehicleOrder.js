@@ -1,16 +1,24 @@
 import React, { Component } from "react";
-import { Table, Button, UncontrolledTooltip } from "reactstrap";
-import { serviceTotalsCalculation } from "../../../helpers"
+import { serviceTotalsCalculation } from "../../../helpers/Sum";
 import Loader from "../../../containers/Loader/Loader";
 import NoDataFound from "../../common/NoFound";
 import { AppConfig } from "../../../config/AppConfig";
 import Dollor from "../../common/Dollor"
-export class CustomerOrders extends Component {
+import {
+  Table,
+  Button,
+  UncontrolledTooltip
+} from "reactstrap";
+export class VehicleOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 1
     };
+  }
+  handleCustomerDetails = (customerId) => {
+    const customerDetailsUrl = "/customers/details/:id"
+    this.props.history.push(customerDetailsUrl.replace(":id", `${customerId}`))
   }
   handleOrderDetails = (orderId) => {
     const orderUrl = "/workflow/order/:id"
@@ -21,26 +29,17 @@ export class CustomerOrders extends Component {
       )}`
     );
   }
-  handleVehicleDetails = (vehicleId) => {
-    const vehicleUrl = "/vehicles/details/:id"
-    this.props.redirectTo(
-      `${vehicleUrl.replace(
-        ":id",
-        vehicleId
-      )}`
-    );
-  }
-  handleCreateOrder = (customerId) => {
-    this.props.addOrderRequest({ customerId: customerId })
+  handleCreateOrder = (vehicleId) => {
+    this.props.addOrderRequest({ vehicleId: vehicleId })
   }
   render() {
-    const { customerOrders, orderReducer, customerDetails } = this.props
+    const { vehicleOrders, orderReducer, vehicleData } = this.props
     const { isOrderLoading } = orderReducer
     const { page } = this.state;
     return (
       <>
-        <div className={"text-right new-Order-btn pb-2"}>
-          <Button onClick={() => this.handleCreateOrder(customerDetails._id)} color={"primary"}>Create New Order</Button>
+        <div className={"text-right new-vehicle-Order-btn pb-2"}>
+          <Button onClick={() => this.handleCreateOrder(vehicleData._id)} color={"primary"}>Create New Order</Button>
         </div>
         <Table responsive>
           <thead>
@@ -49,7 +48,7 @@ export class CustomerOrders extends Component {
                 S No.
               </th>
               <th width={"20"}>Order Id</th>
-              <th width={"100"}>
+              <th width={"80"}>
                 Order Name
               </th>
               <th width={"50"}>
@@ -59,7 +58,7 @@ export class CustomerOrders extends Component {
                 Order Status
               </th>
               <th width={"50"}>
-                Vehicle
+                Customer
               </th>
               <th width={"50"}>
                 Order Total
@@ -74,8 +73,8 @@ export class CustomerOrders extends Component {
           </thead>
           <tbody>
             {!isOrderLoading ? (
-              customerOrders && customerOrders.length ? (
-                customerOrders.map((order, index) => {
+              vehicleOrders && vehicleOrders.length ? (
+                vehicleOrders.map((order, index) => {
                   const orderTotal = serviceTotalsCalculation(order.serviceId)
                   return (
                     <tr key={index}>
@@ -98,19 +97,17 @@ export class CustomerOrders extends Component {
                           <td className={"text-capitalize"}>invoiced</td> :
                           <td className={"text-capitalize "}>estimate</td>
                       }
-                      <td  className={"text-primary"}>
+                      <td onClick={() => { this.handleCustomerDetails(order.customerId._id) }} id={`customer-details-${order._id}`} className={"text-primary cursor_pointer"}>
                         {
-                          order.vehicleId ? <><div onClick={() => { this.handleVehicleDetails(order.vehicleId._id) }} id={`vehicle-details-${order._id}`} className={"cursor_pointer"}>
-                            {`${order.vehicleId.make}${" "}${order.vehicleId.modal}`} </div>
-                            <UncontrolledTooltip target={`vehicle-details-${order._id}`}>
-                              View Vehicle
-                            </UncontrolledTooltip>
-                            </>
-                          : null
+                          order.customerId ?
+                            `${order.customerId.firstName}${" "}${order.customerId.lastName}` :
+                            null
+
                         }
-                       
                       </td>
-                     
+                      <UncontrolledTooltip target={`customer-details-${order._id}`}>
+                        View Customer
+                      </UncontrolledTooltip>
                       <td>
                         <Dollor value={parseFloat(orderTotal.orderGrandTotal || 0).toFixed(2)} />
                       </td>
@@ -143,9 +140,9 @@ export class CustomerOrders extends Component {
                       <NoDataFound
                         showAddButton
                         message={
-                          "Currently there are no customer order added."
+                          "Currently there are no Vehicle order added."
                         }
-                        onAddClick={() => this.handleCreateOrder(customerDetails._id)}
+                        onAddClick={() => this.handleCreateOrder(vehicleData._id)}
                       />
                     </td>
                   </tr>

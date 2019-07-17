@@ -165,7 +165,7 @@ class OrderDetails extends Component {
                   epa = calculateValues(serviceTotalArray || 0, item.serviceId.epa.value || 0, item.serviceId.epa ? item.serviceId.epa.type : '$');
                   discount = calculateValues(serviceTotalArray || 0, item.serviceId.discount.value || 0, item.serviceId.discount ? item.serviceId.discount.type : '$');
                   tax = calculateValues(serviceTotalArray || 0, item.serviceId.taxes.value || 0, item.serviceId.taxes ? item.serviceId.taxes.type : '$');
-                  
+
 
                   serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
                   if (service.serviceType === 'part') {
@@ -182,7 +182,7 @@ class OrderDetails extends Component {
                   return true
                 }) : ''
                 }
-                
+
 
                 <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal) || 0}</span>
                 <span className={"d-none"}>{totalTax += (parseFloat(epa) + parseFloat(tax)) || 0}</span>

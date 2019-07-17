@@ -1,5 +1,4 @@
 
-
 export const UserPermissions = [
   { key: "isAllowedDashboard", text: "Allow access to Dashboard?" },
   { key: "isAllowedWorkflow", text: "Allow access to Workflow?" },

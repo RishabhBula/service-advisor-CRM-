@@ -15,10 +15,15 @@ export const calculateValues = (total, value, type = "%") => {
       return value;
   }
 };
-
+/** 
+/* 
+ */
 export const calculateSubTotal = (cost, quantity, hour, rate) => {
   return (parseFloat(cost || hour) * parseFloat(quantity || rate))
 }
+/** 
+/* 
+ */
 export const calculateDurationFromSeconds = (Seconds) => {
   var minutes = Math.floor(Seconds / 60);
   Seconds = Seconds % 60;
@@ -27,14 +32,17 @@ export const calculateDurationFromSeconds = (Seconds) => {
   const duration = `${hours}:${minutes}:${Seconds}`
   return duration
 }
+/** 
+/* 
+ */
 export const serviceTotalsCalculation = (serviceData) => {
   let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGrandTotal = 0, serviceTotalArray,
     totalTax = 0, totalDiscount = 0;
  
-    serviceData.map((item, index) => {
+    serviceData.map((item) => {
       let mainserviceTotal = [], serviceTotal, epa, discount, tax
       if (item.serviceId && item.serviceId.serviceItems.length) {
-        item.serviceId.serviceItems.map((service, sIndex) => {
+        item.serviceId.serviceItems.map((service) => {
           const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0)).toFixed(2)
           const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
           const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);

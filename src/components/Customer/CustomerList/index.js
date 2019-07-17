@@ -386,12 +386,8 @@ class CustomerList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div id={`view-${user._id}`} onClick={() => this.handleCustomerView(user._id)} className={"font-weight-semibold cursor_pointer text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
+                        <div className={"font-weight-semibold text-capitalize pb-1"}>{user.firstName + " " + user.lastName || notExist}</div>
                         <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : null}</div>
-                        {/* {user.email || null} */}
-                        <UncontrolledTooltip target={`view-${user._id}`}>
-                          View Details
-                        </UncontrolledTooltip>
                       </td>
                       <td>
                         {user.phoneDetail
@@ -473,26 +469,41 @@ class CustomerList extends Component {
                             Edit
                           </UncontrolledTooltip>
                         </span>
-                        <Button
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedCustomers: [user._id]
-                              },
-                              () => {
-                                this.onDelete();
-                              }
-                            )
-                          }
-                          id={`delete-${user._id}`}
-                          className={"btn-theme-transparent"}
-                        >
-                          <i className={"icons cui-trash"} />
-                        </Button>
-                        <UncontrolledTooltip target={`delete-${user._id}`}>
-                          Delete
+                        <span className={"mr-2"}>
+                          <Button
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedCustomers: [user._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                }
+                              )
+                            }
+                            id={`delete-${user._id}`}
+                            className={"btn-theme-transparent"}
+                          >
+                            <i className={"icons cui-trash"} />
+                          </Button>
+                          <UncontrolledTooltip target={`delete-${user._id}`}>
+                            Delete
                         </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
+                          <Button
+                            className={"btn-theme-transparent"}
+                            size={"sm"}
+                            onClick={() => this.handleCustomerView(user._id)}
+                            id={`view-${user._id}`}
+                          >
+                            <i className="fas fa-eye" />
+                          </Button>
+                          <UncontrolledTooltip target={`view-${user._id}`}>
+                            View
+                          </UncontrolledTooltip>
+                        </span>
                       </td>
                     </tr>
                   );

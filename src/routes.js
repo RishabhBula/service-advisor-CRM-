@@ -17,6 +17,8 @@ const Order = React.lazy(() => import("./containers/Orders"));
 const Profile = React.lazy(() => import("./containers/Profile"));
 const CannedService = React.lazy(() => import("./components/Orders/Services/cannedService"));
 const CustomerDetails = React.lazy(() => import("./components/Customer/CustomerView"));
+const VehicleDetails = React.lazy(() => import("./components/Vehicles/VehicleView"));
+
 const routes = [
   {
     path: AppRoutes.HOME.url,
@@ -76,6 +78,12 @@ const routes = [
     exact: AppRoutes.VEHICLES.exact,
     name: AppRoutes.VEHICLES.name,
     component: Vehicles
+  },
+  {
+    path: AppRoutes.VEHICLES_DETAILS.url,
+    exact: AppRoutes.VEHICLES_DETAILS.exact,
+    name: AppRoutes.VEHICLES_DETAILS.name,
+    component: VehicleDetails
   },
   {
     path: AppRoutes.FLEETS.url,

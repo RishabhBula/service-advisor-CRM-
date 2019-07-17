@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardFooter, Row, Col } from "reactstrap";
+import { Card, CardBody, Row, Col } from "reactstrap";
 import VehicleIcons from "../../../containers/Icons/Vehicles"
 import { CrmVehicleModal } from "../../common/Vehicles/CrmVehicleModal";
 export class CustomerVehicles extends Component {
@@ -24,6 +24,16 @@ export class CustomerVehicles extends Component {
     }
     this.props.vehicleAddAction(payload);
   };
+  handleVehicleDetails = (vehicleId) => {
+    const vehicleUrl = "/vehicles/details/:id"
+    this.props.redirectTo(
+      `${vehicleUrl.replace(
+        ":id",
+        vehicleId
+      )}`
+    );
+  }
+
   render() {
     const { customerVehicles, modelInfoReducer } = this.props
     const { modelDetails } = modelInfoReducer;
@@ -35,12 +45,9 @@ export class CustomerVehicles extends Component {
               return (
                 <Col key={index} md={"4"}>
                   <Card>
-                    <CardBody className={"d-flex justify-content-center cursor_pointer"}>
-                      <div className={"vehicle-details"}></div>
-                      <div className={""}>
-                        <div>
-                          <h5>{vehicle.year}{" "}{vehicle.make}{" "}{vehicle.modal}</h5>
-                        </div>
+                    <CardBody className={"d-flex justify-content-center cursor_pointer vehicle-details"}>
+                      <div>
+                        <h5>{vehicle.year}{" "}{vehicle.make}{" "}{vehicle.modal}</h5>
                         <div className={"vehicle-type-img d-inline-block d-flex justify-content-center"}>
                           <VehicleIcons
                             type={vehicle.type.value}
@@ -48,8 +55,10 @@ export class CustomerVehicles extends Component {
                           />
                         </div>
                       </div>
+                      <div className={"overlay"} onClick={() => { this.handleVehicleDetails(vehicle._id) }}>
+                          <span>View Details <i class="fa fa-angle-right"></i></span>
+                        </div>
                     </CardBody>
-                    <CardFooter></CardFooter>
                   </Card>
                 </Col>
               )

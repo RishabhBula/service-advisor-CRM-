@@ -235,6 +235,11 @@ class VehiclesList extends Component {
     }
     return null;
   };
+  handleVehicleDetails = (vehicleId) =>{
+    const vehicleDetailsUrl = "/vehicles/details/:id"
+    this.props.history.push(vehicleDetailsUrl.replace(":id", `${vehicleId}`))
+  }
+
   render() {
     const { vehicleData } = this.props;
     const { vehicleList, isLoading, totalVehicles } = vehicleData;
@@ -481,6 +486,20 @@ class VehiclesList extends Component {
                           </Button>
                           <UncontrolledTooltip target={`delete-${vehicle._id}`}>
                             Delete
+                          </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
+                          <Button
+                            className={"btn-theme-transparent"}
+                            size={"sm"}
+                            onClick={() =>this.handleVehicleDetails(vehicle._id)
+                            }
+                            id={`view-${vehicle._id}`}
+                          >
+                            <i className="fas fa-eye"/>
+                          </Button>
+                          <UncontrolledTooltip target={`view-${vehicle._id}`}>
+                            View
                           </UncontrolledTooltip>
                         </span>
                       </td>

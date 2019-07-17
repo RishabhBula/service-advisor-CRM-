@@ -96,7 +96,7 @@ export class CrmEditVehicleModal extends Component {
 
   componentDidUpdate(prevProps) {
     const { vehicleData } = this.props;
-    if (prevProps.vehicleData._id !== vehicleData._id) {
+    if (prevProps.vehicleData !== vehicleData) {
       this.setState({
         year: this.props.vehicleData.year,
         make: this.props.vehicleData.make,

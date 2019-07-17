@@ -222,7 +222,10 @@ const addOrderLogic = createLogic({
       "POST",
       true,
       undefined,
-      action.payload
+      {
+        customerId: action.payload && action.payload.customerId ? action.payload.customerId : null,
+        vehicleId: action.payload && action.payload.vehicleId ? action.payload.vehicleId : null,
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -366,7 +369,9 @@ const getOrderDetails = createLogic({
               ? action.payload.search
               : null,
         _id: action.payload && action.payload._id ? action.payload._id : null,
-        customerId: action.payload && action.payload.customerId ? action.payload.customerId : null
+        customerId: action.payload && action.payload.customerId ? action.payload.customerId : null,
+        vehicleId: action.payload && action.payload.vehicleId ? action.payload.vehicleId : null
+
       },
       undefined
     );
@@ -411,7 +416,8 @@ const getOrderDetails = createLogic({
         getOrderDetailsSuccess({
           order: result.data.data[0],
           orderId: result.data.data[0] ? result.data.data[0].orderId : null,
-          customerOrders: result.data.data
+          customerOrders: !action.payload.vehicleId ? result.data.data : [],
+          vehicleOrders: !action.payload.customerId ? result.data.data : []
         })
       );
       dispatch(hideLoader());

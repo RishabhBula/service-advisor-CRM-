@@ -108,7 +108,7 @@ class Order extends Component {
       serviceData: '',
       sentModal: false,
       mesageModal: false,
-      pdfBlob:''
+      pdfBlob: ''
     };
     this.orderNameRef = React.createRef();
   }
@@ -223,7 +223,14 @@ class Order extends Component {
     if (customerData.data && vehicleData.data) {
       customerValue = customerData.data._id;
       vehicleValue = vehicleData.data._id;
-    } else {
+    } else if (!customerData.data && vehicleData.data) {
+      customerValue = customerData._id;
+      vehicleValue = vehicleData.data._id;
+    } else if (customerData.data && !vehicleData.data) {
+      customerValue = customerData.data._id;
+      vehicleValue = vehicleData._id;
+    }
+    else {
       customerValue = customerData._id;
       vehicleValue = vehicleData._id;
     }
@@ -288,14 +295,14 @@ class Order extends Component {
     var pdfWidth = doc.internal.pageSize.getWidth()
     doc.setFontSize(15)
     doc.setTextColor(51, 47, 62);
-    doc.text('Invoice -: #' + orderData.orderId+ '', 20, 40);
+    doc.text('Invoice -: #' + orderData.orderId + '', 20, 40);
     doc.setFontSize(10);
     doc.text('Created -: ' + moment(orderData.createdAt || '').format("MMM Do YYYY") + '', 20, 54);
 
     doc.setFontSize(15)
     doc.setFontStyle("bold");
     var nameWidth = doc.getTextDimensions(comapnyInfo.companyName)
-    doc.text(comapnyInfo.companyName, pdfWidth - (nameWidth.w + 25) , 45);
+    doc.text(comapnyInfo.companyName, pdfWidth - (nameWidth.w + 25), 45);
     doc.setFontStyle("normal");
 
     doc.setLineWidth(0.1)
@@ -317,8 +324,8 @@ class Order extends Component {
     doc.setDrawColor(187, 185, 193);
     doc.line(20, 100, 570, 100);
 
-    let epa = 0, epaType = '', serviceDiscount = 0, serviceDiscountType = "", serviceTax = 0, serviceTaxType = "", epaValue = 0, totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray, totalTax = 0, totalDiscount = 0;
-    
+    let epa = 0, epaType = '', serviceDiscount = 0, serviceDiscountType = "", serviceTax = 0, serviceTaxType = "", totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray, totalTax = 0, totalDiscount = 0;
+
     let columnHeight = 110;
     let itemHeight = columnHeight;
     for (let i = 0; i < serviceData.length; i++) {
@@ -336,7 +343,7 @@ class Order extends Component {
       doc.text(serviceData[i].serviceId.serviceName, 25, columnHeight + 14);
 
       let mainserviceTotal = [], serviceTotal, discount, tax, calSubTotal = 0;
-      
+
       var columns = [
         { title: "Service Tile", dataKey: "Service Tile" },
         { title: "Price", dataKey: "Price" },
@@ -378,7 +385,7 @@ class Order extends Component {
       for (let j = 0; j < serviceData[i].serviceId.serviceItems.length; j++) {
         let service = serviceData[i].serviceId.serviceItems[j];
         var val = service.description || service.brandName || service.discription;
-        var serviceType = service.serviceType;
+        // var serviceType = service.serviceType;
         var qty = service.qty || '';
         var hours = service.hours;
         var hourlyRate = (service.rate ? service.rate.hourlyRate : 0)
@@ -408,19 +415,19 @@ class Order extends Component {
         var discountValue = service.discount.value || 0
         var discountMainVal = ''
         discountMainVal = discountValue > 0 ? discountType === '%' ? (discountValue + '%') : ('$' + discountValue) : 0;
-       
+
         rows.push({
           'Service Tile': val,
           Price: cost || '-',
           Qty: qty || '-',
           Discount: discountMainVal,
-          'Sub total': '$'+servicesSubTotal+''
+          'Sub total': '$' + servicesSubTotal + ''
         })
-        
+
       }
-     
+
       doc.autoTable(columns, rows, options);
-      
+
       orderGandTotal += parseFloat(serviceTotal)
       totalTax += parseFloat(epa) + parseFloat(tax)
       totalDiscount += parseFloat(discount)
@@ -429,20 +436,19 @@ class Order extends Component {
       var rowHeight = ((rowCount + 1) * 22)
       var finalY = doc.autoTable.previous.finalY
 
-      epaValue = epa > 0 ? epaType === '%' ? (epa + '%') : ('$' + epa) : 0;
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(10);
       doc.text('EPA : $' + parseFloat(epa).toFixed(2) + '', 180, columnHeight + rowHeight + 28);
       doc.text('Discount : $' + parseFloat(discount).toFixed(2) + '', 250, columnHeight + rowHeight + 28);
       doc.text('Tax : $' + parseFloat(tax).toFixed(2) + '', 335, columnHeight + rowHeight + 28);
       doc.text('Service Total : $' + calSubTotal + '', 455, columnHeight + rowHeight + 28);
-      
+
       //  to plus and increase columnHeight for next item 
-      columnHeight = columnHeight + rowHeight + 40 ;
+      columnHeight = columnHeight + rowHeight + 40;
       // Last row  EPA DISCOUNT
     }
     itemHeight = finalY + 30;
-    
+
     doc.setFontSize(12);
     doc.text('Total Parts  : $' + totalParts.toFixed(2) + '', 450, itemHeight + 30);
     doc.text('Total Tires  : $' + totalTires.toFixed(2) + '', 450, itemHeight + 45);
@@ -457,14 +463,14 @@ class Order extends Component {
     doc.setFontStyle("bold");
     doc.text('Grand Total  : $' + orderGandTotal.toFixed(2) + '', 430, itemHeight + 127);
 
-    if (itemHeight > 750){
+    if (itemHeight > 750) {
       doc.addPage();
     }
     var file = doc.output("dataurlstring");
-    
+
     if (!sentinvoice) {
       window.open(doc.output("bloburl"), "_blank");
-    }else{
+    } else {
       this.setState({
         pdfBlob: file
       });
@@ -578,7 +584,7 @@ class Order extends Component {
                 </div>
                 <div className={"position-relative"}>
                   {this.props.orderReducer.orderItems &&
-                    !this.props.orderReducer.orderItems.customerId ?
+                    (!this.props.orderReducer.orderItems.customerId || !this.props.orderReducer.orderItems.vehicleId) ?
 
                     <div className={"service-overlay"}>
                       <img src="https://gramener.com/schoolminutes/img/arrow.png" alt={"arrow"} />
@@ -593,8 +599,8 @@ class Order extends Component {
                       {/* <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link> */}
                       <i className="icons cui-cursor"></i>&nbsp; Sent
                     </span>
-                    <span id="add-Appointment" className="print-btn" onClick={()=>this.printInvoice(false)}>
-                      <i className="icon-printer icons "></i>&nbsp; View or Print
+                    <span id="add-Appointment" className="print-btn" onClick={() => this.printInvoice(false)}>
+                      <i className="icon-printer icons "></i>&nbsp; Print
                     </span>
                   </div>
                   <div className={"position-relative"}>
@@ -866,10 +872,10 @@ const mapDispatchToProps = dispatch => ({
   deleteNotes: data => {
     dispatch(deleteNotes(data))
   },
-  addPaymentRequest: data =>{
+  addPaymentRequest: data => {
     dispatch(addPaymentRequest(data))
   },
-  addNewCannedService: data =>{
+  addNewCannedService: data => {
     dispatch(addNewCannedService(data))
   }
 });

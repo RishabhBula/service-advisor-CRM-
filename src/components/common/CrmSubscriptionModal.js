@@ -15,17 +15,33 @@ export class CrmSubscriptionModel extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      subscriptionData: [],
+      planId: ""
     };
   }
-  handleSubPaymentModal = () => {
+  componentDidMount = () => {
+    this.props.getSubscriptionPlanRequest()
+  }
+  componentDidUpdate = ({ subscriptionReducer }) => {
+    if (subscriptionReducer.subscriptionPlanData !== this.props.subscriptionReducer.subscriptionPlanData) {
+      this.setState({
+        subscriptionData: this.props.subscriptionReducer.subscriptionPlanData
+      })
+    }
+  }
+  handleSubPaymentModal = (planId) => {
     const { modelOperate, openSubPayementModel } = this.props;
     modelOperate({
       openSubPayementModel: !openSubPayementModel
     })
+    this.setState({
+      planId
+    })
   }
 
   render() {
-    const { openSubscriptionModel, openSubPayementModel } = this.props
+    const { openSubscriptionModel, openSubPayementModel, addSubscriptionRequest } = this.props
+    const { subscriptionData, planId } = this.state
     return (
       <>
         <Modal
@@ -81,6 +97,8 @@ export class CrmSubscriptionModel extends Component {
         <CrmSubPaymentModalModel
           openSubPayementModel={openSubPayementModel}
           handleSubPaymentModal={this.handleSubPaymentModal}
+          planId={planId}
+          addSubscriptionRequest={addSubscriptionRequest}
         />
       </>
     );
