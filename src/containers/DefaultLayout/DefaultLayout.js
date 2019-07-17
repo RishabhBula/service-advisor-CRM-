@@ -36,7 +36,6 @@ import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
 import { WildCardRoutes } from "../../config/Constants";
 import { isValidObjectId } from "../../helpers";
-import { AppNavbarBrand } from "@coreui/react";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));

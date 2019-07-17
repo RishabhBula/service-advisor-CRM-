@@ -1,4 +1,4 @@
-import { AppRoutes } from "./AppRoutes";
+
 
 export const UserPermissions = [
   { key: "isAllowedDashboard", text: "Allow access to Dashboard?" },

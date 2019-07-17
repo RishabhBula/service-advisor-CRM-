@@ -75,12 +75,12 @@ class OrderDetails extends Component {
   // }
 
   render() {
-    const { orderReducer, profileReducer, modelInfoReducer, modelOperate, addPaymentRequest, paymentReducer,isPrint } = this.props
+    const { orderReducer, profileReducer, modelInfoReducer, modelOperate, addPaymentRequest, paymentReducer } = this.props
     const { modelDetails } = modelInfoReducer;
     const { paymentModalOpen } = modelDetails
     const paymentList = paymentReducer.paymentData.length ? paymentReducer.paymentData : []
     const payedAmountList = paymentList && paymentList.length && paymentList[0].payedAmount && paymentList[0].payedAmount.length ? paymentList[0].payedAmount : null
-    const { activityLogs,activeService } = this.state
+    const { activityLogs } = this.state
     const createdDate = orderReducer.orderItems ? moment(orderReducer.orderItems.createdAt || '').format("MMM Do YYYY LT") : '';
     const isInvoice = orderReducer.orderItems ? orderReducer.orderItems.isInvoice : '';
     const serviceWriter = profileReducer.profileInfo.firstName + ' ' + profileReducer.profileInfo.lastName

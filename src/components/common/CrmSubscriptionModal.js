@@ -3,14 +3,14 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Card,
-  CardBody,
   CardFooter,
   Row,
   Col,
   Button
 } from "reactstrap";
 import { CrmSubPaymentModalModel } from "../../components/common/CrmSubPaymentModal"
+import "../../scss/subscription.scss"
+import Dollor from "../common/Dollor"
 export class CrmSubscriptionModel extends Component {
   constructor(props) {
     super(props);
@@ -35,48 +35,47 @@ export class CrmSubscriptionModel extends Component {
         >
           <ModalHeader toggle={this.toggle}>Subscription Plans</ModalHeader>
           <ModalBody>
+            <h5 className={"subscription-head-line"}>Get a monthly Subscription for uninterrupted access.</h5>
             <Row>
-              <Col md={"6 d-flex justify-content-center"}>
-                <Card className={"w-75 subscription-modal"}>
-                  <CardBody className={"justify-content-center"}>
-                    <div className={"pt-4"}>
-                      <h4 className={"pb-2 text-center"}>Core</h4>
-                      <h3 className={"text-primary text-center"}>$69<small>/month</small></h3>
+              <div className={"subscription-card-wrap d-flex justify-content-center"}>
+                  <div className={"subscription-card"}>
+                    <h4 className={"text-center"}>Core</h4>
+                    <div className={"subscription-card-inner"}>
+                      <h3 className={"text-primary text-center plan-price"}>
+                        <Dollor value={70} /><small>/month</small>
+                      </h3>
+                      <div className={"text-center pt-3 pb-3 user-count"}>
+                        1 User License
+                      </div>
+                      <div className={"notes"}>
+                        Pay $10/user and add more users
+                      </div>
                     </div>
                     <div className={"text-center"}>
-                      <ul className="list-group">
-                        <li className="list-group-item">1 User License</li>
-                      </ul>
-                    </div>
-                  </CardBody>
-                  <CardFooter className={"d-flex justify-content-center"}>
-                    <div>
                       <Button color={"primary"} onClick={this.handleSubPaymentModal} className={"text-center btn"}>Subscribe</Button>
                     </div>
-                  </CardFooter>
-                </Card>
-              </Col>
-              <Col md={"6 d-flex justify-content-center"}>
-                <Card className={"w-75 subscription-modal"}>
-                  <CardBody className={"justify-content-center"}>
-                    <div className={"pt-4"}>
-                      <h4 className={"pb-2 text-center"}>Enhanced</h4>
-                      <h3 className={"text-primary text-center"}>$149<small>/month</small></h3>
+                  </div>
+              
+                  <div className={"subscription-card"}>
+                    <h4 className={"text-center"}>Enhanced</h4>
+                    <div className={"subscription-card-inner"}>
+                      <h3 className={"text-primary text-center plan-price"}>
+                        <Dollor value={149} /><small>/month</small>
+                      </h3>
+                      <div className={"text-center pt-3 pb-3 user-count"}>
+                        3 User License
+                      </div>
+                      <div className={"notes"}>
+                        Pay $10/user and add more users
+                      </div>
                     </div>
                     <div className={"text-center"}>
-                      <ul className="list-group">
-                        <li className="list-group-item">3 User License</li>
-                      </ul>
-                    </div>
-                  </CardBody>
-                  <CardFooter className={"d-flex justify-content-center"}>
-                    <div>
                       <Button color={"primary"} onClick={this.handleSubPaymentModal} className={"text-center btn"}>Subscribe</Button>
                     </div>
-                  </CardFooter>
-                </Card>
-              </Col>
+                  </div>
+              </div>
             </Row>
+            <br/>
           </ModalBody>
         </Modal>
         <CrmSubPaymentModalModel

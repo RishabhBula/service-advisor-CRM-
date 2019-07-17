@@ -322,7 +322,6 @@ class Order extends Component {
     let columnHeight = 110;
     let itemHeight = columnHeight;
     for (let i = 0; i < serviceData.length; i++) {
-      let itemlength = serviceData[i].serviceId.serviceItems.length
       epa = serviceData[i].serviceId.epa.value || 0
       epaType = serviceData[i].serviceId.epa.type;
       serviceDiscount = serviceData[i].serviceId.discount.value || 0;
@@ -481,7 +480,6 @@ class Order extends Component {
       orderName,
       orderId,
       pdfBlob,
-      isPrint
     } = this.state;
     const {
       getVehicleData,
