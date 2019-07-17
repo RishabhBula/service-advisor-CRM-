@@ -56,7 +56,7 @@ export class CustomerInfo extends Component {
     };
   }
   componentDidMount = () => {
-    this.props.customerGetRequest()
+    this.props.customerGetRequest({ customerId: this.props.match.params.id })
     this.props.getMatrix();
     this.props.getStdList("");
     this.props.setLabourRateDefault();
