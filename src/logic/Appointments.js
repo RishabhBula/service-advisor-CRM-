@@ -28,7 +28,7 @@ const getAppointmentLogic = createLogic({
       payload
     );
     if (result.isError) {
-      dispatch(toast.error(result.messages[0] || DefaultErrorMessage));
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(
         getAppointmentsSuccess({
           data: []
@@ -63,12 +63,51 @@ const addAppointmentLogic = createLogic({
       payload
     );
     if (result.isError) {
-      dispatch(toast.error(result.messages[0] || DefaultErrorMessage));
+      toast.error(result.messages[0] || DefaultErrorMessage);
       dispatch(hideLoader());
       done();
       return;
     }
-    dispatch(toast.success(result.messages[0]));
+    toast.success(result.messages[0]);
+    dispatch(getAppointments());
+    dispatch(
+      modelOpenRequest({
+        modelDetails: {
+          showAddAppointmentModal: false
+        }
+      })
+    );
+    dispatch(hideLoader());
+    done();
+  }
+});
+/**
+ *
+ */
+/**
+ *
+ */
+const udpateAppointmentLogic = createLogic({
+  type: appointmentActions.UPDATE_APPOINTMENT_REQUEST,
+  async process({ action }, dispatch, done) {
+    const { payload } = action;
+    dispatch(showLoader());
+    const api = new ApiHelper();
+    const result = await api.FetchFromServer(
+      "/appointment",
+      "/" + payload.id,
+      "PUT",
+      true,
+      undefined,
+      payload.data
+    );
+    if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+      dispatch(hideLoader());
+      done();
+      return;
+    }
+    toast.success(result.messages[0]);
     dispatch(getAppointments());
     dispatch(
       modelOpenRequest({
@@ -107,5 +146,6 @@ const getAppointmentDetailsLogic = createLogic({
 export const AppointmentLogics = [
   addAppointmentLogic,
   getAppointmentLogic,
-  getAppointmentDetailsLogic
+  getAppointmentDetailsLogic,
+  udpateAppointmentLogic
 ];

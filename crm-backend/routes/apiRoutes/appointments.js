@@ -3,7 +3,8 @@ const router = express.Router();
 const {
   appointmentList,
   addAppointment,
-  getAppointmentDetails
+  getAppointmentDetails,
+  updateAppointment
 } = require("./../../controllers/frontend/appointment");
 const { authorisedUser } = require("./../../common/token");
 /**
@@ -11,6 +12,7 @@ const { authorisedUser } = require("./../../common/token");
  */
 router.get("/", authorisedUser, appointmentList);
 router.post("/", authorisedUser, addAppointment);
+router.put("/:eventId", authorisedUser, updateAppointment);
 router.get("/:eventId", authorisedUser, getAppointmentDetails);
 /**
  *

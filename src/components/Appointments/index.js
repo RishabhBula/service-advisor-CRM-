@@ -50,7 +50,8 @@ export default class Appointments extends Component {
         ).setUTCMinutes(startMin),
         end: new Date(
           new Date(event.appointmentDate).setUTCHours(endHours)
-        ).setUTCMinutes(endMin)
+        ).setUTCMinutes(endMin),
+        color: event.appointmentColor
       };
     });
     return (

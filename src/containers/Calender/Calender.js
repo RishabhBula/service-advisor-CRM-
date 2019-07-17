@@ -13,11 +13,13 @@ import {
   getOrderListForSelect,
   addAppointmentRequest,
   getAppointments,
-  getAppointmentDetails
+  getAppointmentDetails,
+  updateAppointmentRequest,
+  getUsersList
 } from "../../actions";
 import Loader from "../Loader/Loader";
 import AppointmentDetails from "../../components/Appointments/AppointmentDetails";
-
+import { AppRoutes } from "./../../config/AppRoutes";
 class Calender extends Component {
   constructor(props) {
     super(props);
@@ -89,6 +91,33 @@ class Calender extends Component {
   /**
    *
    */
+  onOrderClick = orderId => {
+    window.open(
+      `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", orderId)}`,
+      "_blank"
+    );
+  };
+  /**
+   *
+   */
+  onCustomerClick = customerId => {
+    window.open(
+      `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", customerId)}`,
+      "_blank"
+    );
+  };
+  /**
+   *
+   */
+  onVehicleClick = vehicleId => {
+    window.open(
+      `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", vehicleId)}`,
+      "_blank"
+    );
+  };
+  /**
+   *
+   */
   render() {
     const {
       modelInfoReducer,
@@ -97,7 +126,9 @@ class Calender extends Component {
       getOrders,
       addAppointment,
       appointmentReducer,
-      appointmentDetailsReducer
+      appointmentDetailsReducer,
+      updateAppointment,
+      getUserData
     } = this.props;
     const { isLoading, data } = appointmentReducer;
     const { modelDetails } = modelInfoReducer;
@@ -144,7 +175,9 @@ class Calender extends Component {
           date={selectedDate}
           getOrders={getOrders}
           addAppointment={addAppointment}
+          updateAppointment={updateAppointment}
           editData={editData}
+          getUserData={getUserData}
         />
         <AppointmentDetails
           isOpen={showAppointmentDetailModal}
@@ -152,6 +185,9 @@ class Calender extends Component {
           isLoading={appointmentDetailsReducer.isLoading}
           data={appointmentDetailsReducer.data}
           toggleEditAppointModal={this.toggleEditAppointModal}
+          orderClick={this.onOrderClick}
+          onCustomerClick={this.onCustomerClick}
+          onVehicleClick={this.onVehicleClick}
         />
       </div>
     );
@@ -163,12 +199,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  getUserData: data => dispatch(getUsersList(data)),
   getAppointments: data => dispatch(getAppointments(data)),
   getAppointmentDetails: data => dispatch(getAppointmentDetails(data)),
   getCustomerData: data => dispatch(customerGetRequest(data)),
   getVehicleData: data => dispatch(vehicleGetRequest(data)),
   getOrders: data => dispatch(getOrderListForSelect(data)),
-  addAppointment: data => dispatch(addAppointmentRequest(data))
+  addAppointment: data => dispatch(addAppointmentRequest(data)),
+  updateAppointment: data => dispatch(updateAppointmentRequest(data))
 });
 
 export default connect(

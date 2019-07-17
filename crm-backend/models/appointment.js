@@ -57,6 +57,12 @@ const appointmentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user"
   },
+  techinicians: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "user"
+    }
+  ],
   isDeleted: {
     type: Boolean,
     default: false

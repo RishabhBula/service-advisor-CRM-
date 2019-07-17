@@ -38,18 +38,61 @@ const AppointmentDetails = props => (
         <Col sm={"6"}>Note: {props.data.note || "N/A"}</Col>
         <Col sm={"6"}>
           Customer:{" "}
-          {props.data.customerId
-            ? `${props.data.customerId.firstName} ${
-                props.data.customerId.lastName
-              }`
-            : "N/A"}
+          {props.data.customerId ? (
+            <a
+              href="/"
+              onClick={e => {
+                e.preventDefault();
+                props.onCustomerClick(props.data.customerId._id);
+              }}
+            >{`${props.data.customerId.firstName} ${
+              props.data.customerId.lastName
+            }`}</a>
+          ) : (
+            "N/A"
+          )}
         </Col>
         <Col sm={"6"}>
           Order:{" "}
-          {props.data.orderId ? `${props.data.orderId.orderName}` : "N/A"}
+          {props.data.orderId ? (
+            <a
+              href="/"
+              onClick={e => {
+                e.preventDefault();
+                props.orderClick(props.data.orderId._id);
+              }}
+            >{`${props.data.orderId.orderName}`}</a>
+          ) : (
+            "N/A"
+          )}
         </Col>
-        <Col sm={"6"}>Phone: {props.data.phone}</Col>
-        <Col sm={"6"}>Email: {props.data.email}</Col>
+        <Col sm={"6"}>
+          Vehicle:{" "}
+          {props.data.vehicleId ? (
+            <a
+              href="/"
+              onClick={e => {
+                e.preventDefault();
+                props.onVehicleClick(props.data.vehicleId._id);
+              }}
+            >{`${props.data.vehicleId.make}`}</a>
+          ) : (
+            "N/A"
+          )}
+        </Col>
+        <Col sm={"6"}>
+          Phone: <a href={`tel:${props.data.phone}`}>{props.data.phone}</a>
+        </Col>
+        <Col sm={"6"}>
+          Email:{" "}
+          <a
+            href={`mailto:${props.data.email}`}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {props.data.email}
+          </a>
+        </Col>
       </Row>
     )}
   </CRMModal>

@@ -29,7 +29,7 @@ export default class AddAppointment extends Component {
   isCustomerReqSent;
   isVehicleReqSent;
   isOrderReqSent;
-
+  isTechnicianReqSent;
   constructor(props) {
     super(props);
     this.state = {
@@ -49,11 +49,13 @@ export default class AddAppointment extends Component {
       selectedColor: AppointmentColors[0].value,
       selectedOrder: null,
       email: "",
-      phone: ""
+      phone: "",
+      selectedTechincians: []
     };
     this.isCustomerReqSent = false;
     this.isVehicleReqSent = false;
     this.isOrderReqSent = false;
+    this.isTechnicianReqSent = false;
   }
   /**
    *
@@ -86,7 +88,8 @@ export default class AddAppointment extends Component {
         startTime,
         customerId,
         vehicleId,
-        orderId
+        orderId,
+        techinicians
       } = editData;
       this.setState({
         appointmentTitle,
@@ -115,7 +118,14 @@ export default class AddAppointment extends Component {
               label: `${orderId.orderName}`,
               value: orderId._id
             }
-          : null
+          : null,
+        selectedTechincians: techinicians.map(tech => {
+          return {
+            data: tech,
+            label: `${tech.firstName} ${tech.lastName}`,
+            value: tech._id
+          };
+        })
       });
     }
   }
@@ -186,6 +196,13 @@ export default class AddAppointment extends Component {
   /**
    *
    */
+  loadTechnician = (input, callback) => {
+    const type = "5ca3473d70537232f13ff1fa";
+    this.props.getUserData({ input, type, callback });
+  };
+  /**
+   *
+   */
   onTimeChange = (time, type) => {
     this.setState({
       [type]: time,
@@ -239,8 +256,13 @@ export default class AddAppointment extends Component {
         appointmentDate,
         appointmentTitle,
         startTime,
-        endTime
+        endTime,
+        selectedTechincians
       } = this.state;
+      const { editData } = this.props;
+      const techinicians = selectedTechincians.map(tech => {
+        return tech.value;
+      });
       const data = {
         selectedColor,
         note,
@@ -261,8 +283,10 @@ export default class AddAppointment extends Component {
         appointmentDate: appointmentDate.toISOString(),
         appointmentTitle,
         startTime,
-        endTime
+        endTime,
+        techinicians
       };
+
       const { errors, isValid } = Validator(
         data,
         AddAppointmentValidations,
@@ -274,7 +298,11 @@ export default class AddAppointment extends Component {
         });
         return;
       }
-      this.props.addAppointment(data);
+      if (editData && editData._id) {
+        this.props.updateAppointment({ id: editData._id, data });
+      } else {
+        this.props.addAppointment(data);
+      }
     } catch (error) {
       logger(error);
       toast.error(error.message || DefaultErrorMessage);
@@ -296,9 +324,13 @@ export default class AddAppointment extends Component {
       selectedColor,
       selectedOrder,
       email,
-      phone
+      phone,
+      selectedTechincians
     } = this.state;
-    const { toggleAddAppointModal, isOpen, isEditMode } = this.props;
+
+    const { toggleAddAppointModal, isOpen, editData } = this.props;
+    const isEditMode = editData && editData._id ? true : false;
+
     const headerText = isEditMode
       ? "Update Appointment Details"
       : "Add Appointment Details";
@@ -618,6 +650,41 @@ export default class AddAppointment extends Component {
                       />
                       {errors.selectedOrder ? (
                         <FormFeedback>{errors.selectedOrder}</FormFeedback>
+                      ) : null}
+                    </div>
+                  </FormGroup>
+                </Col>
+                <Col md={"12"}>
+                  <FormGroup className={"fleet-block"}>
+                    <Label htmlFor="name" className="customer-modal-text-style">
+                      Technician
+                    </Label>
+                    <div className={"input-block"}>
+                      <Async
+                        placeholder={"Type name of technician"}
+                        isMulti
+                        loadOptions={this.loadTechnician}
+                        className={classnames("w-100 form-select", {
+                          "is-invalid": errors.selectedTechincians
+                        })}
+                        value={selectedTechincians}
+                        isClearable={true}
+                        noOptionsMessage={() =>
+                          this.isTechnicianReqSent || selectedTechincians.length
+                            ? "No techinician found"
+                            : "Type name of technician"
+                        }
+                        onChange={e => {
+                          logger(e);
+                          this.setState({
+                            selectedTechincians: e
+                          });
+                        }}
+                      />
+                      {errors.selectedTechincians ? (
+                        <FormFeedback>
+                          {errors.selectedTechincians}
+                        </FormFeedback>
                       ) : null}
                     </div>
                   </FormGroup>
