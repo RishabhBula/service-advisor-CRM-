@@ -7,7 +7,8 @@ import {
   DropdownMenu,
   Dropdown,
   Row,
-  Col
+  Col,
+  UncontrolledTooltip
 } from "reactstrap";
 
 import { logger } from "../../helpers/Logger";
@@ -15,6 +16,8 @@ import Loader from "../../containers/Loader/Loader";
 import { AppRoutes } from "../../config/AppRoutes";
 import serviceUser from "../../assets/service-user.png";
 import serviceTyre from "../../assets/service-car.png";
+import { serviceTotalsCalculation } from "../../helpers";
+import Dollor from "../common/Dollor";
 
 class WorkflowGridView extends React.Component {
   constructor(props) {
@@ -100,90 +103,136 @@ class WorkflowGridView extends React.Component {
       </Dropdown>
     );
   };
-  /**
-   *
-   */
-  renderOrders = (status, tasks, isLoading) => {
+
+  renderOrders = (status, tasks, orders, isLoading) => {
+    let serviceCalculation = {}
+    if (orders[status._id] && orders[status._id].length) {
+      orders[status._id].map((task, index) => {
+        if (task.serviceId && task.serviceId.length) {
+          serviceCalculation = serviceTotalsCalculation(task.serviceId)
+          
+        }
+        return true
+      })
+    }
     return (
       <Droppable droppableId={status._id}>
         {provided => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((task, index) => (
-              <Draggable draggableId={task._id} key={task._id} index={index}>
-                {providedNew => (
-                  <div
-                    {...providedNew.draggableProps}
-                    {...providedNew.dragHandleProps}
-                    ref={providedNew.innerRef}
-                    className={"content"}
-                  >
-                    <div onClick={() => {
-                      this.props.redirectTo(
-                        `${AppRoutes.WORKFLOW_ORDER.url.replace(
-                          ":id",
-                          task._id
-                        )}`
-                      );
-                    }}>
-                      <h5 className={"mb-0 "}>
-                        <span>
-                          {task.orderId ? `(#${task.orderId})` : null}
-                        </span>
-                        {"  "}
-                        <span
-                         
-                        >
-                          {task.orderName || "Unnamed order"}
-                        </span>
-                      </h5>
-                    <div>
-                      <span>
-                        <img
-                          src={serviceUser}
-                          alt={"serviceUser"}
-                          width={"18"}
-                          height={"18"}
-                        />
-                        {"  "}
-                        {task.customerId
-                          ? `${task.customerId.firstName} ${" "} ${
-                              task.customerId.lastName
-                            }`
-                          : "No Customer"}
-                      </span>{" "}
-                    </div>
-                    <div>
-                      <span>
-                        <img
-                          src={serviceTyre}
-                          alt={"serviceUser"}
-                          width={"18"}
-                          height={"18"}
-                        />
-                        {"  "}
-                        {task.vehicleId
-                          ? `${task.vehicleId.make} ${" "} ${
-                              task.vehicleId.modal
-                            }`
-                          : "No Vehicle"}
-                      </span>
-                    </div>
-                    </div>
-                    <span className={"delete-icon"}>
-                      <i
-                        className={"fa fa-trash pull-right"}
+              <React.Fragment key={task._id}>
+                <Draggable draggableId={task._id} index={index}>
+                  {providedNew => (
+                    <div
+                      {...providedNew.draggableProps}
+                      {...providedNew.dragHandleProps}
+                      ref={providedNew.innerRef}
+                      className={"content"}
+                    >
+                      <div
                         onClick={() => {
-                          this.props.deleteOrder({
-                            statusId: status._id,
-                            index,
-                            id: task._id
-                          });
+                          this.props.redirectTo(
+                            `${AppRoutes.WORKFLOW_ORDER.url.replace(
+                              ":id",
+                              task._id
+                            )}`
+                          );
                         }}
-                      />
-                    </span>
-                  </div>
-                )}
-              </Draggable>
+                      >
+                        <h5 className={"mb-0 "}>
+                          <span>
+                            {task.orderId ? `(#${task.orderId})` : null}
+                          </span>
+                          {"  "}
+                          <span>{task.orderName || "Unnamed order"}</span>
+                        </h5>
+                        <div className={"content-title"}>
+                          <span>
+                            <img
+                              src={serviceUser}
+                              alt={"serviceUser"}
+                              width={"18"}
+                              height={"18"}
+                            />
+                          </span>
+                          <span className={"text"}>
+                            {"  "}
+                            {task.customerId
+                              ? `${task.customerId.firstName} ${" "} ${
+                                  task.customerId.lastName
+                                }`
+                              : "No Customer"}
+                          </span>{" "}
+                        </div>
+                        <div className={"content-title"}>
+                          <span>
+                            <img
+                              src={serviceTyre}
+                              alt={"serviceUser"}
+                              width={"18"}
+                              height={"18"}
+                            />
+                          </span>
+                          <span className={"text"}>
+                            {"  "}
+                            {task.vehicleId
+                              ? `${task.vehicleId.make} ${" "} ${
+                                  task.vehicleId.modal
+                                }`
+                              : "No Vehicle"}
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        className={"delete-icon"}
+                        id={`delete-${task._id}`}
+                      >
+                        <i
+                          className={"fa fa-trash pull-right"}
+                          onClick={() => {
+                            this.props.deleteOrder({
+                              statusId: status._id,
+                              index,
+                              id: task._id
+                            });
+                          }}
+                        />
+                      </span>
+                      <UncontrolledTooltip target={`delete-${task._id}`}>
+                        Delete Order
+                      </UncontrolledTooltip>
+                      <div className={"pt-2 position-relative"}>
+                        <div className={"service-total"}>
+                          <span className={"text-black-50"}>Total:</span>
+                          <Dollor
+                            value={serviceCalculation.orderGrandTotal}
+                          />
+                        </div>
+                        <span
+                          className={"pr-2"}
+                          id={`authorised-status-${task._id}`}
+                        >
+                          <i
+                            className={
+                              task.status
+                                ? "fas fa-check text-success"
+                                : "fas fa-check text-muted"
+                            }
+                          />
+                        </span>
+                        <UncontrolledTooltip
+                          target={`authorised-status-${task._id}`}
+                        >
+                          {task.status ? "Authorised" : "Not Authorised"}
+                        </UncontrolledTooltip>
+                        <span className={"pr-2 text-dark"}>
+                          <i className="nav-icon icons icon-calendar" />
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              </React.Fragment>
             ))}
             {isLoading ? <Loader /> : provided.placeholder}
           </div>
@@ -197,6 +246,7 @@ class WorkflowGridView extends React.Component {
   render() {
     const { orderStatus, orderData } = this.props;
     const { orders, isLoading } = orderData;
+
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable
@@ -213,6 +263,7 @@ class WorkflowGridView extends React.Component {
             >
               {orderStatus.map((status, index) => (
                 <React.Fragment key={status._id}>
+
                   <Draggable draggableId={status._id} index={index}>
                     {provided => (
                       <>
@@ -237,6 +288,7 @@ class WorkflowGridView extends React.Component {
                           {this.renderOrders(
                             status,
                             orders[status._id] || [],
+                            orders,
                             isLoading
                           )}
                         </div>

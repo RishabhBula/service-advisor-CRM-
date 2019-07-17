@@ -109,7 +109,6 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
-
     done();
   }
 });

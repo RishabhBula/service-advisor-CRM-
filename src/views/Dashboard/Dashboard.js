@@ -29,9 +29,9 @@ class Dashboard extends Component {
     const { modelInfoReducer, modelOperate } = this.props
     const { modelDetails } = modelInfoReducer;
     const { openSubscriptionModel } = modelDetails
-    modelOperate({
-      openSubscriptionModel: !openSubscriptionModel
-    })
+    // modelOperate({
+    //   openSubscriptionModel: !openSubscriptionModel
+    // })
   }
 
   render() {

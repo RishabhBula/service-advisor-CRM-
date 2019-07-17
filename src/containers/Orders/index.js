@@ -59,6 +59,8 @@ import TimeClock from "../../components/Orders/TimeClock";
 import Message from "../../components/Orders/Message";
 import CustomerVehicle from "../../components/Orders/CutomerVehicle";
 import OrderDetails from "../../components/Orders/OrderDetails"
+import SendInspection from "../../components/Orders/Inspection/sentInspect"
+import MessageTemplate from "../../components/Orders/Inspection/messageTemplate"
 import { logger, calculateSubTotal, getSumOfArray, calculateValues } from "../../helpers";
 import qs from "query-string";
 const OrderTab = React.lazy(() => import("../../components/Orders/OrderTab"));
@@ -103,7 +105,10 @@ class Order extends Component {
       orderName: "",
       isPrint: false,
       isOrderSubbmited: false,
-      serviceData: ''
+      serviceData: '',
+      sentModal: false,
+      mesageModal: false,
+      pdfBlob:''
     };
     this.orderNameRef = React.createRef();
   }
@@ -260,7 +265,20 @@ class Order extends Component {
     this.props.updateOrderDetails(payload)
   }
 
-  printInvoice = () => {
+  handelTemplateModal = () => {
+    this.setState({
+      sentModal: !this.state.sentModal
+    });
+    this.printInvoice({ "sentinvoice": true })
+  }
+
+  toggleMessageTemplate = (ele) => {
+    this.setState({
+      mesageModal: !this.state.mesageModal,
+    });
+  }
+
+  printInvoice = (sentinvoice) => {
     const orderData = this.props.orderReducer.orderItems;
     const customerData = orderData.customerId
     const serviceData = this.props.orderReducer.orderItems.serviceId;
@@ -443,9 +461,15 @@ class Order extends Component {
     if (itemHeight > 750){
       doc.addPage();
     }
-
-
-    window.open(doc.output("bloburl"), "_blank");
+    var file = doc.output("dataurlstring");
+    
+    if (!sentinvoice) {
+      window.open(doc.output("bloburl"), "_blank");
+    }else{
+      this.setState({
+        pdfBlob: file
+      });
+    }
   }
 
   render() {
@@ -456,6 +480,7 @@ class Order extends Component {
       isError,
       orderName,
       orderId,
+      pdfBlob,
       isPrint
     } = this.state;
     const {
@@ -566,11 +591,12 @@ class Order extends Component {
                     : null
                   }
                   <div className={"order-activity"}>
-                    {/* <span color="" className="print-btn">
-                      <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link>
-                    </span> */}
-                    <span id="add-Appointment" className="print-btn" onClick={this.printInvoice}>
-                      <i className="icon-printer icons "></i>&nbsp; Print
+                    <span color="" className="print-btn" onClick={this.handelTemplateModal}>
+                      {/* <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link> */}
+                      <i className="icons cui-cursor"></i>&nbsp; Sent
+                    </span>
+                    <span id="add-Appointment" className="print-btn" onClick={()=>this.printInvoice(false)}>
+                      <i className="icon-printer icons "></i>&nbsp; View or Print
                     </span>
                   </div>
                   <div className={"position-relative"}>
@@ -684,6 +710,26 @@ class Order extends Component {
               modelOperate={modelOperate}
               addPaymentRequest={addPaymentRequest}
               paymentReducer={paymentReducer}
+            />
+            <SendInspection
+              isOpen={this.state.sentModal}
+              toggle={this.handelTemplateModal}
+              customerData={customerData}
+              vehicleData={vehicleData}
+              searchMessageTemplateList={this.props.searchMessageTemplateList}
+              toggleMessageTemplate={this.toggleMessageTemplate}
+              sendMessageTemplate={this.props.sendMessageTemplate}
+              pdfBlob={pdfBlob}
+              isOrder
+            />
+            <MessageTemplate
+              isOpen={this.state.mesageModal}
+              toggle={this.toggleMessageTemplate}
+              inspectionData={this.props.inspectionReducer}
+              addMessageTemplate={this.props.addMessageTemplate}
+              getMessageTemplate={this.props.getMessageTemplate}
+              updateMessageTemplate={this.props.updateMessageTemplate}
+              deleteMessageTemplate={this.props.deleteMessageTemplate}
             />
           </div>
         </Card>

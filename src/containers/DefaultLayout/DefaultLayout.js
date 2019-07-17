@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { Container } from "reactstrap";
+import { Container, UncontrolledTooltip } from "reactstrap";
 import { Redirect, Route, Switch } from "react-router-dom";
 import React, { Component, Suspense } from "react";
 
@@ -16,6 +16,7 @@ import {
 import routes, { BreadCrumbRoutes } from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
 import Loader from "./../Loader/Loader";
+import Avtar from "../../components/common/Avtar" 
 import {
   AppAside,
   AppBreadcrumb,
@@ -46,7 +47,8 @@ class DefaultLayout extends Component {
     this.state = {
       hasAccess: true,
       isCustVehiclemodal: false,
-      isURLChecked: false
+      isURLChecked: false,
+      shopLogo: ""
     };
   }
 
@@ -57,9 +59,9 @@ class DefaultLayout extends Component {
       this.props.profileInfoAction();
     }
   }
-  componentDidUpdate({ location }) {
-    const { profileInfoReducer, location: newLocation } = this.props;
-    const { profileInfo } = profileInfoReducer;
+  componentDidUpdate({ location, profileInfoReducer }) {
+    const { location: newLocation } = this.props;
+    const { profileInfo } = this.props.profileInfoReducer;
     const { isURLChecked } = this.state;
     if (
       (location.pathname !== newLocation.pathname || !isURLChecked) &&
@@ -104,6 +106,14 @@ class DefaultLayout extends Component {
         this.signOut();
       }
       this.setState({ isURLChecked: true });
+    }
+    if (
+      profileInfoReducer.profileInfo !==
+      this.props.profileInfoReducer.profileInfo
+    ) {
+      this.setState({
+        shopLogo: this.props.profileInfoReducer.profileInfo.shopLogo
+      })
     }
   }
   signOut() {
@@ -168,9 +178,10 @@ class DefaultLayout extends Component {
   render() {
     const { profileInfoReducer } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
-    const { permissions, shopLogo } = profileInfo;
-    const { hasAccess } = this.state;
-    const providerCompanyName = profileInfoReducer.profileInfo.companyName || 'Service Advisor' 
+    const { permissions } = profileInfo;
+    const { hasAccess, shopLogo } = this.state;
+    const providerCompanyName =
+      profileInfoReducer.profileInfo.companyName || "Service Adviser";
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -188,10 +199,23 @@ class DefaultLayout extends Component {
         </AppHeader>
         <div className="app-body">
           <AppSidebar className="custom-sidebar" fixed display="lg">
-              <div className={"provider-logo"} style={{ backgroundImage: `url(${shopLogo || "/assets/img/logo-white.svg"})`}}>
+            {shopLogo ? (
+              <div
+                className={"provider-logo"}
+                style={{ backgroundImage: `url(${shopLogo})` }}
+              />
+            ) : (
+              <div
+                className={"provider-logo company-name"} id={"comapnyName"}
+                  >
+                    <Avtar value={profileInfo.companyName || process.env.REACT_APP_NAME} class={"name"} />
+                <UncontrolledTooltip target={"comapnyName"}>
+                  {profileInfo.companyName}
+                </UncontrolledTooltip>
               </div>
-              <div className={"company-logo"}>{providerCompanyName}</div>
-                {/* <AppNavbarBrand
+            )}
+            <div className={"company-logo"}>{providerCompanyName}</div>
+            {/* <AppNavbarBrand
                 full={{
                   src: shopLogo || "/assets/img/logo-white.svg",
                   alt: "Service Adviser",
@@ -203,21 +227,25 @@ class DefaultLayout extends Component {
                   alt: "Service Adviser"
                 }}
               /> */}
-             
+
             <AppSidebarHeader />
             <AppSidebarForm />
-            
+
             <Suspense>
               <AppSidebarNav
                 navConfig={this.navigation(permissions || {})}
                 {...this.props}
               />
             </Suspense>
-              <div className={"text-center nav-footer-logo"}>
-                <img src={"/assets/img/logo-white.svg"} alt={"service-advisor"} width={70}/>
-                <div>Service Adviser</div>
-                {/* <span className={"powered-by-line"}>Powered by</span> */}
-              </div>
+            <div className={"text-center nav-footer-logo"}>
+              <img
+                src={"/assets/img/logo-white.svg"}
+                alt={"service-advisor"}
+                width={70}
+              />
+              <div>Service Adviser</div>
+              {/* <span className={"powered-by-line"}>Powered by</span> */}
+            </div>
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>

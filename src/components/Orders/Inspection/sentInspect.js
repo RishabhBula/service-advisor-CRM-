@@ -150,8 +150,11 @@ class SendInspection extends Component {
       const payload = {
         message: messageTextSent,
         subject: subject,
-        email: customerEmail
-      }
+        email: customerEmail,
+        pdf: this.props.pdfBlob,
+        orderTitle: this.props.orderTitle
+      };
+      
       this.props.sendMessageTemplate(payload)
       // close and clear modal form 
       this.props.toggle()
@@ -209,6 +212,7 @@ class SendInspection extends Component {
   }
   render() {
     const { templateData, recipients, errors, search, customerData, messageTextSentError } = this.state
+    const { isMessage, isOrder} = this.props;
     return (
       <>
         <Modal
@@ -221,7 +225,7 @@ class SendInspection extends Component {
             <Button className="close" onClick={this.props.toggle}>
               <span aria-hidden="true">×</span>
             </Button>
-            Send Inspection
+            {!isMessage && !isOrder ? 'Send Inspection' : isMessage ? 'Message template'  : 'Sent Invoice'}
             </ModalHeader>
           <ModalBody>
             <Button onClick={this.props.toggleMessageTemplate}>Add template</Button>
@@ -355,9 +359,9 @@ class SendInspection extends Component {
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
             </div>
-            {!this.props.isMessage ? 
+            {!isMessage ? 
             <Button color='primary' onClick={this.handleSentInspection}>
-              Sent Inspection
+                {isOrder ? 'Sent Invoice' : 'Sent Inspection'} 
             </Button> : <Button color='primary' onClick={this.handleAddtoMessage}>
                 Add to message
             </Button> }{' '}

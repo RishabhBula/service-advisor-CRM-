@@ -13,6 +13,10 @@
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
 
+$ft-regular: "FrutigerNeueLTPro-Regular";
+$ft-bold: "FrutigerNeueLTPro-Bold";
+$ft-medium: "FrutigerNeueLTPro-Medium";
+
 .sidebar-navigation {
   text-decoration: none;
   list-style-type: none;
@@ -52,6 +56,14 @@ body {
       height: 50px;
       margin: 0;
       padding: 22px;
+       &.company-name{
+         font-size: 28px;
+         .name{
+          position: relative;
+          top: -21px;
+          left: -9px;
+         }
+       }
     }
     .company-logo{
       display: none;
@@ -86,6 +98,13 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
+      &.company-name{
+        background-color: #fff;
+        color: #8157ef;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+      }
   }
   &.sidebar-fixed {
     .app-header + .app-body .sidebar{
@@ -445,12 +464,13 @@ body {
     -webkit-align-items: center;
     align-items: center;
      h5 {
-      margin-bottom: 0;
-      font-size: 16px;
-      letter-spacing: 0.5px;
-      font-family: "FrutigerNeueLTPro-Medium";
-      color: #000;
-      color: #403b4e;
+        margin-bottom: 0;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        color: #2b2b2b;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-family: "FrutigerNeueLTPro-Bold";
     }
     .icon{
       color: #6d6d6d;
@@ -492,14 +512,14 @@ body {
     .content {
       width: calc(100% - 6px);
       min-height: 50px;
-      margin: 6px auto;
-      padding: 7px 10px;
-      border: 1px solid #dcdade;
+      margin: 7px auto;
+      padding: 10px;
+      border: 1px solid #c5c4c5;
       background: #fff;
       position: relative;
       h5{
         font-size: 15px;
-        // font-weight: 600;
+        padding-right: 10px;
         padding-bottom: 6px;
         color: #1862d4;
          font-family: "FrutigerNeueLTPro-Regular";
@@ -510,6 +530,23 @@ body {
         right: 5px;
         cursor: pointer;
         font-size: 16px;
+        color: #8b929c;
+        &:hover{
+          color: rgb(230, 66, 66);
+        }
+      }
+      .service-total{
+        position: absolute;
+        right: -3px;
+        bottom: 3px;
+      }
+      .content-title{
+        .text{
+          position: relative;
+          top: 4px;
+          font-family: $ft-regular;
+          font-size: 14px;
+        }
       }
     }
   }
@@ -523,8 +560,46 @@ body {
     width: max-content;
   }
   .workflow-table{
+    font-family: $ft-regular;
     td,th{
       padding: 5px 10px;
+      vertical-align: middle;
+      font-size: 15px;
+      font-family: $ft-regular;
+      font-weight: 500;
+      b,strong{
+        font-family: $ft-bold;
+        font-weight: 600;
+      }
+    }
+    .status-btn{
+      display: inline-block;
+      padding: 3px 10px;
+      border: 1px solid #a49fb1;
+      border-radius: 21px;
+      font-size: 12px;
+      font-family: $ft-bold;
+      color: #65616f;
+      min-width: 100px;
+      text-align: center;
+    }
+    .delete-icon{
+      cursor: pointer;
+      font-size: 16px;
+      color: #8b929c;
+      &hover{
+        color: rgb(230, 66, 66);
+      }
+    }
+    .order-title{
+        cursor: pointer;
+        font-size: 15px;
+        font-family: $ft-bold;
+      .order-id{
+        color: #1862d4;
+        font-size: 15px;
+        font-weight: 500;
+      }
     }
   }
   /*==============*/
@@ -537,10 +612,10 @@ body {
 
 /*======order Details Right Side==========*/
  .workflow-section .workflow-right {
-    width: 345px;
+    width: 355px;
     height: 100%;
-    -webkit-flex: 0 0 350px;
-    flex: 0 0 350px;
+    -webkit-flex: 0 0 355px;
+    flex: 0 0 355px;
     padding: 10px 10px 75px 0;
     margin-top: -11px;
     position: fixed;
@@ -682,3 +757,4 @@ body {
     background: #f3f3f4;
   }
 }
+

@@ -28,6 +28,7 @@ export class CustomerOrders extends Component {
               if (serviceData && serviceData.length) {
                 serviceCalculation = serviceTotalsCalculation(serviceData)
               }
+              console.log(serviceCalculation, "serviceCalculation")
               return (
                 <Col key={index} md={"12"}>
                   <Card onClick={() => this.handleOrderDetails(orders._id)} className={"customer-order cursor_pointer"}>
@@ -66,7 +67,7 @@ export class CustomerOrders extends Component {
                           <Row>
                             <Col md={"6"}>
                               <div className={"pt-5"}>
-                                <h5>${serviceCalculation.orderGandTotal ? parseFloat(serviceCalculation.orderGandTotal) : "0.00"}</h5>
+                                <h5>${serviceCalculation && serviceCalculation.orderGrandTotal ? parseFloat(serviceCalculation.orderGrandTotal) : "0.00"}</h5>
                               </div>
                               <span>Remaining $0.00</span>
                             </Col>
