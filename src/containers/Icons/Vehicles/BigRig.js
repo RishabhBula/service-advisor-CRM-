@@ -9,7 +9,7 @@ const BigRig = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="383.021px"
+      width={props.size||"383.021px"}
       height="203.979px"
       viewBox="0 0 383.021 203.979"
       enable-background="new 0 0 383.021 203.979"

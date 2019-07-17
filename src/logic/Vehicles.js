@@ -18,7 +18,8 @@ import {
   vehicleEditSuccess,
   customerAddStarted,
   redirectTo,
-  updateImportVehicleReq
+  updateImportVehicleReq,
+  customerGetRequest
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
@@ -71,7 +72,10 @@ const vehicleAddLogic = createLogic({
           isLoading: false
         })
       );
-      dispatch(showLoader());
+      dispatch(hideLoader());
+      if (data.isCustomerDetails) {
+        dispatch(customerGetRequest())
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -106,7 +110,8 @@ const getVehiclesLogic = createLogic({
       {
         search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
         sort: action.payload && action.payload.sort ? action.payload.sort : null,
-        limit: AppConfig.ITEMS_PER_PAGE
+        limit: AppConfig.ITEMS_PER_PAGE,
+        vehicleId: action.payload && action.payload.vehicleId && action.payload.isGetVehicle ? action.payload.vehicleId : null,
       }
     );
     if (result.isError) {

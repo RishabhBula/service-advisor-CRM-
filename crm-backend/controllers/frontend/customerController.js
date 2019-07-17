@@ -67,6 +67,7 @@ const getAllCustomerList = async (req, res) => {
     const offset = (page - 1) * limit;
     const searchValue = query.search ? query.search : "";
     const sort = query.sort;
+    const customerId = query.customerId
     const status = query.status;
     let sortBy = {};
     switch (sort) {
@@ -140,6 +141,11 @@ const getAllCustomerList = async (req, res) => {
         ]
       });
     }
+    if (customerId) {
+      condition["$and"].push({
+        _id: mongoose.Types.ObjectId(customerId) 
+      });
+    }
     const users = await customerModel
       .aggregate([
         { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
@@ -153,7 +159,7 @@ const getAllCustomerList = async (req, res) => {
       .skip(offset)
       .limit(limit);
     const getAllCustomer = await customerModel.populate(users, {
-      path: "fleet"
+      path: "fleet vehicles"
     });
     const getAllCustomerCount = await customerModel.aggregate([
       { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },

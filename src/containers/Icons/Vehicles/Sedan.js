@@ -9,7 +9,7 @@ const Sedan = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="419.07px"
+      width={props.size||"419.07px"} 
       height="142.039px"
       viewBox="0 0 419.07 142.039"
       enable-background="new 0 0 419.07 142.039"

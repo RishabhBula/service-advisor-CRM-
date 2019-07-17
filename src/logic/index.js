@@ -21,8 +21,10 @@ import { UsersLogic } from "./Users";
 import { VehicleLogic } from "./Vehicles";
 import { VendorLogic } from "./Vendor";
 import { ActivityLogic } from "./Activity";
-import { MessageLogic } from"./Message"
-import { OrderSummaryLogic } from "./OrderSummary"
+import { MessageLogic } from "./Message";
+import { OrderSummaryLogic } from "./OrderSummary";
+import { PaymentLogic } from "./Payment";
+import { SubscriptionLogic } from "./Subscription";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -55,5 +57,7 @@ export default [
   ...ActivityLogic,
   ...MessageLogic,
   ...OrderSummaryLogic,
+  ...PaymentLogic,
+  ...SubscriptionLogic,
   redirectToLogic
 ];

@@ -188,6 +188,7 @@ class Message extends Component {
       const customerName = !isSummary ? orderReducer.orderItems && orderReducer.orderItems.customerId ? orderReducer.orderItems.customerId.firstName : "" : '';
       const companyNameSummary = isSummary && profileSummary.companyName ? profileSummary.companyName : ''
       const companyName = profileReducer ? profileReducer.profileInfo.companyName : "";
+      const orderId = orderReducer.orderItems._id
       return (
          <div className={"message-warp"} id={"message-warp"}>
             {isSummary ? <h4 className={"mb-4 ml-3 pt-3"}>Messages</h4> : ''}
@@ -346,7 +347,12 @@ class Message extends Component {
                   </div>
                </>
                :
-               <Notes messages={messages} companyName={companyName} deleteNotes={this.props.deleteNotes} />
+               <Notes 
+                  messages={messages} 
+                  companyName={companyName} 
+                  deleteNotes={this.props.deleteNotes}
+                  orderId={orderId}
+               />
             }
 
             <SendInspection
@@ -360,7 +366,15 @@ class Message extends Component {
                toggleMessageTemplate={this.toggleMessageTemplate}
             />
             {!isSummary ?
-               <MessageTemplate isOpen={this.state.mesageModal} toggle={this.toggleMessageTemplate} inspectionData={this.props.inspectionData} addMessageTemplate={this.props.addMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} updateMessageTemplate={this.props.updateMessageTemplate} deleteMessageTemplate={this.props.deleteMessageTemplate} />
+               <MessageTemplate 
+               isOpen={this.state.mesageModal} 
+               toggle={this.toggleMessageTemplate} 
+               inspectionData={this.props.inspectionData} 
+               addMessageTemplate={this.props.addMessageTemplate} 
+               getMessageTemplate={this.props.getMessageTemplate} 
+               updateMessageTemplate={this.props.updateMessageTemplate} 
+               deleteMessageTemplate={this.props.deleteMessageTemplate} 
+               />
                : ''
             }
          </div>

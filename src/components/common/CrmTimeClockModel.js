@@ -16,6 +16,7 @@ import Select from "react-select";
 import "react-dates/initialize";
 import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
+import "../../scss/timeclock.scss"
 import moment from "moment";
 import TimeInput from 'react-time-input';
 import * as classnames from "classnames";
@@ -43,7 +44,6 @@ export class CrmTimeClockModal extends Component {
   }
   componentDidUpdate = ({ timeLogEle }) => {
     if (timeLogEle !== this.props.timeLogEle) {
-      console.log("########################", this.props.timeLogEle);
       const {
         date,
         startDateTime,
@@ -179,7 +179,7 @@ export class CrmTimeClockModal extends Component {
         <Modal
           isOpen={openTimeClockModal}
           toggle={handleTimeClockModal}
-          className="customer-modal custom-form-modal modal-lg"
+          className="customer-modal custom-form-modal modal-lg time-clock-modal"
           backdrop={"static"}
         >
           <ModalHeader toggle={handleTimeClockModal}>
@@ -205,6 +205,7 @@ export class CrmTimeClockModal extends Component {
                     options={technicianData}
                     onChange={e => this.handleTechnicianAdd(e)}
                     noOptionsMessage={() => "Technician not assigned"}
+                    isOpen={true}
                   />
                   {
                     isError && !selectedTechnician.value ?
@@ -214,8 +215,8 @@ export class CrmTimeClockModal extends Component {
                 </div>
               </FormGroup>
             </Col>
-            <Col md="12">
-              <Row>
+            <Col md="12" className={"p-0"}>
+              <Row className={"m-0"}>
                 <Col md="4">
                   <FormGroup>
                     <Label htmlFor="name" className="customer-modal-text-style">
@@ -287,7 +288,8 @@ export class CrmTimeClockModal extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col md="12">
+            <Row className={"m-0"}>
+            <Col md="6">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
                   Activity <span className="asteric">*</span>
@@ -300,7 +302,7 @@ export class CrmTimeClockModal extends Component {
                 </div>
               </FormGroup>
             </Col>
-            <Col md="12">
+            <Col md="6">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
                   Date <span className="asteric">*</span>
@@ -316,6 +318,7 @@ export class CrmTimeClockModal extends Component {
                 </div>
               </FormGroup>
             </Col>
+            </Row>
             <Col md="12">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">

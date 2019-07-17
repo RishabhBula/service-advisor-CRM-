@@ -9,7 +9,7 @@ const Van = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="355.568px"
+      width={props.size||"355.568px"}
       height="144.335px"
       viewBox="0 0 355.568 144.335"
       enable-background="new 0 0 355.568 144.335"

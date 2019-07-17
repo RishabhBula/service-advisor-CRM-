@@ -27,7 +27,8 @@ const initialAuthState = {
     timeClockModalOpen: false,
     timeClockEditModalOpen: false,
     paymentModalOpen: false,
-    paymentCardModalOpen: false
+    openSubscriptionModel: false,
+    openSubPayementModel: false
   }
 };
 

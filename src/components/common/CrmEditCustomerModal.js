@@ -77,10 +77,11 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
+
     if (
       this.props.customer &&
       this.props.customer._id &&
-      (prevProps.customer._id !== this.props.customer._id)
+      (prevProps.customer!== this.props.customer)
     ) {
       const { customer } = this.props;
       this.setState({
@@ -591,7 +592,7 @@ export class CrmEditCustomerModal extends Component {
         >
           <ModalHeader toggle={this.handleCustomerModal}>
             {"Update Customer"}
-            {customer.updatedAt ?
+            {customer && customer.updatedAt ?
               <LastUpdated updatedAt={customer.updatedAt} /> :
               null
             }
