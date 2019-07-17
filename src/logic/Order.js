@@ -109,7 +109,6 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
-
     done();
   }
 });
@@ -223,7 +222,10 @@ const addOrderLogic = createLogic({
       "POST",
       true,
       undefined,
-      action.payload
+      {
+        customerId: action.payload && action.payload.customerId ? action.payload.customerId : null,
+        vehicleId: action.payload && action.payload.vehicleId ? action.payload.vehicleId : null,
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -415,7 +417,7 @@ const getOrderDetails = createLogic({
           order: result.data.data[0],
           orderId: result.data.data[0] ? result.data.data[0].orderId : null,
           customerOrders: !action.payload.vehicleId ? result.data.data : [],
-          vehicleOrders: !action.payload.customerId ?result.data.data: []
+          vehicleOrders: !action.payload.customerId ? result.data.data : []
         })
       );
       dispatch(hideLoader());

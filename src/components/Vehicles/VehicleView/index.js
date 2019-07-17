@@ -4,7 +4,8 @@ import {
    vehicleGetRequest,
    modelOpenRequest,
    getOrderDetailsRequest,
-   vehicleEditRequest
+   vehicleEditRequest,
+   addOrderRequest
 } from "../../../actions"
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
@@ -74,7 +75,7 @@ class CustomerView extends Component {
    };
    render() {
       const { activeTab, vehicleData } = this.state;
-      const { orderReducer, vehicleGetRequest, modelInfoReducer, modelOperate, vehicleEditRequest } = this.props
+      const { orderReducer, vehicleGetRequest, modelInfoReducer, modelOperate, vehicleEditRequest,addOrderRequest } = this.props
       return (
          <>
             <div className={"p-3"}>
@@ -111,7 +112,9 @@ class CustomerView extends Component {
                      {activeTab === 0 ? (
                         <VehicleOrder
                            vehicleOrders={orderReducer.vehicleOrders}
+                           vehicleData={vehicleData[0]}
                            orderReducer={orderReducer}
+                           addOrderRequest={addOrderRequest}
                            {...this.props}
                         />) : null}
                      {activeTab === 1 ?
@@ -151,6 +154,9 @@ const mapDispatchToProps = dispatch => ({
    },
    vehicleEditRequest: data =>{
       dispatch(vehicleEditRequest(data))
+   },
+   addOrderRequest: data =>{
+      dispatch(addOrderRequest(data))
    }
 })
 export default connect(

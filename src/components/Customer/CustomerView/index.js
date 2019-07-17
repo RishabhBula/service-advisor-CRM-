@@ -10,7 +10,8 @@ import {
   getRateStandardListRequest,
   setRateStandardListStart,
   customerEditRequest,
-  getCustomerFleetListRequest
+  getCustomerFleetListRequest,
+  addOrderRequest
 } from "../../../actions"
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
@@ -93,7 +94,8 @@ class CustomerView extends Component {
       setLabourRateDefault,
       getCustomerFleetListActions,
       updateCustomer,
-      getStdList } = this.props
+      getStdList,
+      addOrderRequest } = this.props
     const { customerOrders } = orderReducer;
     let customerDetails = customerData
     return (
@@ -128,6 +130,8 @@ class CustomerView extends Component {
                 <CustomerOrders
                   customerOrders={customerOrders}
                   orderReducer={orderReducer}
+                  customerDetails={customerDetails && customerDetails[0] ? customerDetails[0] : null}
+                  addOrderRequest={addOrderRequest}
                   {...this.props}
                 />) : null}
               {activeTab === 1 ?
@@ -202,6 +206,9 @@ const mapDispatchToProps = dispatch => ({
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
   },
+  addOrderRequest: (data) => {
+    dispatch(addOrderRequest(data));
+  }
 })
 export default connect(
   mapStateToProps,

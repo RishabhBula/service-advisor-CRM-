@@ -49,10 +49,10 @@ class TimeClock extends Component {
           switchTimer={switchTimer}
         />
         <span
-          className={"text-primary cursor_pointer"}
+          className={"btn btn-theme-line mb-3 mt-2"}
           onClick={this.handleTimeClockModal}
         >
-          Add Time Manually
+          <i className={"fa fa-plus"}></i> Add Time Manually
         </span>
         <TimeLogList
           timeLogData={timelogReducer.timeLogData}

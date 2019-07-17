@@ -7,6 +7,7 @@ import {
   redirectTo,
   updateCompanyLogoSuccess,
   updatePasswordSuccess,
+  profileInfoRequest,
   updatePasswordFailed,
   profileSettingUpdateSuccess,
   profileSettingUpdateFailed,
@@ -104,6 +105,7 @@ const updateCompanyDetailsLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
+      dispatch(profileInfoRequest());
       dispatch(
         profileInfoSuccess({
           isLoading: false,
@@ -177,6 +179,7 @@ const profileSettingUpdate = createLogic({
           isLoading: false
         })
         );
+      console.log(result.data.data, "result.data.data")
       }
     done();
   }

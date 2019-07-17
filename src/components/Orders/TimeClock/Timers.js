@@ -31,7 +31,13 @@ class Timers extends Component {
   onServiceChange = ({ target }, index) => {
     const { selectedServices } = this.state;
     selectedServices[index] = target.value;
-    this.setState({ selectedServices });
+    console.log(target.value,"target.value")
+    if (target.value !== "Select Service"){
+      this.setState({ selectedServices });
+    }
+    else{
+      this.setState({ selectedServices: []});
+    }
   };
   /**
    *
@@ -139,7 +145,8 @@ class Timers extends Component {
                   })}
                 >
                   <Col sm={"4"}>
-                    <div className={"technician-name"}>
+                    <div className={"technician-name text-capitalize"}>
+                      <span className={"mr-2"}><i className={"fas fa-user"}></i></span>
                       {[tech.firstName, tech.lastName].join(" ")}
                     </div>
                   </Col>
@@ -173,7 +180,7 @@ class Timers extends Component {
                                 onChange={e => this.onServiceChange(e, index)}
                                 className={"switch-select-box"}
                               >
-                                <option>Select Service</option>
+                                <option value="">Select Service</option>
                                 {technicianServices.map((service, ind) => {
                                   return (
                                     <React.Fragment key={`${index}-${ind}`}>
@@ -235,6 +242,9 @@ class Timers extends Component {
                   </Col>
                   <Col sm={"2"} className={"text-right"}>
                     <div className={"timer-running-time"}>
+                      <span className={"mr-2"}>
+                        <i className={"fa fa-clock-o"}></i>
+                      </span>
                       {isWorking ? (
                         <>
                           {this.startTempTimer(index, startTime)}
@@ -243,17 +253,18 @@ class Timers extends Component {
                             moment().diff(moment(startTime), "seconds")
                           )}
                         </>
-                      ) : null}
+                      ) : <span className={"timer-running-manually"}>--:--:--</span>}
                     </div>
                   </Col>
                   <Col sm={"2"} className={"text-right"}>
                     <div className={"clock-button"}>
                       {!isWorking ? (
                         <Button
-                          color={"primary"}
+                          color={"secondary"}
                           onClick={() =>
                             this.startTimer(index, tech, orderId)
                           }
+                          disabled={!this.state.selectedServices[index]}
                         >
                           Clock In
                           </Button>

@@ -327,7 +327,7 @@ class WorkFlow extends Component {
       <>
         <Card className={"white-card position-relative"}>
           <CardBody className={"custom-card-body"}>
-            <Row className={"mb-4 ml-0"}>
+            <Row className={"mb-2 ml-0"}>
               <Col className={"title-left-section"}>
                 <h4 className={"card-title"}>Workflow</h4>
                 <div className={"workflow-mode"}>
@@ -344,7 +344,7 @@ class WorkFlow extends Component {
                         onClick={() => this.setState({ listView: true })}
                         id={"list-view"}
                       />
-                      <UncontrolledTooltip target={"list-view"} >
+                      <UncontrolledTooltip target={"list-view"}>
                         Click to view List
                       </UncontrolledTooltip>
                     </div>
@@ -360,7 +360,7 @@ class WorkFlow extends Component {
                         onClick={() => this.setState({ listView: false })}
                         id={"grid-view"}
                       />
-                      <UncontrolledTooltip target={"grid-view"} >
+                      <UncontrolledTooltip target={"grid-view"}>
                         Click to view Grid
                       </UncontrolledTooltip>
                     </div>
@@ -369,15 +369,15 @@ class WorkFlow extends Component {
                 </div>
               </Col>
               <Col className={"title-right-section"}>
-                <div className={'invt-add-btn-block'}>
+                <div className={"invt-add-btn-block"}>
                   <Button
                     onClick={this.handleOrder}
                     color={"primary"}
                     id={"add-Appointment"}
                   >
                     <i className={"fa fa-plus mr-1"} /> New Quote
-                </Button>
-                  <UncontrolledTooltip target={"add-Appointment"} >
+                  </Button>
+                  <UncontrolledTooltip target={"add-Appointment"}>
                     Add a New Quote
                   </UncontrolledTooltip>
                 </div>
@@ -390,23 +390,24 @@ class WorkFlow extends Component {
                     orderData={orderData}
                     orderStatus={orderStatus}
                     updateOrderStatus={updateOrderStatus}
+                    updateOrderOfOrderStatus={updateOrderOfOrderStatus}
                     deleteOrderStatus={this.deleteOrderStatus}
                     deleteOrder={this.deleteOrder}
                     redirectTo={redirectTo}
                   />
                 ) : (
-                    <div style={{ overflowX: "auto" }}>
-                      <WorkflowGridView
-                        orderData={orderData}
-                        orderStatus={orderStatus}
-                        updateOrderStatus={updateOrderStatus}
-                        deleteOrderStatus={this.deleteOrderStatus}
-                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                        deleteOrder={this.deleteOrder}
-                        redirectTo={redirectTo}
-                      />
-                    </div>
-                  )}
+                  <div style={{ overflowX: "auto" }}>
+                    <WorkflowGridView
+                      orderData={orderData}
+                      orderStatus={orderStatus}
+                      updateOrderStatus={updateOrderStatus}
+                      deleteOrderStatus={this.deleteOrderStatus}
+                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                      deleteOrder={this.deleteOrder}
+                      redirectTo={redirectTo}
+                    />
+                  </div>
+                )}
               </Col>
             </Row>
           </CardBody>

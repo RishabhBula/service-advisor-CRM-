@@ -521,13 +521,13 @@ class UserList extends Component {
                       </td>
                       <td>
                         <div id={`create${index}`}>
-                          {user.loggedInAt ? formateDate(user.loggedInAt) : "-"}
+                          {user.loggedInAt ? formateDate(user.loggedInAt) : " "}
                           {user.loggedInAt ? <UncontrolledTooltip target={`create${index}`}>
                             Created At
                           </UncontrolledTooltip> :null}
                         </div>
                         <div id={`loginip-${index}`}>
-                          {user.loggedInIp || " "}
+                          {user.loggedInIp || "-"}
                           {user.loggedInIp ? <UncontrolledTooltip target={`loginip-${index}`}>
                             Last Login Ip Address
                           </UncontrolledTooltip> :null }

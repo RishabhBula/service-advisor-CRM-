@@ -21,7 +21,7 @@ export class CustomerOrders extends Component {
       )}`
     );
   }
-  handleVehicleDetails = (vehicleId) =>{
+  handleVehicleDetails = (vehicleId) => {
     const vehicleUrl = "/vehicles/details/:id"
     this.props.redirectTo(
       `${vehicleUrl.replace(
@@ -30,13 +30,18 @@ export class CustomerOrders extends Component {
       )}`
     );
   }
+  handleCreateOrder = (customerId) => {
+    this.props.addOrderRequest({ customerId: customerId })
+  }
   render() {
-    const { customerOrders, orderReducer } = this.props
+    const { customerOrders, orderReducer, customerDetails } = this.props
     const { isOrderLoading } = orderReducer
     const { page } = this.state;
-    console.log("########################", this.props.vehicleOrders);
     return (
       <>
+        <div className={"text-right new-Order-btn pb-2"}>
+          <Button onClick={() => this.handleCreateOrder(customerDetails._id)} color={"primary"}>Create New Order</Button>
+        </div>
         <Table responsive>
           <thead>
             <tr>
@@ -94,13 +99,16 @@ export class CustomerOrders extends Component {
                           <td className={"text-capitalize "}>estimate</td>
                       }
                       <td onClick={() => { this.handleVehicleDetails(order.vehicleId._id) }} id={`vehicle-details-${order._id}`} className={"text-primary cursor_pointer"}>
-                        {order.vehicleId.make}{" "}{order.vehicleId.modal}
+                        {
+                          order.vehicleId ?
+                            `${order.vehicleId.make}${" "}${order.vehicleId.modal}` : null
+                        }
                       </td>
                       <UncontrolledTooltip target={`vehicle-details-${order._id}`}>
                         View Vehicle
                       </UncontrolledTooltip>
                       <td>
-                        <Dollor value={parseFloat(orderTotal.orderGandTotal || 0).toFixed(2)} />
+                        <Dollor value={parseFloat(orderTotal.orderGrandTotal || 0).toFixed(2)} />
                       </td>
                       {
                         order.paymentId && order.paymentId.length && order.paymentId[order.paymentId.length - 1].isFullyPaid ?
@@ -129,10 +137,11 @@ export class CustomerOrders extends Component {
                   <tr>
                     <td className={"text-center"} colSpan={12}>
                       <NoDataFound
-                        showAddButton={false}
+                        showAddButton
                         message={
                           "Currently there are no customer order added."
                         }
+                        onAddClick={() => this.handleCreateOrder(customerDetails._id)}
                       />
                     </td>
                   </tr>

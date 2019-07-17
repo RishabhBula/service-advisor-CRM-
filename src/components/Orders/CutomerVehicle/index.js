@@ -30,7 +30,7 @@ class CutomerVehicle extends Component {
    }
    componentDidUpdate = ({ orderReducer }) => {
       if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
-         if (this.props.orderReducer.orderItems.customerId && this.props.orderReducer.orderItems.vehicleId) {
+         if (this.props.orderReducer.orderItems.customerId || this.props.orderReducer.orderItems.vehicleId) {
             const {
                customerId,
                vehicleId
@@ -39,12 +39,12 @@ class CutomerVehicle extends Component {
                customerId,
                vehicleId,
                selectedCustomer: {
-                  label: `${customerId.firstName} ${customerId.lastName}`,
-                  value: customerId._id
+                  label: customerId ? `${customerId.firstName} ${customerId.lastName}` : "Type to select customer",
+                  value: customerId ? customerId._id : ""
                },
                selectedVehicle: {
-                  label: `${vehicleId.make} ${vehicleId.modal}`,
-                  value: vehicleId._id
+                  label: vehicleId ? `${vehicleId.make} ${vehicleId.modal}` : "Type to select vehicle",
+                  value: vehicleId ? vehicleId._id : ""
                }
             })
          }

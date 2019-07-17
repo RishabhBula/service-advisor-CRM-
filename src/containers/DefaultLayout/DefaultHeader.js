@@ -11,7 +11,7 @@ import {
   NavItem
 } from "reactstrap";
 // import SearchBar from "../../components/common/SearchBar";
-import { AppNavbarBrand } from "@coreui/react";
+
 
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
 
@@ -32,26 +32,13 @@ class DefaultHeader extends Component {
       <React.Fragment>
         <div className="custom-main-logo">
           <AppSidebarToggler className="d-lg-none" display="md" mobile />
-          <AppNavbarBrand
-            full={{
-              src: this.props.shopLogo || "/assets/img/logo-white.svg",
-              width: 40,
-              height: 40,
-              alt: "Service Adviser"
-            }}
-            minimized={{
-              src: this.props.shopLogo || "/assets/img/logo-white.svg",
-              width: 50,
-              height: 50,
-              alt: "Service Adviser"
-            }}
-          />
+          
 
-          <AppSidebarToggler
+          {/* <AppSidebarToggler
             children={<i className="fa fa-bars" />}
             className="custom-toggle-bar custom-toggle-ba d-md-down-none"
             display="lg"
-          />
+          /> */}
           {/* <Nav className="d-md-down-none search-input-wrap" navbar>
             <NavItem className="px-3">
               <SearchBar />

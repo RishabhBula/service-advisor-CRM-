@@ -17,7 +17,9 @@ class OrderDetails extends Component {
       orderId: "",
       query: "",
       orderStatus: false,
-      activityLogs: []
+      activityLogs: [],
+      serviceDataObject: {},
+      activeService: false
     };
   }
   componentDidMount = () => {
@@ -26,12 +28,18 @@ class OrderDetails extends Component {
       activityLogs: activityReducer.activity
     })
   }
-  componentDidUpdate = ({ activityReducer }) => {
+  componentDidUpdate = ({ activityReducer, isPrint }) => {
     const activityData = this.props.activityReducer
     if (activityReducer !== activityData) {
       this.setState({
         activityLogs: activityData.activity
       })
+    }
+    if (isPrint !== this.props.isPrint) {
+      this.setState({
+        activeService: true
+      })
+
     }
   }
   handlePaymentModal = () => {
@@ -42,6 +50,30 @@ class OrderDetails extends Component {
       paymentModalOpen: !paymentModalOpen
     });
   }
+
+  // handlePrint = (
+  //   totalParts,
+  //   totalTires,
+  //   totalLabor,
+  //   orderSubTotal,
+  //   orderGandTotal,
+  //   serviceTotalArray,
+  //   totalTax,
+  //   totalDiscount,
+  // )=>{
+  //   this.props.handlePDF(
+  //     totalParts,
+  //     totalTires,
+  //     totalLabor,
+  //     orderSubTotal,
+  //     orderGandTotal,
+  //     serviceTotalArray,
+  //     totalTax,
+  //     totalDiscount,
+  //   );
+  //   return true;
+  // }
+
   render() {
     const { orderReducer, profileReducer, modelInfoReducer, modelOperate, addPaymentRequest, paymentReducer } = this.props
     const { modelDetails } = modelInfoReducer;
@@ -133,6 +165,8 @@ class OrderDetails extends Component {
                   epa = calculateValues(serviceTotalArray || 0, item.serviceId.epa.value || 0, item.serviceId.epa ? item.serviceId.epa.type : '$');
                   discount = calculateValues(serviceTotalArray || 0, item.serviceId.discount.value || 0, item.serviceId.discount ? item.serviceId.discount.type : '$');
                   tax = calculateValues(serviceTotalArray || 0, item.serviceId.taxes.value || 0, item.serviceId.taxes ? item.serviceId.taxes.type : '$');
+
+
                   serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
                   if (service.serviceType === 'part') {
                     totalParts += parseFloat(servicesSubTotal)
@@ -144,12 +178,15 @@ class OrderDetails extends Component {
                     totalLabor += parseFloat(servicesSubTotal)
                   }
                   orderSubTotal += (parseFloat(servicesSubTotal))
+
                   return true
                 }) : ''
                 }
-                <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal)}</span>
-                <span className={"d-none"}>{totalTax += parseFloat(epa) + parseFloat(tax)}</span>
-                <span className={"d-none"}>{totalDiscount += parseFloat(discount)}</span>
+
+
+                <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal) || 0}</span>
+                <span className={"d-none"}>{totalTax += (parseFloat(epa) + parseFloat(tax)) || 0}</span>
+                <span className={"d-none"}>{totalDiscount += parseFloat(discount) || 0}</span>
               </div>
             )
           })
@@ -238,6 +275,8 @@ class OrderDetails extends Component {
             )
           }) : ""}
         </div>
+
+
         <CrmPaymentModel
           openPaymentModel={paymentModalOpen}
           handlePaymentModal={this.handlePaymentModal}
@@ -251,6 +290,22 @@ class OrderDetails extends Component {
           addPaymentRequest={addPaymentRequest}
           totalPaiedAmount={totalPaiedAmount}
         />
+        <div>
+          {/* {
+           activeService ?
+            () => this.props.handlePDF(
+              totalParts,
+              totalTires,
+              totalLabor,
+              orderSubTotal,
+              orderGandTotal,
+              serviceTotalArray,
+              totalTax,
+              totalDiscount,
+              serviceData
+            ) : null
+        } */}
+        </div>
       </div>
     )
   }

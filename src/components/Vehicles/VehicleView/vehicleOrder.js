@@ -29,12 +29,18 @@ export class VehicleOrder extends Component {
       )}`
     );
   }
+  handleCreateOrder = (vehicleId) => {
+    this.props.addOrderRequest({ vehicleId: vehicleId })
+  }
   render() {
-    const { vehicleOrders, orderReducer } = this.props
+    const { vehicleOrders, orderReducer, vehicleData } = this.props
     const { isOrderLoading } = orderReducer
     const { page } = this.state;
     return (
       <>
+        <div className={"text-right new-vehicle-Order-btn pb-2"}>
+          <Button onClick={() => this.handleCreateOrder(vehicleData._id)} color={"primary"}>Create New Order</Button>
+        </div>
         <Table responsive>
           <thead>
             <tr>
@@ -92,13 +98,18 @@ export class VehicleOrder extends Component {
                           <td className={"text-capitalize "}>estimate</td>
                       }
                       <td onClick={() => { this.handleCustomerDetails(order.customerId._id) }} id={`customer-details-${order._id}`} className={"text-primary cursor_pointer"}>
-                        {order.customerId.firstName}{" "}{order.customerId.lastName}
+                        {
+                          order.customerId ?
+                            `${order.customerId.firstName}${" "}${order.customerId.lastName}` :
+                            null
+
+                        }
                       </td>
                       <UncontrolledTooltip target={`customer-details-${order._id}`}>
                         View Customer
                       </UncontrolledTooltip>
                       <td>
-                        <Dollor value={parseFloat(orderTotal.orderGandTotal || 0).toFixed(2)} />
+                        <Dollor value={parseFloat(orderTotal.orderGrandTotal || 0).toFixed(2)} />
                       </td>
                       {
                         order.paymentId && order.paymentId.length && order.paymentId[order.paymentId.length - 1].isFullyPaid ?
@@ -131,6 +142,7 @@ export class VehicleOrder extends Component {
                         message={
                           "Currently there are no Vehicle order added."
                         }
+                        onAddClick={() => this.handleCreateOrder(vehicleData._id)}
                       />
                     </td>
                   </tr>

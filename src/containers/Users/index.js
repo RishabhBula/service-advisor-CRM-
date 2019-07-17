@@ -87,9 +87,10 @@ class Users extends Component {
     this.props.onStatusUpdate({ ...query, ...data });
   };
   render() {
-    const { userReducer, addUser, modelInfoReducer, modelOperate } = this.props;
+    const { userReducer, addUser, modelInfoReducer, modelOperate, profileInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { addUserModal, editUserModal } = modelDetails;
+    const companyName = profileInfoReducer.profileInfo.companyName
     return (
       <>
         <Card className={"white-card"}>
@@ -123,13 +124,15 @@ class Users extends Component {
           userModalOpen={addUserModal}
           handleUserModal={this.toggleCreateModal}
           addUser={addUser}
+          companyName={companyName}
         />
       </>
     );
   }
 }
 const mapStateToProps = state => ({
-  userReducer: state.usersReducer
+  userReducer: state.usersReducer,
+  profileInfoReducer: state.profileInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
