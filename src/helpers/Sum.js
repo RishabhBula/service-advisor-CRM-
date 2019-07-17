@@ -15,10 +15,15 @@ export const calculateValues = (total, value, type = "%") => {
       return value;
   }
 };
-
+/** 
+/* 
+ */
 export const calculateSubTotal = (cost, quantity, hour, rate) => {
   return (parseFloat(cost || hour) * parseFloat(quantity || rate))
 }
+/** 
+/* 
+ */
 export const calculateDurationFromSeconds = (Seconds) => {
   var minutes = Math.floor(Seconds / 60);
   Seconds = Seconds % 60;
@@ -27,6 +32,9 @@ export const calculateDurationFromSeconds = (Seconds) => {
   const duration = `${hours}:${minutes}:${Seconds}`
   return duration
 }
+/** 
+/* 
+ */
 export const serviceTotalsCalculation = (serviceData) => {
   let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
     totalTax = 0, totalDiscount = 0;

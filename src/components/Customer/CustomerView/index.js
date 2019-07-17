@@ -5,7 +5,12 @@ import {
   customerGetRequest,
   modelOpenRequest,
   vehicleAddRequest,
-  getOrderDetailsRequest
+  getOrderDetailsRequest,
+  getMatrixList,
+  getRateStandardListRequest,
+  setRateStandardListStart,
+  customerEditRequest,
+  getCustomerFleetListRequest
 } from "../../../actions"
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
@@ -38,7 +43,7 @@ class CustomerView extends Component {
   }
   componentDidMount = () => {
     this.props.getCustomerDetailsSuccess();
-    this.props.customerGetRequest()
+    this.props.customerGetRequest({ customerId: this.props.match.params.id })
     const query = qs.parse(this.props.location.search);
     const customerId = this.props.match.params.id
     this.props.getOrderDetailsRequest({ customerId: customerId })
@@ -74,13 +79,23 @@ class CustomerView extends Component {
     );
   };
   render() {
-    const { customerData, customerId, activeTab } = this.state;
-    const { modelOperate, modelInfoReducer, vehicleAddAction, orderReducer } = this.props
+    const { customerData, activeTab } = this.state;
+    const {
+      modelOperate,
+      modelInfoReducer,
+      vehicleAddAction,
+      orderReducer,
+      matrixListReducer,
+      rateStandardListReducer,
+      getMatrix,
+      customerFleetReducer,
+      profileInfoReducer,
+      setLabourRateDefault,
+      getCustomerFleetListActions,
+      updateCustomer,
+      getStdList } = this.props
     const { customerOrders } = orderReducer;
-    let customerDetails = {}
-    if (customerData && customerData.length) {
-      customerDetails = customerData.filter(customer => customer._id === customerId)
-    }
+    let customerDetails = customerData
     return (
       <>
         <div className={"p-3"}>
@@ -112,6 +127,7 @@ class CustomerView extends Component {
               {activeTab === 0 ? (
                 <CustomerOrders
                   customerOrders={customerOrders}
+                  orderReducer={orderReducer}
                   {...this.props}
                 />) : null}
               {activeTab === 1 ?
@@ -122,7 +138,23 @@ class CustomerView extends Component {
                   vehicleAddAction={vehicleAddAction}
                   customerId={customerDetails[0] ? customerDetails[0]._id : null}
                 />) : null}
-              {activeTab === 2 ? (<CustomerInfo />) : null}
+              {activeTab === 2 ? (
+                <CustomerInfo
+                  customerDetails={customerDetails && customerDetails[0] ? customerDetails[0] : null}
+                  customerGetRequest={this.props.customerGetRequest}
+                  modelOperate={modelOperate}
+                  modelInfoReducer={modelInfoReducer}
+                  matrixListReducer={matrixListReducer}
+                  rateStandardListReducer={rateStandardListReducer}
+                  getMatrix={getMatrix}
+                  updateCustomer={updateCustomer}
+                  customerFleetReducer={customerFleetReducer}
+                  profileInfoReducer={profileInfoReducer}
+                  getStdList={getStdList}
+                  setLabourRateDefault={setLabourRateDefault}
+                  getCustomerFleetListActions={getCustomerFleetListActions}
+                />
+              ) : null}
             </React.Fragment>
           </Suspense>
         </div>
@@ -134,13 +166,17 @@ const mapStateToProps = state => ({
   customerListReducer: state.customerListReducer,
   modelInfoReducer: state.modelInfoReducer,
   orderReducer: state.orderReducer,
+  matrixListReducer: state.matrixListReducer,
+  profileInfoReducer: state.profileInfoReducer,
+  rateStandardListReducer: state.rateStandardListReducer,
+  customerFleetReducer: state.fleetReducer
 });
 const mapDispatchToProps = dispatch => ({
   getCustomerDetailsSuccess: () => {
     dispatch(getCustomerDetailsSuccess())
   },
-  customerGetRequest: () => {
-    dispatch(customerGetRequest())
+  customerGetRequest: (data) => {
+    dispatch(customerGetRequest(data))
   },
   modelOperate: data => {
     dispatch(modelOpenRequest({ modelDetails: data }));
@@ -150,7 +186,22 @@ const mapDispatchToProps = dispatch => ({
   },
   getOrderDetailsRequest: data => {
     dispatch(getOrderDetailsRequest(data))
-  }
+  },
+  getMatrix: data => {
+    dispatch(getMatrixList(data));
+  },
+  getStdList: data => {
+    dispatch(getRateStandardListRequest(data));
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
+  updateCustomer: data => {
+    dispatch(customerEditRequest(data));
+  },
+  getCustomerFleetListActions: () => {
+    dispatch(getCustomerFleetListRequest());
+  },
 })
 export default connect(
   mapStateToProps,

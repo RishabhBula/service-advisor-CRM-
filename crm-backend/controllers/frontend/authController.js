@@ -90,7 +90,7 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 /*  */
 const confirmationSignUp = async (req, res) => {
@@ -193,6 +193,12 @@ const loginApp = async (req, res) => {
         success: false
       };
     }
+    let companyData
+    if (result.parentId && mongoose.Types.ObjectId(result._id) !== mongoose.Types.ObjectId(result.parentId)) {
+      companyData = await userModel.findOne({
+        _id: result.parentId
+      })
+    }
     await userModel.updateOne(
       {
         _id: result._id
@@ -222,6 +228,7 @@ const loginApp = async (req, res) => {
     return res.status(200).json({
       responseCode: 200,
       data: result,
+      companyData: companyData || {},
       tokenExpire: moment() + 86400,
       token: token,
       message: "Successfully Login",
@@ -546,13 +553,13 @@ const imageDelete = async (req, res) => {
       var originalImagePath = __basedir + "/images/" + currentUser.id;
       var thumbnailImagePath =
         __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      fs.unlinkSync(originalImagePath, buf, function(err) {
+      fs.unlinkSync(originalImagePath, buf, function (err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
         if (err) {
           return console.log(err);
         }
@@ -611,13 +618,16 @@ const createUser = async (req, res) => {
         success: false
       });
     }
+
     const confirmationNumber = new Date().valueOf();
     let $data = req.body;
     $data.firstTimeUser = true;
     $data.userSideActivationValue = confirmationNumber;
+    console.log("####################", $data.companyName);
     let inserList = {
       ...$data,
       subdomain: currentUser.subdomain,
+      companyName: $data.companyName,
       roleType: mongoose.Types.ObjectId($data.roleType),
       parentId: req.currentUser.id,
       rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)

@@ -169,6 +169,10 @@ export const ValidatedRoutes = [
     authKey: "isAllowedCompanySettings"
   },
   {
+    url: AppRoutes.VEHICLES_DETAILS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
     url: AppRoutes.FLEETS.url,
     authKey: "isAllowedCompanySettings"
   },

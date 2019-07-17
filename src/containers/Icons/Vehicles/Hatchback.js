@@ -9,7 +9,7 @@ const Hatchback = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="355.417px"
+      width={props.size||"355.417px"}
       height="125.492px"
       viewBox="0 0 355.417 125.492"
       enable-background="new 0 0 355.417 125.492"

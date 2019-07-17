@@ -213,7 +213,14 @@ class Order extends Component {
     if (customerData.data && vehicleData.data) {
       customerValue = customerData.data._id;
       vehicleValue = vehicleData.data._id;
-    } else {
+    } else if (!customerData.data && vehicleData.data) {
+      customerValue = customerData._id;
+      vehicleValue = vehicleData.data._id;
+    }else if (customerData.data && !vehicleData.data) {
+      customerValue = customerData.data._id;
+      vehicleValue = vehicleData._id;
+    }
+    else{
       customerValue = customerData._id;
       vehicleValue = vehicleData._id;
     }
@@ -626,10 +633,10 @@ const mapDispatchToProps = dispatch => ({
   deleteNotes: data => {
     dispatch(deleteNotes(data))
   },
-  addPaymentRequest: data =>{
+  addPaymentRequest: data => {
     dispatch(addPaymentRequest(data))
   },
-  addNewCannedService: data =>{
+  addNewCannedService: data => {
     dispatch(addNewCannedService(data))
   }
 });

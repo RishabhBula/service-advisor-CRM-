@@ -57,27 +57,35 @@ class CutomerVehicle extends Component {
    loadVehicles = (input, callback) => {
       this.props.getVehicleData({ input, callback });
    };
-   handaleCustomerVehicleSelect = (e, name) => {
+   handaleCustomerSelect = (e, name) => {
       const { customerId, vehicleId } = this.state;
       if (e && e.value && name === 'customer') {
          this.setState({
             customerId: e,
+         }, () => {
+            this.props.customerVehicleData(customerId, vehicleId)
          })
-         this.props.customerVehicleData(customerId, vehicleId)
-      } else if (e && e.value && name === 'vehicle') {
-         this.setState({
-            vehicleId: e,
-         })
-         this.props.customerVehicleData(customerId, vehicleId)
-      } else if (name === 'customer') {
+      }
+      else {
          this.setState({
             customerId: "",
             selectedCustomer: {
                lable: "Type to select customer",
                value: ""
             },
+         }, () => {
+            this.props.customerVehicleData(customerId, vehicleId)
          })
-         this.props.customerVehicleData(customerId, vehicleId)
+      }
+   }
+   handaleVehicleSelect = (e, name) => {
+      const { customerId, vehicleId } = this.state;
+      if (e && e.value && name === 'vehicle') {
+         this.setState({
+            vehicleId: e,
+         }, () => {
+            this.props.customerVehicleData(customerId, vehicleId)
+         })
       } else {
          this.setState({
             vehicleId: "",
@@ -85,8 +93,9 @@ class CutomerVehicle extends Component {
                lable: "Type to select vehicle",
                value: ""
             }
+         }, () => {
+            this.props.customerVehicleData(customerId, vehicleId)
          })
-         this.props.customerVehicleData(customerId, vehicleId)
       }
    }
    render() {
@@ -126,7 +135,7 @@ class CutomerVehicle extends Component {
                            this.setState({
                               customerId: e
                            }, () => {
-                              this.handaleCustomerVehicleSelect(e, 'customer')
+                              this.handaleCustomerSelect(e, 'customer')
                            });
                         }}
                      />
@@ -162,7 +171,7 @@ class CutomerVehicle extends Component {
                            this.setState({
                               vehicleId: e
                            }, () => {
-                              this.handaleCustomerVehicleSelect(e, 'vehicle')
+                              this.handaleVehicleSelect(e, 'vehicle')
                            });
                         }}
                      />

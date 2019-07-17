@@ -1,16 +1,24 @@
 import React, { Component } from "react";
-import { Table, Button, UncontrolledTooltip } from "reactstrap";
-import { serviceTotalsCalculation } from "../../../helpers"
+import { serviceTotalsCalculation } from "../../../helpers/Sum";
 import Loader from "../../../containers/Loader/Loader";
 import NoDataFound from "../../common/NoFound";
 import { AppConfig } from "../../../config/AppConfig";
 import Dollor from "../../common/Dollor"
-export class CustomerOrders extends Component {
+import {
+  Table,
+  Button,
+  UncontrolledTooltip
+} from "reactstrap";
+export class VehicleOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 1
     };
+  }
+  handleCustomerDetails = (customerId) => {
+    const customerDetailsUrl = "/customers/details/:id"
+    this.props.history.push(customerDetailsUrl.replace(":id", `${customerId}`))
   }
   handleOrderDetails = (orderId) => {
     const orderUrl = "/workflow/order/:id"
@@ -21,20 +29,10 @@ export class CustomerOrders extends Component {
       )}`
     );
   }
-  handleVehicleDetails = (vehicleId) =>{
-    const vehicleUrl = "/vehicles/details/:id"
-    this.props.redirectTo(
-      `${vehicleUrl.replace(
-        ":id",
-        vehicleId
-      )}`
-    );
-  }
   render() {
-    const { customerOrders, orderReducer } = this.props
+    const { vehicleOrders, orderReducer } = this.props
     const { isOrderLoading } = orderReducer
     const { page } = this.state;
-    console.log("########################", this.props.vehicleOrders);
     return (
       <>
         <Table responsive>
@@ -44,7 +42,7 @@ export class CustomerOrders extends Component {
                 S No.
               </th>
               <th width={"20"}>Order Id</th>
-              <th width={"100"}>
+              <th width={"80"}>
                 Order Name
               </th>
               <th width={"50"}>
@@ -54,7 +52,7 @@ export class CustomerOrders extends Component {
                 Order Status
               </th>
               <th width={"50"}>
-                Vehicle
+                Customer
               </th>
               <th width={"50"}>
                 Order Total
@@ -69,8 +67,8 @@ export class CustomerOrders extends Component {
           </thead>
           <tbody>
             {!isOrderLoading ? (
-              customerOrders && customerOrders.length ? (
-                customerOrders.map((order, index) => {
+              vehicleOrders && vehicleOrders.length ? (
+                vehicleOrders.map((order, index) => {
                   const orderTotal = serviceTotalsCalculation(order.serviceId)
                   return (
                     <tr key={index}>
@@ -93,11 +91,11 @@ export class CustomerOrders extends Component {
                           <td className={"text-capitalize"}>invoiced</td> :
                           <td className={"text-capitalize "}>estimate</td>
                       }
-                      <td onClick={() => { this.handleVehicleDetails(order.vehicleId._id) }} id={`vehicle-details-${order._id}`} className={"text-primary cursor_pointer"}>
-                        {order.vehicleId.make}{" "}{order.vehicleId.modal}
+                      <td onClick={() => { this.handleCustomerDetails(order.customerId._id) }} id={`customer-details-${order._id}`} className={"text-primary cursor_pointer"}>
+                        {order.customerId.firstName}{" "}{order.customerId.lastName}
                       </td>
-                      <UncontrolledTooltip target={`vehicle-details-${order._id}`}>
-                        View Vehicle
+                      <UncontrolledTooltip target={`customer-details-${order._id}`}>
+                        View Customer
                       </UncontrolledTooltip>
                       <td>
                         <Dollor value={parseFloat(orderTotal.orderGandTotal || 0).toFixed(2)} />
@@ -129,9 +127,9 @@ export class CustomerOrders extends Component {
                   <tr>
                     <td className={"text-center"} colSpan={12}>
                       <NoDataFound
-                        showAddButton={false}
+                        showAddButton
                         message={
-                          "Currently there are no customer order added."
+                          "Currently there are no Vehicle order added."
                         }
                       />
                     </td>

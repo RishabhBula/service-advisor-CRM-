@@ -16,11 +16,43 @@ export class CrmSubPaymentModalModel extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      cardNumber: "",
+      expMonth: "",
+      expYear: "",
+      cvv: "",
+      expireDate: ""
     };
   }
-
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    })
+    if (name === "expireDate") {
+      const expireDate = value.split('/')
+      this.setState({
+        expMonth: expireDate[0],
+        expYear: expireDate[1]
+      })
+    }
+  }
+  handleSubscriptionPayment = () => {
+    const { cardNumber, expMonth, expYear, cvv } = this.state
+    const payload = {
+      planId: this.props.planId,
+      cardNumber: cardNumber,
+      expMonth: expMonth,
+      expYear: expYear,
+      cvv: cvv
+    }
+    console.log("################", payload);
+    this.props.addSubscriptionRequest(payload)
+  }
   render() {
     const { openSubPayementModel, handleSubPaymentModal } = this.props
+    const { cardNumber, cvv, expireDate } = this.state
+    console.log("This is state^^^^^^^^^^^^", this.state);
+
     return (
       <>
         <Modal
@@ -67,6 +99,7 @@ export class CrmSubPaymentModalModel extends Component {
                       ]}
                       className={'form-control'}
                       placeholder="Enter card number"
+                      value={cardNumber}
                       name="cardNumber"
                       onChange={this.handleChange}
                     />
@@ -82,6 +115,7 @@ export class CrmSubPaymentModalModel extends Component {
                         placeholder="Enter expiry date"
                         id="expireDate"
                         name="expireDate"
+                        value={expireDate}
                         onChange={this.handleChange}
                       />
                     </FormGroup>
@@ -95,6 +129,7 @@ export class CrmSubPaymentModalModel extends Component {
                         placeholder="Enter CVV"
                         id="cvv"
                         name="cvv"
+                        value={cvv}
                         onChange={this.handleChange}
                       />
                     </FormGroup>
@@ -105,7 +140,7 @@ export class CrmSubPaymentModalModel extends Component {
           </ModalBody>
           <ModalFooter>
             <div>
-              <Button color="primary">Subscribe</Button>
+              <Button onClick={this.handleSubscriptionPayment} color="primary">Subscribe</Button>
             </div>
             <div>
               <Button onClick={handleSubPaymentModal} color="secondary">Cancel</Button>

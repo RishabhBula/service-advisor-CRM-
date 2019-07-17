@@ -67,6 +67,7 @@ const getAllCustomerList = async (req, res) => {
     const offset = (page - 1) * limit;
     const searchValue = query.search ? query.search : "";
     const sort = query.sort;
+    const customerId = query.customerId
     const status = query.status;
     let sortBy = {};
     switch (sort) {
@@ -138,6 +139,11 @@ const getAllCustomerList = async (req, res) => {
             }
           }
         ]
+      });
+    }
+    if (customerId) {
+      condition["$and"].push({
+        _id: mongoose.Types.ObjectId(customerId) 
       });
     }
     const users = await customerModel

@@ -9,7 +9,7 @@ const Coupe = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="470.86px"
+      width={props.size||"470.86px"}
       height="144.955px"
       viewBox="0 0 470.86 144.955"
       enable-background="new 0 0 470.86 144.955"

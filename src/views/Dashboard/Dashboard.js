@@ -3,7 +3,7 @@ import { Card, CardBody, Col, Row } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
-
+import { getSubscriptionPlanRequest, addSubscriptionRequest } from "../../actions"
 //Random Numbers
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -35,7 +35,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { modelInfoReducer, modelOperate } = this.props
+    const { modelInfoReducer, modelOperate, getSubscriptionPlanRequest, subscriptionReducer, addSubscriptionRequest } = this.props
     const { modelDetails } = modelInfoReducer;
     const { openSubscriptionModel, openSubPayementModel } = modelDetails
     return (
@@ -58,6 +58,9 @@ class Dashboard extends Component {
           openSubscriptionModel={openSubscriptionModel}
           modelOperate={modelOperate}
           openSubPayementModel={openSubPayementModel}
+          getSubscriptionPlanRequest={getSubscriptionPlanRequest}
+          subscriptionReducer={subscriptionReducer}
+          addSubscriptionRequest={addSubscriptionRequest}
         />
       </div>
     );
@@ -65,8 +68,17 @@ class Dashboard extends Component {
 }
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
+  subscriptionReducer: state.subscriptionReducer
 });
+const mapDispatchToProps = dispatch => ({
+  getSubscriptionPlanRequest: () => {
+    dispatch(getSubscriptionPlanRequest())
+  },
+  addSubscriptionRequest: (data) =>{
+    dispatch( addSubscriptionRequest(data))
+  }
+})
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(withRouter(Dashboard));

@@ -9,7 +9,7 @@ const Motorcycle = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="349.813px"
+      width={props.size||"349.813px"}
       height="223.84px"
       viewBox="0 0 349.813 223.84"
       enable-background="new 0 0 349.813 223.84"

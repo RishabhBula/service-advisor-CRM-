@@ -94,6 +94,11 @@ export const AppRoutes = {
     name: "Vehicles",
     exact: true
   },
+  VEHICLES_DETAILS: {
+    url: "/vehicles/details/:id",
+    name: "Vehicles Details",
+    exact: true
+  },
   FLEETS: {
     url: "/settings/fleets",
     name: "Fleets",

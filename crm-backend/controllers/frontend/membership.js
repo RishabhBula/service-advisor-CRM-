@@ -36,7 +36,6 @@ const subscribe = async (req, res) => {
     }
     console.log("Is a valid user");
     let customerId = null;
-
     if (userDetails.stripeCustomerId) {
       console.log("Existing stripe custsomer found.");
       try {
@@ -78,7 +77,7 @@ const subscribe = async (req, res) => {
           await stripe.subscriptions.del(userDetails.planId.stripeId);
           console.log(
             `Previous subscription for ${
-              userDetails.planId.name
+            userDetails.planId.name
             }) plan has been cancelled.`
           );
         } catch (error) {
@@ -146,4 +145,19 @@ const subscribe = async (req, res) => {
 /**
  *
  */
-module.exports = { subscribe };
+const getPlansList = async (req,res) => {
+  try {
+    const planList = await PlanModel.find({ isDeleted: false })
+    return res.status(200).json({
+      data: planList || [],
+      success: true
+    })
+  } catch (error) {
+    return res.status(500).json({
+      responsecode: 500,
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
+module.exports = { subscribe, getPlansList };

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardFooter, Row, Col } from "reactstrap";
+import { Card, CardBody, Row, Col } from "reactstrap";
 import VehicleIcons from "../../../containers/Icons/Vehicles"
 import { CrmVehicleModal } from "../../common/Vehicles/CrmVehicleModal";
 export class CustomerVehicles extends Component {
@@ -49,7 +49,6 @@ export class CustomerVehicles extends Component {
                         </div>
                       </div>
                     </CardBody>
-                    <CardFooter></CardFooter>
                   </Card>
                 </Col>
               )

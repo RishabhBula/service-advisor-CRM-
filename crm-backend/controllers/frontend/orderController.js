@@ -321,6 +321,7 @@ const getOrderDetails = async (req, res) => {
     const searchValue = query.search;
     const orderId = query._id;
     const customerId = query.customerId
+    const vehicleId = query.vehicleId
     let condition = {};
     condition["$and"] = [
       {
@@ -377,6 +378,15 @@ const getOrderDetails = async (req, res) => {
         $or: [
           {
             customerId: mongoose.Types.ObjectId(customerId)
+          }
+        ]
+      });
+    }
+    if (vehicleId) {
+      condition["$and"].push({
+        $or: [
+          {
+            vehicleId: mongoose.Types.ObjectId(vehicleId)
           }
         ]
       });
