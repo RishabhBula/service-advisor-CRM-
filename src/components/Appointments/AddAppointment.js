@@ -701,7 +701,7 @@ export default class AddAppointment extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col sm={"4"} />
+            <Col sm={"4"}>fasdf</Col>
           </Row>
         </Form>
       </CRMModal>

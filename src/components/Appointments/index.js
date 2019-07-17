@@ -51,7 +51,8 @@ export default class Appointments extends Component {
         end: new Date(
           new Date(event.appointmentDate).setUTCHours(endHours)
         ).setUTCMinutes(endMin),
-        color: event.appointmentColor
+        color: event.appointmentColor,
+        customRender: true
       };
     });
     return (
@@ -65,6 +66,8 @@ export default class Appointments extends Component {
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         weekends={true}
         events={events}
+        displayEventTime={true}
+        displayEventEnd={true}
         eventClick={this.onEventClick}
         dateClick={this.onDateClick}
       />
