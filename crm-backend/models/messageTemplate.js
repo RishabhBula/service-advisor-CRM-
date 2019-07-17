@@ -14,6 +14,9 @@ const messageTemplateSchema = new Schema({
         type: String,
         default: null
     },
+    pdfAttachment: {
+        type: String
+    },
     orderId: {
         type: Schema.Types.ObjectId,
         ref: "Order",

@@ -53,6 +53,12 @@ const orderSchema = new Schema({
       ref: "TimeClock"
     }
   ],
+  paymentId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "PaymentRecord"
+    }
+  ],
   messageId: {
     type: [
       new Schema({

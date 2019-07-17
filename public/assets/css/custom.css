@@ -2,20 +2,53 @@
 
 @font-face {
   font-family: "FrutigerNeueLTPro-Regular";
-  src: url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.eot");
-  src: url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.eot?#iefix")
+  src: url("../fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.eot");
+  src: url("../fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.eot?#iefix")
       format("embedded-opentype"),
-    url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.woff2")
+    url("../fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.woff2")
       format("woff2"),
-    url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.woff")
+    url("../fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.woff")
       format("woff"),
-    url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.ttf")
+    url("../fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.ttf")
       format("truetype"),
-    url("./fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.svg#FrutigerNeueLTPro-Regular")
+    url("../fonts/FrutigerNeueLTPro-Regular/FrutigerNeueLTPro-Regular.svg#FrutigerNeueLTPro-Regular")
       format("svg");
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: "FrutigerNeueLTPro-Medium";
+  src: url("../fonts/frutiger-neue-lt-pro-medium/FrutigerNeueLTPro-Medium.eot");
+  src: url("../fonts/frutiger-neue-lt-pro-medium/FrutigerNeueLTPro-Medium.eot?#iefix")
+      format("embedded-opentype"),
+    url("../fonts/frutiger-neue-lt-pro-medium/FrutigerNeueLTPro-Medium.woff2")
+      format("woff2"),
+    url("../fonts/frutiger-neue-lt-pro-medium/FrutigerNeueLTPro-Medium.woff")
+      format("woff"),
+    url("../fonts/frutiger-neue-lt-pro-medium/FrutigerNeueLTPro-Medium.ttf")
+      format("truetype"),
+    url("../fonts/frutiger-neue-lt-pro-medium/FrutigerNeueLTPro-Medium.svg#FrutigerNeueLTPro-Medium")
+      format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "FrutigerNeueLTPro-Bold";
+  src: url("../fonts/frutiger-neue-lt-pro-bold/FrutigerNeueLTPro-Bold.eot");
+  src: url("../fonts/frutiger-neue-lt-pro-bold/FrutigerNeueLTPro-Bold.eot?#iefix")
+      format("embedded-opentype"),
+    url("../fonts/frutiger-neue-lt-pro-bold/FrutigerNeueLTPro-Bold.woff2")
+      format("woff2"),
+    url("../fonts/frutiger-neue-lt-pro-bold/FrutigerNeueLTPro-Bold.woff")
+      format("woff"),
+    url("../fonts/frutiger-neue-lt-pro-bold/FrutigerNeueLTPro-Bold.ttf")
+      format("truetype"),
+    url("../fonts/frutiger-neue-lt-pro-bold/FrutigerNeueLTPro-Bold.svg#FrutigerNeueLTPro-Bold")
+      format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @font-face {
   font-family: "Acumin-Pro-Regular";
   src: url("../fonts/acumin-pro/Acumin-RPro.woff"), format("woff");
@@ -34,7 +67,7 @@
   font-family: "Open Sans", sans-serif;
 }
 .table tr td {
-  font-size: 14px !important;
+  font-size: 14px ;
 }
 .btn.btn-blue {
   background: linear-gradient(to bottom, #8358f0, #5c43db);
@@ -203,6 +236,11 @@
   color: #444;
   background-color: #dedede;
   border-color: #dedede;
+}
+.custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff !important;
+  background-color: #7f6cb9 !important;
+  border-color: #7f6cb9 !important;
 }
 .pagination .page-item.active .page-link:focus {
   box-shadow: none;
@@ -2047,7 +2085,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .workflow-section .workflow-left {
   flex: 1;
-  margin-right: 350px;
+  margin-right: 355px;
 }
 .order-activity {
   position: absolute;
@@ -2540,6 +2578,15 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   align-items: center;
   background-color: #fff;
   position: relative;
+}
+.remaining-amount-section{
+  background: rgba(189, 186, 195, 0.17);
+  min-height: 211px;
+  padding: 15px;
+}
+.payment-debit-card input{
+  top: 6px;
+  right: 31px;
 }
 /*=========Payment Page css======*/
 

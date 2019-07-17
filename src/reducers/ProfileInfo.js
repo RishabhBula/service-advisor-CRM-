@@ -3,6 +3,7 @@ import { profileInfoActions } from "./../actions";
 
 const initialAuthState = {
   profileInfo: {},
+  companyInfo:{},
   isLoading: true,
   companyLogoUpdated: true
 };
@@ -17,7 +18,8 @@ export const profileInfoReducer = handleActions(
     [profileInfoActions.PROFILE_INFO_SUCCESS]: (state, action) => ({
       ...state,
       profileInfo: action.payload.profileInfo,
-      isLoading: action.payload.isLoading
+      isLoading: action.payload.isLoading,
+      companyInfo: action.payload.companyInfo
     }),
     [profileInfoActions.PROFILE_INFO_FAILED]: (state, action) => ({
       ...state,

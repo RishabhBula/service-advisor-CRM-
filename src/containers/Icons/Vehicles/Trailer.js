@@ -9,7 +9,7 @@ const Trailer = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="380.307px"
+      width={props.size||"380.307px"} 
       height="141.743px"
       viewBox="0 0 380.307 141.743"
       enable-background="new 0 0 380.307 141.743"

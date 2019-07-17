@@ -119,7 +119,11 @@ const getCustomersLogic = createLogic({
           action.payload && action.payload.status
             ? action.payload.status
             : null,
-        limit: AppConfig.ITEMS_PER_PAGE
+        limit: AppConfig.ITEMS_PER_PAGE,
+        customerId:
+          action.payload && action.payload.customerId
+            ? action.payload.customerId
+            : null
       }
     );
     if (result.isError) {

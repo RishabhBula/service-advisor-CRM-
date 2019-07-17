@@ -9,6 +9,8 @@ export const customersAddActions = {
   CUSTOMER_GET_START: "Customer get Started!",
   CUSTOMER_GET_SUCCESS: "Customer Get successfully!",
   CUSTOMER_GET_FAILED: "Customer Get failed!",
+  CUSTOMER_DETAILS_REQUEST: "Customer details request",
+  CUSTOMER_DETAILS_SUCCESS: "Get customer details success",
   DELETE_CUSTOMER: "Delete customer Requested!",
   UPDATE_CUSTOMER_STATUS: "Update customer status Requested!",
   EDIT_CUSTOMER_REQUESTED: "Edit CUSTOMER Requested!",
@@ -68,3 +70,11 @@ export const updateImportCustomersReq = createAction(
 export const exportCustomers = createAction(
   customersAddActions.EXPORT_CUSTOMERS
 );
+
+export const getCustomerDetailsSuccess = createAction(
+  customersAddActions.CUSTOMER_DETAILS_SUCCESS
+)
+
+export const getCustomerDetailsRequest = createAction(
+  customersAddActions.CUSTOMER_DETAILS_REQUEST
+)

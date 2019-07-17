@@ -9,7 +9,7 @@ const Bicycle = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="280.307px"
+      width= {props.size||"280.307px"}
       height="171.306px"
       viewBox="0 0 280.307 171.306"
       enable-background="new 0 0 280.307 171.306"

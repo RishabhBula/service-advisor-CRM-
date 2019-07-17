@@ -24,7 +24,7 @@ class CutomerVehicle extends Component {
   componentDidUpdate = ({ orderReducer }) => {
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
-        this.props.orderReducer.orderItems.customerId &&
+        this.props.orderReducer.orderItems.customerId ||
         this.props.orderReducer.orderItems.vehicleId
       ) {
         const { customerId, vehicleId } = this.props.orderReducer.orderItems;
@@ -32,12 +32,16 @@ class CutomerVehicle extends Component {
           customerId,
           vehicleId,
           selectedCustomer: {
-            label: `${customerId.firstName} ${customerId.lastName}`,
-            value: customerId._id
+            label: customerId
+              ? `${customerId.firstName} ${customerId.lastName}`
+              : "Type to select customer",
+            value: customerId ? customerId._id : ""
           },
           selectedVehicle: {
-            label: `${vehicleId.make} ${vehicleId.modal}`,
-            value: vehicleId._id
+            label: vehicleId
+              ? `${vehicleId.make} ${vehicleId.modal}`
+              : "Type to select vehicle",
+            value: vehicleId ? vehicleId._id : ""
           }
         });
       }
@@ -49,36 +53,56 @@ class CutomerVehicle extends Component {
   loadVehicles = (input, callback) => {
     this.props.getVehicleData({ input, callback });
   };
-  handaleCustomerVehicleSelect = (e, name) => {
+  handaleCustomerSelect = (e, name) => {
     const { customerId, vehicleId } = this.state;
     if (e && e.value && name === "customer") {
-      this.setState({
-        customerId: e
-      });
-      this.props.customerVehicleData(customerId, vehicleId);
-    } else if (e && e.value && name === "vehicle") {
-      this.setState({
-        vehicleId: e
-      });
-      this.props.customerVehicleData(customerId, vehicleId);
-    } else if (name === "customer") {
-      this.setState({
-        customerId: "",
-        selectedCustomer: {
-          lable: "Type to select customer",
-          value: ""
+      this.setState(
+        {
+          customerId: e
+        },
+        () => {
+          this.props.customerVehicleData(customerId, vehicleId);
         }
-      });
-      this.props.customerVehicleData(customerId, vehicleId);
+      );
     } else {
-      this.setState({
-        vehicleId: "",
-        selectedVehicle: {
-          lable: "Type to select vehicle",
-          value: ""
+      this.setState(
+        {
+          customerId: "",
+          selectedCustomer: {
+            lable: "Type to select customer",
+            value: ""
+          }
+        },
+        () => {
+          this.props.customerVehicleData(customerId, vehicleId);
         }
-      });
-      this.props.customerVehicleData(customerId, vehicleId);
+      );
+    }
+  };
+  handaleVehicleSelect = (e, name) => {
+    const { customerId, vehicleId } = this.state;
+    if (e && e.value && name === "vehicle") {
+      this.setState(
+        {
+          vehicleId: e
+        },
+        () => {
+          this.props.customerVehicleData(customerId, vehicleId);
+        }
+      );
+    } else {
+      this.setState(
+        {
+          vehicleId: "",
+          selectedVehicle: {
+            lable: "Type to select vehicle",
+            value: ""
+          }
+        },
+        () => {
+          this.props.customerVehicleData(customerId, vehicleId);
+        }
+      );
     }
   };
   render() {
@@ -124,7 +148,7 @@ class CutomerVehicle extends Component {
                       customerId: e
                     },
                     () => {
-                      this.handaleCustomerVehicleSelect(e, "customer");
+                      this.handaleCustomerSelect(e, "customer");
                     }
                   );
                 }}
@@ -168,7 +192,7 @@ class CutomerVehicle extends Component {
                       vehicleId: e
                     },
                     () => {
-                      this.handaleCustomerVehicleSelect(e, "vehicle");
+                      this.handaleVehicleSelect(e, "vehicle");
                     }
                   );
                 }}

@@ -9,7 +9,7 @@ const SUV = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="377.246px"
+      width= {props.size||"377.246px"}
       height="144.68px"
       viewBox="0 0 377.246 144.68"
       enable-background="new 0 0 377.246 144.68"

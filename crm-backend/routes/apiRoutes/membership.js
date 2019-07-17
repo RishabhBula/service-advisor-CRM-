@@ -4,13 +4,22 @@ const { authorisedUser } = require("./../../common/token");
 const {
   SubscribeMembershipValidations
 } = require("./../../common/apiValidation");
-const { subscribe } = require("./../../controllers/frontend/membership");
-
+const { subscribe, getPlansList } = require("./../../controllers/frontend/membership");
+/*
+/* 
+ */
 router.post(
   "/subscribe",
   SubscribeMembershipValidations,
   authorisedUser,
   subscribe
 );
-
+/*
+/* 
+ */
+router.get(
+  "/list",
+  authorisedUser,
+  getPlansList
+)
 module.exports = router;

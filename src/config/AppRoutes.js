@@ -94,6 +94,11 @@ export const AppRoutes = {
     name: "Vehicles",
     exact: true
   },
+  VEHICLES_DETAILS: {
+    url: "/vehicles/details/:id",
+    name: "Vehicles Details",
+    exact: true
+  },
   FLEETS: {
     url: "/settings/fleets",
     name: "Fleets",
@@ -102,6 +107,11 @@ export const AppRoutes = {
   CUSTOMERS: {
     url: "/customers",
     name: "Customers",
+    exact: true
+  },
+  CUSTOMER_DETAILS: {
+    url: "/customers/details/:id",
+    name: "Customers Details",
     exact: true
   },
   PRICEMATRIX: {

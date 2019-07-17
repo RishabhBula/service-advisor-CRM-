@@ -28,7 +28,9 @@ const initialAuthState = {
     timeClockEditModalOpen: false,
     paymentModalOpen: false,
     showAddAppointmentModal: false,
-    showAppointmentDetailModal: false
+    showAppointmentDetailModal: false,
+    openSubscriptionModel: false,
+    openSubPayementModel: false
   }
 };
 

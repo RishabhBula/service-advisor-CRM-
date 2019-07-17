@@ -9,7 +9,7 @@ const Truck = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="428.312px"
+      width={props.size||"428.312px"}
       height="145.149px"
       viewBox="0 0 428.312 145.149"
       enable-background="new 0 0 428.312 145.149"

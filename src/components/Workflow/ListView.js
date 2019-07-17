@@ -1,8 +1,13 @@
 import React from "react";
-import { Table, Nav, NavItem, NavLink } from "reactstrap";
+import { Table, Nav, NavItem, NavLink, UncontrolledTooltip} from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
 import { AppRoutes } from "../../config/AppRoutes";
+import serviceUser from "../../assets/service-user.png";
+import serviceTyre from "../../assets/service-car.png";
+import { serviceTotalsCalculation } from "../../helpers";
+import Dollor from "../common/Dollor";
+import Select from "react-select";
 
 class WorkflowListView extends React.Component {
   constructor(props) {
@@ -11,28 +16,127 @@ class WorkflowListView extends React.Component {
       activeTab: null
     };
   }
+
+  handleType = (destination, source, orderId) => {
+    console.log(
+      source + " source",
+      destination.id + " destination",
+      orderId,
+      "e isprinted"
+    );
+    
+    // this.props.updateOrderStatus({
+    //   // from: source,
+    //   // to: destination.id,
+    //   // orderId,
+    //   // destinationIndex: { index: 0, droppableId: destination.id },
+    //   // sourceIndex: { index: 0, droppableId: source }
+    //   orderId,
+    //   orderStatus: destination,
+    //   orderIndex:0
+    // });
+  };
   /**
    *
    */
   renderRow = (order, index) => {
     const { activeTab } = this.state;
+    let serviceCalculation = {};
+    serviceCalculation = serviceTotalsCalculation(order.serviceId);
+    const { orderStatus } = this.props;
+    const groupedOptions = [];
+    orderStatus.map((status, index) => {
+      return (
+        //console.log(status),
+        groupedOptions.push({ label: status.name, id: status._id })
+      );
+    });
+    console.log(serviceCalculation,"serviceCalculation  ")
+    
     return (
       <tr key={index}>
-        <td>
-          <span
+        <td className={""} width={300}>
+          <div
             onClick={() =>
               this.props.redirectTo(
                 `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", order._id)}`
               )
             }
-            style={{
-              cursor: "pointer"
-            }}
+            className={"order-title"}
           >
-            {order.name || "Unnamed order"}
-          </span>
+            <div className={"order-id"}>
+              <span className={"pr-2"}>
+                <strong>{order.isInvoice ? "Invoice" : "Estimate"}</strong>
+              </span>
+              #{order.orderId || "---"}
+            </div>
+            
+            {order.orderName || "Unnamed order"}
+          </div>
+        </td>
+        <td width={220}>
+          <div className={"d-flex"}>
+            <img
+              src={serviceUser}
+              alt={"serviceUser"}
+              width={"20"}
+              height={"20"}
+              className={"mr-1"}
+            />
+            {order && order.customerId
+              ? order.customerId.firstName + " " + order.customerId.lastName
+              : "No Customer"}
+          </div>
         </td>
         <td>
+          <div className={"d-flex"}>
+            <img
+              src={serviceTyre}
+              alt={"serviceTyre"}
+              width={"20"}
+              height={"20"}
+              className={"mr-1"}
+            />
+            {order && order.customerId
+              ? order.vehicleId.make + " " + order.vehicleId.modal
+              : "No Vehicle"}
+          </div>
+        </td>
+        <td className={"pl-2"}>
+          <Dollor value={serviceCalculation.orderGrandTotal} />
+        </td>
+        <td width={200}>
+          {console.log(groupedOptions, "groupedOptions")}
+          <Select
+            defaultValue={groupedOptions.filter(
+              item => item.id === order.workflowStatus
+            )}
+            options={groupedOptions}
+            className="w-100 form-select"
+            onChange={e => this.handleType(e, order.workflowStatus, order._id)}
+            classNamePrefix={"form-select-theme"}
+          />
+          
+        </td>
+        <td>
+          <span
+            className={
+              order.status
+                ? "status-btn border-success text-success"
+                : "status-btn"
+            }
+          >
+            <i
+              className={
+                order.status
+                  ? "fas fa-check text-success"
+                  : "fas fa-check text-secondary"
+              }
+            />{" "}
+            {order.status ? "Authorised" : "Not Authorised"}
+          </span>
+        </td>
+        <td className={"delete-icon"}>
           <i
             className={"fa fa-trash"}
             onClick={() =>
@@ -42,7 +146,11 @@ class WorkflowListView extends React.Component {
                 index
               })
             }
+            id={`delete-${order._id}`}
           />
+          <UncontrolledTooltip target={`delete-${order._id}`}>
+            Delete Order
+          </UncontrolledTooltip>
         </td>
       </tr>
     );
@@ -63,6 +171,7 @@ class WorkflowListView extends React.Component {
         <Nav pills className={"inventory-nav"}>
           {orderStatus
             ? orderStatus.map((tab, index) => {
+                console.log(tab, "tab tab");
                 return (
                   <NavItem key={index}>
                     <NavLink
@@ -82,11 +191,16 @@ class WorkflowListView extends React.Component {
               })
             : null}
         </Nav>
-        <Table responsive>
+        <Table className={"workflow-table"}>
           <thead>
             <tr>
-              <th>Order Name</th>
-              <th />
+              <th>Order Details</th>
+              <th>Customer Details</th>
+              <th>Vehicle Details</th>
+              <th>Order Total</th>
+              <th>Status</th>
+              <th width={""}>Invoice</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -100,7 +214,7 @@ class WorkflowListView extends React.Component {
               orders[activeTab].map(this.renderRow)
             ) : (
               <tr>
-                <td className={"text-center"}>
+                <td className={"text-center"} colSpan={6}>
                   <NoDataFound />
                 </td>
               </tr>

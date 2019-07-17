@@ -9,7 +9,8 @@ import {
   redirectTo,
   showLoader,
   hideLoader,
-  logOutRequest
+  logOutRequest,
+  profileInfoSuccess,
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 import { APP_URL } from "../config/AppConfig";
@@ -37,13 +38,22 @@ const loginLogic = createLogic({
       done();
       return;
     } else {
+      console.log(result.data.companyData, "result.data.companyData")
+      dispatch(
+        profileInfoSuccess({
+          companyInfo: result.data.companyData,
+          isLoading: false
+        })
+      );
       logger(
+        
         `Redirect URI: ${window.location.protocol}://${
           result.data.data.subdomain
         }.${APP_URL}/verify-user-details?user=${
           result.data.token
         }&key=${Date.now()}&verification=${Math.random()}`
       );
+    
       window.location.href = `${"http"}://${
         result.data.data.subdomain
       }.${APP_URL}/verify-user-details?user=${

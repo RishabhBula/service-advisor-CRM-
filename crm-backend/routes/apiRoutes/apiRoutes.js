@@ -23,6 +23,7 @@ const {
   messageChat,
   timeClock,
   userActivity,
+  payment,
   memberShipRoutes,
   webhookRoutes,
   appointmentRoutes
@@ -58,6 +59,7 @@ router.use("", googleCaptcha);
 router.use("/message", messageChat);
 router.use("/timeClock", timeClock);
 router.use("/activity", userActivity);
+router.use("/payment", payment);
 router.use("/membership-plan", memberShipRoutes);
 router.use("/webhooks", webhookRoutes);
 router.use("/appointment", appointmentRoutes);

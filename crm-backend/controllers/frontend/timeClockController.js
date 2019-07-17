@@ -153,7 +153,7 @@ const stopTimer = async (req, res) => {
   const convertedDuration = result.duration / 3600
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
-      endDateTime: new Date,
+      endDateTime: new Date(),
       total: parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) || 0,
       activity: `Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`
     }

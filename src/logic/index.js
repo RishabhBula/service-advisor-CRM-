@@ -24,6 +24,8 @@ import { ActivityLogic } from "./Activity";
 import { MessageLogic } from "./Message";
 import { OrderSummaryLogic } from "./OrderSummary";
 import { AppointmentLogics } from "./Appointments";
+import { PaymentLogic } from "./Payment";
+import { SubscriptionLogic } from "./Subscription";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -57,5 +59,7 @@ export default [
   ...MessageLogic,
   ...OrderSummaryLogic,
   ...AppointmentLogics,
+  ...PaymentLogic,
+  ...SubscriptionLogic,
   redirectToLogic
 ];

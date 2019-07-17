@@ -17,7 +17,9 @@ class OrderDetails extends Component {
       orderId: "",
       query: "",
       orderStatus: false,
-      activityLogs: []
+      activityLogs: [],
+      serviceDataObject: {},
+      activeService: false
     };
   }
   componentDidMount = () => {
@@ -26,12 +28,18 @@ class OrderDetails extends Component {
       activityLogs: activityReducer.activity
     })
   }
-  componentDidUpdate = ({ activityReducer }) => {
+  componentDidUpdate = ({ activityReducer, isPrint }) => {
     const activityData = this.props.activityReducer
     if (activityReducer !== activityData) {
       this.setState({
         activityLogs: activityData.activity
       })
+    }
+    if (isPrint !== this.props.isPrint) {
+      this.setState({
+        activeService: true
+      })
+
     }
   }
   handlePaymentModal = () => {
@@ -42,17 +50,43 @@ class OrderDetails extends Component {
       paymentModalOpen: !paymentModalOpen
     });
   }
+
+  // handlePrint = (
+  //   totalParts,
+  //   totalTires,
+  //   totalLabor,
+  //   orderSubTotal,
+  //   orderGandTotal,
+  //   serviceTotalArray,
+  //   totalTax,
+  //   totalDiscount,
+  // )=>{
+  //   this.props.handlePDF(
+  //     totalParts,
+  //     totalTires,
+  //     totalLabor,
+  //     orderSubTotal,
+  //     orderGandTotal,
+  //     serviceTotalArray,
+  //     totalTax,
+  //     totalDiscount,
+  //   );
+  //   return true;
+  // }
+
   render() {
-    const { orderReducer, profileReducer, modelInfoReducer, modelOperate } = this.props
+    const { orderReducer, profileReducer, modelInfoReducer, modelOperate, addPaymentRequest, paymentReducer } = this.props
     const { modelDetails } = modelInfoReducer;
     const { paymentModalOpen } = modelDetails
+    const paymentList = paymentReducer.paymentData.length ? paymentReducer.paymentData : []
+    const payedAmountList = paymentList && paymentList.length && paymentList[0].payedAmount && paymentList[0].payedAmount.length ? paymentList[0].payedAmount : null
     const { activityLogs } = this.state
     const createdDate = orderReducer.orderItems ? moment(orderReducer.orderItems.createdAt || '').format("MMM Do YYYY LT") : '';
     const isInvoice = orderReducer.orderItems ? orderReducer.orderItems.isInvoice : '';
     const serviceWriter = profileReducer.profileInfo.firstName + ' ' + profileReducer.profileInfo.lastName
     const serviceData = orderReducer.orderItems ? orderReducer.orderItems.serviceId : ""
     let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
-      totalTax = 0, totalDiscount = 0;
+      totalTax = 0, totalDiscount = 0, totalPaiedAmount = 0;
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -131,6 +165,8 @@ class OrderDetails extends Component {
                   epa = calculateValues(serviceTotalArray || 0, item.serviceId.epa.value || 0, item.serviceId.epa ? item.serviceId.epa.type : '$');
                   discount = calculateValues(serviceTotalArray || 0, item.serviceId.discount.value || 0, item.serviceId.discount ? item.serviceId.discount.type : '$');
                   tax = calculateValues(serviceTotalArray || 0, item.serviceId.taxes.value || 0, item.serviceId.taxes ? item.serviceId.taxes.type : '$');
+
+
                   serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
                   if (service.serviceType === 'part') {
                     totalParts += parseFloat(servicesSubTotal)
@@ -142,17 +178,25 @@ class OrderDetails extends Component {
                     totalLabor += parseFloat(servicesSubTotal)
                   }
                   orderSubTotal += (parseFloat(servicesSubTotal))
+
                   return true
                 }) : ''
-
                 }
-                <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal)}</span>
-                <span className={"d-none"}>{totalTax += parseFloat(epa) + parseFloat(tax)}</span>
-                <span className={"d-none"}>{totalDiscount += parseFloat(discount)}</span>
+
+
+                <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal) || 0}</span>
+                <span className={"d-none"}>{totalTax += (parseFloat(epa) + parseFloat(tax)) || 0}</span>
+                <span className={"d-none"}>{totalDiscount += parseFloat(discount) || 0}</span>
               </div>
             )
           })
             : ''
+          }
+          {
+            paymentList && paymentList.length ? paymentList.map((paymentData) => {
+              totalPaiedAmount += paymentData.payedAmount[paymentData.payedAmount.length - 1].amount
+              return true
+            }) : null
           }
           {serviceData && serviceData.length ?
             <>
@@ -164,6 +208,7 @@ class OrderDetails extends Component {
                 <div>Total Tax : <Dollor value={!isNaN(totalTax) ? totalTax.toFixed(2) : 0.00} /></div>
                 <div>Total Discount : <Dollor value={!isNaN(totalDiscount) ? totalDiscount.toFixed(2) : 0.00} /></div>
                 <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={!isNaN(orderGandTotal) ? orderGandTotal.toFixed(2) : 0.00} /></div>
+                <div className={"pt-2"}>Total Paid Amount : <Dollor value={parseFloat(totalPaiedAmount).toFixed(2)} /></div>
               </div>
               <div className={"clearfix"}></div>
             </>
@@ -172,8 +217,32 @@ class OrderDetails extends Component {
         </div>
         <hr />
         <div className={"text-center payment-section"}>
-          <h6 className={orderGandTotal === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={orderGandTotal.toFixed(2)} /></h6>
+          <h6 className={orderGandTotal - totalPaiedAmount === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)} /></h6>
           <Button size={"sm"} onClick={this.handlePaymentModal} className={"btn btn-success btn-rounded"}>New Payment</Button>
+        </div>
+        <div className={"activity-logs"}>
+          {
+            activityLogs && activityLogs.length ?
+              <h5 className={"mb-2 p-2 text-left"}>Payments</h5> :
+              null
+          }
+          {
+            paymentList && paymentList.length ? paymentList.slice(0).reverse().map((paymentData, pIndex) => {
+              return (
+                <div key={pIndex} className={"activity-block p-3"}>
+                  <div className={"pr-3 text-left"}>
+                    <span>{`Paid $${paymentData.payedAmount[paymentData.payedAmount.length - 1].amount.toFixed(2)} viea ${paymentData.paymentType} on date`}</span>
+                  </div>
+                  <div className={"text-left activity-date"}>
+                    <span>{moment(paymentData.payedAmount[paymentData.payedAmount.length - 1].date).format("MMM Do YYYY, h:mm A")}</span>
+                  </div>
+                  <span className={"activity-icon payment-set"}>
+                    <i className={"fa fa-dollar-sign"} />
+                  </span>
+                </div>
+              )
+            }) : null
+          }
         </div>
         <hr />
         <div className={"activity-logs"}>
@@ -186,30 +255,57 @@ class OrderDetails extends Component {
             return (
               <div key={index} className={"activity-block p-3"}>
                 <div className={"pr-3 text-left"}>
-                  <span>{activity.activityPerson.firstName}{" "}{activity.activityPerson.lastName}{" "}{activity.type !== "NEW_ORDER" ? "changed" : null}{" "}{activity.name}</span>
+                  <span>{activity.activityPerson.firstName}{" "}{activity.activityPerson.lastName}{" "}{activity.type !== "NEW_ORDER" && activity.type !== "ADD_PAYMENT" ? "changed" : null}{" "}{activity.name}</span>
                 </div>
                 <div className={"text-left activity-date"}>
                   <span>{moment(activity.createdAt).format("MMM Do YYYY, h:mm A")}</span>
                 </div>
                 <span className={activity.type === 'MESSAGE' ? "activity-icon activity-message" : "activity-icon activity-set"}>
                   {
-                    activity.type !== "NEW_ORDER" ?
+                    activity.type !== "NEW_ORDER" && activity.type !== "ADD_PAYMENT" ?
                       <i className={"fa fa-check"} /> :
                       null
+                  }
+                  {
+                    activity.type === "ADD_PAYMENT" ?
+                      <i className={"fa fa-dollar-sign"} /> : null
                   }
                 </span>
               </div>
             )
           }) : ""}
         </div>
+
+
         <CrmPaymentModel
           openPaymentModel={paymentModalOpen}
           handlePaymentModal={this.handlePaymentModal}
           payableAmmount={orderGandTotal}
           modelDetails={modelDetails}
           modelOperate={modelOperate}
-          paymentType={""}
+          isPaymentChange={false}
+          profileReducer={profileReducer}
+          orderReducer={orderReducer}
+          payedAmountList={payedAmountList}
+          addPaymentRequest={addPaymentRequest}
+          totalPaiedAmount={totalPaiedAmount}
         />
+        <div>
+          {/* {
+           activeService ?
+            () => this.props.handlePDF(
+              totalParts,
+              totalTires,
+              totalLabor,
+              orderSubTotal,
+              orderGandTotal,
+              serviceTotalArray,
+              totalTax,
+              totalDiscount,
+              serviceData
+            ) : null
+        } */}
+        </div>
       </div>
     )
   }

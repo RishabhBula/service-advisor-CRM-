@@ -9,7 +9,7 @@ const Wagon = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="438.093px"
+      width={props.size||"438.093px"}
       height="144.97px"
       viewBox="0 0 438.093 144.97"
       enable-background="new 0 0 438.093 144.97"

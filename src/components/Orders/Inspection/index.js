@@ -18,6 +18,7 @@ import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import * as jsPDF from "jspdf";
 import 'jspdf-autotable';
+import { logger } from "../../../helpers";
 
 class Inspection extends Component {
    constructor(props) {
@@ -32,7 +33,8 @@ class Inspection extends Component {
          orderDetails: '',
          colorIndex: '',
          selectedOption: '',
-         showPDF: false
+         showPDF: false,
+         pdfBlob : ''
       };
    }
 
@@ -42,6 +44,7 @@ class Inspection extends Component {
          vehicleData: this.props.vehicleData,
          orderDetails: this.props.orderReducer
       })
+     
    }
 
    componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
@@ -342,6 +345,7 @@ class Inspection extends Component {
          this.setState({
             sentModal: !this.state.sentModal
          });
+         this.downloadPDF({"sentInspection":true})
       }
 
    }
@@ -364,14 +368,14 @@ class Inspection extends Component {
       });
    }
 
-   downloadPDF = () => {
-
+   downloadPDF = (check) => {
       var doc = new jsPDF('p', 'pt');
       doc.setFontSize(12)
       doc.setTextColor(51, 47, 62);
-      doc.text('D-Company', 40, 30);
-
       const orderDetail = this.state.orderDetails
+      const profileReducer = this.props.profileReducer
+      const companyName = profileReducer.profileInfo.companyName || process.env.REACT_APP_NAME
+      doc.text(companyName, 40, 30);
       doc.setFontSize(14)
       doc.text('Inspection', 430, 25);
       doc.setTextColor('black');
@@ -422,14 +426,29 @@ class Inspection extends Component {
             },
             startY: index === 0 ? 140 : finalY + 20,
             columnStyles: {
-               'Item Tile': { columnWidth: 100 },
-               'Note': { columnWidth: 90 },
-               'Status': { columnWidth: 60, textColor: '#ffffff' },
-               'Image': { columnWidth: 130 ,textColor:'#ffffff',fontSize:8},
+               'Item Tile': { cellWidth: 100 },
+               'Note': { cellWidth: 90 },
+               'Status': { cellWidth: 60, textColor: '#ffffff' },
+               'Image': { cellWidth: 130 ,textColor:'#ffffff',fontSize:8},
             },
             
             styles: {
                1: {rowHeight: 100},
+               cellPadding: 3,
+               fontSize: 10,
+               font: "helvetica", // helvetica, times, courier
+               lineColor: 200,
+               lineWidth: 0.1,
+               lineHeight: 0,
+               fontStyle: 'normal', // normal, bold, italic, bolditalic
+               overflow: 'ellipsize', // visible, hidden, ellipsize or linebreak
+               fillColor: 255,
+               textColor: 20,
+               halign: 'left', // left, center, right
+               valign: 'middle', // top, middle, bottom
+               fillStyle: 'F', // 'S', 'F' or 'DF' (stroke, fill or fill then stroke)
+               cellWidth: 'auto', // 'auto', 'wrap' or a number
+               minCellHeight: 20,
             },
             didParseCell:  data => {
                if (data.row.section !== "head"){
@@ -533,15 +552,25 @@ class Inspection extends Component {
 
          doc.autoTable(columns, rows, options);
       }
-
-      window.open(doc.output("bloburl"), "_blank");
+    
+      var file = doc.output("dataurlstring");
+      if(!check){
+         window.open(doc.output("bloburl"), "_blank");
+      }else{
+         this.setState({
+           pdfBlob: file
+         });
+      }
+      //   var url = URL.createObjectURL(file);
+      logger(file, "file");
    };
 
 
 
    render() {
-      const { inspection, templateData } = this.state;
-  
+      const { inspection, templateData, orderDetails} = this.state;
+      const orderTitle = orderDetails ? orderDetails.orderItems.orderName : " Untitled"
+      console.log(orderDetails, "orderTitle")
       return (
          <div>
             <div className={"mb-3 d-flex"}>
@@ -549,7 +578,7 @@ class Inspection extends Component {
                   <span color={""} className={"print-btn"} onClick={this.toggleSentInspection}>
                      <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
                   <span
-                     onClick={this.downloadPDF}
+                     onClick={()=>this.downloadPDF(false)}
                      id={"add-Appointment"}
                      className={"print-btn"}
                   >
@@ -752,7 +781,8 @@ class Inspection extends Component {
                customerData={this.props.customerData}
                vehicleData={this.props.vehicleData}
                sendMessageTemplate={this.props.sendMessageTemplate}
-               
+               pdfBlob = {this.state.pdfBlob}
+               orderTitle={orderTitle}
             />
 
             {/* ====== MessageTemplate Modal====== */}
