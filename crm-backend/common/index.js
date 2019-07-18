@@ -1,19 +1,4 @@
 const nodemailer = require("nodemailer");
-// const sgMail = require("@sendgrid/mail");
-// //Secret Auth
-// const secret = "qwertyuiop[]lkjhgfdazxcvbnm,./!@#$%^&*()";
-
-const SelectableSetting = [
-  "FACEBOOK_URL",
-  "TWITTER_URL",
-  "INSTA_URL",
-  "SHIPPING_PRICE",
-  "REWARD_POINT_PURCHASE",
-  "REWARD_POINT_REDEEM",
-  "Order_Confirmation_Email"
-];
-
-
 //Email SMTP Transport
 const smtpTransport = nodemailer.createTransport({
   service: "Gmail",
@@ -21,8 +6,7 @@ const smtpTransport = nodemailer.createTransport({
     user: "test.chapter247@gmail.com",
     pass: "chapter247@@"
   }
-}); 
-
+});
 
 //Form Validation
 const formatValidationErr = (err, isString = false, delimeter = "<br>") => {
@@ -50,8 +34,6 @@ const formatError = errors => {
   return errorObject;
 };
 
-
-
 const getIpAddress = req => {
   var ip = null;
   try {
@@ -68,11 +50,10 @@ const getIpAddress = req => {
   return ip;
 };
 
-
-const isValidEmail = (email) => {
+const isValidEmail = email => {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
-  }
+};
 
 module.exports = {
   formatValidationErr,

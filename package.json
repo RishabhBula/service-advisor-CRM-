@@ -1,5 +1,5 @@
 {
-  "name": "crm360",
+  "name": "service-advisor",
   "version": "1.0.0",
   "description": "CRM Admin template",
   "author": "chapter247",
@@ -52,6 +52,7 @@
     "react-cropper": "^1.2.0",
     "react-currency-input": "^1.3.6",
     "react-dates": "^20.2.4",
+    "react-day-picker": "^7.3.0",
     "react-dom": "^16.8.5",
     "react-dropzone": "^10.1.0",
     "react-easy-crop": "^1.10.0",
