@@ -188,7 +188,7 @@ class Message extends Component {
       const customerName = !isSummary ? orderReducer.orderItems && orderReducer.orderItems.customerId ? orderReducer.orderItems.customerId.firstName : "" : '';
       const companyNameSummary = isSummary && profileSummary.companyName ? profileSummary.companyName : ''
       const companyName = profileReducer ? profileReducer.profileInfo.companyName : "";
-      const orderId = orderReducer.orderItems._id
+      const orderId = !isSummary ? orderReducer.orderItems ? orderReducer.orderItems._id : ""  : ''
       return (
          <div className={"message-warp"} id={"message-warp"}>
             {isSummary ? <h4 className={"mb-4 ml-3 pt-3"}>Messages</h4> : ''}

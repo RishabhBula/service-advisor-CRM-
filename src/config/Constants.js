@@ -1,3 +1,5 @@
+import { AppRoutes } from "./AppRoutes";
+
 export const UserPermissions = [
   { key: "isAllowedDashboard", text: "Allow access to Dashboard?" },
   { key: "isAllowedWorkflow", text: "Allow access to Workflow?" },
@@ -425,7 +427,7 @@ export const DefaultErrorMessage =
 
 export const notExist = "-";
 export const WildCardRoutes = [
-  // AppRoutes.PROFILE.url
+  AppRoutes.PROFILE.url
 ];
 
 export const CustomerSheetHeaderToJSONKey = {

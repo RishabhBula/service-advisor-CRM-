@@ -38,15 +38,13 @@ const sendMessageChat = async (req, res) => {
     const messageElements = new MessageChat(messageData);
     await messageElements.save();
 
-    if (!body.notToken && !body.isInternalNotes) {
-      const encryptedOrderId = commonCrypto.encrypt(body.orderId);
-      const encrypteCustomerId = commonCrypto.encrypt(body.customerId);
-      const encrypteUserId = commonCrypto.encrypt(body.userId);
-      const emailVar = new Email(body);
-      const subject = `${currentUser.subdomain}`;
-      const emailMsgBody = `<div><b>${
-        messageElements.messageData
-      }</b></div><div><p><a href="http://d-company.localhost:3000/order-summary?order=${encryptedOrderId}&customer=${encrypteCustomerId}&user=${encrypteUserId}"
+      if (!body.notToken && !body.isInternalNotes) {
+         const encryptedOrderId = commonCrypto.encrypt(body.orderId);
+         const encrypteCustomerId = commonCrypto.encrypt(body.customerId);
+         const encrypteUserId = commonCrypto.encrypt(body.userId)
+         const emailVar = new Email(body);
+         const subject = `${currentUser.subdomain}`
+         const emailMsgBody = `<div><b>${messageElements.messageData}</b></div><div><p><a href="http://${currentUser.subdomain}.serviceadvisor.io/dev/order-summary?order=${encryptedOrderId}&customer=${encrypteCustomerId}&user=${encrypteUserId}"
          style="display:inline-block;background:green;color:#fff;padding:6px 30px;font-size:16px;text-decoration:none;border-radius:4px;margin:15px 0px"
          target="_blank">Check Now</a>
          </p></div>`;
