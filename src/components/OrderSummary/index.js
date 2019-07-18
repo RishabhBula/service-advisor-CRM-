@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
-import { getSumOfArray, calculateValues, calculateSubTotal } from "../../helpers"
+import { getSumOfArray, calculateValues, calculateSubTotal, serviceTotalsCalculation } from "../../helpers"
 import Dollor from "../common/Dollor"
 
 class OrderSummary extends Component {
@@ -39,7 +39,8 @@ class OrderSummary extends Component {
     totalTax = 0, totalDiscount = 0;
     
     const orderLabel = orderData && !orderData.isInvoice ? 'Estimate' : 'Invoice' 
-  
+    const serviceCal = serviceData && serviceData.length ? serviceTotalsCalculation(serviceData) : ''
+    console.log(serviceCal, "serviceCal")
     return (
       <>
         <div className={"summary-head d-flex flex-column  pt-2 pb-2"}>
@@ -69,7 +70,9 @@ class OrderSummary extends Component {
         </div>
 
         <div className={"service-warp border-top"}>
-          {serviceData && serviceData.length ? serviceData.map((item, index) => {
+          {
+            serviceData && serviceData.length ? serviceData.map((item, index) => {
+            
             let mainserviceTotal = [], serviceTotal, epa, discount, tax
             return (
               <div key={index} className={"mb-2 mt-2 border"}>
@@ -80,20 +83,22 @@ class OrderSummary extends Component {
                   const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
                   mainserviceTotal.push(parseFloat(servicesSubTotal))
                   serviceTotalArray = getSumOfArray(mainserviceTotal)
-                  epa = calculateValues(serviceTotalArray || 0, item.serviceId.epa.value || 0, item.serviceId.epa ? item.serviceId.epa.type : '$');
+                  epa = (calculateValues(serviceTotalArray || 0, item.serviceId.epa.value !== "" ? item.serviceId.epa.value : 0, item.serviceId.epa ? item.serviceId.epa.type : '$')|| 0);
                   discount = calculateValues(serviceTotalArray || 0, item.serviceId.discount.value || 0, item.serviceId.discount ? item.serviceId.discount.type : '$');
                   tax = calculateValues(serviceTotalArray || 0, item.serviceId.taxes.value || 0, item.serviceId.taxes ? item.serviceId.taxes.type : '$');
                   serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
-                  if (service.serviceType === 'part') {
-                    totalParts += parseFloat(servicesSubTotal)
-                  }
-                  if (service.serviceType === 'tire') {
-                    totalTires += parseFloat(servicesSubTotal)
-                  }
-                  if (service.serviceType === 'labor') {
-                    totalLabor += parseFloat(servicesSubTotal)
-                  }
-                  orderSubTotal += (parseFloat(servicesSubTotal))
+
+                  console.log(mainserviceTotal, "epa epa")
+                  // if (service.serviceType === 'part') {
+                  //   totalParts += parseFloat(servicesSubTotal)
+                  // }
+                  // if (service.serviceType === 'tire') {
+                  //   totalTires += parseFloat(servicesSubTotal)
+                  // }
+                  // if (service.serviceType === 'labor') {
+                  //   totalLabor += parseFloat(servicesSubTotal)
+                  // }
+                  // orderSubTotal += (parseFloat(servicesSubTotal))
                   
                   return (
                     <div key={sIndex} className={"pb-2 border-bottom"}>
@@ -137,19 +142,20 @@ class OrderSummary extends Component {
 
                 }
                 <div className={"d-flex justify-content-end pl-2 pr-2 pt-3 pb-3"}>
+                  {console.log(epa, "epa test")}
                   <div className={"pr-3"}>
                     EPA : <span className={"value"}>
-                      <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{parseFloat(epa).toFixed(2)}</span>
+                      <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{parseFloat(epa || 0).toFixed(2)}</span>
                     </span>
                   </div>
 
-                  <div className={"pr-3"}>Discount : <Dollor value={parseFloat(discount).toFixed(2)} /></div>
-                  <div className={"pr-2"}>Tax : <Dollor value={parseFloat(tax).toFixed(2)} /></div>
+                  <div className={"pr-3"}>Discount : <Dollor value={parseFloat(discount || 0).toFixed(2)} /></div>
+                  <div className={"pr-2"}>Tax : <Dollor value={parseFloat(tax || 0).toFixed(2)} /></div>
                   <div className={"w-25 text-right"}>Service Total : <Dollor value={!isNaN(serviceTotal) ? serviceTotal : 0.00} /></div>
                 </div>
-                <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal)}</span>
-                <span className={"d-none"}>{totalTax += parseFloat(epa) + parseFloat(tax)}</span>
-                <span className={"d-none"}>{totalDiscount += parseFloat(discount)}</span>
+                {/* <span className={"d-none"}>{orderGandTotal += parseFloat(serviceTotal) || 0}</span>
+                <span className={"d-none"}>{totalTax += parseFloat(epa) + parseFloat(tax) || 0}</span>
+                <span className={"d-none"}>{totalDiscount += parseFloat(discount) || 0}</span> */}
               </div>
             )
           })
@@ -158,13 +164,13 @@ class OrderSummary extends Component {
           {serviceData && serviceData.length ? 
           <>
           <div className={"w-50 text-right pull-right pr-2 order-total-block"}>
-            <div>Total Parts : <Dollor value={totalParts.toFixed(2)}/></div>
-            <div>Total Tires : <Dollor value={totalTires.toFixed(2)} /></div>
-            <div>Total Labor : <Dollor value={totalLabor.toFixed(2)} /></div>
-            <div className={"pt-2 border-top mt-2"}>Sub Total: <Dollor value={orderSubTotal.toFixed(2)} /></div>
-            <div>Total Tax : <Dollor value={totalTax.toFixed(2)} /></div>
-            <div>Total Discount : <Dollor value={totalDiscount.toFixed(2)} /></div>
-            <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={orderGandTotal.toFixed(2)} /></div>
+          <div>Total Parts : <Dollor value={serviceCal.totalParts.toFixed(2)}/></div>
+          <div>Total Tires : <Dollor value={serviceCal.totalTires.toFixed(2)} /></div>
+          <div>Total Labor : <Dollor value={serviceCal.totalLabor.toFixed(2)} /></div>
+          <div className={"pt-2 border-top mt-2"}>Sub Total: <Dollor value={serviceCal.orderSubTotal.toFixed(2)} /></div>
+          <div>Total Tax : <Dollor value={serviceCal.totalTax.toFixed(2)} /></div>
+          <div>Total Discount : <Dollor value={serviceCal.totalDiscount.toFixed(2)} /></div>
+                <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={serviceCal.orderGrandTotal.toFixed(2)} /></div>
           </div>
           <div className={"clearfix"}></div>
           </>

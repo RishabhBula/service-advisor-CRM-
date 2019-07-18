@@ -23,6 +23,7 @@ class Profile extends Component {
 
   render() {
     const { profileInfo } = this.props;
+    const profileSetting = profileInfo.profileInfo.permissions.isAllowedCompanySettings
     return (
       <Card className={"white-card"}>
         <CardBody className={"custom-card-body position-relative"}>
@@ -37,8 +38,12 @@ class Profile extends Component {
                 <UpdatePassword updatePassword={this.props.updatePasswordRequest} />                
               </Col>
             </Row>
+            {profileSetting ? 
+            <>
             <hr className={"pb-3 mt-5"}/>
             <CompanySettings profileData={profileInfo} updateProfileSetting={this.props.profileSettingUpdateRequest} />
+            </>
+            : null }
           </div>
         </CardBody>
       </Card>
