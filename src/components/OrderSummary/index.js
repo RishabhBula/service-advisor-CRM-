@@ -35,9 +35,7 @@ class OrderSummary extends Component {
     const orderID = orderData ? orderData.orderId : ""
     const createdDate = orderData ? orderData.createdAt : ""
     const serviceData = orderData ? orderData.serviceId : ""
-    let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
-    totalTax = 0, totalDiscount = 0;
-    
+    let serviceTotalArray
     const orderLabel = orderData && !orderData.isInvoice ? 'Estimate' : 'Invoice' 
     const serviceCal = serviceData && serviceData.length ? serviceTotalsCalculation(serviceData) : ''
     console.log(serviceCal, "serviceCal")
