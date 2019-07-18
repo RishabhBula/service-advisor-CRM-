@@ -105,7 +105,7 @@ class Calender extends Component {
    */
   onCustomerClick = customerId => {
     window.open(
-      `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", customerId)}`,
+      `${AppRoutes.CUSTOMER_DETAILS.url.replace(":id", customerId)}`,
       "_blank"
     );
   };
