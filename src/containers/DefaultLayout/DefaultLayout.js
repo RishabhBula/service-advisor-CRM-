@@ -238,7 +238,7 @@ class DefaultLayout extends Component {
             </Suspense>
             <div className={"text-center nav-footer-logo"}>
               <img
-                src={"/assets/img/logo-white.svg"}
+                src={"../../assets/img/logo-white.svg"}
                 alt={"service-advisor"}
                 width={70}
               />
