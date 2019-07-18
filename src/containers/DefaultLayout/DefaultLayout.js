@@ -47,7 +47,8 @@ class DefaultLayout extends Component {
       hasAccess: true,
       isCustVehiclemodal: false,
       isURLChecked: false,
-      shopLogo: ""
+      shopLogo: "",
+      parentId : ''
     };
   }
 
@@ -69,7 +70,7 @@ class DefaultLayout extends Component {
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
       let currentPage = this.props.location.pathname;
-      if (WildCardRoutes.indexOf(currentPage) === -1) {
+      // if (WildCardRoutes.indexOf(currentPage) === -1) {
         let currentPageArr = currentPage.split("/");
         let inde = [];
         currentPageArr.forEach((value, index) => {
@@ -84,8 +85,9 @@ class DefaultLayout extends Component {
         const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
 
         logger(ind, currentPage, location);
-        if (ind > -1) {
-          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+      const isWildCardRoute = WildCardRoutes.indexOf(currentPage) > -1
+      if (ind > -1 || isWildCardRoute) {
+        if (profileInfo.permissions[ValidatedRoutes[ind].authKey] || isWildCardRoute) {
             logger("Allowed to use");
             this.setState({
               hasAccess: true
@@ -101,19 +103,23 @@ class DefaultLayout extends Component {
             hasAccess: false
           });
         }
-      } else {
-        this.signOut();
-      }
+      // } else {
+      //   this.signOut();
+      // }
       this.setState({ isURLChecked: true });
     }
+    
     if (
       profileInfoReducer.profileInfo !==
       this.props.profileInfoReducer.profileInfo
     ) {
       this.setState({
-        shopLogo: this.props.profileInfoReducer.profileInfo.shopLogo
+        shopLogo: this.props.profileInfoReducer.profileInfo.shopLogo,
+        parentId: this.props.profileInfoReducer.profileInfo.parentId
       })
     }
+    
+    console.log(this.state.shopLogo, "profileInfo profileInfo")
   }
   signOut() {
     this.props.logoutUser();
@@ -179,8 +185,9 @@ class DefaultLayout extends Component {
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
     const { hasAccess, shopLogo } = this.state;
-    const providerCompanyName =
-      profileInfoReducer.profileInfo.companyName || "Service Adviser";
+    const parentId = profileInfoReducer.profileInfo.parentId || ''
+    const providerCompanyName = profileInfoReducer.profileInfo.companyName || parentId.companyName;
+    console.log(parentId, "parentId")
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -198,16 +205,14 @@ class DefaultLayout extends Component {
         </AppHeader>
         <div className="app-body">
           <AppSidebar className="custom-sidebar" fixed display="lg">
-            {shopLogo ? (
+              {shopLogo || parentId.shopLogo ? (
               <div
                 className={"provider-logo"}
-                style={{ backgroundImage: `url(${shopLogo})` }}
+                  style={{ backgroundImage: `url(${shopLogo || parentId.shopLogo})` }}
               />
             ) : (
-              <div
-                className={"provider-logo company-name"} id={"comapnyName"}
-                  >
-                    <Avtar value={profileInfo.companyName || process.env.REACT_APP_NAME} class={"name"} />
+              <div className={"provider-logo company-name"} id={"comapnyName"}>
+                <Avtar value={providerCompanyName} class={"name"} />
                 <UncontrolledTooltip target={"comapnyName"}>
                   {profileInfo.companyName}
                 </UncontrolledTooltip>
