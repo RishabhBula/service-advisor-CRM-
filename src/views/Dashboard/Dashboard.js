@@ -33,7 +33,7 @@ class Dashboard extends Component {
     //   openSubscriptionModel: !openSubscriptionModel
     // })
   }
-
+          
   render() {
     const { modelInfoReducer, modelOperate, getSubscriptionPlanRequest, subscriptionReducer, addSubscriptionRequest } = this.props
     const { modelDetails } = modelInfoReducer;
@@ -68,7 +68,8 @@ class Dashboard extends Component {
 }
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
-  subscriptionReducer: state.subscriptionReducer
+  subscriptionReducer: state.subscriptionReducer,
+
 });
 const mapDispatchToProps = dispatch => ({
   getSubscriptionPlanRequest: () => {

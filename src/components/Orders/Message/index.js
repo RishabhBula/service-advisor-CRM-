@@ -108,7 +108,8 @@ class Message extends Component {
          query,
          customerSummryData,
          isSummary,
-         profileSummary
+         profileSummary,
+         orderReducer
       } = this.props
       var subjectValue = document.getElementById('messageDataText'),
          textMessage = subjectValue.innerHTML;
@@ -126,9 +127,22 @@ class Message extends Component {
          isSummary: isSummary,
          query: query,
          isInternalNotes: isNote ? true : false,
+         subdomain: isSummary ? profileSummary.subdomain :  profileReducer.profileInfo.subdomain,
+         companyName: isSummary ? profileSummary.companyName : profileReducer.profileInfo.companyName,
+         orderTitle: isSummary ? summaryReducer.orderData.orderName : orderReducer.orderItems.orderName
       }
-
-      this.props.sendMessage(payload)
+      if(payload.email !== ''){
+         this.props.sendMessage(payload)
+      }
+      else{
+         ConfirmBox({
+            text: "Please provide valid email address of Customer",
+            showCancelButton:false,
+            title: "Mail Address Not Found",
+            confirmButtonText: "Ok",
+         });
+            return;
+      }
       subjectValue.innerHTML = ''
       this.setState({
          messageData: '',
@@ -280,7 +294,7 @@ class Message extends Component {
 
                         return (
                            ele && ele !== null && !ele.isInternalNotes ?
-                              <div className={ele.senderId === ele.userId && ele.isSender ? "message-tile d-flex flex-row-reverse send mb-4" : "message-tile d-flex flex-row  recive mb-4"} key={Index}>
+                              <div className={ele.senderId === ele.userId && ele.isSender ? "message-tile d-flex flex-row-reverse send" : "message-tile d-flex flex-row  recive"} key={Index}>
                                  <div className={"user-name"} id={`userId-${Index}`}>
                                     <span>
                                        {
@@ -305,7 +319,7 @@ class Message extends Component {
                                     }
                                  </UncontrolledTooltip>
                                  <div className={"flex-1"}>
-                                    <span className={"sent-date"}>{moment(ele.createdAt || '').format("MMM Do YYYY LT")}</span>
+                                    <span className={ele.senderId === ele.userId && ele.isSender ? "sent-date" : "recive-date"}>{moment(ele.createdAt || '').format("MMM Do YYYY LT")}</span>
                                     <div className={"message-input-block border p-1"}>
                                        <p
                                           className={"message-input"}

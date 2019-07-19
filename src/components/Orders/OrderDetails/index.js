@@ -9,6 +9,7 @@ import { getSumOfArray, calculateValues, calculateSubTotal } from "../../../help
 import Dollor from "../../common/Dollor"
 import "./index.scss";
 import { CrmPaymentModel } from "../../common/CrmPaymentModal";
+import Select from "react-select";
 
 class OrderDetails extends Component {
   constructor(props) {
@@ -51,28 +52,15 @@ class OrderDetails extends Component {
     });
   }
 
-  // handlePrint = (
-  //   totalParts,
-  //   totalTires,
-  //   totalLabor,
-  //   orderSubTotal,
-  //   orderGandTotal,
-  //   serviceTotalArray,
-  //   totalTax,
-  //   totalDiscount,
-  // )=>{
-  //   this.props.handlePDF(
-  //     totalParts,
-  //     totalTires,
-  //     totalLabor,
-  //     orderSubTotal,
-  //     orderGandTotal,
-  //     serviceTotalArray,
-  //     totalTax,
-  //     totalDiscount,
-  //   );
-  //   return true;
-  // }
+  handleType = (e, workflowStatus, orderId) => {
+    this.props.updateOrderStatus({
+      from: workflowStatus,
+      to: e.id,
+      orderId,
+      destinationIndex: 0,
+      sourceIndex: 0
+    });
+  };
 
   render() {
     const { orderReducer, profileReducer, modelInfoReducer, modelOperate, addPaymentRequest, paymentReducer } = this.props
@@ -87,6 +75,16 @@ class OrderDetails extends Component {
     const serviceData = orderReducer.orderItems ? orderReducer.orderItems.serviceId : ""
     let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
       totalTax = 0, totalDiscount = 0, totalPaiedAmount = 0;
+      const orderStatus = orderReducer.orderStatus;
+    const groupedOptions = [];
+    orderStatus.map((status, index) => {
+     
+      return (
+        //console.log(status),
+        groupedOptions.push({ label: status.name, id: status._id })
+      );
+    });
+    
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -116,10 +114,10 @@ class OrderDetails extends Component {
             <span className={"name-label"}>Authorization</span>
             <span>
               <ButtonGroup>
-                <Button color={""} className={"btn btn-sm"} onClick={(e) => this.props.orderStatus('authorizStatus', false)}>
+                <Button color={""} className={orderReducer && !orderReducer.orderItems.status ? "btn btn-sm active" : "btn btn-sm"} onClick={(e) => this.props.orderStatus('authorizStatus', false)}>
                   {orderReducer && !orderReducer.orderItems.status ? <span className={"bg-danger authoris-dot"}></span> : ''} Not Authorised
                       </Button>
-                <Button color={""} className={"btn btn-sm active"} onClick={(e) => this.props.orderStatus('authorizStatus', true)}>
+                <Button color={""} className={orderReducer && !orderReducer.orderItems.status ? "btn btn-sm" : "btn btn-sm active"} onClick={(e) => this.props.orderStatus('authorizStatus', true)}>
                   {orderReducer && orderReducer.orderItems.status ? <span className={"bg-success authoris-dot"}></span> : ''} Authorised
                       </Button>
               </ButtonGroup>
@@ -140,14 +138,18 @@ class OrderDetails extends Component {
           </div>
           <div className={"d-flex justify-content-between pb-2 pl-2 pt-2"}>
             <span className={"name-label"}>Workflow</span>
-            <span>
-              <Input type={"select"} placeholder={"Select workflow status"}>
-                <option value="">Select workflow status</option>
-                <option value="estimate">Estimate</option>
-                <option value="droppedOff">Dropped Off</option>
-                <option value="inProcess">In Process</option>
-              </Input>
-            </span>
+            <Select
+              defaultValue={groupedOptions.filter(
+                item => item.id === orderReducer.orderItems.workflowStatus
+              )}
+              value={groupedOptions.filter(
+                item => item.id === orderReducer.orderItems.workflowStatus
+              )}
+              options={groupedOptions}
+              className="form-select w-50"
+              onChange={e => this.handleType(e, orderReducer.orderItems.workflowStatus, orderReducer.orderItems._id)}
+              classNamePrefix={"form-select-theme"}
+            />
           </div>
           <hr />
         </div>

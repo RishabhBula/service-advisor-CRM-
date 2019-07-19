@@ -35,12 +35,11 @@ class OrderSummary extends Component {
     const orderID = orderData ? orderData.orderId : ""
     const createdDate = orderData ? orderData.createdAt : ""
     const serviceData = orderData ? orderData.serviceId : ""
-    let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
-    totalTax = 0, totalDiscount = 0;
+    let serviceTotalArray
     
     const orderLabel = orderData && !orderData.isInvoice ? 'Estimate' : 'Invoice' 
     const serviceCal = serviceData && serviceData.length ? serviceTotalsCalculation(serviceData) : ''
-    console.log(serviceCal, "serviceCal")
+   
     return (
       <>
         <div className={"summary-head d-flex flex-column  pt-2 pb-2"}>
@@ -88,7 +87,7 @@ class OrderSummary extends Component {
                   tax = calculateValues(serviceTotalArray || 0, item.serviceId.taxes.value || 0, item.serviceId.taxes ? item.serviceId.taxes.type : '$');
                   serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
 
-                  console.log(mainserviceTotal, "epa epa")
+                  
                   // if (service.serviceType === 'part') {
                   //   totalParts += parseFloat(servicesSubTotal)
                   // }
@@ -142,7 +141,6 @@ class OrderSummary extends Component {
 
                 }
                 <div className={"d-flex justify-content-end pl-2 pr-2 pt-3 pb-3"}>
-                  {console.log(epa, "epa test")}
                   <div className={"pr-3"}>
                     EPA : <span className={"value"}>
                       <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{parseFloat(epa || 0).toFixed(2)}</span>

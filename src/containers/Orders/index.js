@@ -51,7 +51,9 @@ import {
   sendMessage,
   deleteNotes,
   addPaymentRequest,
-  addNewCannedService
+  addNewCannedService,
+  getOrderList,
+  updateOrderStatus
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -115,6 +117,7 @@ class Order extends Component {
   componentDidMount() {
     this.props.getOrderId();
     this.props.getLabelList();
+    this.props.getOrders();
     this.props.getCannedServiceList();
     const query = qs.parse(this.props.location.search);
     this.setState({
@@ -348,6 +351,7 @@ class Order extends Component {
         { title: "Service Tile", dataKey: "Service Tile" },
         { title: "Price", dataKey: "Price" },
         { title: "Qty", dataKey: "Qty" },
+        { title: "Hours", dataKey: "Hours" },
         { title: "Discount", dataKey: "Discount" },
         { title: "Sub total", dataKey: "Sub total" }
       ];
@@ -358,8 +362,10 @@ class Order extends Component {
         startY: columnHeight + 21,
         tableWidth: pdfWidth - 45,
         columnStyles: {
+          'Service Tile': { cellWidth: 150},
           'Price': { halign: 'left' },
-          'Qty': { halign: 'left' },
+          'Qty': { halign: 'left', cellWidth: 30 },
+          'Hours': { halign: 'left', cellWidth: 30 },
           'Discount': { halign: 'left' },
           'Sub total': { halign: 'left' },
         },
@@ -385,6 +391,10 @@ class Order extends Component {
       for (let j = 0; j < serviceData[i].serviceId.serviceItems.length; j++) {
         let service = serviceData[i].serviceId.serviceItems[j];
         var val = service.description || service.brandName || service.discription;
+
+        var note = (service.serviceType === 'part' && service.partOptions && service.partOptions.showNoteOnQuoteAndInvoice ? ('{ ' + service.note + ' }') : '') || (service.serviceType === 'tire' && service.tierPermission && service.tierPermission.showNoteOnQuotesInvoices && service.tierSize[0].notes !== '' ? ('{ ' + service.tierSize[0].notes + ' }') : '');
+
+        var partnumber = (service.serviceType === 'part' && service.partOptions && service.partOptions.showNumberOnQuoteAndInvoice && service.partNumber !== '' ? (service.partNumber) : '') || '';
         // var serviceType = service.serviceType;
         var qty = service.qty || '';
         var hours = service.hours;
@@ -415,11 +425,13 @@ class Order extends Component {
         var discountValue = service.discount.value || 0
         var discountMainVal = ''
         discountMainVal = discountValue > 0 ? discountType === '%' ? (discountValue + '%') : ('$' + discountValue) : 0;
-
         rows.push({
-          'Service Tile': val,
-          Price: cost || '-',
-          Qty: qty || '-',
+          'Service Tile': val + ' ' + (partnumber || "") + ' ' + (note || "")  , 
+
+          Price: service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? '$' + cost : service.serviceType === 'tire' ? '$' +cost : '-' || '-',
+
+          Qty: service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? qty : service.serviceType === 'tire' ? qty : '-' || '-',
+          Hours: hours || "-",
           Discount: discountMainVal,
           'Sub total': '$' + servicesSubTotal + ''
         })
@@ -535,9 +547,11 @@ class Order extends Component {
       activityReducer,
       addPaymentRequest,
       paymentReducer,
-      addNewCannedService
+      addNewCannedService,
+      updateOrderStatus
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
+    
     return (
       <div className="animated fadeIn">
         <Card className="white-card" id={"white-card"}>
@@ -714,6 +728,7 @@ class Order extends Component {
               modelOperate={modelOperate}
               addPaymentRequest={addPaymentRequest}
               paymentReducer={paymentReducer}
+              updateOrderStatus={updateOrderStatus}
             />
             <SendInspection
               isOpen={this.state.sentModal}
@@ -877,7 +892,9 @@ const mapDispatchToProps = dispatch => ({
   },
   addNewCannedService: data => {
     dispatch(addNewCannedService(data))
-  }
+  },
+  getOrders: () => dispatch(getOrderList()),
+  updateOrderStatus: data => dispatch(updateOrderStatus(data)),
 });
 export default connect(
   mapStateToProps,

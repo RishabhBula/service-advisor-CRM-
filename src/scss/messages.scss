@@ -45,14 +45,24 @@
     font-size: 12px;
     color: #80909e;
     position: absolute;
+    right: calc(100% - 181px);
+    bottom: -19px;
+    display: block;
+    white-space: nowrap;
+  }
+  .recive-date{
+    font-size: 12px;
+    color: #80909e;
+    position: absolute;
     left: calc(100% - 181px);
-    top: -18px;
+    bottom: -19px;
     display: block;
     white-space: nowrap;
   }
 }
 .message-tile{
   max-width: 700px;
+  margin-bottom: 35px;
 }
 .message-sent-block .user-name {
   left: 14px;
@@ -135,7 +145,7 @@
   z-index: 1;
 }
 .message-tile.send .message-input-block {
-  border-radius: 8px;
+  border-radius: 4px;
   position: relative;
   max-width: 100%;
   margin-right: auto;
