@@ -152,7 +152,9 @@ class SendInspection extends Component {
         subject: subject,
         email: customerEmail,
         pdf: this.props.pdfBlob,
-        orderTitle: this.props.orderTitle
+        orderTitle: this.props.orderTitle,
+        subdomain: '',
+        orderCreated : ''
       };
       
       this.props.sendMessageTemplate(payload)

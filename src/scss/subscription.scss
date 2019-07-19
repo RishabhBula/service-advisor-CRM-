@@ -55,3 +55,25 @@
       font-family: 'FrutigerNeueLTPro-Bold';
     }
 }
+.subscription-plan{
+  min-height: 100px;
+  font-family: "FrutigerNeueLTPro-Regular";
+  box-shadow: -1px 0px 6px 1px #dbdbdb;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  .plan-detail{
+    font-size: 16px;
+  }
+  b{
+     font-family: 'FrutigerNeueLTPro-Bold';
+  }
+  .plan-icon{
+    font-size: 64px;
+    color: #e9a007;
+    background: #fff;
+    border-radius: 50%;
+  }
+  .expire-block{
+    font-size: 18px;
+  }
+}

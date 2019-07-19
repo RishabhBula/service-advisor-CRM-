@@ -87,18 +87,22 @@ const addTimeLogs = async (req, res) => {
 const startTimer = async (req, res) => {
   const { body } = req;
   const { technicianId, serviceId, orderId } = body;
-  if (timeClocks[`${technicianId}`]) {
-    return res.status(400).json({
-      message: "This technician is already working on something else."
-    });
-  }
-  await TimeClock.create({
+  console.log("Time Clock Restriction", timeClocks[`${technicianId}`]);
+
+  // if (timeClocks[`${technicianId}`]) {
+  //   return res.status(400).json({
+  //     message: "This technician is already working on something else."
+  //   });
+  // }
+  const timeClock = await TimeClock.create({
     type: "timeclock",
     technicianId,
     serviceId,
     orderId,
     startDateTime: new Date
   });
+  console.log("&&&&&&&&&&&&&&&&&&&&&", timeClock);
+
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -142,20 +146,30 @@ const stopTimer = async (req, res) => {
     // return res.status(400).json({
     //   message: "This technician is not working on any task."
     // });
+    console.log('###########Time Log Distroyed#############');
+
     timeClocks[`${technicianId}`].destroy();
   }
   const result = await TimeClock.findOne(
     {
       technicianId: technicianId,
-      serviceId: serviceId
+      serviceId: serviceId,
+      isCompleted: false
     },
   ).populate("technicianId orderId");
+  /*  if (!result) {
+     return res.status(400).json({
+       message: "Time data not found",
+       success: false
+     })
+   } */
   const convertedDuration = result.duration / 3600
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
       endDateTime: new Date(),
       total: parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) || 0,
-      activity: `Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`
+      activity: `Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`,
+      isCompleted: true
     }
   })
   await UserModel.updateOne(
@@ -168,15 +182,14 @@ const stopTimer = async (req, res) => {
       }
     }
   );
-  const payload = [result._id];
   if (result) {
-    await OrderModal.update(
+    const orderUpdate = await OrderModal.update(
       {
-        _id: orderId
+        _id: mongoose.Types.ObjectId(result.orderId._id)
       },
       {
         $push: {
-          timeClockId: payload
+          timeClockId: result._id
         }
       }
     );

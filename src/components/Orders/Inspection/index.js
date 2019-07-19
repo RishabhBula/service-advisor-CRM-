@@ -562,7 +562,7 @@ class Inspection extends Component {
          });
       }
       //   var url = URL.createObjectURL(file);
-      logger(file, "file");
+      
    };
 
 
@@ -570,7 +570,7 @@ class Inspection extends Component {
    render() {
       const { inspection, templateData, orderDetails} = this.state;
       const orderTitle = orderDetails ? orderDetails.orderItems.orderName : " Untitled"
-      console.log(orderDetails, "orderTitle")
+      
       return (
          <div>
             <div className={"mb-3 d-flex"}>
@@ -783,7 +783,9 @@ class Inspection extends Component {
                sendMessageTemplate={this.props.sendMessageTemplate}
                pdfBlob = {this.state.pdfBlob}
                orderTitle={orderTitle}
+               orderDetails={orderDetails}
             />
+            
 
             {/* ====== MessageTemplate Modal====== */}
             <MessageTemplate isOpen={this.state.mesageModal} toggle={this.toggleMessageTemplate} inspectionData={this.props.inspectionData} addMessageTemplate={this.props.addMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} updateMessageTemplate={this.props.updateMessageTemplate} deleteMessageTemplate={this.props.deleteMessageTemplate} />

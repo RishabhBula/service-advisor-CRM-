@@ -8,6 +8,7 @@ import {
 import GenralSettings from "../../components/Profile/GeneralSettings";
 import UpdatePassword from "../../components/Profile/UpdatePassword"
 import CompanySettings from "../../components/Profile/CompanySettings"
+import SubscriptionSettings from "../../components/Profile/SubscriptionSettings"
 import { connect } from "react-redux";
 import {
   updatePasswordRequest,
@@ -41,6 +42,8 @@ class Profile extends Component {
             {profileSetting ? 
             <>
             <hr className={"pb-3 mt-5"}/>
+            
+            <SubscriptionSettings profileData={profileInfo}/>
             <CompanySettings profileData={profileInfo} updateProfileSetting={this.props.profileSettingUpdateRequest} />
             </>
             : null }

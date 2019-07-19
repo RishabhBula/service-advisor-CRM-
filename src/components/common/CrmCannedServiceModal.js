@@ -5,13 +5,14 @@ import {
    ModalHeader,
    Col,
    FormGroup,
+   UncontrolledTooltip,
    Label,
    Button,
    Input
 } from "reactstrap";
 import Async from "react-select/lib/Async";
 import NoDataFound from "./NoFound";
-
+import { ConfirmBox } from "../../helpers/SweetAlert";
 export class CrmCannedServiceModal extends Component {
    constructor(props) {
       super(props);
@@ -91,10 +92,19 @@ export class CrmCannedServiceModal extends Component {
          }
       })
    }
+   handleDeleteCannedService = async(serviceId) => {
+      const { value } = await ConfirmBox({
+         text: "Do you want to remove this canned service?"
+      });
+      if (!value) {
+         return;
+      } else {
+         this.props.deleteCannedServiceRequest({ cannedServiceId: serviceId })
+      }
+   }
    render() {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex } = this.state
-      const cannedServiceUrl = "/workflow/canned-service"
       return (
          <>
             <Modal
@@ -144,24 +154,30 @@ export class CrmCannedServiceModal extends Component {
                                           }
 
                                           <span>{item.serviceName}</span>
-                                          <span><Button size={"sm"} color={""} disabled={item.isCannedAdded} className={"btn btn-theme"} onClick={() => this.handleAddToService(item, index)}>
-                                             +
-                                             {
-                                                item.isCannedAdded ?
-                                                   <>Service Added <i className={"fa fa-check"} /></>
-                                                   : "Add to service"
-                                             }
-                                          </Button>
-                                             <Button
-                                                size={"sm"}
-                                                id={`${index}Edit`}
-                                                onClick={() => {
-                                                   this.props.history.push(`${cannedServiceUrl}`)
-                                                }}
-                                                className={"btn-theme-transparent"}>
-                                                <i className={"icons cui-pencil"} />
-                                             </Button>
-                                          </span>
+                                          <div>
+                                             <span className={"mr-2"}>
+                                                <Button size={"sm"} color={""} disabled={item.isCannedAdded} className={"btn btn-theme"} onClick={() => this.handleAddToService(item, index)}>
+                                                   +
+                                                   {
+                                                      item.isCannedAdded ?
+                                                         <>Service Added <i className={"fa fa-check"} /></>
+                                                         : "Add to service"
+                                                   }
+                                                </Button>
+                                             </span>
+                                             <span>
+                                                <Button
+                                                   size={"sm"}
+                                                   id={`delete-${item._id}`}
+                                                   onClick={() => this.handleDeleteCannedService(item._id)}
+                                                   className={"btn-theme-transparent"}>
+                                                   <i className={"icon-trash icons"} />
+                                                </Button>
+                                                <UncontrolledTooltip target={`delete-${item._id}`}>
+                                                   Delete Canned Service
+                                                </UncontrolledTooltip>
+                                             </span>
+                                          </div>
                                        </div>
                                        {
                                           (serviceIndex === index) && isToggelOpen ?

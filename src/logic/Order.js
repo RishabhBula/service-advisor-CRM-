@@ -22,7 +22,7 @@ import {
   getActivityList,
   getMessageListSuccess,
   verifyLinkRequest,
-  getPaymentSuccess
+  getPaymentSuccess,
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -171,6 +171,7 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
+    dispatch(getOrderDetailsRequest({_id: action.payload.orderId}))
     done();
   }
 });

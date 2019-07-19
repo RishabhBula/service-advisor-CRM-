@@ -2319,7 +2319,26 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .service-card-btn-block .notValue {
   border-bottom: 3px solid transparent;
 }
-.order-top-section {
+.technician-popover{
+  min-width: 180px;
+}
+.technician-popover .popover-header{
+  background-color: #413c4f;
+  color: #fff;
+}
+.technician-popover .technician-detail{
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "FrutigerNeueLTPro-Medium";
+}
+.technician-popover .technician-detail .text-note{
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  font-style: italic;
+  color: #858091;
+}
+.order-top-section{
   margin-bottom: 30px;
   height: 80px;
   background: #eee;

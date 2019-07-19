@@ -137,6 +137,7 @@ const getAllCannedServices = async (req, res) => {
    try {
       const id = currentUser.id;
       const searchValue = query.search;
+      const serviceId = query.serviceId
       const parentId = currentUser.parentId || currentUser.id;
       let condition = {};
       condition["$and"] = [
@@ -169,6 +170,11 @@ const getAllCannedServices = async (req, res) => {
             ],
          });
       }
+      if (serviceId) {
+         condition["$and"].push({
+            _id: mongoose.Types.ObjectId(serviceId)
+         })
+      }
       const getAllCannedServices = await Service.find(condition)
       return res.status(200).json({
          data: getAllCannedServices,
@@ -182,8 +188,30 @@ const getAllCannedServices = async (req, res) => {
       });
    }
 }
+
+const updateCannedService = async (req, res) => {
+   const { body } = req;
+   try {
+      await Service.findByIdAndUpdate(mongoose.Types.ObjectId(body.cannedServiceId), {
+         $set: {
+            isCannedService: false
+         }
+      })
+      return res.status(200).json({
+         message: "Canned service deleted successfully",
+         success: true
+      })
+   } catch (error) {
+      console.log("this is update canned service error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
 module.exports = {
    addNewService,
    getAllCannedServices,
-   addNewCannedService
+   addNewCannedService,
+   updateCannedService
 };

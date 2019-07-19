@@ -39,7 +39,8 @@ export class CrmSubscriptionModel extends Component {
 
   render() {
     const { openSubscriptionModel, openSubPayementModel, addSubscriptionRequest } = this.props
-    const {  planId } = this.state
+    const { subscriptionData, planId } = this.state
+   
     return (
       <>
         <Modal
@@ -52,41 +53,29 @@ export class CrmSubscriptionModel extends Component {
             <h5 className={"subscription-head-line"}>Get a monthly Subscription for uninterrupted access.</h5>
             <Row>
               <div className={"subscription-card-wrap d-flex justify-content-center"}>
-                  <div className={"subscription-card"}>
-                    <h4 className={"text-center"}>Core</h4>
+                {subscriptionData && subscriptionData.length ? subscriptionData.map((plan ,index)=>{
+                  return(
+                  <div className={"subscription-card"} key={index}>
+                      <h4 className={"text-center"}>{plan.name}</h4>
                     <div className={"subscription-card-inner"}>
                       <h3 className={"text-primary text-center plan-price"}>
-                        <Dollor value={70} /><small>/month</small>
+                          <Dollor value={plan.amount} /><small>/month</small>
                       </h3>
                       <div className={"text-center pt-3 pb-3 user-count"}>
-                        1 User License
+                          {plan.facilities.noOfLiscence} User License
                       </div>
                       <div className={"notes"}>
                         Pay $10/user and add more users
                       </div>
                     </div>
                     <div className={"text-center"}>
-                      <Button color={"primary"} onClick={this.handleSubPaymentModal} className={"text-center btn"}>Subscribe</Button>
+                      <Button color={"primary"} onClick={(e)=>this.handleSubPaymentModal(plan._id)} className={"text-center btn"}>Subscribe</Button>
                     </div>
                   </div>
-              
-                  <div className={"subscription-card"}>
-                    <h4 className={"text-center"}>Enhanced</h4>
-                    <div className={"subscription-card-inner"}>
-                      <h3 className={"text-primary text-center plan-price"}>
-                        <Dollor value={149} /><small>/month</small>
-                      </h3>
-                      <div className={"text-center pt-3 pb-3 user-count"}>
-                        3 User License
-                      </div>
-                      <div className={"notes"}>
-                        Pay $10/user and add more users
-                      </div>
-                    </div>
-                    <div className={"text-center"}>
-                      <Button color={"primary"} onClick={this.handleSubPaymentModal} className={"text-center btn"}>Subscribe</Button>
-                    </div>
-                  </div>
+                  )
+                }):null}
+                  
+                
               </div>
             </Row>
             <br/>

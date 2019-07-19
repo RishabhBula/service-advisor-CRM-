@@ -119,7 +119,6 @@ class DefaultLayout extends Component {
       })
     }
     
-    console.log(this.state.shopLogo, "profileInfo profileInfo")
   }
   signOut() {
     this.props.logoutUser();
@@ -187,7 +186,6 @@ class DefaultLayout extends Component {
     const { hasAccess, shopLogo } = this.state;
     const parentId = profileInfoReducer.profileInfo.parentId || ''
     const providerCompanyName = profileInfoReducer.profileInfo.companyName || parentId.companyName;
-    console.log(parentId, "parentId")
     return isLoading ? (
       <FullPageLoader />
     ) : (
