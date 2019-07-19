@@ -21,5 +21,6 @@ module.exports = {
   userActivity: require("./userActivityRoutes"),
   payment: require("./paymentRoutes"),
   memberShipRoutes: require("./membership"),
-  webhookRoutes: require("./webhook")
+  webhookRoutes: require("./webhook"),
+  appointmentRoutes: require("./appointments")
 };
