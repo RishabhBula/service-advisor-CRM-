@@ -38,38 +38,38 @@ body {
   .row {
     width: 100%;
   }
-  &.header-fixed .app-body{
-    margin-top:0px;
+  &.header-fixed .app-body {
+    margin-top: 0px;
   }
-  &.header-fixed .app-header{
+  &.header-fixed .app-header {
     width: calc(100% - 200px);
     right: 0;
   }
   &.sidebar-minimized.header-fixed {
-    .app-header{
+    .app-header {
       width: calc(100% - 50px);
       right: 0;
-    } 
-    .provider-logo{
+    }
+    .provider-logo {
       display: block;
       width: 50px;
       height: 50px;
       margin: 0;
       padding: 22px;
-       &.company-name{
-         font-size: 28px;
-         .name{
+      &.company-name {
+        font-size: 28px;
+        .name {
           position: relative;
           top: -21px;
           left: -9px;
-         }
-       }
+        }
+      }
     }
-    .company-logo{
+    .company-logo {
       display: none;
     }
-    .sidebar{
-      .nav-footer-logo{
+    .sidebar {
+      .nav-footer-logo {
         position: absolute;
         bottom: 60px;
         left: 5px;
@@ -77,46 +77,46 @@ body {
         height: 40px;
         overflow: hidden;
         justify-content: flex-start;
-        img{
+        img {
           width: 40px;
         }
       }
     }
   }
-  .app-header{
+  .app-header {
     background-color: #8157ef;
     border-bottom: 0px;
   }
-  .provider-logo{
+  .provider-logo {
     display: inline-flex;
     flex-flow: column;
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border:3px solid #fff;
+    border: 3px solid #fff;
     margin: 10px auto;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-      &.company-name{
-        background-color: #fff;
-        color: #8157ef;
-        justify-content: center;
-        align-items: center;
-        font-size: 48px;
-      }
+    &.company-name {
+      background-color: #fff;
+      color: #8157ef;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+    }
   }
   &.sidebar-fixed {
-    .app-header + .app-body .sidebar{
+    .app-header + .app-body .sidebar {
       height: calc(100vh);
       padding-top: 15px;
     }
   }
-  .app-body{ 
-    .main{
-      padding-top:55px; 
+  .app-body {
+    .main {
+      padding-top: 55px;
     }
-    .company-logo{
+    .company-logo {
       padding-bottom: 5px;
       border-bottom: 1px solid #fff;
       text-align: center;
@@ -129,16 +129,16 @@ body {
         padding: 7px 7px 7px 38px;
       }
     }
-    .nav-footer-logo{
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 18px;
-        line-height: 17px;
-        .powered-by-line{
-          font-size:11px;
-        }
+    .nav-footer-logo {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      line-height: 17px;
+      .powered-by-line {
+        font-size: 11px;
+      }
     }
   }
   .brand-logo {
@@ -404,7 +404,6 @@ body {
     border-color: #f86c6b !important;
   }
 
-  
   .dropzone-error {
     border: 1px solid red;
   }
@@ -456,27 +455,27 @@ body {
       border-bottom-left-radius: 0;
     }
   }
-  .workflow-heads{
+  .workflow-heads {
     display: -webkit-flex;
     display: flex;
     -webkit-justify-content: space-between;
     justify-content: space-between;
     -webkit-align-items: center;
     align-items: center;
-     h5 {
-        margin-bottom: 0;
-        font-size: 14px;
-        letter-spacing: 0.5px;
-        color: #2b2b2b;
-        text-transform: uppercase;
-        font-weight: 600;
-        font-family: "FrutigerNeueLTPro-Bold";
+    h5 {
+      margin-bottom: 0;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: #2b2b2b;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-family: "FrutigerNeueLTPro-Bold";
     }
-    .icon{
+    .icon {
       color: #6d6d6d;
       font-size: 18px;
     }
-    .dropdown{
+    .dropdown {
       position: relative;
       left: 20px;
     }
@@ -517,31 +516,31 @@ body {
       border: 1px solid #c5c4c5;
       background: #fff;
       position: relative;
-      h5{
+      h5 {
         font-size: 15px;
         padding-right: 10px;
         padding-bottom: 6px;
         color: #1862d4;
-         font-family: "FrutigerNeueLTPro-Regular";
+        font-family: "FrutigerNeueLTPro-Regular";
       }
-      .delete-icon{
+      .delete-icon {
         position: absolute;
         top: 6px;
         right: 5px;
         cursor: pointer;
         font-size: 16px;
         color: #8b929c;
-        &:hover{
+        &:hover {
           color: rgb(230, 66, 66);
         }
       }
-      .service-total{
+      .service-total {
         position: absolute;
         right: -3px;
         bottom: 3px;
       }
-      .content-title{
-        .text{
+      .content-title {
+        .text {
           position: relative;
           top: 4px;
           font-family: $ft-regular;
@@ -559,20 +558,22 @@ body {
   .workflow-grid-container {
     width: max-content;
   }
-  .workflow-table{
+  .workflow-table {
     font-family: $ft-regular;
-    td,th{
+    td,
+    th {
       padding: 5px 10px;
       vertical-align: middle;
       font-size: 15px;
       font-family: $ft-regular;
       font-weight: 500;
-      b,strong{
+      b,
+      strong {
         font-family: $ft-bold;
         font-weight: 600;
       }
     }
-    .status-btn{
+    .status-btn {
       display: inline-block;
       padding: 3px 10px;
       border: 1px solid #a49fb1;
@@ -583,19 +584,19 @@ body {
       min-width: 100px;
       text-align: center;
     }
-    .delete-icon{
+    .delete-icon {
       cursor: pointer;
       font-size: 16px;
       color: #8b929c;
-      &hover{
+      &hover {
         color: rgb(230, 66, 66);
       }
     }
-    .order-title{
-        cursor: pointer;
-        font-size: 15px;
-        font-family: $ft-bold;
-      .order-id{
+    .order-title {
+      cursor: pointer;
+      font-size: 15px;
+      font-family: $ft-bold;
+      .order-id {
         color: #1862d4;
         font-size: 15px;
         font-weight: 500;
@@ -608,10 +609,9 @@ body {
     min-height: 80px;
     padding: 20px 10px;
   }
-}
 
-/*======order Details Right Side==========*/
- .workflow-section .workflow-right {
+  /*======order Details Right Side==========*/
+  .workflow-section .workflow-right {
     width: 355px;
     height: 100%;
     -webkit-flex: 0 0 355px;
@@ -626,26 +626,26 @@ body {
     // border-left: 2px solid #cccad2;
     border-top: 1px solid #c8ced3;
     overflow: auto;
-    .name-label{
+    .name-label {
       font-weight: 600;
     }
-    .service-warp{
+    .service-warp {
       font-size: 16px;
       font-weight: 600;
       .grand-total {
         font-size: 18px;
         font-weight: 700;
-        .dollar-price{
+        .dollar-price {
           font-size: 18px;
         }
-        .fa.dollar-icon{
+        .fa.dollar-icon {
           font-size: 18px;
         }
       }
-      .dollar-price{
+      .dollar-price {
         font-size: 16px;
       }
-      .fa.dollar-icon{
+      .fa.dollar-icon {
         font-size: 14px;
       }
     }
@@ -660,15 +660,15 @@ body {
         min-width: 105px;
         background: #eee;
         color: #989797;
-        &.active{
+        &.active {
           background: #fff;
           color: #000;
         }
-        &:focus{
+        &:focus {
           box-shadow: none;
         }
       }
-      .authoris-dot{
+      .authoris-dot {
         display: inline-block;
         width: 10px;
         height: 10px;
@@ -677,126 +677,108 @@ body {
       }
     }
   }
-/*===========Order Summary========*/
-.summary-warp{
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 10px;
-  .service-warp{
-    .service-head{
-      font-size: 16px;
-      font-weight: 600;
-      .part-number{
+  /*===========Order Summary========*/
+  .summary-warp {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    .service-warp {
+      .service-head {
+        font-size: 16px;
+        font-weight: 600;
+        .part-number {
+          font-size: 14px;
+          color: #9ba0a5;
+        }
+        .part-note {
+          font-size: 13px;
+          font-style: italic;
+          background: transparent;
+          border: 0;
+          display: block;
+          max-width: 75%;
+          color: #4c5558;
+          font-weight: 400;
+          margin-bottom: 5px;
+        }
+      }
+      .entity {
+        color: #4d515d;
         font-size: 14px;
-        color: #9ba0a5;
+        font-weight: 500;
       }
-      .part-note{
-        font-size: 13px;
-        font-style: italic;
-        background: transparent;
-        border: 0;
-        display: block;
-        max-width: 75%;
-        color: #4c5558;
-        font-weight: 400;
-        margin-bottom: 5px;
-      }
-    }
-    .entity{
-      color: #4d515d;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .order-total-block{
-      font-size: 14px;
-      font-weight: 600;
-      font-family: 'open sans';
-      .grand-total{
-        font-weight: 800;
-        font-size: 18px;
-        .dollar-price{
+      .order-total-block {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "open sans";
+        .grand-total {
+          font-weight: 800;
           font-size: 18px;
-          .fa.dollar-icon{
+          .dollar-price {
             font-size: 18px;
+            .dollar-price {
+              font-size: 18px;
+              .fa.dollar-icon {
+                font-size: 18px;
+              }
+            }
           }
         }
       }
     }
+    .fc td {
+      cursor: pointer;
+    }
   }
-}
+  .add-appointment-form {
+    .appointment-color-container {
+      margin: 10px 20px;
+      display: flex;
+      align-items: center;
 
-/*===========Subscription Modal========*/
-.subscription-modal{
-  box-shadow: 1px 2px 7px -1px;
-  .card-body{
-    min-height: 280px;
-    ul{
-      text-align: center;
-      li{
-        width: 145px;
-        margin: 15px auto;
+      .appointment-colors {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        float: left;
+        margin: 0 0.32em;
+        cursor: pointer;
+        position: relative;
+        &.selected {
+          i {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 20px;
+          }
+        }
+        &:hover {
+          transition: opacity 0.4s cubic-bezier(0.3, 1, 0.4, 1);
+          opacity: 0.6;
+        }
+      }
+    }
+    label {
+      min-width: 20% !important;
+    }
+    .phone-field {
+      label {
+        min-width: 41% !important;
+      }
+    }
+    .is-invalid {
+      .css-vj8t7z {
+        border: 1px solid #f86c6b !important;
+        padding: 0;
       }
     }
   }
-}
-/*===========Customer details========*/
-.card-body{
-  &.vehicle-details{
-    position: relative;
-    width: 100%;
-    text-align: center;
-    transition:all ease 0.3s;
-    .overlay{
-      display: flex;
-      width: 100%;
-      background: #7e7e7e;
-      position: absolute;
-      width: 100%;
-      height: 35px;
-      bottom: 0;
-      left: 0;
-      opacity: 0;
-      justify-content: center;
-      align-items: center;
-      font-size: 19px;
-      color: #fff;
-       &:hover .fa{
-          transform: translateX(20px);
-          transition:all ease 0.3s;
-       }
-    }
-    &:hover .overlay{
-        opacity: 1;
-        transition:opacity ease 0.3s;
+  /* React Select Design  */
+  .css-11unzgr {
+    .css-1gl4k7y,
+    .css-wqgs6e {
+      padding: 0px 5px;
+      text-align: left;
     }
   }
 }
-.card{
-  .add-vehicle{
-    border: 1px dashed #0000005e;
-    background: #f3f3f4;
-  }
-}
-.new-Order-btn{
-  position: absolute;
-  top: 234px;
-  right: 19px;
-  button{
-    height: 39px;
-  }
-}
-/*===========Vehicle details========*/
-.vehicle-image-detail{
-  svg{
-    height:30px;
-  }
-}
-.new-vehicle-Order-btn{
-  position: absolute;
-  top: 220px;
-  right: 19px;
-  button{
-    height: 39px;
-  }
-}
-

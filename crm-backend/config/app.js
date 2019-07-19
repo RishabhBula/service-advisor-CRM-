@@ -11,10 +11,21 @@ const StripeAPIKey = isDev
   ? "sk_test_zCSjOxiIHTNmPJUBdg4hFQAZ"
   : "sk_test_zCSjOxiIHTNmPJUBdg4hFQAZ";
 
+const Twilio = {
+  accountSid: isDev
+    ? "ACa5b59a10ecb28e91fd3375991a06e050"
+    : "ACf74b4d20b3e4d75db48ac9928090407e",
+  authToken: isDev
+    ? "ae58ecb856aeb716e5bb6411e21a670a"
+    : "9ae3119ecc9ff41e3b7a968d768dfd25",
+  from: isDev ? "+15005550006" : "+15005550006"
+};
+
 module.exports = {
   mode,
   isDev,
   webURL,
   s3Key,
-  StripeAPIKey
+  StripeAPIKey,
+  Twilio
 };

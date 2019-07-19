@@ -23,6 +23,8 @@ import { timelogReducer } from "./TimeLog";
 import { activityReducer } from "./Activity";
 import { messageReducer } from "./Message";
 import { summaryReducer } from "./OrderSummary";
+import { appointmentReducer, appointmentDetailsReducer } from "./Appointments";
+
 import { paymentReducer } from "./Payment";
 import { subscriptionReducer } from "./Subscription";
 export const mainReducer = handleActions(
@@ -64,6 +66,8 @@ const AppReducer = combineReducers({
   activityReducer,
   messageReducer,
   summaryReducer,
+  appointmentReducer,
+  appointmentDetailsReducer,
   paymentReducer,
   subscriptionReducer,
   routing: routerReducer

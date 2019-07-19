@@ -23,6 +23,7 @@ import { VendorLogic } from "./Vendor";
 import { ActivityLogic } from "./Activity";
 import { MessageLogic } from "./Message";
 import { OrderSummaryLogic } from "./OrderSummary";
+import { AppointmentLogics } from "./Appointments";
 import { PaymentLogic } from "./Payment";
 import { SubscriptionLogic } from "./Subscription";
 
@@ -57,6 +58,7 @@ export default [
   ...ActivityLogic,
   ...MessageLogic,
   ...OrderSummaryLogic,
+  ...AppointmentLogics,
   ...PaymentLogic,
   ...SubscriptionLogic,
   redirectToLogic

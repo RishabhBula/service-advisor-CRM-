@@ -8,6 +8,7 @@ import {
 import GenralSettings from "../../components/Profile/GeneralSettings";
 import UpdatePassword from "../../components/Profile/UpdatePassword"
 import CompanySettings from "../../components/Profile/CompanySettings"
+import SubscriptionSettings from "../../components/Profile/SubscriptionSettings"
 import { connect } from "react-redux";
 import {
   updatePasswordRequest,
@@ -23,6 +24,7 @@ class Profile extends Component {
 
   render() {
     const { profileInfo } = this.props;
+    const profileSetting = profileInfo.profileInfo.permissions.isAllowedCompanySettings
     return (
       <Card className={"white-card"}>
         <CardBody className={"custom-card-body position-relative"}>
@@ -37,8 +39,14 @@ class Profile extends Component {
                 <UpdatePassword updatePassword={this.props.updatePasswordRequest} />                
               </Col>
             </Row>
+            {profileSetting ? 
+            <>
             <hr className={"pb-3 mt-5"}/>
+            
+            <SubscriptionSettings profileData={profileInfo}/>
             <CompanySettings profileData={profileInfo} updateProfileSetting={this.props.profileSettingUpdateRequest} />
+            </>
+            : null }
           </div>
         </CardBody>
       </Card>

@@ -41,8 +41,6 @@ class WorkflowListView extends React.Component {
         groupedOptions.push({ label: status.name, id: status._id })
       );
     });
-    console.log("^^^^^^^^^^^^^^^^^^^^", orderStatus);
-
     const statusValue = groupedOptions.filter(item => item.id === order.workflowStatus)
     return (
       <tr key={index}>
@@ -88,7 +86,7 @@ class WorkflowListView extends React.Component {
               height={"20"}
               className={"mr-1"}
             />
-            {order && order.customerId
+            {order && order.vehicleId
               ? order.vehicleId.make + " " + order.vehicleId.modal
               : "No Vehicle"}
           </div>
@@ -157,6 +155,7 @@ class WorkflowListView extends React.Component {
     if (!activeTab && orderStatus[0]) {
       activeTab = orderStatus[0]._id;
     }
+
     return (
       <div>
         <Nav pills className={"inventory-nav"}>

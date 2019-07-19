@@ -23,8 +23,9 @@ export * from "./TimeLog";
 export * from "./Activity";
 export * from "./Message";
 export * from "./OrderSummary";
-export * from "./Payment"
-export * from "./Subscription"
+export * from "./Appointments";
+export * from "./Payment";
+export * from "./Subscription";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

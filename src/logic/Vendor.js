@@ -3,7 +3,7 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { AppConfig } from "../config/AppConfig";
 
-import { 
+import {
   addVendorSuccess,
   editVendorSuccess,
   getVendorsList,
@@ -13,9 +13,8 @@ import {
   modelOpenRequest,
   vendorActions,
   deleteVendorSuccess
-} from "../actions"
+} from "../actions";
 import { logger } from "../helpers/Logger";
-
 
 const getVendorLogic = createLogic({
   type: vendorActions.GET_VENDOR_LIST,
@@ -26,15 +25,18 @@ const getVendorLogic = createLogic({
         vendors: []
       })
     );
+    logger("test");
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/vendor",
-       "/vendorList",
-        "GET",
-       true, {
-      ...action.payload,
-      limit: AppConfig.ITEMS_PER_PAGE
-    });
+      "/vendorList",
+      "GET",
+      true,
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
+    );
     if (result.isError) {
       dispatch(
         getVendorsListSuccess({
@@ -106,7 +108,7 @@ const editVendorsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      logger(result, "result")
+      logger(result, "result");
       toast.error(result.messages[0]);
       dispatch(hideLoader());
       done();
