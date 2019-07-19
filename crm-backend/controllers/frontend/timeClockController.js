@@ -147,7 +147,7 @@ const stopTimer = async (req, res) => {
     //   message: "This technician is not working on any task."
     // });
     console.log('###########Time Log Distroyed#############');
-    
+
     timeClocks[`${technicianId}`].destroy();
   }
   const result = await TimeClock.findOne(
@@ -157,13 +157,12 @@ const stopTimer = async (req, res) => {
       isCompleted: false
     },
   ).populate("technicianId orderId");
-
-  if (!result) {
-    return res.status(400).json({
-      message: "Time data not found",
-      success: false
-    })
-  }
+  /*  if (!result) {
+     return res.status(400).json({
+       message: "Time data not found",
+       success: false
+     })
+   } */
   const convertedDuration = result.duration / 3600
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
