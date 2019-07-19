@@ -51,7 +51,8 @@ import {
   sendMessage,
   deleteNotes,
   addPaymentRequest,
-  addNewCannedService
+  addNewCannedService,
+  deleteCannedServiceRequest
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -535,7 +536,8 @@ class Order extends Component {
       activityReducer,
       addPaymentRequest,
       paymentReducer,
-      addNewCannedService
+      addNewCannedService,
+      deleteCannedServiceRequest
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -645,6 +647,7 @@ class Order extends Component {
                           getInventoryPartsVendors={getInventoryPartsVendors}
                           orderReducer={orderReducer}
                           addNewCannedService={addNewCannedService}
+                          deleteCannedServiceRequest={deleteCannedServiceRequest}
                           {...this.props}
                         />
                       ) : null}
@@ -877,7 +880,8 @@ const mapDispatchToProps = dispatch => ({
   },
   addNewCannedService: data => {
     dispatch(addNewCannedService(data))
-  }
+  },
+  deleteCannedServiceRequest: data => dispatch(deleteCannedServiceRequest(data))
 });
 export default connect(
   mapStateToProps,

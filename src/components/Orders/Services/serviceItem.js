@@ -623,7 +623,7 @@ class ServiceItem extends Component {
   render() {
     const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
-    const { labelReducer, getCannedServiceList, serviceReducers } = this.props;
+    const { labelReducer, getCannedServiceList, serviceReducers,deleteCannedServiceRequest } = this.props;
     return (
       <>
         <div className={"w-100"}>
@@ -1090,6 +1090,7 @@ class ServiceItem extends Component {
             getCannedServiceList={getCannedServiceList}
             serviceReducers={serviceReducers}
             handleAddToService={this.handleCannedAddToService}
+            deleteCannedServiceRequest={deleteCannedServiceRequest}
             {...this.props}
           />
         </div>

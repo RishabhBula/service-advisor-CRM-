@@ -40,7 +40,7 @@ class TimeLogList extends Component {
     });
   };
 
-  handleTimeLogdelete = async (timeLogId) => {
+  handleTimeLogdelete = async (timeLogId, orderId) => {
     const { value } = await ConfirmBox({
       text: "You want to delete this time log?"
     });
@@ -49,6 +49,7 @@ class TimeLogList extends Component {
     }
     const paylod = {
       isDeleted: true,
+      orderId: orderId,
       _id: timeLogId
     }
     this.props.editTimeLogRequest(paylod)
@@ -165,7 +166,7 @@ class TimeLogList extends Component {
                     <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
                     {/* <td>{timeLog.activity}</td>  */}
-                    <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`}/></td>
+                    <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
                     <td><Dollor value={`${parseFloat(timeLog.total).toFixed(2)}`} /></td>
                     <td className={"text-center"}>
                       <Button
@@ -183,7 +184,7 @@ class TimeLogList extends Component {
                       <Button
                         size={"sm"}
                         id={`delete-${timeLog._id}`}
-                        onClick={() => this.handleTimeLogdelete(timeLog._id)}
+                        onClick={() => this.handleTimeLogdelete(timeLog._id, timeLog.orderId._id)}
                         className={"btn-theme-transparent"}
                       >
                         <i className={"icons cui-trash"} />

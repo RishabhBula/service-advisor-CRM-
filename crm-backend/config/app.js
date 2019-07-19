@@ -1,6 +1,6 @@
 const mode = "development"; // test, production, development
 const isDev = mode !== "production";
-const webURL = "http://192.168.2.119:3000/";
+const webURL = isDev ? "localhost:3000" : "serviceadvisor.io/dev";
 const s3Key = {
   key: "iIkoc2HZhl+JEMSUFZA2flh/YNtBMCUa3CE/GSbg",
   keyId: "AKIAIBVWQL2OGVIO6D7Q",

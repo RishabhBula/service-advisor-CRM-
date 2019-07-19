@@ -11,4 +11,7 @@ router.get("/cannedServiceList", token.authorisedUser, serviceController.getAllC
 
 /* add new canned service */
 router.post("/addCanned", token.authorisedUser, serviceController.addNewCannedService)
+
+/* update Canned service data */
+router.put("/updateCanned", token.authorisedUser, serviceController.updateCannedService)
 module.exports = router;

@@ -215,6 +215,11 @@ const sendMailToCustomer = async (req, res) => {
       ])
       await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
          body: body.message,
+         createdAt: createdAt,
+         orderTitle: body.orderTitle,
+         subDomain: body.subdomain,
+         titleMessage: "You got an nspection for",
+         displayStyle: `style="text-align:center; display: none";`
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({

@@ -218,7 +218,7 @@ class OrderDetails extends Component {
         <hr />
         <div className={"text-center payment-section"}>
           <h6 className={orderGandTotal - totalPaiedAmount === 0 ? "text-success" : "text-warning"}>Remaining Balance <Dollor value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)} /></h6>
-          <Button size={"sm"} onClick={this.handlePaymentModal} className={"btn btn-success btn-rounded"}>New Payment</Button>
+          <Button size={"sm"} /* onClick={this.handlePaymentModal} */ className={"btn btn-success btn-rounded"}>New Payment</Button>
         </div>
         <div className={"activity-logs"}>
           {

@@ -77,14 +77,9 @@ export const serviceReducers = handleActions(
          services: action.payload.services,
          isAddServiceItem: false
       }),
-      [serviceActions.GET_CANNED_SERVICE_LIST]: (state, action) => ({
-         ...state,
-         isLoading: true
-      }),
       [serviceActions.GET_CANNED_SERVICE_LIST_SUCCESS]: (state, action) => ({
          ...state,
          cannedServiceList: action.payload.cannedServiceList,
-         isLoading: false
       }),
       [serviceActions.GET_SERVICE_LIST]: (state, action) => ({
          ...state,

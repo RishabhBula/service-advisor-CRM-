@@ -80,7 +80,7 @@ class Email {
         this.subject = "[Service Advisor] Unsubscription";
         break;
       case AvailiableTemplates.INSPECTION_TEMPLATE:
-        // this.subject = "[Service Advisor] Unsubscription";
+         // this.subject = "[Service Advisor] Unsubscription";
         break;
       default:
         throw new Error("Invalid template name", 400);

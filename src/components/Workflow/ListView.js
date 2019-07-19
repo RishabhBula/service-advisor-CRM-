@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Nav, NavItem, NavLink, UncontrolledTooltip} from "reactstrap";
+import { Table, Nav, NavItem, NavLink, UncontrolledTooltip } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
 import { AppRoutes } from "../../config/AppRoutes";
@@ -17,24 +17,14 @@ class WorkflowListView extends React.Component {
     };
   }
 
-  handleType = (destination, source, orderId) => {
-    console.log(
-      source + " source",
-      destination.id + " destination",
+  handleType = (e, workflowStatus, orderId, index) => {
+    this.props.updateOrderStatus({
+      from: workflowStatus,
+      to: e.id,
       orderId,
-      "e isprinted"
-    );
-    
-    // this.props.updateOrderStatus({
-    //   // from: source,
-    //   // to: destination.id,
-    //   // orderId,
-    //   // destinationIndex: { index: 0, droppableId: destination.id },
-    //   // sourceIndex: { index: 0, droppableId: source }
-    //   orderId,
-    //   orderStatus: destination,
-    //   orderIndex:0
-    // });
+      destinationIndex: 0,
+      sourceIndex: index
+    });
   };
   /**
    *
@@ -51,8 +41,9 @@ class WorkflowListView extends React.Component {
         groupedOptions.push({ label: status.name, id: status._id })
       );
     });
-    console.log(serviceCalculation,"serviceCalculation  ")
-    
+    console.log("^^^^^^^^^^^^^^^^^^^^", orderStatus);
+
+    const statusValue = groupedOptions.filter(item => item.id === order.workflowStatus)
     return (
       <tr key={index}>
         <td className={""} width={300}>
@@ -70,7 +61,7 @@ class WorkflowListView extends React.Component {
               </span>
               #{order.orderId || "---"}
             </div>
-            
+
             {order.orderName || "Unnamed order"}
           </div>
         </td>
@@ -106,17 +97,17 @@ class WorkflowListView extends React.Component {
           <Dollor value={serviceCalculation.orderGrandTotal} />
         </td>
         <td width={200}>
-          {console.log(groupedOptions, "groupedOptions")}
           <Select
-            defaultValue={groupedOptions.filter(
-              item => item.id === order.workflowStatus
-            )}
+            // defaultValue={groupedOptions.filter(
+            //   item => item.id === order.workflowStatus
+            // )}
+            value={statusValue[0]}
             options={groupedOptions}
             className="w-100 form-select"
-            onChange={e => this.handleType(e, order.workflowStatus, order._id)}
+            onChange={e => this.handleType(e, order.workflowStatus, order._id, index)}
             classNamePrefix={"form-select-theme"}
           />
-          
+
         </td>
         <td>
           <span
@@ -171,24 +162,24 @@ class WorkflowListView extends React.Component {
         <Nav pills className={"inventory-nav"}>
           {orderStatus
             ? orderStatus.map((tab, index) => {
-                console.log(tab, "tab tab");
-                return (
-                  <NavItem key={index}>
-                    <NavLink
-                      href={tab.url}
-                      active={tab._id === activeTab}
-                      onClick={e => {
-                        e.preventDefault();
-                        this.setState({
-                          activeTab: tab._id
-                        });
-                      }}
-                    >
-                      {tab.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })
+              console.log(tab, "tab tab");
+              return (
+                <NavItem key={index}>
+                  <NavLink
+                    href={tab.url}
+                    active={tab._id === activeTab}
+                    onClick={e => {
+                      e.preventDefault();
+                      this.setState({
+                        activeTab: tab._id
+                      });
+                    }}
+                  >
+                    {tab.name}
+                  </NavLink>
+                </NavItem>
+              );
+            })
             : null}
         </Nav>
         <Table className={"workflow-table"}>
@@ -213,12 +204,12 @@ class WorkflowListView extends React.Component {
             ) : orders && orders[activeTab] && orders[activeTab].length ? (
               orders[activeTab].map(this.renderRow)
             ) : (
-              <tr>
-                <td className={"text-center"} colSpan={6}>
-                  <NoDataFound />
-                </td>
-              </tr>
-            )}
+                  <tr>
+                    <td className={"text-center"} colSpan={6}>
+                      <NoDataFound />
+                    </td>
+                  </tr>
+                )}
           </tbody>
         </Table>
       </div>

@@ -34,6 +34,10 @@ const timeClockSchema = new Schema({
     type: String,
     default: null
   },
+  isCompleted:{
+    type: Boolean,
+    default: false
+  },
   activity: {
     type: String,
     default: null
