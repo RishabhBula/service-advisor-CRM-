@@ -19,11 +19,14 @@ import { tiresReducer } from "./Tires";
 import { usersReducer } from "./Users";
 import { vehicleAddInfoReducer, vehicleListReducer } from "./Vehicles";
 import { vendorsReducer } from "./Vendors";
-import { timelogReducer } from "./TimeLog"
-import { activityReducer } from "./Activity"
-import { messageReducer } from "./Message"
-import { summaryReducer} from "./OrderSummary"
+import { timelogReducer } from "./TimeLog";
+import { activityReducer } from "./Activity";
+import { messageReducer } from "./Message";
+import { summaryReducer } from "./OrderSummary";
+import { appointmentReducer, appointmentDetailsReducer } from "./Appointments";
 
+import { paymentReducer } from "./Payment";
+import { subscriptionReducer } from "./Subscription";
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -63,6 +66,10 @@ const AppReducer = combineReducers({
   activityReducer,
   messageReducer,
   summaryReducer,
+  appointmentReducer,
+  appointmentDetailsReducer,
+  paymentReducer,
+  subscriptionReducer,
   routing: routerReducer
 });
 

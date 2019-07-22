@@ -69,11 +69,12 @@ const customerSchema = new Schema({
     ref: "user",
     default: null
   },
-  vehicles: {
-    type: [Schema.Types.ObjectId],
-    ref: "vehicle",
-    default: []
-  },
+  vehicles: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "vehicle"
+    }
+  ],
   status: {
     type: Boolean,
     default: true

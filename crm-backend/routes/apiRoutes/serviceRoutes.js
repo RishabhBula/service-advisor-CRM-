@@ -7,5 +7,11 @@ const token = require("../../common/token");
 router.post("/addService", token.authorisedUser, serviceController.addNewService);
 
 /* get all canned services */
-router.get("/cannedServiceList", token.authorisedUser, serviceController.getAllCannedServices)
+router.get("/cannedServiceList", token.authorisedUser, serviceController.getAllCannedServices);
+
+/* add new canned service */
+router.post("/addCanned", token.authorisedUser, serviceController.addNewCannedService)
+
+/* update Canned service data */
+router.put("/updateCanned", token.authorisedUser, serviceController.updateCannedService)
 module.exports = router;

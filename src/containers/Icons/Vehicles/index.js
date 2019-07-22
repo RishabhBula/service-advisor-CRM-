@@ -12,28 +12,28 @@ import Wagon from "./Wagon";
 
 class VehicleIcons extends Component {
   renderIcon = () => {
-    const { type, color } = this.props;
+    const { type, color, size } = this.props;
     switch (type) {
       case "bicycle":
-        return <Bicycle color={color || '#000'} />;
+        return <Bicycle color={color || '#000'} size={size} />;
       case "sedan":
-        return <Sedan color={color || '#000'} />;
+        return <Sedan color={color || '#000'} size={size}/>;
       case "truck":
-        return <Truck color={color || '#000'} />;
+        return <Truck color={color || '#000'} size={size}/>;
       case "trailer":
-        return <Trailer color={color || '#000'} />;
+        return <Trailer color={color || '#000'} size={size}/>;
       case "convertible":
-        return <Convertible color={color || '#000'} />;
+        return <Convertible color={color || '#000'} size={size}/>;
       case "coupe":
-        return <Coupe color={color || '#000'} />;
+        return <Coupe color={color || '#000'} size={size}/>;
       case "hatchback":
-        return <Hatchback color={color || '#000'} />;
+        return <Hatchback color={color || '#000'} size={size}/>;
       case "suv":
-        return <SUV color={color || '#000'} />;
+        return <SUV color={color || '#000'} size={size}/>;
       case "van":
-        return <Van color={color || '#000'} />;
+        return <Van color={color || '#000'} size={size}/>;
       case "wagon":
-        return <Wagon color={color || '#000'} />;
+        return <Wagon color={color || '#000'} size={size}/>;
       default:
         return <>-</>;
     }

@@ -13,6 +13,10 @@
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
 
+$ft-regular: "FrutigerNeueLTPro-Regular";
+$ft-bold: "FrutigerNeueLTPro-Bold";
+$ft-medium: "FrutigerNeueLTPro-Medium";
+
 .sidebar-navigation {
   text-decoration: none;
   list-style-type: none;
@@ -34,13 +38,108 @@ body {
   .row {
     width: 100%;
   }
+  &.header-fixed .app-body {
+    margin-top: 0px;
+  }
+  &.header-fixed .app-header {
+    width: calc(100% - 200px);
+    right: 0;
+  }
+  &.sidebar-minimized.header-fixed {
+    .app-header {
+      width: calc(100% - 50px);
+      right: 0;
+    }
+    .provider-logo {
+      display: block;
+      width: 50px;
+      height: 50px;
+      margin: 0;
+      padding: 22px;
+      &.company-name {
+        font-size: 28px;
+        .name {
+          position: relative;
+          top: -21px;
+          left: -9px;
+        }
+      }
+    }
+    .company-logo {
+      display: none;
+    }
+    .sidebar {
+      .nav-footer-logo {
+        position: absolute;
+        bottom: 60px;
+        left: 5px;
+        width: 40px;
+        height: 40px;
+        overflow: hidden;
+        justify-content: flex-start;
+        img {
+          width: 40px;
+        }
+      }
+    }
+  }
+  .app-header {
+    background-color: #8157ef;
+    border-bottom: 0px;
+  }
+  .provider-logo {
+    display: inline-flex;
+    flex-flow: column;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    margin: 10px auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    &.company-name {
+      background-color: #fff;
+      color: #8157ef;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+    }
+  }
+  &.sidebar-fixed {
+    .app-header + .app-body .sidebar {
+      height: calc(100vh);
+      padding-top: 15px;
+    }
+  }
+  .app-body {
+    .main {
+      padding-top: 55px;
+    }
+    .company-logo {
+      padding-bottom: 5px;
+      border-bottom: 1px solid #fff;
+      text-align: center;
+      font-size: 15px;
+    }
+  }
   .sidebar {
     .nav-dropdown-items {
       .nav-link {
         padding: 7px 7px 7px 38px;
       }
     }
-
+    .nav-footer-logo {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      line-height: 17px;
+      .powered-by-line {
+        font-size: 11px;
+      }
+    }
   }
   .brand-logo {
     display: inline-block;
@@ -305,7 +404,6 @@ body {
     border-color: #f86c6b !important;
   }
 
-  
   .dropzone-error {
     border: 1px solid red;
   }
@@ -357,13 +455,40 @@ body {
       border-bottom-left-radius: 0;
     }
   }
+  .workflow-heads {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-align-items: center;
+    align-items: center;
+    h5 {
+      margin-bottom: 0;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: #2b2b2b;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-family: "FrutigerNeueLTPro-Bold";
+    }
+    .icon {
+      color: #6d6d6d;
+      font-size: 18px;
+    }
+    .dropdown {
+      position: relative;
+      left: 20px;
+    }
+  }
   .workflow-grid-card {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 15px;
-    border-radius: 5px;
-    width: 250px;
+    background: #f1f1f1;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-top: 0px;
+    // padding: 1px;
+    margin: 15px 0px;
+    // border-radius: 5px;
+    width: 270px;
     display: inline-block;
     height: 500px;
     overflow-y: auto;
@@ -374,17 +499,54 @@ body {
       overflow-x: hidden;
     }
     .title {
-      background: #8157ef;
       padding: 5px;
       text-align: center;
-      color: #fff;
+      color: #464646;
+      margin: 0;
+      background: #fff;
+      display: block;
+      border-top: 1px solid #b5b1b1;
+      border-bottom: 1px solid #b5b1b1;
     }
     .content {
-      width: 100%;
+      width: calc(100% - 6px);
       min-height: 50px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
-      margin: 10px 0;
+      margin: 7px auto;
       padding: 10px;
+      border: 1px solid #c5c4c5;
+      background: #fff;
+      position: relative;
+      h5 {
+        font-size: 15px;
+        padding-right: 10px;
+        padding-bottom: 6px;
+        color: #1862d4;
+        font-family: "FrutigerNeueLTPro-Regular";
+      }
+      .delete-icon {
+        position: absolute;
+        top: 6px;
+        right: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #8b929c;
+        &:hover {
+          color: rgb(230, 66, 66);
+        }
+      }
+      .service-total {
+        position: absolute;
+        right: -3px;
+        bottom: 3px;
+      }
+      .content-title {
+        .text {
+          position: relative;
+          top: 4px;
+          font-family: $ft-regular;
+          font-size: 14px;
+        }
+      }
     }
   }
   .tax-popover {
@@ -396,20 +558,64 @@ body {
   .workflow-grid-container {
     width: max-content;
   }
+  .workflow-table {
+    font-family: $ft-regular;
+    td,
+    th {
+      padding: 5px 10px;
+      vertical-align: middle;
+      font-size: 15px;
+      font-family: $ft-regular;
+      font-weight: 500;
+      b,
+      strong {
+        font-family: $ft-bold;
+        font-weight: 600;
+      }
+    }
+    .status-btn {
+      display: inline-block;
+      padding: 3px 10px;
+      border: 1px solid #a49fb1;
+      border-radius: 21px;
+      font-size: 12px;
+      font-family: $ft-bold;
+      color: #65616f;
+      min-width: 100px;
+      text-align: center;
+    }
+    .delete-icon {
+      cursor: pointer;
+      font-size: 16px;
+      color: #8b929c;
+      &hover {
+        color: rgb(230, 66, 66);
+      }
+    }
+    .order-title {
+      cursor: pointer;
+      font-size: 15px;
+      font-family: $ft-bold;
+      .order-id {
+        color: #1862d4;
+        font-size: 15px;
+        font-weight: 500;
+      }
+    }
+  }
   /*==============*/
   .popover.service-note-popover {
     width: 300px;
     min-height: 80px;
     padding: 20px 10px;
   }
-}
 
-/*======order Details Right Side==========*/
- .workflow-section .workflow-right {
-    width: 345px;
+  /*======order Details Right Side==========*/
+  .workflow-section .workflow-right {
+    width: 355px;
     height: 100%;
-    -webkit-flex: 0 0 350px;
-    flex: 0 0 350px;
+    -webkit-flex: 0 0 355px;
+    flex: 0 0 355px;
     padding: 10px 10px 75px 0;
     margin-top: -11px;
     position: fixed;
@@ -420,26 +626,26 @@ body {
     // border-left: 2px solid #cccad2;
     border-top: 1px solid #c8ced3;
     overflow: auto;
-    .name-label{
+    .name-label {
       font-weight: 600;
     }
-    .service-warp{
+    .service-warp {
       font-size: 16px;
       font-weight: 600;
       .grand-total {
         font-size: 18px;
         font-weight: 700;
-        .dollar-price{
+        .dollar-price {
           font-size: 18px;
         }
-        .fa.dollar-icon{
+        .fa.dollar-icon {
           font-size: 18px;
         }
       }
-      .dollar-price{
+      .dollar-price {
         font-size: 16px;
       }
-      .fa.dollar-icon{
+      .fa.dollar-icon {
         font-size: 14px;
       }
     }
@@ -454,15 +660,15 @@ body {
         min-width: 105px;
         background: #eee;
         color: #989797;
-        &.active{
+        &.active {
           background: #fff;
           color: #000;
         }
-        &:focus{
+        &:focus {
           box-shadow: none;
         }
       }
-      .authoris-dot{
+      .authoris-dot {
         display: inline-block;
         width: 10px;
         height: 10px;
@@ -471,34 +677,108 @@ body {
       }
     }
   }
-/*===========Order Summary========*/
-.summary-warp{
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 10px;
-  .service-warp{
-    .service-head{
-      font-size: 16px;
-      font-weight: 600;
-    }
-    .entity{
-      color: #707070;
-      font-size: 15px;
-    }
-    .order-total-block{
-      font-size: 14px;
-      font-weight: 600;
-      font-family: 'open sans';
-      .grand-total{
-        font-weight: 800;
-        font-size: 18px;
-        .dollar-price{
+  /*===========Order Summary========*/
+  .summary-warp {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    .service-warp {
+      .service-head {
+        font-size: 16px;
+        font-weight: 600;
+        .part-number {
+          font-size: 14px;
+          color: #9ba0a5;
+        }
+        .part-note {
+          font-size: 13px;
+          font-style: italic;
+          background: transparent;
+          border: 0;
+          display: block;
+          max-width: 75%;
+          color: #4c5558;
+          font-weight: 400;
+          margin-bottom: 5px;
+        }
+      }
+      .entity {
+        color: #4d515d;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .order-total-block {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "open sans";
+        .grand-total {
+          font-weight: 800;
           font-size: 18px;
-          .fa.dollar-icon{
+          .dollar-price {
             font-size: 18px;
+            .dollar-price {
+              font-size: 18px;
+              .fa.dollar-icon {
+                font-size: 18px;
+              }
+            }
           }
         }
       }
+    }
+    .fc td {
+      cursor: pointer;
+    }
+  }
+  .add-appointment-form {
+    .appointment-color-container {
+      margin: 10px 20px;
+      display: flex;
+      align-items: center;
+
+      .appointment-colors {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        float: left;
+        margin: 0 0.32em;
+        cursor: pointer;
+        position: relative;
+        &.selected {
+          i {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 20px;
+          }
+        }
+        &:hover {
+          transition: opacity 0.4s cubic-bezier(0.3, 1, 0.4, 1);
+          opacity: 0.6;
+        }
+      }
+    }
+    label {
+      min-width: 20% !important;
+    }
+    .phone-field {
+      label {
+        min-width: 41% !important;
+      }
+    }
+    .is-invalid {
+      .css-vj8t7z {
+        border: 1px solid #f86c6b !important;
+        padding: 0;
+      }
+    }
+  }
+  /* React Select Design  */
+  .css-11unzgr {
+    .css-1gl4k7y,
+    .css-wqgs6e {
+      padding: 0px 5px;
+      text-align: left;
     }
   }
 }

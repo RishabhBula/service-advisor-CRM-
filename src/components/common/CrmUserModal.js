@@ -42,12 +42,19 @@ export class CrmUserModal extends Component {
       phone: "",
       roleType: "5ca3473d70537232f13ff1f9",
       rate: "",
+      companyName:"",
       permissions: AdminDefaultPermissions,
       errors: {},
       isEditMode: false
     };
   }
+  componentDidMount =() =>{
+    this.setState({
+      companyName: this.props.companyName
+    })
+  }
   componentDidUpdate({ userModalOpen, userData }) {
+    
     if (
       this.props.userModalOpen !== userModalOpen &&
       !this.props.userModalOpen
@@ -73,6 +80,7 @@ export class CrmUserModal extends Component {
         lastName,
         email,
         phone,
+        companyName,
         rate,
         permissions
       } = this.props.userData;
@@ -81,12 +89,15 @@ export class CrmUserModal extends Component {
         firstName,
         lastName,
         email,
+        companyName,
         phone: phone || "",
         roleType: this.props.userData.roleType ? this.props.userData.roleType._id : "",
         rate: rate || "",
         permissions
       });
+
     }
+    
   }
   handleClick = e => {
     this.setState({
@@ -137,14 +148,17 @@ export class CrmUserModal extends Component {
         roleType,
         rate,
         permissions,
+        companyName,
         isEditMode
       } = this.state;
+      // const companyName = this.props.companyName
       const payload = {
         firstName,
         lastName,
         email,
         phone,
         roleType,
+        companyName,
         rate: rate
           ? parseFloat(rate.toString().replace(/[$,\s]/g, "")).toFixed(2)
           : "0",
@@ -164,6 +178,7 @@ export class CrmUserModal extends Component {
       if (!isEditMode) {
         this.props.addUser(payload);
       } else {
+        console.log(payload, " for edit")
         this.props.updateUser(this.props.userData._id, payload);
       }
     } catch (error) {
@@ -171,7 +186,7 @@ export class CrmUserModal extends Component {
     }
   };
   render() {
-    const { userModalOpen, handleUserModal, userData } = this.props;
+    const { userModalOpen, handleUserModal, userData} = this.props;
     const {
       permissions,
       firstName,
@@ -183,7 +198,7 @@ export class CrmUserModal extends Component {
       errors,
       isEditMode
     } = this.state;
-    logger(this.state, "!!!!!!!!This state!!!!!!!!")
+  
     return (
       <>
         <Form onSubmit={this.addUser}>
@@ -385,7 +400,7 @@ export class CrmUserModal extends Component {
               </Row>
             </ModalBody>
             <ModalFooter>
-              <div class="required-fields">*Fields are Required.</div>
+              <div className="required-fields">*Fields are Required.</div>
               <Button color="primary" onClick={this.addUser}>
                 {isEditMode ? "Update" : "Add"} Member
               </Button>{" "}

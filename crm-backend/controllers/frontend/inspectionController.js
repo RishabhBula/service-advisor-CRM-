@@ -2,7 +2,6 @@ const Inspection = require("../../models/inspection");
 const commonValidation = require("../../common");
 const mongoose = require("mongoose");
 const { validationResult } = require("express-validator/check");
-var pdf = require('html-pdf');
 
 /* get order number */
 const creteNewInspection = async (req, res) => {

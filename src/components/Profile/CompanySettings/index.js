@@ -6,7 +6,8 @@ import {
   FormGroup,
   FormFeedback,
   Button,
-  Label
+  Label,
+  UncontrolledTooltip
 } from "reactstrap";
 import { logger } from "../../../helpers/Logger";
 import Validator from "js-object-validation";
@@ -14,11 +15,17 @@ import { ProfileValidations, ProfileValidationsMessaages } from "../../../valida
 import { allServices, allVehicleServices, allPeopleArray } from "../../../config/Constants"
 import classnames from "classnames";
 import { isValidURL } from "../../../helpers/Object";
+import Dropzone from "react-dropzone";
+
+import Cropper from "react-easy-crop";
 
 class CompanySettings extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      crop: { x: 0, y: 0 },
+      zoom: 1,
+      aspect: 4 / 3,
       errors: "",
       firstName: "",
       lastName: "",
@@ -27,6 +34,7 @@ class CompanySettings extends Component {
       address: "",
       companyName: "",
       companyNumber: "",
+      shopLogo : "",
       vatNumber: "",
       website: "",
       currency: "",
@@ -43,7 +51,8 @@ class CompanySettings extends Component {
         selectedVehicleServices: [],
         allVehicleServices
       },
-      validErrors: {}
+      validErrors: {},
+      permissions:''
     };
   }
 
@@ -56,6 +65,7 @@ class CompanySettings extends Component {
         phoneNumber,
         address,
         currency,
+        shopLogo,
         companyName,
         companyNumber,
         vatNumber,
@@ -68,6 +78,7 @@ class CompanySettings extends Component {
         email,
         phoneNumber,
         address,
+        shopLogo,
         companyName,
         companyNumber,
         vatNumber,
@@ -98,6 +109,7 @@ class CompanySettings extends Component {
         phoneNumber,
         address,
         currency,
+        shopLogo,
         companyName,
         companyNumber,
         vatNumber,
@@ -112,6 +124,7 @@ class CompanySettings extends Component {
         phoneNumber,
         address,
         currency,
+        shopLogo,
         companyName,
         companyNumber,
         vatNumber,
@@ -132,6 +145,13 @@ class CompanySettings extends Component {
       })
     }
   }
+  onCropChange = crop => {
+    this.setState({ crop });
+  };
+
+  onZoomChange = zoom => {
+    this.setState({ zoom });
+  };
 
   handleInputChange = e => {
     const { target } = e;
@@ -144,6 +164,25 @@ class CompanySettings extends Component {
       }
     });
 
+  };
+
+  onSelectFile = e => {
+    var reader = new FileReader();
+    const scope = this;
+    reader.addEventListener("load", () =>
+      scope.setState({
+        shopLogo: reader.result
+      })
+    );
+    reader.onloadend = function (as) {
+      var image = new Image();
+      image.onload = function () {
+        scope.setState({
+          shopLogo: reader.result
+        });
+      };
+    };
+    reader.readAsDataURL(e[0]);
   };
 
   serviceOfferAction = event => {
@@ -227,6 +266,7 @@ class CompanySettings extends Component {
         companyName,
         vatNumber,
         companyNumber,
+        shopLogo,
         website,
         vehicleService: {
           selectedVehicleServices
@@ -276,6 +316,7 @@ class CompanySettings extends Component {
       const payload = {
         companyName,
         companyNumber,
+        shopLogo,
         vatNumber,
         website,
         vehicleService: vehicleServicesOfferTemp,
@@ -308,8 +349,8 @@ class CompanySettings extends Component {
 
 
   render() {
-    const { errors, validErrors, urlError, website, companyName, companyNumber, vatNumber, peopleWork, servicesOffer, vehicleService } = this.state;
-
+    const { errors, validErrors, urlError, website, companyName, companyNumber,shopLogo ,vatNumber, peopleWork, servicesOffer, vehicleService } = this.state;
+    
     return (
       <div>
         <h3 className={"pb-3"}>Company Profile</h3>
@@ -404,7 +445,92 @@ class CompanySettings extends Component {
               </Col>
                 </Row>
               </Col>
-              <Col lg={5} md={"5"}></Col>
+              <Col lg={5} md={"5"}>
+                {shopLogo === "" ? (
+                  <Dropzone onDrop={this.onSelectFile}>
+                    {({ getRootProps, getInputProps, isDragActive }) => {
+                      return (
+                        <div className="welcome-image-select-background">
+                          <div className="text-center" {...getRootProps()}>
+                            <input
+                              {...getInputProps()}
+                              accept="image/png, image/jpeg"
+                            />
+                            {
+                              <>
+                                <i className="far fa-file-image welcome-image-icon" />
+                                <div className="text-center welcome-image-text">
+                                  Shop Logo
+                                      <br />
+                                  Drag image here or click to add
+                                    </div>
+                              </>
+                            }
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </Dropzone>
+                ) : null}
+                {shopLogo !== "" ? (
+                  <div>
+                    <div className="welcome-image-uploaded select-background welcome-image-parnet">
+                      <div className="welcome-image-upload">
+                        <Cropper
+                          image={this.state.shopLogo}
+                          crop={this.state.crop}
+                          aspect={this.state.aspect}
+                          onCropChange={this.onCropChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="cropper-controls">
+                      <Row className={"m-0"}>
+                        <Col
+                          md="12"
+                          className="welcome-slider-left text-center"
+                        >
+                          {/* <Slider
+                                className=""
+                                value={this.state.zoom}
+                                min={1}
+                                max={3}
+                                step={0.1}
+                                aria-labelledby="Zoom"
+                                onChange={(e, zoom) => this.onZoomChange(zoom)}
+                              /> */}
+
+                          {/* <Button
+                                color="primary"
+                                className="btn-sm mr-1"
+                                type={"button"}
+                                onClick={this.saveLogo}
+                              >
+                                Save Logo
+                              </Button> */}
+
+                          <Button
+                            color="danger"
+                            className="btn-sm"
+                            type={"button"}
+                            id="Tooltip-1"
+                            onClick={() => {
+                              this.setState({
+                                shopLogo: ""
+                              });
+                            }}
+                          >
+                            <i className="cui-trash icons" />
+                          </Button>
+                          <UncontrolledTooltip target="Tooltip-1">
+                            Remove
+                          </UncontrolledTooltip>
+                        </Col>
+                      </Row>
+                    </div>
+                  </div>
+                ) : null}
+              </Col>
             </Row>
 
             <Row>

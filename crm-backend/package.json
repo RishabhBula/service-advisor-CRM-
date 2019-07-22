@@ -25,6 +25,8 @@
     "node-cron": "^2.0.3",
     "nodemailer": "^6.0.0",
     "normalize-email": "^1.1.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "stripe": "^7.4.0",
+    "twilio": "^3.33.1"
   }
 }

@@ -77,7 +77,6 @@ const addServiceLogic = createLogic({
 const getCannedServiceLogic = createLogic({
    type: serviceActions.GET_CANNED_SERVICE_LIST,
    async process({ action }, dispatch, done) {
-      logger(action.payload);
       let api = new ApiHelper();
       let result = await api.FetchFromServer(
          "/service",
@@ -86,6 +85,7 @@ const getCannedServiceLogic = createLogic({
          true,
          {
             search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+            serviceId: action.payload && action.payload.serviceId ? action.payload.serviceId : null,
          }
       );
       if (result.isError) {
@@ -114,7 +114,67 @@ const getCannedServiceLogic = createLogic({
    }
 })
 
+const addCannedServiceLogic = createLogic({
+   type: serviceActions.ADD_CANNED_SERVICE,
+   async process({ action }, dispatch, done) {
+      dispatch(showLoader());
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/service",
+         "/addCanned",
+         "POST",
+         true,
+         undefined,
+         action.payload
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         dispatch(hideLoader());
+         done();
+         return;
+      } else {
+         if (result.messages[0] !== '') {
+            toast.success(result.messages[0]);
+         }
+         dispatch(getCannedServiceList())
+         dispatch(hideLoader());
+         done();
+      }
+   }
+});
+
+const deleteCannedServiceLogic = createLogic({
+   type: serviceActions.DELETE_CANNED_SERVICE_REQUEST,
+   async process({ action }, dispatch, done) {
+      dispatch(showLoader());
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/service",
+         "/updateCanned",
+         "PUT",
+         true,
+         undefined,
+         action.payload
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         dispatch(hideLoader());
+         done();
+         return;
+      } else {
+         toast.success(result.messages[0]);
+         dispatch(getCannedServiceList())
+         dispatch(hideLoader());
+         done();
+      }
+   }
+});
+
 export const ServiceLogic = [
    addServiceLogic,
-   getCannedServiceLogic
+   getCannedServiceLogic,
+   addCannedServiceLogic,
+   deleteCannedServiceLogic
 ];

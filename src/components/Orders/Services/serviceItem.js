@@ -10,7 +10,8 @@ import {
   PopoverHeader,
   PopoverBody,
   FormFeedback,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound";
 import CrmDiscountBtn from "../../common/CrmDiscountBtn";
@@ -22,6 +23,7 @@ import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import recommandUser from "../../../assets/recommand-user.png"
 import recommandTech from "../../../assets/recommand-tech.png"
+import Dollor from "../../common/Dollor"
 
 class ServiceItem extends Component {
   constructor(props) {
@@ -283,8 +285,6 @@ class ServiceItem extends Component {
   };
   handleTechnicianAdd = (e, index) => {
     if (e && e.value) {
-      console.log("$$$$$$$$$$$$$$$$$$", e);
-      
       const serviceData = [...this.state.services]
       serviceData[index].technician = e.data
       this.setState({
@@ -572,7 +572,7 @@ class ServiceItem extends Component {
         thisIsCannedService: true
       }
 
-      this.props.addNewService(payload)
+      this.props.addNewCannedService(payload)
     }
     this.setState({
       isServiceSubmitted: true,
@@ -625,7 +625,7 @@ class ServiceItem extends Component {
   render() {
     const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
-    const { labelReducer, getCannedServiceList, serviceReducers } = this.props;
+    const { labelReducer, getCannedServiceList, serviceReducers,deleteCannedServiceRequest } = this.props;
     return (
       <>
         <div className={"w-100"}>
@@ -661,6 +661,7 @@ class ServiceItem extends Component {
                 "label":item.technician?`${item.technician.firstName} ${item.technician.lastName}`:"type to select technician",
                 "value": item.technician? item.technician._id: ""
               }
+             
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
@@ -685,17 +686,42 @@ class ServiceItem extends Component {
                           <div className={((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue" : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue"} id={`tech${index}`}>
                             <img className={""} src={"../../assets/img/expert.svg"} width={"30"} alt={"technician"} />
                           </div>
-                          <UncontrolledTooltip placement="top" target={`tech${index}`}>
-                            {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "Assign a technician" : "Update technician"}
+                          {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ?<UncontrolledTooltip placement="top" target={`tech${index}`}>
+                             Assign a technician
                           </UncontrolledTooltip>
+                            : 
+                            <UncontrolledPopover className={"technician-popover"} placement="top" target={`tech${index}`} trigger={"hover"} >
+                            <PopoverHeader>Technician Details</PopoverHeader>
+                            <PopoverBody>
+                                <div className={"technician-detail"}>
+                                  <div className={"text-capitalize pb-1 border-bottom"}>{item.technician.firstName} {item.technician.lastName}</div>
+                                <div className={"pt-1 pb-1"}>Rate/hour: <Dollor value={item.technician.rate}/> </div>
+                                  <div className={"pt-1 text-note"}>Click below to update Technician </div>
+                              </div>
+                            </PopoverBody>
+                          </UncontrolledPopover >
+                          }
                           <div className={
                             item.note ? "pb-1 cursor_pointer isValue" : "pb-1 cursor_pointer notValue"
                           } id={`note${index}`}>
-                            <img className={""} src={"../../assets/img/writing.svg"} width={"30"} alt={"Notes"} />
+                            <img className={""} src={"../../assets/img/writing .svg"} width={"30"} alt={"Notes"} />
                           </div>
-                          <UncontrolledTooltip placement="top" target={`note${index}`}>
-                            {item.note ? "Update note" : "Add a note"}
-                          </UncontrolledTooltip>
+                          {item.note ? 
+                            <UncontrolledPopover className={"technician-popover"} placement="top" target={`note${index}`} trigger={"hover"} >
+                              <PopoverHeader>Note Details</PopoverHeader>
+                              <PopoverBody>
+                                <div className={"technician-detail"}>
+                                  <div className={"text-capitalize pb-1 border-bottom"}>{item.note} </div>
+                                  <div className={"pt-1 text-note"}>Click below to update note </div>
+                                </div>
+                              </PopoverBody>
+                            </UncontrolledPopover >
+                            : 
+                            <UncontrolledTooltip placement="top" target={`note${index}`}>
+                              Add note
+                            </UncontrolledTooltip>
+                          }
+
                           <UncontrolledPopover trigger="legacy" placement="bottom" target={`tech${index}`} className={"service-note-popover"}>
                             <Async
                               className={"w-100 form-select"}
@@ -752,7 +778,7 @@ class ServiceItem extends Component {
                                 tax = calculateValues(serviceTotalArray || 0, item.taxes.value || 0, item.taxes.type);
                                 serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
                                 return (
-                                  <tr>
+                                  <tr key={sIndex}>
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
                                     <td>
                                       {
@@ -1092,6 +1118,7 @@ class ServiceItem extends Component {
             getCannedServiceList={getCannedServiceList}
             serviceReducers={serviceReducers}
             handleAddToService={this.handleCannedAddToService}
+            deleteCannedServiceRequest={deleteCannedServiceRequest}
             {...this.props}
           />
         </div>

@@ -63,6 +63,7 @@ const getAllVehicleList = async (req, res) => {
     const page = parseInt(query.page) || 1;
     const offset = page < 1 ? 0 : (page - 1) * limit;
     const searchValue = query.search;
+    const vehicleId = query.vehicleId
     const sort = query.sort;
     const status = query.status;
     let sortBy = {};
@@ -144,6 +145,11 @@ const getAllVehicleList = async (req, res) => {
 
     if (typeof status !== "undefined") {
       condition["$and"].push({ status: status });
+    }
+    if (vehicleId) {
+      condition["$and"].push({
+        _id: mongoose.Types.ObjectId(vehicleId) 
+      });
     }
     const getAllVehicle = await vehicleModal
       .aggregate([

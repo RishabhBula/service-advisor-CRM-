@@ -10,6 +10,8 @@ const initialState = {
   },
   orderStatus: [],
   orderItems: [],
+  customerOrders: [],
+  vehicleOrders: [],
   data: [],
   isOrderLoading: true
 };
@@ -53,6 +55,8 @@ export const orderReducer = handleActions(
       ...state,
       orderItems: payload.order,
       orderId: payload.orderId,
+      customerOrders: payload.customerOrders,
+      vehicleOrders: payload.vehicleOrders,
       isOrderLoading: false
     })
   },

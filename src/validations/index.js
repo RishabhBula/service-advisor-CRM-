@@ -12,3 +12,4 @@ export * from "./priceMatrix";
 export * from "./orderStatus";
 export * from "./inspection";
 export * from "./profile";
+export * from "./appointment";

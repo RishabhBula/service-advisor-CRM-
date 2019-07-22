@@ -195,31 +195,37 @@ class Services extends Component {
       getCannedServiceList,
       orderId,
       deleteLabel,
-      orderReducer
+      orderReducer,
+      addNewCannedService,
+      deleteCannedServiceRequest
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
       <>
         <div className={"d-flex justify-content-between pb-4"}>
-          <ServiceItem
-            servicesData={servicesData}
-            handleRemoveService={this.handleRemoveService}
-            handleServiceModal={this.handleServiceModal}
-            modelOperate={modelOperate}
-            modelDetails={modelDetails}
-            serviceReducers={serviceReducers}
-            getUserData={getUserData}
-            handleSeviceAdd={this.handleSeviceAdd}
-            addPartToService={addPartToService}
-            labelReducer={labelReducer}
-            addNewLabel={addNewLabel}
-            addNewService={addNewService}
-            getCannedServiceList={getCannedServiceList}
-            orderId={orderId}
-            deleteLabel={deleteLabel}
-            orderReducer={orderReducer}
-            {...this.props}
-          />
+          <React.Fragment>
+            <ServiceItem
+              servicesData={servicesData}
+              handleRemoveService={this.handleRemoveService}
+              handleServiceModal={this.handleServiceModal}
+              modelOperate={modelOperate}
+              modelDetails={modelDetails}
+              serviceReducers={serviceReducers}
+              getUserData={getUserData}
+              handleSeviceAdd={this.handleSeviceAdd}
+              addPartToService={addPartToService}
+              labelReducer={labelReducer}
+              addNewLabel={addNewLabel}
+              addNewService={addNewService}
+              getCannedServiceList={getCannedServiceList}
+              orderId={orderId}
+              deleteLabel={deleteLabel}
+              orderReducer={orderReducer}
+              addNewCannedService={addNewCannedService}
+              deleteCannedServiceRequest={deleteCannedServiceRequest}
+              {...this.props}
+            />
+          </React.Fragment>
         </div>
         {selectedService ? this.handleOpenModal() : null}
       </>

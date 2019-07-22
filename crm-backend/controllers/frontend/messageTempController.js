@@ -1,6 +1,9 @@
 const MessageTemplate = require("../../models/messageTemplate");
 const mongoose = require("mongoose");
 const { Email, AvailiableTemplates } = require("../../common/Email");
+const fs = require("fs");
+const path = require("path");
+const __basedir = path.join(__dirname, "../../public");
 
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
@@ -200,14 +203,27 @@ const deleteMessageTemplate = async (req, res) => {
 const sendMailToCustomer = async (req, res) => {
    const { body } = req;
    try {
+
+      // var buf = new Buffer.from(body.pdf, "base64");
       const emailVar = new Email(body);
       await emailVar.setSubject("[Service Advisor]" + body.subject + " - Inspection Details");
+      await emailVar.setAttachements([
+         {
+            fileName: `Inspection for ${body.orderTitle || 'Unnamed Order'}`,
+            path: body.pdf
+         }
+      ])
       await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
          body: body.message,
+         createdAt: createdAt,
+         orderTitle: body.orderTitle,
+         subDomain: body.subdomain,
+         titleMessage: "You got an nspection for",
+         displayStyle: `style="text-align:center; display: none";`
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({
-         message: "Inspection details send to customer successfully!",
+         message: "Mail send successfully!",
          success: true
       })
    } catch (error) {

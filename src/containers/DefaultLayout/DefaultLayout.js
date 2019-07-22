@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { Container } from "reactstrap";
+import { Container, UncontrolledTooltip } from "reactstrap";
 import { Redirect, Route, Switch } from "react-router-dom";
 import React, { Component, Suspense } from "react";
 
@@ -16,6 +16,7 @@ import {
 import routes, { BreadCrumbRoutes } from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
 import Loader from "./../Loader/Loader";
+import Avtar from "../../components/common/Avtar" 
 import {
   AppAside,
   AppBreadcrumb,
@@ -45,7 +46,9 @@ class DefaultLayout extends Component {
     this.state = {
       hasAccess: true,
       isCustVehiclemodal: false,
-      isURLChecked: false
+      isURLChecked: false,
+      shopLogo: "",
+      parentId : ''
     };
   }
 
@@ -56,9 +59,9 @@ class DefaultLayout extends Component {
       this.props.profileInfoAction();
     }
   }
-  componentDidUpdate({ location }) {
-    const { profileInfoReducer, location: newLocation } = this.props;
-    const { profileInfo } = profileInfoReducer;
+  componentDidUpdate({ location, profileInfoReducer }) {
+    const { location: newLocation } = this.props;
+    const { profileInfo } = this.props.profileInfoReducer;
     const { isURLChecked } = this.state;
     if (
       (location.pathname !== newLocation.pathname || !isURLChecked) &&
@@ -67,7 +70,7 @@ class DefaultLayout extends Component {
       newLocation.pathname !== AppRoutes.HOME.url
     ) {
       let currentPage = this.props.location.pathname;
-      if (WildCardRoutes.indexOf(currentPage) === -1) {
+      // if (WildCardRoutes.indexOf(currentPage) === -1) {
         let currentPageArr = currentPage.split("/");
         let inde = [];
         currentPageArr.forEach((value, index) => {
@@ -82,8 +85,9 @@ class DefaultLayout extends Component {
         const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
 
         logger(ind, currentPage, location);
-        if (ind > -1) {
-          if (profileInfo.permissions[ValidatedRoutes[ind].authKey]) {
+      const isWildCardRoute = WildCardRoutes.indexOf(currentPage) > -1
+      if (ind > -1 || isWildCardRoute) {
+        if (profileInfo.permissions[ValidatedRoutes[ind].authKey] || isWildCardRoute) {
             logger("Allowed to use");
             this.setState({
               hasAccess: true
@@ -99,11 +103,22 @@ class DefaultLayout extends Component {
             hasAccess: false
           });
         }
-      } else {
-        this.signOut();
-      }
+      // } else {
+      //   this.signOut();
+      // }
       this.setState({ isURLChecked: true });
     }
+    
+    if (
+      profileInfoReducer.profileInfo !==
+      this.props.profileInfoReducer.profileInfo
+    ) {
+      this.setState({
+        shopLogo: this.props.profileInfoReducer.profileInfo.shopLogo,
+        parentId: this.props.profileInfoReducer.profileInfo.parentId
+      })
+    }
+    
   }
   signOut() {
     this.props.logoutUser();
@@ -167,8 +182,10 @@ class DefaultLayout extends Component {
   render() {
     const { profileInfoReducer } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
-    const { permissions, shopLogo } = profileInfo;
-    const { hasAccess } = this.state;
+    const { permissions } = profileInfo;
+    const { hasAccess, shopLogo } = this.state;
+    const parentId = profileInfoReducer.profileInfo.parentId || ''
+    const providerCompanyName = profileInfoReducer.profileInfo.companyName || parentId.companyName;
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -186,14 +203,51 @@ class DefaultLayout extends Component {
         </AppHeader>
         <div className="app-body">
           <AppSidebar className="custom-sidebar" fixed display="lg">
+              {shopLogo || parentId.shopLogo ? (
+              <div
+                className={"provider-logo"}
+                  style={{ backgroundImage: `url(${shopLogo || parentId.shopLogo})` }}
+              />
+            ) : (
+              <div className={"provider-logo company-name"} id={"comapnyName"}>
+                <Avtar value={providerCompanyName} class={"name"} />
+                <UncontrolledTooltip target={"comapnyName"}>
+                  {profileInfo.companyName}
+                </UncontrolledTooltip>
+              </div>
+            )}
+            <div className={"company-logo"}>{providerCompanyName}</div>
+            {/* <AppNavbarBrand
+                full={{
+                  src: shopLogo || "/assets/img/logo-white.svg",
+                  alt: "Service Adviser",
+                }}
+                minimized={{
+                  src: shopLogo || "/assets/img/logo-white.svg",
+                  width: 50,
+                  height: 50,
+                  alt: "Service Adviser"
+                }}
+              /> */}
+
             <AppSidebarHeader />
             <AppSidebarForm />
+
             <Suspense>
               <AppSidebarNav
                 navConfig={this.navigation(permissions || {})}
                 {...this.props}
               />
             </Suspense>
+            <div className={"text-center nav-footer-logo"}>
+              <img
+                src={"../../assets/img/logo-white.svg"}
+                alt={"service-advisor"}
+                width={70}
+              />
+              <div>Service Adviser</div>
+              {/* <span className={"powered-by-line"}>Powered by</span> */}
+            </div>
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>

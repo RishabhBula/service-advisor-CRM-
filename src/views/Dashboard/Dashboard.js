@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Card, CardBody, Col, Row } from "reactstrap";
-
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
+import { getSubscriptionPlanRequest, addSubscriptionRequest } from "../../actions"
 //Random Numbers
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -22,8 +25,19 @@ class Dashboard extends Component {
     super(props);
     this.state = {};
   }
-
+  componentDidMount = () => {
+    // const { modelInfoReducer, modelOperate } = this.props
+    // const { modelDetails } = modelInfoReducer;
+    // const { openSubscriptionModel } = modelDetails
+    // modelOperate({
+    //   openSubscriptionModel: !openSubscriptionModel
+    // })
+  }
+          
   render() {
+    const { modelInfoReducer, modelOperate, getSubscriptionPlanRequest, subscriptionReducer, addSubscriptionRequest } = this.props
+    const { modelDetails } = modelInfoReducer;
+    const { openSubscriptionModel, openSubPayementModel } = modelDetails
     return (
       <div className="animated fadeIn">
         <Row>
@@ -40,9 +54,32 @@ class Dashboard extends Component {
             </Card>
           </Col>
         </Row>
+        <CrmSubscriptionModel
+          openSubscriptionModel={openSubscriptionModel}
+          modelOperate={modelOperate}
+          openSubPayementModel={openSubPayementModel}
+          getSubscriptionPlanRequest={getSubscriptionPlanRequest}
+          subscriptionReducer={subscriptionReducer}
+          addSubscriptionRequest={addSubscriptionRequest}
+        />
       </div>
     );
   }
 }
+const mapStateToProps = state => ({
+  modelInfoReducer: state.modelInfoReducer,
+  subscriptionReducer: state.subscriptionReducer,
 
-export default Dashboard;
+});
+const mapDispatchToProps = dispatch => ({
+  getSubscriptionPlanRequest: () => {
+    dispatch(getSubscriptionPlanRequest())
+  },
+  addSubscriptionRequest: (data) =>{
+    dispatch( addSubscriptionRequest(data))
+  }
+})
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Dashboard));

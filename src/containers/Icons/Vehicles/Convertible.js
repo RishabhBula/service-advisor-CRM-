@@ -9,7 +9,7 @@ const Convertible = props => (
       xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="470.754px"
+      width={props.size||"470.754px"}
       height="143.573px"
       viewBox="0 0 470.754 143.573"
       enable-background="new 0 0 470.754 143.573"

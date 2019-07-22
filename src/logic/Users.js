@@ -26,11 +26,20 @@ const getUsersLogic = createLogic({
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer("/user", "/", "GET", true, {
-      search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
+      search:
+        action.payload && action.payload.input
+          ? action.payload.input
+          : action.payload && action.payload.search
+          ? action.payload.search
+          : null,
       sort: action.payload && action.payload.sort ? action.payload.sort : null,
-      status: action.payload && action.payload.status ? action.payload.status : null,
+      status:
+        action.payload && action.payload.status ? action.payload.status : null,
       type: action.payload && action.payload.type ? action.payload.type : null,
-      invitaionStatus: action.payload && action.payload.invitaionStatus ? action.payload.invitaionStatus : null,
+      invitaionStatus:
+        action.payload && action.payload.invitaionStatus
+          ? action.payload.invitaionStatus
+          : null,
       limit: AppConfig.ITEMS_PER_PAGE
     });
     if (result.isError) {
@@ -48,7 +57,11 @@ const getUsersLogic = createLogic({
         value: user._id,
         data: user
       }));
-      logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
+      logger(
+        action.payload && action.payload.callback
+          ? action.payload.callback(options)
+          : null
+      );
       dispatch(hideLoader());
       dispatch(
         getUsersListSuccess({
@@ -126,7 +139,7 @@ const editUsersLogic = createLogic({
         })
       );
       dispatch(hideLoader());
-      dispatch(editUserSuccess())
+      dispatch(editUserSuccess());
       done();
     }
   }

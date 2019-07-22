@@ -3,6 +3,7 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
+import NoDataFound from "../../common/NoFound";
 import moment from "moment";
 class Notes extends Component {
   constructor(props) {
@@ -35,7 +36,8 @@ class Notes extends Component {
     }
     const payload = {
       messageId: id,
-      isDeleted: true
+      isDeleted: true,
+      orderId: this.props.orderId
     }
     this.props.deleteNotes(payload)
   }
@@ -47,68 +49,115 @@ class Notes extends Component {
 
   render() {
     const { messages } = this.props;
+    let notes = messages.filter(value => !value.isDeleted)
+    notes = notes.filter(value => value.isInternalNotes)
     return (
       <>
         <div className={"message-list mt-5"}>
-          {messages && messages.length ? messages.map((ele, Index) => {
-            return (
-              ele && ele !== null && ele.isInternalNotes && !ele.isDeleted?
-                <div className={ele.senderId === ele.userId && ele.isSender ? "message-tile d-flex flex-row-reverse send mb-3" : "message-tile d-flex flex-row  recive mb-4"} key={Index}>
-                  <span className={"text-danger cursor_pointer ml-2 delete-icon"} onClick={(e) => this.deleteNote(ele._id)} id={`Id-${Index}`}><i className="fa fa-trash"></i></span>
+          { notes && notes.length ? notes.map((ele, Index) => {
+              return(
+                <div
+                  className={
+                    ele.senderId === ele.userId && ele.isSender
+                      ? "message-tile d-flex flex-row-reverse send mb-3"
+                      : "message-tile d-flex flex-row  recive mb-4"
+                  }
+                  key={Index}
+                >
+                  <span
+                    className={
+                      "text-danger cursor_pointer ml-2 delete-icon"
+                    }
+                    onClick={e => this.deleteNote(ele._id)}
+                    id={`Id-${Index}`}
+                  >
+                    <i className="fa fa-trash" />
+                  </span>
                   <UncontrolledTooltip target={`Id-${Index}`}>
                     Delete this note
                   </UncontrolledTooltip>
                   <div className={"user-name"} id={`userId-${Index}`}>
-                    <span>
-                      {
-                        this.props.companyName.slice(0, 1)
-                      }
-                    </span>
+                    <span>{this.props.companyName.slice(0, 1)}</span>
                   </div>
 
                   <div className={"flex-1"}>
-                  <span className={"sent-date"}>{moment(ele.createdAt || '').format("MMM Do YYYY LT")}</span>
+                    <span className={"sent-date"}>
+                      {moment(ele.createdAt || "").format("MMM Do YYYY LT")}
+                    </span>
                     <div className={"message-input-block border p-1"}>
                       <p
                         className={"message-input"}
-                        id={'messageDataText'}
-                        dangerouslySetInnerHTML={{ __html: ele ? ele.messageData : '' }}
-                      >
-                      </p>
-                      {ele.messageAttachment && ele.messageAttachment.itemImagePreview.length ?
+                        id={"messageDataText"}
+                        dangerouslySetInnerHTML={{
+                          __html: ele ? ele.messageData : ""
+                        }}
+                      />
+                      {ele.messageAttachment &&
+                      ele.messageAttachment.itemImagePreview.length ? (
                         <ul className={"attachment-preview-group  p-1"}>
-                          {ele.messageAttachment ? ele.messageAttachment.itemImagePreview.map((imgele, index, ) => {
-                            const type = imgele.dataURL.split(';')[0].split('/')[1];
-                            return (
-                              <li key={index}>
-                                {type === 'pdf' ?
-                                  <span className={"pdf-img"} onClick={(filename) => this.viewFile(imgele.dataURL, type)}>
-                                    <i className={"fa fa-file-pdf-o"}></i>
-                                    <span className={"file-name"}>{imgele.name}</span>
-                                  </span>
-                                  :
-                                  <span className={"img-block"} onClick={(filename) => this.viewFile(imgele.dataURL, type)}>
-                                    <img src={imgele.dataURL} alt={imgele.dataURL} />
-                                  </span>
+                          {ele.messageAttachment
+                            ? ele.messageAttachment.itemImagePreview.map(
+                                (imgele, index) => {
+                                  const type = imgele.dataURL
+                                    .split(";")[0]
+                                    .split("/")[1];
+                                  return (
+                                    <li key={index}>
+                                      {type === "pdf" ? (
+                                        <span
+                                          className={"pdf-img"}
+                                          onClick={filename =>
+                                            this.viewFile(
+                                              imgele.dataURL,
+                                              type
+                                            )
+                                          }
+                                        >
+                                          <i
+                                            className={"fa fa-file-pdf-o"}
+                                          />
+                                          <span className={"file-name"}>
+                                            {imgele.name}
+                                          </span>
+                                        </span>
+                                      ) : (
+                                        <span
+                                          className={"img-block"}
+                                          onClick={filename =>
+                                            this.viewFile(
+                                              imgele.dataURL,
+                                              type
+                                            )
+                                          }
+                                        >
+                                          <img
+                                            src={imgele.dataURL}
+                                            alt={imgele.dataURL}
+                                          />
+                                        </span>
+                                      )}
+                                    </li>
+                                  );
                                 }
-                              </li>
-                            )
-                          }) : ''
-                          }
-                        </ul> : ''
-                      }
-                      <div className="clearfix"></div>
+                              )
+                            : ""}
+                        </ul>
+                      ) : (
+                        ""
+                      )}
+                      <div className="clearfix" />
                     </div>
-
                   </div>
                 </div>
-                : ""
-            )
-          })
-            : null}
+              )
+          }) : 
+          <div className={"text-center"}>
+            <NoDataFound message={"No any note added yet!"}/>
+          </div>
+          }
+          
         </div>
-  </>
-
+      </>
     );
   }
 }

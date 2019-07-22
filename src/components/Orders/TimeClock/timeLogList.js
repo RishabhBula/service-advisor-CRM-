@@ -17,6 +17,7 @@ import moment from "moment";
 import { CrmTimeClockModal } from "../../common/CrmTimeClockModel";
 import { calculateDurationFromSeconds } from "../../../helpers/Sum"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
+import Dollor from "../../common/Dollor"
 
 class TimeLogList extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class TimeLogList extends Component {
     });
   };
 
-  handleTimeLogdelete = async (timeLogId) => {
+  handleTimeLogdelete = async (timeLogId, orderId) => {
     const { value } = await ConfirmBox({
       text: "You want to delete this time log?"
     });
@@ -48,6 +49,7 @@ class TimeLogList extends Component {
     }
     const paylod = {
       isDeleted: true,
+      orderId: orderId,
       _id: timeLogId
     }
     this.props.editTimeLogRequest(paylod)
@@ -135,19 +137,19 @@ class TimeLogList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive >
+        <Table responsive className={"time-log-table"}>
           <thead>
             <tr>
               <th width='50px'>S No.</th>
-              <th width={"60px"}>Type</th>
-              <th width={"120px"}><i className="fa fa-user"></i> Technician</th>
-              <th>Vehicle</th>
+              <th width={"80px"}>Type</th>
+              <th width={"150px"}><i className="fa fa-user"></i> Technician</th>
+              {/* <th>Vehicle</th> */}
               <th> Start Date Time</th>
               <th> End Date Time</th>
               <th> Duration</th>
-              <th>Activity</th>
-              <th>Tech Rate</th>
-              <th width={"90"}>Total</th>
+              {/* <th>Activity</th> */}
+              <th width={"80"}>Tech Rate</th>
+              <th width={"80"}>Total</th>
               <th width={"90"} className={"text-center"}>Action</th>
             </tr>
           </thead>
@@ -157,15 +159,15 @@ class TimeLogList extends Component {
                 return (
                   <tr key={index}>
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
-                    <td>{timeLog.type}</td>
-                    <td>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
-                    <td>{timeLog.orderId && timeLog.orderId.vehicleId ? `${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}` : "-"}</td>
+                    <td className={"text-capitalize"}>{timeLog.type}</td>
+                    <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
+                    {/* <td>{timeLog.orderId && timeLog.orderId.vehicleId ? `${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}` : "-"}</td> */}
                     <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
                     <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
-                    <td>{timeLog.activity}</td>
-                    <td>{`$ ${timeLog.technicianId.rate}`}</td>
-                    <td>{`$ ${parseFloat(timeLog.total).toFixed(2)}`}</td>
+                    {/* <td>{timeLog.activity}</td>  */}
+                    <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
+                    <td><Dollor value={`${parseFloat(timeLog.total).toFixed(2)}`} /></td>
                     <td className={"text-center"}>
                       <Button
                         size={"sm"}
@@ -182,7 +184,7 @@ class TimeLogList extends Component {
                       <Button
                         size={"sm"}
                         id={`delete-${timeLog._id}`}
-                        onClick={() => this.handleTimeLogdelete(timeLog._id)}
+                        onClick={() => this.handleTimeLogdelete(timeLog._id, timeLog.orderId._id)}
                         className={"btn-theme-transparent"}
                       >
                         <i className={"icons cui-trash"} />
