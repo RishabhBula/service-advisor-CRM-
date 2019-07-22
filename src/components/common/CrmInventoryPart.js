@@ -192,7 +192,7 @@ class CrmInventoryPart extends Component {
         if (partDetails && partDetails._id) {
           updateInventoryPart({ ...data, id: partDetails._id });
         } else {
-          addInventoryPart(data);
+          addInventoryPart({data: data});
         }
       } catch (error) {
         logger(error);

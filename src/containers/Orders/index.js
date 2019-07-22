@@ -1013,6 +1013,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getOrders: () => dispatch(getOrderList()),
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
+  deleteCannedServiceRequest: (data) =>{
+    dispatch(deleteCannedServiceRequest(data))
+  }
 });
 export default connect(
   mapStateToProps,
