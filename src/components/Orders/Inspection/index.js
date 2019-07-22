@@ -18,7 +18,6 @@ import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import * as jsPDF from "jspdf";
 import 'jspdf-autotable';
-import { logger } from "../../../helpers";
 
 class Inspection extends Component {
    constructor(props) {

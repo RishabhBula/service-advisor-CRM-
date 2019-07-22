@@ -160,7 +160,7 @@ const loginApp = async (req, res) => {
         { normalizedEmail: email },
         { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
       ]
-    });
+    }).populate("planId");
     if (result === null) {
       // eslint-disable-next-line no-throw-literal
       throw {
@@ -218,7 +218,8 @@ const loginApp = async (req, res) => {
         firstName: result.firstName,
         lastName: result.lastName,
         parentId: result.parentId,
-        subdomain: result.subdomain
+        subdomain: result.subdomain,
+        planId: result.planId
       },
       commonCrypto.secret,
       {
@@ -618,12 +619,10 @@ const createUser = async (req, res) => {
         success: false
       });
     }
-
     const confirmationNumber = new Date().valueOf();
     let $data = req.body;
     $data.firstTimeUser = true;
     $data.userSideActivationValue = confirmationNumber;
-    console.log("####################", $data.companyName);
     let inserList = {
       ...$data,
       subdomain: currentUser.subdomain,
