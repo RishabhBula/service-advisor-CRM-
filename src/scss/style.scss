@@ -5,10 +5,54 @@
 @import "~@coreui/coreui/scss/coreui.scss";
 
 // Temp fix for reactstrap
-@import '~@coreui/coreui/scss/_dropdown-menu-right.scss';
+@import "~@coreui/coreui/scss/_dropdown-menu-right.scss";
 
 // If you want to add something do it here
 @import "custom";
 
 // ie fixes
 @import "ie-fix";
+
+body {
+  .dashboard-container {
+    .dashboard-block-container {
+      background: #fff;
+      box-shadow: -1px 0px 6px 1px #e6e4e4;
+      border: 1px solid #fff;
+      padding: 10px;
+    }
+    .dashboard-card {
+      .main-card {
+        img {
+          max-width: 100%;
+        }
+        hr {
+          padding: 0;
+          margin: 0;
+          margin-left: -12px;
+          margin-right: -12px;
+          display: block;
+        }
+        .anchor-container {
+          margin-top: 10px;
+        }
+      }
+    }
+    .dashboard-plan-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+
+      span {
+        font-weight: 600;
+      }
+      .image-container {
+        margin-right: 10px;
+        float: left;
+        img {
+          height: 35px;
+        }
+      }
+    }
+  }
+}
