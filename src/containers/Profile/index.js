@@ -12,7 +12,8 @@ import SubscriptionSettings from "../../components/Profile/SubscriptionSettings"
 import { connect } from "react-redux";
 import {
   updatePasswordRequest,
-  profileSettingUpdateRequest
+  profileSettingUpdateRequest,
+  updateCompanyLogo
 } from "../../actions";
 class Profile extends Component {
   constructor(props) {
@@ -30,27 +31,40 @@ class Profile extends Component {
         <CardBody className={"custom-card-body position-relative"}>
           <div className={"p-3 profile-setting-page"}>
             <Row>
-              <Col lg={"7"} md={"7"} >
+              <Col lg={"7"} md={"7"}>
                 <h3 className={"pb-3"}>Profile Settings</h3>
-                <GenralSettings profileData={profileInfo} updateProfileSetting={this.props.profileSettingUpdateRequest} />
+                <GenralSettings
+                  profileData={profileInfo}
+                  updateProfileSetting={
+                    this.props.profileSettingUpdateRequest
+                  }
+                />
               </Col>
-              <Col lg={"5"} md={"5"} >
+              <Col lg={"5"} md={"5"}>
                 <h3 className={"pb-3"}>Change Password</h3>
-                <UpdatePassword updatePassword={this.props.updatePasswordRequest} />                
+                <UpdatePassword
+                  updatePassword={this.props.updatePasswordRequest}
+                />
               </Col>
             </Row>
-            {profileSetting ? 
-            <>
-            <hr className={"pb-3 mt-5"}/>
-            
-            <SubscriptionSettings profileData={profileInfo}/>
-            <CompanySettings profileData={profileInfo} updateProfileSetting={this.props.profileSettingUpdateRequest} />
-            </>
-            : null }
+            {profileSetting ? (
+              <>
+                <hr className={"pb-3 mt-5"} />
+
+                <SubscriptionSettings profileData={profileInfo} />
+                <CompanySettings
+                  profileData={profileInfo}
+                  updateProfileSetting={
+                    this.props.profileSettingUpdateRequest
+                  }
+                  onLogoUpdate={this.props.updateCompanyLogo}
+                />
+              </>
+            ) : null}
           </div>
         </CardBody>
       </Card>
-    )
+    );
   }
 }
 
@@ -64,7 +78,8 @@ const mapDispatchToProps = dispatch => ({
   },
   profileSettingUpdateRequest : data =>{
     dispatch(profileSettingUpdateRequest(data));
-  }
+  },
+  updateCompanyLogo: data => dispatch(updateCompanyLogo(data)),
 })
 
 

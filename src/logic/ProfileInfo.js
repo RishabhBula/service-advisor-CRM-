@@ -46,6 +46,7 @@ const profileInfoLogic = createLogic({
           isLoading: false
         })
       );
+
       done();
     }
   }
@@ -54,7 +55,7 @@ const profileInfoLogic = createLogic({
 const updateCompanyLogoLogic = createLogic({
   type: profileInfoActions.UPDATE_COMPANY_LOGO,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    //dispatch(showLoader());
     const { payload } = action;
     logger(payload);
     let api = new ApiHelper();
@@ -67,18 +68,21 @@ const updateCompanyLogoLogic = createLogic({
       action.payload
     );
     logger(result);
-    dispatch(hideLoader());
+    //dispatch(hideLoader());
     if (result.isError) {
       toast.error(result.messages[0] || DefaultErrorMessage);
       done();
       return;
     } else {
+      dispatch(hideLoader());
       // toast.success(result.messages[0]);
       dispatch(
         updateCompanyLogoSuccess({
-          shopLogo: result.data.imageUploadData
+          shopLogo: result.data.shopLogo,
+          isLogoLoading:false
         })
       );
+      //dispatch(profileInfoRequest());
       done();
     }
   }
@@ -138,7 +142,7 @@ const updatePasswordLogic = createLogic({
     if (result.isError) {
       toast.error(result.messages[0]);
       dispatch(hideLoader());
-      dispatch(updatePasswordFailed())
+      dispatch(updatePasswordFailed());
       done();
       return;
     } else {
@@ -148,7 +152,7 @@ const updatePasswordLogic = createLogic({
       done();
     }
   }
-})
+});
 
 const profileSettingUpdate = createLogic({
   type: profileInfoActions.PROFILE_SETTING_UPDATE_REQUEST,
@@ -167,23 +171,24 @@ const profileSettingUpdate = createLogic({
     if (result.isError) {
       toast.error(result.messages[0]);
       dispatch(hideLoader());
-      dispatch(profileSettingUpdateFailed())
+      dispatch(profileSettingUpdateFailed());
       done();
       return;
     } else {
       toast.success(result.messages[0]);
+      
       dispatch(hideLoader());
       dispatch(
         profileSettingUpdateSuccess({
           profileInfo: result.data.data,
           isLoading: false
         })
-        );
-      console.log(result.data.data, "result.data.data")
-      }
+      );
+      dispatch(profileInfoRequest());
+    }
     done();
   }
-})
+});
 
 export const ProfileInfoLogic = [
   profileInfoLogic,

@@ -306,7 +306,9 @@ class Inspection extends Component {
          await picReader.addEventListener("load", async (event) => {
             let dataURL = picReader.result;
             const { inspection } = this.state;
-            inspection[inspIndex].items[itemIndex].itemImagePreview.push(dataURL)
+            inspection[inspIndex].items[
+              itemIndex
+            ].itemImagePreview.push({ dataURL, name: file.name });
             inspection[inspIndex].items[itemIndex].itemImage.push(file)
             await this.setState({
                inspection
@@ -565,7 +567,10 @@ class Inspection extends Component {
       
    };
 
-
+   viewFile = (filename, type) => {
+      let pdfWindow = window.open("")
+      pdfWindow.document.body.innerHTML = type === 'pdf' ? "<iframe width='100%' height='100%' src='" + filename + "'></iframe>" : "<img src=' " + filename + "' >";
+   }
 
    render() {
       const { inspection, templateData, orderDetails} = this.state;
@@ -706,16 +711,98 @@ class Inspection extends Component {
                                                 <ul className={"preview-group  p-0"}>
                                                    {
                                                       val.itemImagePreview.map((file, previewindx) => {
+                                                         
+                                                         const type = file.dataURL
+                                                           .split(
+                                                             ";"
+                                                           )[0]
+                                                           .split(
+                                                             "/"
+                                                           )[1];
                                                          return (
-                                                            <li key={previewindx}>
-                                                               <span onClick={(e) => { this.removeImage(previewindx, itemIndex, inspIndex) }} className={"remove-preview"}>
-                                                                  <i class="icon-close icons"></i>
+                                                           <li
+                                                             key={
+                                                               previewindx
+                                                             }
+                                                           >
+                                                             {type ===
+                                                             "pdf" ? (
+                                                               <span
+                                                                 className={
+                                                                   "pdf-img"
+                                                                 }
+                                                                 onClick={filename =>
+                                                                   this.viewFile(
+                                                                     file.dataURL,
+                                                                     type
+                                                                   )
+                                                                 }
+                                                               >
+                                                                 <i
+                                                                   className={
+                                                                     "fa fa-file-pdf-o"
+                                                                   }
+                                                                 />
+                                                                 <span
+                                                                   onClick={e => {
+                                                                     this.removeImage(
+                                                                       previewindx,
+                                                                       itemIndex,
+                                                                       inspIndex
+                                                                     );
+                                                                   }}
+                                                                   className={
+                                                                     "remove-preview"
+                                                                   }
+                                                                 >
+                                                                   <i class="icon-close icons mr-2" />{" "}
+                                                                   Remove
+                                                                 </span>
+                                                                 <span
+                                                                   className={
+                                                                     "file-name"
+                                                                   }
+                                                                 >
+                                                                   {
+                                                                     file.name
+                                                                   }
+                                                                 </span>
                                                                </span>
-
-                                                               <img src={file} alt={file} />
-
-                                                            </li>
-                                                         )
+                                                             ) : (
+                                                               <>
+                                                                 <span
+                                                                   onClick={e => {
+                                                                     this.removeImage(
+                                                                       previewindx,
+                                                                       itemIndex,
+                                                                       inspIndex
+                                                                     );
+                                                                   }}
+                                                                   className={
+                                                                     "remove-preview"
+                                                                   }
+                                                                 >
+                                                                   <i class="icon-close icons mr-2" />{" "}
+                                                                   Remove
+                                                                 </span>
+                                                                 <img
+                                                                   src={
+                                                                     file.dataURL
+                                                                   }
+                                                                   alt={
+                                                                     file.dataURL
+                                                                   }
+                                                                   onClick={filename =>
+                                                                     this.viewFile(
+                                                                       file.dataURL,
+                                                                       type
+                                                                     )
+                                                                   }
+                                                                 />
+                                                               </>
+                                                             )}
+                                                           </li>
+                                                         );
                                                       })
                                                    }
                                                 </ul>

@@ -3,9 +3,10 @@ import { profileInfoActions } from "./../actions";
 
 const initialAuthState = {
   profileInfo: {},
-  companyInfo:{},
+  companyInfo: {},
   isLoading: true,
-  companyLogoUpdated: true
+  companyLogoUpdated: true,
+  isLogoLoading: false
 };
 
 export const profileInfoReducer = handleActions(
@@ -28,7 +29,8 @@ export const profileInfoReducer = handleActions(
     }),
     [profileInfoActions.UPDATE_COMPANY_LOGO]: (state, action) => ({
       ...state,
-      companyLogoUpdated: false
+      companyLogoUpdated: false,
+      isLogoLoading: true
     }),
     [profileInfoActions.UPDATE_COMPANY_LOGO_SUCCESS]: (state, action) => ({
       ...state,
@@ -36,7 +38,8 @@ export const profileInfoReducer = handleActions(
         ...state.profileInfo,
         shopLogo: action.payload.shopLogo
       },
-      companyLogoUpdated: true
+      companyLogoUpdated: true,
+      isLogoLoading: false
     }),
     [profileInfoActions.UPDATE_PASSWORD_REQUEST]: (state, action) => ({
       ...state,
@@ -61,7 +64,7 @@ export const profileInfoReducer = handleActions(
     [profileInfoActions.PROFILE_SETTING_UPDATE_FAILED]: (state, action) => ({
       ...state,
       isSuccess: false
-    }),
+    })
   },
   initialAuthState
 );

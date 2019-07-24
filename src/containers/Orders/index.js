@@ -695,6 +695,7 @@ class Order extends Component {
       updateOrderStatus
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
+
     const sentinvoice = false;
     return (
       <div className="animated fadeIn">
@@ -753,11 +754,7 @@ class Order extends Component {
                     </div>
                   ) : null}
                   <div className={"order-activity"}>
-                    {this.props.orderReducer.orderItems &&
-                    (!this.props.orderReducer.orderItems.customerId ||
-                      !this.props.orderReducer.orderItems.vehicleId) ? (
-                      ""
-                    ) : (
+                    {serviceReducers.services.length  ? 
                       <>
                         <span
                           color=""
@@ -777,7 +774,8 @@ class Order extends Component {
                           &nbsp; Print
                         </span>{" "}
                       </>
-                    )}
+                      : null
+                    }
                   </div>
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
@@ -818,7 +816,9 @@ class Order extends Component {
                           addRate={addRate}
                           profileInfoReducer={profileInfoReducer}
                           rateStandardListReducer={rateStandardListReducer}
-                          getInventoryPartsVendors={getInventoryPartsVendors}
+                          getInventoryPartsVendors={
+                            getInventoryPartsVendors
+                          }
                           orderReducer={orderReducer}
                           addNewCannedService={addNewCannedService}
                           deleteCannedServiceRequest={
@@ -837,7 +837,9 @@ class Order extends Component {
                           getMessageTemplate={getMessageTemplate}
                           updateMessageTemplate={updateMessageTemplate}
                           deleteMessageTemplate={deleteMessageTemplate}
-                          searchMessageTemplateList={searchMessageTemplateList}
+                          searchMessageTemplateList={
+                            searchMessageTemplateList
+                          }
                           customerData={customerData}
                           vehicleData={vehicleData}
                           sendMessageTemplate={sendMessageTemplate}
@@ -864,7 +866,9 @@ class Order extends Component {
                       ) : null}
                       {activeTab === 3 ? (
                         <Message
-                          searchMessageTemplateList={searchMessageTemplateList}
+                          searchMessageTemplateList={
+                            searchMessageTemplateList
+                          }
                           customerData={customerData}
                           vehicleData={vehicleData}
                           sendMessage={sendMessage}
@@ -902,7 +906,9 @@ class Order extends Component {
               toggle={this.handelTemplateModal}
               customerData={customerData}
               vehicleData={vehicleData}
-              searchMessageTemplateList={this.props.searchMessageTemplateList}
+              searchMessageTemplateList={
+                this.props.searchMessageTemplateList
+              }
               toggleMessageTemplate={this.toggleMessageTemplate}
               sendMessageTemplate={this.props.sendMessageTemplate}
               pdfBlob={pdfBlob}
