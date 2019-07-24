@@ -463,11 +463,23 @@ const imageUpload = async (req, res) => {
   try {
     const { body, currentUser } = req;
     if (!body.imageData) {
-      return res.status(401).json({
-        responseCode: 401,
-        message: "Not provided any file to upload!",
-        success: false
+      const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
+        shopLogo: ""
       });
+      if (companyLogo) {
+        return res.status(200).json({
+          responseCode: 200,
+          message: "Company Logo uploaded successfully!",
+          success: true,
+          shopLogo: ""
+        });
+      } else {
+        return res.status(400).json({
+          responseCode: 400,
+          message: "Error uploading company logo.",
+          success: false
+        });
+      }
     }
     if (body.imageData !== undefined || body.imageData !== "") {
       const base64Image = body.imageData.replace(
@@ -485,27 +497,27 @@ const imageUpload = async (req, res) => {
         if (err) {
           throw err;
         }
-        const imageUrl = await imagePath(originalImagePath);
 
         var thumbnailImagePath = path.join(
           __basedir,
           "images-thumbnail",
           fileName
         );
-        await resizeImage(originalImagePath, thumbnailImagePath, 600);
+        await resizeImage(originalImagePath, thumbnailImagePath, 200);
         const imageUploadData = {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         };
+        const shopLogo = await imagePath(thumbnailImagePath);
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
-          shopLogo: imageUrl
+          shopLogo: shopLogo
         });
         if (companyLogo) {
           return res.status(200).json({
             responseCode: 200,
             message: "Company Logo uploaded successfully!",
             success: true,
-            imageUploadData
+            shopLogo: shopLogo
           });
         } else {
           return res.status(400).json({
@@ -514,12 +526,6 @@ const imageUpload = async (req, res) => {
             success: false
           });
         }
-      });
-    } else {
-      return res.status(400).json({
-        responsecode: 400,
-        message: "Enter valid image.",
-        success: false
       });
     }
   } catch (error) {

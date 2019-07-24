@@ -59,13 +59,7 @@ const rateAddLogic = createLogic({
 const getStandardRateListLogic = createLogic({
   type: rateStandardListActions.GET_RATE_STANDARD_LIST_REQUEST,
   cancelType: rateStandardListActions.GET_RATE_STANDARD_LIST_FAILED,
-  async process({ action, getState }, dispatch, done) {
-    const profileStateData = getState().profileInfoReducer;
-
-    let parentId = profileStateData.profileInfo.parentId;
-    if (profileStateData.profileInfo.parentId === null) {
-      parentId = profileStateData.profileInfo._id;
-    }
+  async process({ action }, dispatch, done) {
     dispatch(
       getRateStandardListStart({
         standardRateList: []
@@ -77,7 +71,9 @@ const getStandardRateListLogic = createLogic({
       "/getAllStdRate",
       "get",
       true,
-      { parentId: parentId, searchValue: action.payload && action.payload.input ? action.payload.input : null }
+      {
+        searchValue: action.payload && action.payload.input ? action.payload.input : null
+      }
     );
     if (result.isError) {
       dispatch(

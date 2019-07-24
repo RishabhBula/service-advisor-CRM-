@@ -18,7 +18,9 @@ class CutomerVehicle extends Component {
       selectedVehicle: {
         lable: "Type to select vehicle",
         value: ""
-      }
+      },
+      customerInput: "",
+      vehicleInput: ""
     };
   }
   componentDidUpdate = ({ orderReducer }) => {
@@ -48,9 +50,15 @@ class CutomerVehicle extends Component {
     }
   };
   loadCustomers = (input, callback) => {
+    this.setState({
+      customerInput: input.length > 1 ? input : null 
+    })
     this.props.getCustomerData({ input, callback });
   };
   loadVehicles = (input, callback) => {
+    this.setState({
+      vehicleInput: input.length > 1 ? input : null
+    })
     this.props.getVehicleData({ input, callback });
   };
   handaleCustomerSelect = (e, name) => {
@@ -141,7 +149,7 @@ class CutomerVehicle extends Component {
                 className={classnames("w-100 form-select", {
                   "is-invalid": isError && !customerId
                 })}
-                noOptionsMessage={() => "Type customer name"}
+                noOptionsMessage={() => this.state.customerInput ? "No customer found" : "Type customer name"}
                 onChange={e => {
                   this.setState(
                     {
@@ -185,7 +193,7 @@ class CutomerVehicle extends Component {
                   selectedVehicle.value !== "" ? selectedVehicle : vehicleId
                 }
                 isClearable={true}
-                noOptionsMessage={() => "Type Vehicle name"}
+                noOptionsMessage={() => this.state.vehicleInput ? "No vehicle found" : "Type vehicle name"}
                 onChange={e => {
                   this.setState(
                     {

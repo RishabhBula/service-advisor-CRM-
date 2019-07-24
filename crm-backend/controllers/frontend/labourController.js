@@ -5,13 +5,14 @@ const commonValidation = require("../../common");
 const { validationResult } = require("express-validator/check");
 /* -------------Get All Standard Rate------------ */
 const getAllStandardRate = async (req, res) => {
+  const { currentUser } = req
   try {
     let $data = req.query;
     let condition = {
       name: new RegExp($data.searchValue, "i")
     };
     const getAllStdRate = await rateStandardModel.find({
-      parentId: mongoose.Types.ObjectId($data.parentId),
+      parentId: mongoose.Types.ObjectId(currentUser.parentId),
       ...condition
     });
     if (getAllStdRate) {

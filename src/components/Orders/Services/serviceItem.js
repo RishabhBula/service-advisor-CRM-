@@ -366,6 +366,14 @@ class ServiceItem extends Component {
     if (services.length) {
       this.setState({
         services: t
+      }, () => {
+        if (services.length === 1 && index === 0) {
+          const payload = {
+            serviceId: [],
+            _id: this.props.orderId,
+          };
+          this.props.updateOrderDetails(payload);
+        }
       });
     }
   };
@@ -625,7 +633,7 @@ class ServiceItem extends Component {
   render() {
     const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
-    const { labelReducer, getCannedServiceList, serviceReducers,deleteCannedServiceRequest } = this.props;
+    const { labelReducer, getCannedServiceList, serviceReducers, deleteCannedServiceRequest } = this.props;
     return (
       <>
         <div className={"w-100"}>
@@ -658,10 +666,10 @@ class ServiceItem extends Component {
             services && services.length ? services.map((item, index) => {
               let mainserviceTotal = [], serviceTotal, epa, discount, tax
               const technicianEle = {
-                "label":item.technician?`${item.technician.firstName} ${item.technician.lastName}`:"type to select technician",
-                "value": item.technician? item.technician._id: ""
+                "label": item.technician ? `${item.technician.firstName} ${item.technician.lastName}` : "type to select technician",
+                "value": item.technician ? item.technician._id : ""
               }
-             
+
               return (
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
@@ -686,27 +694,27 @@ class ServiceItem extends Component {
                           <div className={((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue" : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue"} id={`tech${index}`}>
                             <img className={""} src={"../../assets/img/expert.svg"} width={"30"} alt={"technician"} />
                           </div>
-                          {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ?<UncontrolledTooltip placement="top" target={`tech${index}`}>
-                             Assign a technician
+                          {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? <UncontrolledTooltip placement="top" target={`tech${index}`}>
+                            Assign a technician
                           </UncontrolledTooltip>
-                            : 
+                            :
                             <UncontrolledPopover className={"technician-popover"} placement="top" target={`tech${index}`} trigger={"hover"} >
-                            <PopoverHeader>Technician Details</PopoverHeader>
-                            <PopoverBody>
+                              <PopoverHeader>Technician Details</PopoverHeader>
+                              <PopoverBody>
                                 <div className={"technician-detail"}>
                                   <div className={"text-capitalize pb-1 border-bottom"}>{item.technician.firstName} {item.technician.lastName}</div>
-                                <div className={"pt-1 pb-1"}>Rate/hour: <Dollor value={item.technician.rate}/> </div>
+                                  <div className={"pt-1 pb-1"}>Rate/hour: <Dollor value={item.technician.rate} /> </div>
                                   <div className={"pt-1 text-note"}>Click below to update Technician </div>
-                              </div>
-                            </PopoverBody>
-                          </UncontrolledPopover >
+                                </div>
+                              </PopoverBody>
+                            </UncontrolledPopover >
                           }
                           <div className={
                             item.note ? "pb-1 cursor_pointer isValue" : "pb-1 cursor_pointer notValue"
                           } id={`note${index}`}>
                             <img className={""} src={"../../assets/img/writing .svg"} width={"30"} alt={"Notes"} />
                           </div>
-                          {item.note ? 
+                          {item.note ?
                             <UncontrolledPopover className={"technician-popover"} placement="top" target={`note${index}`} trigger={"hover"} >
                               <PopoverHeader>Note Details</PopoverHeader>
                               <PopoverBody>
@@ -716,7 +724,7 @@ class ServiceItem extends Component {
                                 </div>
                               </PopoverBody>
                             </UncontrolledPopover >
-                            : 
+                            :
                             <UncontrolledTooltip placement="top" target={`note${index}`}>
                               Add note
                             </UncontrolledTooltip>
