@@ -25,7 +25,7 @@ import { isValidURL } from "../../../helpers/Object";
 import Dropzone from "react-dropzone";
 
 import Cropper from "react-easy-crop";
-import getCroppedImg from "./cropImage";
+import getCroppedImg from "../../common/cropImage";
 
 class CompanySettings extends Component {
   constructor(props) {
