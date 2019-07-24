@@ -60,7 +60,7 @@ class GenralSettings extends Component {
         companyNumber,
         vatNumber,
         website,
-        peopleWork,
+        peopleWork
       } = this.props.profileData.profileInfo;
       this.setState({
         firstName,
@@ -75,22 +75,24 @@ class GenralSettings extends Component {
         currency,
         peopleWork: {
           ...this.state.peopleWork,
-          selected: peopleWork,
+          selected: peopleWork
         },
         servicesOffer: {
           ...this.state.servicesOffer,
-          selectedServices: this.props.profileData.profileInfo ? this.props.profileData.profileInfo.serviceOffer : [],
+          selectedServices: this.props.profileData.profileInfo
+            ? this.props.profileData.profileInfo.serviceOffer
+            : []
         },
         vehicleService: {
           ...this.state.vehicleService,
-          selectedVehicleServices: this.props.profileData.profileInfo ? this.props.profileData.profileInfo.vehicleService : [],
+          selectedVehicleServices: this.props.profileData.profileInfo
+            ? this.props.profileData.profileInfo.vehicleService
+            : []
         }
-
-      })
+      });
     }
-  }
+  };
   componentDidUpdate = ({ profileData }) => {
-
     if (profileData.profileInfo !== this.props.profileData.profileInfo) {
       const {
         firstName,
@@ -103,7 +105,7 @@ class GenralSettings extends Component {
         vatNumber,
         website,
         timeZone,
-        peopleWork,
+        peopleWork
       } = this.props.profileData.profileInfo;
 
       this.setState({
@@ -119,19 +121,23 @@ class GenralSettings extends Component {
         timeZone,
         peoplework: {
           ...this.state.peopleWork,
-          selected: peopleWork,
+          selected: peopleWork
         },
         servicesOffer: {
           ...this.state.servicesOffer,
-          selectedServices: this.props.profileData.profileInfo ? this.props.profileData.profileInfo.serviceOffer : [],
+          selectedServices: this.props.profileData.profileInfo
+            ? this.props.profileData.profileInfo.serviceOffer
+            : []
         },
         vehicleService: {
           ...this.state.vehicleService,
-          selectedVehicleServices: this.props.profileData.profileInfo ? this.props.profileData.profileInfo.vehicleService : [],
+          selectedVehicleServices: this.props.profileData.profileInfo
+            ? this.props.profileData.profileInfo.vehicleService
+            : []
         }
-      })
+      });
     }
-  }
+  };
 
   handleInputChange = e => {
     const { target } = e;
@@ -143,7 +149,6 @@ class GenralSettings extends Component {
         [name]: null
       }
     });
-
   };
 
   serviceOfferAction = event => {
@@ -177,8 +182,7 @@ class GenralSettings extends Component {
     let vehicleService = this.state.vehicleService;
     if (vehicleService.selectedVehicleServices.length) {
       let checkVehicleExistence = vehicleService.selectedVehicleServices.some(
-        item =>
-          item === event.key
+        item => item === event.key
       );
 
       if (!checkVehicleExistence) {
@@ -187,10 +191,7 @@ class GenralSettings extends Component {
         let vehicleExistance = vehicleService.selectedVehicleServices.findIndex(
           item => item === event.key
         );
-        vehicleService.selectedVehicleServices.splice(
-          vehicleExistance,
-          1
-        );
+        vehicleService.selectedVehicleServices.splice(vehicleExistance, 1);
       }
     } else {
       vehicleService.selectedVehicleServices.push(event.key);
@@ -217,6 +218,7 @@ class GenralSettings extends Component {
     });
   };
 
+ 
 
   handleSubmit = e => {
     e.preventDefault();
@@ -234,12 +236,8 @@ class GenralSettings extends Component {
         companyNumber,
         website,
         timeZone,
-        vehicleService: {
-          selectedVehicleServices
-        },
-        servicesOffer: {
-          selectedServices
-        },
+        vehicleService: { selectedVehicleServices },
+        servicesOffer: { selectedServices },
         peopleWork
       } = this.state;
       const { selected } = peopleWork;
@@ -261,12 +259,11 @@ class GenralSettings extends Component {
       if (website && !isValidURL(website)) {
         this.setState({
           urlError: "Please enter Valid URL( http:// )"
-        })
-      }
-      else {
+        });
+      } else {
         this.setState({
           urlError: ""
-        })
+        });
       }
       const servicesOfferTemp = [];
       for (let index = 0; index < selectedServices.length; index++) {
@@ -292,7 +289,7 @@ class GenralSettings extends Component {
         timeZone,
         vehicleService: vehicleServicesOfferTemp,
         servicesOffer: servicesOfferTemp,
-        peopleWork: selected,
+        peopleWork: selected
       };
 
       const { isValid, errors } = Validator(
@@ -307,26 +304,35 @@ class GenralSettings extends Component {
           errors
         });
         return;
+      } else {
+        
+        this.props.updateProfileSetting(payload);
       }
-      else {
-        this.props.updateProfileSetting(payload)
-      }
-    }
-    catch (error) {
+    } catch (error) {
       logger(error);
     }
-  }
-
-
+  };
 
   render() {
-    const { errors, firstName, lastName, phoneNumber, address, currency} = this.state;
+    const {
+      errors,
+      firstName,
+      lastName,
+      phoneNumber,
+      address,
+      currency
+    } = this.state;
     const { profileData } = this.props;
-    const timeZoneOptions = countryWithTimezone.filter(country => country.name === 'United States')
-    const options = timeZoneOptions[0].timezones.map(
-      (item, index) => {
-        return <option key={index} value={item}>{item}</option>
-      });
+    const timeZoneOptions = countryWithTimezone.filter(
+      country => country.name === "United States"
+    );
+    const options = timeZoneOptions[0].timezones.map((item, index) => {
+      return (
+        <option key={index} value={item}>
+          {item}
+        </option>
+      );
+    });
 
     return (
       <div>
@@ -334,9 +340,12 @@ class GenralSettings extends Component {
           <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
             <Form onSubmit={this.handleSubmit}>
               <Row>
-                <Col lg={"6"} md={"6"} >
+                <Col lg={"6"} md={"6"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
                       First Name<span className="asteric">*</span>
                     </Label>
                     <div className="input-block">
@@ -354,9 +363,12 @@ class GenralSettings extends Component {
                     </div>
                   </FormGroup>
                 </Col>
-                <Col lg={"6"} md={"6"} >
+                <Col lg={"6"} md={"6"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
                       Last Name <span className="asteric">*</span>
                     </Label>
                     <div className="input-block">
@@ -376,9 +388,12 @@ class GenralSettings extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col lg={"6"} md={"6"} >
+                <Col lg={"6"} md={"6"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
                       Email<span className="asteric">*</span>
                     </Label>
                     <div className="input-block">
@@ -397,17 +412,20 @@ class GenralSettings extends Component {
                     </div>
                   </FormGroup>
                 </Col>
-                <Col lg={"6"} md={"6"} >
+                <Col lg={"6"} md={"6"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
                       Contact Number
-                  </Label>
+                    </Label>
                     <div className="input-block">
                       <Input
                         type="text"
                         placeholder="Contact Number"
                         onChange={this.handleInputChange}
-                        value={phoneNumber}
+                        value={phoneNumber || ""}
                         name="phoneNumber"
                         invalid={errors.phoneNumber}
                         maxLength={13}
@@ -420,17 +438,20 @@ class GenralSettings extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col lg={"6"} md={"6"} >
+                <Col lg={"6"} md={"6"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
                       Currency
-                  </Label>
+                    </Label>
                     <div className="input-block">
                       <Input
                         type="select"
                         placeholder="Currency"
                         onChange={this.handleInputChange}
-                        value={currency}
+                        value={currency || ""}
                         name="currency"
                         invalid={errors.currency}
                       >
@@ -445,9 +466,12 @@ class GenralSettings extends Component {
                 </Col>
                 <Col lg={"6"} md={"6"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
                       Time Zone
-                </Label>
+                    </Label>
                     <div className="input-block">
                       <Input
                         type="select"
@@ -467,35 +491,40 @@ class GenralSettings extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col lg={"12"} md={"12"} >
-              <FormGroup>
-                <Label htmlFor={"old password"} className="customer-modal-text-style">
-                  Address
-                  </Label>
-                <div className="input-block">
-                  <Input
-                    type="textarea"
-                    placeholder="Address"
-                    onChange={this.handleInputChange}
-                    value={address}
-                    name="address"
-                    invalid={errors.address}
-                  />
-                  <FormFeedback>
-                    {errors.address ? errors.address : null}
-                  </FormFeedback>
-                </div>
-              </FormGroup>
+                <Col lg={"12"} md={"12"}>
+                  <FormGroup>
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    >
+                      Address
+                    </Label>
+                    <div className="input-block">
+                      <Input
+                        type="textarea"
+                        placeholder="Address"
+                        onChange={this.handleInputChange}
+                        value={address || ""}
+                        name="address"
+                        invalid={errors.address}
+                      />
+                      <FormFeedback>
+                        {errors.address ? errors.address : null}
+                      </FormFeedback>
+                    </div>
+                  </FormGroup>
                 </Col>
-                </Row>
+              </Row>
             </Form>
           </Col>
         </Row>
         <Row className={"m-0 d-flex justify-content-center"}>
           <Col xs="4" className={""}>
             <FormGroup>
-              <Label htmlFor={"old password"} className="customer-modal-text-style">
-              </Label>
+              <Label
+                htmlFor={"old password"}
+                className="customer-modal-text-style"
+              />
               <div className="input-block">
                 <Button
                   color="primary"
@@ -505,14 +534,13 @@ class GenralSettings extends Component {
                   onClick={this.handleSubmit}
                 >
                   Update
-                    </Button>
+                </Button>
               </div>
             </FormGroup>
-
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

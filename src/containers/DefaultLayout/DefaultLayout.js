@@ -186,6 +186,7 @@ class DefaultLayout extends Component {
     const { hasAccess, shopLogo } = this.state;
     const parentId = profileInfoReducer.profileInfo.parentId || ''
     const providerCompanyName = profileInfoReducer.profileInfo.companyName || parentId.companyName;
+    const isLogoLoading = profileInfoReducer.isLogoLoading;
     return isLoading ? (
       <FullPageLoader />
     ) : (
@@ -203,13 +204,24 @@ class DefaultLayout extends Component {
         </AppHeader>
         <div className="app-body">
           <AppSidebar className="custom-sidebar" fixed display="lg">
-              {shopLogo || parentId.shopLogo ? (
-              <div
-                className={"provider-logo"}
-                  style={{ backgroundImage: `url(${shopLogo || parentId.shopLogo})` }}
-              />
+            {shopLogo || parentId.shopLogo ? (
+              <div className={"provider-logo"}>
+                {!isLogoLoading ? (
+                  <img src={shopLogo || parentId.shopLogo} alt={"logo"} />
+                ) : (
+                  <img
+                    src={
+                      "https://loading.io/spinners/google/index.flip-circle-google-loader-gif.svg"
+                    }
+                    alt={"logo"}
+                  />
+                )}
+              </div>
             ) : (
-              <div className={"provider-logo company-name"} id={"comapnyName"}>
+              <div
+                className={"provider-logo company-name"}
+                id={"comapnyName"}
+              >
                 <Avtar value={providerCompanyName} class={"name"} />
                 <UncontrolledTooltip target={"comapnyName"}>
                   {profileInfo.companyName}
@@ -241,7 +253,7 @@ class DefaultLayout extends Component {
             </Suspense>
             <div className={"text-center nav-footer-logo"}>
               <img
-                src={"../../assets/img/logo-white.svg"}
+                src={"./assets/img/logo-white.svg"}
                 alt={"service-advisor"}
                 width={70}
               />

@@ -19,7 +19,6 @@ import {
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
-import Logo from "./../../assets/img/logo-white.svg";
 class LoginPage extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +77,11 @@ class LoginPage extends Component {
           <Col md="12" lg="12" xl="12">
             <Col className="text-center">
               <h4 className="logo-title">
-                <img src={Logo} alt={"logo"} style={{ width: 120 }} />
+                <img
+                  src={"/assets/img/logo-white.svg"}
+                  alt={"logo"}
+                  style={{ width: 120 }}
+                />
               </h4>
             </Col>
             <CardGroup>

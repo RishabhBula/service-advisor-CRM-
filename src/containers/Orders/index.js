@@ -369,7 +369,6 @@ class Order extends Component {
       updateOrderDetails
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
-
     return (
       <div className="animated fadeIn">
         <Card className="white-card" id={"white-card"}>
@@ -484,7 +483,9 @@ class Order extends Component {
                           addRate={addRate}
                           profileInfoReducer={profileInfoReducer}
                           rateStandardListReducer={rateStandardListReducer}
-                          getInventoryPartsVendors={getInventoryPartsVendors}
+                          getInventoryPartsVendors={
+                            getInventoryPartsVendors
+                          }
                           orderReducer={orderReducer}
                           addNewCannedService={addNewCannedService}
                           deleteCannedServiceRequest={deleteCannedServiceRequest}
@@ -502,7 +503,9 @@ class Order extends Component {
                           getMessageTemplate={getMessageTemplate}
                           updateMessageTemplate={updateMessageTemplate}
                           deleteMessageTemplate={deleteMessageTemplate}
-                          searchMessageTemplateList={searchMessageTemplateList}
+                          searchMessageTemplateList={
+                            searchMessageTemplateList
+                          }
                           customerData={customerData}
                           vehicleData={vehicleData}
                           sendMessageTemplate={sendMessageTemplate}
