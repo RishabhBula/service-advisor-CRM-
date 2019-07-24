@@ -214,8 +214,7 @@ class CutomerVehicle extends Component {
         <Col md={"2"}>
           <Button
             color={"secondary"}
-            size={"sm"}
-            className={"mt-1"}
+            size={""}
             onClick={this.props.handleEditOrder}
           >
             Update Order

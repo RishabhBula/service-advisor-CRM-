@@ -12,6 +12,7 @@ import {
   FormFeedback,
   Label
 } from 'reactstrap';
+import moment from "moment";
 import { Async } from "react-select";
 import Validator from "js-object-validation";
 import { inspectValidations, inspectValidationMessage } from "../../../validations/inspection";
@@ -126,7 +127,15 @@ class SendInspection extends Component {
 
   handleSentInspection = () => {
     const {customerData, subject } = this.state
-    const customerEmail = customerData.email
+    const { orderReducer, profileReducer, isOrder } = this.props;
+    const customerEmail = customerData.email;
+    const orderTitle = orderReducer.orderItems ? orderReducer.orderItems.orderName : '' || '';
+    const orderCreated = orderReducer.orderItems
+      ? moment(orderReducer.orderItems.createdAt || "").format(
+          "MMM Do YYYY"
+        )
+      : "" || "";
+    const companyName = profileReducer.profileInfo.companyName || '';
     try {
       var messageTextValue = document.getElementById('messageTextSent'),
         messageTextSent = messageTextValue.innerHTML;
@@ -147,16 +156,18 @@ class SendInspection extends Component {
         });
         return;
       }
+      
       const payload = {
         message: messageTextSent,
         subject: subject,
         email: customerEmail,
         pdf: this.props.pdfBlob,
-        orderTitle: this.props.orderTitle,
-        subdomain: '',
-        orderCreated : ''
+        orderTitle: orderTitle,
+        companyName: companyName,
+        orderCreated : orderCreated,
+        isInvoice: isOrder ? true : false
       };
-      
+     
       this.props.sendMessageTemplate(payload)
       // close and clear modal form 
       this.props.toggle()
@@ -214,7 +225,7 @@ class SendInspection extends Component {
   }
   render() {
     const { templateData, recipients, errors, search, customerData, messageTextSentError } = this.state
-    const { isMessage, isOrder} = this.props;
+    const { isMessage, isOrder } = this.props;
     return (
       <>
         <Modal

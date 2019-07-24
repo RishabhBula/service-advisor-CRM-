@@ -31,7 +31,7 @@ class CompanySettings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      crop: { x: 50, y: 0 },
+      crop: { x: 0, y: 0 },
       zoom: 1,
       aspect: 4 / 3,
       cropSize: { width: 200, height: 150 },
@@ -163,10 +163,7 @@ class CompanySettings extends Component {
     }
   };
 
-  onZoomChange = zoom => {
-    this.setState({ zoom });
-  };
-
+ 
   handleInputChange = e => {
     const { target } = e;
     const { name, value } = target;
