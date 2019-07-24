@@ -1,4 +1,4 @@
-import { Card, CardBody, Input } from "reactstrap";
+import { Card, CardBody, Input, UncontrolledTooltip } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import React, { Component, Suspense } from "react";
@@ -302,7 +302,10 @@ class Order extends Component {
       orderData.vehicleId.modal;
     var doc = new jsPDF("p", "pt");
     var pdfWidth = doc.internal.pageSize.getWidth();
-    invoicePDF(sentinvoice, orderData, customerData, serviceData, comapnyInfo, vehilceInfo, doc, pdfWidth)
+    const pdfBlob = invoicePDF(sentinvoice, orderData, customerData, serviceData, comapnyInfo, vehilceInfo, doc, pdfWidth)
+    this.setState({
+      pdfBlob
+    });
   };
 
   render() {
@@ -415,34 +418,49 @@ class Order extends Component {
                 </div>
                 <div className={"position-relative"}>
                   {this.props.orderReducer.orderItems &&
-                    (!this.props.orderReducer.orderItems.customerId ||
-                      !this.props.orderReducer.orderItems.vehicleId) ? (
-                      <div className={"service-overlay"}>
-                        <img
-                          src="https://gramener.com/schoolminutes/img/arrow.png"
-                          alt={"arrow"}
-                        />
-                        <h3>Please Add Order Details first</h3>
-                      </div>
-                    ) : null}
+                  (!this.props.orderReducer.orderItems.customerId ||
+                    !this.props.orderReducer.orderItems.vehicleId) ? (
+                    <div className={"service-overlay"}>
+                      <img
+                        src="https://gramener.com/schoolminutes/img/arrow.png"
+                        alt={"arrow"}
+                      />
+                      <h3>Please Add Order Details first</h3>
+                    </div>
+                  ) : null}
+
                   <div className={"order-activity"}>
-                    <span
-                      color=""
-                      className="print-btn"
-                      onClick={this.handelTemplateModal}
-                    >
-                      {/* <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link> */}
-                      <i className="icons cui-cursor" />
-                      &nbsp; Sent
-                    </span>
-                    <span
-                      id="add-Appointment"
-                      className="print-btn"
-                      onClick={() => this.printInvoice(false)}
-                    >
-                      <i className="icon-printer icons " />
-                      &nbsp; Print
-                    </span>
+                    {this.props.orderReducer.orderItems &&
+                    this.props.orderReducer.orderItems.serviceId &&
+                    this.props.orderReducer.orderItems.serviceId.length &&
+                    this.props.orderReducer.orderItems.customerId &&
+                    this.props.orderReducer.orderItems.vehicleId ? (
+                      <>
+                        <span
+                          color=""
+                          className="print-btn"
+                          onClick={this.handelTemplateModal}
+                          id={"sentInvoice"}
+                        >
+                          <i className="icons cui-cursor" />
+                          &nbsp; Sent
+                        </span>
+                        <UncontrolledTooltip target={"sentInvoice"}>
+                          Click to Send Invoice
+                        </UncontrolledTooltip>
+                        <span
+                          id="add-Appointment"
+                          className="print-btn"
+                          onClick={() => this.printInvoice(false)}
+                        >
+                          <i className="icon-printer icons " />
+                          &nbsp; Print
+                        </span>
+                        <UncontrolledTooltip target={"add-Appointment"}>
+                          Click to Print Invoice
+                        </UncontrolledTooltip>
+                      </>
+                    ) : null}
                   </div>
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
@@ -488,7 +506,9 @@ class Order extends Component {
                           }
                           orderReducer={orderReducer}
                           addNewCannedService={addNewCannedService}
-                          deleteCannedServiceRequest={deleteCannedServiceRequest}
+                          deleteCannedServiceRequest={
+                            deleteCannedServiceRequest
+                          }
                           updateOrderDetails={updateOrderDetails}
                           {...this.props}
                         />
@@ -532,7 +552,9 @@ class Order extends Component {
                       ) : null}
                       {activeTab === 3 ? (
                         <Message
-                          searchMessageTemplateList={searchMessageTemplateList}
+                          searchMessageTemplateList={
+                            searchMessageTemplateList
+                          }
                           customerData={customerData}
                           vehicleData={vehicleData}
                           sendMessage={sendMessage}
@@ -570,11 +592,15 @@ class Order extends Component {
               toggle={this.handelTemplateModal}
               customerData={customerData}
               vehicleData={vehicleData}
-              searchMessageTemplateList={this.props.searchMessageTemplateList}
+              searchMessageTemplateList={
+                this.props.searchMessageTemplateList
+              }
               toggleMessageTemplate={this.toggleMessageTemplate}
               sendMessageTemplate={this.props.sendMessageTemplate}
               pdfBlob={pdfBlob}
               isOrder
+              orderReducer={orderReducer}
+              profileReducer={profileInfoReducer}
             />
             <MessageTemplate
               isOpen={this.state.mesageModal}

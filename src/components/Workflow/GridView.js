@@ -105,14 +105,14 @@ class WorkflowGridView extends React.Component {
   };
 
   renderOrders = (status, tasks, orders, isLoading) => {
-    let serviceCalculation = []
+    let serviceCalculation = [];
     if (orders[status._id] && orders[status._id].length) {
       orders[status._id].map((task, index) => {
         if (task.serviceId && task.serviceId.length) {
-          serviceCalculation.push(serviceTotalsCalculation(task.serviceId))
+          serviceCalculation.push(serviceTotalsCalculation(task.serviceId));
         }
-        return true
-      })
+        return true;
+      });
     }
     return (
       <Droppable droppableId={status._id}>
@@ -161,8 +161,8 @@ class WorkflowGridView extends React.Component {
                             {"  "}
                             {task.customerId
                               ? `${task.customerId.firstName} ${" "} ${
-                              task.customerId.lastName
-                              }`
+                                  task.customerId.lastName
+                                }`
                               : "No Customer"}
                           </span>{" "}
                         </div>
@@ -179,8 +179,8 @@ class WorkflowGridView extends React.Component {
                             {"  "}
                             {task.vehicleId
                               ? `${task.vehicleId.make} ${" "} ${
-                              task.vehicleId.modal
-                              }`
+                                  task.vehicleId.modal
+                                }`
                               : "No Vehicle"}
                           </span>
                         </div>
@@ -207,7 +207,11 @@ class WorkflowGridView extends React.Component {
                         <div className={"service-total"}>
                           <span className={"text-black-50"}>Total:</span>
                           <Dollor
-                            value={serviceCalculation[index].orderGrandTotal}
+                            value={
+                              serviceCalculation[index]
+                                ? serviceCalculation[index].orderGrandTotal
+                                : 0
+                            }
                           />
                         </div>
                         <span
@@ -265,7 +269,6 @@ class WorkflowGridView extends React.Component {
             >
               {orderStatus.map((status, index) => (
                 <React.Fragment key={status._id}>
-
                   <Draggable draggableId={status._id} index={index}>
                     {provided => (
                       <>
@@ -282,7 +285,9 @@ class WorkflowGridView extends React.Component {
                               <Col sm={"12"}>
                                 <div className={"workflow-heads"}>
                                   <h5>{status.name}</h5>
-                                  <span>{this.renderActions(status, index)}</span>
+                                  <span>
+                                    {this.renderActions(status, index)}
+                                  </span>
                                 </div>
                               </Col>
                             </Row>

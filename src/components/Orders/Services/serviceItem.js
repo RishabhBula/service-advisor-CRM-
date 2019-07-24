@@ -363,14 +363,19 @@ class ServiceItem extends Component {
     services[index].isCannedAdded = false
     let t = [...services];
     t.splice(index, 1);
+  
     if (services.length) {
       this.setState({
         services: t
       }, () => {
-        if (services.length === 1 && index === 0) {
+        if (
+          services.length === 1 &&
+          index === 0 && this.props.orderReducer.orderItems.serviceId &&
+          this.props.orderReducer.orderItems.serviceId.length
+        ) {
           const payload = {
             serviceId: [],
-            _id: this.props.orderId,
+            _id: this.props.orderId
           };
           this.props.updateOrderDetails(payload);
         }

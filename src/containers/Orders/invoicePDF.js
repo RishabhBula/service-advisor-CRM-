@@ -267,8 +267,7 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
   if (!sentinvoice) {
     window.open(doc.output("bloburl"), "_blank");
   } else {
-    this.setState({
-      pdfBlob: file
-    });
+      const pdfBlob = file;
+      return pdfBlob;
   }
 }
