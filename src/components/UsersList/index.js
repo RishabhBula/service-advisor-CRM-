@@ -467,7 +467,7 @@ class UserList extends Component {
                         <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : "-"} </div>
                       </td>
                       <td>
-                        {user.rate ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
+                        {user.rate ? <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
                       </td>
                       <td className={"text-capitalize"}>
                         {user.roleType ? user.roleType.userType : "-"}

@@ -172,17 +172,17 @@ const getProfile = async (req, res) => {
   const { currentUser } = req;
   try {
     let userFind
-    
+
     if (currentUser.parentId && (mongoose.Types.ObjectId(currentUser.parentId) !== mongoose.Types.ObjectId(currentUser.id))) {
       userFind = await userModel.findOne({
         _id: currentUser.id,
         $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
-      }).populate("parentId")
+      }).populate("parentId planId")
     } else {
       userFind = await userModel.findOne({
         _id: currentUser.id,
         $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
-      });
+      }).populate("planId");
     }
     if (userFind) {
       return res.status(200).json({

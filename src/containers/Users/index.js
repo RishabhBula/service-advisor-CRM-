@@ -91,23 +91,45 @@ class Users extends Component {
     const { modelDetails } = modelInfoReducer;
     const { addUserModal, editUserModal } = modelDetails;
     const companyName = profileInfoReducer.profileInfo.companyName
+    const planData = profileInfoReducer.profileInfo.planId
+    const isInTrialPeriod = profileInfoReducer.profileInfo.isInTrialPeriod
+    const userData = userReducer.users
     return (
       <>
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
-            <div className={"text-right invt-add-btn-block"}>
-              <Button
-                color="primary"
-                id="add-user"
-                onClick={this.toggleCreateModal}
-              >
-                <i className={"fa fa-plus"} />
-                &nbsp; Add New Staff Member
+            {
+              planData ?
+                userData.length < (planData.facilities.noOfLiscence) ?
+                  <div className={"text-right invt-add-btn-block"}>
+                    <Button
+                      color="primary"
+                      id="add-user"
+                      onClick={this.toggleCreateModal}
+                    >
+                      <i className={"fa fa-plus"} />
+                      &nbsp; Add New Staff Member
                   </Button>
-              <UncontrolledTooltip target={"add-user"}>
-                Add New Staff Member
+                    <UncontrolledTooltip target={"add-user"}>
+                      Add New Staff Member
                   </UncontrolledTooltip>
-            </div>
+                  </div> :
+                  null :
+                isInTrialPeriod ?
+                  <div className={"text-right invt-add-btn-block"}>
+                    <Button
+                      color="primary"
+                      id="add-user"
+                      onClick={this.toggleCreateModal}
+                    >
+                      <i className={"fa fa-plus"} />
+                      &nbsp; Add New Staff Member
+                  </Button>
+                    <UncontrolledTooltip target={"add-user"}>
+                      Add New Staff Member
+                  </UncontrolledTooltip>
+                  </div> : null
+            }
             <UsersList
               userData={userReducer}
               onPageChange={this.onPageChange}

@@ -4,7 +4,7 @@ const { Email, AvailiableTemplates } = require("../../common/Email");
 const fs = require("fs");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
-
+const moment = require("moment");
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
    const { body, currentUser } = req;
@@ -206,7 +206,7 @@ const sendMailToCustomer = async (req, res) => {
 
       // var buf = new Buffer.from(body.pdf, "base64");
       const emailVar = new Email(body);
-      await emailVar.setSubject("[Service Advisor]" + body.subject + " - Inspection Details");
+      await emailVar.setSubject("[Service Advisor]" + body.subject + ` - ${body.isInvoice ? "Order Invoice details" : "Inspection Details"}`);
       await emailVar.setAttachements([
          {
             fileName: `Inspection for ${body.orderTitle || 'Unnamed Order'}`,
@@ -215,10 +215,10 @@ const sendMailToCustomer = async (req, res) => {
       ])
       await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
          body: body.message,
-         createdAt: createdAt,
          orderTitle: body.orderTitle,
-         subDomain: body.subdomain,
-         titleMessage: "You got an nspection for",
+         createdAt: body.orderCreated,
+         companyName: body.companyName,
+         titleMessage: body.isInvoice ? "You got an invoice for" : "You got an inspection for",
          displayStyle: `style="text-align:center; display: none";`
       });
       await emailVar.sendEmail(body.email);

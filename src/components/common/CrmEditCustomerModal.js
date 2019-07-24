@@ -10,19 +10,19 @@ import {
   Row,
   Col,
   FormGroup,
-  InputGroup,
+  //InputGroup,
   Label,
   Input,
   FormFeedback
 } from "reactstrap";
 import Select from "react-select";
-import { AppSwitch } from "@coreui/react";
+//import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
 import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
-  CustomerPermissionsText
+  //CustomerPermissionsText
 } from "../../config/Constants";
 import { AppConfig } from "../../config/AppConfig";
 import {
@@ -33,7 +33,7 @@ import {
 } from "../../validations";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
-import Async from "react-select/lib/Async";
+//import Async from "react-select/lib/Async";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import LastUpdated from "../common/LastUpdated";
@@ -543,7 +543,7 @@ export class CrmEditCustomerModal extends Component {
   render() {
     const {
       customerModalOpen,
-      rateStandardListData,
+      //rateStandardListData,
       getCustomerFleetList,
       customer,
       isCustVehiclemodal
@@ -556,9 +556,9 @@ export class CrmEditCustomerModal extends Component {
       firstName,
       lastName,
       email,
-      selectedLabourRate,
-      selectedPriceMatrix,
-      percentageError
+      //selectedLabourRate,
+      //selectedPriceMatrix,
+      //percentageError
     } = this.state;
     let customerDefaultPermissions = this.state.customerDefaultPermissions;
     if (!customerDefaultPermissions) {
@@ -1019,7 +1019,7 @@ export class CrmEditCustomerModal extends Component {
                 </Col>
               </Row>
             </div>
-            <Row className="custom-label-padding ">
+            {/* <Row className="custom-label-padding ">
               {CustomerPermissionsText
                 ? CustomerPermissionsText.map((permission, index) => {
                   let discountShow = false;
@@ -1143,7 +1143,6 @@ export class CrmEditCustomerModal extends Component {
                             />
                           </Col>
                         ) : null}
-                        {/* */}
                         {pricingMatrix ? (
                           <Col
                             md=""
@@ -1165,7 +1164,7 @@ export class CrmEditCustomerModal extends Component {
                   );
                 })
                 : null}
-            </Row>
+            </Row> */}
             {fleetModalOpen ? <CrmFleetModal /> : ""}
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}

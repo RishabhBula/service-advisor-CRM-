@@ -11,19 +11,19 @@ import {
   Row,
   Col,
   FormGroup,
-  InputGroup,
+  //InputGroup,
   Label,
   Input,
   FormFeedback
 } from "reactstrap";
 import Select from "react-select";
-import { AppSwitch } from "@coreui/react";
+//import { AppSwitch } from "@coreui/react";
 import { CrmFleetModal } from "../common/CrmFleetModal";
 import { CrmStandardModel } from "../common/CrmStandardModel";
 import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import {
   CustomerDefaultPermissions,
-  CustomerPermissionsText
+  //CustomerPermissionsText
 } from "../../config/Constants";
 import { AppConfig } from "../../config/AppConfig";
 import {
@@ -34,7 +34,7 @@ import {
 } from "../../validations";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
-import Async from "react-select/lib/Async";
+//import Async from "react-select/lib/Async";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { toast } from "react-toastify";
 
@@ -463,22 +463,22 @@ export class CrmCustomerModal extends Component {
   render() {
     const {
       customerModalOpen,
-      rateStandardListData,
+      //rateStandardListData,
       getCustomerFleetList,
       isCustVehiclemodal
     } = this.props;
     const {
       selectedOption,
-      expandForm,
+      //expandForm,
       fleetModalOpen,
       phoneDetail,
       errors,
       firstName,
       lastName,
       email,
-      selectedLabourRate,
-      selectedPriceMatrix,
-      percentageError
+      //selectedLabourRate,
+      //selectedPriceMatrix,
+      //percentageError
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
       return (
@@ -908,7 +908,7 @@ export class CrmCustomerModal extends Component {
                 </FormGroup>
               </Col>
             </Row>
-            <Row className="custom-label-padding ">
+            {/* <Row className="custom-label-padding ">
               {CustomerPermissionsText
                 ? CustomerPermissionsText.map((permission, index) => {
                   let discountShow = false;
@@ -1027,7 +1027,6 @@ export class CrmCustomerModal extends Component {
                             />
                           </Col>
                         ) : null}
-                        {/* */}
                         {pricingMatrix && !this.state.modalIsOpen ? (
                           <Col
                             md=""
@@ -1049,8 +1048,8 @@ export class CrmCustomerModal extends Component {
                   );
                 })
                 : null}
-            </Row>
-            {expandForm ? (
+            </Row> */}
+            {/* {expandForm ? (
               <Col md="12 text-center pt-3">
                 <span
                   onClick={this.handleExpandForm}
@@ -1060,7 +1059,7 @@ export class CrmCustomerModal extends Component {
                   Show Less{" "}
                 </span>
               </Col>
-            ) : null}
+            ) : null} */}
             {/* </>
             ) : (
                 ""

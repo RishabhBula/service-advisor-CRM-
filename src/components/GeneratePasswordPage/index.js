@@ -20,7 +20,6 @@ import {
   ResetPasswordValidations,
   ResetPasswordValidationsMessaages
 } from "../../validations";
-import Logo from "./../../assets/img/logo-white.svg";
 
 class GeneratePasswordPage extends Component {
   constructor(props) {
@@ -75,15 +74,19 @@ class GeneratePasswordPage extends Component {
           <Col md="6">
             <Col className="text-center">
               <h4 className="logo-title">
-                <img src={Logo} alt={"logo"} />
+                <img src={"/assets/img/logo-white.svg"} alt={"logo"} />
               </h4>
             </Col>
             <CardGroup>
               <Card className="p-4">
                 <CardBody>
                   <Form onSubmit={this.generatePassword}>
-                    <h1 className="auth-title text-center">Generate Password</h1>
-                    <p className="text-muted text-center text-info-line">for your Account</p>
+                    <h1 className="auth-title text-center">
+                      Generate Password
+                    </h1>
+                    <p className="text-muted text-center text-info-line">
+                      for your Account
+                    </p>
                     <FormGroup>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -130,7 +133,11 @@ class GeneratePasswordPage extends Component {
                     </FormGroup>
                     <Row className={"m-0"}>
                       <Col xs="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
-                        <Button className="px-4 btn-theme" block onClick={this.generatePassword}>
+                        <Button
+                          className="px-4 btn-theme"
+                          block
+                          onClick={this.generatePassword}
+                        >
                           Generate Password
                         </Button>
                       </Col>

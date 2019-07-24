@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import moment from "moment";
 import {
   Button,
-  Input,
   ButtonGroup
 } from "reactstrap";
 import { getSumOfArray, calculateValues, calculateSubTotal } from "../../../helpers"

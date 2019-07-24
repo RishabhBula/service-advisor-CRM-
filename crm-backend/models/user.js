@@ -109,6 +109,12 @@ const userSchema = new Schema({
     type: [String],
     default: null
   },
+  companyNumber:{
+    type: String
+  },
+  vatNumber:{
+    type: String
+  },
   vehicleService: {
     type: [String],
     default: null
