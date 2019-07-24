@@ -207,7 +207,7 @@ class WorkflowGridView extends React.Component {
                         <div className={"service-total"}>
                           <span className={"text-black-50"}>Total:</span>
                           <Dollor
-                            value={serviceCalculation[index].orderGrandTotal}
+                            value={serviceCalculation[index] ? serviceCalculation[index].orderGrandTotal : 0}
                           />
                         </div>
                         <span
