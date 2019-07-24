@@ -53,10 +53,12 @@ class SubscriptionSettings extends Component {
   render() {
     // const { firstName, lastName,  } = this.state;
     const { profileData } = this.props;
-    const planName = profileData.profileInfo.planId.planStripeDetails.nickname || 'Plan Name';
-    const planAmount = profileData.profileInfo.planId.amount || "Plan Name";
+    const planName =
+      profileData.profileInfo.planId ? profileData.profileInfo.planId
+        .planStripeDetails.nickname : '' || "Trial Plan";
+    const planAmount = profileData.profileInfo.planId ? profileData.profileInfo.planId.amount: 0 || 0;
     const expirationDate = profileData.profileInfo.planExiprationDate;
-    const planUser = profileData.profileInfo.planId.facilities.noOfLiscence || 0;
+    const planUser = profileData.profileInfo.planId ?  profileData.profileInfo.planId.facilities.noOfLiscence : 0 || 'Limited';
     
 
     return (
