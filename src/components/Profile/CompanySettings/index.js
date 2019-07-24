@@ -198,6 +198,25 @@ class CompanySettings extends Component {
     reader.readAsDataURL(e[0]);
   };
 
+  onSelectFile = e => {
+    var reader = new FileReader();
+    const scope = this;
+    reader.addEventListener("load", () =>
+      scope.setState({
+        shopLogo: reader.result
+      })
+    );
+    reader.onloadend = function (as) {
+      var image = new Image();
+      image.onload = function () {
+        scope.setState({
+          shopLogo: reader.result
+        });
+      };
+    };
+    reader.readAsDataURL(e[0]);
+  };
+
   serviceOfferAction = event => {
     let servicesOffer = this.state.servicesOffer;
     if (servicesOffer.selectedServices.length) {
@@ -283,6 +302,7 @@ class CompanySettings extends Component {
         companyName,
         vatNumber,
         companyNumber,
+        shopLogo,
         website,
         vehicleService: { selectedVehicleServices },
         servicesOffer: { selectedServices },
@@ -327,6 +347,7 @@ class CompanySettings extends Component {
       const payload = {
         companyName,
         companyNumber,
+        shopLogo,
         vatNumber,
         website,
         vehicleService: vehicleServicesOfferTemp,

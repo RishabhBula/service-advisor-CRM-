@@ -282,11 +282,10 @@ class Order extends Component {
   };
 
   handelTemplateModal = () => {
-    const sentinvoice = true;
     this.setState({
       sentModal: !this.state.sentModal
     });
-    this.printInvoice(sentinvoice);
+    this.printInvoice({ sentinvoice: true });
   };
 
   toggleMessageTemplate = ele => {
@@ -397,12 +396,12 @@ class Order extends Component {
         startY: columnHeight + 21,
         tableWidth: pdfWidth - 45,
         columnStyles: {
-          "Service Tile": { cellWidth: 150 },
-          Price: { halign: "left" },
-          Qty: { halign: "left", cellWidth: 30 },
-          Hours: { halign: "left", cellWidth: 30 },
-          Discount: { halign: "left" },
-          "Sub total": { halign: "left" }
+          'Service Tile': { cellWidth: 150},
+          'Price': { halign: 'left' },
+          'Qty': { halign: 'left', cellWidth: 30 },
+          'Hours': { halign: 'left', cellWidth: 30 },
+          'Discount': { halign: 'left' },
+          'Sub total': { halign: 'left' },
         },
         styles: {
           // minCellHeight: 5,
@@ -425,29 +424,11 @@ class Order extends Component {
       };
       for (let j = 0; j < serviceData[i].serviceId.serviceItems.length; j++) {
         let service = serviceData[i].serviceId.serviceItems[j];
-        var val =
-          service.description || service.brandName || service.discription;
+        var val = service.description || service.brandName || service.discription;
 
-        var note =
-          (service.serviceType === "part" &&
-          service.partOptions &&
-          service.partOptions.showNoteOnQuoteAndInvoice
-            ? "{ " + service.note + " }"
-            : "") ||
-          (service.serviceType === "tire" &&
-          service.tierPermission &&
-          service.tierPermission.showNoteOnQuotesInvoices &&
-          service.tierSize[0].notes !== ""
-            ? "{ " + service.tierSize[0].notes + " }"
-            : "");
+        var note = (service.serviceType === 'part' && service.partOptions && service.partOptions.showNoteOnQuoteAndInvoice ? ('{ ' + service.note + ' }') : '') || (service.serviceType === 'tire' && service.tierPermission && service.tierPermission.showNoteOnQuotesInvoices && service.tierSize[0].notes !== '' ? ('{ ' + service.tierSize[0].notes + ' }') : '');
 
-        var partnumber =
-          (service.serviceType === "part" &&
-          service.partOptions &&
-          service.partOptions.showNumberOnQuoteAndInvoice &&
-          service.partNumber !== ""
-            ? service.partNumber
-            : "") || "";
+        var partnumber = (service.serviceType === 'part' && service.partOptions && service.partOptions.showNumberOnQuoteAndInvoice && service.partNumber !== '' ? (service.partNumber) : '') || '';
         // var serviceType = service.serviceType;
         var qty = service.qty || "";
         var hours = service.hours;
@@ -503,37 +484,18 @@ class Order extends Component {
         if (service.serviceType === "labor") {
           totalLabor += parseFloat(servicesSubTotal);
         }
-        orderSubTotal += parseFloat(servicesSubTotal);
+        orderSubTotal += (parseFloat(servicesSubTotal))
 
-        var discountType = service.discount.type;
-        var discountValue = service.discount.value || 0;
-        var discountMainVal = "";
-        discountMainVal =
-          discountValue > 0
-            ? discountType === "%"
-              ? discountValue + "%"
-              : "$" + discountValue
-            : 0;
+        var discountType = service.discount.type
+        var discountValue = service.discount.value || 0
+        var discountMainVal = ''
+        discountMainVal = discountValue > 0 ? discountType === '%' ? (discountValue + '%') : ('$' + discountValue) : 0;
         rows.push({
-          "Service Tile": val + " " + (partnumber || "") + " " + (note || ""),
+          'Service Tile': val + ' ' + (partnumber || "") + ' ' + (note || "")  , 
 
-          Price:
-            service.serviceType === "part" &&
-            service.partOptions &&
-            service.partOptions.showPriceOnQuoteAndInvoice
-              ? "$" + cost
-              : service.serviceType === "tire"
-              ? "$" + cost
-              : "-" || "-",
+          Price: service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? '$' + cost : service.serviceType === 'tire' ? '$' +cost : '-' || '-',
 
-          Qty:
-            service.serviceType === "part" &&
-            service.partOptions &&
-            service.partOptions.showPriceOnQuoteAndInvoice
-              ? qty
-              : service.serviceType === "tire"
-              ? qty
-              : "-" || "-",
+          Qty: service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? qty : service.serviceType === 'tire' ? qty : '-' || '-',
           Hours: hours || "-",
           Discount: discountMainVal,
           "Sub total": "$" + servicesSubTotal + ""
@@ -580,12 +542,11 @@ class Order extends Component {
     itemHeight = finalY + 30;
 
     doc.setFontSize(12);
-     doc.text(
-       "Total Parts  : $" + parseFloat(totalParts).toFixed(2) + "",
-       450,
-       itemHeight + 30
-     );
-   
+    doc.text(
+      "Total Parts  : $" + totalParts.toFixed(2) + "",
+      450,
+      itemHeight + 30
+    );
     doc.text(
       "Total Tires  : $" + totalTires.toFixed(2) + "",
       450,
@@ -754,28 +715,23 @@ class Order extends Component {
                     </div>
                   ) : null}
                   <div className={"order-activity"}>
-                    {serviceReducers.services.length  ? 
-                      <>
-                        <span
-                          color=""
-                          className="print-btn"
-                          onClick={this.handelTemplateModal}
-                        >
-                          {/* <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link> */}
-                          <i className="icons cui-cursor" />
-                          &nbsp; Sent
-                        </span>
-                        <span
-                          id="add-Appointment"
-                          className="print-btn"
-                          onClick={() => this.printInvoice(sentinvoice)}
-                        >
-                          <i className="icon-printer icons " />
-                          &nbsp; Print
-                        </span>{" "}
-                      </>
-                      : null
-                    }
+                    <span
+                      color=""
+                      className="print-btn"
+                      onClick={this.handelTemplateModal}
+                    >
+                      {/* <Link to={`/order-summary?orderId=${orderIDurl}&customerId=${customerIDurl}&companyIDurl=${companyIDurl}`} target="_blank"><i className="icon-eye icons"></i>&nbsp; View</Link> */}
+                      <i className="icons cui-cursor" />
+                      &nbsp; Sent
+                    </span>
+                    <span
+                      id="add-Appointment"
+                      className="print-btn"
+                      onClick={() => this.printInvoice(false)}
+                    >
+                      <i className="icon-printer icons " />
+                      &nbsp; Print
+                    </span>
                   </div>
                   <div className={"position-relative"}>
                     <Suspense fallback={"Loading.."}>
@@ -821,9 +777,7 @@ class Order extends Component {
                           }
                           orderReducer={orderReducer}
                           addNewCannedService={addNewCannedService}
-                          deleteCannedServiceRequest={
-                            deleteCannedServiceRequest
-                          }
+                          deleteCannedServiceRequest={deleteCannedServiceRequest}
                           {...this.props}
                         />
                       ) : null}
@@ -866,9 +820,7 @@ class Order extends Component {
                       ) : null}
                       {activeTab === 3 ? (
                         <Message
-                          searchMessageTemplateList={
-                            searchMessageTemplateList
-                          }
+                          searchMessageTemplateList={searchMessageTemplateList}
                           customerData={customerData}
                           vehicleData={vehicleData}
                           sendMessage={sendMessage}
@@ -906,9 +858,7 @@ class Order extends Component {
               toggle={this.handelTemplateModal}
               customerData={customerData}
               vehicleData={vehicleData}
-              searchMessageTemplateList={
-                this.props.searchMessageTemplateList
-              }
+              searchMessageTemplateList={this.props.searchMessageTemplateList}
               toggleMessageTemplate={this.toggleMessageTemplate}
               sendMessageTemplate={this.props.sendMessageTemplate}
               pdfBlob={pdfBlob}
@@ -1064,10 +1014,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addPaymentRequest(data));
   },
   addNewCannedService: data => {
-    dispatch(addNewCannedService(data));
+    dispatch(addNewCannedService(data))
   },
   getOrders: () => dispatch(getOrderList()),
-  updateOrderStatus: data => dispatch(updateOrderStatus(data))
+  updateOrderStatus: data => dispatch(updateOrderStatus(data)),
 });
 export default connect(
   mapStateToProps,
