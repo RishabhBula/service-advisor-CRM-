@@ -10,10 +10,12 @@ import {
   Nav,
   NavItem
 } from "reactstrap";
+import { AppRoutes } from "../../config/AppRoutes"
 // import SearchBar from "../../components/common/SearchBar";
-
-
+import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
+import { logger } from "../../helpers";
+import AddAppointment from "../../components/Appointments/AddAppointment";
 
 const propTypes = {
   children: PropTypes.node
@@ -22,17 +24,76 @@ const propTypes = {
 const defaultProps = {};
 
 class DefaultHeader extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openCreate: false,
+      selectedDate: new Date()
+    }
+  }
   toggleCustAndVehicle = () => {
     this.props.toggleCustAndVehicle();
   };
+  handleNewOrder = () => {
+    this.props.addOrderRequest()
+  }
+  handleInventrySection = () => {
+    this.props.redirectTo(AppRoutes.INVENTORY_STATATICS.url)
+  }
+  toggleCreateModal = e => {
+    e.preventDefault();
+    this.setState({
+      openCreate: !this.state.openCreate,
+    });
+  };
+  handleAddFleet = data => {
+    try {
+      this.props.addFleet(data);
+      this.setState({
+        openCreate: !this.state.openCreate,
+      });
+    } catch (error) {
+      logger(error)
+    }
+  };
+  onTypeHeadStdFun = data => {
+    this.props.getStdList(data);
+  };
+  setDefaultRate = value => {
+    this.props.setLabourRateDefault(value);
+  };
+  toggleAddAppointModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { showAddAppointmentModal } = modelDetails;
+    this.props.modelOperate({
+      showAddAppointmentModal: !showAddAppointmentModal
+    });
+    this.setState({
+      editData: {},
+      selectedDate: new Date()
+    });
+  };
   render() {
-    const { permissions } = this.props;
+    const {
+      permissions,
+      rateStandardListReducer,
+      profileInfoReducer,
+      showAddAppointmentModal,
+      matrixListReducer,
+      getCustomerData,
+      getVehicleData,
+      getOrders,
+      addAppointment,
+      getUserData,
+      getMatrix } = this.props;
+    const { openCreate, selectedDate } = this.state
     // eslint-disable-next-line
     return (
       <React.Fragment>
         <div className="custom-main-logo">
           <AppSidebarToggler className="d-lg-none" display="md" mobile />
-          
+
 
           {/* <AppSidebarToggler
             children={<i className="fa fa-bars" />}
@@ -98,26 +159,26 @@ class DefaultHeader extends Component {
                   </span>
                   <span className="header-add-text">Customer & Vehicle</span>
                 </DropdownItem>
-                <DropdownItem>
+                <DropdownItem onClick={this.handleNewOrder}>
                   <span className="header-add-icon">
                     <i className="far fa-file-alt" />
                     <i className="fal fa-file-invoice" />
                   </span>
                   <span>Quote</span>
                 </DropdownItem>
-                <DropdownItem>
+                <DropdownItem onClick={this.toggleAddAppointModal}>
                   <span className="header-add-icon">
                     <i className="fa fa-tasks" />
                   </span>
                   <span>Appointment</span>
                 </DropdownItem>
-                <DropdownItem>
+                <DropdownItem onClick={this.handleInventrySection}>
                   <span className="header-add-icon">
                     <i className="fas fa-sitemap" />
                   </span>
                   <span>Inventory</span>
                 </DropdownItem>
-                <DropdownItem>
+                <DropdownItem onClick={this.toggleCreateModal}>
                   <span className="header-add-icon">
                     <i className="fa fa-automobile" />
                   </span>
@@ -133,6 +194,28 @@ class DefaultHeader extends Component {
             </AppHeaderDropdown>
           </Nav>
         </div>
+        <CrmFleetModal
+          fleetModalOpen={openCreate}
+          handleFleetModal={this.toggleCreateModal}
+          handleAddFleet={this.handleAddFleet}
+          onTypeHeadStdFun={this.onTypeHeadStdFun}
+          setDefaultRate={this.setDefaultRate}
+          addFleet={this.handleAddFleet}
+          rateStandardListData={rateStandardListReducer}
+          profileInfoReducer={profileInfoReducer.profileInfo}
+          matrixListReducerData={matrixListReducer}
+          getPriceMatrix={getMatrix}
+        />
+        <AddAppointment
+          isOpen={showAddAppointmentModal}
+          toggleAddAppointModal={this.toggleAddAppointModal}
+          getCustomerData={getCustomerData}
+          getVehicleData={getVehicleData}
+          date={selectedDate}
+          getOrders={getOrders}
+          addAppointment={addAppointment}
+          getUserData={getUserData}
+        />
       </React.Fragment>
     );
   }
