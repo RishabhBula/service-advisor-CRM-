@@ -34,6 +34,10 @@ class InvoiceChart extends Component {
   renderOptions = () => {
     return {
       responsive: true,
+      legend: {
+        display: true,
+        position: "bottom"
+      },
       scales: {
         xAxes: [
           {
