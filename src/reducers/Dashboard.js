@@ -11,6 +11,9 @@ const initialState = {
     technicianCount: 0,
     vehicleCount: 0,
     isLoading: true
+  },
+  customerSales: {
+    isLoading: true
   }
 };
 
@@ -28,6 +31,23 @@ export const dashboardReducer = handleActions(
     ) => ({
       ...state,
       overview: {
+        ...payload,
+        isLoading: false
+      }
+    }),
+    [dashboardActions.GET_DASHBOARD_CUSTOMER_SALE]: (state, { payload }) => ({
+      ...state,
+      customerSales: {
+        isLoading: true
+      }
+    }),
+    [dashboardActions.GET_DASHBOARD_CUSTOMER_SALE_SUCCESS]: (
+      state,
+      { payload }
+    ) => ({
+      ...state,
+      customerSales: {
+        ...state.customerSales,
         ...payload,
         isLoading: false
       }

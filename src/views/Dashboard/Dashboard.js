@@ -19,6 +19,9 @@ import DashboardPlanDetails from "../../components/Dashboard/PlanDetails";
 import InvoiceChart from "../../components/Dashboard/InvoiceChart";
 import DashboardAppointments from "../../components/Dashboard/Appointments";
 import { AppRoutes } from "../../config/AppRoutes";
+import moment from "moment";
+import qs from "query-string";
+import { logger } from "../../helpers";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -53,14 +56,120 @@ class Dashboard extends Component {
           key: "technicianCount",
           url: AppRoutes.STAFF_MEMBERS.url
         }
-      ]
+      ],
+      customerStartDate: "",
+      customerEndDate: "",
+      type: "today"
     };
   }
+  /**
+   *
+   */
   componentDidMount = () => {
     this.props.getDashboardOverView();
-    this.props.getDashboardCustomerSales();
+    this.getCustomerSales();
   };
+  /**
+   *
+   */
+  componentDidUpdate({ location }) {
+    const { search: oldSearch } = location;
+    const { search } = this.props.location;
+    if (search !== oldSearch) {
+      this.getCustomerSales();
+    }
+  }
+  /**
+   *
+   */
+  getCustomerSales = () => {
+    const { location } = this.props.history;
+    const { search } = location;
+    let { customerSales } = qs.parse(search);
+    this.setState({
+      type: customerSales
+    });
+    let { start, end } = this.getStartAndEnd(customerSales);
+    if (!start) {
+      start = moment().format("YYYY-MM-DD");
+    }
+    if (!end) {
+      end = moment().format("YYYY-MM-DD");
+    }
+    this.props.getDashboardCustomerSales({
+      start,
+      end
+    });
+  };
+  /**
+   *
+   */
+  getStartAndEnd = type => {
+    switch (type) {
+      case "week":
+        return {
+          start: moment()
+            .startOf("week")
+            .format("YYYY-MM-DD"),
+          end: moment().format("YYYY-MM-DD")
+        };
+      case "month":
+        return {
+          start: moment()
+            .startOf("month")
+            .format("YYYY-MM-DD"),
+          end: moment().format("YYYY-MM-DD")
+        };
+      case "quarter":
+        return {
+          start: moment()
+            .startOf("quarter")
+            .format("YYYY-MM-DD"),
+          end: moment().format("YYYY-MM-DD")
+        };
+      case "all":
+        return {
+          start: moment()
+            .subtract(10, "years")
+            .format("YYYY-MM-DD"),
+          end: moment().format("YYYY-MM-DD")
+        };
+      default:
+        return {
+          start: moment().format("YYYY-MM-DD"),
+          end: moment().format("YYYY-MM-DD")
+        };
+    }
+  };
+  /**
+   *
+   */
+  onCustomerSaleRangeChange = (value, start, end) => {
+    if (value !== "custom") {
+      const dates = this.getStartAndEnd(value);
+      start = dates.start;
+      end = dates.end;
+    }
+    logger(start, end);
+    let { search } = this.props.location;
+    if (!search) {
+      search = {};
+    } else {
+      search = qs.parse(search);
+    }
+    search = {
+      ...search,
+      customerSales: value,
+      start,
+      end
+    };
+    logger(search);
 
+    this.props.redirectTo(`${AppRoutes.DASHBOARD.url}?${qs.stringify(search)}`);
+  };
+  /**
+   *
+   */
   render() {
     const {
       modelInfoReducer,
@@ -74,8 +183,8 @@ class Dashboard extends Component {
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { openSubscriptionModel, openSubPayementModel } = modelDetails;
-    const { cards } = this.state;
-    const { overview } = dashboardData;
+    const { cards, customerStartDate, customerEndDate, type } = this.state;
+    const { overview, customerSales } = dashboardData;
     const actualCards = cards.map(card => {
       return {
         ...card,
@@ -103,7 +212,13 @@ class Dashboard extends Component {
                 <br />
                 <Row>
                   <Col sm={"6"}>
-                    <InvoiceChart />
+                    <InvoiceChart
+                      customerSales={customerSales}
+                      onFilterChange={this.onCustomerSaleRangeChange}
+                      customerStartDate={customerStartDate}
+                      customerEndDate={customerEndDate}
+                      type={type}
+                    />
                   </Col>
                   <Col sm={"6"}>
                     <DashboardAppointments />
