@@ -5,47 +5,61 @@ import { withRouter } from "react-router-dom";
 import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
 import {
   getSubscriptionPlanRequest,
-  addSubscriptionRequest
+  addSubscriptionRequest,
+  getDashboardOverview,
+  getDashboardCustomerSale
 } from "../../actions";
-// import SubscriptionSettings from "../../components/Profile/SubscriptionSettings";
 
 import CardComponent from "../../components/Dashboard/Card";
 import CustomerIcon from "./../../assets/customers.svg";
+import OrderIcon from "./../../assets/product.svg";
+import DeliveryTruckIcon from "./../../assets/delivery-truck.svg";
+import TechnicianIcon from "./../../assets/car-service.svg";
 import DashboardPlanDetails from "../../components/Dashboard/PlanDetails";
 import InvoiceChart from "../../components/Dashboard/InvoiceChart";
+import DashboardAppointments from "../../components/Dashboard/Appointments";
+import { AppRoutes } from "../../config/AppRoutes";
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cards: [
         {
-          icon: CustomerIcon,
+          icon: OrderIcon,
           text: "Orders",
-          value: 10,
-          key: "orders"
+          value: 0,
+          key: "orderCount",
+          url: AppRoutes.WORKFLOW.url
         },
         {
           icon: CustomerIcon,
           text: "Customers",
-          value: 10,
-          key: "customer"
+          value: 0,
+          key: "customerCount",
+          url: AppRoutes.CUSTOMERS.url
         },
         {
-          icon: CustomerIcon,
+          icon: DeliveryTruckIcon,
           text: "Vehicles",
-          value: 10,
-          key: "vehicle"
+          value: 0,
+          key: "vehicleCount",
+          url: AppRoutes.VEHICLES.url
         },
         {
-          icon: CustomerIcon,
+          icon: TechnicianIcon,
           text: "Technicians",
-          value: 10,
-          key: "technicians"
+          value: 0,
+          key: "technicianCount",
+          url: AppRoutes.STAFF_MEMBERS.url
         }
       ]
     };
   }
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    this.props.getDashboardOverView();
+    this.props.getDashboardCustomerSales();
+  };
 
   render() {
     const {
@@ -53,13 +67,21 @@ class Dashboard extends Component {
       modelOperate,
       getSubscriptionPlanRequest,
       subscriptionReducer,
-      addSubscriptionRequest
+      addSubscriptionRequest,
+      dashboardData,
+      redirectTo
       // profileInfo
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { openSubscriptionModel, openSubPayementModel } = modelDetails;
     const { cards } = this.state;
-
+    const { overview } = dashboardData;
+    const actualCards = cards.map(card => {
+      return {
+        ...card,
+        value: overview[card.key]
+      };
+    });
     return (
       <div className="animated fadeIn dashboard-container ">
         <Row>
@@ -70,10 +92,10 @@ class Dashboard extends Component {
                   <Col sm={"12"}>
                     <DashboardPlanDetails />
                   </Col>
-                  {cards.map((card, index) => {
+                  {actualCards.map((card, index) => {
                     return (
                       <Col sm={"3"} key={index} className={"dashboard-card"}>
-                        <CardComponent {...card} />
+                        <CardComponent redirectTo={redirectTo} {...card} />
                       </Col>
                     );
                   })}
@@ -84,7 +106,7 @@ class Dashboard extends Component {
                     <InvoiceChart />
                   </Col>
                   <Col sm={"6"}>
-                    <InvoiceChart />
+                    <DashboardAppointments />
                   </Col>
                 </Row>
               </CardBody>
@@ -106,11 +128,14 @@ class Dashboard extends Component {
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   subscriptionReducer: state.subscriptionReducer,
-  profileInfo: state.profileInfoReducer
+  profileInfo: state.profileInfoReducer,
+  dashboardData: state.dashboardReducer
 });
 const mapDispatchToProps = dispatch => ({
   getSubscriptionPlanRequest: () => dispatch(getSubscriptionPlanRequest()),
-  addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data))
+  addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data)),
+  getDashboardOverView: data => dispatch(getDashboardOverview(data)),
+  getDashboardCustomerSales: data => dispatch(getDashboardCustomerSale(data))
 });
 export default connect(
   mapStateToProps,

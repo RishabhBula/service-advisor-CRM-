@@ -71,6 +71,8 @@ class InvoiceChart extends Component {
     };
     return (
       <div className={"dashboard-block-container"}>
+        <h3>Sales Details</h3>
+        <br />
         <Bar data={costChart} options={options} />
       </div>
     );

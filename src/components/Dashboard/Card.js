@@ -7,7 +7,7 @@ class CardComponent extends Component {
     this.state = {};
   }
   render() {
-    const { icon, text, value } = this.props;
+    const { icon, text, value, redirectTo, url } = this.props;
     return (
       <div className={"main-card dashboard-block-container"}>
         <Row>
@@ -21,8 +21,14 @@ class CardComponent extends Component {
         </Row>
         <hr />
         <div className={"anchor-container"}>
-          <a href={"/"} onClick={e => e.preventDefault()}>
-            View Details
+          <a
+            href={"/"}
+            onClick={e => {
+              e.preventDefault();
+              redirectTo(url);
+            }}
+          >
+            View All
           </a>
         </div>
       </div>

@@ -32,7 +32,7 @@ const createCustomer = async (req, res) => {
       permission: body.permission,
       parentId: body.parentId,
       userId: body.userId,
-      status: true,
+      status: true
     };
 
     let result = await customerModel(cusomerData).save();
@@ -67,7 +67,7 @@ const getAllCustomerList = async (req, res) => {
     const offset = (page - 1) * limit;
     const searchValue = query.search ? query.search : "";
     const sort = query.sort;
-    const customerId = query.customerId
+    const customerId = query.customerId;
     const status = query.status;
     let sortBy = {};
     switch (sort) {
@@ -143,7 +143,7 @@ const getAllCustomerList = async (req, res) => {
     }
     if (customerId) {
       condition["$and"].push({
-        _id: mongoose.Types.ObjectId(customerId) 
+        _id: mongoose.Types.ObjectId(customerId)
       });
     }
     const users = await customerModel
@@ -282,6 +282,9 @@ const updateStatus = async ({ body }, res) => {
     });
   }
 };
+/**
+ *
+ */
 const bulkCustomerAdd = async (req, res) => {
   const { body } = req;
   var i,
@@ -296,6 +299,9 @@ const bulkCustomerAdd = async (req, res) => {
     .status(200)
     .json({ message: `${body.length} records added successfully!` });
 };
+/**
+ *
+ */
 module.exports = {
   createCustomer,
   getAllCustomerList,

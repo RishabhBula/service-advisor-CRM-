@@ -26,6 +26,8 @@ export * from "./OrderSummary";
 export * from "./Appointments";
 export * from "./Payment";
 export * from "./Subscription";
+export * from "./Dashboard";
+
 //
 export const redirectTo = createAction("REDIRET_TO");
 //
