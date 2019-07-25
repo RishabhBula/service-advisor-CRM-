@@ -98,12 +98,25 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
+    background-color: #fff;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
     &.company-name {
       background-color: #fff;
       color: #8157ef;
       justify-content: center;
       align-items: center;
       font-size: 48px;
+    }
+    img{
+      max-width: 120px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
   &.sidebar-fixed {
@@ -774,11 +787,22 @@ body {
     }
   }
   /* React Select Design  */
-  .css-11unzgr {
-    .css-1gl4k7y,
-    .css-wqgs6e {
-      padding: 0px 5px;
-      text-align: left;
+  // .css-11unzgr {
+  //   .css-1gl4k7y,
+  //   .css-wqgs6e {
+  //     padding: 0px 5px;
+  //     text-align: left;
+  //   }
+  // }
+
+  /*======Profile Setting Page===*/
+  .profile-setting-page{
+    .custom-form-modal{
+      .form-group {
+        label{
+          min-width: 110px;
+        }
+      }
     }
   }
 }

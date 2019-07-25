@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Row, Col, Button } from "reactstrap";
-
 import "../../../scss/subscription.scss";
+import Dollor from "../../common/Dollor";
+
 import moment from "moment";
 class SubscriptionSettings extends Component {
   constructor(props) {
@@ -35,7 +36,16 @@ class SubscriptionSettings extends Component {
 
   render() {
     const { profileData } = this.props;
+    const planName = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId.planStripeDetails.nickname
+      : "" || "Trial Plan";
+    const planAmount = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId.amount
+      : 0 || 0;
     const expirationDate = profileData.profileInfo.planExiprationDate;
+    const planUser = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId.facilities.noOfLiscence
+      : 0 || "Limited";
 
     return (
       <div>
@@ -51,17 +61,17 @@ class SubscriptionSettings extends Component {
                 <i className="icons cui-dollar mr-3 plan-icon" />
                 <div>
                   <h4>
-                    Currently <b className={"text-success"}>"{"Plan Name"}"</b>{" "}
-                    has been activated{" "}
+                    Currently <b className={"text-success"}>"{planName}"</b> has
+                    been activated{" "}
                   </h4>
                   <span className={"plan-detail mr-4 text-muted"}>
-                    Allowed: <span className={"pl-2 text-dark"}>1 User(s)</span>
+                    Allowed:{" "}
+                    <span className={"pl-2 text-dark"}>{planUser} User(s)</span>
                   </span>
                   <span className={"plan-detail text-muted"}>
                     Amount:{" "}
                     <span className={"pl-2 text-dark"}>
-                      <i className="fas fa-dollar" />
-                      70 paid{" "}
+                      <Dollor value={planAmount} /> paid{" "}
                     </span>
                   </span>
                   <div className={"pt-3 mb-2"}>

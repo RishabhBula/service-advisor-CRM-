@@ -169,17 +169,23 @@ class TimeLogList extends Component {
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
                     <td><Dollor value={`${parseFloat(timeLog.total).toFixed(2)}`} /></td>
                     <td className={"text-center"}>
-                      <Button
-                        size={"sm"}
-                        onClick={() => this.handleEditTimeClockModal(timeLog)}
-                        id={`edit-${timeLog._id}`}
-                        className={"btn-theme-transparent"}
-                      >
-                        <i className={"icons cui-pencil"} />
-                      </Button>{" "}
-                      <UncontrolledTooltip target={`edit-${timeLog._id}`}>
-                        Edit
-                      </UncontrolledTooltip>
+                      {
+                        timeLog.type !== "timeclock" ?
+                          <span>
+                            <Button
+                              size={"sm"}
+                              onClick={() => this.handleEditTimeClockModal(timeLog)}
+                              id={`edit-${timeLog._id}`}
+                              className={"btn-theme-transparent"}
+                            >
+                              <i className={"icons cui-pencil"} />
+                            </Button>{" "}
+                            <UncontrolledTooltip target={`edit-${timeLog._id}`}>
+                              Edit
+                            </UncontrolledTooltip>
+                          </span> :
+                          null
+                      }
                       &nbsp;
                       <Button
                         size={"sm"}

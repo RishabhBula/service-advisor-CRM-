@@ -20,6 +20,8 @@ import Dropzone from "react-dropzone";
 import Cropper from "react-easy-crop";
 import classnames from "classnames";
 import { isValidURL } from "../../helpers/Object";
+import getCroppedImg from "./cropImage";
+
 const allVehicleServices = [
   {
     key: "Cars",
@@ -84,6 +86,9 @@ export class CrmWelcomeModel extends Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
       aspect: 4 / 3,
+      cropSize: { width: 200, height: 150 },
+      croppedAreaPixels: null,
+      croppedImage: null,
       peopleWork: {
         selected: "",
         allPeopleArray
@@ -123,6 +128,10 @@ export class CrmWelcomeModel extends Component {
 
   onCropChange = crop => {
     this.setState({ crop });
+  };
+
+  onCropComplete = (croppedArea, croppedAreaPixels) => {
+    this.setState({ croppedAreaPixels });
   };
 
   onZoomChange = zoom => {
@@ -303,6 +312,15 @@ export class CrmWelcomeModel extends Component {
       });
     }
   };
+
+  showCroppedImage = async () => {
+    const croppedImage = await getCroppedImg(
+      this.state.companyLogo,
+      this.state.croppedAreaPixels
+    );
+    this.setState({ companyLogo: croppedImage, zoom: 1 });
+  };
+
   render() {
     const { modalOpen, toggleLarge, userName } = this.props;
     const {
@@ -407,13 +425,25 @@ export class CrmWelcomeModel extends Component {
                             <Cropper
                               image={this.state.companyLogo}
                               crop={this.state.crop}
-                              // zoom={this.state.zoom}
                               aspect={this.state.aspect}
                               onCropChange={this.onCropChange}
-                              // onZoomChange={this.onZoomChange}
+                              onCropComplete={this.onCropComplete}
+                              onZoomChange={this.onZoomChange}
+                              zoom={this.state.zoom}
+                              restrictPosition={false}
+                              cropSize={this.state.cropSize}
+                              viewMode={2}
                             />
                           </div>
                         </div>
+                        <Button
+                          onClick={this.showCroppedImage}
+                          variant="contained"
+                          color=""
+                          className={"btn-theme-line mt-2"}
+                        >
+                          <i className="fa fa-crop" /> &nbsp;Crop Logo
+                        </Button>
                         <div className="cropper-controls">
                           <Row className={"m-0"}>
                             <Col
@@ -450,7 +480,7 @@ export class CrmWelcomeModel extends Component {
                                   });
                                 }}
                               >
-                                <i class="cui-trash icons" />
+                                <i className="cui-trash icons" />
                               </Button>
                               <UncontrolledTooltip target="Tooltip-1">
                                 Remove

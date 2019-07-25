@@ -7,7 +7,8 @@ import SubscriptionSettings from "../../components/Profile/SubscriptionSettings"
 import { connect } from "react-redux";
 import {
   updatePasswordRequest,
-  profileSettingUpdateRequest
+  profileSettingUpdateRequest,
+  updateCompanyLogo
 } from "../../actions";
 class Profile extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class Profile extends Component {
                 <CompanySettings
                   profileData={profileInfo}
                   updateProfileSetting={this.props.profileSettingUpdateRequest}
+                  onLogoUpdate={this.props.updateCompanyLogo}
                 />
               </>
             ) : null}
@@ -66,7 +68,8 @@ const mapDispatchToProps = dispatch => ({
   },
   profileSettingUpdateRequest: data => {
     dispatch(profileSettingUpdateRequest(data));
-  }
+  },
+  updateCompanyLogo: data => dispatch(updateCompanyLogo(data))
 });
 
 export default connect(

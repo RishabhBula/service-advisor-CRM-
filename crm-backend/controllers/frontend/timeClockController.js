@@ -101,8 +101,6 @@ const startTimer = async (req, res) => {
     orderId,
     startDateTime: new Date
   });
-  console.log("&&&&&&&&&&&&&&&&&&&&&", timeClock);
-
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -146,8 +144,6 @@ const stopTimer = async (req, res) => {
     // return res.status(400).json({
     //   message: "This technician is not working on any task."
     // });
-    console.log('###########Time Log Distroyed#############');
-
     timeClocks[`${technicianId}`].destroy();
   }
   const result = await TimeClock.findOne(
