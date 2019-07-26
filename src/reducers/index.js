@@ -27,6 +27,8 @@ import { appointmentReducer, appointmentDetailsReducer } from "./Appointments";
 
 import { paymentReducer } from "./Payment";
 import { subscriptionReducer } from "./Subscription";
+import { dashboardReducer } from "./Dashboard";
+
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -70,6 +72,7 @@ const AppReducer = combineReducers({
   appointmentDetailsReducer,
   paymentReducer,
   subscriptionReducer,
+  dashboardReducer,
   routing: routerReducer
 });
 
