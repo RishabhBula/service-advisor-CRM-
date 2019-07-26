@@ -180,6 +180,9 @@ const customerSales = async (req, res) => {
                 $gte: start,
                 $lte: end
               }
+            },
+            {
+              isInvoice: true
             }
           ]
         };
@@ -208,6 +211,9 @@ const customerSales = async (req, res) => {
                     $gte: start,
                     $lte: end
                   }
+                },
+                {
+                  isInvoice: true
                 }
               ]
             }

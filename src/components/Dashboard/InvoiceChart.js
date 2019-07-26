@@ -38,6 +38,9 @@ class InvoiceChart extends Component {
         display: true,
         position: "bottom"
       },
+      tooltips: {
+        mode: "label"
+      },
       scales: {
         xAxes: [
           {
@@ -53,9 +56,22 @@ class InvoiceChart extends Component {
             gridLines: {
               display: false
             },
+            id: "y-axis-1",
             ticks: {
               beginAtZero: true
-            }
+            },
+            position: "left"
+          },
+          {
+            display: true,
+            gridLines: {
+              display: false
+            },
+            id: "y-axis-2",
+            ticks: {
+              beginAtZero: true
+            },
+            position: "right"
           }
         ]
       }
@@ -91,7 +107,8 @@ class InvoiceChart extends Component {
           pointBorderColor: "#8157ef",
           pointBackgroundColor: "#8157ef",
           pointHoverBackgroundColor: "#8157ef",
-          pointHoverBorderColor: "#8157ef"
+          pointHoverBorderColor: "#8157ef",
+          yAxisID: "y-axis-1"
         },
         {
           data: invoiceNumbers,
@@ -101,7 +118,8 @@ class InvoiceChart extends Component {
           backgroundColor: "#20a8d8",
           borderColor: "#20a8d8",
           hoverBackgroundColor: "#20a8d8",
-          hoverBorderColor: "#20a8d8"
+          hoverBorderColor: "#20a8d8",
+          yAxisID: "y-axis-2"
         }
       ]
     };
