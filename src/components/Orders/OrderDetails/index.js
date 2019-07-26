@@ -74,16 +74,16 @@ class OrderDetails extends Component {
     const serviceData = orderReducer.orderItems ? orderReducer.orderItems.serviceId : ""
     let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGandTotal = 0, serviceTotalArray,
       totalTax = 0, totalDiscount = 0, totalPaiedAmount = 0;
-      const orderStatus = orderReducer.orderStatus;
+    const orderStatus = orderReducer.orderStatus;
     const groupedOptions = [];
     orderStatus.map((status, index) => {
-     
+
       return (
         //console.log(status),
         groupedOptions.push({ label: status.name, id: status._id })
       );
     });
-    
+
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -113,12 +113,12 @@ class OrderDetails extends Component {
             <span className={"name-label"}>Authorization</span>
             <span>
               <ButtonGroup>
-                <Button color={""} className={orderReducer && !orderReducer.orderItems.status ? "btn btn-sm active" : "btn btn-sm"} onClick={(e) => this.props.orderStatus('authorizStatus', false)}>
+                <Button color={""} className={orderReducer && orderReducer.orderItems && !orderReducer.orderItems.status ? "btn btn-sm active" : "btn btn-sm"} onClick={(e) => this.props.orderStatus('authorizStatus', false)}>
                   {orderReducer && !orderReducer.orderItems.status ? <span className={"bg-danger authoris-dot"}></span> : ''} Not Authorised
-                      </Button>
-                <Button color={""} className={orderReducer && !orderReducer.orderItems.status ? "btn btn-sm" : "btn btn-sm active"} onClick={(e) => this.props.orderStatus('authorizStatus', true)}>
+                </Button>
+                <Button color={""} className={orderReducer && orderReducer.orderItems && !orderReducer.orderItems.status ? "btn btn-sm" : "btn btn-sm active"} onClick={(e) => this.props.orderStatus('authorizStatus', true)}>
                   {orderReducer && orderReducer.orderItems.status ? <span className={"bg-success authoris-dot"}></span> : ''} Authorised
-                      </Button>
+                </Button>
               </ButtonGroup>
             </span>
           </div>

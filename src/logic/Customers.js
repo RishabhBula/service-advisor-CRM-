@@ -111,8 +111,8 @@ const getCustomersLogic = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         sort:
           action.payload && action.payload.sort ? action.payload.sort : null,
         status:
@@ -123,7 +123,8 @@ const getCustomersLogic = createLogic({
         customerId:
           action.payload && action.payload.customerId
             ? action.payload.customerId
-            : null
+            : null,
+        page: action.payload && action.payload.page ? action.payload.page : null
       }
     );
     if (result.isError) {
@@ -300,7 +301,7 @@ const importCustomerLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `First name not found on row  <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }
@@ -308,7 +309,7 @@ const importCustomerLogic = createLogic({
         hasError = true;
         errroredRows.push(
           `Phone number not found on row  <b>${element.rowNumber}</b> of <b>${
-            element.sheetName
+          element.sheetName
           }</b> sheet.`
         );
       }
@@ -438,14 +439,14 @@ const getExportData = async (payload, data = []) => {
         "Refral Source": res.referralSource || "-",
         "Is Tax Exempt":
           res.permission &&
-          res.permission.isCorporateFleetTaxExempt &&
-          res.permission.isCorporateFleetTaxExempt.status
+            res.permission.isCorporateFleetTaxExempt &&
+            res.permission.isCorporateFleetTaxExempt.status
             ? "yes"
             : "no",
         "Is Receive A Discount":
           res.permission &&
-          res.permission.shouldReceiveDiscount &&
-          res.permission.shouldReceiveDiscount.status
+            res.permission.shouldReceiveDiscount &&
+            res.permission.shouldReceiveDiscount.status
             ? "yes"
             : "no",
         Status: res.status ? "Active" : "Inactive"
