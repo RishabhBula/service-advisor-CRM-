@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import Validator from "js-object-validation";
 import * as classnames from "classnames";
-// import MaskedInput from "react-maskedinput";
+import MaskedInput from "react-text-mask";
 import {
   Button,
   Modal,
@@ -230,14 +230,11 @@ export class CrmCustomerModal extends Component {
 
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
-    if (isNaN(value)) {
-      return
-    }
-    const InCorrectNumber = [...this.state.inCorrectNumber]
-    if (parseInt(value.length) < 10) {
-      InCorrectNumber[index] = true
+    const IncorrectNumber = [...this.state.inCorrectNumber]
+    if (parseInt(value.length) < 12) {
+      IncorrectNumber[index] = true
       this.setState({
-        inCorrectNumber: InCorrectNumber
+        inCorrectNumber: IncorrectNumber
       })
     } else {
       this.setState({
@@ -250,7 +247,6 @@ export class CrmCustomerModal extends Component {
       phoneDetail
     });
   };
-
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
@@ -595,16 +591,19 @@ export class CrmCustomerModal extends Component {
                                 </Input>
                                 {phoneDetail[index].phone === "mobile" ? (
                                   <div className="input-block select-number-tile">
-                                    <Input
+                                    <MaskedInput
+                                      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
                                       name="phoneDetail"
                                       placeholder="(555) 055-0555"
                                       className={classnames("form-control", {
                                         "is-invalid":
                                           (this.state.phoneErrors[index] !== "" &&
-                                            !item.value) || this.state.inCorrectNumber[index]
+                                            !item.value) || (this.state.inCorrectNumber[index])
                                       })}
-                                      maxLength={"10"}
+                                      size="20"
                                       value={item.value}
+                                      maxLength={13}
+                                      guide={false}
                                       onChange={e =>
                                         this.handlePhoneValueChange(index, e)
                                       }
@@ -618,16 +617,15 @@ export class CrmCustomerModal extends Component {
                                   </div>
                                 ) : (
                                     <div className="input-block select-number-tile">
-                                      <Input
+                                      <MaskedInput
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            (this.state.phoneErrors[index] !== "" &&
-                                              !item.value) || this.state.inCorrectNumber[index]
-                                        })}
+                                        className="form-control"
                                         placeholder="(555) 055-0555 ext 1234"
-                                        maxLength={"15"}
+                                        size="20"
                                         value={item.value}
+                                        maxLength={22}
+                                        guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
@@ -700,16 +698,19 @@ export class CrmCustomerModal extends Component {
                                   </Input>
                                   {phoneDetail[index].phone === "mobile" ? (
                                     <div className="input-block select-number-tile">
-                                      <Input
+                                      <MaskedInput
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
                                           "is-invalid":
                                             (this.state.phoneErrors[index] !== "" &&
-                                              !item.value) || this.state.inCorrectNumber[index]
+                                              !item.value) || (this.state.inCorrectNumber[index])
                                         })}
-                                        maxLength={"10"}
+                                        size="20"
                                         value={item.value}
+                                        maxLength={13}
+                                        guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
@@ -723,16 +724,15 @@ export class CrmCustomerModal extends Component {
                                     </div>
                                   ) : (
                                       <div className="input-block select-number-tile">
-                                        <Input
+                                        <MaskedInput
+                                          mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                           name="phoneDetail"
-                                          className={classnames("form-control", {
-                                            "is-invalid":
-                                              (this.state.phoneErrors[index] !== "" &&
-                                                !item.value) || this.state.inCorrectNumber[index]
-                                          })}
+                                          className="form-control"
                                           placeholder="(555) 055-0555 ext 1234"
-                                          maxLength={"15"}
+                                          size="20"
                                           value={item.value}
+                                          maxLength={22}
+                                          guide={false}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
                                           }

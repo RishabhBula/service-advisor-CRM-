@@ -1,5 +1,4 @@
 import TimeInput from "react-time-input";
-
 import {
   Row,
   Col,
@@ -24,6 +23,7 @@ import {
   AddAppointmentMessages
 } from "../../validations";
 import { toast } from "react-toastify";
+import { SendEmailAndSMS } from "../SendReminderEmail&SMS";
 
 export default class AddAppointment extends Component {
   isCustomerReqSent;
@@ -38,6 +38,8 @@ export default class AddAppointment extends Component {
       errors: {},
       selectedCustomer: null,
       selectedVehicle: null,
+      isEmail: false,
+      isSms: false,
       startTime: moment()
         .add(1, "hour")
         .format("HH:00"),
@@ -109,17 +111,17 @@ export default class AddAppointment extends Component {
           },
           selectedVehicle: vehicleId
             ? {
-                data: vehicleId,
-                label: `${vehicleId.make}`,
-                value: vehicleId._id
-              }
+              data: vehicleId,
+              label: `${vehicleId.make}`,
+              value: vehicleId._id
+            }
             : null,
           selectedOrder: orderId
             ? {
-                data: orderId,
-                label: `${orderId.orderName}`,
-                value: orderId._id
-              }
+              data: orderId,
+              label: `${orderId.orderName}`,
+              value: orderId._id
+            }
             : null,
           selectedTechincians: techinicians.map(tech => {
             return {
@@ -137,6 +139,25 @@ export default class AddAppointment extends Component {
    */
   handleInputChange = e => {
     logger(e.target.value);
+    if (e.target.name === "email" && e.target.value) {
+      this.setState({
+        isEmail: true
+      })
+    } else if (e.target.name === "email" && !e.target.value){
+      this.setState({
+        isEmail: false
+      })
+    }
+    if (e.target.name === "phone" && e.target.value) {
+      this.setState({
+        isSms: true
+      })
+    }
+    else if (e.target.name === "phone" && !e.target.value){
+      this.setState({
+        isSms: false
+      })
+    }
     this.setState({
       [e.target.name]: e.target.value,
       errors: {
@@ -237,7 +258,9 @@ export default class AddAppointment extends Component {
       selectedOrder: null,
       email: "",
       phone: "",
-      selectedTechincians: []
+      selectedTechincians: [],
+      isEmail: false,
+      isSms: false
     });
   };
   /**
@@ -315,6 +338,12 @@ export default class AddAppointment extends Component {
   /**
    *
    */
+  handleReminder = (e) => {
+    const { name, checked } = e.target
+    this.setState({
+      [name]: checked
+    })
+  }
   render() {
     const {
       selectedCustomer,
@@ -329,7 +358,9 @@ export default class AddAppointment extends Component {
       selectedOrder,
       email,
       phone,
-      selectedTechincians
+      selectedTechincians,
+      isEmail,
+      isSms
     } = this.state;
 
     const { toggleAddAppointModal, isOpen, editData } = this.props;
@@ -529,6 +560,8 @@ export default class AddAppointment extends Component {
                           this.setState({
                             selectedCustomer: e,
                             email: customer.email || "",
+                            isEmail: customer.email ? true : false,
+                            isSms: phone ? true : false,
                             phone,
                             errors: {
                               ...this.state.errors,
@@ -544,7 +577,7 @@ export default class AddAppointment extends Component {
                             ? "No customer found"
                             : "Type customer name"
                         }
-                        // menuIsOpen={true}
+                      // menuIsOpen={true}
                       />
                       {errors.selectedCustomer ? (
                         <FormFeedback>{errors.selectedCustomer}</FormFeedback>
@@ -701,7 +734,16 @@ export default class AddAppointment extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col sm={"4"}>fasdf</Col>
+            <Col sm={"4"}>
+              <SendEmailAndSMS
+                headingTitle={"Send Reminder"}
+                handleReminder={this.handleReminder}
+                isEmail={isEmail}
+                isSms={isSms}
+                email={email}
+                phone={phone}
+              />
+            </Col>
           </Row>
         </Form>
       </CRMModal>

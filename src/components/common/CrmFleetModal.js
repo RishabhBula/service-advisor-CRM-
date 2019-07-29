@@ -17,7 +17,7 @@ import {
 import { AppSwitch } from "@coreui/react";
 import { AppConfig } from "../../config/AppConfig";
 import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
-// import MaskedInput from "react-maskedinput";
+import MaskedInput from "react-text-mask";
 import {
   CustomerDefaultPermissions,
   CustomerPermissionsText
@@ -231,12 +231,9 @@ export class CrmFleetModal extends Component {
 
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
-    if (isNaN(value)) {
-      return;
-    }
-    const IncorrectNumber = [...this.state.inCorrectNumber];
-    if (parseInt(value.length) < 10) {
-      IncorrectNumber[index] = true;
+    const IncorrectNumber = [...this.state.inCorrectNumber]
+    if (parseInt(value.length) < 12) {
+      IncorrectNumber[index] = true
       this.setState({
         inCorrectNumber: IncorrectNumber
       });
@@ -534,7 +531,8 @@ export class CrmFleetModal extends Component {
                                   {phoneDetail[index].phone === "mobile" ||
                                   phoneDetail[index].phone === "" ? (
                                     <div className="input-block select-number-tile">
-                                      <Input
+                                      <MaskedInput
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
@@ -546,7 +544,8 @@ export class CrmFleetModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
-                                        maxLength={"10"}
+                                        maxLength={13}
+                                        guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
@@ -560,13 +559,15 @@ export class CrmFleetModal extends Component {
                                     </div>
                                   ) : (
                                     <div className="input-block select-number-tile">
-                                      <Input
+                                      <MaskedInput
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         className="form-control"
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
-                                        maxLength={"15"}
+                                        maxLength={22}
+                                        guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
                                         }
@@ -606,62 +607,62 @@ export class CrmFleetModal extends Component {
                                     {phoneOptions}
                                   </Input>
                                   {phoneDetail[index].phone === "mobile" ||
-                                  phoneDetail[index].phone === "" ? (
-                                    <div className="input-block select-number-tile">
-                                      <Input
-                                        name="phoneDetail"
-                                        placeholder="(555) 055-0555"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            (this.state.phoneErrors[index] !==
-                                              "" &&
-                                              !item.value) ||
-                                            this.state.inCorrectNumber[index]
-                                        })}
-                                        size="20"
-                                        value={item.value}
-                                        maxLength={"10"}
-                                        onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
-                                        }
-                                      />
-                                      <FormFeedback>
-                                        {this.state.phoneErrors[index]}
-                                        {this.state.inCorrectNumber[index]
-                                          ? "Phone number should not be less than ten digit."
-                                          : null}
-                                      </FormFeedback>
-                                      {/* <p className='text-danger'>
+                                    phoneDetail[index].phone === "" ? (
+                                      <div className="input-block select-number-tile">
+                                        <MaskedInput
+                                          mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                          name="phoneDetail"
+                                          placeholder="(555) 055-0555"
+                                          className={classnames("form-control", {
+                                            "is-invalid":
+                                              (this.state.phoneErrors[index] !== "" &&
+                                                !item.value) || (this.state.inCorrectNumber[index])
+                                          })}
+                                          size="20"
+                                          value={item.value}
+                                          maxLength={13}
+                                          guide={false}
+                                          onChange={e =>
+                                            this.handlePhoneValueChange(index, e)
+                                          }
+                                        />
+                                        <FormFeedback>
+                                          {this.state.phoneErrors[index]}
+                                          {
+                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          }
+                                        </FormFeedback>
+                                        {/* <p className='text-danger'>
                                         {this.state.phoneErrors[index]}
                                       </p> */}
-                                    </div>
-                                  ) : (
-                                    <div className="input-block select-number-tile">
-                                      <Input
-                                        name="phoneDetail"
-                                        className={classnames("form-control", {
-                                          "is-invalid":
-                                            (this.state.phoneErrors[index] !==
-                                              "" &&
-                                              !item.value) ||
-                                            this.state.inCorrectNumber[index]
-                                        })}
-                                        placeholder="(555) 055-0555 ext 1234"
-                                        size="20"
-                                        value={item.value}
-                                        maxLength={"15"}
-                                        onChange={e =>
-                                          this.handlePhoneValueChange(index, e)
-                                        }
-                                      />
-                                      <FormFeedback>
-                                        {this.state.phoneErrors[index]}
-                                        {this.state.inCorrectNumber[index]
-                                          ? "Phone number should not be less than ten digit."
-                                          : null}
-                                      </FormFeedback>
-                                    </div>
-                                  )}
+                                      </div>
+                                    ) : (
+                                      <div className="input-block select-number-tile">
+                                        <MaskedInput
+                                          mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+                                          name="phoneDetail"
+                                          className={classnames("form-control", {
+                                            "is-invalid":
+                                              (this.state.phoneErrors[index] !== "" &&
+                                                !item.value) || (this.state.inCorrectNumber[index])
+                                          })}
+                                          placeholder="(555) 055-0555 ext 1234"
+                                          size="20"
+                                          value={item.value}
+                                          maxLength={22}
+                                          guide={false}
+                                          onChange={e =>
+                                            this.handlePhoneValueChange(index, e)
+                                          }
+                                        />
+                                        <FormFeedback>
+                                          {this.state.phoneErrors[index]}
+                                          {
+                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          }
+                                        </FormFeedback>
+                                      </div>
+                                    )}
                                 </FormGroup>
                               </Col>
                             </>

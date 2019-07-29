@@ -33,7 +33,7 @@ class Inspection extends Component {
          colorIndex: '',
          selectedOption: '',
          showPDF: false,
-         pdfBlob : ''
+         pdfBlob: ''
       };
    }
 
@@ -43,7 +43,7 @@ class Inspection extends Component {
          vehicleData: this.props.vehicleData,
          orderDetails: this.props.orderReducer
       })
-     
+
    }
 
    componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
@@ -292,29 +292,29 @@ class Inspection extends Component {
       const { inspection } = this.state;
       let count = 5 - inspection[inspIndex].items[itemIndex].itemImagePreview.length
       if (files.length > count) {
-          await ConfirmBox({
+         await ConfirmBox({
             text: "",
             title: "Can not upload more than 5 images",
-            showCancelButton:false,
-            confirmButtonText:"Ok"
+            showCancelButton: false,
+            confirmButtonText: "Ok"
          });
-      } else { 
-      files.map(async (k, i) => {
-         let picReader = new FileReader();
-         let file = files[i];
-         await picReader.addEventListener("load", async (event) => {
-            let dataURL = picReader.result;
-            const { inspection } = this.state;
-            inspection[inspIndex].items[
-              itemIndex
-            ].itemImagePreview.push({ dataURL, name: file.name });
-            inspection[inspIndex].items[itemIndex].itemImage.push(file)
-            await this.setState({
-               inspection
-            })
-         });
-         await picReader.readAsDataURL(file);
-      })
+      } else {
+         files.map(async (k, i) => {
+            let picReader = new FileReader();
+            let file = files[i];
+            await picReader.addEventListener("load", async (event) => {
+               let dataURL = picReader.result;
+               const { inspection } = this.state;
+               inspection[inspIndex].items[
+                  itemIndex
+               ].itemImagePreview.push({ dataURL, name: file.name });
+               inspection[inspIndex].items[itemIndex].itemImage.push(file)
+               await this.setState({
+                  inspection
+               })
+            });
+            await picReader.readAsDataURL(file);
+         })
       }
    };
    /**
@@ -346,7 +346,7 @@ class Inspection extends Component {
          this.setState({
             sentModal: !this.state.sentModal
          });
-         this.downloadPDF({"sentInspection":true})
+         this.downloadPDF({ "sentInspection": true })
       }
 
    }
@@ -384,7 +384,7 @@ class Inspection extends Component {
       doc.setFontSize(12);
       doc.setTextColor('gray');
       var textOrderId = orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName : orderDetail.order.orderName;
-      let  textOrderIdDetail =  doc.splitTextToSize(textOrderId);
+      let textOrderIdDetail = doc.splitTextToSize(textOrderId);
       doc.text(textOrderIdDetail, 430, 42);
 
       doc.setTextColor('black');
@@ -420,7 +420,7 @@ class Inspection extends Component {
          };
 
          var options = {
-            theme:'grid',
+            theme: 'grid',
             beforePageContent: header,
             margin: {
                top: finalY
@@ -430,11 +430,11 @@ class Inspection extends Component {
                'Item Tile': { cellWidth: 100 },
                'Note': { cellWidth: 90 },
                'Status': { cellWidth: 60, textColor: '#ffffff' },
-               'Image': { cellWidth: 130 ,textColor:'#ffffff',fontSize:8},
+               'Image': { cellWidth: 130, textColor: '#ffffff', fontSize: 8 },
             },
-            
+
             styles: {
-               1: {rowHeight: 100},
+               1: { rowHeight: 100 },
                cellPadding: 3,
                fontSize: 10,
                font: "helvetica", // helvetica, times, courier
@@ -451,24 +451,24 @@ class Inspection extends Component {
                cellWidth: 'auto', // 'auto', 'wrap' or a number
                minCellHeight: 20,
             },
-            didParseCell:  data => {
-               if (data.row.section !== "head"){
+            didParseCell: data => {
+               if (data.row.section !== "head") {
                   data.row.height = 50
                }
                for (let j = 0; j < inspectData[index].items.length; j++) {
                   if (data.row.section !== "head" && data.row.raw.Image > 0) {
-                     if (data.row.raw.Image > 3){
+                     if (data.row.raw.Image > 3) {
                         data.row.height = 130
                      }
-                     else{
+                     else {
                         data.row.height = 60
                      }
-                     
+
                   }
                }
 
             },
-            didDrawCell:async  data => {
+            didDrawCell: async  data => {
                if (data.section === 'body' && data.column.dataKey === 'Image') {
                   for (let j = 0; j < 1; j++) {
                      var itemsJ = inspectData[index].items[count];
@@ -480,7 +480,7 @@ class Inspection extends Component {
                         if (k < 3) {
                            doc.addImage(base64Img, 'JPEG', xAxis + (50 * k) + 5, yAxis, 50, 50);
                         }
-                        if(k === 3){
+                        if (k === 3) {
                            doc.addImage(base64Img, 'JPEG', xAxis + 5, yAxis + 60, 50, 50);
                         }
                         if (k === 4) {
@@ -494,10 +494,10 @@ class Inspection extends Component {
                   var str = data.cell.text[0];
                   var result = str.split(" ");
                   data.cell.styles.fontSize = 8;
-                  if(result[0] === 'true' ){
+                  if (result[0] === 'true') {
                      doc.setDrawColor(77, 189, 116);
                      doc.setFillColor(255, 255, 255);
-                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD'); 
+                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD');
                      doc.setTextColor(77, 189, 116);
                      doc.text("Approved", data.cell.x + 11, data.cell.y + 35);
                   }
@@ -527,9 +527,9 @@ class Inspection extends Component {
                   }
                   doc.setDrawColor(204);
                   doc.circle(data.cell.x + 8, data.cell.y + 10, 4, 'FD');
-                  
+
                }
-             
+
             },
          };
 
@@ -553,17 +553,17 @@ class Inspection extends Component {
 
          doc.autoTable(columns, rows, options);
       }
-    
+
       var file = doc.output("dataurlstring");
-      if(!check){
+      if (!check) {
          window.open(doc.output("bloburl"), "_blank");
-      }else{
+      } else {
          this.setState({
-           pdfBlob: file
+            pdfBlob: file
          });
       }
       //   var url = URL.createObjectURL(file);
-      
+
    };
 
    viewFile = (filename, type) => {
@@ -572,9 +572,9 @@ class Inspection extends Component {
    }
 
    render() {
-      const { inspection, templateData, orderDetails} = this.state;
+      const { inspection, templateData, orderDetails } = this.state;
       const orderTitle = orderDetails ? orderDetails.orderItems.orderName : " Untitled"
-      
+
       return (
          <div>
             <div className={"mb-3 d-flex"}>
@@ -582,7 +582,7 @@ class Inspection extends Component {
                   <span color={""} className={"print-btn"} onClick={this.toggleSentInspection}>
                      <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
                   <span
-                     onClick={()=>this.downloadPDF(false)}
+                     onClick={() => this.downloadPDF(false)}
                      id={"add-Appointment"}
                      className={"print-btn"}
                   >
@@ -681,19 +681,19 @@ class Inspection extends Component {
                                                 <Dropzone onDrop={(files) => this.onDrop(files, inspIndex, itemIndex)} >
                                                    {({ getRootProps, getInputProps }) => (
                                                       <>
-                                                      <section className="drop-image-block">
-                                                         <div {...getRootProps({ className: 'dropzone' })}>
-                                                            <input {...getInputProps()} />
-                                                            <i className="icon-picture icons"></i>
-                                                         </div>
-                                                      </section>
+                                                         <section className="drop-image-block">
+                                                            <div {...getRootProps({ className: 'dropzone' })}>
+                                                               <input {...getInputProps()} />
+                                                               <i className="icon-picture icons"></i>
+                                                            </div>
+                                                         </section>
                                                          <div className={"drop-image-text"}>
                                                             Max limit 5 images
                                                          </div>
                                                       </>
                                                    )}
                                                 </Dropzone>
-                                                
+
                                                 {itemIndex >= 1 ?
                                                    <>
                                                       <span onClick={() => { this.removeItem(inspIndex, itemIndex) }} color={"danger"} className={"delete-icon"} id={`delete-${itemIndex}`}><i className={"icons cui-circle-x"}></i></span>
@@ -710,97 +710,97 @@ class Inspection extends Component {
                                                 <ul className={"preview-group  p-0"}>
                                                    {
                                                       val.itemImagePreview.map((file, previewindx) => {
-                                                         
+
                                                          const type = file.dataURL
-                                                           .split(
-                                                             ";"
-                                                           )[0]
-                                                           .split(
-                                                             "/"
-                                                           )[1];
+                                                            .split(
+                                                               ";"
+                                                            )[0]
+                                                            .split(
+                                                               "/"
+                                                            )[1];
                                                          return (
-                                                           <li
-                                                             key={
-                                                               previewindx
-                                                             }
-                                                           >
-                                                             {type ===
-                                                             "pdf" ? (
-                                                               <span
-                                                                 className={
-                                                                   "pdf-img"
-                                                                 }
-                                                                 onClick={filename =>
-                                                                   this.viewFile(
-                                                                     file.dataURL,
-                                                                     type
-                                                                   )
-                                                                 }
-                                                               >
-                                                                 <i
-                                                                   className={
-                                                                     "fa fa-file-pdf-o"
-                                                                   }
-                                                                 />
-                                                                 <span
-                                                                   onClick={e => {
-                                                                     this.removeImage(
-                                                                       previewindx,
-                                                                       itemIndex,
-                                                                       inspIndex
-                                                                     );
-                                                                   }}
-                                                                   className={
-                                                                     "remove-preview"
-                                                                   }
-                                                                 >
-                                                                   <i class="icon-close icons mr-2" />{" "}
-                                                                   Remove
+                                                            <li
+                                                               key={
+                                                                  previewindx
+                                                               }
+                                                            >
+                                                               {type ===
+                                                                  "pdf" ? (
+                                                                     <span
+                                                                        className={
+                                                                           "pdf-img"
+                                                                        }
+                                                                        onClick={filename =>
+                                                                           this.viewFile(
+                                                                              file.dataURL,
+                                                                              type
+                                                                           )
+                                                                        }
+                                                                     >
+                                                                        <i
+                                                                           className={
+                                                                              "fa fa-file-pdf-o"
+                                                                           }
+                                                                        />
+                                                                        <span
+                                                                           onClick={e => {
+                                                                              this.removeImage(
+                                                                                 previewindx,
+                                                                                 itemIndex,
+                                                                                 inspIndex
+                                                                              );
+                                                                           }}
+                                                                           className={
+                                                                              "remove-preview"
+                                                                           }
+                                                                        >
+                                                                           <i class="icon-close icons mr-2" />{" "}
+                                                                           Remove
                                                                  </span>
-                                                                 <span
-                                                                   className={
-                                                                     "file-name"
-                                                                   }
-                                                                 >
-                                                                   {
-                                                                     file.name
-                                                                   }
+                                                                        <span
+                                                                           className={
+                                                                              "file-name"
+                                                                           }
+                                                                        >
+                                                                           {
+                                                                              file.name
+                                                                           }
+                                                                        </span>
+                                                                     </span>
+                                                                  ) : (
+                                                                     <>
+                                                                        <span
+                                                                           onClick={e => {
+                                                                              this.removeImage(
+                                                                                 previewindx,
+                                                                                 itemIndex,
+                                                                                 inspIndex
+                                                                              );
+                                                                           }}
+                                                                           className={
+                                                                              "remove-preview"
+                                                                           }
+                                                                        >
+                                                                           <i class="icon-close icons mr-2" />{" "}
+                                                                           Remove
                                                                  </span>
-                                                               </span>
-                                                             ) : (
-                                                               <>
-                                                                 <span
-                                                                   onClick={e => {
-                                                                     this.removeImage(
-                                                                       previewindx,
-                                                                       itemIndex,
-                                                                       inspIndex
-                                                                     );
-                                                                   }}
-                                                                   className={
-                                                                     "remove-preview"
-                                                                   }
-                                                                 >
-                                                                   <i class="icon-close icons mr-2" />{" "}
-                                                                   Remove
-                                                                 </span>
-                                                                 <img
-                                                                   src={
-                                                                     file.dataURL
-                                                                   }
-                                                                   alt={
-                                                                     file.dataURL
-                                                                   }
-                                                                   onClick={filename =>
-                                                                     this.viewFile(
-                                                                       file.dataURL,
-                                                                       type
-                                                                     )
-                                                                   }
-                                                                 />
-                                                               </>
-                                                             )}
-                                                           </li>
+                                                                        <img
+                                                                           src={
+                                                                              file.dataURL
+                                                                           }
+                                                                           alt={
+                                                                              file.dataURL
+                                                                           }
+                                                                           onClick={filename =>
+                                                                              this.viewFile(
+                                                                                 file.dataURL,
+                                                                                 type
+                                                                              )
+                                                                           }
+                                                                        />
+                                                                     </>
+                                                                  )}
+                                                            </li>
                                                          );
                                                       })
                                                    }
@@ -867,11 +867,11 @@ class Inspection extends Component {
                customerData={this.props.customerData}
                vehicleData={this.props.vehicleData}
                sendMessageTemplate={this.props.sendMessageTemplate}
-               pdfBlob = {this.state.pdfBlob}
+               pdfBlob={this.state.pdfBlob}
                orderTitle={orderTitle}
                orderDetails={orderDetails}
             />
-            
+
 
             {/* ====== MessageTemplate Modal====== */}
             <MessageTemplate isOpen={this.state.mesageModal} toggle={this.toggleMessageTemplate} inspectionData={this.props.inspectionData} addMessageTemplate={this.props.addMessageTemplate} getMessageTemplate={this.props.getMessageTemplate} updateMessageTemplate={this.props.updateMessageTemplate} deleteMessageTemplate={this.props.deleteMessageTemplate} />

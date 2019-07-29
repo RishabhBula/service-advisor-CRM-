@@ -481,7 +481,8 @@ const imageUpload = async (req, res) => {
         });
       }
     }
-    if (body.imageData !== undefined || body.imageData !== "") {
+    const isNotBase64 = body.imageData.split("https")
+    if ((body.imageData !== undefined || body.imageData !== "") && !isNotBase64[1]) {
       const base64Image = body.imageData.replace(
         /^data:image\/\w+;base64,/,
         ""
@@ -527,6 +528,13 @@ const imageUpload = async (req, res) => {
           });
         }
       });
+    } else if (isNotBase64[1]) {
+      return res.status(200).json({
+        responseCode: 200,
+        message: "Company Logo uploaded successfully!",
+        success: true,
+        shopLogo: body.imageData
+      })
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
