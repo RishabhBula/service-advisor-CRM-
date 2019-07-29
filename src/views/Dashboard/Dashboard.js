@@ -7,7 +7,8 @@ import {
   getSubscriptionPlanRequest,
   addSubscriptionRequest,
   getDashboardOverview,
-  getDashboardCustomerSale
+  getDashboardCustomerSale,
+  getDashboardAppointments
 } from "../../actions";
 
 import CardComponent from "../../components/Dashboard/Card";
@@ -68,6 +69,7 @@ class Dashboard extends Component {
   componentDidMount = () => {
     this.props.getDashboardOverView();
     this.getCustomerSales();
+    this.getDashboardAppointments();
   };
   /**
    *
@@ -75,8 +77,35 @@ class Dashboard extends Component {
   componentDidUpdate({ location }) {
     const { search: oldSearch } = location;
     const { search } = this.props.location;
-    if (search !== oldSearch) {
+    const {
+      customerSales,
+      start: customerStart,
+      end: oldCustomerEnd,
+      appointment: oldAppointment,
+      appStart: oldAppStart,
+      appEnd: oldAppEnd
+    } = qs.parse(search);
+    const {
+      customerSales: oldCustomerSales,
+      start,
+      end,
+      appointment,
+      appStart,
+      appEnd
+    } = qs.parse(oldSearch);
+    if (
+      customerSales !== oldCustomerSales ||
+      customerStart !== start ||
+      end !== oldCustomerEnd
+    ) {
       this.getCustomerSales();
+    }
+    if (
+      appointment !== oldAppointment ||
+      appStart !== oldAppStart ||
+      oldAppEnd !== appEnd
+    ) {
+      this.getDashboardAppointments();
     }
   }
   /**
@@ -85,11 +114,15 @@ class Dashboard extends Component {
   getCustomerSales = () => {
     const { location } = this.props.history;
     const { search } = location;
-    let { customerSales } = qs.parse(search);
+    let { customerSales, start, end } = qs.parse(search);
     this.setState({
       type: customerSales
     });
-    let { start, end } = this.getStartAndEnd(customerSales);
+    if (!start || !end) {
+      let dates = this.getStartAndEnd(customerSales);
+      start = dates.start;
+      end = dates.end;
+    }
     if (!start) {
       start = moment().format("YYYY-MM-DD");
     }
@@ -97,6 +130,33 @@ class Dashboard extends Component {
       end = moment().format("YYYY-MM-DD");
     }
     this.props.getDashboardCustomerSales({
+      start,
+      end
+    });
+  };
+  /**
+   *
+   */
+  getDashboardAppointments = () => {
+    const { location } = this.props.history;
+    const { search } = location;
+    let { appointment, appStart: start, appEnd: end } = qs.parse(search);
+    this.setState({
+      appointmentType: appointment
+    });
+    if (!start || !end) {
+      let dates = this.getStartAndEnd(appointment);
+      start = dates.start;
+      end = dates.end;
+    }
+
+    if (!start) {
+      start = moment().format("YYYY-MM-DD");
+    }
+    if (!end) {
+      end = moment().format("YYYY-MM-DD");
+    }
+    this.props.getDashboardAppointments({
       start,
       end
     });
@@ -170,6 +230,33 @@ class Dashboard extends Component {
   /**
    *
    */
+  onAppointmentChange = (value, appStart, appEnd) => {
+    if (value !== "custom") {
+      const dates = this.getStartAndEnd(value);
+      logger(dates, appStart, appEnd);
+      appStart = dates.start;
+      appEnd = dates.end;
+    }
+    logger(appStart, appEnd);
+    let { search } = this.props.location;
+    if (!search) {
+      search = {};
+    } else {
+      search = qs.parse(search);
+    }
+    search = {
+      ...search,
+      appointment: value,
+      appStart,
+      appEnd
+    };
+    logger(search);
+
+    this.props.redirectTo(`${AppRoutes.DASHBOARD.url}?${qs.stringify(search)}`);
+  };
+  /**
+   *
+   */
   render() {
     const {
       modelInfoReducer,
@@ -183,8 +270,14 @@ class Dashboard extends Component {
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { openSubscriptionModel, openSubPayementModel } = modelDetails;
-    const { cards, customerStartDate, customerEndDate, type } = this.state;
-    const { overview, customerSales } = dashboardData;
+    const {
+      cards,
+      customerStartDate,
+      customerEndDate,
+      type,
+      appointmentType
+    } = this.state;
+    const { overview, customerSales, appointments } = dashboardData;
     const actualCards = cards.map(card => {
       return {
         ...card,
@@ -221,7 +314,12 @@ class Dashboard extends Component {
                     />
                   </Col>
                   <Col sm={"6"}>
-                    <DashboardAppointments />
+                    <DashboardAppointments
+                      onFilterChange={this.onAppointmentChange}
+                      type={appointmentType}
+                      appointments={appointments}
+                      redirectTo={redirectTo}
+                    />
                   </Col>
                 </Row>
               </CardBody>
@@ -250,7 +348,9 @@ const mapDispatchToProps = dispatch => ({
   getSubscriptionPlanRequest: () => dispatch(getSubscriptionPlanRequest()),
   addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data)),
   getDashboardOverView: data => dispatch(getDashboardOverview(data)),
-  getDashboardCustomerSales: data => dispatch(getDashboardCustomerSale(data))
+  getDashboardCustomerSales: data => dispatch(getDashboardCustomerSale(data)),
+  getDashboardAppointments: data =>
+    dispatch(getDashboardAppointments({ ...data, limit: 5 }))
 });
 export default connect(
   mapStateToProps,

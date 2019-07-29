@@ -90,7 +90,7 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 /*  */
 const confirmationSignUp = async (req, res) => {
@@ -155,12 +155,14 @@ const confirmationSignUp = async (req, res) => {
 const loginApp = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const result = await userModel.findOne({
-      $and: [
-        { normalizedEmail: email },
-        { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
-      ]
-    }).populate("planId");
+    const result = await userModel
+      .findOne({
+        $and: [
+          { normalizedEmail: email },
+          { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
+        ]
+      })
+      .populate("planId");
     if (result === null) {
       // eslint-disable-next-line no-throw-literal
       throw {
@@ -193,11 +195,15 @@ const loginApp = async (req, res) => {
         success: false
       };
     }
-    let companyData
-    if (result.parentId && mongoose.Types.ObjectId(result._id) !== mongoose.Types.ObjectId(result.parentId)) {
+    let companyData;
+    if (
+      result.parentId &&
+      mongoose.Types.ObjectId(result._id) !==
+        mongoose.Types.ObjectId(result.parentId)
+    ) {
       companyData = await userModel.findOne({
         _id: result.parentId
-      })
+      });
     }
     await userModel.updateOne(
       {
@@ -504,10 +510,10 @@ const imageUpload = async (req, res) => {
           fileName
         );
         await resizeImage(originalImagePath, thumbnailImagePath, 200);
-        const imageUploadData = {
+        /* const imageUploadData = {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
-        };
+        }; */
         const shopLogo = await imagePath(thumbnailImagePath);
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
           shopLogo: shopLogo
@@ -560,13 +566,13 @@ const imageDelete = async (req, res) => {
       var originalImagePath = __basedir + "/images/" + currentUser.id;
       var thumbnailImagePath =
         __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      fs.unlinkSync(originalImagePath, buf, function (err) {
+      fs.unlinkSync(originalImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
         if (err) {
           return console.log(err);
         }
