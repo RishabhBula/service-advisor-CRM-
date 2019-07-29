@@ -287,20 +287,6 @@ const createTierValidation = [
   body("brabdName", "Band name should be less than 100 wards")
     .isLength({ max: 100 })
     .trim()
-  // body("tierSize").custom(tierSize => {
-
-  //   for (let index = 0; index < tierSize.length; index++) {
-  //     const element = tierSize[index];
-  //     const sizeInfo = element.baseInfo.split('R')
-  //     if (sizeInfo[1] && tierSize.length) {
-  //       const checkSize = sizeInfo[1].replace(/\D+/g, '')
-  //       if (!checkSize) {
-  //         throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
-  //       }
-  //     }
-  //   }
-  //   return true;
-  // })
 ];
 const updateTierValidation = [
   body("data.brandName")
@@ -311,19 +297,6 @@ const updateTierValidation = [
   body("data.brabdName", "Band name should be less than 100 wards")
     .isLength({ max: 100 })
     .trim()
-  // body("data.tierSize").custom(tierSize => {
-  //   for (let index = 0; index < tierSize.length; index++) {
-  //     const element = tierSize[index];
-  //     const sizeInfo = element.baseInfo.split('R')
-  //     if (sizeInfo[1] && tierSize.length) {
-  //       const checkSize = sizeInfo[1].replace(/\D+/g, '')
-  //       if (!checkSize) {
-  //         throw new Error("Enter proper crosssection asspect ratio or rim diameter.")
-  //       }
-  //     }
-  //   }
-  //   return true;
-  // })
 ];
 const createNewMatrixValidation = [
   body("matrixName")
@@ -334,7 +307,7 @@ const createNewMatrixValidation = [
   body("matrixRange").custom(matrixRange => {
     for (let index = 0; index < matrixRange.length; index++) {
       const element = matrixRange[index];
-      if (parseFloat(element.lower) >= parseFloat(element.upper)) {
+      if (parseFloat(element.lower) >= parseFloat(element.upper) || isNaN(element.upper) || isNaN(element.lower)) {
         throw new Error("Enter proper matrix range.");
       }
     }

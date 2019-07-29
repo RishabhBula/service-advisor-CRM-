@@ -484,7 +484,6 @@ export class CrmFleetEditModal extends Component {
       fleetDefaultPermissions,
       percentageDiscount
     };
-
     return (
       <>
         <Modal
@@ -574,6 +573,7 @@ export class CrmFleetEditModal extends Component {
                                   onChange={e =>
                                     this.handlePhoneNameChange(index, e)
                                   }
+                                  value={item.phone}
                                   type="select"
                                   id="name"
                                 >
@@ -653,6 +653,7 @@ export class CrmFleetEditModal extends Component {
                                     onChange={e =>
                                       this.handlePhoneNameChange(index, e)
                                     }
+                                    value={item.phone}
                                     type="select"
                                     id="name"
                                   >
