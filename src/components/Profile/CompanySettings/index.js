@@ -34,6 +34,7 @@ class CompanySettings extends Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
       aspect: 4 / 3,
+      maxZoom: 2,
       cropSize: { width: 200, height: 150 },
       croppedAreaPixels: null,
       croppedImage: null,
@@ -63,7 +64,12 @@ class CompanySettings extends Component {
         allVehicleServices
       },
       validErrors: {},
-      permissions: ""
+      permissions: "",
+      logoDetails: "",
+      initialCroppedAreaPixels:{
+        width:200,
+        height:200
+      }
     };
   }
 
@@ -163,7 +169,6 @@ class CompanySettings extends Component {
     }
   };
 
- 
   handleInputChange = e => {
     const { target } = e;
     const { name, value } = target;
@@ -181,31 +186,14 @@ class CompanySettings extends Component {
     const scope = this;
     reader.addEventListener("load", () =>
       scope.setState({
-        shopLogo: reader.result
+        shopLogo: reader.result,
+        logoDetails: e,
+        maxZoom: 2
       })
     );
     reader.onloadend = function(as) {
       var image = new Image();
       image.onload = function() {
-        scope.setState({
-          shopLogo: reader.result
-        });
-      };
-    };
-    reader.readAsDataURL(e[0]);
-  };
-
-  onSelectFile = e => {
-    var reader = new FileReader();
-    const scope = this;
-    reader.addEventListener("load", () =>
-      scope.setState({
-        shopLogo: reader.result
-      })
-    );
-    reader.onloadend = function (as) {
-      var image = new Image();
-      image.onload = function () {
         scope.setState({
           shopLogo: reader.result
         });
@@ -284,7 +272,7 @@ class CompanySettings extends Component {
   saveLogo = e => {
     e.preventDefault();
     const { shopLogo } = this.state;
-    
+
     this.props.onLogoUpdate({
       imageData: shopLogo
     });
@@ -378,20 +366,50 @@ class CompanySettings extends Component {
   };
 
   onCropComplete = (croppedArea, croppedAreaPixels) => {
-    this.setState({ croppedAreaPixels });
+    this.setState({
+      croppedAreaPixels,
+      crop: {
+        x: 0,
+        y: 0
+      }
+    });
+  
   };
 
   onZoomChange = zoom => {
     this.setState({ zoom });
+
   };
 
   showCroppedImage = async () => {
+    const addUrl = "https://cors-anywhere.herokuapp.com/";
+    const { shopLogo } = this.state;
+    const urlCheck = shopLogo.substr(0, 4);
+    const logoUrl = urlCheck === "http" ? addUrl + shopLogo : shopLogo;
+
     const croppedImage = await getCroppedImg(
-      this.state.shopLogo,
+      logoUrl,
       this.state.croppedAreaPixels
     );
-    this.setState({ shopLogo: croppedImage, zoom: 1 });
+    this.setState({
+      shopLogo: croppedImage,
+      zoom: 1,
+      maxZoom: 1,
+      crop: {
+        x: 0,
+        y: 0
+      },
+      logoDetails: ""
+    });
   };
+  onInteractionStart = (e) =>{
+    if(this.state.shopLogo !== ''){
+      this.setState({
+        maxZoom : 1
+      });
+    }
+    console.log(e,"check checkcheckcheck");
+  }
 
   render() {
     const {
@@ -405,9 +423,12 @@ class CompanySettings extends Component {
       vatNumber,
       peopleWork,
       servicesOffer,
-      vehicleService
+      vehicleService,
+      logoDetails,
+      crop,
+      initialCroppedAreaPixels
     } = this.state;
-    // console.log(this.state.shopLogo, "this.state.shopLogo");
+
     return (
       <div>
         <h3 className={"pb-3"}>Company Profile</h3>
@@ -558,18 +579,25 @@ class CompanySettings extends Component {
                           restrictPosition={false}
                           cropSize={this.state.cropSize}
                           viewMode={2}
+                          maxZoom={this.state.maxZoom}
+                          onInteractionEnd={this.onInteractionStart}
+                          initialCroppedAreaPixels={
+                            initialCroppedAreaPixels
+                          }
                         />
                       </div>
                     </div>
-                    <Button
-                      onClick={this.showCroppedImage}
-                      variant="contained"
-                      color=""
-                      className={"btn-theme-line mt-2"}
-                    >
-                      <i className="fa fa-crop" /> &nbsp;Crop Logo
-                    </Button>
-                    
+                    {logoDetails ? (
+                      <Button
+                        onClick={this.showCroppedImage}
+                        variant="contained"
+                        color=""
+                        className={"btn-theme-line mt-2"}
+                      >
+                        <i className="fa fa-crop" /> &nbsp;Crop Logo
+                      </Button>
+                    ) : null}
+
                     <div className="cropper-controls">
                       <Row className={"m-0"}>
                         <Col

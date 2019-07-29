@@ -11,7 +11,6 @@ import {
   PopoverBody,
   FormFeedback,
   UncontrolledTooltip,
-
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound";
 import CrmDiscountBtn from "../../common/CrmDiscountBtn";

@@ -608,6 +608,17 @@ body .navbar-nav .nav-link.active:after {
   left: 0px;
   border-radius: 0;
 }
+.btn.help-btn {
+  position: absolute;
+  right: -35px;
+  top: 7px;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+}
+.auth-input-group .input-group-prepend.invalid{
+  border-color: #f86c6b !important;
+}
 /* end of auth page */
 
 /* Welcome modal */
@@ -2358,6 +2369,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .technician-popover{
   min-width: 180px;
 }
+.technician-popover .popover-body{
+  background-color: #eaebef;
+}
 .technician-popover .popover-header{
   background-color: #413c4f;
   color: #fff;
@@ -2373,6 +2387,19 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   text-align: center;
   font-style: italic;
   color: #858091;
+}
+.bs-popover-top.technician-popover > .arrow:after{
+  border-top-color: #fff0;
+}
+.bs-popover-bottom.technician-popover > .arrow:after{
+  border-bottom-color: #fff0;
+}
+.bs-popover-top.technician-popover > .arrow:before{
+  border-top-color:#eaebef;
+}
+.bs-popover-bottom.technician-popover > .arrow:before{
+  border-bottom-color:#413c4e;
+  top: 2px;
 }
 .order-top-section{
   margin-bottom: 30px;

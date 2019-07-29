@@ -129,8 +129,10 @@ class SendInspection extends Component {
     const {customerData, subject } = this.state
     const { orderReducer, profileReducer, isOrder } = this.props;
     const customerEmail = customerData.email;
-    const orderTitle = orderReducer.orderItems ? orderReducer.orderItems.orderName : '' || '';
-    const orderCreated = orderReducer.orderItems
+    const orderTitle = orderReducer && orderReducer.orderItems
+      ? orderReducer.orderItems.orderName
+      : "" || "";
+    const orderCreated = orderReducer && orderReducer.orderItems
       ? moment(orderReducer.orderItems.createdAt || "").format(
           "MMM Do YYYY"
         )

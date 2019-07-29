@@ -373,9 +373,13 @@ class Inspection extends Component {
       var doc = new jsPDF('p', 'pt');
       doc.setFontSize(12)
       doc.setTextColor(51, 47, 62);
+      const customerData = this.state.customerData;
+      console.log(customerData, " in print");
       const orderDetail = this.state.orderDetails
       const profileReducer = this.props.profileReducer
-      const companyName = profileReducer.profileInfo.companyName || process.env.REACT_APP_NAME
+      const companyName =
+        profileReducer ? profileReducer.profileInfo.companyName :
+        process.env.REACT_APP_NAME;
       doc.text(companyName, 40, 30);
       doc.setFontSize(14)
       doc.text('Inspection', 430, 25);
@@ -392,7 +396,7 @@ class Inspection extends Component {
       doc.setLineWidth(0);
       doc.line(0, 50, 600, 50);
 
-      const customerData = this.state.customerData;
+     
 
       const fullName = customerData.firstName + ' ' + customerData.lastName
       doc.setFontSize(12)
@@ -572,9 +576,13 @@ class Inspection extends Component {
    }
 
    render() {
-      const { inspection, templateData, orderDetails} = this.state;
+      const {
+        inspection,
+        templateData,
+        orderDetails,
+      } = this.state;
       const orderTitle = orderDetails ? orderDetails.orderItems.orderName : " Untitled"
-      
+      console.log(orderDetails, "orderDetails");
       return (
          <div>
             <div className={"mb-3 d-flex"}>
@@ -870,6 +878,7 @@ class Inspection extends Component {
                pdfBlob = {this.state.pdfBlob}
                orderTitle={orderTitle}
                orderDetails={orderDetails}
+               profileReducer ={this.props.profileReducer}
             />
             
 
