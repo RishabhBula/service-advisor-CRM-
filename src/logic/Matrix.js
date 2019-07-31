@@ -16,6 +16,7 @@ import {
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
+let toastId
 
 const getMatrixLogic = createLogic({
   type: matrixActions.GET_MATRIX_LIST,
@@ -86,7 +87,9 @@ const addPriceMatrixLogic = createLogic({
           }
         })
       );
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       dispatch(hideLoader());
       done();
       return;

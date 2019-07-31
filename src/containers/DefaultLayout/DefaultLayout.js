@@ -20,7 +20,9 @@ import {
   customerGetRequest,
   vehicleGetRequest,
   getOrderListForSelect,
-  addAppointmentRequest
+  addAppointmentRequest,
+  getSubscriptionPlanRequest,
+  addSubscriptionRequest
 } from "../../actions";
 // routes config
 import routes, { BreadCrumbRoutes } from "../../routes";
@@ -44,8 +46,11 @@ import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVe
 import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
+import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
 import { WildCardRoutes } from "../../config/Constants";
 import { isValidObjectId } from "../../helpers";
+import moment from "moment";
+
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -139,9 +144,10 @@ class DefaultLayout extends Component {
       parentId,
       firstName,
       companyName,
-      website
+      website,
+      isInTrialPeriod
     } = profileInfo;
-    if (firstTimeUser && !parentId) {
+    if (firstTimeUser && !parentId && isInTrialPeriod) {
       return (
         <CrmWelcomeModel
           modalOpen={true}
@@ -156,6 +162,25 @@ class DefaultLayout extends Component {
       return null;
     }
   };
+  renderSubscriptionModal = profileInfo => {
+    const {
+      isInTrialPeriod,
+      planId,
+      planExiprationDate
+    } = profileInfo
+    const d1 = moment(new Date()).toDate()
+    const d2 = new Date(planExiprationDate);
+    const diffTime = Math.abs(d1.getTime() - d2.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (!isInTrialPeriod && (isNaN(diffDays) || !planId)) {
+      const { modelInfoReducer, modelOperate } = this.props
+      const { modelDetails } = modelInfoReducer;
+      const { openSubscriptionModel } = modelDetails
+      modelOperate({
+        openSubscriptionModel: !openSubscriptionModel
+      })
+    }
+  }
   navigation = permissions => {
     const navItems = {
       items: []
@@ -203,6 +228,10 @@ class DefaultLayout extends Component {
       getVehicleData,
       getOrders,
       addAppointment,
+      getSubscriptionPlanRequest,
+      subscriptionReducer,
+      addSubscriptionRequest,
+      modelOperate,
       setLabourRateDefault } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
@@ -213,12 +242,15 @@ class DefaultLayout extends Component {
     const { modelDetails } = modelInfoReducer;
     const {
       showAddAppointmentModal,
+      openSubscriptionModel,
+      openSubPayementModel
     } = modelDetails;
     return isLoading ? (
       <FullPageLoader />
     ) : (
         <div className="app">
           {this.renderCompanyDetailsPopup(profileInfo || {})}
+          {this.renderSubscriptionModal(profileInfo || {})}
           <AppHeader fixed>
             <Suspense fallback={""}>
               <DefaultHeader
@@ -353,6 +385,14 @@ class DefaultLayout extends Component {
             </Suspense>
           </AppFooter>
           {this.customerAndVehicleModal()}
+          <CrmSubscriptionModel
+            openSubscriptionModel={openSubscriptionModel}
+            modelOperate={modelOperate}
+            openSubPayementModel={openSubPayementModel}
+            getSubscriptionPlanRequest={getSubscriptionPlanRequest}
+            subscriptionReducer={subscriptionReducer}
+            addSubscriptionRequest={addSubscriptionRequest}
+          />
         </div>
       );
   }
@@ -363,6 +403,7 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   rateStandardListReducer: state.rateStandardListReducer,
   matrixListReducer: state.matrixListReducer,
+  subscriptionReducer: state.subscriptionReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -381,6 +422,8 @@ const mapDispatchToProps = dispatch => ({
   getVehicleData: data => dispatch(vehicleGetRequest(data)),
   getOrders: data => dispatch(getOrderListForSelect(data)),
   addAppointment: data => dispatch(addAppointmentRequest(data)),
+  getSubscriptionPlanRequest: () => dispatch(getSubscriptionPlanRequest()),
+  addSubscriptionRequest: (data) => dispatch(addSubscriptionRequest(data))
 });
 
 export default connect(

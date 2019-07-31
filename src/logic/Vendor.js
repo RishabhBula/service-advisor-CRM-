@@ -34,7 +34,8 @@ const getVendorLogic = createLogic({
       true,
       {
         ...action.payload,
-        limit: AppConfig.ITEMS_PER_PAGE
+        limit: AppConfig.ITEMS_PER_PAGE,
+        page: action.payload && action.payload.page ? action.payload.page : null
       }
     );
     if (result.isError) {

@@ -40,10 +40,10 @@ export class CrmUserModal extends Component {
       lastName: "",
       email: "",
       phone: "",
-      roleType: "5ca3473d70537232f13ff1f9",
+      roleType: "5ca3473d70537232f13ff1fa",
       rate: "",
       companyName:"",
-      permissions: AdminDefaultPermissions,
+      permissions: TechincianDefaultPermissions,
       errors: {},
       isEditMode: false
     };
@@ -64,9 +64,9 @@ export class CrmUserModal extends Component {
         lastName: "",
         email: "",
         phone: "",
-        roleType: "",
+        roleType: "5ca3473d70537232f13ff1fa",
         rate: "",
-        permissions: AdminDefaultPermissions,
+        permissions: TechincianDefaultPermissions,
         errors: {}
       });
     }
@@ -91,7 +91,7 @@ export class CrmUserModal extends Component {
         email,
         companyName,
         phone: phone || "",
-        roleType: this.props.userData.roleType ? this.props.userData.roleType._id : "",
+        roleType: this.props.userData.roleType ? this.props.userData.roleType._id : "5ca3473d70537232f13ff1fa",
         rate: rate || "",
         permissions
       });
@@ -317,21 +317,22 @@ export class CrmUserModal extends Component {
                     </Label>
                     <div className={"input-block"}>
                       <Input
-                        type="select"
+                        type="text"
                         className="customer-modal-text-style"
                         id="type"
-                        onChange={this.handleInputChange}
-                        value={roleType}
+                        disabled
+                        // onChange={this.handleInputChange}
+                        value={roleType === "5ca3473d70537232f13ff1fa"? "Technican":"Admin"}
                         name="roleType"
                         invalid={errors.roleType}
                       >
-                        {RoleOptions.map((role, index) => {
+                        {/* {RoleOptions.map((role, index) => {
                           return (
                             <option value={role.key} key={index}>
                               {role.text}
                             </option>
                           );
-                        })}
+                        })} */}
                       </Input>
                       <FormFeedback>
                         {errors.roleType ? errors.roleType : null}

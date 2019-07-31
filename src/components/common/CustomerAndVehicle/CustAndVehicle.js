@@ -64,7 +64,6 @@ class CustAndVehicle extends Component {
   submitCreateVehicleFun = data => {
     const { customerInfoReducer } = this.props;
     const { customerAddInfo } = customerInfoReducer;
-
     this.props.vehicleAddAction({
       ...data,
       customerId: customerAddInfo._id

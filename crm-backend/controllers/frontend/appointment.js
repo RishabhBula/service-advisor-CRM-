@@ -11,33 +11,39 @@ const appointmentList = async (req, res) => {
     page = page || 1;
     const { id, parentId } = currentUser;
     const offset = (page - 1) * (limit || 1);
+    const { id, parentId } = currentUser;
+    const vehicleId = query.vehicleId
+    const customerId = query.customerId
     let condition = {};
-    condition = {
-      $and: [
-        {
-          $or: [
-            {
-              userId: Mongoose.Types.ObjectId(id)
-            },
-            {
-              parentId: Mongoose.Types.ObjectId(parentId)
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            userId: Mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: Mongoose.Types.ObjectId(parentId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
             }
-          ]
-        },
-        {
-          $or: [
-            {
-              isDeleted: {
-                $exists: false
-              }
-            },
-            {
-              isDeleted: false
-            }
-          ]
-        }
-      ]
-    };
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      }
+    ];
+    if (vehicleId) {
+      condition["$and"].push({
+        vehicleId: Mongoose.Types.ObjectId(vehicleId)
+      })
+    }
     if (start) {
       start = new Date(new Date(start).setUTCHours(23, 59, 59, 999));
       condition["$and"].push({
@@ -67,6 +73,7 @@ const appointmentList = async (req, res) => {
       })
       .skip(offset)
       .limit(parseInt(limit) || 10000);
+
     res.status(200).json({
       message: "Appointment list successful.",
       data: result
