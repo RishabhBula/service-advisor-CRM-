@@ -9,6 +9,9 @@ const moment = require("moment");
 const appointmentList = async (req, res) => {
   try {
     const { currentUser, query } = req;
+    let { start, end, limit, page } = query;
+    page = page || 1;
+    const offset = (page - 1) * (limit || 1);
     const { id, parentId } = currentUser;
     const vehicleId = query.vehicleId
     const customerId = query.customerId
@@ -43,13 +46,40 @@ const appointmentList = async (req, res) => {
       })
     }
     if (customerId) {
-      condition = {
-        $and: {
-          customerId: Mongoose.Types.ObjectId(customerId)
-        }
-      }
+      condition["$and"].push({
+        customerId: Mongoose.Types.ObjectId(customerId)
+      })
     }
-    const result = await AppointmentModal.find(condition);
+    if (start) {
+      start = new Date(new Date(start).setUTCHours(23, 59, 59, 999));
+      condition["$and"].push({
+        appointmentDate: {
+          $gte: start
+        }
+      });
+      console.log(start);
+    }
+    if (end) {
+      end = new Date(new Date(end).setUTCHours(0, 0, 0, 0));
+      const ind = condition["$and"].findIndex(d => d.appointmentDate);
+      if (!condition["$and"][ind]) {
+        delete condition["$and"][ind];
+      }
+      condition["$and"].push({
+        appointmentDate: {
+          $gte: start,
+          $lte: end
+        }
+      });
+    }
+    const result = await AppointmentModal.find(condition)
+      .populate("customerId")
+      .sort({
+        appointmentDate: 1
+      })
+      .skip(offset)
+      .limit(parseInt(limit) || 10000);
+
     res.status(200).json({
       message: "Appointment list successful.",
       data: result
