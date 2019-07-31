@@ -2,7 +2,8 @@ import { createLogic } from "redux-logic";
 import {
   dashboardActions,
   getDashboardOverviewSuccess,
-  getDashboardCustomerSaleSuccess
+  getDashboardCustomerSaleSuccess,
+  getDashboardAppointmentsSuccess
 } from "../actions";
 import { logger, ApiHelper } from "../helpers";
 /**
@@ -52,4 +53,30 @@ const getCustomerSalesLogic = createLogic({
 /**
  *
  */
-export const DashboardLogics = [getOverviewLogic, getCustomerSalesLogic];
+const getAppointmentsLogic = createLogic({
+  type: dashboardActions.GET_DASHBOARD_APPOINTMENTS,
+  async process({ action }, dispatch, done) {
+    const result = await new ApiHelper().FetchFromServer(
+      "/dashboard",
+      "/appointments",
+      "GET",
+      true,
+      action.payload
+    );
+    logger(result);
+    dispatch(
+      getDashboardAppointmentsSuccess({
+        data: result.data.data
+      })
+    );
+    done();
+  }
+});
+/**
+ *
+ */
+export const DashboardLogics = [
+  getOverviewLogic,
+  getCustomerSalesLogic,
+  getAppointmentsLogic
+];

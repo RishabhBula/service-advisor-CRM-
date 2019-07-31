@@ -21,10 +21,8 @@ class InvoiceChart extends Component {
   componentDidUpdate({ type: oldType }) {
     const { type } = this.props;
     if (oldType !== type) {
-      const showDate = type === "custom";
       this.setState({
-        selectedFilter: type,
-        showDate
+        selectedFilter: type
       });
     }
   }
