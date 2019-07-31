@@ -6,36 +6,48 @@ const { sendSMS } = require("./../../common/SMS");
  */
 const appointmentList = async (req, res) => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
     const { id, parentId } = currentUser;
+    const vehicleId = query.vehicleId
+    const customerId = query.customerId
     let condition = {};
-    condition = {
-      $and: [
-        {
-          $or: [
-            {
-              userId: Mongoose.Types.ObjectId(id)
-            },
-            {
-              parentId: Mongoose.Types.ObjectId(parentId)
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            userId: Mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: Mongoose.Types.ObjectId(parentId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
             }
-          ]
-        },
-        {
-          $or: [
-            {
-              isDeleted: {
-                $exists: false
-              }
-            },
-            {
-              isDeleted: false
-            }
-          ]
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      }
+    ];
+    if (vehicleId) {
+      condition["$and"].push({
+        vehicleId: Mongoose.Types.ObjectId(vehicleId)
+      })
+    }
+    if (customerId) {
+      condition = {
+        $and: {
+          customerId: Mongoose.Types.ObjectId(customerId)
         }
-      ]
-    };
-
+      }
+    }
+    console.log("###################", condition);
     const result = await AppointmentModal.find(condition);
     res.status(200).json({
       message: "Appointment list successful.",

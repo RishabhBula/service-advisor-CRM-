@@ -154,6 +154,9 @@ class WorkFlow extends Component {
     this.props.modelOperate({
       addOrderStatusModalOpen: !addOrderStatusModalOpen
     });
+    this.setState({
+      orderStatusName:""
+    })
   };
   /**
    *

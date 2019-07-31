@@ -805,4 +805,43 @@ body {
       }
     }
   }
+
+  /*==========Calendar Page css==========*/
+  .appointment-details{
+    font-size: 16px;
+    .left-icons{
+      font-size: 30px;
+      color: #817f88;
+    }
+    .date-block{
+      font-size: 13px;
+    }
+    .title{
+      text-transform: capitalize;
+      color: #000;
+      border-left: 3px solid #7f6cb9;
+      margin-bottom: 10px;
+      margin-left: 6px;
+      line-height: 18px;
+      background: #fff;
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+    }
+    label{
+      font-family: $ft-bold;
+      min-width: 100px;
+      position: relative;
+      padding-right: 5px;
+      font-size: 14px;
+      margin-bottom: 5px !important;
+    }
+    label:after{
+      content:":";
+      position: absolute;
+      right: 8px;
+    }
+  }
+  .fc-past{
+    background-color: #f2f1f5;
+  }
 }

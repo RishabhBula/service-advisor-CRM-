@@ -362,7 +362,7 @@ class ServiceItem extends Component {
     services[index].isCannedAdded = false
     let t = [...services];
     t.splice(index, 1);
-  
+
     if (services.length) {
       this.setState({
         services: t
@@ -400,6 +400,9 @@ class ServiceItem extends Component {
 
   handleTaxesAdd = (e, index) => {
     const { name, value } = e.target
+    if (isNaN(value) || (value < 0)) {
+      return
+    }
     const serviceData = [...this.state.services]
     if ((parseFloat(value) >= 100) && (serviceData[index].epa.type === '%' || serviceData[index].discount.type === '%' || serviceData[index].taxes.type === '%')) {
       if (!toast.isActive(this.toastId)) {
@@ -756,7 +759,7 @@ class ServiceItem extends Component {
                               name={"note"}
                               value={item.note}
                               maxLength={"200"}
-                              rows={"2"} cols={"3"}
+                              rows={"5"} cols={"3"}
                               placeholder={"Add Note for this service"}
                             />
                           </UncontrolledPopover>
@@ -1039,17 +1042,17 @@ class ServiceItem extends Component {
                         <div className="text-right">
                           <h6><span className={"title"}>Epa :&nbsp;</span>
                             <span className={"value"}>
-                              <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(epa) ? parseFloat(epa).toFixed(2) : 0}</span>
-                            </span>
-                          </h6>
-                          <h6>
-                            <span className={"title"}>Discount :&nbsp;</span>
-                            <span className={"value"}> <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(discount) ? parseFloat(discount).toFixed(2) : 0}</span>
+                              <span className="dollar-price">+{" "}<i className="fa fa-dollar dollar-icon"></i>{!isNaN(epa) ? parseFloat(epa).toFixed(2) : 0}</span>
                             </span>
                           </h6>
                           <h6>
                             <span className={"title"}>Taxes :&nbsp;</span>
-                            <span className={"value"}> <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(tax) ? parseFloat(tax).toFixed(2) : 0}</span>
+                            <span className={"value"}> <span className="dollar-price">+{" "}<i className="fa fa-dollar dollar-icon"></i>{!isNaN(tax) ? parseFloat(tax).toFixed(2) : 0}</span>
+                            </span>
+                          </h6>
+                          <h6>
+                            <span className={"title"}>Discount :&nbsp;</span>
+                            <span className={"value"}> <span className="dollar-price">-{" "}<i className="fa fa-dollar dollar-icon"></i>{!isNaN(discount) ? parseFloat(discount).toFixed(2) : 0}</span>
                             </span>
                           </h6>
                         </div>

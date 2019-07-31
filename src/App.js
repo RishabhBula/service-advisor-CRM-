@@ -14,6 +14,9 @@ import AppReducer from "./reducers";
 import AppRoutes from "./routes/";
 import "react-toastify/dist/ReactToastify.css";
 import "react-day-picker/lib/style.css";
+import "react-dates/lib/css/_datepicker.css";
+
+import "react-dates/initialize";
 
 /**
  *

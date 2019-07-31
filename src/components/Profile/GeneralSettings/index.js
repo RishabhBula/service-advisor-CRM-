@@ -56,6 +56,7 @@ class GenralSettings extends Component {
         phoneNumber,
         address,
         currency,
+        timeZone,
         companyName,
         companyNumber,
         vatNumber,
@@ -73,6 +74,7 @@ class GenralSettings extends Component {
         vatNumber,
         website,
         currency,
+        timeZone,
         peopleWork: {
           ...this.state.peopleWork,
           selected: peopleWork
@@ -149,6 +151,7 @@ class GenralSettings extends Component {
         [name]: null
       }
     });
+   
   };
 
   serviceOfferAction = event => {
@@ -320,7 +323,8 @@ class GenralSettings extends Component {
       lastName,
       phoneNumber,
       address,
-      currency
+      currency,
+      timeZone
     } = this.state;
     const { profileData } = this.props;
     const timeZoneOptions = countryWithTimezone.filter(
@@ -328,12 +332,12 @@ class GenralSettings extends Component {
     );
     const options = timeZoneOptions[0].timezones.map((item, index) => {
       return (
-        <option key={index} value={item}>
+        <option key={index} value={item} >
           {item}
         </option>
       );
     });
-
+    
     return (
       <div>
         <Row>
@@ -478,6 +482,7 @@ class GenralSettings extends Component {
                         placeholder="Time Zone"
                         onChange={this.handleInputChange}
                         name="timeZone"
+                        value={timeZone}
                         invalid={errors.timeZone}
                       >
                         {options}

@@ -51,7 +51,7 @@ export class CustomerVehicles extends Component {
                         <div className={"vehicle-type-img d-inline-block d-flex justify-content-center"}>
                           <VehicleIcons
                             type={vehicle.type.value}
-                            color={vehicle.type.color}
+                            color={vehicle.color.color}
                           />
                         </div>
                       </div>

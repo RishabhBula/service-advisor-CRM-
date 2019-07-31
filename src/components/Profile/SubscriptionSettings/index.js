@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import {
-  Row,
-  Col,
-  Button
-} from "reactstrap";
-import "../../../scss/subscription.scss"
-import Dollor from "../../common/Dollor"
+import { Row, Col, Button } from "reactstrap";
+import "../../../scss/subscription.scss";
+import Dollor from "../../common/Dollor";
 
 import moment from "moment";
 class SubscriptionSettings extends Component {
@@ -14,52 +10,42 @@ class SubscriptionSettings extends Component {
     this.state = {
       errors: "",
       firstName: "",
-      lastName: "",
+      lastName: ""
     };
   }
 
   componentDidMount = () => {
     if (this.props.profileData.profileInfo) {
-      const {
-        firstName,
-        lastName,
-      } = this.props.profileData.profileInfo;
+      const { firstName, lastName } = this.props.profileData.profileInfo;
       this.setState({
         firstName,
-        lastName,
-      })
+        lastName
+      });
     }
-  }
+  };
   componentDidUpdate = ({ profileData }) => {
-
     if (profileData.profileInfo !== this.props.profileData.profileInfo) {
-      const {
-        firstName,
-        lastName,
-
-      } = this.props.profileData.profileInfo;
+      const { firstName, lastName } = this.props.profileData.profileInfo;
 
       this.setState({
         firstName,
-        lastName,
-      })
+        lastName
+      });
     }
-  }
+  };
 
-  
-
-
- 
   render() {
-    // const { firstName, lastName,  } = this.state;
     const { profileData } = this.props;
-    const planName =
-      profileData.profileInfo.planId ? profileData.profileInfo.planId
-        .planStripeDetails.nickname : '' || "Trial Plan";
-    const planAmount = profileData.profileInfo.planId ? profileData.profileInfo.planId.amount: 0 || 0;
+    const planName = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId.planStripeDetails.nickname
+      : "" || "Trial Plan";
+    const planAmount = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId.amount
+      : 0 || 0;
     const expirationDate = profileData.profileInfo.planExiprationDate;
-    const planUser = profileData.profileInfo.planId ?  profileData.profileInfo.planId.facilities.noOfLiscence : 0 || 'Limited';
-    
+    const planUser = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId.facilities.noOfLiscence
+      : 0 || "Limited";
 
     return (
       <div>
@@ -75,8 +61,8 @@ class SubscriptionSettings extends Component {
                 <i className="icons cui-dollar mr-3 plan-icon" />
                 <div>
                   <h4>
-                    Currently <b className={"text-success"}>"{planName}"</b>{" "}
-                    has been activated{" "}
+                    Currently <b className={"text-success"}>"{planName}"</b> has
+                    been activated{" "}
                   </h4>
                   <span className={"plan-detail mr-4 text-muted"}>
                     Allowed:{" "}
@@ -111,4 +97,4 @@ class SubscriptionSettings extends Component {
   }
 }
 
-export default SubscriptionSettings
+export default SubscriptionSettings;

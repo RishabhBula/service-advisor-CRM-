@@ -33,7 +33,7 @@ const allVehicleServices = [
   },
   {
     key: "RV's",
-    icon: ",/assets/img/vanLogo.svg"
+    icon: "./assets/img/vanLogo.svg"
   },
   {
     key: "Trailers",

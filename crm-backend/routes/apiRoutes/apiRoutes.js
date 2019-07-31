@@ -26,7 +26,8 @@ const {
   payment,
   memberShipRoutes,
   webhookRoutes,
-  appointmentRoutes
+  appointmentRoutes,
+  dashboardRoutes
 } = require("./index");
 /**
  *
@@ -63,6 +64,7 @@ router.use("/payment", payment);
 router.use("/membership-plan", memberShipRoutes);
 router.use("/webhooks", webhookRoutes);
 router.use("/appointment", appointmentRoutes);
+router.use("/dashboard", dashboardRoutes);
 
 /**
  *

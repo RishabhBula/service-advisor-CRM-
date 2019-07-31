@@ -112,6 +112,7 @@ const getVehiclesLogic = createLogic({
         sort: action.payload && action.payload.sort ? action.payload.sort : null,
         limit: AppConfig.ITEMS_PER_PAGE,
         vehicleId: action.payload && action.payload.vehicleId && action.payload.isGetVehicle ? action.payload.vehicleId : null,
+        page: action.payload && action.payload.page ? action.payload.page : null
       }
     );
     if (result.isError) {
