@@ -1,6 +1,8 @@
 const AppointmentModal = require("../../models/appointment");
 const Mongoose = require("mongoose");
+const { Email, AvailiableTemplates } = require("../../common/Email");
 const { sendSMS } = require("./../../common/SMS");
+const moment = require("moment");
 /**
  *
  */
@@ -47,7 +49,6 @@ const appointmentList = async (req, res) => {
         }
       }
     }
-    console.log("###################", condition);
     const result = await AppointmentModal.find(condition);
     res.status(200).json({
       message: "Appointment list successful.",
@@ -80,9 +81,9 @@ const addAppointment = async (req, res) => {
       selectedOrder: orderId,
       phone,
       email,
-      sendEmail,
-      sendMessage,
-      techinicians
+      techinicians,
+      isEmail,
+      isSms
     } = body;
     const actualStartTime = new Date().setHours(parseInt(startTime.split()[0]));
     const actualEndTime = new Date().setHours(parseInt(endTime.split()[0]));
@@ -96,8 +97,8 @@ const addAppointment = async (req, res) => {
       note,
       phone,
       email,
-      sendEmail,
-      sendMessage,
+      sendEmail: isEmail,
+      sendMessage: isSms,
       parentId: parentId || id,
       userId: id,
       techinicians
@@ -110,8 +111,23 @@ const addAppointment = async (req, res) => {
     }
     const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
-    if (phone) {
+    if (isSms) {
       await sendSMS(phone, "Hello", id);
+    }
+    if (isEmail) {
+      const emailVar = new Email(body);
+      const scheduledDate = moment(appointmentDate).format("lll")
+      await emailVar.setSubject("[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`);
+      const message = `Your appointment has been scheduled for ${appointmentTitle}`
+      await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+        body: message,
+        orderTitle: "Payment Info",
+        createdAt: scheduledDate,
+        companyName: "Fix It All",
+        titleMessage: "Your appointment has been scheduled for",
+        displayStyle: `style="text-align:center; display: none";`
+      });
+      await emailVar.sendEmail(email);
     }
     /* notify via sms */
     res.status(200).json({

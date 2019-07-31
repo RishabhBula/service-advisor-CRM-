@@ -238,7 +238,7 @@ class SendInspection extends Component {
             <Button className="close" onClick={this.props.toggle}>
               <span aria-hidden="true">×</span>
             </Button>
-            {!isMessage && !isOrder ? 'Send Inspection' : isMessage ? 'Message template'  : 'Sent Invoice'}
+            {!isMessage && !isOrder ? 'Send Inspection' : isMessage ? 'Message template'  : 'Send Invoice'}
             </ModalHeader>
           <ModalBody>
             <Button onClick={this.props.toggleMessageTemplate}>Add template</Button>
@@ -374,7 +374,7 @@ class SendInspection extends Component {
             </div>
             {!isMessage ? 
             <Button color='primary' onClick={this.handleSentInspection}>
-                {isOrder ? 'Sent Invoice' : 'Sent Inspection'} 
+                {isOrder ? 'Send Invoice' : 'Send Inspection'} 
             </Button> : <Button color='primary' onClick={this.handleAddtoMessage}>
                 Add to message
             </Button> }{' '}

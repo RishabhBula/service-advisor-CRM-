@@ -45,14 +45,11 @@ export class CrmSubPaymentModalModel extends Component {
       expYear: expYear,
       cvv: cvv
     }
-    console.log("################", payload);
     this.props.addSubscriptionRequest(payload)
   }
   render() {
     const { openSubPayementModel, handleSubPaymentModal } = this.props
     const { cardNumber, cvv, expireDate } = this.state
-    console.log("This is state^^^^^^^^^^^^", this.state);
-
     return (
       <>
         <Modal

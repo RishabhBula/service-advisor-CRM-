@@ -85,6 +85,8 @@ const addNewCannedService = async (req, res) => {
             userId: currentUser.id,
             parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
          })
+         console.log("##################",CannedServiceData);
+         
          if (CannedServiceData.length) {
             return res.status(400).json({
                message: "Canned service name already exist,enter new name.",
@@ -144,7 +146,7 @@ const getAllCannedServices = async (req, res) => {
          {
             $or: [
                {
-                  parentId: mongoose.Types.ObjectId(id)
+                  userId: mongoose.Types.ObjectId(id)
                },
                {
                   parentId: mongoose.Types.ObjectId(parentId)

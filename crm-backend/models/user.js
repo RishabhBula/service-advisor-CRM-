@@ -112,6 +112,12 @@ const userSchema = new Schema({
   companyNumber:{
     type: String
   },
+  currency:{
+    type: String
+  },
+  timeZone:{
+    type: String
+  },
   vatNumber:{
     type: String
   },

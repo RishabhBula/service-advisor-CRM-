@@ -368,7 +368,7 @@ class Parts extends Component {
               parts.map((part, index) => {
                 return (
                   <tr key={index}>
-                    <td>{index + 1}</td>
+                    <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td className={"text-capitalize"}>
                       <div className={"font-weight-semibold"}>
                         {part.description || notExist}

@@ -5,15 +5,15 @@ import {
   Row,
   Col,
   FormGroup,
-  InputGroup,
+  // InputGroup,
   Label,
   Input,
   Button
 } from "reactstrap";
-import { AppSwitch } from "@coreui/react";
+// import { AppSwitch } from "@coreui/react";
 import {
   CustomerDefaultPermissions,
-  CustomerPermissionsText
+  // CustomerPermissionsText
 } from "../../../config/Constants";
 import { AppConfig } from "../../../config/AppConfig";
 import { CrmEditCustomerModal } from "../../common/CrmEditCustomerModal";
@@ -187,9 +187,9 @@ export class CustomerInfo extends Component {
       selectedOption,
       phoneDetail,
       firstName,
-      selectedLabourRate,
-      selectedPriceMatrix,
-      percentageError
+      // selectedLabourRate,
+      // selectedPriceMatrix,
+      // percentageError
     } = this.state;
     let customerDefaultPermissions = this.state.customerDefaultPermissions;
     if (!customerDefaultPermissions) {
@@ -515,7 +515,7 @@ export class CustomerInfo extends Component {
             </Col>
           </Row>
         </div>
-        <Row className="custom-label-padding ">
+        {/* <Row className="custom-label-padding ">
           {CustomerPermissionsText
             ? CustomerPermissionsText.map((permission, index) => {
               let discountShow = false;
@@ -624,7 +624,6 @@ export class CustomerInfo extends Component {
                         />
                       </Col>
                     ) : null}
-                    {/* */}
                     {pricingMatrix ? (
                       <Col
                         md=""
@@ -642,7 +641,7 @@ export class CustomerInfo extends Component {
               );
             })
             : null}
-        </Row>
+        </Row> */}
         <div className={"text-center"}>
           <Button onClick={this.toggleEditModal} color={"primary"}>Update Customer Details</Button>
         </div>

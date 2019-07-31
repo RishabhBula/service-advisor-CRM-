@@ -43,7 +43,7 @@ export const serviceTotalsCalculation = (serviceData) => {
       let mainserviceTotal = [], serviceTotal, epa, discount, tax
       if (item.serviceId && item.serviceId.serviceItems.length) {
         item.serviceId.serviceItems.map((service) => {
-          const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0)).toFixed(2)
+          const calSubTotal = calculateSubTotal(service.retailPrice || (service.tierSize ? service.tierSize[0].retailPrice : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0)).toFixed(2)
           const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
           const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
           mainserviceTotal.push(parseFloat(servicesSubTotal))

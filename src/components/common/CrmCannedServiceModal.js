@@ -24,6 +24,14 @@ export class CrmCannedServiceModal extends Component {
          activeIndex: '',
       };
    }
+   componentDidMount = () => {
+      const {
+         cannedServiceList
+      } = this.props.serviceReducers
+      this.setState({
+         serviceData: cannedServiceList
+      })
+   }
    componentDidUpdate = ({ serviceReducers }) => {
       if (serviceReducers && (serviceReducers !== this.props.serviceReducers)) {
          const {
@@ -92,7 +100,7 @@ export class CrmCannedServiceModal extends Component {
          }
       })
    }
-   handleDeleteCannedService = async(serviceId) => {
+   handleDeleteCannedService = async (serviceId) => {
       const { value } = await ConfirmBox({
          text: "Do you want to remove this canned service?"
       });

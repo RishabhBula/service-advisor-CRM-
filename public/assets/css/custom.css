@@ -1263,6 +1263,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .qty-value {
   font-size: 16px;
 }
+.qty-no-value {
+  font-size: 14px;
+}
 .custom-form-modal .select-number-tile .text-danger {
   left: -70px;
 }

@@ -122,19 +122,19 @@ export const AdminDefaultPermissions = {
 
 export const allPeopleArray = ["1-2", "3-6", "7-10", "11+"];
 export const CustomerPermissionsText = [
-  { key: "isCorporateFleetTaxExempt", text: "Is this customer tax exempt?" },
+  { key: "isCorporateFleetTaxExempt", text: "Is associted customer tax exempt?" },
   {
     key: "shouldReceiveDiscount",
-    text: "Does this customer receive a discount?"
+    text: "Does associted customer receive a discount?"
   },
-  {
-    key: "shouldLaborRateOverride",
-    text: "Does this customer have a labor rate override?"
-  },
-  {
-    key: "shouldPricingMatrixOverride",
-    text: "Does this customer have a pricing matrix override?"
-  }
+  // {
+  //   key: "shouldLaborRateOverride",
+  //   text: "Does this customer have a labor rate override?"
+  // },
+  // {
+  //   key: "shouldPricingMatrixOverride",
+  //   text: "Does this customer have a pricing matrix override?"
+  // }
 ];
 
 export const CustomerDefaultPermissions = {
@@ -229,10 +229,10 @@ export const LabourTextDefault = {
   showNoteOnQuotesInvoices: false
 };
 export const CreatePartOptions = [
-  {
-    key: "isTaxed",
-    text: "Should this be taxed?"
-  },
+  // {
+  //   key: "isTaxed",
+  //   text: "Should this be taxed?"
+  // },
   {
     key: "showNumberOnQuoteAndInvoice",
     text: "Display part number on quote & invoice"
