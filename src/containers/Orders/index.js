@@ -110,7 +110,8 @@ class Order extends Component {
       serviceData: "",
       sentModal: false,
       mesageModal: false,
-      pdfBlob: ""
+      pdfBlob: "",
+      isOrderUpdate: true
     };
     this.orderNameRef = React.createRef();
   }
@@ -201,19 +202,23 @@ class Order extends Component {
     } else if (customer && !vehicle) {
       this.setState({
         customerData: customer,
-        vehicleData: ""
+        vehicleData: "",
+        isOrderUpdate: false
       });
     } else if (vehicle && !customer) {
       this.setState({
         customerData: "",
-        vehicleData: vehicle
+        vehicleData: vehicle,
+        isOrderUpdate: false
       });
     } else {
       this.setState({
         customerData: "",
-        vehicleData: ""
+        vehicleData: "",
+        isOrderUpdate: false
       });
     }
+
   };
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
@@ -245,6 +250,9 @@ class Order extends Component {
       _id: orderId
     };
     logger("*******payload*****", payload);
+    this.setState({
+      isOrderUpdate: true
+    });
     this.props.updateOrderDetails(payload);
   };
   handleChange = e => {
@@ -315,7 +323,8 @@ class Order extends Component {
       isError,
       orderName,
       orderId,
-      pdfBlob
+      pdfBlob,
+      isOrderUpdate
     } = this.state;
     const {
       getVehicleData,
@@ -371,6 +380,7 @@ class Order extends Component {
       updateOrderDetails
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
+
     return (
       <div className="animated fadeIn">
         {
@@ -422,6 +432,7 @@ class Order extends Component {
                     <div className={"position-relative"}>
                       {this.props.orderReducer.orderItems &&
                         (!this.props.orderReducer.orderItems.customerId ||
+                          !isOrderUpdate ||
                           !this.props.orderReducer.orderItems.vehicleId) ? (
                           <div className={"service-overlay"}>
                             <img

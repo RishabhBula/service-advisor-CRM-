@@ -23,7 +23,33 @@ class CutomerVehicle extends Component {
       vehicleInput: ""
     };
   }
+  componentDidMount = () => {
+    if (
+      this.props.orderReducer.orderItems.customerId ||
+      this.props.orderReducer.orderItems.vehicleId
+    ) {
+      const { customerId, vehicleId } = this.props.orderReducer.orderItems;
+      this.setState({
+        customerId,
+        vehicleId,
+        selectedCustomer: {
+          label: customerId
+            ? `${customerId.firstName} ${customerId.lastName}`
+            : "Type to select customer",
+          value: customerId ? customerId._id : ""
+        },
+        selectedVehicle: {
+          label: vehicleId
+            ? `${vehicleId.make} ${vehicleId.modal}`
+            : "Type to select vehicle",
+          value: vehicleId ? vehicleId._id : ""
+        }
+      });
+    }
+  }
   componentDidUpdate = ({ orderReducer }) => {
+    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$", this.props.orderReducer.orderItems);
+
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
         this.props.orderReducer.orderItems.customerId ||
@@ -51,7 +77,7 @@ class CutomerVehicle extends Component {
   };
   loadCustomers = (input, callback) => {
     this.setState({
-      customerInput: input.length > 1 ? input : null 
+      customerInput: input.length > 1 ? input : null
     })
     this.props.getCustomerData({ input, callback });
   };

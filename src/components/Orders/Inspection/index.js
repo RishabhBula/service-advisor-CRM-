@@ -217,6 +217,18 @@ class Inspection extends Component {
 
    }
    /**
+    * 
+    */
+   handleOptionReset =(e,inspIndex, itemIndex)=>{
+       const { inspection } = this.state;
+       inspection[inspIndex].items[itemIndex].color = '';
+       inspection[inspIndex].items[itemIndex].aprovedStatus = ''; 
+       this.setState({
+         selectedOption: '',
+         inspection
+       });
+   }
+   /**
     *
     */
    handleTemplate = (e, inspIndex, id) => {
@@ -230,6 +242,7 @@ class Inspection extends Component {
             this.setState({
                inspectionArray
             });
+            return
          }
          // To remove _id form object before sent it as payload to API for new template 
          let i;
@@ -373,9 +386,12 @@ class Inspection extends Component {
       var doc = new jsPDF('p', 'pt');
       doc.setFontSize(12)
       doc.setTextColor(51, 47, 62);
+      const customerData = this.state.customerData;
       const orderDetail = this.state.orderDetails
       const profileReducer = this.props.profileReducer
-      const companyName = profileReducer.profileInfo.companyName || process.env.REACT_APP_NAME
+      const companyName =
+        profileReducer ? profileReducer.profileInfo.companyName :
+        process.env.REACT_APP_NAME;
       doc.text(companyName, 40, 30);
       doc.setFontSize(14)
       doc.text('Inspection', 430, 25);
@@ -383,7 +399,8 @@ class Inspection extends Component {
       doc.text('# ' + orderDetail.orderId, 500, 25);
       doc.setFontSize(12);
       doc.setTextColor('gray');
-      var textOrderId = orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName : orderDetail.order.orderName;
+      var textOrderId =
+        orderDetail.orderItems && orderDetail.orderItems.orderName ? orderDetail.orderItems.orderName :"Untitled";
       let textOrderIdDetail = doc.splitTextToSize(textOrderId);
       doc.text(textOrderIdDetail, 430, 42);
 
@@ -392,20 +409,20 @@ class Inspection extends Component {
       doc.setLineWidth(0);
       doc.line(0, 50, 600, 50);
 
-      const customerData = this.state.customerData;
+     
 
       const fullName = customerData.firstName + ' ' + customerData.lastName
       doc.setFontSize(12)
-      doc.text(fullName, 40, 70);
+      doc.text(fullName || '', 40, 70);
       doc.setTextColor(126, 126, 126);
-      doc.text(customerData.email, 40, 83);
-      doc.text(customerData.phoneDetail[0].value, 40, 97);
+      doc.text(customerData.email || '', 40, 83);
+      doc.text(customerData.phoneDetail[0].value || '', 40, 97);
 
       const vehicleData = this.state.vehicleData;
       const vehicalName = vehicleData.make + ' ' + vehicleData.modal + ' ' + vehicleData.year
       doc.setFontSize(12)
       doc.setTextColor(0, 0, 0);
-      doc.text(vehicalName, 340, 70);
+      doc.text(vehicalName || '', 340, 70);
 
       const inspectData = this.state.inspection;
 
@@ -420,117 +437,189 @@ class Inspection extends Component {
          };
 
          var options = {
-            theme: 'grid',
-            beforePageContent: header,
-            margin: {
-               top: finalY
-            },
-            startY: index === 0 ? 140 : finalY + 20,
-            columnStyles: {
-               'Item Tile': { cellWidth: 100 },
-               'Note': { cellWidth: 90 },
-               'Status': { cellWidth: 60, textColor: '#ffffff' },
-               'Image': { cellWidth: 130, textColor: '#ffffff', fontSize: 8 },
-            },
+           theme: "grid",
+           didDrawPage: header,
+           margin: {
+             top: finalY
+           },
+           startY: index === 0 ? 140 : finalY + 20,
+           columnStyles: {
+             "Item Tile": { cellWidth: 100 },
+             Note: { cellWidth: 90 },
+             Status: { cellWidth: 60, textColor: "#ffffff" },
+             Image: {
+               cellWidth: 130,
+               textColor: "#ffffff",
+               fontSize: 8
+             }
+           },
 
-            styles: {
-               1: { rowHeight: 100 },
-               cellPadding: 3,
-               fontSize: 10,
-               font: "helvetica", // helvetica, times, courier
-               lineColor: 200,
-               lineWidth: 0.1,
-               lineHeight: 0,
-               fontStyle: 'normal', // normal, bold, italic, bolditalic
-               overflow: 'ellipsize', // visible, hidden, ellipsize or linebreak
-               fillColor: 255,
-               textColor: 20,
-               halign: 'left', // left, center, right
-               valign: 'middle', // top, middle, bottom
-               fillStyle: 'F', // 'S', 'F' or 'DF' (stroke, fill or fill then stroke)
-               cellWidth: 'auto', // 'auto', 'wrap' or a number
-               minCellHeight: 20,
-            },
-            didParseCell: data => {
-               if (data.row.section !== "head") {
-                  data.row.height = 50
+           styles: {
+             1: { rowHeight: 100 },
+             cellPadding: 3,
+             fontSize: 10,
+             font: "helvetica", // helvetica, times, courier
+             lineColor: 200,
+             lineWidth: 0.1,
+             lineHeight: 0,
+             fontStyle: "normal", // normal, bold, italic, bolditalic
+             overflow: "ellipsize", // visible, hidden, ellipsize or linebreak
+             fillColor: 255,
+             textColor: 20,
+             halign: "left", // left, center, right
+             valign: "middle", // top, middle, bottom
+             fillStyle: "F", // 'S', 'F' or 'DF' (stroke, fill or fill then stroke)
+             cellWidth: "auto", // 'auto', 'wrap' or a number
+             minCellHeight: 20
+           },
+           didParseCell: data => {
+             if (data.row.section !== "head") {
+               data.row.height = 50;
+             }
+             for (
+               let j = 0;
+               j < inspectData[index].items.length;
+               j++
+             ) {
+               if (
+                 data.row.section !== "head" &&
+                 data.row.raw.Image > 0
+               ) {
+                 if (data.row.raw.Image > 3) {
+                   data.row.height = 130;
+                 } else {
+                   data.row.height = 60;
+                 }
                }
-               for (let j = 0; j < inspectData[index].items.length; j++) {
-                  if (data.row.section !== "head" && data.row.raw.Image > 0) {
-                     if (data.row.raw.Image > 3) {
-                        data.row.height = 130
-                     }
-                     else {
-                        data.row.height = 60
-                     }
-
-                  }
+             }
+           },
+           didDrawCell: async data => {
+             if (
+               data.section === "body" &&
+               data.column.dataKey === "Image"
+             ) {
+               for (let j = 0; j < 1; j++) {
+                 var itemsJ = inspectData[index].items[count];
+                 var xAxis = data.cell.x;
+                 var yAxis = data.cell.y + 5;
+                 count++;
+                 for (
+                   let k = 0;
+                   k < itemsJ.itemImagePreview.length;
+                   k++
+                 ) {
+                   var base64Img =
+                     itemsJ.itemImagePreview[k].dataURL || "";
+                   if (k < 3) {
+                     doc.addImage(
+                       base64Img,
+                       "JPEG",
+                       xAxis + 50 * k + 5,
+                       yAxis,
+                       50,
+                       50
+                     );
+                   }
+                   if (k === 3) {
+                     doc.addImage(
+                       base64Img,
+                       "JPEG",
+                       xAxis + 5,
+                       yAxis + 60,
+                       50,
+                       50
+                     );
+                   }
+                   if (k === 4) {
+                     doc.addImage(
+                       base64Img,
+                       "JPEG",
+                       xAxis + 60,
+                       yAxis + 60,
+                       50,
+                       50
+                     );
+                   }
+                 }
                }
-
-            },
-            didDrawCell: async  data => {
-               if (data.section === 'body' && data.column.dataKey === 'Image') {
-                  for (let j = 0; j < 1; j++) {
-                     var itemsJ = inspectData[index].items[count];
-                     var xAxis = data.cell.x;
-                     var yAxis = data.cell.y + 5;
-                     count++;
-                     for (let k = 0; k < itemsJ.itemImagePreview.length; k++) {
-                        var base64Img = itemsJ.itemImagePreview[k];
-                        if (k < 3) {
-                           doc.addImage(base64Img, 'JPEG', xAxis + (50 * k) + 5, yAxis, 50, 50);
-                        }
-                        if (k === 3) {
-                           doc.addImage(base64Img, 'JPEG', xAxis + 5, yAxis + 60, 50, 50);
-                        }
-                        if (k === 4) {
-                           doc.addImage(base64Img, 'JPEG', xAxis + 60, yAxis + 60, 50, 50);
-                        }
-                     }
-                  }
+             }
+             if (
+               data.section === "body" &&
+               data.column.dataKey === "Status"
+             ) {
+               var str = data.cell.text[0];
+               var result = str.split(" ");
+               data.cell.styles.fontSize = 8;
+               if (result[0] === "true") {
+                 doc.setDrawColor(77, 189, 116);
+                 doc.setFillColor(255, 255, 255);
+                 doc.roundedRect(
+                   data.cell.x + 4,
+                   data.cell.y + 25,
+                   60,
+                   15,
+                   2,
+                   2,
+                   "FD"
+                 );
+                 doc.setTextColor(77, 189, 116);
+                 doc.text(
+                   "Approved",
+                   data.cell.x + 11,
+                   data.cell.y + 35
+                 );
+               } else {
+                 doc.setDrawColor(204, 204, 204);
+                 doc.setFillColor(255, 255, 255);
+                 doc.roundedRect(
+                   data.cell.x + 4,
+                   data.cell.y + 25,
+                   60,
+                   15,
+                   2,
+                   2,
+                   "FD"
+                 );
+                 doc.setTextColor(126, 126, 126);
+                 doc.text(
+                   "UnApproved",
+                   data.cell.x + 5,
+                   data.cell.y + 35
+                 );
                }
-               if (data.section === 'body' && data.column.dataKey === 'Status') {
-
-                  var str = data.cell.text[0];
-                  var result = str.split(" ");
-                  data.cell.styles.fontSize = 8;
-                  if (result[0] === 'true') {
-                     doc.setDrawColor(77, 189, 116);
-                     doc.setFillColor(255, 255, 255);
-                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD');
-                     doc.setTextColor(77, 189, 116);
-                     doc.text("Approved", data.cell.x + 11, data.cell.y + 35);
-                  }
-                  else {
-                     doc.setDrawColor(204, 204, 204);
-                     doc.setFillColor(255, 255, 255);
-                     doc.roundedRect(data.cell.x + 4, data.cell.y + 25, 60, 15, 2, 2, 'FD');
-                     doc.setTextColor(126, 126, 126);
-                     doc.text("UnApproved", data.cell.x + 5, data.cell.y + 35);
-                  }
-                  switch (result[1]) {
-                     default:
-                        doc.text("Not Selected", data.cell.x + 21, data.cell.y + 15);
-                        doc.setFillColor(204, 204, 204);
-                        break;
-                     case 'default':
-                        doc.text("Orange", data.cell.x + 21, data.cell.y + 15);
-                        doc.setFillColor(248, 188, 24);
-                        break;
-                     case 'danger':
-                        doc.text("Red", data.cell.x + 21, data.cell.y + 15);
-                        doc.setFillColor(243, 65, 65);
-                        break;
-                     case 'success':
-                        doc.text("Green", data.cell.x + 21, data.cell.y + 15);
-                        doc.setFillColor(53, 230, 91);
-                  }
-                  doc.setDrawColor(204);
-                  doc.circle(data.cell.x + 8, data.cell.y + 10, 4, 'FD');
-
+               switch (result[1]) {
+                 default:
+                   doc.text(
+                     "Not Selected",
+                     data.cell.x + 21,
+                     data.cell.y + 15
+                   );
+                   doc.setFillColor(204, 204, 204);
+                   break;
+                 case "default":
+                   doc.text(
+                     "Orange",
+                     data.cell.x + 21,
+                     data.cell.y + 15
+                   );
+                   doc.setFillColor(248, 188, 24);
+                   break;
+                 case "danger":
+                   doc.text("Red", data.cell.x + 21, data.cell.y + 15);
+                   doc.setFillColor(243, 65, 65);
+                   break;
+                 case "success":
+                   doc.text(
+                     "Green",
+                     data.cell.x + 21,
+                     data.cell.y + 15
+                   );
+                   doc.setFillColor(53, 230, 91);
                }
-
-            },
+               doc.setDrawColor(204);
+               doc.circle(data.cell.x + 8, data.cell.y + 10, 4, "FD");
+             }
+           }
          };
 
          var columns = [
@@ -572,21 +661,25 @@ class Inspection extends Component {
    }
 
    render() {
-      const { inspection, templateData, orderDetails } = this.state;
+      const {
+        inspection,
+        templateData,
+        orderDetails,
+      } = this.state;
       const orderTitle = orderDetails ? orderDetails.orderItems.orderName : " Untitled"
-
+      
       return (
          <div>
             <div className={"mb-3 d-flex"}>
                {inspection && inspection.length ? <>
                   <span color={""} className={"print-btn"} onClick={this.toggleSentInspection}>
-                     <i class="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
+                     <i className="icons cui-cursor"></i>&nbsp; Sent Inspection</span>
                   <span
                      onClick={() => this.downloadPDF(false)}
                      id={"add-Appointment"}
                      className={"print-btn"}
                   >
-                     <i class="icon-printer icons "></i>&nbsp; View or Print
+                     <i className="icon-printer icons "></i>&nbsp; View or Print
             </span> </>
                   : null
                }
@@ -623,6 +716,12 @@ class Inspection extends Component {
                                              <Label htmlFor={`item ${itemIndex}`}>Item Description</Label>
                                              <div>
                                                 <div className={"status-warp"} >
+                                                   {val && val.color  ?
+                                                   <span onClick={(e) =>this.handleOptionReset(e,inspIndex, itemIndex)}>
+                                                      <i className={"icon-reload icons"}></i>
+                                                   </span>
+                                                    : null
+                                                   }
                                                    <Label className={val.color === 'default' ? "status-checkbox checked default" : "status-checkbox"}>
                                                       <Input type="radio" name={`color ${itemIndex}`} value={"default"} checked={val.color === 'default'} onChange={(e) => this.handleOptionChange(e, inspIndex, itemIndex)} />{' '}
                                                       {/* default */}
@@ -754,7 +853,7 @@ class Inspection extends Component {
                                                                               "remove-preview"
                                                                            }
                                                                         >
-                                                                           <i class="icon-close icons mr-2" />{" "}
+                                                                           <i className="icon-close icons mr-2" />{" "}
                                                                            Remove
                                                                  </span>
                                                                         <span
@@ -781,7 +880,7 @@ class Inspection extends Component {
                                                                               "remove-preview"
                                                                            }
                                                                         >
-                                                                           <i class="icon-close icons mr-2" />{" "}
+                                                                           <i className="icon-close icons mr-2" />{" "}
                                                                            Remove
                                                                  </span>
                                                                         <img
@@ -845,12 +944,12 @@ class Inspection extends Component {
 
                   <span className={""}>
                      <Button color={""} onClick={this.addInspectionItem} className={"browse-btn"}>
-                        <i class="icon-eye icons"></i> New Inspection
+                        <i className="icon-eye icons"></i> New Inspection
                      </Button>
                   </span>
                   <span className={"pl-2 pr-2"}><i className={"fa fa-plus"}></i></span>
                   <span>
-                     <Button color={""} onClick={this.toggle} className={"browse-btn"}><i class="icon-plus icons "></i> Add Template</Button>
+                     <Button color={""} onClick={this.toggle} className={"browse-btn"}><i className="icon-plus icons "></i> Add Template</Button>
                   </span>
                </div>
             </div>
@@ -869,7 +968,8 @@ class Inspection extends Component {
                sendMessageTemplate={this.props.sendMessageTemplate}
                pdfBlob={this.state.pdfBlob}
                orderTitle={orderTitle}
-               orderDetails={orderDetails}
+               orderReducer={orderDetails}
+               profileReducer ={this.props.profileReducer}
             />
 
 

@@ -92,9 +92,12 @@ class LoginPage extends Component {
                     <p className="text-muted text-center text-info-line">
                       To Your Workspace
                     </p>
-                    <FormGroup>
+                    <FormGroup className={"auth-input-group"}>
                       <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
+                        <InputGroupAddon
+                          addonType="prepend"
+                          className={errors.email ? "invalid" : " "}
+                        >
                           <InputGroupText>
                             <i className="icon-user" />
                           </InputGroupText>
@@ -113,9 +116,12 @@ class LoginPage extends Component {
                         </FormFeedback>
                       </InputGroup>
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup className={"auth-input-group"}>
                       <InputGroup className="mb-4">
-                        <InputGroupAddon addonType="prepend">
+                        <InputGroupAddon
+                          addonType="prepend"
+                          className={errors.password ? "invalid" : " "}
+                        >
                           <InputGroupText>
                             <i className="icon-lock" />
                           </InputGroupText>

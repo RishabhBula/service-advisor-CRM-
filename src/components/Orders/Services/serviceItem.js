@@ -11,7 +11,6 @@ import {
   PopoverBody,
   FormFeedback,
   UncontrolledTooltip,
-
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound";
 import CrmDiscountBtn from "../../common/CrmDiscountBtn";
@@ -763,7 +762,7 @@ class ServiceItem extends Component {
                               name={"note"}
                               value={item.note}
                               maxLength={"200"}
-                              rows={"2"} cols={"3"}
+                              rows={"5"} cols={"3"}
                               placeholder={"Add Note for this service"}
                             />
                           </UncontrolledPopover>

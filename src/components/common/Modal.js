@@ -9,9 +9,9 @@ const CRMModal = props => (
     toggle={props.toggle}
     backdrop={"static"}
     className={classNames(
-      "customer-modal",
-      "custom-form-modal",
-      "custom-modal-lg",
+      props.isAppointment
+        ? "customer-modal custom-form-modal"
+        : "customer-modal custom-form-modal custom-modal-lg",
       { ...props.classNames }
     )}
     {...props.modalProps}

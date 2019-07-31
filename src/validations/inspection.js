@@ -5,7 +5,7 @@ export const inspectValidations = {
     [ValidationTypes.REQUIRED]: true
   },
   email: {
-    [ValidationTypes.REQUIRED]: true,
+    // [ValidationTypes.REQUIRED]: true,
     [ValidationTypes.EMAIL]: true,
   },
 };
@@ -15,7 +15,7 @@ export const inspectValidationMessage = {
     [ValidationTypes.REQUIRED]: 'Please enter subject for template.',
   },
   email: {
-    [ValidationTypes.REQUIRED]: 'Please enter email address',
+    // [ValidationTypes.REQUIRED]: 'Please enter email address',
     [ValidationTypes.EMAIL]: "Enter a valid email",
   },
 };

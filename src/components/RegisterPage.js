@@ -14,7 +14,10 @@ import {
   InputGroupText,
   Row,
   FormGroup,
-  FormFeedback
+  FormFeedback,
+  UncontrolledPopover,
+  PopoverHeader,
+  PopoverBody
 } from "reactstrap";
 
 import { logger } from "../helpers/Logger";
@@ -124,7 +127,7 @@ class RegisterPage extends Component {
         SingupValidationsMessaages
       );
       if (d.companyWebsite && !validUrlCheck(d.companyWebsite)) {
-        errors.companyWebsite = "Please enter a valid URL.";
+        errors.companyWebsite = "Please enter a valid URL. Include http:// or https://";
         isValid = false;
       }
       if (d.workspace && !isValidSubdomain(d.workspace)) {
@@ -172,7 +175,11 @@ class RegisterPage extends Component {
           <Col md="12" lg="12" xl="12">
             <Col className="text-center">
               <h4 className="logo-title">
-                <img src={"/assets/img/logo-white.svg"} alt={"logo"} style={{ width: 120 }} />
+                <img
+                  src={"/assets/img/logo-white.svg"}
+                  alt={"logo"}
+                  style={{ width: 120 }}
+                />
               </h4>
             </Col>
             <CardGroup>
@@ -184,9 +191,12 @@ class RegisterPage extends Component {
                       <p className="text-muted text-center text-info-line">
                         To Create Your Workspace
                       </p>
-                      <FormGroup>
+                      <FormGroup className={"auth-input-group"}>
                         <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={errors.firstName ? "invalid" : " "}
+                          >
                             <InputGroupText>
                               <i className="icon-user" />
                             </InputGroupText>
@@ -205,9 +215,12 @@ class RegisterPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup className={"auth-input-group"}>
                         <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={errors.lastName ? "invalid" : " "}
+                          >
                             <InputGroupText>
                               <i className="icon-user" />
                             </InputGroupText>
@@ -226,9 +239,12 @@ class RegisterPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup className={"auth-input-group"}>
                         <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={errors.email ? "invalid" : " "}
+                          >
                             <InputGroupText>@</InputGroupText>
                           </InputGroupAddon>
                           <Input
@@ -245,9 +261,12 @@ class RegisterPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup className={"auth-input-group"}>
                         <InputGroup className="mb-3">
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={errors.password ? "invalid" : " "}
+                          >
                             <InputGroupText>
                               <i className="icon-lock" />
                             </InputGroupText>
@@ -266,9 +285,14 @@ class RegisterPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup className={"auth-input-group"}>
                         <InputGroup>
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={
+                              errors.confirmPassword ? "invalid" : " "
+                            }
+                          >
                             <InputGroupText>
                               <i className="icon-lock" />
                             </InputGroupText>
@@ -289,11 +313,16 @@ class RegisterPage extends Component {
                           </FormFeedback>
                         </InputGroup>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup
+                        className={"position-relative auth-input-group"}
+                      >
                         <InputGroup>
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={errors.companyName ? "invalid" : " "}
+                          >
                             <InputGroupText>
-                              <i className="icon-lock" />
+                              <i className="icons cui-shield" />
                             </InputGroupText>
                           </InputGroupAddon>
                           <Input
@@ -309,12 +338,45 @@ class RegisterPage extends Component {
                             {errors.companyName ? errors.companyName : null}
                           </FormFeedback>
                         </InputGroup>
+                        <Button
+                          id={"company"}
+                          className={"help-btn rounded-circle"}
+                        >
+                          <i className={"fa fa-question"} />
+                        </Button>
+                        <UncontrolledPopover
+                          className={"technician-popover"}
+                          placement="top"
+                          target={"company"}
+                          trigger={"hover"}
+                        >
+                          <PopoverHeader>Company Name</PopoverHeader>
+                          <PopoverBody>
+                            <div className={"pb-2 technician-detail"}>
+                              <div
+                                className={
+                                  "text-capitalize pb-1 border-bottom"
+                                }
+                              >
+                                Provide name of your company or Organization
+                              </div>
+                              <div className={"pt-2  text-note text-left"}>
+                                ex.&nbsp;serviceadvisor
+                              </div>
+                            </div>
+                          </PopoverBody>
+                        </UncontrolledPopover>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup
+                        className={"position-relative auth-input-group"}
+                      >
                         <InputGroup>
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={errors.workspace ? "invalid" : " "}
+                          >
                             <InputGroupText>
-                              <i className="icon-lock" />
+                              <i className="icons cui-monitor" />
                             </InputGroupText>
                           </InputGroupAddon>
                           <Input
@@ -330,12 +392,49 @@ class RegisterPage extends Component {
                             {errors.workspace ? errors.workspace : null}
                           </FormFeedback>
                         </InputGroup>
+                        <Button
+                          id={"workspace"}
+                          className={"help-btn rounded-circle"}
+                        >
+                          <i className={"fa fa-question"} />
+                        </Button>
+                        <UncontrolledPopover
+                          className={"technician-popover"}
+                          placement="top"
+                          target={"workspace"}
+                          trigger={"hover"}
+                        >
+                          <PopoverHeader>Workspace ?</PopoverHeader>
+                          <PopoverBody>
+                            <div className={"pb-2 technician-detail"}>
+                              <div
+                                className={
+                                  "text-capitalize pb-1 border-bottom"
+                                }
+                              >
+                                Name of dedicated space provide for your
+                                company.
+                              </div>
+                              <div className={"pt-2  text-note text-left"}>
+                                Will Assign a seprate subdomain
+                                <br />
+                                ex.&nbsp;
+                                http://comanyname.serviceadvisor.io
+                              </div>
+                            </div>
+                          </PopoverBody>
+                        </UncontrolledPopover>
                       </FormGroup>
-                      <FormGroup>
+                      <FormGroup className={"auth-input-group"}>
                         <InputGroup className="mb-4">
-                          <InputGroupAddon addonType="prepend">
+                          <InputGroupAddon
+                            addonType="prepend"
+                            className={
+                              errors.companyWebsite ? "invalid" : " "
+                            }
+                          >
                             <InputGroupText>
-                              <i className="icon-lock" />
+                              <i className="icons cui-globe" />
                             </InputGroupText>
                           </InputGroupAddon>
                           <Input
