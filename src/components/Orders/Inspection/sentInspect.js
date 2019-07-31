@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Button,
   Modal,
@@ -11,11 +11,18 @@ import {
   FormGroup,
   FormFeedback,
   Label
-} from 'reactstrap';
+} from "reactstrap";
 import moment from "moment";
 import { Async } from "react-select";
 import Validator from "js-object-validation";
-import { inspectValidations, inspectValidationMessage } from "../../../validations/inspection";
+import {
+  inspectValidations,
+  inspectValidationMessage
+} from "../../../validations/inspection";
+import MaskedInput from "react-text-mask";
+
+import { SendEmailAndSMS } from "../../SendReminderEmail&SMS/index";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
 
 class SendInspection extends Component {
   constructor(props) {
@@ -26,66 +33,99 @@ class SendInspection extends Component {
       customerData: {},
       vehicleData: {},
       orderId: "",
-      templateData: [],
+      templateData: "",
       subject: "",
       customerEmail: "",
       searchInput: "",
       search: "",
-      messageTextSentError:''
+      messageTextSentError: "",
+      isEmail: false,
+      isSms: false,
+      phone: "",
+      incorrectNumber: false
     };
   }
 
   componentDidMount = () => {
     this.setState({
       customerData: this.props.customerData,
-      vehicleData: this.props.vehicleData,
-    })
-  }
+      vehicleData: this.props.vehicleData
+    });
+  };
 
   componentDidUpdate = ({ customerData, vehicleData }) => {
-    let propsCustomerData = this.props.customerData
-    let propsVehicleData = this.props.vehicleData
-    if ((propsCustomerData && propsCustomerData !== customerData) || (propsVehicleData && propsVehicleData !== vehicleData)) {
+    let propsCustomerData = this.props.customerData;
+    let propsVehicleData = this.props.vehicleData;
+    if (
+      (propsCustomerData && propsCustomerData !== customerData) ||
+      (propsVehicleData && propsVehicleData !== vehicleData)
+    ) {
       this.setState({
         customerData: propsCustomerData,
         vehicleData: propsVehicleData,
-      })
-
-    }
-  }
-  handleChangeInput = (e, name) => {
-    const { errors } = this.state
-    if (name === "subject") {
-      errors.subject = ""
-      this.setState({
-        subject: e.target.value,
-      })
-    } else {
-      errors.email = ""
-      this.setState({
-        customerData: {
-          ...this.state.customerData,
-          email: e.target.value,
-        },
-        errors
-      })
+        isEmail: propsCustomerData.email ? true : false,
+        isSms:
+          propsCustomerData && propsCustomerData.phoneDetail[0]
+          .value
+            ? true
+            : false,
+        phone:
+          propsCustomerData &&
+            propsCustomerData.phoneDetail ? propsCustomerData.phoneDetail[0]
+              .value : null
+      });
     }
   };
 
-  handleChange = (e) => {
-    if (e && e.value) {
+  handleChangeInput = (e, name) => {
+    const { errors } = this.state;
+    if (name === "subject") {
+      errors.subject = "";
       this.setState({
-        search: e
-      },
-        () => {
-          this.props.searchMessageTemplateList({ 'search': this.state.search.label });
-        });
-    } else {
-      this.setState({
-        search: ""
-      }, () => {
-        this.props.searchMessageTemplateList();
+        subject: e.target.value,
+        errors
       });
+    } else if (name === "phone") {
+      const { value } = e.target;
+      this.setState({
+        phone: value,
+        isSms: value ? true : false,
+        incorrectNumber: false
+      });
+    } else {
+      errors.email = "";
+      this.setState({
+        customerData: {
+          ...this.state.customerData,
+          [name]: e.target.value ? e.target.value : ""
+        },
+        isEmail: e.target.value ? true : false
+        //errors
+      });
+    }
+  };
+  /** */
+  handleChange = e => {
+    if (e && e.value) {
+      this.setState(
+        {
+          search: e
+        },
+        () => {
+          this.props.searchMessageTemplateList({
+            search: this.state.search.label
+          });
+        }
+      );
+    } else {
+      this.setState(
+        {
+          search: ""
+        },
+        () => {
+          this.props.searchMessageTemplateList();
+        }
+      );
     }
     if (e && e !== "") {
       let content = e.templateData.messageText;
@@ -97,58 +137,81 @@ class SendInspection extends Component {
         last_name: customerData.lastName,
         year: vehicleData && vehicleData.year ? vehicleData.year : null,
         make: vehicleData && vehicleData.make ? vehicleData.make : null,
-        model: vehicleData && vehicleData.modal ? vehicleData.modal : null,
+        model: vehicleData && vehicleData.modal ? vehicleData.modal : null
       };
 
       for (const key in replaceObj) {
         if (replaceObj.hasOwnProperty(key)) {
           const val = replaceObj[key];
           content = content.replace(new RegExp(`{${key}}`, "g"), val);
-          contentSubject = contentSubject.replace(new RegExp(`{${key}}`, "g"), val);
+          contentSubject = contentSubject.replace(
+            new RegExp(`{${key}}`, "g"),
+            val
+          );
         }
       }
       const data = {
         messageText: content,
-        subject: contentSubject,
-      }
-      this.state.templateData.push(data)
+        subject: contentSubject
+      };
       this.setState({
         subject: contentSubject,
-        templateData: this.state.templateData
-      })
-
+        templateData: data,
+        messageTextSentError: "",
+        errors: {
+          subject: ""
+        }
+      });
     }
   };
-
+  /** */
   loadOptions = (search, callback) => {
     this.setState({ search: search.length > 1 ? search : null });
     this.props.searchMessageTemplateList({ search, callback });
   };
-
-  handleSentInspection = () => {
-    const {customerData, subject } = this.state
+  /** */
+  handleSentInspection = async () => {
+    const { customerData, subject, isEmail, isSms, phone } = this.state;
     const { orderReducer, profileReducer, isOrder } = this.props;
+    const customerId = customerData._id;
     const customerEmail = customerData.email;
-    const orderTitle = orderReducer.orderItems ? orderReducer.orderItems.orderName : '' || '';
-    const orderCreated = orderReducer.orderItems
-      ? moment(orderReducer.orderItems.createdAt || "").format(
-          "MMM Do YYYY"
-        )
-      : "" || "";
-    const companyName = profileReducer.profileInfo.companyName || '';
+
+    const orderTitle = orderReducer && orderReducer.orderItems
+      ? orderReducer.orderItems.orderName
+      : "Untitled order";
+
+    const orderCreated =
+      orderReducer && orderReducer.orderItems
+        ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY")
+        : "";
+    const companyName = profileReducer.profileInfo.companyName || "";
+
     try {
-      var messageTextValue = document.getElementById('messageTextSent'),
+      var messageTextValue = document.getElementById("messageTextSent"),
         messageTextSent = messageTextValue.innerHTML;
       const validData = {
         subject: subject,
         email: customerEmail
-      }
-      if (messageTextSent === '') {
+      };
+      if (messageTextSent === "") {
         this.setState({
-          messageTextSentError : "Please enter message "
-        })
+          messageTextSentError: "Please enter message "
+        });
+      } else {
+        this.setState({
+          messageTextSentError: ""
+        });
       }
-      const { isValid, errors } = Validator(validData, inspectValidations, inspectValidationMessage);
+      if (phone !== "" && phone.length < 13) {
+        this.setState({
+          incorrectNumber: true
+        });
+      }
+      const { isValid, errors } = Validator(
+        validData,
+        inspectValidations,
+        inspectValidationMessage
+      );
       if (!isValid) {
         this.setState({
           errors: errors,
@@ -156,214 +219,372 @@ class SendInspection extends Component {
         });
         return;
       }
-      
+
       const payload = {
         message: messageTextSent,
         subject: subject,
+        customerId,
         email: customerEmail,
+        phone,
         pdf: this.props.pdfBlob,
         orderTitle: orderTitle,
         companyName: companyName,
-        orderCreated : orderCreated,
-        isInvoice: isOrder ? true : false
+        orderCreated: orderCreated,
+        isInvoice: isOrder ? true : false,
+        isEmail,
+        isSms
       };
-     
-      this.props.sendMessageTemplate(payload)
-      // close and clear modal form 
-      this.props.toggle()
+
+      if (!isEmail && !isSms) {
+        await ConfirmBox({
+          text: "",
+          title: "Please check Mail or SMS or Both to sent notification",
+          showCancelButton: false,
+          confirmButtonText: "Ok"
+        });
+        return
+      }
+      this.props.sendMessageTemplate(payload);
+
+      // close and clear modal form
+      this.props.toggle();
+
       this.setState({
-        subject:'',
-        search: '',
-        templateData:[
-          {messageText :''}
-        ]
-      })     
-    }
-    catch (error) { }
-  }
-
-  onKeyPress = (e) => {
+        subject: "",
+        search: "",
+        templateData: [{ messageText: "" }]
+      });
+    } catch (error) { }
+  };
+  /** */
+  onKeyPress = e => {
     this.setState({
-      messageTextSentError : ''
+      messageTextSentError: ""
     });
-
-  }
-  handleFocus = (id) =>{
+  };
+  /** */
+  handleFocus = id => {
     document.getElementById(id).addEventListener("paste", function (e) {
       e.preventDefault();
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
     });
-  }
-
-  clearForm =()=>{
+  };
+  /** */
+  clearForm = () => {
     this.setState({
-      errors : {
-        email:'',
-        subject:''
+      errors: {
+        email: "",
+        subject: ""
       },
-      messageTextSentError: '',
-      search: '',
-      subject:'',
-    })
-
-  }
-
-  handleAddtoMessage = () =>{
-    var messageTextValue = document.getElementById('messageTextSent'),
+      messageTextSentError: "",
+      search: "",
+      subject: "",
+      templateData: ""
+    });
+  };
+  /** */
+  handleAddtoMessage = () => {
+    var messageTextValue = document.getElementById("messageTextSent"),
       messageTextSent = messageTextValue.innerHTML;
-      this.props.messsageTemplateData(messageTextSent)
-      // close and clear modal form 
-      this.props.toggle()
-      this.setState({
-        search: '',
-        templateData: [
-          { messageText: '' }
-        ]
-      })
-   
-  }
+    this.props.messsageTemplateData(messageTextSent);
+    // close and clear modal form
+    this.props.toggle();
+    this.setState({
+      search: ""
+    });
+  };
+  /**
+   *
+   */
+  handleReminder = e => {
+    const { name, checked } = e.target;
+    this.setState({
+      [name]: checked
+    });
+  };
+  /**
+   *
+   */
   render() {
-    const { templateData, recipients, errors, search, customerData, messageTextSentError } = this.state
+    const {
+      templateData,
+      recipients,
+      errors,
+      search,
+      customerData,
+      messageTextSentError,
+      isEmail,
+      isSms,
+      incorrectNumber,
+      phone
+    } = this.state;
     const { isMessage, isOrder } = this.props;
+
+    const email = customerData && customerData.email ? customerData.email : "";
+    const phoneNumber = phone;
+
     return (
       <>
         <Modal
           isOpen={this.props.isOpen}
           toggle={this.props.toggle}
           backdrop={"static"}
-          className='customer-modal custom-form-modal custom-modal-lg'
+          className="customer-modal custom-form-modal custom-modal-lg"
         >
-          <ModalHeader >
+          <ModalHeader>
             <Button className="close" onClick={this.props.toggle}>
               <span aria-hidden="true">×</span>
             </Button>
-            {!isMessage && !isOrder ? 'Send Inspection' : isMessage ? 'Message template'  : 'Sent Invoice'}
-            </ModalHeader>
+            {!isMessage && !isOrder
+              ? "Send Inspection"
+              : isMessage
+                ? "Message Template"
+                : "Sent Invoice"}
+          </ModalHeader>
           <ModalBody>
-            <Button onClick={this.props.toggleMessageTemplate}>Add template</Button>
+            <span
+              className={"btn btn-secondary btn-dashed ml-5 mb-4"}
+              onClick={this.props.toggleMessageTemplate}
+            >
+              Manage Template
+            </span>
             <div className="">
-              <Row className='justify-content-center'>
-                <Col md='8'>
-                  <Row className='justify-content-center'>
-                    {!this.props.isMessage  ? <>
-                    <Col md='12'>
-                      <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
-                          Recipients <span className={"asteric"}>*</span>
-                        </Label>
-                        <div className={'input-block'}>
-                          <Input
-                            type='text'
-                            name='name'
-                            onChange={(e) => this.handleChange(e)}
-                            placeholder='John'
-                            value={customerData ? customerData.firstName : ''}
-                            maxLength='50'
-                            id='recipients'
-                            invalid={errors.recipients && !recipients}
-                            disabled
-                          />
-                          <FormFeedback>
-                            {errors.recipients && !recipients ? errors.recipients : null}
-                          </FormFeedback>
-                        </div>
-                      </FormGroup>
-                    </Col>
-                    <Col md='12'>
-                      <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
-                          Email <span className={"asteric"}>*</span>
-                        </Label>
-                        <div className={'input-block'}>
-                          <Input
-                            type='text'
-                            name='customerEmail'
-                            onChange={(e) => this.handleChangeInput(e, "email")}
-                            placeholder='John@gmail.com'
-                            value={customerData && customerData.email ? customerData.email : ''}
-                            maxLength='100'
-                            id='customerEmail'
-                            invalid={errors.email || false}
-                          />
-                          {errors.email ? (
-                            <FormFeedback>{errors.email}</FormFeedback>
-                          ) : null}
-                        </div>
-                      </FormGroup>
-                    </Col>
-                   </> : null}
-                    <Col md='12'>
-                      <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
+              <Row className="justify-content-center">
+                <Col md="8">
+                  <Row className="justify-content-center">
+                    {!this.props.isMessage ? (
+                      <>
+                        <Col md="12">
+                          <FormGroup>
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style"
+                            >
+                              Recipients{" "}
+                              <span className={"asteric"}>*</span>
+                            </Label>
+                            <div className={"input-block"}>
+                              <Input
+                                type="text"
+                                name="name"
+                                onChange={e => this.handleChange(e)}
+                                placeholder="John"
+                                value={
+                                  customerData ? customerData.firstName : ""
+                                }
+                                maxLength="50"
+                                id="recipients"
+                                invalid={errors.recipients && !recipients}
+                                disabled
+                              />
+                              <FormFeedback>
+                                {errors.recipients && !recipients
+                                  ? errors.recipients
+                                  : null}
+                              </FormFeedback>
+                            </div>
+                          </FormGroup>
+                        </Col>
+                        <Col md="12">
+                          <FormGroup>
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style"
+                            >
+                              Email
+                              {/* <span className={"asteric"}>*</span> */}
+                            </Label>
+                            <div className={"input-block"}>
+                              <Input
+                                type="text"
+                                name="customerEmail"
+                                onChange={e =>
+                                  this.handleChangeInput(e, "email")
+                                }
+                                placeholder="John@gmail.com"
+                                value={
+                                  customerData && customerData.email
+                                    ? customerData.email
+                                    : ""
+                                }
+                                maxLength="100"
+                                id="customerEmail"
+                                invalid={errors.email || false}
+                              />
+                              {errors.email ? (
+                                <FormFeedback>{errors.email}</FormFeedback>
+                              ) : null}
+                            </div>
+                          </FormGroup>
+                        </Col>
+                        <Col md="12">
+                          <FormGroup>
+                            <Label
+                              htmlFor="name"
+                              className="customer-modal-text-style"
+                            >
+                              Phone
+                              {/* <span className={"asteric"}>*</span> */}
+                            </Label>
+                            <div className={"input-block"}>
+                              <MaskedInput
+                                mask={[
+                                  "(",
+                                  /[1-9]/,
+                                  /\d/,
+                                  /\d/,
+                                  ")",
+                                  " ",
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  "-",
+                                  /\d/,
+                                  /\d/,
+                                  /\d/
+                                ]}
+                                name="phone"
+                                className={
+                                  !incorrectNumber
+                                    ? "form-control"
+                                    : "form-control is-invalid"
+                                }
+                                placeholder="(555) 055-0555"
+                                size="20"
+                                value={phone}
+                                maxLength={13}
+                                guide={false}
+                                onChange={e =>
+                                  this.handleChangeInput(e, "phone")
+                                }
+                              />
+
+                              {incorrectNumber ? (
+                                <FormFeedback>
+                                  Phone number should not be less than ten
+                                  digit.
+                                </FormFeedback>
+                              ) : null}
+                            </div>
+                          </FormGroup>
+                        </Col>
+                      </>
+                    ) : null}
+                    <Col md="12">
+                      <FormGroup className={"fleet-block"}>
+                        <Label
+                          htmlFor="name"
+                          className="customer-modal-text-style"
+                        >
                           Template Title
-                      </Label>
+                        </Label>
                         <div className={"input-block"}>
                           <Async
                             placeholder={"Type template title"}
                             loadOptions={this.loadOptions}
                             value={search}
-                            onChange={(e) => this.handleChange(e)}
+                            onChange={e => this.handleChange(e)}
                             isClearable={true}
                             noOptionsMessage={() =>
-                              search ? "No template found"
-                                :
-                                <span onClick={this.props.toggleMessageTemplate}>Add template</span>
+                              search ? (
+                                "No template found"
+                              ) : (
+                                  <span
+                                    onClick={this.props.toggleMessageTemplate}
+                                  >
+                                    Add template
+                                </span>
+                                )
                             }
                           />
                         </div>
-
                       </FormGroup>
                     </Col>
-                  {!this.props.isMessage ? 
-                    <Col md='12'>
+                    {!this.props.isMessage ? (
+                      <Col md="12">
+                        <FormGroup>
+                          <Label
+                            htmlFor="name"
+                            className="customer-modal-text-style"
+                          >
+                            Subject <span className={"asteric"}>*</span>
+                          </Label>
+                          <div className={"input-block"}>
+                            <Input
+                              type="text"
+                              name="subject"
+                              onChange={e =>
+                                this.handleChangeInput(e, "subject")
+                              }
+                              placeholder="Inspection #1000 for your vehicle"
+                              value={this.state.subject}
+                              id="subject"
+                              maxLength="60"
+                              invalid={errors.subject || false}
+                            />
+                            {errors.subject ? (
+                              <FormFeedback>{errors.subject}</FormFeedback>
+                            ) : null}
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    ) : null}
+                    <Col md="12">
                       <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
-                          Subject <span className={"asteric"}>*</span>
-                        </Label>
-                        <div className={'input-block'}>
-                          <Input
-                            type='text'
-                            name='subject'
-                            onChange={(e) => this.handleChangeInput(e, "subject")}
-                            placeholder='Inspection #1000 for your vehicle'
-                            value={this.state.subject}
-                            id='subject'
-                            maxLength='60'
-                            invalid={errors.subject || false}
-                          />
-                          {errors.subject ? (
-                            <FormFeedback>{errors.subject}</FormFeedback>
-                          ) : null}
-                        </div>
-                      </FormGroup>
-                    </Col>
-                    : null}
-                    <Col md='12'>
-                      <FormGroup>
-                        <Label htmlFor='name' className='customer-modal-text-style'>
-                          Message  <span className={"asteric"}>*</span>
+                        <Label
+                          htmlFor="name"
+                          className="customer-modal-text-style"
+                        >
+                          Message <span className={"asteric"}>*</span>
                         </Label>
                         <div className={"w-100"}>
-                          <div className={messageTextSentError && messageTextSentError !== "" ? 'input-block message-input-warp is-invalid' : "input-block message-input-warp"}>
+                          <div
+                            className={
+                              messageTextSentError &&
+                                messageTextSentError !== ""
+                                ? "input-block message-input-warp is-invalid"
+                                : "input-block message-input-warp"
+                            }
+                          >
                             <p
-                              suppressContentEditableWarning contentEditable={"true"}
-                              onKeyPress={(e) => this.onKeyPress(e)}
+                              suppressContentEditableWarning
+                              contentEditable={"true"}
+                              onKeyPress={e => this.onKeyPress(e)}
                               className={"message-input"}
-                              id={'messageTextSent'}
-                              dangerouslySetInnerHTML={templateData && templateData.length ? { __html: templateData[0].messageText } : null}
-                              onClick={(e) => this.handleFocus("messageTextSent")}
-                            >
-                            </p>
+                              id={"messageTextSent"}
+                              dangerouslySetInnerHTML={
+                                templateData
+                                  ? { __html: templateData.messageText }
+                                  : null
+                              }
+                              onClick={e =>
+                                this.handleFocus("messageTextSent")
+                              }
+                            />
                           </div>
-                          {messageTextSentError && messageTextSentError !== "" ? <span className={" invalid-feedback "}>Please enter message</span> : null}
+                          {messageTextSentError &&
+                            messageTextSentError !== "" ? (
+                              <span className={" invalid-feedback "}>
+                                Please enter message
+                            </span>
+                            ) : null}
                         </div>
                       </FormGroup>
                     </Col>
                   </Row>
                 </Col>
-                <Col md='4'>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                <Col md="4">
+                  {!this.props.isMessage ? (
+                    <SendEmailAndSMS
+                      headingTitle={"Send Notification"}
+                      handleReminder={this.handleReminder}
+                      isEmail={isEmail}
+                      isSms={isSms}
+                      email={email}
+                      phone={phoneNumber}
+                    />
+                  ) : null}
                 </Col>
               </Row>
             </div>
@@ -372,13 +593,22 @@ class SendInspection extends Component {
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
             </div>
-            {!isMessage ? 
-            <Button color='primary' onClick={this.handleSentInspection}>
-                {isOrder ? 'Sent Invoice' : 'Sent Inspection'} 
-            </Button> : <Button color='primary' onClick={this.handleAddtoMessage}>
-                Add to message
-            </Button> }{' '}
-            <Button color='secondary' onClick={(e) => { this.props.toggle(); this.clearForm()}}>
+            {!isMessage ? (
+              <Button color="primary" onClick={this.handleSentInspection}>
+                {isOrder ? "Sent Invoice" : "Sent Inspection"}
+              </Button>
+            ) : (
+                <Button color="primary" onClick={this.handleAddtoMessage}>
+                  Add to message
+              </Button>
+              )}{" "}
+            <Button
+              color="secondary"
+              onClick={e => {
+                this.props.toggle();
+                this.clearForm();
+              }}
+            >
               Cancel
             </Button>
           </ModalFooter>
@@ -388,4 +618,4 @@ class SendInspection extends Component {
   }
 }
 
-export default (SendInspection)
+export default SendInspection;

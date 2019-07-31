@@ -143,7 +143,7 @@ export default class AddAppointment extends Component {
       this.setState({
         isEmail: true
       })
-    } else if (e.target.name === "email" && !e.target.value){
+    } else if (e.target.name === "email" && !e.target.value) {
       this.setState({
         isEmail: false
       })
@@ -153,7 +153,7 @@ export default class AddAppointment extends Component {
         isSms: true
       })
     }
-    else if (e.target.name === "phone" && !e.target.value){
+    else if (e.target.name === "phone" && !e.target.value) {
       this.setState({
         isSms: false
       })
@@ -284,7 +284,9 @@ export default class AddAppointment extends Component {
         appointmentTitle,
         startTime,
         endTime,
-        selectedTechincians
+        selectedTechincians,
+        isEmail,
+        isSms
       } = this.state;
       const { editData } = this.props;
       const techinicians = selectedTechincians.map(tech => {
@@ -311,7 +313,9 @@ export default class AddAppointment extends Component {
         appointmentTitle,
         startTime,
         endTime,
-        techinicians
+        techinicians,
+        isEmail,
+        isSms
       };
 
       const { errors, isValid } = Validator(

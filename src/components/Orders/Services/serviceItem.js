@@ -11,7 +11,6 @@ import {
   PopoverBody,
   FormFeedback,
   UncontrolledTooltip,
-
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound";
 import CrmDiscountBtn from "../../common/CrmDiscountBtn";
@@ -223,6 +222,9 @@ class ServiceItem extends Component {
 
   setDiscountValue = (e, Mindex, index) => {
     const { name, value } = e.target
+    if (isNaN(value) || value < 0) {
+      return
+    }
     let serviceData = [...this.state.services]
     const discountValue = serviceData[Mindex].serviceItems[index].discount
     if (discountValue.type === '%' && value) {
@@ -249,7 +251,7 @@ class ServiceItem extends Component {
   handleCostChange = (e, Mindex, index) => {
     const serviceData = [...this.state.services]
     const { value } = e.target
-    serviceData[Mindex].serviceItems[index].cost = value
+    serviceData[Mindex].serviceItems[index].retailPrice = value
     this.setState({
       services: serviceData
     })
@@ -760,7 +762,7 @@ class ServiceItem extends Component {
                               name={"note"}
                               value={item.note}
                               maxLength={"200"}
-                              rows={"2"} cols={"3"}
+                              rows={"5"} cols={"3"}
                               placeholder={"Add Note for this service"}
                             />
                           </UncontrolledPopover>
@@ -784,7 +786,7 @@ class ServiceItem extends Component {
                           {
                             this.state.services[index] && this.state.services[index].serviceItems.length ?
                               this.state.services[index].serviceItems.map((service, sIndex) => {
-                                const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
+                                const calSubTotal = calculateSubTotal(service.retailPrice || (service.tierSize ? service.tierSize[0].retailPrice : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
                                 const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
                                 const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
                                 mainserviceTotal.push(parseFloat(servicesSubTotal))
@@ -801,10 +803,10 @@ class ServiceItem extends Component {
                                         (service.cost !== null || (service.tierSize ? service.tierSize[0].cost !== null : null)) && service.serviceType !== 'labor' ?
                                           <Input
                                             onChange={(e) => this.handleCostChange(e, index, sIndex)}
-                                            name={"cost"}
+                                            name={"retailPrice"}
                                             type="text"
                                             maxLength={"4"}
-                                            value={service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0}
+                                            value={service.retailPrice || (service.tierSize ? service.tierSize[0].retailPrice : null) || 0}
                                           /> :
                                           null
                                       }

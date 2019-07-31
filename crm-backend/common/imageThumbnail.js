@@ -45,7 +45,11 @@ const imagePath = async imageRoute => {
         reject(new Error(err));
       }
       resolve(data.Location);
-      imageUrl = data.Location
+      if (data) {
+        imageUrl = data.Location
+      } else {
+        imageUrl = ""
+      }
     });
   });
   return imageUrl

@@ -77,11 +77,10 @@ export class CrmEditCustomerModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-
     if (
       this.props.customer &&
       this.props.customer._id &&
-      (prevProps.customer !== this.props.customer)
+      ((prevProps.customer !== this.props.customer) || (prevProps.customerModalOpen !== this.props.customerModalOpen))
     ) {
       const { customer } = this.props;
       this.setState({

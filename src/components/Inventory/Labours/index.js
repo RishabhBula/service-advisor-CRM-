@@ -301,12 +301,12 @@ class Labours extends Component {
           <thead>
             <tr>
               <th width='90px'>S No.</th>
-              <th width={"250"}><i class="fa fa-user"></i> Labor Description</th>
-              <th width={"350"}><i class="fa fa-file-text"></i> Note</th>
-              <th><i class="fa fa-dollar"></i> Rate</th>
-              <th><i class="fa fa-hourglass-2"></i> Hours</th>
+              <th width={"250"}><i className="fa fa-user"></i> Labor Description</th>
+              <th width={"350"}><i className="fa fa-file-text"></i> Note</th>
+              <th><i className="fa fa-dollar"></i> Rate</th>
+              <th><i className="fa fa-hourglass-2"></i> Hours</th>
               {/* <th>Price</th> */}
-              <th><i class="fa fa-percent"></i> Discount</th>
+              <th><i className="fa fa-percent"></i> Discount</th>
               <th width={"90"} className={"text-center"}>Action</th>
             </tr>
           </thead>

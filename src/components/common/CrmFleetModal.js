@@ -12,9 +12,10 @@ import {
   FormFeedback,
   FormGroup,
   Label,
-  Input
+  Input,
+  CustomInput
 } from "reactstrap";
-import { AppSwitch } from "@coreui/react";
+// import { AppSwitch } from "@coreui/react";
 import { AppConfig } from "../../config/AppConfig";
 import { PhoneOptions, DefaultErrorMessage } from "../../config/Constants";
 import MaskedInput from "react-text-mask";
@@ -26,7 +27,7 @@ import {
   CreateRateValidations,
   CreateRateValidMessaages
 } from "../../validations";
-import Async from "react-select/lib/Async";
+// import Async from "react-select/lib/Async";
 import { CrmStandardModel } from "../common/CrmStandardModel";
 import { logger } from "../../helpers/Logger";
 import Validator from "js-object-validation";
@@ -385,7 +386,7 @@ export class CrmFleetModal extends Component {
     const {
       fleetModalOpen,
       handleFleetModal,
-      rateStandardListData
+      // rateStandardListData
     } = this.props;
     const {
       companyName,
@@ -401,8 +402,8 @@ export class CrmFleetModal extends Component {
       percentageDiscount,
       isEditMode,
       fleetId,
-      selectedLabourRate,
-      selectedPriceMatrix,
+      // selectedLabourRate,
+      // selectedPriceMatrix,
       percentageError
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
@@ -505,30 +506,30 @@ export class CrmFleetModal extends Component {
                 {/* <Row className="justify-content-center"> */}
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
-                      return (
-                        <React.Fragment key={index}>
-                          {index < 1 ? (
-                            <>
-                              <Col md="6">
-                                <FormGroup className="phone-number-feild">
-                                  <Label
-                                    htmlFor="name"
-                                    className="customer-modal-text-style"
-                                  >
-                                    Phone <span className={"asteric"}>*</span>
-                                  </Label>
-                                  {/* <div></div> */}
+                    return (
+                      <React.Fragment key={index}>
+                        {index < 1 ? (
+                          <>
+                            <Col md="6">
+                              <FormGroup className="phone-number-feild">
+                                <Label
+                                  htmlFor="name"
+                                  className="customer-modal-text-style"
+                                >
+                                  Phone <span className={"asteric"}>*</span>
+                                </Label>
+                                {/* <div></div> */}
 
-                                  <Input
-                                    onChange={e =>
-                                      this.handlePhoneNameChange(index, e)
-                                    }
-                                    type="select"
-                                    id="name"
-                                  >
-                                    {phoneOptions}
-                                  </Input>
-                                  {phoneDetail[index].phone === "mobile" ||
+                                <Input
+                                  onChange={e =>
+                                    this.handlePhoneNameChange(index, e)
+                                  }
+                                  type="select"
+                                  id="name"
+                                >
+                                  {phoneOptions}
+                                </Input>
+                                {phoneDetail[index].phone === "mobile" ||
                                   phoneDetail[index].phone === "" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
@@ -577,10 +578,10 @@ export class CrmFleetModal extends Component {
                                       </p>
                                     </div>
                                   )}
-                                </FormGroup>
-                              </Col>
-                            </>
-                          ) : (
+                              </FormGroup>
+                            </Col>
+                          </>
+                        ) : (
                             <>
                               <Col md="6">
                                 <button
@@ -667,9 +668,9 @@ export class CrmFleetModal extends Component {
                               </Col>
                             </>
                           )}
-                        </React.Fragment>
-                      );
-                    })
+                      </React.Fragment>
+                    );
+                  })
                   : null}
                 {phoneDetail.length < 2 ? (
                   <Col md="6">
@@ -696,7 +697,104 @@ export class CrmFleetModal extends Component {
                 ) : null}
               </Row>
             </div>
+            <div>
+              <Row className="custom-label-padding ">
+                {CustomerPermissionsText
+                  ? CustomerPermissionsText.map((permission, index) => {
+                    let discountShow = false;
+                    if (
+                      permission.key === "shouldReceiveDiscount" &&
+                      fleetDefaultPermissions[permission.key].status
+                    ) {
+                      discountShow = true;
+                    }
+                    return (
+                      <React.Fragment key={index}>
+                        <Col
+                          md="6"
+                          for={`fleet-premision-${index}`}
+                          key={index}
+                          className={
+                            permission.key === "shouldPricingMatrixOverride"
+                              ? "price-matrix"
+                              : null
+                          }
+                        >
+                          <div className="d-flex">
+                            <CustomInput
+                              className={"mx-1"}
+                              id={`fleet-premision-${index}`}
+                              type={"checkbox"}
+                              checked={
+                                fleetDefaultPermissions[permission.key].status
+                              }
+                              onClick={this.handleClick.bind(
+                                this,
+                                permission.key
+                              )}
+                            />
+                            <p className="customer-modal-text-style">
+                              {permission.text}
+                            </p>
+                          </div>
+                          {discountShow ? (
+                            <div
+                              className="custom-label col-12 d-flex"
+                              key={index}
+                            >
+                              <Label
+                                htmlFor="name"
+                                className="customer-modal-text-style mr-2 text-nowrap"
+                              >
+                                Percent Discount
+                              </Label>
+                              <FormGroup>
+                                <Col md="6" className={"p-0"}>
+                                  <div className={"input-block"}>
+                                    <InputGroup>
+                                      <Input
+                                        placeholder="00.00"
+                                        name="percentageDiscount"
+                                        maxLength="5"
+                                        onChange={this.handlePercentageChange}
+                                        className="form-control"
+                                        invalid={
+                                          fleetDefaultPermissions[
+                                            permission.key
+                                          ].percentageDiscount &&
+                                          percentageError
+                                        }
+                                        value={
+                                          fleetDefaultPermissions[
+                                            permission.key
+                                          ].percentageDiscount
+                                        }
+                                      />
 
+                                      <div className="input-group-append">
+                                        <span className="input-group-text">
+                                          <i className="fa fa-percent" />
+                                        </span>
+                                      </div>
+                                    </InputGroup>
+                                    <p className="text-danger text-nowrap">
+                                      {fleetDefaultPermissions[permission.key]
+                                        .percentageDiscount && percentageError
+                                        ? percentageError
+                                        : null}
+                                    </p>
+                                  </div>
+                                </Col>
+                              </FormGroup>
+                            </div>
+                          ) : null}
+                        </Col>
+                      </React.Fragment>
+                    );
+                  })
+                  : null}
+              </Row>
+            </div>
             <div className="">
               <Row className="justify-content-center">
                 <Col md="6">
@@ -789,164 +887,6 @@ export class CrmFleetModal extends Component {
                 </Col>
               </Row>
             </div>
-            <Row className="custom-label-padding ">
-              {CustomerPermissionsText
-                ? CustomerPermissionsText.map((permission, index) => {
-                    let discountShow = false;
-                    let labourRate = false;
-                    let pricingMatrix = false;
-                    if (
-                      permission.key === "shouldReceiveDiscount" &&
-                      fleetDefaultPermissions[permission.key].status
-                    ) {
-                      discountShow = true;
-                    }
-                    if (
-                      permission.key === "shouldLaborRateOverride" &&
-                      fleetDefaultPermissions[permission.key].status
-                    ) {
-                      labourRate = true;
-                    }
-
-                    if (
-                      permission.key === "shouldPricingMatrixOverride" &&
-                      fleetDefaultPermissions[permission.key].status
-                    ) {
-                      pricingMatrix = true;
-                    }
-
-                    return (
-                      <React.Fragment key={index}>
-                        <Col
-                          md="6"
-                          key={index}
-                          className={
-                            permission.key === "shouldPricingMatrixOverride"
-                              ? "price-matrix"
-                              : null
-                          }
-                        >
-                          <div className="d-flex">
-                            <AppSwitch
-                              className={"mx-1"}
-                              checked={
-                                fleetDefaultPermissions[permission.key].status
-                              }
-                              onClick={this.handleClick.bind(
-                                this,
-                                permission.key
-                              )}
-                              variant={"3d"}
-                              color={"primary"}
-                              size={"sm"}
-                            />
-                            <p className="customer-modal-text-style">
-                              {permission.text}
-                            </p>
-                          </div>
-                          {discountShow ? (
-                            <div
-                              className="custom-label col-12 d-flex"
-                              key={index}
-                            >
-                              <Label
-                                htmlFor="name"
-                                className="customer-modal-text-style mr-2 text-nowrap"
-                              >
-                                Percent Discount
-                              </Label>
-                              <FormGroup>
-                                <Col md="6" className={"p-0"}>
-                                  <div className={"input-block"}>
-                                    <InputGroup>
-                                      <Input
-                                        placeholder="00.00"
-                                        name="percentageDiscount"
-                                        maxLength="5"
-                                        onChange={this.handlePercentageChange}
-                                        className="form-control"
-                                        invalid={
-                                          fleetDefaultPermissions[
-                                            permission.key
-                                          ].percentageDiscount &&
-                                          percentageError
-                                        }
-                                        value={
-                                          fleetDefaultPermissions[
-                                            permission.key
-                                          ].percentageDiscount
-                                        }
-                                      />
-
-                                      <div className="input-group-append">
-                                        <span className="input-group-text">
-                                          <i className="fa fa-percent" />
-                                        </span>
-                                      </div>
-                                    </InputGroup>
-                                    <p className="text-danger text-nowrap">
-                                      {fleetDefaultPermissions[permission.key]
-                                        .percentageDiscount && percentageError
-                                        ? percentageError
-                                        : null}
-                                    </p>
-                                  </div>
-                                </Col>
-                              </FormGroup>
-                            </div>
-                          ) : null}
-                          {labourRate &&
-                          rateStandardListData &&
-                          rateStandardListData.standardRateList &&
-                          rateStandardListData.standardRateList.length ? (
-                            <Col
-                              md=""
-                              className={"fleet-block rate-standard-list"}
-                            >
-                              <Async
-                                defaultOptions={
-                                  rateStandardListData.standardRateList
-                                }
-                                loadOptions={this.loadOptions}
-                                onChange={this.handleStandardRate}
-                                isClearable={
-                                  this.state.selectedLabourRate.value !== ""
-                                    ? true
-                                    : false
-                                }
-                                value={selectedLabourRate}
-                              />
-                            </Col>
-                          ) : null}
-                          {/* */}
-                          {pricingMatrix ? (
-                            <Col
-                              md=""
-                              className={"fleet-block rate-standard-list"}
-                            >
-                              <Async
-                                placeholder={"Type to select price matrix"}
-                                loadOptions={this.matrixLoadOptions}
-                                onChange={e => this.handlePriceMatrix(e)}
-                                isClearable={
-                                  selectedPriceMatrix &&
-                                  selectedPriceMatrix.value
-                                    ? true
-                                    : false
-                                }
-                                noOptionsMessage={() =>
-                                  "Type price matrix name"
-                                }
-                                value={selectedPriceMatrix}
-                              />
-                            </Col>
-                          ) : null}
-                        </Col>
-                      </React.Fragment>
-                    );
-                  })
-                : null}
-            </Row>
             <CrmStandardModel
               openStadardRateModel={this.state.openStadardRateModel}
               stdModelFun={this.stdModelFun}

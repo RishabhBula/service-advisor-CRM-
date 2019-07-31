@@ -208,7 +208,7 @@ class PriceMatrixComponent extends Component {
                                     <span className={"matrix-drop-down"}>
                                       {index >= 1 ? (
                                         <span
-                                          onClick={() =>
+                                          onClick={() => 
                                             handleAddBelowMatrixRange(
                                               index,
                                               "above"

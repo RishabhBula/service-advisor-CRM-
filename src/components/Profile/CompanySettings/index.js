@@ -26,6 +26,7 @@ import Dropzone from "react-dropzone";
 
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../../common/cropImage";
+import { ConfirmBox } from "../../../helpers/SweetAlert";
 
 class CompanySettings extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class CompanySettings extends Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
       aspect: 4 / 3,
+      maxZoom: 2,
       cropSize: { width: 200, height: 150 },
       croppedAreaPixels: null,
       croppedImage: null,
@@ -63,7 +65,12 @@ class CompanySettings extends Component {
         allVehicleServices
       },
       validErrors: {},
-      permissions: ""
+      permissions: "",
+      logoDetails: "",
+      initialCroppedAreaPixels: {
+        width: 200,
+        height: 200
+      }
     };
   }
 
@@ -163,7 +170,6 @@ class CompanySettings extends Component {
     }
   };
 
- 
   handleInputChange = e => {
     const { target } = e;
     const { name, value } = target;
@@ -176,42 +182,57 @@ class CompanySettings extends Component {
     });
   };
 
-  onSelectFile = e => {
+  onSelectFile = async (file,e) => {
+    if (file[0].size > 10000000) {
+      await ConfirmBox({
+        text: "",
+        title: "Maximum allowed size for image is 10mb",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
     var reader = new FileReader();
     const scope = this;
-    reader.addEventListener("load", () =>
-      scope.setState({
-        shopLogo: reader.result
-      })
-    );
-    reader.onloadend = function(as) {
+    reader.addEventListener("load", async (as) => {
       var image = new Image();
-      image.onload = function() {
-        scope.setState({
-          shopLogo: reader.result
-        });
-      };
-    };
-    reader.readAsDataURL(e[0]);
-  };
-
-  onSelectFile = e => {
-    var reader = new FileReader();
-    const scope = this;
-    reader.addEventListener("load", () =>
-      scope.setState({
-        shopLogo: reader.result
-      })
-    );
-    reader.onloadend = function (as) {
-      var image = new Image();
-      image.onload = function () {
-        scope.setState({
-          shopLogo: reader.result
-        });
-      };
-    };
-    reader.readAsDataURL(e[0]);
+      var imageWidth = 0;
+      var message = ''
+      image.src = as.target.result;
+       image.onload = async function() {
+         imageWidth = this.width;
+          if (imageWidth <= 300 || imageWidth >= 2000) {
+            message = imageWidth <= 300 ? 'Allowed image width is minimum 300px.': 'Allowed image width is maximum 2000px.'
+            await ConfirmBox({
+              text: "",
+              title: message,
+              showCancelButton: false,
+              confirmButtonText: "Ok"
+            });
+           
+            return;
+          } else {
+            scope.setState({
+              shopLogo: reader.result,
+              logoDetails: file,
+              maxZoom: 2
+            });
+          } 
+       
+       };
+     
+    });
+      
+    // reader.onloadend = function(as) {
+    //   var image = new Image();
+    //   image.src = as.target.result;
+    //   image.onload = async function() {
+    //     scope.setState({
+    //       shopLogo: reader.result
+    //     });
+    //   };
+    // };
+    reader.readAsDataURL(file[0]);
   };
 
   serviceOfferAction = event => {
@@ -284,7 +305,7 @@ class CompanySettings extends Component {
   saveLogo = e => {
     e.preventDefault();
     const { shopLogo } = this.state;
-    
+
     this.props.onLogoUpdate({
       imageData: shopLogo
     });
@@ -365,6 +386,7 @@ class CompanySettings extends Component {
         });
         return;
       } else {
+        // this.showCroppedImage();
         this.saveLogo(e);
         this.props.updateProfileSetting(payload);
       }
@@ -378,7 +400,9 @@ class CompanySettings extends Component {
   };
 
   onCropComplete = (croppedArea, croppedAreaPixels) => {
-    this.setState({ croppedAreaPixels });
+    this.setState({
+      croppedAreaPixels,
+    });
   };
 
   onZoomChange = zoom => {
@@ -386,11 +410,32 @@ class CompanySettings extends Component {
   };
 
   showCroppedImage = async () => {
+    const addUrl = "https://cors-anywhere.herokuapp.com/";
+    const { shopLogo } = this.state;
+    const urlCheck = shopLogo.substr(0, 4);
+    const logoUrl = urlCheck === "http" ? addUrl + shopLogo : shopLogo;
+
     const croppedImage = await getCroppedImg(
-      this.state.shopLogo,
+      logoUrl,
       this.state.croppedAreaPixels
     );
-    this.setState({ shopLogo: croppedImage, zoom: 1 });
+    this.setState({
+      shopLogo: croppedImage,
+      zoom: 1,
+      maxZoom: 1,
+      crop: {
+        x: 0,
+        y: 0
+      },
+      logoDetails: ""
+    });
+  };
+  onInteractionStart = e => {
+    if (this.state.shopLogo !== "") {
+      this.setState({
+        maxZoom: 1
+      });
+    }
   };
 
   render() {
@@ -405,9 +450,11 @@ class CompanySettings extends Component {
       vatNumber,
       peopleWork,
       servicesOffer,
-      vehicleService
+      vehicleService,
+      logoDetails,
+      initialCroppedAreaPixels
     } = this.state;
-    // console.log(this.state.shopLogo, "this.state.shopLogo");
+
     return (
       <div>
         <h3 className={"pb-3"}>Company Profile</h3>
@@ -483,9 +530,7 @@ class CompanySettings extends Component {
                           invalid={errors.companyNumber}
                         />
                         <FormFeedback>
-                          {errors.companyNumber
-                            ? errors.companyNumber
-                            : null}
+                          {errors.companyNumber ? errors.companyNumber : null}
                         </FormFeedback>
                       </div>
                     </FormGroup>
@@ -518,7 +563,7 @@ class CompanySettings extends Component {
               </Col>
               <Col lg={5} md={"5"}>
                 {shopLogo === "" ? (
-                  <Dropzone onDrop={this.onSelectFile}>
+                  <Dropzone onDrop={file => this.onSelectFile(file)}>
                     {({ getRootProps, getInputProps, isDragActive }) => {
                       return (
                         <div className="welcome-image-select-background">
@@ -558,18 +603,23 @@ class CompanySettings extends Component {
                           restrictPosition={false}
                           cropSize={this.state.cropSize}
                           viewMode={2}
+                          maxZoom={this.state.maxZoom}
+                          onInteractionEnd={this.onInteractionStart}
+                          initialCroppedAreaPixels={initialCroppedAreaPixels}
                         />
                       </div>
                     </div>
-                    <Button
-                      onClick={this.showCroppedImage}
-                      variant="contained"
-                      color=""
-                      className={"btn-theme-line mt-2"}
-                    >
-                      <i className="fa fa-crop" /> &nbsp;Crop Logo
-                    </Button>
-                    
+                    {logoDetails ? (
+                      <Button
+                        onClick={this.showCroppedImage}
+                        variant="contained"
+                        color=""
+                        className={"btn-theme-line mt-2"}
+                      >
+                        <i className="fa fa-crop" /> &nbsp;Crop Logo
+                      </Button>
+                    ) : null}
+
                     <div className="cropper-controls">
                       <Row className={"m-0"}>
                         <Col
@@ -652,9 +702,7 @@ class CompanySettings extends Component {
                         : null}
                     </div>
                     <p className={"text-danger error-msg"}>
-                      {validErrors.peopleWork
-                        ? validErrors.peopleWork
-                        : null}
+                      {validErrors.peopleWork ? validErrors.peopleWork : null}
                     </p>
                   </div>
                 </div>
@@ -726,43 +774,39 @@ class CompanySettings extends Component {
                   </h4>
                   <div className="justify-content-center error-block-contain">
                     <div className="d-flex box-space">
-                      {vehicleService.allVehicleServices.map(
-                        (item, index) => {
-                          let selectedValue = [];
-                          selectedValue =
-                            vehicleService.selectedVehicleServices &&
-                            vehicleService.selectedVehicleServices.length
-                              ? vehicleService.selectedVehicleServices.filter(
-                                  value => item.key === value
-                                )
-                              : null;
-                          return (
-                            <div
-                              key={index}
-                              className={
-                                selectedValue &&
-                                selectedValue.length &&
-                                selectedValue[0]
-                                  ? "box-contain active"
-                                  : "box-contain"
-                              }
-                              onClick={() =>
-                                this.vehicleServicesAction(item)
-                              }
-                            >
-                              <div className="justify-content-center">
-                                <img src={item.icon} alt="" />
-                                <div className="welcome-service-text">
-                                  {item.key}
-                                </div>
+                      {vehicleService.allVehicleServices.map((item, index) => {
+                        let selectedValue = [];
+                        selectedValue =
+                          vehicleService.selectedVehicleServices &&
+                          vehicleService.selectedVehicleServices.length
+                            ? vehicleService.selectedVehicleServices.filter(
+                                value => item.key === value
+                              )
+                            : null;
+                        return (
+                          <div
+                            key={index}
+                            className={
+                              selectedValue &&
+                              selectedValue.length &&
+                              selectedValue[0]
+                                ? "box-contain active"
+                                : "box-contain"
+                            }
+                            onClick={() => this.vehicleServicesAction(item)}
+                          >
+                            <div className="justify-content-center">
+                              <img src={item.icon} alt="" />
+                              <div className="welcome-service-text">
+                                {item.key}
                               </div>
-                              <span className="check-icon">
-                                <i className="fa fa-check-circle" />
-                              </span>
                             </div>
-                          );
-                        }
-                      )}
+                            <span className="check-icon">
+                              <i className="fa fa-check-circle" />
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                     <p className={"text-danger error-msg"}>
                       {validErrors.vehicleService

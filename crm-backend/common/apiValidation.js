@@ -323,7 +323,16 @@ const UpdateMatrixValidation = [
   body("id")
     .not()
     .isEmpty()
-    .withMessage("Matrix id is required.")
+    .withMessage("Matrix id is required."),
+  body("matrixRange").custom(matrixRange => {
+    for (let index = 0; index < matrixRange.length; index++) {
+      const element = matrixRange[index];
+      if (parseFloat(element.lower) >= parseFloat(element.upper) || (isNaN(element.upper) && element.upper !== "beyond") || (isNaN(element.lower) && element.lower !== "beyond")) {
+        throw new Error("Enter proper matrix range.");
+      }
+    }
+    return true;
+  })
 ];
 
 const userChangePasswordValidation = [

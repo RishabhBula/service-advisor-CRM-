@@ -259,7 +259,7 @@ class PriceMatrix extends Component {
   };
   handleAddBelowMatrixRange = (index, name) => {
     let { matrixRange } = this.state;
-    const lastIndex = matrixRange.length - 1;
+    const lastIndex = matrixRange.length - 1; 
     if (index === lastIndex && name === "below") {
       const upper = "beyond";
       const lower = parseFloat(matrixRange[lastIndex].lower) + 100;

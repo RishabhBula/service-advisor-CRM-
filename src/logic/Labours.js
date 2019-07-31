@@ -106,7 +106,8 @@ const labourListLogic = createLogic({
       {
         search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
         sort: action.payload && action.payload.sort ? action.payload.sort : null,
-        limit: AppConfig.ITEMS_PER_PAGE
+        limit: AppConfig.ITEMS_PER_PAGE,
+        page: action.payload && action.payload.page ? action.payload.page : null
       },
       undefined,
     );

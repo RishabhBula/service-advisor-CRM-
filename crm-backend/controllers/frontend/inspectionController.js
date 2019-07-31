@@ -21,7 +21,7 @@ const creteNewInspection = async (req, res) => {
       const inspectionDataModal = {
         inspectionName: element.inspectionName,
         items: element.items,
-        isTemplate: element.isTemplate,
+        isTemplate: false,
         userId: currentUser.id,
         parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
         status: true,
@@ -132,9 +132,23 @@ const inspectionTemplate = async (req, res) => {
           success: true
         })
       } else {
+        let inspectionItems = []
+        for (let index = 0; index < element.items.length; index++) {
+          const inspection = element.items[index];
+          inspectionItems.push(
+            {
+              aprovedStatus: inspection.aprovedStatus,
+              color: inspection.color,
+              itemImage: [],
+              itemImagePreview: [],
+              name: inspection.name,
+              note: inspection.note
+            }
+          )
+        }
         const inspectionDataModal = {
           inspectionName: element.inspectionName,
-          items: element.items,
+          items: inspectionItems,
           isTemplate: element.isTemplate,
           userId: currentUser.id,
           parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,

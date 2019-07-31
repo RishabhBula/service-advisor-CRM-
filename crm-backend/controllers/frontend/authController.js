@@ -26,7 +26,7 @@ const signUp = async (req, res) => {
       });
     }
     const roleType = await roleModel.findOne({
-      userType: new RegExp("sub-admin", "i")
+      userType: new RegExp("admin", "i")
     });
     let $data = req.body;
     $data.roleType = roleType._id;
@@ -495,7 +495,10 @@ const imageUpload = async (req, res) => {
       );
       var buf = new Buffer.from(base64Image, "base64");
       const type = types[base64Image.charAt(0)];
-      const fileName = [currentUser.id, "_company_logo.", type || "png"].join(
+      console.log("#################",type);
+      
+      const randomConst = Math.floor(Math.random() * 90 + 10)
+      const fileName = [currentUser.id, randomConst, "_company_logo.", type || "png"].join(
         ""
       );
 
@@ -837,7 +840,7 @@ const changePasswordUser = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "Password did not match!",
+        message: "Old password did not match!",
         success: false
       };
     } else {

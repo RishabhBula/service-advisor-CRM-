@@ -4,7 +4,7 @@ const { Email, AvailiableTemplates } = require("../../common/Email");
 const fs = require("fs");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
-const moment = require("moment");
+const { sendSMS } = require("./../../common/SMS");
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
    const { body, currentUser } = req;
@@ -203,29 +203,33 @@ const deleteMessageTemplate = async (req, res) => {
 const sendMailToCustomer = async (req, res) => {
    const { body } = req;
    try {
-
+      if (body.isEmail) {
+         const emailVar = new Email(body);
+         await emailVar.setSubject("[Service Advisor]" + body.subject + ` - ${body.isInvoice ? "Order Invoice details" : "Inspection Details"}`);
+         await emailVar.setAttachements([
+            {
+               fileName: `Inspection for ${body.orderTitle || 'Unnamed Order'}`,
+               path: body.pdf
+            }
+         ])
+         await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+            body: body.message,
+            orderTitle: body.orderTitle,
+            createdAt: body.orderCreated,
+            companyName: body.companyName,
+            titleMessage: body.isInvoice ? "You got an invoice for" : "You got an inspection for",
+            displayStyle: `style="text-align:center; display: none";`
+         });
+         await emailVar.sendEmail(body.email);
+         return res.status(200).json({
+            message: "Mail send successfully!",
+            success: true
+         })
+      }
+      if (isSms) {
+         await sendSMS(body.phone, body.message,body.customerId);
+      }
       // var buf = new Buffer.from(body.pdf, "base64");
-      const emailVar = new Email(body);
-      await emailVar.setSubject("[Service Advisor]" + body.subject + ` - ${body.isInvoice ? "Order Invoice details" : "Inspection Details"}`);
-      await emailVar.setAttachements([
-         {
-            fileName: `Inspection for ${body.orderTitle || 'Unnamed Order'}`,
-            path: body.pdf
-         }
-      ])
-      await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
-         body: body.message,
-         orderTitle: body.orderTitle,
-         createdAt: body.orderCreated,
-         companyName: body.companyName,
-         titleMessage: body.isInvoice ? "You got an invoice for" : "You got an inspection for",
-         displayStyle: `style="text-align:center; display: none";`
-      });
-      await emailVar.sendEmail(body.email);
-      return res.status(200).json({
-         message: "Mail send successfully!",
-         success: true
-      })
    } catch (error) {
       console.log("this is send mail error", error);
       return res.status(500).json({

@@ -386,8 +386,8 @@ class FleetList extends Component {
               <th width={"250"}><i className={"fa fa-building-o"} /> Company Name</th>
               <th width={"250"}><i className={"fa fa-phone"} /> Phone</th>
               {/* <th width={"250"}>Email</th> */}
-              <th><i className={"fa fa-cab"} /> Vehicles</th>
-              <th><i className={"fa fa-list-ol"} /> Orders</th>
+              <th><i className={"fa fa-calculator"} /> Tax Exempted</th>
+              <th><i className="fa fa-percent" /> Discount</th>
               {/* <th><i className={"fa fa-bookmark"} /> Lables</th> */}
               <th><i className={"fa fa-exclamation-circle"} /> Status</th>
               <th><i className={"fa fa-clock-o"} /> Created</th>
@@ -428,8 +428,8 @@ class FleetList extends Component {
                             }) : "-"}
                         </div>
                       </td>
-                      <td className={"pl-4"}><span className={"qty-value"}>0</span></td>
-                      <td className={"pl-4 qty-value"}><span className={"qty-value"}>0</span></td>
+                      <td className={"pl-4"}><span className={"qty-value"}>{data.fleetDefaultPermissions && !data.fleetDefaultPermissions.isCorporateFleetTaxExempt.status ? <i className={"fa fa-times text-danger"} /> : <i className="fa fa-check text-success" />}</span></td>
+                      <td className={"pl-4 qty-value"}><span className={"qty-value"}>{data.fleetDefaultPermissions && data.fleetDefaultPermissions.shouldReceiveDiscount.status ? `${data.fleetDefaultPermissions.shouldReceiveDiscount.percentageDiscount}%` : "0%"}</span></td>
                       {/* <td >
                         <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
                       </td> */}

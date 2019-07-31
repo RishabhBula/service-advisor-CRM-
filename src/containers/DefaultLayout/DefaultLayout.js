@@ -50,6 +50,7 @@ import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionMod
 import { WildCardRoutes } from "../../config/Constants";
 import { isValidObjectId } from "../../helpers";
 import moment from "moment";
+import ServiceAdvisorLogo from "./../../assets/logo-white.svg";
 
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
@@ -327,7 +328,7 @@ class DefaultLayout extends Component {
               </Suspense>
               <div className={"text-center nav-footer-logo"}>
                 <img
-                  src={"./assets/img/logo-white.svg"}
+                  src={ServiceAdvisorLogo}
                   alt={"service-advisor"}
                   width={70}
                 />

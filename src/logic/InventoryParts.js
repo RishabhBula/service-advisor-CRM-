@@ -136,7 +136,8 @@ const getInventoryPartsListLogic = createLogic({
         status: action.payload && action.payload.status ? action.payload.status : null,
         type: action.payload && action.payload.type ? action.payload.type : null,
         vendorId: action.payload && action.payload.vendorId ? action.payload.vendorId : null,
-        limit: AppConfig.ITEMS_PER_PAGE
+        limit: AppConfig.ITEMS_PER_PAGE,
+        page: action.payload && action.payload.page ? action.payload.page : null
       }
     );
     if (result.isError) {

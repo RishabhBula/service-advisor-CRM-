@@ -7,7 +7,6 @@ import Loader from "../Loader/Loader";
 import { invoicePDF } from "./invoicePDF"
 import * as jsPDF from "jspdf";
 import "jspdf-autotable";
-
 import {
   getOrderIdRequest,
   customerGetRequest,
@@ -111,7 +110,8 @@ class Order extends Component {
       serviceData: "",
       sentModal: false,
       mesageModal: false,
-      pdfBlob: ""
+      pdfBlob: "",
+      isOrderUpdate: true
     };
     this.orderNameRef = React.createRef();
   }
@@ -202,19 +202,23 @@ class Order extends Component {
     } else if (customer && !vehicle) {
       this.setState({
         customerData: customer,
-        vehicleData: ""
+        vehicleData: "",
+        isOrderUpdate: false
       });
     } else if (vehicle && !customer) {
       this.setState({
         customerData: "",
-        vehicleData: vehicle
+        vehicleData: vehicle,
+        isOrderUpdate: false
       });
     } else {
       this.setState({
         customerData: "",
-        vehicleData: ""
+        vehicleData: "",
+        isOrderUpdate: false
       });
     }
+
   };
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
@@ -246,6 +250,9 @@ class Order extends Component {
       _id: orderId
     };
     logger("*******payload*****", payload);
+    this.setState({
+      isOrderUpdate: true
+    });
     this.props.updateOrderDetails(payload);
   };
   handleChange = e => {
@@ -316,7 +323,8 @@ class Order extends Component {
       isError,
       orderName,
       orderId,
-      pdfBlob
+      pdfBlob,
+      isOrderUpdate
     } = this.state;
     const {
       getVehicleData,
@@ -372,247 +380,255 @@ class Order extends Component {
       updateOrderDetails
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
+
     return (
       <div className="animated fadeIn">
-        <Card className="white-card" id={"white-card"}>
-          <div className="workflow-section">
-            <div className={"workflow-left"}>
-              <CardBody className={"custom-card-body inventory-card"}>
-                <div
-                  className={
-                    "d-flex order-info-block flex-row justify-content-between pb-2"
+        {
+          !orderReducer.isOrderLoading ?
+            <Card className="white-card" id={"white-card"}>
+              <div className="workflow-section">
+                <div className={"workflow-left"}>
+                  <CardBody className={"custom-card-body inventory-card"}>
+                    <div
+                      className={
+                        "d-flex order-info-block flex-row justify-content-between pb-2"
+                      }
+                    >
+                      <div className={"order-info-head d-flex"}>
+                        <h3 className={"mr-3 orderId"}>
+                          Order (
+                        {
+                            `#${typeof this.props.orderReducer.orderId !== "object"
+                              ? this.props.orderReducer.orderId
+                              : null}`
+                          }
+                          )
+                        </h3>
+                        <div className="input-block">
+                          <Input
+                            placeholder={"Enter a order title"}
+                            onChange={e => this.handleChange(e)}
+                            name={"orderName"}
+                            value={orderName}
+                            maxLength={"250"}
+                            className={"order-name-input"}
+                            ref={this.orderNameRef}
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={"order-top-section"}>
+                      <CustomerVehicle
+                        getCustomerData={getCustomerData}
+                        getVehicleData={getVehicleData}
+                        customerVehicleData={this.customerVehicleData}
+                        isError={isError}
+                        handleEditOrder={this.handleEditOrder}
+                        orderReducer={orderReducer}
+                      />
+                    </div>
+                    <div className={"position-relative"}>
+                      {this.props.orderReducer.orderItems &&
+                        (!this.props.orderReducer.orderItems.customerId ||
+                          !isOrderUpdate ||
+                          !this.props.orderReducer.orderItems.vehicleId) ? (
+                          <div className={"service-overlay"}>
+                            <img
+                              src="https://gramener.com/schoolminutes/img/arrow.png"
+                              alt={"arrow"}
+                            />
+                            <h3>Please Add Order Details first</h3>
+                          </div>
+                        ) : null}
+
+                      <div className={"order-activity"}>
+                        {this.props.orderReducer.orderItems &&
+                          this.props.orderReducer.orderItems.serviceId &&
+                          this.props.orderReducer.orderItems.serviceId.length &&
+                          this.props.orderReducer.orderItems.customerId &&
+                          this.props.orderReducer.orderItems.vehicleId ? (
+                            <>
+                              <span
+                                color=""
+                                className="print-btn"
+                                onClick={this.handelTemplateModal}
+                                id={"sentInvoice"}
+                              >
+                                <i className="icons cui-cursor" />
+                                &nbsp; Sent
+                              </span>
+                              <UncontrolledTooltip target={"sentInvoice"}>
+                                Click to Send Invoice
+                              </UncontrolledTooltip>
+                              <span
+                                id="add-Appointment"
+                                className="print-btn"
+                                onClick={() => this.printInvoice(false)}
+                              >
+                                <i className="icon-printer icons " />
+                                &nbsp; Print
+                               </span>
+                              <UncontrolledTooltip target={"add-Appointment"}>
+                                Click to Print Invoice
+                              </UncontrolledTooltip>
+                            </>
+                          ) : null}
+                      </div>
+                      <div className={"position-relative"}>
+                        <Suspense fallback={"Loading.."}>
+                          <OrderTab
+                            tabs={OrderTabs}
+                            activeTab={activeTab}
+                            onTabChange={this.onTabChange}
+                          />
+                        </Suspense>
+                      </div>
+                      <Suspense fallback={<Loader />}>
+                        <React.Fragment>
+                          {activeTab === 0 ? (
+                            <Services
+                              modelInfoReducer={modelInfoReducer}
+                              modelOperate={modelOperate}
+                              addPartToService={addPartToService}
+                              addTireToService={addTireToService}
+                              getPartDetails={getPartDetails}
+                              addInventoryPart={this.addInventoryPart}
+                              addInventryTire={addInventryTire}
+                              serviceReducers={serviceReducers}
+                              getTireDetails={getTireDetails}
+                              addLaborInventry={addLaborInventry}
+                              addLaborToService={addLaborToService}
+                              getLaborDetails={getLaborDetails}
+                              getUserData={getUserData}
+                              addNewService={addNewService}
+                              labelReducer={labelReducer}
+                              addNewLabel={addNewLabel}
+                              getCannedServiceList={getCannedServiceList}
+                              customerData={customerData}
+                              vehicleData={vehicleData}
+                              orderId={orderId}
+                              deleteLabel={deleteLabel}
+                              getPriceMatrix={getPriceMatrix}
+                              getStdList={getStdList}
+                              addRate={addRate}
+                              profileInfoReducer={profileInfoReducer}
+                              rateStandardListReducer={rateStandardListReducer}
+                              getInventoryPartsVendors={
+                                getInventoryPartsVendors
+                              }
+                              orderReducer={orderReducer}
+                              addNewCannedService={addNewCannedService}
+                              deleteCannedServiceRequest={
+                                deleteCannedServiceRequest
+                              }
+                              updateOrderDetails={updateOrderDetails}
+                              {...this.props}
+                            />
+                          ) : null}
+                          {activeTab === 1 ? (
+                            <Inspection
+                              addNewInspection={addNewInspection}
+                              inspectionData={this.props.inspectionReducer}
+                              addInspectionTemplate={addInspectionTemplate}
+                              getTemplateList={getTemplateList}
+                              addMessageTemplate={addMessageTemplate}
+                              getMessageTemplate={getMessageTemplate}
+                              updateMessageTemplate={updateMessageTemplate}
+                              deleteMessageTemplate={deleteMessageTemplate}
+                              searchMessageTemplateList={
+                                searchMessageTemplateList
+                              }
+                              customerData={customerData}
+                              vehicleData={vehicleData}
+                              sendMessageTemplate={sendMessageTemplate}
+                              orderId={orderId}
+                              profileReducer={profileInfoReducer}
+                              orderReducer={orderReducer}
+                            />
+                          ) : null}
+                          {activeTab === 2 ? (
+                            <TimeClock
+                              modelInfoReducer={modelInfoReducer}
+                              modelOperate={modelOperate}
+                              orderId={orderId}
+                              getUserData={getUserData}
+                              orderItems={orderReducer.orderItems}
+                              orderReducer={orderReducer}
+                              addTimeLogRequest={addTimeLogRequest}
+                              timelogReducer={timelogReducer}
+                              editTimeLogRequest={updateTimeLogRequest}
+                              startTimer={startTimer}
+                              stopTimer={stopTimer}
+                              switchTimer={switchTimer}
+                            />
+                          ) : null}
+                          {activeTab === 3 ? (
+                            <Message
+                              searchMessageTemplateList={
+                                searchMessageTemplateList
+                              }
+                              customerData={customerData}
+                              vehicleData={vehicleData}
+                              sendMessage={sendMessage}
+                              profileReducer={profileInfoReducer}
+                              orderId={orderId}
+                              orderReducer={orderReducer}
+                              messageReducer={messageReducer}
+                              inspectionData={this.props.inspectionReducer}
+                              addMessageTemplate={addMessageTemplate}
+                              getMessageTemplate={getMessageTemplate}
+                              updateMessageTemplate={updateMessageTemplate}
+                              deleteMessageTemplate={deleteMessageTemplate}
+                              deleteNotes={deleteNotes}
+                              isSummary={false}
+                            />
+                          ) : null}
+                        </React.Fragment>
+                      </Suspense>
+                    </div>
+                  </CardBody>
+                </div>
+                <OrderDetails
+                  profileReducer={profileInfoReducer}
+                  orderReducer={orderReducer}
+                  orderStatus={this.orderStatus}
+                  activityReducer={activityReducer}
+                  modelInfoReducer={modelInfoReducer}
+                  modelOperate={modelOperate}
+                  addPaymentRequest={addPaymentRequest}
+                  paymentReducer={paymentReducer}
+                  updateOrderStatus={updateOrderStatus}
+                />
+                <SendInspection
+                  isOpen={this.state.sentModal}
+                  toggle={this.handelTemplateModal}
+                  customerData={customerData}
+                  vehicleData={vehicleData}
+                  searchMessageTemplateList={
+                    this.props.searchMessageTemplateList
                   }
-                >
-                  <div className={"order-info-head d-flex"}>
-                    <h3 className={"mr-3 orderId"}>
-                      Order (#
-                      {typeof this.props.orderReducer.orderId !== "object"
-                        ? this.props.orderReducer.orderId
-                        : null}
-                      )
-                    </h3>
-                    <div className="input-block">
-                      <Input
-                        placeholder={"Enter a order title"}
-                        onChange={e => this.handleChange(e)}
-                        name={"orderName"}
-                        value={orderName}
-                        maxLength={"250"}
-                        className={"order-name-input"}
-                        ref={this.orderNameRef}
-                        autoFocus
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className={"order-top-section"}>
-                  <CustomerVehicle
-                    getCustomerData={getCustomerData}
-                    getVehicleData={getVehicleData}
-                    customerVehicleData={this.customerVehicleData}
-                    isError={isError}
-                    handleEditOrder={this.handleEditOrder}
-                    orderReducer={orderReducer}
-                  />
-                </div>
-                <div className={"position-relative"}>
-                  {this.props.orderReducer.orderItems &&
-                  (!this.props.orderReducer.orderItems.customerId ||
-                    !this.props.orderReducer.orderItems.vehicleId) ? (
-                    <div className={"service-overlay"}>
-                      <img
-                        src="https://gramener.com/schoolminutes/img/arrow.png"
-                        alt={"arrow"}
-                      />
-                      <h3>Please Add Order Details first</h3>
-                    </div>
-                  ) : null}
-
-                  <div className={"order-activity"}>
-                    {this.props.orderReducer.orderItems &&
-                    this.props.orderReducer.orderItems.serviceId &&
-                    this.props.orderReducer.orderItems.serviceId.length &&
-                    this.props.orderReducer.orderItems.customerId &&
-                    this.props.orderReducer.orderItems.vehicleId ? (
-                      <>
-                        <span
-                          color=""
-                          className="print-btn"
-                          onClick={this.handelTemplateModal}
-                          id={"sentInvoice"}
-                        >
-                          <i className="icons cui-cursor" />
-                          &nbsp; Sent
-                        </span>
-                        <UncontrolledTooltip target={"sentInvoice"}>
-                          Click to Send Invoice
-                        </UncontrolledTooltip>
-                        <span
-                          id="add-Appointment"
-                          className="print-btn"
-                          onClick={() => this.printInvoice(false)}
-                        >
-                          <i className="icon-printer icons " />
-                          &nbsp; Print
-                        </span>
-                        <UncontrolledTooltip target={"add-Appointment"}>
-                          Click to Print Invoice
-                        </UncontrolledTooltip>
-                      </>
-                    ) : null}
-                  </div>
-                  <div className={"position-relative"}>
-                    <Suspense fallback={"Loading.."}>
-                      <OrderTab
-                        tabs={OrderTabs}
-                        activeTab={activeTab}
-                        onTabChange={this.onTabChange}
-                      />
-                    </Suspense>
-                  </div>
-                  <Suspense fallback={<Loader />}>
-                    <React.Fragment>
-                      {activeTab === 0 ? (
-                        <Services
-                          modelInfoReducer={modelInfoReducer}
-                          modelOperate={modelOperate}
-                          addPartToService={addPartToService}
-                          addTireToService={addTireToService}
-                          getPartDetails={getPartDetails}
-                          addInventoryPart={this.addInventoryPart}
-                          addInventryTire={addInventryTire}
-                          serviceReducers={serviceReducers}
-                          getTireDetails={getTireDetails}
-                          addLaborInventry={addLaborInventry}
-                          addLaborToService={addLaborToService}
-                          getLaborDetails={getLaborDetails}
-                          getUserData={getUserData}
-                          addNewService={addNewService}
-                          labelReducer={labelReducer}
-                          addNewLabel={addNewLabel}
-                          getCannedServiceList={getCannedServiceList}
-                          customerData={customerData}
-                          vehicleData={vehicleData}
-                          orderId={orderId}
-                          deleteLabel={deleteLabel}
-                          getPriceMatrix={getPriceMatrix}
-                          getStdList={getStdList}
-                          addRate={addRate}
-                          profileInfoReducer={profileInfoReducer}
-                          rateStandardListReducer={rateStandardListReducer}
-                          getInventoryPartsVendors={
-                            getInventoryPartsVendors
-                          }
-                          orderReducer={orderReducer}
-                          addNewCannedService={addNewCannedService}
-                          deleteCannedServiceRequest={
-                            deleteCannedServiceRequest
-                          }
-                          updateOrderDetails={updateOrderDetails}
-                          {...this.props}
-                        />
-                      ) : null}
-                      {activeTab === 1 ? (
-                        <Inspection
-                          addNewInspection={addNewInspection}
-                          inspectionData={this.props.inspectionReducer}
-                          addInspectionTemplate={addInspectionTemplate}
-                          getTemplateList={getTemplateList}
-                          addMessageTemplate={addMessageTemplate}
-                          getMessageTemplate={getMessageTemplate}
-                          updateMessageTemplate={updateMessageTemplate}
-                          deleteMessageTemplate={deleteMessageTemplate}
-                          searchMessageTemplateList={
-                            searchMessageTemplateList
-                          }
-                          customerData={customerData}
-                          vehicleData={vehicleData}
-                          sendMessageTemplate={sendMessageTemplate}
-                          orderId={orderId}
-                          profileReducer={profileInfoReducer}
-                          orderReducer={orderReducer}
-                        />
-                      ) : null}
-                      {activeTab === 2 ? (
-                        <TimeClock
-                          modelInfoReducer={modelInfoReducer}
-                          modelOperate={modelOperate}
-                          orderId={orderId}
-                          getUserData={getUserData}
-                          orderItems={orderReducer.orderItems}
-                          orderReducer={orderReducer}
-                          addTimeLogRequest={addTimeLogRequest}
-                          timelogReducer={timelogReducer}
-                          editTimeLogRequest={updateTimeLogRequest}
-                          startTimer={startTimer}
-                          stopTimer={stopTimer}
-                          switchTimer={switchTimer}
-                        />
-                      ) : null}
-                      {activeTab === 3 ? (
-                        <Message
-                          searchMessageTemplateList={
-                            searchMessageTemplateList
-                          }
-                          customerData={customerData}
-                          vehicleData={vehicleData}
-                          sendMessage={sendMessage}
-                          profileReducer={profileInfoReducer}
-                          orderId={orderId}
-                          orderReducer={orderReducer}
-                          messageReducer={messageReducer}
-                          inspectionData={this.props.inspectionReducer}
-                          addMessageTemplate={addMessageTemplate}
-                          getMessageTemplate={getMessageTemplate}
-                          updateMessageTemplate={updateMessageTemplate}
-                          deleteMessageTemplate={deleteMessageTemplate}
-                          deleteNotes={deleteNotes}
-                          isSummary={false}
-                        />
-                      ) : null}
-                    </React.Fragment>
-                  </Suspense>
-                </div>
-              </CardBody>
-            </div>
-            <OrderDetails
-              profileReducer={profileInfoReducer}
-              orderReducer={orderReducer}
-              orderStatus={this.orderStatus}
-              activityReducer={activityReducer}
-              modelInfoReducer={modelInfoReducer}
-              modelOperate={modelOperate}
-              addPaymentRequest={addPaymentRequest}
-              paymentReducer={paymentReducer}
-              updateOrderStatus={updateOrderStatus}
-            />
-            <SendInspection
-              isOpen={this.state.sentModal}
-              toggle={this.handelTemplateModal}
-              customerData={customerData}
-              vehicleData={vehicleData}
-              searchMessageTemplateList={
-                this.props.searchMessageTemplateList
-              }
-              toggleMessageTemplate={this.toggleMessageTemplate}
-              sendMessageTemplate={this.props.sendMessageTemplate}
-              pdfBlob={pdfBlob}
-              isOrder
-              orderReducer={orderReducer}
-              profileReducer={profileInfoReducer}
-            />
-            <MessageTemplate
-              isOpen={this.state.mesageModal}
-              toggle={this.toggleMessageTemplate}
-              inspectionData={this.props.inspectionReducer}
-              addMessageTemplate={this.props.addMessageTemplate}
-              getMessageTemplate={this.props.getMessageTemplate}
-              updateMessageTemplate={this.props.updateMessageTemplate}
-              deleteMessageTemplate={this.props.deleteMessageTemplate}
-            />
-          </div>
-        </Card>
+                  toggleMessageTemplate={this.toggleMessageTemplate}
+                  sendMessageTemplate={this.props.sendMessageTemplate}
+                  pdfBlob={pdfBlob}
+                  isOrder
+                  orderReducer={orderReducer}
+                  profileReducer={profileInfoReducer}
+                />
+                <MessageTemplate
+                  isOpen={this.state.mesageModal}
+                  toggle={this.toggleMessageTemplate}
+                  inspectionData={this.props.inspectionReducer}
+                  addMessageTemplate={this.props.addMessageTemplate}
+                  getMessageTemplate={this.props.getMessageTemplate}
+                  updateMessageTemplate={this.props.updateMessageTemplate}
+                  deleteMessageTemplate={this.props.deleteMessageTemplate}
+                />
+              </div>
+            </Card> :
+            <Loader />
+        }
       </div>
     );
   }
