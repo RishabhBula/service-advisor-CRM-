@@ -9,7 +9,6 @@ const appointmentList = async (req, res) => {
     const { currentUser, query } = req;
     let { start, end, limit, page } = query;
     page = page || 1;
-    const { id, parentId } = currentUser;
     const offset = (page - 1) * (limit || 1);
     const { id, parentId } = currentUser;
     const vehicleId = query.vehicleId
@@ -42,6 +41,11 @@ const appointmentList = async (req, res) => {
     if (vehicleId) {
       condition["$and"].push({
         vehicleId: Mongoose.Types.ObjectId(vehicleId)
+      })
+    }
+    if (customerId) {
+      condition["$and"].push({
+        customerId: Mongoose.Types.ObjectId(customerId)
       })
     }
     if (start) {
