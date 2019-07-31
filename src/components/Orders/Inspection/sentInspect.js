@@ -65,7 +65,7 @@ class SendInspection extends Component {
         vehicleData: propsVehicleData,
         isEmail: propsCustomerData.email ? true : false,
         isSms:
-          propsCustomerData && propsCustomerData.phoneDetail[0]
+          propsCustomerData &&  propsCustomerData.phoneDetail && propsCustomerData.phoneDetail[0]
           .value
             ? true
             : false,
