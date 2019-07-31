@@ -968,7 +968,7 @@ class Inspection extends Component {
                sendMessageTemplate={this.props.sendMessageTemplate}
                pdfBlob={this.state.pdfBlob}
                orderTitle={orderTitle}
-               orderDetails={orderDetails}
+               orderReducer={orderDetails}
                profileReducer ={this.props.profileReducer}
             />
 

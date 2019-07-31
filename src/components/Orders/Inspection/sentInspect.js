@@ -64,8 +64,14 @@ class SendInspection extends Component {
         customerData: propsCustomerData,
         vehicleData: propsVehicleData,
         isEmail: propsCustomerData.email ? true : false,
-        isSms: propsCustomerData && propsCustomerData.phoneDetail ? true : false,
-        phone: propsCustomerData.phoneDetail[0].value
+        isSms:
+          propsCustomerData && propsCustomerData.phoneDetail
+            ? true
+            : false,
+        phone:
+          propsCustomerData &&
+          propsCustomerData.phoneDetail ? propsCustomerData.phoneDetail[0]
+            .value : null
       });
     }
   };
@@ -169,14 +175,14 @@ class SendInspection extends Component {
     const customerId = customerData._id;
     const customerEmail = customerData.email;
 
-    const orderTitle =
-      orderReducer && orderReducer.orderItems
+    const orderTitle = orderReducer && orderReducer.orderItems
         ? orderReducer.orderItems.orderName
-        : "Untitled order" || "Untitled order";
+        : "Untitled order";
+    
     const orderCreated =
       orderReducer && orderReducer.orderItems
         ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY")
-        : "" || "";
+        : "";
     const companyName = profileReducer.profileInfo.companyName || "";
 
     try {
@@ -227,6 +233,7 @@ class SendInspection extends Component {
         isEmail,
         isSms
       };
+     
       if (!isEmail && !isSms){
           await ConfirmBox({
             text: "",
@@ -236,7 +243,7 @@ class SendInspection extends Component {
          });
          return
       } 
-      this.props.sendMessageTemplate(payload);
+     this.props.sendMessageTemplate(payload);
 
       // close and clear modal form
       this.props.toggle();

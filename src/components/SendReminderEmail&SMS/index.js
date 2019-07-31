@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import {
-  Row,
-  Col,
-  FormGroup,
   Label,
   CustomInput
 } from "reactstrap";
