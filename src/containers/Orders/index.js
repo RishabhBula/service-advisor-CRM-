@@ -601,30 +601,38 @@ class Order extends Component {
                   paymentReducer={paymentReducer}
                   updateOrderStatus={updateOrderStatus}
                 />
-                <SendInspection
-                  isOpen={this.state.sentModal}
-                  toggle={this.handelTemplateModal}
-                  customerData={customerData}
-                  vehicleData={vehicleData}
-                  searchMessageTemplateList={
-                    this.props.searchMessageTemplateList
-                  }
-                  toggleMessageTemplate={this.toggleMessageTemplate}
-                  sendMessageTemplate={this.props.sendMessageTemplate}
-                  pdfBlob={pdfBlob}
-                  isOrder
-                  orderReducer={orderReducer}
-                  profileReducer={profileInfoReducer}
-                />
-                <MessageTemplate
-                  isOpen={this.state.mesageModal}
-                  toggle={this.toggleMessageTemplate}
-                  inspectionData={this.props.inspectionReducer}
-                  addMessageTemplate={this.props.addMessageTemplate}
-                  getMessageTemplate={this.props.getMessageTemplate}
-                  updateMessageTemplate={this.props.updateMessageTemplate}
-                  deleteMessageTemplate={this.props.deleteMessageTemplate}
-                />
+                {this.props.orderReducer.orderItems &&
+                  this.props.orderReducer.orderItems.customerId &&
+                  this.props.orderReducer.orderItems.vehicleId ?
+                  <React.Fragment>
+                    <SendInspection
+                      isOpen={this.state.sentModal}
+                      toggle={this.handelTemplateModal}
+                      customerData={customerData}
+                      vehicleData={vehicleData}
+                      searchMessageTemplateList={
+                        this.props.searchMessageTemplateList
+                      }
+                      toggleMessageTemplate={this.toggleMessageTemplate}
+                      sendMessageTemplate={this.props.sendMessageTemplate}
+                      pdfBlob={pdfBlob}
+                      isOrder
+                      orderReducer={orderReducer}
+                      profileReducer={profileInfoReducer}
+                    />
+                    <MessageTemplate
+                      isOpen={this.state.mesageModal}
+                      toggle={this.toggleMessageTemplate}
+                      inspectionData={this.props.inspectionReducer}
+                      addMessageTemplate={this.props.addMessageTemplate}
+                      getMessageTemplate={this.props.getMessageTemplate}
+                      updateMessageTemplate={this.props.updateMessageTemplate}
+                      deleteMessageTemplate={this.props.deleteMessageTemplate}
+                    />
+                  </React.Fragment>
+                  :
+                  null
+                }
               </div>
             </Card> :
             <Loader />

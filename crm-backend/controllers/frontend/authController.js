@@ -495,8 +495,6 @@ const imageUpload = async (req, res) => {
       );
       var buf = new Buffer.from(base64Image, "base64");
       const type = types[base64Image.charAt(0)];
-      console.log("#################",type);
-      
       const randomConst = Math.floor(Math.random() * 90 + 10)
       const fileName = [currentUser.id, randomConst, "_company_logo.", type || "png"].join(
         ""
@@ -518,7 +516,7 @@ const imageUpload = async (req, res) => {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         }; */
-        const shopLogo = await imagePath(thumbnailImagePath);
+        const shopLogo = await imagePath(thumbnailImagePath,"profile-thumb");
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
           shopLogo: shopLogo
         });

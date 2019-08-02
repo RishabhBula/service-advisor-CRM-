@@ -27,12 +27,12 @@ const resizeImage = async (sourcePath, destinationPath, width) => {
   });
 };
 
-const imagePath = async imageRoute => {
+const imagePath = async (imageRoute,folderPath) => {
   let imageUrl
   var params = {
     Bucket: bucketName,
     Body: fs.createReadStream(imageRoute),
-    Key: "download/" + Date.now() + "_" + path.basename(imageRoute),
+    Key: `${folderPath}/` + Date.now() + "_" + path.basename(imageRoute),
     ACL: "public-read"
   };
 

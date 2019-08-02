@@ -48,8 +48,6 @@ class CutomerVehicle extends Component {
     }
   }
   componentDidUpdate = ({ orderReducer }) => {
-    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$", this.props.orderReducer.orderItems);
-
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
         this.props.orderReducer.orderItems.customerId ||

@@ -256,10 +256,6 @@ class OrderDetails extends Component {
                 tax;
               return (
                 <div key={index} className={""}>
-                  {
-                    console.log("%%%%%%%%%%%%%%%%%", item)
-
-                  }
                   {item.serviceId && item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
                     ? item.serviceId.serviceItems.map((service, sIndex) => {
