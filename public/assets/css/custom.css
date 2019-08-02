@@ -1863,6 +1863,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   position: relative;
   display: inline-flex;
   width: 25px;
+  cursor: pointer;
 }
 .status-warp .status-checkbox:after {
   content: "";
@@ -1894,6 +1895,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   top: -5px;
   left: -3px;
   opacity: 0;
+  cursor: pointer;
 }
 .status-warp .status-btn {
   padding: 4px 7px;
@@ -1917,6 +1919,13 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .status-warp .status-btn.btn-outline-success {
   opacity: 1;
 }
+.status-warp .reset-status{
+  position: relative;
+  top: -2px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
 .inspection-card .status-warp .status-checkbox.default:after {
   background: rgb(248, 188, 24);
 }
@@ -2077,6 +2086,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   top: -3px;
   margin-left: 5px;
   font-size: 19px;
+  cursor: pointer;
 }
 .services-list-block {
   position: relative;

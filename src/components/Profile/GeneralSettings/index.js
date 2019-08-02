@@ -224,6 +224,7 @@ class GenralSettings extends Component {
  
 
   handleSubmit = e => {
+  
     e.preventDefault();
     try {
       let validErrors = {};
@@ -301,14 +302,16 @@ class GenralSettings extends Component {
         ProfileValidationsMessaages
       );
 
-      if (!isValid || (!isValid && hasErrors) || hasErrors) {
+      if (
+        (!isValid || (!isValid && hasErrors) || hasErrors) &&
+        this.props.profileSetting
+      ) {
         this.setState({
           validErrors,
           errors
         });
         return;
       } else {
-        
         this.props.updateProfileSetting(payload);
       }
     } catch (error) {

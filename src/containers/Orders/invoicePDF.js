@@ -6,15 +6,24 @@ import {
   serviceTotalsCalculation
 } from "../../helpers";
 
-export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, comapnyInfo, vehilceInfo, doc, pdfWidth) => {
+export const invoicePDF = (
+  sentinvoice,
+  orderData,
+  customerData,
+  serviceData,
+  comapnyInfo,
+  vehilceInfo,
+  doc,
+  pdfWidth
+) => {
   doc.setFontSize(15);
   doc.setTextColor(51, 47, 62);
   doc.text("Invoice -: #" + orderData.orderId + "", 20, 40);
   doc.setFontSize(10);
   doc.text(
     "Created -: " +
-    moment(orderData.createdAt || "").format("MMM Do YYYY") +
-    "",
+      moment(orderData.createdAt || "").format("MMM Do YYYY") +
+      "",
     20,
     54
   );
@@ -55,9 +64,9 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
 
   let columnHeight = 110;
   let itemHeight = columnHeight;
-  const serviceCal = serviceTotalsCalculation(serviceData)
+  const serviceCal = serviceTotalsCalculation(serviceData);
   for (let i = 0; i < serviceData.length; i++) {
-    let calEpa
+    let calEpa;
     epa = serviceData[i].serviceId.epa.value || 0;
     epaType = serviceData[i].serviceId.epa.type;
     serviceDiscount = serviceData[i].serviceId.discount.value || 0;
@@ -91,12 +100,12 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
       startY: columnHeight + 21,
       tableWidth: pdfWidth - 45,
       columnStyles: {
-        'Service Tile': { cellWidth: 150 },
-        'Price': { halign: 'left' },
-        'Qty': { halign: 'left', cellWidth: 30 },
-        'Hours': { halign: 'left', cellWidth: 30 },
-        'Discount': { halign: 'left' },
-        'Sub total': { halign: 'left' },
+        "Service Tile": { cellWidth: 150 },
+        Price: { halign: "left" },
+        Qty: { halign: "left", cellWidth: 30 },
+        Hours: { halign: "left", cellWidth: 30 },
+        Discount: { halign: "left" },
+        "Sub total": { halign: "left" }
       },
       styles: {
         // minCellHeight: 5,
@@ -121,9 +130,26 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
       let service = serviceData[i].serviceId.serviceItems[j];
       var val = service.description || service.brandName || service.discription;
 
-      var note = (service.serviceType === 'part' && service.partOptions && service.partOptions.showNoteOnQuoteAndInvoice ? ('{ ' + service.note + ' }') : '') || (service.serviceType === 'tire' && service.tierPermission && service.tierPermission.showNoteOnQuotesInvoices && service.tierSize[0].notes !== '' ? ('{ ' + service.tierSize[0].notes + ' }') : '');
+      var note =
+        (service.serviceType === "part" &&
+        service.partOptions &&
+        service.partOptions.showNoteOnQuoteAndInvoice
+          ? "{ " + service.note + " }"
+          : "") ||
+        (service.serviceType === "tire" &&
+        service.tierPermission &&
+        service.tierPermission.showNoteOnQuotesInvoices &&
+        service.tierSize[0].notes !== ""
+          ? "{ " + service.tierSize[0].notes + " }"
+          : "");
 
-      var partnumber = (service.serviceType === 'part' && service.partOptions && service.partOptions.showNumberOnQuoteAndInvoice && service.partNumber !== '' ? (service.partNumber) : '') || '';
+      var partnumber =
+        (service.serviceType === "part" &&
+        service.partOptions &&
+        service.partOptions.showNumberOnQuoteAndInvoice &&
+        service.partNumber !== ""
+          ? service.partNumber
+          : "") || "";
       // var serviceType = service.serviceType;
       var qty = service.qty || "";
       var hours = service.hours;
@@ -171,16 +197,35 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
         parseFloat(discount)
       ).toFixed(2);
 
-      var discountType = service.discount.type
-      var discountValue = service.discount.value || 0
-      var discountMainVal = ''
-      discountMainVal = discountValue > 0 ? discountType === '%' ? (discountValue + '%') : ('$' + discountValue) : 0;
+      var discountType = service.discount.type;
+      var discountValue = service.discount.value || 0;
+      var discountMainVal = "";
+      discountMainVal =
+        discountValue > 0
+          ? discountType === "%"
+            ? discountValue + "%"
+            : "$" + discountValue
+          : 0;
       rows.push({
-        'Service Tile': val + ' ' + (partnumber || "") + ' ' + (note || ""),
+        "Service Title": val + " " + (partnumber || "") + " " + (note || ""),
 
-        Price: service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? '$' + cost : service.serviceType === 'tire' ? '$' + cost : '-' || '-',
+        Price:
+          service.serviceType === "part" &&
+          service.partOptions &&
+          service.partOptions.showPriceOnQuoteAndInvoice
+            ? "$" + cost
+            : service.serviceType === "tire"
+            ? "$" + cost
+            : "-" || "-",
 
-        Qty: service.serviceType === 'part' && service.partOptions && service.partOptions.showPriceOnQuoteAndInvoice ? qty : service.serviceType === 'tire' ? qty : '-' || '-',
+        Qty:
+          service.serviceType === "part" &&
+          service.partOptions &&
+          service.partOptions.showPriceOnQuoteAndInvoice
+            ? qty
+            : service.serviceType === "tire"
+            ? qty
+            : "-" || "-",
         Hours: hours || "-",
         Discount: discountMainVal,
         "Sub total": "$" + servicesSubTotal + ""
@@ -237,14 +282,20 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
     450,
     itemHeight + 60
   );
+  doc.setDrawColor(187, 185, 192);
+  doc.line(570, itemHeight + 110, 350, itemHeight + 110); // horizontal line
   doc.text(
     "Sub Total : $" + serviceCal.orderSubTotal.toFixed(2) + "",
     450,
     itemHeight + 75
   );
-  doc.text("Total Tax  : $" + serviceCal.totalTax.toFixed(2) + "", 450, itemHeight + 90);
   doc.text(
-    "Total Discount : $" + serviceCal.totalDiscount.toFixed(2) + "",
+    "Total Tax  : +  $" + serviceCal.totalTax.toFixed(2) + "",
+    450,
+    itemHeight + 90
+  );
+  doc.text(
+    "Total Discount : - $" + serviceCal.totalDiscount.toFixed(2) + "",
     450,
     itemHeight + 105
   );
@@ -267,7 +318,7 @@ export const invoicePDF = (sentinvoice, orderData, customerData, serviceData, co
   if (!sentinvoice) {
     window.open(doc.output("bloburl"), "_blank");
   } else {
-      const pdfBlob = file;
-      return pdfBlob;
+    const pdfBlob = file;
+    return pdfBlob;
   }
-}
+};

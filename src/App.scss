@@ -805,6 +805,32 @@ body {
       }
     }
   }
+  /*========Inspection css===========*/
+  .status-warp{
+      .status-checkbox{
+        &.status-danger{
+          &:hover{
+            &:after{
+              background-color: #f34141;
+            }
+          }
+        }
+        &.status-warning{
+          &:hover{
+            &:after{
+              background-color: #f8bc18;
+            }
+          }
+        }
+        &.status-success{
+          &:hover{
+            &:after{
+              background-color: #35e65b;
+            }
+          }
+        }        
+      }
+  }
 
   /*==========Calendar Page css==========*/
   .appointment-details{

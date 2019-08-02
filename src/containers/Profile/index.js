@@ -29,7 +29,10 @@ class Profile extends Component {
                 <h3 className={"pb-3"}>Profile Settings</h3>
                 <GenralSettings
                   profileData={profileInfo}
-                  updateProfileSetting={this.props.profileSettingUpdateRequest}
+                  updateProfileSetting={
+                    this.props.profileSettingUpdateRequest
+                  }
+                  profileSetting={profileSetting}
                 />
               </Col>
               <Col lg={"5"} md={"5"}>
@@ -46,7 +49,9 @@ class Profile extends Component {
                 <SubscriptionSettings profileData={profileInfo} />
                 <CompanySettings
                   profileData={profileInfo}
-                  updateProfileSetting={this.props.profileSettingUpdateRequest}
+                  updateProfileSetting={
+                    this.props.profileSettingUpdateRequest
+                  }
                   onLogoUpdate={this.props.updateCompanyLogo}
                 />
               </>
