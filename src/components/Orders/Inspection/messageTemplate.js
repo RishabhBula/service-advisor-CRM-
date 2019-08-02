@@ -211,9 +211,9 @@ class MessageTemplate extends Component {
           isOpen={this.props.isOpen}
           toggle={this.props.toggle}
           backdrop={"static"}
-          className='customer-modal custom-form-modal custom-modal-lg'
+          className="customer-modal custom-form-modal custom-modal-lg"
         >
-          <ModalHeader >
+          <ModalHeader>
             <Button className="close" onClick={this.props.toggle}>
               <span aria-hidden="true">×</span>
             </Button>
@@ -221,131 +221,235 @@ class MessageTemplate extends Component {
           </ModalHeader>
           <ModalBody>
             <div className="">
-              <Row className='justify-content-center ml-0'>
+              <Row className="justify-content-center ml-0 pt-4 pb-5">
                 <Col md={"5"} sm={"5"}>
-                  <h5 className={"pb-2 border-bottom title-h5"}>Template List</h5>
+                  <h5 className={"pb-2 border-bottom title-h5"}>
+                    Template List
+                  </h5>
                   <div className={"message-template-block"}>
-                    {templateListData && templateListData.length ?
+                    {templateListData && templateListData.length ? (
                       templateListData.map((ele, index) => {
                         return (
                           <div key={index} className={"position-relative"}>
-                            <div className={activeIndex === index ? 'template-tile d-flex active' : 'template-tile d-flex'} onClick={(e) => this.handleEditTemplate(e, ele._id, index)}>
-                            <h5 className={"text-capitalize"}>{ele.templateName || '-'}</h5>
-                              <div className={"sub-head"}><span>Subject</span> -: {ele.subject || '-'}</div>
-                              <div className={"text-message"}>{ele.messageText ? stripHTML(ele.messageText.substring(0, 500)) : '-'}</div>
+                            <div
+                              className={
+                                activeIndex === index
+                                  ? "template-tile d-flex active"
+                                  : "template-tile d-flex"
+                              }
+                              onClick={e =>
+                                this.handleEditTemplate(e, ele._id, index)
+                              }
+                            >
+                              <h5 className={"text-capitalize"}>
+                                {ele.templateName || "-"}
+                              </h5>
+                              <div className={"sub-head"}>
+                                <span>Subject</span> -: {ele.subject || "-"}
+                              </div>
+                              <div className={"text-message"}>
+                                {ele.messageText
+                                  ? stripHTML(
+                                      ele.messageText.substring(0, 500)
+                                    )
+                                  : "-"}
+                              </div>
+                            </div>
+                            <Button
+                              onClick={e =>
+                                this.handelTemplateDelete(e, ele._id)
+                              }
+                              color={""}
+                              className={"btn-delete"}
+                            >
+                              <i className="icons cui-circle-x" />
+                            </Button>
                           </div>
-                            <Button onClick={(e) => this.handelTemplateDelete(e, ele._id)} color={""} className={"btn-delete"}><i className="icons cui-circle-x"></i></Button>
-                          </div>
-                        )
+                        );
                       })
-                      :
+                    ) : (
                       <p>No Message Template has been added yet!</p>
-                    }
+                    )}
                   </div>
                 </Col>
                 <Col md={"7"} sm={"7"}>
                   <h5 className={"text-center mb-4 title-h5"}>
-                    {!isEditMode ? "Add New Message Template" : "Edit Message Template"}
-                    {isEditMode ? <Button
-                      color={"warning"} 
-                      size={"sm"}
-                      className={"pull-right"}
-                      onClick={()=>
-                        this.setState({
-                          singleTemplateData: {
-                            templateName: "",
-                            subject: "",
-                            messages: "",
-                          },
-                          isEditMode:false,
-                          activeIndex:''
-                        })
-                      }>
+                    {!isEditMode
+                      ? "Add New Message Template"
+                      : "Edit Message Template"}
+                    {isEditMode ? (
+                      <Button
+                        color={"warning"}
+                        size={"sm"}
+                        className={"pull-right"}
+                        onClick={() =>
+                          this.setState({
+                            singleTemplateData: {
+                              templateName: "",
+                              subject: "",
+                              messages: ""
+                            },
+                            isEditMode: false,
+                            activeIndex: ""
+                          })
+                        }
+                      >
                         Add New
                       </Button>
-                      : null
-                    }
+                    ) : null}
                   </h5>
-                  <Row className='justify-content-center m-0'>
-                    <Col md='12'>
+                  <Row className="justify-content-center m-0">
+                    <Col md="12">
                       <FormGroup>
-                        <Label htmlFor='name' className='message-temp-label'>
+                        <Label
+                          htmlFor="name"
+                          className="message-temp-label"
+                        >
                           Template Name <span className={"asteric"}>*</span>
-                          </Label>
-                        <div className={'input-block'}>
+                        </Label>
+                        <div className={"input-block"}>
                           <Input
-                            type='text'
-                            name='templateName'
-                            onChange={(e) => this.handleChange(e)}
-                            placeholder='ex.Invoice Default'
+                            type="text"
+                            name="templateName"
+                            onChange={e => this.handleChange(e)}
+                            placeholder="ex.Invoice Default"
                             value={singleTemplateData.templateName}
-                            maxLength='55'
-                            id='recipients'
-                            invalid={errors && errors.templateName ? true : false}
+                            maxLength="55"
+                            id="recipients"
+                            invalid={
+                              errors && errors.templateName ? true : false
+                            }
                           />
-                          {errors && errors.templateName ? <p className={"text-danger font-italic"}>{errors.templateName}</p> : null}
+                          {errors && errors.templateName ? (
+                            <p className={"text-danger font-italic"}>
+                              {errors.templateName}
+                            </p>
+                          ) : null}
                         </div>
                       </FormGroup>
                     </Col>
-                    <Col md='12'>
+                    <Col md="12">
                       <FormGroup>
-                        <Label htmlFor='name' className='message-temp-label'>
+                        <Label
+                          htmlFor="name"
+                          className="message-temp-label"
+                        >
                           Subject <span className={"asteric"}>*</span>
                         </Label>
-                        <div className={'input-block'}>
-                          <div className={'input-block message-input-warp'}>
-                          <p contentEditable={"true"} onKeyPress={(e) => this.onKeyPress(e)} className={errors && errors.subject ? "tagInput mb-0 is-invalid" : "tagInput mb-0"} id={"tagInput"} onClick={(e) => this.handleFocus("tagInput")} dangerouslySetInnerHTML={singleTemplateData.subject ? { __html: singleTemplateData.subject } : null}>
-                          </p>
+                        <div className={"input-block"}>
+                          <div className={"input-block message-input-warp"}>
+                            <p
+                              contentEditable={"true"}
+                              onKeyPress={e => this.onKeyPress(e)}
+                              className={
+                                errors && errors.subject
+                                  ? "tagInput mb-0 is-invalid"
+                                  : "tagInput mb-0"
+                              }
+                              id={"tagInput"}
+                              onClick={e => this.handleFocus("tagInput")}
+                              dangerouslySetInnerHTML={
+                                singleTemplateData.subject
+                                  ? { __html: singleTemplateData.subject }
+                                  : null
+                              }
+                            />
                           </div>
-                          {errors && errors.subject ? <p className={"text-danger font-italic"}>{errors.subject}</p> : null}
+                          {errors && errors.subject ? (
+                            <p className={"text-danger font-italic"}>
+                              {errors.subject}
+                            </p>
+                          ) : null}
                         </div>
                       </FormGroup>
                     </Col>
 
-                    <Col md='12'>
+                    <Col md="12">
                       <FormGroup>
-                        <Label htmlFor='name' className='message-temp-label'>
+                        <Label
+                          htmlFor="name"
+                          className="message-temp-label"
+                        >
                           Message
                         </Label>
-                        <div className={'input-block message-input-warp'}>
+                        <div className={"input-block message-input-warp"}>
                           <p
-                            suppressContentEditableWarning contentEditable={"true"}
+                            suppressContentEditableWarning
+                            contentEditable={"true"}
                             className={"message-input"}
-                            id={'messageText'}
-                            onClick={(e) => this.handleFocus("messageText")}
-                            dangerouslySetInnerHTML={singleTemplateData.messageText ? {__html:singleTemplateData.messageText} : null}
-                          >
-                          </p>
+                            id={"messageText"}
+                            onClick={e => this.handleFocus("messageText")}
+                            dangerouslySetInnerHTML={
+                              singleTemplateData.messageText
+                                ? { __html: singleTemplateData.messageText }
+                                : null
+                            }
+                          />
                         </div>
                       </FormGroup>
                     </Col>
                   </Row>
                   <div className={"tagging-warp text-right"}>
-                    <span onClick={(e) => this.handelTag(e, '{first_name}')} className={"tags"}>Firstname</span>
-                    <span onClick={(e) => this.handelTag(e, '{last_name}')} className={"tags"}>Lastname</span>
-                    <span onClick={(e) => this.handelTag(e, '{vehicle}')} className={"tags"}>Vehicle</span>
-                    <span onClick={(e) => this.handelTag(e, '{year}')} className={"tags"}>Year</span>
-                    <span onClick={(e) => this.handelTag(e, '{make}')} className={"tags"}>Make</span>
-                    <span onClick={(e) =>this.handelTag(e, '{model}')} className={"tags"}>Model</span>
+                    <span
+                      onClick={e => this.handelTag(e, "{first_name}")}
+                      className={"tags"}
+                    >
+                      Firstname
+                    </span>
+                    <span
+                      onClick={e => this.handelTag(e, "{last_name}")}
+                      className={"tags"}
+                    >
+                      Lastname
+                    </span>
+                    <span
+                      onClick={e =>
+                        this.handelTag(e, "{year} {make} {model}")
+                      }
+                      className={"tags"}
+                    >
+                      Vehicle
+                    </span>
+                    <span
+                      onClick={e => this.handelTag(e, "{year}")}
+                      className={"tags"}
+                    >
+                      Year
+                    </span>
+                    <span
+                      onClick={e => this.handelTag(e, "{make}")}
+                      className={"tags"}
+                    >
+                      Make
+                    </span>
+                    <span
+                      onClick={e => this.handelTag(e, "{model}")}
+                      className={"tags"}
+                    >
+                      Model
+                    </span>
                   </div>
                 </Col>
               </Row>
-
             </div>
-
-
           </ModalBody>
           <ModalFooter>
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
             </div>
             <Button
-              color='primary'
-              onClick={(e) => this.handleAddtemplate(e)}
+              color="primary"
+              onClick={e => this.handleAddtemplate(e)}
             >
               {!isEditMode ? "Add New Template " : "Update Template"}
-            </Button>{' '}
-            <Button color='secondary' onClick={(e) => { this.props.toggle(); this.clearMessageForm()}}>
+            </Button>{" "}
+            <Button
+              color="secondary"
+              onClick={e => {
+                this.props.toggle();
+                this.clearMessageForm();
+              }}
+            >
               Cancel
             </Button>
           </ModalFooter>

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
+// import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
 import {
   getSubscriptionPlanRequest,
   addSubscriptionRequest,
@@ -259,17 +259,17 @@ class Dashboard extends Component {
    */
   render() {
     const {
-      modelInfoReducer,
-      modelOperate,
-      getSubscriptionPlanRequest,
-      subscriptionReducer,
-      addSubscriptionRequest,
+      //modelInfoReducer,
+      // modelOperate,
+      // getSubscriptionPlanRequest,
+      // subscriptionReducer,
+      // addSubscriptionRequest,
       dashboardData,
       redirectTo
       // profileInfo
     } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    const { openSubscriptionModel, openSubPayementModel } = modelDetails;
+    // const { modelDetails } = modelInfoReducer;
+    // const { openSubscriptionModel, openSubPayementModel } = modelDetails;
     const {
       cards,
       customerStartDate,
@@ -326,14 +326,14 @@ class Dashboard extends Component {
             </Card>
           </Col>
         </Row>
-        <CrmSubscriptionModel
+        {/* <CrmSubscriptionModel
           openSubscriptionModel={openSubscriptionModel}
           modelOperate={modelOperate}
           openSubPayementModel={openSubPayementModel}
           getSubscriptionPlanRequest={getSubscriptionPlanRequest}
           subscriptionReducer={subscriptionReducer}
           addSubscriptionRequest={addSubscriptionRequest}
-        />
+        /> */}
       </div>
     );
   }

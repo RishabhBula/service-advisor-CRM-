@@ -63,16 +63,12 @@ class SendInspection extends Component {
       this.setState({
         customerData: propsCustomerData,
         vehicleData: propsVehicleData,
-        isEmail: propsCustomerData.email ? true : false,
-        isSms:
-          propsCustomerData &&  propsCustomerData.phoneDetail && propsCustomerData.phoneDetail[0]
-          .value
-            ? true
-            : false,
+        isEmail: propsCustomerData && propsCustomerData.email ? true : false,
+         isSms: propsCustomerData && propsCustomerData.phoneDetail && propsCustomerData.phoneDetail[0].value ? true : false,
         phone:
-          propsCustomerData &&
-            propsCustomerData.phoneDetail ? propsCustomerData.phoneDetail[0]
-              .value : null
+          propsCustomerData && propsCustomerData.phoneDetail
+            ? propsCustomerData.phoneDetail[0].value
+            : null
       });
     }
   };

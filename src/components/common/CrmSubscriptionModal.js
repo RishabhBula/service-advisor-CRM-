@@ -27,20 +27,19 @@ export class CrmSubscriptionModel extends Component {
       })
     }
   }
-  handleSubPaymentModal = (planId) => {
+  handleSubPaymentModal = async(planId) => {
     const { modelOperate, openSubPayementModel } = this.props;
+    await this.setState({
+      planId: planId
+    })
     modelOperate({
       openSubPayementModel: !openSubPayementModel
-    })
-    this.setState({
-      planId
     })
   }
 
   render() {
     const { openSubscriptionModel, openSubPayementModel, addSubscriptionRequest } = this.props
     const { subscriptionData, planId } = this.state
-   
     return (
       <>
         <Modal
@@ -53,32 +52,32 @@ export class CrmSubscriptionModel extends Component {
             <h5 className={"subscription-head-line"}>Get a monthly Subscription for uninterrupted access.</h5>
             <Row>
               <div className={"subscription-card-wrap d-flex justify-content-center"}>
-                {subscriptionData && subscriptionData.length ? subscriptionData.map((plan ,index)=>{
-                  return(
-                  <div className={"subscription-card"} key={index}>
+                {subscriptionData && subscriptionData.length ? subscriptionData.map((plan, index) => {
+                  return (
+                    <div className={"subscription-card"} key={index}>
                       <h4 className={"text-center"}>{plan.name}</h4>
-                    <div className={"subscription-card-inner"}>
-                      <h3 className={"text-primary text-center plan-price"}>
+                      <div className={"subscription-card-inner"}>
+                        <h3 className={"text-primary text-center plan-price"}>
                           <Dollor value={plan.amount} /><small>/month</small>
-                      </h3>
-                      <div className={"text-center pt-3 pb-3 user-count"}>
+                        </h3>
+                        <div className={"text-center pt-3 pb-3 user-count"}>
                           {plan.facilities.noOfLiscence} User License
                       </div>
-                      <div className={"notes"}>
-                        Pay $10/user and add more users
+                        <div className={"notes"}>
+                          Pay $10/user and add more users
+                      </div>
+                      </div>
+                      <div className={"text-center"}>
+                        <Button color={"primary"} onClick={() => this.handleSubPaymentModal(plan._id)} className={"text-center btn"}>Subscribe</Button>
                       </div>
                     </div>
-                    <div className={"text-center"}>
-                      <Button color={"primary"} onClick={(e)=>this.handleSubPaymentModal(plan._id)} className={"text-center btn"}>Subscribe</Button>
-                    </div>
-                  </div>
                   )
-                }):null}
-                  
-                
+                }) : null}
+
+
               </div>
             </Row>
-            <br/>
+            <br />
           </ModalBody>
         </Modal>
         <CrmSubPaymentModalModel

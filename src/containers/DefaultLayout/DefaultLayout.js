@@ -169,17 +169,34 @@ class DefaultLayout extends Component {
       planId,
       planExiprationDate
     } = profileInfo
+    const {
+      getSubscriptionPlanRequest,
+      subscriptionReducer,
+      addSubscriptionRequest,
+      modelOperate,
+      modelInfoReducer
+    } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const {
+      openSubPayementModel
+    } = modelDetails;
     const d1 = moment(new Date()).toDate()
     const d2 = new Date(planExiprationDate);
     const diffTime = Math.abs(d1.getTime() - d2.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (!isInTrialPeriod && (isNaN(diffDays) || !planId)) {
-      const { modelInfoReducer, modelOperate } = this.props
-      const { modelDetails } = modelInfoReducer;
-      const { openSubscriptionModel } = modelDetails
-      modelOperate({
-        openSubscriptionModel: !openSubscriptionModel
-      })
+      return (
+        <CrmSubscriptionModel
+          openSubscriptionModel={true}
+          modelOperate={modelOperate}
+          openSubPayementModel={openSubPayementModel}
+          getSubscriptionPlanRequest={getSubscriptionPlanRequest}
+          subscriptionReducer={subscriptionReducer}
+          addSubscriptionRequest={addSubscriptionRequest}
+        />
+      );
+    } else {
+      return null;
     }
   }
   navigation = permissions => {
@@ -229,10 +246,6 @@ class DefaultLayout extends Component {
       getVehicleData,
       getOrders,
       addAppointment,
-      getSubscriptionPlanRequest,
-      subscriptionReducer,
-      addSubscriptionRequest,
-      modelOperate,
       setLabourRateDefault } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
@@ -243,8 +256,6 @@ class DefaultLayout extends Component {
     const { modelDetails } = modelInfoReducer;
     const {
       showAddAppointmentModal,
-      openSubscriptionModel,
-      openSubPayementModel
     } = modelDetails;
     return isLoading ? (
       <FullPageLoader />
@@ -386,14 +397,6 @@ class DefaultLayout extends Component {
             </Suspense>
           </AppFooter>
           {this.customerAndVehicleModal()}
-          <CrmSubscriptionModel
-            openSubscriptionModel={openSubscriptionModel}
-            modelOperate={modelOperate}
-            openSubPayementModel={openSubPayementModel}
-            getSubscriptionPlanRequest={getSubscriptionPlanRequest}
-            subscriptionReducer={subscriptionReducer}
-            addSubscriptionRequest={addSubscriptionRequest}
-          />
         </div>
       );
   }

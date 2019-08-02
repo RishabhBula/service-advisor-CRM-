@@ -72,7 +72,7 @@ const addInspectionLogic = createLogic({
 const addInspectionTemplateLogic = createLogic({
   type: InspectionActions.ADD_INSPCETION_TEMPLATE,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    //dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/inspection",
@@ -93,7 +93,7 @@ const addInspectionTemplateLogic = createLogic({
       dispatch(
         getTemplateList()
       );
-      dispatch(hideLoader());
+     // dispatch(hideLoader());
       done();
     }
   }
