@@ -164,12 +164,13 @@ const listOrders = async (req, res) => {
         e.parentId = condition.parentId;
       });
       await OrderStatus.insertMany(defaultOrderStatus);
-      orderStatus = await OrderStatus.find(condition, {
+      orderStatus = await OrderStatus.find(orderStatusCondition, {
         name: 1,
         isInvoice: 1
       }).sort({ orderIndex: 1 });
     }
     let response = {};
+
     result.forEach(element => {
       const { workflowStatus: status } = element;
       if (!response[status]) {
@@ -460,7 +461,8 @@ const getOrderDetails = async (req, res) => {
           const element = result[0].messageId[index];
           if (
             element.messageId &&
-            (element.messageId.receiverId).toString() === (currentUser.id).toString()
+            element.messageId.receiverId.toString() ===
+              currentUser.id.toString()
           ) {
             element.messageId.isSender = false;
           }
