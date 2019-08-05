@@ -77,7 +77,7 @@ const subscribe = async (req, res) => {
           await stripe.subscriptions.del(userDetails.planId.stripeId);
           console.log(
             `Previous subscription for ${
-            userDetails.planId.name
+              userDetails.planId.name
             }) plan has been cancelled.`
           );
         } catch (error) {
@@ -145,13 +145,13 @@ const subscribe = async (req, res) => {
 /**
  *
  */
-const getPlansList = async (req,res) => {
+const getPlansList = async (req, res) => {
   try {
-    const planList = await PlanModel.find({ isDeleted: false })
+    const planList = await PlanModel.find({ isDeleted: false });
     return res.status(200).json({
       data: planList || [],
       success: true
-    })
+    });
   } catch (error) {
     return res.status(500).json({
       responsecode: 500,
@@ -159,5 +159,5 @@ const getPlansList = async (req,res) => {
       success: false
     });
   }
-}
+};
 module.exports = { subscribe, getPlansList };

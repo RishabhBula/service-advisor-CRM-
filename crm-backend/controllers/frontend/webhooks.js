@@ -14,14 +14,8 @@ const paymentSuccess = async (req, data) => {
   } = data;
 
   const userData = await UserModel.findOne({
-    $or: [
-      {
-        stripeCustomerId: customer
-      },
-      {
-        email: customer_email
-      }
-    ],
+    stripeCustomerId: customer,
+    email: customer_email,
     isDeleted: false
   });
 
@@ -68,14 +62,8 @@ const paymentFailed = async (req, data) => {
   const { customer, customer_email } = data;
 
   const userData = await UserModel.findOne({
-    $or: [
-      {
-        stripeCustomerId: customer
-      },
-      {
-        email: customer_email
-      }
-    ],
+    stripeCustomerId: customer,
+    email: customer_email,
     isDeleted: false
   });
 
