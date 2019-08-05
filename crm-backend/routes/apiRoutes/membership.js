@@ -4,7 +4,10 @@ const { authorisedUser } = require("./../../common/token");
 const {
   SubscribeMembershipValidations
 } = require("./../../common/apiValidation");
-const { subscribe, getPlansList } = require("./../../controllers/frontend/membership");
+const {
+  subscribe,
+  getPlansList
+} = require("./../../controllers/frontend/membership");
 /*
 /* 
  */
@@ -17,9 +20,5 @@ router.post(
 /*
 /* 
  */
-router.get(
-  "/list",
-  authorisedUser,
-  getPlansList
-)
+router.get("/list", authorisedUser, getPlansList);
 module.exports = router;
