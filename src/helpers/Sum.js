@@ -36,11 +36,21 @@ export const calculateDurationFromSeconds = (Seconds) => {
 /* 
  */
 export const serviceTotalsCalculation = (serviceData) => {
-  let totalParts = 0, totalTires = 0, totalLabor = 0, orderSubTotal = 0, orderGrandTotal = 0, serviceTotalArray,
-    totalTax = 0, totalDiscount = 0;
+  let totalParts = 0,
+    totalTires = 0,
+    totalLabor = 0,
+    orderSubTotal = 0,
+    orderGrandTotal = 0,
+    serviceTotalArray,
+    totalTax = 0,
+    totalDiscount = 0,
+    serviceEpa = [],
+    serviceTax = [],
+    serviceDiscount = [],
+    serviceCount = [];
  
     serviceData.map((item) => {
-      let mainserviceTotal = [], serviceTotal, epa, discount, tax
+      let mainserviceTotal = [], serviceTotal,epa,discount,tax;
       if (item.serviceId && item.serviceId.serviceItems.length) {
         item.serviceId.serviceItems.map((service) => {
           const calSubTotal = calculateSubTotal(service.retailPrice || (service.tierSize ? service.tierSize[0].retailPrice : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0)).toFixed(2)
@@ -55,6 +65,7 @@ export const serviceTotalsCalculation = (serviceData) => {
           if (service.serviceType === 'part') {
             totalParts += parseFloat(servicesSubTotal)
           }
+          
           if (service.serviceType === 'tire') {
             totalTires += parseFloat(servicesSubTotal)
           }
@@ -65,13 +76,17 @@ export const serviceTotalsCalculation = (serviceData) => {
           return true
         })
       }
+      serviceEpa.push(epa);
+      serviceTax.push(tax);
+      serviceDiscount.push(discount);
+      serviceCount.push(serviceTotal);
       totalTax += parseFloat(epa) + parseFloat(tax) || 0
       totalDiscount += parseFloat(discount) || 0
       orderGrandTotal += parseFloat(serviceTotal) || 0
       return true
     })
   
-  
+
   const data = {
     totalParts,
     totalTires,
@@ -79,7 +94,11 @@ export const serviceTotalsCalculation = (serviceData) => {
     orderSubTotal,
     totalTax,
     totalDiscount,
-    orderGrandTotal
-  }
+    orderGrandTotal,
+    serviceEpa,
+    serviceTax,
+    serviceDiscount,
+    serviceCount
+  };
   return data
 }

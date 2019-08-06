@@ -28,6 +28,7 @@ import { appointmentReducer, appointmentDetailsReducer } from "./Appointments";
 import { paymentReducer } from "./Payment";
 import { subscriptionReducer } from "./Subscription";
 import { dashboardReducer } from "./Dashboard";
+import { pdfReducer } from "./Pdf";
 
 export const mainReducer = handleActions(
   {
@@ -73,6 +74,7 @@ const AppReducer = combineReducers({
   paymentReducer,
   subscriptionReducer,
   dashboardReducer,
+  pdfReducer,
   routing: routerReducer
 });
 

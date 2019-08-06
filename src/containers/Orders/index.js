@@ -4,7 +4,8 @@ import { withRouter } from "react-router-dom";
 import React, { Component, Suspense } from "react";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
-import { invoicePDF } from "./invoicePDF"
+import { invoicePDF } from "./invoicePDF";
+import InvoiceTable from "./invoiceTable";
 import * as jsPDF from "jspdf";
 import "jspdf-autotable";
 import {
@@ -53,7 +54,8 @@ import {
   addNewCannedService,
   deleteCannedServiceRequest,
   getOrderList,
-  updateOrderStatus
+  updateOrderStatus,
+  genrateInvoice
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -155,7 +157,8 @@ class Order extends Component {
     if (
       (serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
         inspectionReducer.inspectionData.isSuccess !==
-        this.props.inspectionReducer.inspectionData.isSuccess) && !this.props.serviceReducers.isAddServiceItem
+          this.props.inspectionReducer.inspectionData.isSuccess) &&
+      !this.props.serviceReducers.isAddServiceItem
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     }
@@ -163,7 +166,7 @@ class Order extends Component {
       orderReducer.orderItems !== this.props.orderReducer.orderItems ||
       orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
       messageReducer.messageData.isSuccess !==
-      this.props.messageReducer.messageData.isSuccess
+        this.props.messageReducer.messageData.isSuccess
     ) {
       const {
         orderName,
@@ -218,7 +221,6 @@ class Order extends Component {
         isOrderUpdate: false
       });
     }
-
   };
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
@@ -296,6 +298,11 @@ class Order extends Component {
     });
   };
 
+  getPdf = () => {
+    const HTML = document.getElementById("customers").innerHTML;
+    this.props.genrateInvoice({ html: HTML });
+  };
+
   printInvoice = sentinvoice => {
     const orderData = this.props.orderReducer.orderItems;
     const customerData = orderData.customerId;
@@ -309,7 +316,16 @@ class Order extends Component {
       orderData.vehicleId.modal;
     var doc = new jsPDF("p", "pt");
     var pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfBlob = invoicePDF(sentinvoice, orderData, customerData, serviceData, comapnyInfo, vehilceInfo, doc, pdfWidth)
+    const pdfBlob = invoicePDF(
+      sentinvoice,
+      orderData,
+      customerData,
+      serviceData,
+      comapnyInfo,
+      vehilceInfo,
+      doc,
+      pdfWidth
+    );
     this.setState({
       pdfBlob
     });
@@ -377,10 +393,12 @@ class Order extends Component {
       addNewCannedService,
       deleteCannedServiceRequest,
       updateOrderStatus,
-      updateOrderDetails
+      updateOrderDetails,
+      genrateInvoice,
+      pdfReducer
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
-
+    console.log(pdfReducer, "pdfReducer");
     return (
       <div className="animated fadeIn">
         {!orderReducer.isOrderLoading ? (
@@ -462,10 +480,11 @@ class Order extends Component {
                           <UncontrolledTooltip target={"sentInvoice"}>
                             Click to Send Invoice
                           </UncontrolledTooltip>
+                          {/* onClick={() => this.printInvoice(false)} */}
                           <span
                             id="add-Appointment"
                             className="print-btn"
-                            onClick={() => this.printInvoice(false)}
+                            onClick={this.getPdf}
                           >
                             <i className="icon-printer icons " />
                             &nbsp; Print
@@ -549,6 +568,7 @@ class Order extends Component {
                             profileReducer={profileInfoReducer}
                             updateOrderDetails={updateOrderDetails}
                             orderReducer={orderReducer}
+                            genrateInvoiceSuccess={genrateInvoice}
                           />
                         ) : null}
                         {activeTab === 2 ? (
@@ -629,6 +649,14 @@ class Order extends Component {
                 deleteMessageTemplate={this.props.deleteMessageTemplate}
               />
             </div>
+
+            <div id="customers">
+              <InvoiceTable
+                orderReducer={orderReducer}
+                vehicleData={vehicleData}
+                profileReducer={profileInfoReducer}
+              />
+            </div>
           </Card>
         ) : (
           <Loader />
@@ -648,7 +676,8 @@ const mapStateToProps = state => ({
   timelogReducer: state.timelogReducer,
   messageReducer: state.messageReducer,
   activityReducer: state.activityReducer,
-  paymentReducer: state.paymentReducer
+  paymentReducer: state.paymentReducer,
+  pdfReducer: state.pdfReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -772,12 +801,15 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addPaymentRequest(data));
   },
   addNewCannedService: data => {
-    dispatch(addNewCannedService(data))
+    dispatch(addNewCannedService(data));
   },
   getOrders: () => dispatch(getOrderList()),
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
-  deleteCannedServiceRequest: (data) => {
-    dispatch(deleteCannedServiceRequest(data))
+  deleteCannedServiceRequest: data => {
+    dispatch(deleteCannedServiceRequest(data));
+  },
+  genrateInvoice: data => {
+    dispatch(genrateInvoice(data));
   }
 });
 export default connect(

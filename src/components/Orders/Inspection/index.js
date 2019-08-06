@@ -19,7 +19,7 @@ import MessageTemplate from "./messageTemplate";
 import * as jsPDF from "jspdf";
 import "jspdf-autotable";
 import pdfIcon from "../../../assets/pdfIcon.png";
-
+import getCroppedImg from "../../common/cropImage";
 class Inspection extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +50,7 @@ class Inspection extends Component {
   componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
     let propdata = this.props.inspectionData;
     const { inspectionStatus } = this.state;
-    
+
     if (
       propdata &&
       propdata.inspectionData &&
@@ -204,7 +204,7 @@ class Inspection extends Component {
   /**
    *
    */
-  handleInspection = e =>       {
+  handleInspection = e => {
     e.preventDefault();
     const { inspection } = this.state;
     const payload = {
@@ -329,18 +329,19 @@ class Inspection extends Component {
    */
   onDrop = async (files, inspIndex, itemIndex) => {
     const { inspection } = this.state;
-     
-     if (files[0].size > 10000000) {
-       await ConfirmBox({
-         text: "",
-         title: "Maximum allowed size for image is 10mb",
-         showCancelButton: false,
-         confirmButtonText: "Ok"
-       });
-       return;
-     }
-  
-    let count = 5 - inspection[inspIndex].items[itemIndex].itemImagePreview.length;
+
+    if (files[0].size > 10000000) {
+      await ConfirmBox({
+        text: "",
+        title: "Maximum allowed size for image is 10mb",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
+
+    let count =
+      5 - inspection[inspIndex].items[itemIndex].itemImagePreview.length;
     if (files.length > count) {
       await ConfirmBox({
         text: "",
@@ -354,45 +355,39 @@ class Inspection extends Component {
         const that = this;
         let file = files[i];
         await picReader.addEventListener("load", async event => {
-           var image = new Image();
-           var imageWidth = 0;
-           var message = "";
-           image.src = event.target.result;
-          
-           image.onload = async function() {
-             imageWidth = this.width;
-             if (imageWidth <= 500 || imageWidth >= 8000) {
-               message =
-                 imageWidth <= 300
-                   ? "Allowed image width is minimum 500px."
-                   : "Allowed image width is maximum 8000px.";
-               await ConfirmBox({
-                 text: "",
-                 title: message,
-                 showCancelButton: false,
-                 confirmButtonText: "Ok"
-               });
+          var image = new Image();
+          var imageWidth = 0;
+          var message = "";
+          image.src = event.target.result;
 
-               return;
-             } else {
-               let dataURL = picReader.result;
-               
-               inspection[inspIndex].items[
-                 itemIndex
-               ].itemImagePreview.push({
-                 dataURL,
-                 name: file.name
-               });
-               inspection[inspIndex].items[
-                 itemIndex
-               ].itemImage.push(file);
-               that.setState({
-                 inspection
-               });
-             }
-           };
+          image.onload = async function() {
+            imageWidth = this.width;
+            if (imageWidth <= 500 || imageWidth >= 8000) {
+              message =
+                imageWidth <= 300
+                  ? "Allowed image width is minimum 500px."
+                  : "Allowed image width is maximum 8000px.";
+              await ConfirmBox({
+                text: "",
+                title: message,
+                showCancelButton: false,
+                confirmButtonText: "Ok"
+              });
 
-         
+              return;
+            } else {
+              let dataURL = picReader.result;
+
+              inspection[inspIndex].items[itemIndex].itemImagePreview.push({
+                dataURL,
+                name: file.name
+              });
+              inspection[inspIndex].items[itemIndex].itemImage.push(file);
+              that.setState({
+                inspection
+              });
+            }
+          };
         });
         await picReader.readAsDataURL(file);
       });
@@ -461,6 +456,10 @@ class Inspection extends Component {
   /**
    *
    */
+  getPdf = () =>{
+    this.props.genrateInvoiceSuccess()
+  }
+  /** */ 
   toggleMessageTemplate = ele => {
     this.setState({
       mesageModal: !this.state.mesageModal
@@ -490,7 +489,7 @@ class Inspection extends Component {
         : "Untitled";
     // let textOrderIdDetail = doc.splitTextToSize(textOrderId,(200));
     var textOrderIdDetailWidth = doc.getTextDimensions(textOrderId);
-    
+
     doc.text(textOrderId, textOrderIdDetailWidth.w - 30, 42);
 
     doc.setTextColor("black");
@@ -588,11 +587,24 @@ class Inspection extends Component {
               var yAxis = data.cell.y + 5;
               count++;
               let type = "";
+              
+             
               for (let k = 0; k < itemsJ.itemImagePreview.length; k++) {
-                var base64Img = itemsJ.itemImagePreview[k].dataURL || "";
+                var base64Img =
+                  itemsJ.itemImagePreview[k].dataURL ||
+                  itemsJ.itemImagePreview[k];
+                 
+                 const croppedImage = await getCroppedImg(
+                   'https://cors-anywhere.herokuapp.com/'+itemsJ.itemImagePreview[k]
+                 );
+                 console.log(
+                 croppedImage,
+                  "base64Img"
+                );
+
                 type = base64Img.split(";")[0].split("/")[1];
                 base64Img = type === "pdf" ? pdfIcon : base64Img;
-               
+
                 if (k < 3) {
                   doc.addImage(
                     base64Img,
@@ -716,6 +728,7 @@ class Inspection extends Component {
   };
 
   viewFile = (filename, type) => {
+    console.log(filename, "filename");
     let pdfWindow = window.open("");
     pdfWindow.document.body.innerHTML =
       type === "pdf"
@@ -1061,7 +1074,6 @@ class Inspection extends Component {
                                           <ul className={"preview-group  p-0"}>
                                             {val.itemImagePreview.map(
                                               (file, previewindx) => {
-                                                
                                                 const type = "png";
                                                 // const type = file.dataURL
                                                 //   .split(";")[0]
@@ -1085,7 +1097,7 @@ class Inspection extends Component {
                                                           }
                                                           onClick={filename =>
                                                             this.viewFile(
-                                                              file.dataURL,
+                                                              file,
                                                               type
                                                             )
                                                           }
@@ -1154,7 +1166,10 @@ class Inspection extends Component {
                                                           }
                                                           onClick={filename =>
                                                             this.viewFile(
-                                                              file.dataURL,
+                                                              file &&
+                                                                file.dataURL
+                                                                ? file.dataURL
+                                                                : file,
                                                               type
                                                             )
                                                           }
