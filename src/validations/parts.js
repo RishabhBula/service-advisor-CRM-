@@ -53,6 +53,6 @@ export const PartValidationMessages = {
       "Retails price can not have more than 8 digits."
   },
   note: {
-    [ValidationTypes.MAXLENGTH]: "Note can not have more than 120 digits."
+    [ValidationTypes.MAXLENGTH]: "Note can not have more than 120 characters."
   }
 };
