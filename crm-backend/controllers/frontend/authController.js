@@ -633,6 +633,7 @@ const imageDelete = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { currentUser } = req;
+    const parentId = currentUser.parentId || currentUser.id;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({
@@ -649,7 +650,7 @@ const createUser = async (req, res) => {
       subdomain: currentUser.subdomain,
       companyName: $data.companyName,
       roleType: mongoose.Types.ObjectId($data.roleType),
-      parentId: req.currentUser.id,
+      parentId: parentId,
       rate: parseFloat($data.rate.replace(/[$,\s]/g, "")).toFixed(2)
     };
     let result = await userModel(inserList).save();
