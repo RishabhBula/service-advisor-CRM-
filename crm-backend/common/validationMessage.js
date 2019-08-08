@@ -26,8 +26,8 @@ const otherMessage = {
   insertUserMessage:
     "Member details added successfully. A confirmation link has been sent to user email id.",
   updatedUserMessage: "Member details updated successfully.",
-  updateUserDataMessage:"User details updated successfully.",
-  userPasswordCreation: "Your password was successfully created.",
+  updateUserDataMessage: "User details updated successfully.",
+  userPasswordCreation: "New password created successfully.",
   linkExpiration: "Link has been expired.",
   userNotExist: "User Not Exist",
   newCustomer: "Customer has been created successfully."

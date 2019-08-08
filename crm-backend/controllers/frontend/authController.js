@@ -167,7 +167,8 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "Email Address not found!",
+        message:
+          "Email address is not registered with us. Please try to login with registered email address.",
         success: false
       };
     }
@@ -487,18 +488,24 @@ const imageUpload = async (req, res) => {
         });
       }
     }
-    const isNotBase64 = body.imageData.split("https")
-    if ((body.imageData !== undefined || body.imageData !== "") && !isNotBase64[1]) {
+    const isNotBase64 = body.imageData.split("https");
+    if (
+      (body.imageData !== undefined || body.imageData !== "") &&
+      !isNotBase64[1]
+    ) {
       const base64Image = body.imageData.replace(
         /^data:image\/\w+;base64,/,
         ""
       );
       var buf = new Buffer.from(base64Image, "base64");
       const type = types[base64Image.charAt(0)];
-      const randomConst = Math.floor(Math.random() * 90 + 10)
-      const fileName = [currentUser.id, randomConst, "_company_logo.", type || "png"].join(
-        ""
-      );
+      const randomConst = Math.floor(Math.random() * 90 + 10);
+      const fileName = [
+        currentUser.id,
+        randomConst,
+        "_company_logo.",
+        type || "png"
+      ].join("");
 
       var originalImagePath = path.join(__basedir, "images", fileName);
       fs.writeFile(originalImagePath, buf, async err => {
@@ -516,7 +523,7 @@ const imageUpload = async (req, res) => {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         }; */
-        const shopLogo = await imagePath(thumbnailImagePath,"profile-thumb");
+        const shopLogo = await imagePath(thumbnailImagePath, "profile-thumb");
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
           shopLogo: shopLogo
         });
@@ -541,7 +548,7 @@ const imageUpload = async (req, res) => {
         message: "Company Logo uploaded successfully!",
         success: true,
         shopLogo: body.imageData
-      })
+      });
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
