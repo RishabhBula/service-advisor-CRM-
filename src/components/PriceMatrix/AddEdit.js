@@ -132,7 +132,9 @@ class PriceMatrixComponent extends Component {
                                         onChange={e =>
                                           handleCostChange(index, e)
                                         }
-                                        disabled={item.lower === "0.00"}
+                                        disabled={
+                                          parseFloat(item.lower) === 0.0
+                                        }
                                       />
                                     </div>
                                     <span className={"value-sprate"}>
@@ -208,7 +210,7 @@ class PriceMatrixComponent extends Component {
                                     <span className={"matrix-drop-down"}>
                                       {index >= 1 ? (
                                         <span
-                                          onClick={() => 
+                                          onClick={() =>
                                             handleAddBelowMatrixRange(
                                               index,
                                               "above"
