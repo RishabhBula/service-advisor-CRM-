@@ -232,9 +232,7 @@ class PriceMatrix extends Component {
             parseFloat(matrixRange[i].lower) + 99.99
           ).toFixed(2);
         } else if (i === lastIndex) {
-          matrixRange[i].lower = (
-            parseFloat(matrixRange[i - 1].upper) + 0.01
-          ).toFixed(2);
+          continue;
         } else {
           matrixRange[i].lower = (
             parseFloat(matrixRange[i - 1].upper) + 0.01
