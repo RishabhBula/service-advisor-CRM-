@@ -29,7 +29,7 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import CrmInventoryPart from "../../common/CrmInventoryPart";
 import moment from "moment";
 import NoDataFound from "../../common/NoFound";
-import { notExist, currencyFormatter} from "../../../config/Constants";
+import { notExist, currencyFormatter } from "../../../config/Constants";
 
 class Parts extends Component {
   constructor(props) {
@@ -183,10 +183,9 @@ class Parts extends Component {
     const query = this.getQueryParams();
     this.props.updateInventoryPart({ data, query });
   };
-  // setVendorSearch = (vendorData) => {
-  //   this.props.history.push(`/inventory/vendors?page=1&search=${vendorData.name}`);
-  // }
-
+  /**
+   *
+   */
   render() {
     const {
       vendorId,
@@ -384,63 +383,90 @@ class Parts extends Component {
                           " "
                         )} */}
                     </td>
-                    <td >
-                      {part.vendorId && part.vendorId.name ? <a href={`/inventory/vendors?page=1&search=${part.vendorId.name}`} target={"_blank"} className={"text-body"}>{part.vendorId ? part.vendorId.name || notExist : notExist}</a> :  part.vendorId ? part.vendorId.name || notExist : notExist }
+                    <td>
+                      {part.vendorId && part.vendorId.name ? (
+                        <a
+                          href={`/inventory/vendors?page=1&search=${
+                            part.vendorId.name
+                          }`}
+                          target={"_blank"}
+                          className={"text-body"}
+                        >
+                          {part.vendorId
+                            ? part.vendorId.name || notExist
+                            : notExist}
+                        </a>
+                      ) : part.vendorId ? (
+                        part.vendorId.name || notExist
+                      ) : (
+                        notExist
+                      )}
                     </td>
                     <td>{part.location || notExist}</td>
                     <td>
-                      {
-                        !part.cost && !part.retailPrice ?
-                          notExist :
-                          <>
-                            {part.cost ? (
+                      {!part.cost && !part.retailPrice ? (
+                        notExist
+                      ) : (
+                        <>
+                          {part.cost ? (
+                            <div className="modal-info">
+                              Cost :{" "}
+                              <span className={"dollar-price"}>
+                                <i className="fa fa-dollar dollar-icon" />
+                                {/* {part.cost || notExist} */}
+                                {part.cost
+                                  ? currencyFormatter.format(part.cost)
+                                  : notExist}
+                              </span>
+                            </div>
+                          ) : (
+                            <>
                               <div className="modal-info">
                                 Cost :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {/* {part.cost || notExist} */}
-                                  {part.cost ? currencyFormatter.format(part.cost) : notExist}
+                                  {0}
                                 </span>
                               </div>
-                            ) :
-                              <>
-                                <div className="modal-info">
-                                  Cost :{" "}
-                                  <span className={"dollar-price"}>
-                                    <i className="fa fa-dollar dollar-icon" />
-                                    {0}
-                                  </span>
-                                </div>
-                              </>}
-                            {part.retailPrice ? (
+                            </>
+                          )}
+                          {part.retailPrice ? (
+                            <div className="modal-info">
+                              Retail :{" "}
+                              <span className={"dollar-price"}>
+                                <i className="fa fa-dollar dollar-icon" />
+                                {part.retailPrice
+                                  ? currencyFormatter.format(part.retailPrice)
+                                  : "notExist"}
+                              </span>
+                            </div>
+                          ) : (
+                            <>
                               <div className="modal-info">
                                 Retail :{" "}
                                 <span className={"dollar-price"}>
                                   <i className="fa fa-dollar dollar-icon" />
-                                  {part.retailPrice ? currencyFormatter.format(part.retailPrice)  : "notExist"}
-                                  
+                                  {0}
                                 </span>
                               </div>
-                            ) :
-                              <>
-                                <div className="modal-info">
-                                  Retail :{" "}
-                                  <span className={"dollar-price"}>
-                                    <i className="fa fa-dollar dollar-icon" />
-                                    {0}
-                                  </span>
-                                </div>
-                              </>
-                            }
-                          </>
-                      }
+                            </>
+                          )}
+                        </>
+                      )}
                     </td>
-                    <td className={part.quantity > part.criticalQuantity ? "pl-4" : null}>
-                      <span className={"qty-value"}>{part.quantity || 0}&nbsp;</span>
+                    <td
+                      className={
+                        part.quantity > part.criticalQuantity ? "pl-4" : null
+                      }
+                    >
+                      <span className={"qty-value"}>
+                        {part.quantity || 0}&nbsp;
+                      </span>
                       {part.quantity <= part.criticalQuantity ? (
                         <Badge color={"warning"}>Reorder</Badge>
-                      ) : " "}
-
+                      ) : (
+                        " "
+                      )}
                     </td>
                     <td>
                       <div>{moment(part.createdAt).format("MMM Do YYYY")}</div>
@@ -484,23 +510,23 @@ class Parts extends Component {
                 );
               })
             ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={12}>
-                      {filterApplied ? (
-                        <NoDataFound
-                          message={"No Part details found related to your search"}
-                          noResult
-                        />
-                      ) : (
-                          <NoDataFound
-                            showAddButton
-                            message={"Currently there are no Part details added."}
-                            onAddClick={onAddClick}
-                          />
-                        )}
-                    </td>
-                  </tr>
-                )}
+              <tr>
+                <td className={"text-center"} colSpan={12}>
+                  {filterApplied ? (
+                    <NoDataFound
+                      message={"No Part details found related to your search"}
+                      noResult
+                    />
+                  ) : (
+                    <NoDataFound
+                      showAddButton
+                      message={"Currently there are no Part details added."}
+                      onAddClick={onAddClick}
+                    />
+                  )}
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         {totalParts && !isLoading ? (
