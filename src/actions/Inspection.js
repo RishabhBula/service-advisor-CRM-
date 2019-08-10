@@ -3,8 +3,8 @@ import { createAction } from "redux-actions";
 export const InspectionActions = {
   ADD_INSPCETION: "Add new Inspection Requested!",
   ADD_INSPCETION_SUCCESS: "Add new Inspection Success!",
-  ADD_INSPCETION_TEMPLATE: "Add new Inspection Template Requested!",
-  ADD_INSPCETION_TEMPLATE_SUCCESS: "Add new Inspection Template success",
+  ADD_INSPCETION_TEMPLATE: "Add Inspection Template Requested!",
+  ADD_INSPCETION_TEMPLATE_SUCCESS: "Add Inspection Template success",
   GET_TEMPLATE_LIST: "Get All template List",
   GET_TEMPLATE_LIST_SUCCESS: "Get All template List Success",
   REMOVE_TEMPLATE: "remove template from List",

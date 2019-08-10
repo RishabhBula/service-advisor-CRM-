@@ -36,6 +36,11 @@ router.put(
   token.authorisedUser,
   timeClockController.updateTimeLogOfTechnician
 )
+router.get(
+  "/technicianTimeLogs",
+  token.authorisedUser,
+  timeClockController.getTimeLogOfTechnician
+)
 /**
  *
  */

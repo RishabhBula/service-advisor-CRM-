@@ -5,6 +5,8 @@ import {
   hideLoader,
   getAppointments,
   getAppointmentsSuccess,
+  getTechnicianAppoitmentSuccess,
+  getVehicleAppoitmentSuccess,
   modelOpenRequest,
   getAppointmentDetailsSuccess
 } from "../actions";
@@ -36,13 +38,30 @@ const getAppointmentLogic = createLogic({
       );
       done();
       return;
+    } else {
+      if (action.payload.technicianId) {
+        dispatch(
+          getTechnicianAppoitmentSuccess(
+            result.data.data
+          )
+        )
+      } else if (action.payload.vehicleId) {
+        dispatch(
+          getVehicleAppoitmentSuccess({
+            vehicleAppoitment: result.data.data
+          }
+          )
+        )
+      }
+      else {
+        dispatch(
+          getAppointmentsSuccess({
+            data: result.data.data
+          })
+        );
+      }
+      done();
     }
-    dispatch(
-      getAppointmentsSuccess({
-        data: result.data.data
-      })
-    );
-    done();
   }
 });
 /**
@@ -69,7 +88,7 @@ const addAppointmentLogic = createLogic({
       return;
     }
     toast.success(result.messages[0]);
-    dispatch(getAppointments());
+    dispatch(getAppointments({ technicianId: null, vehicleId: null }));
     dispatch(
       modelOpenRequest({
         modelDetails: {
@@ -108,7 +127,7 @@ const udpateAppointmentLogic = createLogic({
       return;
     }
     toast.success(result.messages[0]);
-    dispatch(getAppointments());
+    dispatch(getAppointments({ technicianId: null, vehicleId: null }));
     dispatch(
       modelOpenRequest({
         modelDetails: {

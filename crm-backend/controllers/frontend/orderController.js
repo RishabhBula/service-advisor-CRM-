@@ -357,6 +357,7 @@ const getOrderDetails = async (req, res) => {
     const orderId = query._id;
     const customerId = query.customerId;
     const vehicleId = query.vehicleId;
+    const technicianId = query.technicianId
     let condition = {};
     condition["$and"] = [
       {

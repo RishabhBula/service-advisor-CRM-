@@ -4,7 +4,8 @@ import { timelogActions } from "../actions";
 
 const initialState = {
   isSuccess: false,
-  timeLogData: []
+  timeLogData: [],
+  technicianTime: []
 };
 
 export const timelogReducer = handleActions(
@@ -29,6 +30,16 @@ export const timelogReducer = handleActions(
     [timelogActions.GET_TIME_LOG_SUCCESS]: (state, { payload }) => ({
       ...state,
       timeLogData: payload.timeLog,
+      isSuccess: true
+    }),
+    [timelogActions.GET_TECHNICIAN_TIME_LOGS_REQUEST]: (state, { payload }) => ({
+      ...state,
+      technicianTime: [],
+      isSuccess: false
+    }),
+    [timelogActions.GET_TECHNICIAN_TIME_LOGS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      technicianTime: payload,
       isSuccess: true
     })
   },

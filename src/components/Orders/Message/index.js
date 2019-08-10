@@ -113,7 +113,6 @@ class Message extends Component {
       } = this.props
       var subjectValue = document.getElementById('messageDataText'),
          textMessage = subjectValue.innerHTML;
-
       const payload = {
          receiverId: isSummary ? profileSummary._id : customerData._id,
          customerId: isSummary && customerSummryData ? customerSummryData._id : customerData._id,

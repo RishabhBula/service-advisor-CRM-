@@ -15,6 +15,7 @@ const appointmentList = async (req, res) => {
     const { id, parentId } = currentUser;
     const vehicleId = query.vehicleId
     const customerId = query.customerId
+    const techinicians = query.technicianId
     let condition = {};
     condition["$and"] = [
       {
@@ -50,6 +51,11 @@ const appointmentList = async (req, res) => {
         customerId: Mongoose.Types.ObjectId(customerId)
       })
     }
+    if (techinicians) {
+      condition["$and"].push({
+        techinicians: Mongoose.Types.ObjectId(techinicians)
+      })
+    }
     if (start) {
       start = new Date(new Date(start).setUTCHours(23, 59, 59, 999));
       condition["$and"].push({
@@ -73,7 +79,7 @@ const appointmentList = async (req, res) => {
       });
     }
     const result = await AppointmentModal.find(condition)
-      .populate("customerId")
+      .populate("customerId vehicleId orderId techinicians")
       .sort({
         appointmentDate: 1
       })
@@ -179,7 +185,8 @@ const getAppointmentDetails = async (req, res) => {
   try {
     const { params, currentUser } = req;
     const { id, parentId } = currentUser;
-    const { eventId } = params;
+    const { eventId, technicianId } = params;
+    const techinicians = technicianId
     const details = await AppointmentModal.findOne({
       _id: Mongoose.Types.ObjectId(eventId),
       $and: [

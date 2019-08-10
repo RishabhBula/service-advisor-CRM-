@@ -20,7 +20,8 @@ class CutomerVehicle extends Component {
         value: ""
       },
       customerInput: "",
-      vehicleInput: ""
+      vehicleInput: "",
+      isCustomerVehicleUpdate: false
     };
   }
   componentDidMount = () => {
@@ -48,6 +49,8 @@ class CutomerVehicle extends Component {
     }
   }
   componentDidUpdate = ({ orderReducer }) => {
+  
+
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
         this.props.orderReducer.orderItems.customerId ||
@@ -86,14 +89,19 @@ class CutomerVehicle extends Component {
     this.props.getVehicleData({ input, callback });
   };
   handaleCustomerSelect = (e, name) => {
-    const { customerId, vehicleId } = this.state;
+    const { customerId, vehicleId, isCustomerVehicleUpdate } = this.state;
     if (e && e.value && name === "customer") {
       this.setState(
         {
-          customerId: e
+          customerId: e,
+          selectedCustomer: {
+            label: e.label,
+            value: e.value,
+          },
+          isCustomerVehicleUpdate: true
         },
         () => {
-          this.props.customerVehicleData(customerId, vehicleId);
+          this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
         }
       );
     } else {
@@ -101,25 +109,31 @@ class CutomerVehicle extends Component {
         {
           customerId: "",
           selectedCustomer: {
-            lable: "Type to select customer",
+            label: "Type to select customer",
             value: ""
-          }
+          },
+          isCustomerVehicleUpdate: false
         },
         () => {
-          this.props.customerVehicleData(customerId, vehicleId);
+          this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
         }
       );
     }
   };
   handaleVehicleSelect = (e, name) => {
-    const { customerId, vehicleId } = this.state;
+    const { customerId, vehicleId, isCustomerVehicleUpdate } = this.state;
     if (e && e.value && name === "vehicle") {
       this.setState(
         {
-          vehicleId: e
+          vehicleId: e,
+          selectedVehicle: {
+            label: e.label,
+            value: e.value
+          },
+          isCustomerVehicleUpdate: true
         },
         () => {
-          this.props.customerVehicleData(customerId, vehicleId);
+          this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
         }
       );
     } else {
@@ -127,12 +141,13 @@ class CutomerVehicle extends Component {
         {
           vehicleId: "",
           selectedVehicle: {
-            lable: "Type to select vehicle",
+            label: "Type to select vehicle",
             value: ""
-          }
+          },
+          isCustomerVehicleUpdate: false
         },
         () => {
-          this.props.customerVehicleData(customerId, vehicleId);
+          this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
         }
       );
     }
@@ -142,7 +157,7 @@ class CutomerVehicle extends Component {
       selectedCustomer,
       selectedVehicle,
       customerId,
-      vehicleId
+      vehicleId,
     } = this.state;
     const { isError } = this.props;
     return (
@@ -236,13 +251,15 @@ class CutomerVehicle extends Component {
           </FormGroup>
         </Col>
         <Col md={"2"}>
-          <Button
-            color={"secondary"}
-            size={""}
-            onClick={this.props.handleEditOrder}
-          >
-            Update Order
+          <div id={`orderUpdated`}>
+            <Button
+              color={"secondary"}
+              size={""}
+              onClick={this.props.handleEditOrder}
+            >
+              Update Order
           </Button>
+          </div>
         </Col>
       </Row>
     );

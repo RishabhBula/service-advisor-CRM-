@@ -39,6 +39,7 @@ export class CrmTimeClockModal extends Component {
       technicianData: "",
       notes: "",
       isError: false,
+      seconds: 0,
       isEditTimeClock: false
     };
   }
@@ -102,7 +103,8 @@ export class CrmTimeClockModal extends Component {
     const duration = calculateDurationFromSeconds(Seconds)
 
     this.setState({
-      duration: duration
+      duration: duration,
+      seconds: Seconds
     })
   }
   handleClickTimeType = (value) => {
@@ -129,7 +131,7 @@ export class CrmTimeClockModal extends Component {
     }
   }
   handleAddTimeLogs = () => {
-    const { selectedTechnician, timeIn, timeOut, duration, technicianData, date, notes } = this.state
+    const { selectedTechnician, timeIn, timeOut, duration, technicianData, date, notes, seconds } = this.state
     if (!timeIn || !timeOut || !duration || !selectedTechnician.value) {
       this.setState({
         isError: true
@@ -137,7 +139,8 @@ export class CrmTimeClockModal extends Component {
       return
     } else {
       const { orderReducer, timeLogEle } = this.props
-      const totalValue = parseFloat(duration) * parseFloat(technicianData.rate)
+      const calDuration = parseFloat(seconds)/3600
+      const totalValue = parseFloat(calDuration) * parseFloat(technicianData.rate)
       const payload = {
         type: "Manual",
         technicianId: selectedTechnician.value,

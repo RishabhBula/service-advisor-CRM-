@@ -180,6 +180,11 @@ class SendInspection extends Component {
       orderReducer && orderReducer.orderItems
         ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY")
         : "";
+    const invoiceURL = orderReducer && orderReducer.orderItems ? orderReducer.orderItems.invoiceURL : '';
+    const inspectionURL =
+      orderReducer && orderReducer.orderItems
+        ? orderReducer.orderItems.inspectionURL
+        : "";
     const companyName = profileReducer.profileInfo.companyName || "";
 
     try {
@@ -222,7 +227,7 @@ class SendInspection extends Component {
         customerId,
         email: customerEmail,
         phone,
-        pdf: this.props.pdfBlob,
+        pdf: isOrder ? invoiceURL : inspectionURL,
         orderTitle: orderTitle,
         companyName: companyName,
         orderCreated: orderCreated,

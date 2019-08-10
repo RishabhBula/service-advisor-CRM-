@@ -14,4 +14,10 @@ router.post("/addCanned", token.authorisedUser, serviceController.addNewCannedSe
 
 /* update Canned service data */
 router.put("/updateCanned", token.authorisedUser, serviceController.updateCannedService)
+
+/* get all service data */
+router.get("/serviceData", token.authorisedUser, serviceController.getAllServiceData)
+
+/* update service data */
+router.put("/updateService", token.authorisedUser, serviceController.updateServiceData)
 module.exports = router;

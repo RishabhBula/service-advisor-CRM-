@@ -23,6 +23,8 @@ import { ConfirmBox } from "../../../helpers/SweetAlert";
 import recommandUser from "../../../assets/recommand-user.png"
 import recommandTech from "../../../assets/recommand-tech.png"
 import Dollor from "../../common/Dollor"
+import InvoiceTable from "../../../containers/Orders/invoiceTable"
+
 
 class ServiceItem extends Component {
   constructor(props) {
@@ -351,7 +353,7 @@ class ServiceItem extends Component {
     }
   }
 
-  handleRemoveService = async (index) => {
+  handleRemoveService = async (index, serviceId) => {
     const { value } = await ConfirmBox({
       text: "Do you want to remove this service?"
     });
@@ -382,6 +384,9 @@ class ServiceItem extends Component {
           this.props.updateOrderDetails(payload);
         }
       });
+      if (serviceId) {
+        this.props.deleteService({ serviceId: serviceId })
+      }
     }
   };
 
@@ -541,7 +546,7 @@ class ServiceItem extends Component {
       isServiceSubmitted: true,
       isCannedServiceSumbmit: false
     })
-
+    const HTML = document.getElementById("customers").innerHTML;
     let ele
     for (let index = 0; index < serviceData.length; index++) {
       const serviceContent = [...this.state.services]
@@ -564,8 +569,9 @@ class ServiceItem extends Component {
         customerComment: customerComment,
         userRecommendations: userRecommendations,
         orderId: this.props.orderId,
-        isServiceSubmit: true
-      }
+        isServiceSubmit: true,
+        html: HTML
+      };
       this.props.addNewService(payload)
     }
   }
@@ -643,7 +649,14 @@ class ServiceItem extends Component {
   render() {
     const { services, selectedTechnician, customerComment,
       userRecommendations, isServiceSubmitted, openCannedService, technicianData } = this.state
-    const { labelReducer, getCannedServiceList, serviceReducers, deleteCannedServiceRequest } = this.props;
+    const {
+      labelReducer,
+      getCannedServiceList,
+      serviceReducers,
+      deleteCannedServiceRequest,
+      profileInfoReducer,
+      orderReducer
+    } = this.props;
     return (
       <>
         <div className={"w-100"}>
@@ -1092,7 +1105,7 @@ class ServiceItem extends Component {
                         <Button className={"mr-3 btn-dashed"} onClick={() => this.handleAddCannedService(item, index)} >Save as canned service</Button>
                         <Button
                           className="btn btn-remove btn-outline-danger"
-                          onClick={() => this.handleRemoveService(index)}
+                          onClick={() => this.handleRemoveService(index, item._id)}
                           id={`remove-service-${index}`}
                         >
                           <i className="fa fa-trash" /> &nbsp;Remove
@@ -1139,6 +1152,15 @@ class ServiceItem extends Component {
             deleteCannedServiceRequest={deleteCannedServiceRequest}
             {...this.props}
           />
+
+          <div id="customers" className={"invoiceTableCompnent"}>
+            <InvoiceTable
+              services={services}
+              orderReducer={orderReducer}
+              vehicleData={orderReducer.orderItems.vehicleId}
+              profileReducer={profileInfoReducer}
+            />
+          </div>
         </div>
       </>
     );

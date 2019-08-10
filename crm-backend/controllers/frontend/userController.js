@@ -172,7 +172,6 @@ const getProfile = async (req, res) => {
   const { currentUser } = req;
   try {
     let userFind
-
     if (currentUser.parentId && (mongoose.Types.ObjectId(currentUser.parentId) !== mongoose.Types.ObjectId(currentUser.id))) {
       userFind = await userModel.findOne({
         _id: currentUser.id,
@@ -231,9 +230,39 @@ const updateStatus = async ({ body }, res) => {
     });
   }
 };
+const getTechnicianData = async (req, res) => {
+  const { query } = req;
+  try {
+    const userFind = await userModel.findOne({
+      _id: query.id,
+      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
+    });
+
+    if (userFind) {
+      return res.status(200).json({
+        responseCode: 200,
+        data: userFind,
+        success: true
+      });
+    } else {
+      return res.status(401).json({
+        responseCode: 401,
+        message: otherMessage.userNotExist,
+        success: false
+      });
+    }
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
 module.exports = {
   deleteUser,
   getAllUserList,
   getProfile,
-  updateStatus
+  updateStatus,
+  getTechnicianData
 };

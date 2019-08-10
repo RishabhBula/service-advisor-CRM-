@@ -57,7 +57,7 @@ class OrderSummary extends Component {
         <div className={"user-info d-flex justify-content-between"}>
           <div className={"border-right w-50 pt-2 pb-2 pl-2"}>
             {customerInfo ? <>
-              <h4>{customerInfo.firstName}</h4>
+              <h4 className={"text-capitalize"}>{customerInfo.firstName}</h4>
               <div>{customerInfo ? customerInfo.email : ''}</div>
             </>
               : ''

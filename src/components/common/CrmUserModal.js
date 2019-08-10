@@ -29,8 +29,8 @@ import {
   UserPermissions,
   RoleOptions
 } from "../../config/Constants";
-import CurrencyInput from "react-currency-input";
 import LastUpdated from "../common/LastUpdated";
+import { AppRoutes } from "../../config/AppRoutes";
 
 export class CrmUserModal extends Component {
   constructor(props) {
@@ -42,19 +42,19 @@ export class CrmUserModal extends Component {
       phone: "",
       roleType: "5ca3473d70537232f13ff1fa",
       rate: "",
-      companyName:"",
+      companyName: "",
       permissions: TechincianDefaultPermissions,
       errors: {},
       isEditMode: false
     };
   }
-  componentDidMount =() =>{
+  componentDidMount = () => {
     this.setState({
       companyName: this.props.companyName
     })
   }
   componentDidUpdate({ userModalOpen, userData }) {
-    
+
     if (
       this.props.userModalOpen !== userModalOpen &&
       !this.props.userModalOpen
@@ -97,7 +97,7 @@ export class CrmUserModal extends Component {
       });
 
     }
-    
+
   }
   handleClick = e => {
     this.setState({
@@ -110,6 +110,9 @@ export class CrmUserModal extends Component {
   handleInputChange = e => {
     const { target } = e;
     const { name, value } = target;
+    if (name === "rate" && isNaN(value)) {
+      return
+    }
     this.setState({
       [name]: value,
       errors: {
@@ -185,7 +188,7 @@ export class CrmUserModal extends Component {
     }
   };
   render() {
-    const { userModalOpen, handleUserModal, userData} = this.props;
+    const { userModalOpen, handleUserModal, userData } = this.props;
     const {
       permissions,
       firstName,
@@ -197,7 +200,7 @@ export class CrmUserModal extends Component {
       errors,
       isEditMode
     } = this.state;
-  
+
     return (
       <>
         <Form onSubmit={this.addUser}>
@@ -207,7 +210,7 @@ export class CrmUserModal extends Component {
             className="customer-modal custom-form-modal custom-modal-lg"
           >
             <ModalHeader toggle={handleUserModal}>
-              {!isEditMode ? "Add New Member" : `Update member details`}
+              {!isEditMode ? `Add New ${AppRoutes.STAFF_MEMBERS.name}` : `Update ${AppRoutes.STAFF_MEMBERS.name} details`}
               {isEditMode ? <LastUpdated updatedAt={userData.updatedAt} /> : null}
             </ModalHeader>
             <ModalBody>
@@ -321,7 +324,7 @@ export class CrmUserModal extends Component {
                         id="type"
                         disabled
                         // onChange={this.handleInputChange}
-                        value={roleType === "5ca3473d70537232f13ff1fa"? "Technican":"Admin"}
+                        value={roleType === "5ca3473d70537232f13ff1fa" ? "Technican" : "Admin"}
                         name="roleType"
                         invalid={errors.roleType}
                       >
@@ -351,10 +354,11 @@ export class CrmUserModal extends Component {
                             <i className="fa fa-dollar"></i>
                           </span>
                         </div>
-                        <CurrencyInput
+                        <Input
                           value={rate}
                           name={"rate"}
-                          onChangeEvent={this.handleInputChange}
+                          placeholder={"0.00"}
+                          onChange={this.handleInputChange}
                           className={classnames("form-control", {
                             "is-invalid": errors.rate
                           })}
@@ -402,7 +406,7 @@ export class CrmUserModal extends Component {
             <ModalFooter>
               <div className="required-fields">*Fields are Required.</div>
               <Button color="primary" onClick={this.addUser}>
-                {isEditMode ? "Update" : "Add"} Member
+                {isEditMode ? "Update" : "Add"} {AppRoutes.STAFF_MEMBERS.name}
               </Button>{" "}
               <Button color="secondary" onClick={handleUserModal}>
                 Cancel

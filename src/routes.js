@@ -18,7 +18,7 @@ const Profile = React.lazy(() => import("./containers/Profile"));
 const CannedService = React.lazy(() => import("./components/Orders/Services/cannedService"));
 const CustomerDetails = React.lazy(() => import("./components/Customer/CustomerView"));
 const VehicleDetails = React.lazy(() => import("./components/Vehicles/VehicleView"));
-
+const UserDetails = React.lazy(() => import("./components/UsersList/UserInfo"))
 const routes = [
   {
     path: AppRoutes.HOME.url,
@@ -72,6 +72,12 @@ const routes = [
     exact: AppRoutes.STAFF_MEMBERS.exact,
     name: AppRoutes.STAFF_MEMBERS.name,
     component: Users
+  },
+  {
+    path: AppRoutes.STAFF_MEMBERS_DETAILS.url,
+    exact: AppRoutes.STAFF_MEMBERS_DETAILS.exact,
+    name: AppRoutes.STAFF_MEMBERS_DETAILS.name,
+    component: UserDetails
   },
   {
     path: AppRoutes.VEHICLES.url,
@@ -194,6 +200,11 @@ export const BreadCrumbRoutes = [
     path: AppRoutes.STAFF_MEMBERS.url,
     exact: AppRoutes.STAFF_MEMBERS.exact,
     name: AppRoutes.STAFF_MEMBERS.name
+  },
+  {
+    path: AppRoutes.STAFF_MEMBERS_DETAILS.url,
+    exact: AppRoutes.STAFF_MEMBERS_DETAILS.exact,
+    name: AppRoutes.STAFF_MEMBERS_DETAILS.name,
   },
   {
     path: AppRoutes.VEHICLES.url,

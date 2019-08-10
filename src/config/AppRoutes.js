@@ -86,7 +86,12 @@ export const AppRoutes = {
   },
   STAFF_MEMBERS: {
     url: "/settings/staff-members",
-    name: "Staff Members",
+    name: "Technician",
+    exact: true
+  },
+  STAFF_MEMBERS_DETAILS: {
+    url: "/settings/staff-members/details/:id",
+    name: "Technician Details",
     exact: true
   },
   VEHICLES: {

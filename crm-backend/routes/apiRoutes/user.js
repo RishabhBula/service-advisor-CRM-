@@ -8,5 +8,5 @@ router.get("/", token.authorisedUser, userController.getAllUserList);
 router.post("/delete", token.authorisedUser, userController.deleteUser);
 router.post("/updateStatus", token.authorisedUser, userController.updateStatus);
 router.get("/getProfile", token.authorisedUser, userController.getProfile);
-
+router.get("/singleUser", token.authorisedUser, userController.getTechnicianData)
 module.exports = router;
