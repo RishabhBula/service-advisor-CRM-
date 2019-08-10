@@ -101,6 +101,8 @@ const startTimer = async (req, res) => {
     orderId,
     startDateTime: new Date
   });
+  console.log("*********************", timeClock);
+
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -120,7 +122,8 @@ const startTimer = async (req, res) => {
       {
         technicianId,
         serviceId,
-        orderId
+        orderId,
+        _id: timeClock.id
       },
       {
         $inc: {
@@ -160,6 +163,8 @@ const stopTimer = async (req, res) => {
      })
    } */
   const convertedDuration = result.duration / 3600
+  console.log("########################", convertedDuration, result.duration);
+
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
       endDateTime: new Date(),
@@ -222,13 +227,13 @@ const getTimeLogByTechnician = async (req, res) => {
 /**
  *
  */
-const getTimeLogByOrderId = async (req, res) => {
+const getTimeLogOfTechnician = async (req, res) => {
   try {
     const { query } = req;
-    const { orderId } = query;
+    const { technicianId } = query;
     const result = await TimeClock.find({
-      orderId
-    });
+      technicianId: technicianId
+    }).populate("technicianId orderId")
     return res.status(200).json({
       message: "Timer get success!",
       data: result || []
@@ -389,7 +394,7 @@ module.exports = {
   startTimer,
   getTimeLogByTechnician,
   updateTimeLogOfTechnician,
-  getTimeLogByOrderId,
+  getTimeLogOfTechnician,
   stopTimer,
   switchService
 };

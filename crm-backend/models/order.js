@@ -70,6 +70,12 @@ const orderSchema = new Schema({
     ],
     default: []
   },
+  invoiceURL: {
+    type: String
+  },
+  inspectionURL: {
+    type: String
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",

@@ -20,10 +20,11 @@ import * as qs from "query-string";
 import { AppConfig } from "../../config/AppConfig";
 import { ConfirmBox } from "../../helpers/SweetAlert";
 import { CrmUserModal } from "../common/CrmUserModal";
-import { RoleOptions } from "../../config/Constants";
+//import { RoleOptions } from "../../config/Constants";
 import { toast } from "react-toastify";
 import { logger } from "../../helpers/Logger";
 import NoDataFound from "../common/NoFound"
+import { AppRoutes } from "../../config/AppRoutes"
 
 class UserList extends Component {
   constructor(props) {
@@ -222,12 +223,14 @@ class UserList extends Component {
     }
   };
 
-  onAddClick =()=>{
+  onAddClick = () => {
     this.props.modelOperate({
       addUserModal: true
     });
   }
-
+  handleUserView = userId => {
+    this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
+  };
   render() {
     const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
@@ -239,7 +242,7 @@ class UserList extends Component {
       sort,
       status,
       invitaionStatus,
-      type,
+      //type,
       user,
       selectedUsers,
       filterApplied,
@@ -279,7 +282,7 @@ class UserList extends Component {
                     value={invitaionStatus}
                   >
                     <option className="form-control" value={""}>
-                     Invitation Status
+                      Invitation Status
                     </option>
                     <option value={1}>Accepted</option>
                     <option value={0}>Pending</option>
@@ -299,7 +302,7 @@ class UserList extends Component {
                     value={status}
                   >
                     <option className="form-control" value={""}>
-                     User Status
+                      User Status
                     </option>
                     <option value={1}>Active</option>
                     <option value={0}>Inactive</option>
@@ -330,11 +333,11 @@ class UserList extends Component {
               </Col>
               <Col lg={"3"} md={"3"} className="mb-0">
                 <Row>
-                  <Col md={"6"}>
+                  {/* <Col md={"6"}>
                     <FormGroup className="mb-0">
-                      {/* <Label htmlFor="SortFilter" className="label">
+                      <Label htmlFor="SortFilter" className="label">
                         User Type
-                      </Label> */}
+                      </Label>
                       <Input
                         type="select"
                         name="type"
@@ -354,7 +357,7 @@ class UserList extends Component {
                         })}
                       </Input>
                     </FormGroup>
-                  </Col>
+                  </Col> */}
                   <Col lg={"6"} md={"6"} className="mb-0">
                     <div className="filter-btn-wrap">
                       <Label className="height17 label" />
@@ -428,7 +431,7 @@ class UserList extends Component {
                   </Input>
                 </div>
               </th>
-              <th width={"300"}><i className={"fa fa-users"} /> Member Details</th>
+              <th width={"300"}><i className={"fa fa-users"} /> {AppRoutes.STAFF_MEMBERS.name} Details</th>
               {/* <th>Email</th> */}
               <th width={"130"}><i className={"fa fa-dollar"} /> Hourly Rate</th>
               <th width={"150"} ><i className={"fa fa-user-circle"} /> Role</th>
@@ -470,7 +473,7 @@ class UserList extends Component {
                         {user.rate ? <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
                       </td>
                       <td className={"text-capitalize"}>
-                        {user.roleType ? user.roleType.userType : "-"}
+                        {"Technician"}
                       </td>
                       {/* <td>
                         {user.createdAt ? formateDate(user.createdAt) : "-"}
@@ -479,8 +482,8 @@ class UserList extends Component {
                         {user.userSideActivation ? (
                           <Badge color="success">Accepted</Badge>
                         ) : (
-                          <Badge color="warning">Pending</Badge>
-                        )}
+                            <Badge color="warning">Pending</Badge>
+                          )}
                       </td>
                       <td className={"text-center"}>
                         {user.status ? (
@@ -501,91 +504,107 @@ class UserList extends Component {
                             Active
                           </Badge>
                         ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedUsers: [user._id]
-                                },
-                                () => {
-                                  this.activateUsers();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedUsers: [user._id]
+                                  },
+                                  () => {
+                                    this.activateUsers();
+                                  }
+                                );
+                              }}
+                            >
+                              Inactive
                           </Badge>
-                        )}
+                          )}
                       </td>
                       <td>
                         <div id={`create${index}`}>
                           {user.loggedInAt ? formateDate(user.loggedInAt) : " "}
                           {user.loggedInAt ? <UncontrolledTooltip target={`create${index}`}>
                             Created At
-                          </UncontrolledTooltip> :null}
+                          </UncontrolledTooltip> : null}
                         </div>
                         <div id={`loginip-${index}`}>
                           {user.loggedInIp || "-"}
                           {user.loggedInIp ? <UncontrolledTooltip target={`loginip-${index}`}>
                             Last Login Ip Address
-                          </UncontrolledTooltip> :null }
+                          </UncontrolledTooltip> : null}
                         </div>
                       </td>
                       <td className={"text-center"}>
-                        <Button
-                          size={"sm"}
-                          onClick={() => this.editUser(user)}
-                          id={`edit-${user._id}`}
-                          className={"btn-theme-transparent"}
-                        >
-                          <i className={"icons cui-pencil"} />
-                        </Button>{" "}
-                        <UncontrolledTooltip target={`edit-${user._id}`}>
-                          Edit
+                        <span>
+                          <Button
+                            size={"sm"}
+                            onClick={() => this.editUser(user)}
+                            id={`edit-${user._id}`}
+                            className={"btn-theme-transparent"}
+                          >
+                            <i className={"icons cui-pencil"} />
+                          </Button>{" "}
+                          <UncontrolledTooltip target={`edit-${user._id}`}>
+                            Edit
                         </UncontrolledTooltip>
-                        &nbsp;
-                        <Button
-                          size={"sm"}
-                          onClick={() =>
-                            this.setState(
-                              {
-                                selectedUsers: [user._id]
-                              },
-                              () => {
-                                this.onDelete();
-                              }
-                            )
-                          }
-                          id={`delete-${user._id}`}
-                          className={"btn-theme-transparent"}
-                        >
-                          <i className={"icons cui-trash"} />
-                        </Button>
-                        <UncontrolledTooltip target={`delete-${user._id}`}>
-                          Delete 
+                        </span>
+                        <span className="mr-1">
+                          <Button
+                            size={"sm"}
+                            onClick={() =>
+                              this.setState(
+                                {
+                                  selectedUsers: [user._id]
+                                },
+                                () => {
+                                  this.onDelete();
+                                }
+                              )
+                            }
+                            id={`delete-${user._id}`}
+                            className={"btn-theme-transparent"}
+                          >
+                            <i className={"icons cui-trash"} />
+                          </Button>
+                          <UncontrolledTooltip target={`delete-${user._id}`}>
+                            Delete
                         </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
+                          <Button
+                            className={"btn-theme-transparent"}
+                            size={"sm"}
+                            onClick={() => this.handleUserView(user._id)}
+                            id={`view-${user._id}`}
+                          >
+                            <i className="fas fa-eye" />
+                          </Button>
+                          <UncontrolledTooltip target={`view-${user._id}`}>
+                            View
+                          </UncontrolledTooltip>
+                        </span>
                       </td>
                     </tr>
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? <NoDataFound message={"No Member details found related to your search"} noResult /> :
+                        <NoDataFound showAddButton message={"Currently there are no Staff Member details added."} onAddClick={this.onAddClick} />
+                      }
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                      {filterApplied ? <NoDataFound message={"No Member details found related to your search"} noResult /> :
-                        <NoDataFound showAddButton message={"Currently there are no Staff Member details added."} onAddClick={this.onAddClick}/>
-                      }
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {totalUsers && !isLoading ? (

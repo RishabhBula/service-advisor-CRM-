@@ -9,7 +9,8 @@ import {
    addServiceSuccess,
    getCannedServiceListSuccess,
    getCannedServiceList,
-   updateOrderDetailsRequest
+   updateOrderDetailsRequest,
+   getAllServiceListSuccess
 } from "./../actions";
 
 const addServiceLogic = createLogic({
@@ -57,7 +58,6 @@ const addServiceLogic = createLogic({
                serviceIdData.push(serviceId)
                return true
             })
-
             if (!action.payload.thisIsCannedService) {
                const payload = {
                   serviceId: serviceIdData,
@@ -172,9 +172,75 @@ const deleteCannedServiceLogic = createLogic({
    }
 });
 
+const deleteServiceLogic = createLogic({
+   type: serviceActions.DELETE_SERVICE,
+   async process({ action }, dispatch, done) {
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/service",
+         "/updateService",
+         "PUT",
+         true,
+         undefined,
+         action.payload
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         done();
+         return;
+      } else {
+         done();
+      }
+   }
+});
+
+const getAllServiceLogic = createLogic({
+   type: serviceActions.GET_ALL_SERVICE_LIST_REQUEST,
+   async process({ action }, dispatch, done) {
+      logger(action.payload);
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/service",
+         "/serviceData",
+         "Get",
+         true,
+         {
+            technicianId: action.payload && action.payload.technicianId ? action.payload.technicianId : null
+         }
+      );
+      if (result.isError) {
+         toast.error(result.messages[0]);
+         done();
+         return;
+      } else {
+         let orderArray = []
+         if (result.data.data.length) {
+            result.data.data.map((element) => {
+               if (element.orderId) {
+                  if (orderArray && orderArray.length) {
+                     let index = orderArray.findIndex(order => (order._id === element.orderId._id))
+                     if (index === -1) {
+                        orderArray.push(element.orderId);
+                     }
+                  } else {
+                     orderArray.push(element.orderId);
+                  }
+               }
+               return true
+            })
+         }
+         dispatch(getAllServiceListSuccess(orderArray))
+         done();
+      }
+   }
+});
+
 export const ServiceLogic = [
    addServiceLogic,
    getCannedServiceLogic,
    addCannedServiceLogic,
-   deleteCannedServiceLogic
+   deleteCannedServiceLogic,
+   deleteServiceLogic,
+   getAllServiceLogic
 ];

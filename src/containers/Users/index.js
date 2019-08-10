@@ -17,7 +17,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
-
+import { AppRoutes } from "../../config/AppRoutes"
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -108,11 +108,11 @@ class Users extends Component {
                       onClick={this.toggleCreateModal}
                     >
                       <i className={"fa fa-plus"} />
-                      &nbsp; Add New Staff Member
-                  </Button>
+                      &nbsp; {`Add New ${AppRoutes.STAFF_MEMBERS.name}`}
+                    </Button>
                     <UncontrolledTooltip target={"add-user"}>
-                      Add New Staff Member
-                  </UncontrolledTooltip>
+                      {`Add New ${AppRoutes.STAFF_MEMBERS.name}`}
+                    </UncontrolledTooltip>
                   </div> :
                   null :
                 isInTrialPeriod ?
@@ -139,6 +139,7 @@ class Users extends Component {
               openEdit={editUserModal}
               onStatusUpdate={this.onStatusUpdate}
               modelOperate={modelOperate}
+              {...this.props}
             />
           </CardBody>
         </Card>

@@ -9,7 +9,9 @@ export const timelogActions = {
   UPDATE_TIME_LOG_REQUEST: "Update time log request",
   UPDATE_TIME_LOG_SUCCESS: "Update time log success",
   STOP_TIMER: "Stop timer for technician!",
-  SWITCH_TIMER: "Switch task timer for technician!"
+  SWITCH_TIMER: "Switch task timer for technician!",
+  GET_TECHNICIAN_TIME_LOGS_REQUEST: "Get technician time logs request!",
+  GET_TECHNICIAN_TIME_LOGS_SUCCESS: "Get technician time logs success!"
 };
 
 export const startTimer = createAction(timelogActions.START_TIMER);
@@ -21,3 +23,7 @@ export const updateTimeLogRequest = createAction(timelogActions.UPDATE_TIME_LOG_
 export const updateTimeLogSuccess = createAction(timelogActions.UPDATE_TIME_LOG_SUCCESS);
 export const stopTimer = createAction(timelogActions.STOP_TIMER);
 export const switchTask = createAction(timelogActions.SWITCH_TIMER);
+/* 
+ */
+export const getTechinicianTimeLogRequest = createAction(timelogActions.GET_TECHNICIAN_TIME_LOGS_REQUEST)
+export const getTechinicianTimeLogSuccess = createAction(timelogActions.GET_TECHNICIAN_TIME_LOGS_SUCCESS)

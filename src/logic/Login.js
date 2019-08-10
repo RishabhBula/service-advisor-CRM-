@@ -38,7 +38,6 @@ const loginLogic = createLogic({
       done();
       return;
     } else {
-      console.log(result.data.companyData, "result.data.companyData")
       dispatch(
         profileInfoSuccess({
           companyInfo: result.data.companyData,

@@ -198,7 +198,8 @@ class Services extends Component {
       orderReducer,
       addNewCannedService,
       deleteCannedServiceRequest,
-      updateOrderDetails
+      updateOrderDetails,
+      deleteService
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
@@ -225,6 +226,7 @@ class Services extends Component {
               addNewCannedService={addNewCannedService}
               deleteCannedServiceRequest={deleteCannedServiceRequest}
               updateOrderDetails={updateOrderDetails}
+              deleteService={deleteService}
               {...this.props}
             />
           </React.Fragment>

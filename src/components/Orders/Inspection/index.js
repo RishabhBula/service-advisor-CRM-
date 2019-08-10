@@ -50,7 +50,7 @@ class Inspection extends Component {
   componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
     let propdata = this.props.inspectionData;
     const { inspectionStatus } = this.state;
-    
+
     if (
       propdata &&
       propdata.inspectionData &&
@@ -204,7 +204,7 @@ class Inspection extends Component {
   /**
    *
    */
-  handleInspection = e =>       {
+  handleInspection = e => {
     e.preventDefault();
     const { inspection } = this.state;
     const payload = {
@@ -329,17 +329,17 @@ class Inspection extends Component {
    */
   onDrop = async (files, inspIndex, itemIndex) => {
     const { inspection } = this.state;
-     
-     if (files[0].size > 10000000) {
-       await ConfirmBox({
-         text: "",
-         title: "Maximum allowed size for image is 10mb",
-         showCancelButton: false,
-         confirmButtonText: "Ok"
-       });
-       return;
-     }
-  
+
+    if (files[0].size > 10000000) {
+      await ConfirmBox({
+        text: "",
+        title: "Maximum allowed size for image is 10mb",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
+
     let count = 5 - inspection[inspIndex].items[itemIndex].itemImagePreview.length;
     if (files.length > count) {
       await ConfirmBox({
@@ -354,45 +354,45 @@ class Inspection extends Component {
         const that = this;
         let file = files[i];
         await picReader.addEventListener("load", async event => {
-           var image = new Image();
-           var imageWidth = 0;
-           var message = "";
-           image.src = event.target.result;
-          
-           image.onload = async function() {
-             imageWidth = this.width;
-             if (imageWidth <= 500 || imageWidth >= 8000) {
-               message =
-                 imageWidth <= 300
-                   ? "Allowed image width is minimum 500px."
-                   : "Allowed image width is maximum 8000px.";
-               await ConfirmBox({
-                 text: "",
-                 title: message,
-                 showCancelButton: false,
-                 confirmButtonText: "Ok"
-               });
+          var image = new Image();
+          var imageWidth = 0;
+          var message = "";
+          image.src = event.target.result;
 
-               return;
-             } else {
-               let dataURL = picReader.result;
-               
-               inspection[inspIndex].items[
-                 itemIndex
-               ].itemImagePreview.push({
-                 dataURL,
-                 name: file.name
-               });
-               inspection[inspIndex].items[
-                 itemIndex
-               ].itemImage.push(file);
-               that.setState({
-                 inspection
-               });
-             }
-           };
+          image.onload = async function () {
+            imageWidth = this.width;
+            if (imageWidth <= 500 || imageWidth >= 8000) {
+              message =
+                imageWidth <= 300
+                  ? "Allowed image width is minimum 500px."
+                  : "Allowed image width is maximum 8000px.";
+              await ConfirmBox({
+                text: "",
+                title: message,
+                showCancelButton: false,
+                confirmButtonText: "Ok"
+              });
 
-         
+              return;
+            } else {
+              let dataURL = picReader.result;
+
+              inspection[inspIndex].items[
+                itemIndex
+              ].itemImagePreview.push({
+                dataURL,
+                name: file.name
+              });
+              inspection[inspIndex].items[
+                itemIndex
+              ].itemImage.push(file);
+              that.setState({
+                inspection
+              });
+            }
+          };
+
+
         });
         await picReader.readAsDataURL(file);
       });
@@ -471,6 +471,34 @@ class Inspection extends Component {
     var doc = new jsPDF("p", "pt");
     doc.setFontSize(12);
     doc.setTextColor(51, 47, 62);
+    // /* 
+    // /*  
+    // */
+    // function getBase64Image(imgUrl) {
+    //   console.log("%%%%%%%%%%%%%%%%%%%%%%%", imgUrl);
+
+    //   var img = new Image();
+    //   img.setAttribute('crossOrigin', 'anonymous'); //
+    //   img.src = imgUrl;
+    //   // onload fires when the image is fully loadded, and has width and height
+
+    //   img.onload = function () {
+    //     console.log("^^^^^^^^^^^^^^^^^^^^^^", img);
+    //     var canvas = document.createElement("canvas");
+    //     canvas.width = img.width;
+    //     canvas.height = img.height;
+    //     var ctx = canvas.getContext("2d");
+    //     ctx.drawImage(img, 0, 0);
+    //     var dataURL = canvas.toDataURL("image/png"),
+    //       dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    //     console.log("$$$$$$$$$$$$$$$$$$$$$$$$", dataURL);
+    //     // the base64 string
+
+    //   };
+    // }
+    // /* 
+    // /*  
+    // */
     const customerData = this.state.customerData;
     const orderDetail = this.state.orderDetails;
     const profileReducer = this.props.profileReducer;
@@ -490,7 +518,7 @@ class Inspection extends Component {
         : "Untitled";
     // let textOrderIdDetail = doc.splitTextToSize(textOrderId,(200));
     var textOrderIdDetailWidth = doc.getTextDimensions(textOrderId);
-    
+
     doc.text(textOrderId, textOrderIdDetailWidth.w - 30, 42);
 
     doc.setTextColor("black");
@@ -588,11 +616,14 @@ class Inspection extends Component {
               var yAxis = data.cell.y + 5;
               count++;
               let type = "";
+
               for (let k = 0; k < itemsJ.itemImagePreview.length; k++) {
-                var base64Img = itemsJ.itemImagePreview[k].dataURL || "";
+                var base64 =  new File( itemsJ.itemImagePreview[k])
+                console.log("$$$$$$$$$$$$$$$$$$$$$$$$$",base64);
+                
+                var base64Img = base64 || "";
                 type = base64Img.split(";")[0].split("/")[1];
                 base64Img = type === "pdf" ? pdfIcon : base64Img;
-               
                 if (k < 3) {
                   doc.addImage(
                     base64Img,
@@ -756,323 +787,323 @@ class Inspection extends Component {
         <div className={"inspection-add-block"} id={"inspection-add-block"}>
           {inspection && inspection.length
             ? inspection.map((ele, inspIndex) => {
-                return (
-                  <div className={"inspection-card"} key={inspIndex}>
-                    <Card>
-                      <div className={"inspection-header"}>
-                        <Input
-                          type={"text"}
-                          value={ele.inspectionName}
-                          name={"inspectionName"}
-                          bsSize={"lg"}
-                          placeholder={
-                            "Please Enter a name for this inspection"
-                          }
-                          onChange={e => this.handleChange(e, inspIndex)}
-                          invalid={ele.error}
-                          maxLength={75}
-                        />
-                        {ele.error ? (
-                          <p className={"text-danger mb-0"}>
-                            Please enter title of Inspection
+              return (
+                <div className={"inspection-card"} key={inspIndex}>
+                  <Card>
+                    <div className={"inspection-header"}>
+                      <Input
+                        type={"text"}
+                        value={ele.inspectionName}
+                        name={"inspectionName"}
+                        bsSize={"lg"}
+                        placeholder={
+                          "Please Enter a name for this inspection"
+                        }
+                        onChange={e => this.handleChange(e, inspIndex)}
+                        invalid={ele.error}
+                        maxLength={75}
+                      />
+                      {ele.error ? (
+                        <p className={"text-danger mb-0"}>
+                          Please enter title of Inspection
                           </p>
-                        ) : null}
-                      </div>
-                      <CardBody className={"p-0"}>
-                        <div className={"item-warp"}>
-                          {ele.items && ele.items.length
-                            ? ele.items.map((val, itemIndex) => {
-                                return (
-                                  <div
-                                    className={"d-flex block-item"}
-                                    key={itemIndex}
-                                  >
-                                    <div className={"count-block"}>
-                                      <Badge color="secondary">
-                                        {itemIndex + 1}
-                                      </Badge>
-                                    </div>
-                                    <Row
-                                      key={itemIndex}
-                                      className={"ml-0 mr-0"}
-                                    >
-                                      <Col lg={"9"} md={"9"}>
-                                        <Label htmlFor={`item ${itemIndex}`}>
-                                          Item Description
+                      ) : null}
+                    </div>
+                    <CardBody className={"p-0"}>
+                      <div className={"item-warp"}>
+                        {ele.items && ele.items.length
+                          ? ele.items.map((val, itemIndex) => {
+                            return (
+                              <div
+                                className={"d-flex block-item"}
+                                key={itemIndex}
+                              >
+                                <div className={"count-block"}>
+                                  <Badge color="secondary">
+                                    {itemIndex + 1}
+                                  </Badge>
+                                </div>
+                                <Row
+                                  key={itemIndex}
+                                  className={"ml-0 mr-0"}
+                                >
+                                  <Col lg={"9"} md={"9"}>
+                                    <Label htmlFor={`item ${itemIndex}`}>
+                                      Item Description
                                         </Label>
-                                        <div>
-                                          <div className={"status-warp"}>
-                                            {val && val.color ? (
+                                    <div>
+                                      <div className={"status-warp"}>
+                                        {val && val.color ? (
+                                          <>
+                                            <span
+                                              onClick={e =>
+                                                this.handleOptionReset(
+                                                  e,
+                                                  inspIndex,
+                                                  itemIndex
+                                                )
+                                              }
+                                              id={`reset-${itemIndex}`}
+                                              className={"reset-status"}
+                                            >
+                                              <i
+                                                className={
+                                                  "icon-reload icons"
+                                                }
+                                              />
+                                            </span>
+                                            <UncontrolledTooltip
+                                              target={`reset-${itemIndex}`}
+                                            >
+                                              Click to reset item status
+                                                </UncontrolledTooltip>
+                                          </>
+                                        ) : null}
+                                        <Label
+                                          className={
+                                            val.color === "default"
+                                              ? "status-checkbox checked default"
+                                              : "status-checkbox status-warning"
+                                          }
+                                        >
+                                          <Input
+                                            type="radio"
+                                            name={`color ${itemIndex}`}
+                                            value={"default"}
+                                            checked={
+                                              val.color === "default"
+                                            }
+                                            onChange={e =>
+                                              this.handleOptionChange(
+                                                e,
+                                                inspIndex,
+                                                itemIndex
+                                              )
+                                            }
+                                          />{" "}
+                                          {/* default */}
+                                        </Label>
+                                        <Label
+                                          className={
+                                            val.color === "danger"
+                                              ? "status-checkbox checked danger "
+                                              : "status-checkbox status-danger"
+                                          }
+                                        >
+                                          <Input
+                                            type="radio"
+                                            name={`color ${itemIndex}`}
+                                            value={"danger"}
+                                            checked={val.color === "danger"}
+                                            onChange={e =>
+                                              this.handleOptionChange(
+                                                e,
+                                                inspIndex,
+                                                itemIndex
+                                              )
+                                            }
+                                          />{" "}
+                                          {/* danger */}
+                                        </Label>
+                                        <Label
+                                          className={
+                                            val.color === "success"
+                                              ? "status-checkbox checked success"
+                                              : "status-checkbox status-success"
+                                          }
+                                        >
+                                          <Input
+                                            type="radio"
+                                            name={`color ${itemIndex}`}
+                                            value={"success"}
+                                            checked={
+                                              val.color === "success"
+                                            }
+                                            onChange={e =>
+                                              this.handleOptionChange(
+                                                e,
+                                                inspIndex,
+                                                itemIndex
+                                              )
+                                            }
+                                          />{" "}
+                                          {/* success */}
+                                        </Label>
+                                        <span>
+                                          {val.color === "success" ||
+                                            val.color === "danger" ? (
                                               <>
-                                                <span
+                                                <Button
+                                                  size={"sm"}
+                                                  outline
+                                                  color={
+                                                    val.aprovedStatus
+                                                      ? "success"
+                                                      : "dark"
+                                                  }
+                                                  className={"status-btn"}
                                                   onClick={e =>
-                                                    this.handleOptionReset(
+                                                    this.handleApproval(
                                                       e,
                                                       inspIndex,
                                                       itemIndex
                                                     )
                                                   }
-                                                  id={`reset-${itemIndex}`}
-                                                  className={"reset-status"}
+                                                  id={`item-status-${itemIndex}`}
                                                 >
                                                   <i
-                                                    className={
-                                                      "icon-reload icons"
-                                                    }
-                                                  />
-                                                </span>
+                                                    className={"fa fa-check"}
+                                                  />{" "}
+                                                  Approved
+                                                  </Button>
                                                 <UncontrolledTooltip
-                                                  target={`reset-${itemIndex}`}
+                                                  target={`item-status-${itemIndex}`}
                                                 >
-                                                  Click to reset item status
-                                                </UncontrolledTooltip>
+                                                  Click to change status of
+                                                  this inpection item
+                                                  </UncontrolledTooltip>
                                               </>
                                             ) : null}
-                                            <Label
-                                              className={
-                                                val.color === "default"
-                                                  ? "status-checkbox checked default"
-                                                  : "status-checkbox status-warning"
-                                              }
-                                            >
-                                              <Input
-                                                type="radio"
-                                                name={`color ${itemIndex}`}
-                                                value={"default"}
-                                                checked={
-                                                  val.color === "default"
-                                                }
-                                                onChange={e =>
-                                                  this.handleOptionChange(
-                                                    e,
-                                                    inspIndex,
-                                                    itemIndex
-                                                  )
-                                                }
-                                              />{" "}
-                                              {/* default */}
-                                            </Label>
-                                            <Label
-                                              className={
-                                                val.color === "danger"
-                                                  ? "status-checkbox checked danger "
-                                                  : "status-checkbox status-danger"
-                                              }
-                                            >
-                                              <Input
-                                                type="radio"
-                                                name={`color ${itemIndex}`}
-                                                value={"danger"}
-                                                checked={val.color === "danger"}
-                                                onChange={e =>
-                                                  this.handleOptionChange(
-                                                    e,
-                                                    inspIndex,
-                                                    itemIndex
-                                                  )
-                                                }
-                                              />{" "}
-                                              {/* danger */}
-                                            </Label>
-                                            <Label
-                                              className={
-                                                val.color === "success"
-                                                  ? "status-checkbox checked success"
-                                                  : "status-checkbox status-success"
-                                              }
-                                            >
-                                              <Input
-                                                type="radio"
-                                                name={`color ${itemIndex}`}
-                                                value={"success"}
-                                                checked={
-                                                  val.color === "success"
-                                                }
-                                                onChange={e =>
-                                                  this.handleOptionChange(
-                                                    e,
-                                                    inspIndex,
-                                                    itemIndex
-                                                  )
-                                                }
-                                              />{" "}
-                                              {/* success */}
-                                            </Label>
-                                            <span>
-                                              {val.color === "success" ||
-                                              val.color === "danger" ? (
-                                                <>
-                                                  <Button
-                                                    size={"sm"}
-                                                    outline
-                                                    color={
-                                                      val.aprovedStatus
-                                                        ? "success"
-                                                        : "dark"
-                                                    }
-                                                    className={"status-btn"}
-                                                    onClick={e =>
-                                                      this.handleApproval(
-                                                        e,
-                                                        inspIndex,
-                                                        itemIndex
-                                                      )
-                                                    }
-                                                    id={`item-status-${itemIndex}`}
-                                                  >
-                                                    <i
-                                                      className={"fa fa-check"}
-                                                    />{" "}
-                                                    Approved
-                                                  </Button>
-                                                  <UncontrolledTooltip
-                                                    target={`item-status-${itemIndex}`}
-                                                  >
-                                                    Click to change status of
-                                                    this inpection item
-                                                  </UncontrolledTooltip>
-                                                </>
-                                              ) : null}
-                                            </span>
-                                            <span
-                                              id={`status-warp-${itemIndex}`}
-                                              className={"info-icon"}
-                                            >
-                                              <i
-                                                className={
-                                                  "fa fa-question-circle"
-                                                }
-                                              />
-                                            </span>
-                                            <UncontrolledTooltip
-                                              target={`status-warp-${itemIndex}`}
-                                            >
-                                              Define the priority of this
-                                              Inspection item by adding
-                                              appropriate labels.
+                                        </span>
+                                        <span
+                                          id={`status-warp-${itemIndex}`}
+                                          className={"info-icon"}
+                                        >
+                                          <i
+                                            className={
+                                              "fa fa-question-circle"
+                                            }
+                                          />
+                                        </span>
+                                        <UncontrolledTooltip
+                                          target={`status-warp-${itemIndex}`}
+                                        >
+                                          Define the priority of this
+                                          Inspection item by adding
+                                          appropriate labels.
                                             </UncontrolledTooltip>
-                                          </div>
-                                        </div>
-                                        <div className={""}>
-                                          <Input
-                                            type="text"
-                                            name={"name"}
-                                            value={val.name}
-                                            placeholder={"Item Title"}
-                                            maxLength={"75"}
-                                            onChange={e =>
-                                              this.handleItemChange(
-                                                itemIndex,
-                                                e,
-                                                inspIndex
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                        <div className={"mt-2"}>
-                                          <Input
-                                            type="text"
-                                            name={"note"}
-                                            value={val.note}
-                                            maxLength={"75"}
-                                            placeholder={
-                                              "Enter Notes and Recommendation"
-                                            }
-                                            onChange={e =>
-                                              this.handleItemChange(
-                                                itemIndex,
-                                                e,
-                                                inspIndex
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      </Col>
-                                      <Col lg={3} md={3} className={"mt-2 p-0"}>
-                                        <div className={"d-flex flex-row"}>
-                                          <Dropzone
-                                            accept={"image/jpeg, image/png"}
-                                            onDrop={files =>
-                                              this.onDrop(
-                                                files,
+                                      </div>
+                                    </div>
+                                    <div className={""}>
+                                      <Input
+                                        type="text"
+                                        name={"name"}
+                                        value={val.name}
+                                        placeholder={"Item Title"}
+                                        maxLength={"75"}
+                                        onChange={e =>
+                                          this.handleItemChange(
+                                            itemIndex,
+                                            e,
+                                            inspIndex
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                    <div className={"mt-2"}>
+                                      <Input
+                                        type="text"
+                                        name={"note"}
+                                        value={val.note}
+                                        maxLength={"75"}
+                                        placeholder={
+                                          "Enter Notes and Recommendation"
+                                        }
+                                        onChange={e =>
+                                          this.handleItemChange(
+                                            itemIndex,
+                                            e,
+                                            inspIndex
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                  </Col>
+                                  <Col lg={3} md={3} className={"mt-2 p-0"}>
+                                    <div className={"d-flex flex-row"}>
+                                      <Dropzone
+                                        accept={"image/jpeg, image/png"}
+                                        onDrop={files =>
+                                          this.onDrop(
+                                            files,
+                                            inspIndex,
+                                            itemIndex
+                                          )
+                                        }
+                                      >
+                                        {({
+                                          acceptedFiles,
+                                          getRootProps,
+                                          getInputProps
+                                        }) => (
+                                            <>
+                                              <section className="drop-image-block">
+                                                <div
+                                                  {...getRootProps({
+                                                    className: "dropzone"
+                                                  })}
+                                                >
+                                                  <input
+                                                    {...getInputProps()}
+                                                  />
+                                                  <i className="icon-picture icons" />
+                                                </div>
+                                              </section>
+                                              <div
+                                                className={"drop-image-text"}
+                                              >
+                                                Max limit 5 images
+                                                </div>
+                                            </>
+                                          )}
+                                      </Dropzone>
+
+                                      {itemIndex >= 1 ? (
+                                        <>
+                                          <span
+                                            onClick={() => {
+                                              this.removeItem(
                                                 inspIndex,
                                                 itemIndex
-                                              )
-                                            }
+                                              );
+                                            }}
+                                            color={"danger"}
+                                            className={"delete-icon"}
+                                            id={`delete-${itemIndex}`}
                                           >
-                                            {({
-                                              acceptedFiles,
-                                              getRootProps,
-                                              getInputProps
-                                            }) => (
-                                              <>
-                                                <section className="drop-image-block">
-                                                  <div
-                                                    {...getRootProps({
-                                                      className: "dropzone"
-                                                    })}
-                                                  >
-                                                    <input
-                                                      {...getInputProps()}
-                                                    />
-                                                    <i className="icon-picture icons" />
-                                                  </div>
-                                                </section>
-                                                <div
-                                                  className={"drop-image-text"}
-                                                >
-                                                  Max limit 5 images
-                                                </div>
-                                              </>
-                                            )}
-                                          </Dropzone>
-
-                                          {itemIndex >= 1 ? (
-                                            <>
-                                              <span
-                                                onClick={() => {
-                                                  this.removeItem(
-                                                    inspIndex,
-                                                    itemIndex
-                                                  );
-                                                }}
-                                                color={"danger"}
-                                                className={"delete-icon"}
-                                                id={`delete-${itemIndex}`}
-                                              >
-                                                <i
-                                                  className={
-                                                    "icons cui-circle-x"
-                                                  }
-                                                />
-                                              </span>
-                                              <UncontrolledTooltip
-                                                target={`delete-${itemIndex}`}
-                                              >
-                                                Delete this Item
+                                            <i
+                                              className={
+                                                "icons cui-circle-x"
+                                              }
+                                            />
+                                          </span>
+                                          <UncontrolledTooltip
+                                            target={`delete-${itemIndex}`}
+                                          >
+                                            Delete this Item
                                               </UncontrolledTooltip>
-                                            </>
-                                          ) : null}
-                                        </div>
-                                      </Col>
-                                      <Col lg={12} md={12}>
-                                        {val.itemImagePreview &&
-                                        val.itemImagePreview.length ? (
-                                          <ul className={"preview-group  p-0"}>
-                                            {val.itemImagePreview.map(
-                                              (file, previewindx) => {
-                                                
-                                                const type = "png";
-                                                // const type = file.dataURL
-                                                //   .split(";")[0]
-                                                //   .split("/")[1];
-                                                return (
-                                                  <li
-                                                    key={
-                                                      previewindx
-                                                    }
-                                                  >
-                                                    {type ===
+                                        </>
+                                      ) : null}
+                                    </div>
+                                  </Col>
+                                  <Col lg={12} md={12}>
+                                    {val.itemImagePreview &&
+                                      val.itemImagePreview.length ? (
+                                        <ul className={"preview-group  p-0"}>
+                                          {val.itemImagePreview.map(
+                                            (file, previewindx) => {
+
+                                              const type = "png";
+                                              // const type = file.dataURL
+                                              //   .split(";")[0]
+                                              //   .split("/")[1];
+                                              return (
+                                                <li
+                                                  key={
+                                                    previewindx
+                                                  }
+                                                >
+                                                  {type ===
                                                     "pdf" ? (
                                                       <span
                                                         className={
@@ -1142,13 +1173,13 @@ class Inspection extends Component {
                                                         <img
                                                           src={
                                                             file &&
-                                                            file.dataURL
+                                                              file.dataURL
                                                               ? file.dataURL
                                                               : file
                                                           }
                                                           alt={
                                                             file &&
-                                                            file.dataURL
+                                                              file.dataURL
                                                               ? file.dataURL
                                                               : file
                                                           }
@@ -1161,79 +1192,79 @@ class Inspection extends Component {
                                                         />
                                                       </>
                                                     )}
-                                                  </li>
-                                                );
-                                              }
-                                            )}
-                                          </ul>
-                                        ) : null}
-                                      </Col>
-                                    </Row>
-                                  </div>
-                                );
-                              })
-                            : null}
-                        </div>
+                                                </li>
+                                              );
+                                            }
+                                          )}
+                                        </ul>
+                                      ) : null}
+                                  </Col>
+                                </Row>
+                              </div>
+                            );
+                          })
+                          : null}
+                      </div>
 
-                        <CardFooter>
+                      <CardFooter>
+                        <Button
+                          className={"btn-theme"}
+                          onClick={() => this.addItem(inspIndex)}
+                          id={`add-item-${inspIndex}`}
+                        >
+                          {" "}
+                          + Add Item
+                          </Button>
+                        <UncontrolledTooltip target={`add-item-${inspIndex}`}>
+                          Click to add new item in this inspection
+                          </UncontrolledTooltip>
+                        <div
+                          className={"pull-right d-flex align-item-center"}
+                        >
                           <Button
-                            className={"btn-theme"}
-                            onClick={() => this.addItem(inspIndex)}
-                            id={`add-item-${inspIndex}`}
+                            className={"btn-dashed"}
+                            onClick={e =>
+                              this.handleTemplate(
+                                e,
+                                inspIndex,
+                                ele.templateId
+                              )
+                            }
+                            id={`make-template-${inspIndex}`}
                           >
                             {" "}
-                            + Add Item
-                          </Button>
-                          <UncontrolledTooltip target={`add-item-${inspIndex}`}>
-                            Click to add new item in this inspection
-                          </UncontrolledTooltip>
-                          <div
-                            className={"pull-right d-flex align-item-center"}
-                          >
-                            <Button
-                              className={"btn-dashed"}
-                              onClick={e =>
-                                this.handleTemplate(
-                                  e,
-                                  inspIndex,
-                                  ele.templateId
-                                )
-                              }
-                              id={`make-template-${inspIndex}`}
-                            >
-                              {" "}
-                              Save as Template
+                            Save as Template
                             </Button>{" "}
-                            <UncontrolledTooltip
-                              target={`make-template-${inspIndex}`}
-                            >
-                              Click to make this Inspection as Template
+                          <UncontrolledTooltip
+                            target={`make-template-${inspIndex}`}
+                          >
+                            Click to make this Inspection as Template
                             </UncontrolledTooltip>
-                            &nbsp;&nbsp;
+                          &nbsp;&nbsp;
                             <Button
-                              color={"secondary"}
-                              className={
-                                "pull-right btn-remove btn-outline-danger"
-                              }
-                              onClick={() => {
-                                this.removeInspection(inspIndex);
-                              }}
-                              id={`delete-${inspIndex}`}
-                            >
-                              {" "}
-                              <i className={"fa fa-trash"} />
-                              &nbsp; Remove
+                            color={"secondary"}
+                            className={
+                              "pull-right btn-remove btn-outline-danger"
+                            }
+                            onClick={() => {
+                              this.removeInspection(inspIndex);
+                            }}
+                            id={`delete-${inspIndex}`}
+                          >
+                            {" "}
+                            <i className={"fa fa-trash"} />
+                            &nbsp; Remove
                             </Button>
-                            <UncontrolledTooltip target={`delete-${inspIndex}`}>
-                              Delete this Inspection
+                          <UncontrolledTooltip target={`delete-${inspIndex}`}>
+                            Delete this Inspection
                             </UncontrolledTooltip>
-                          </div>
-                        </CardFooter>
-                      </CardBody>
-                    </Card>
-                  </div>
-                );
-              })
+                        </div>
+                      </CardFooter>
+                    </CardBody>
+                  </Card>
+                </div>
+              );
+            })
             : null}
 
           {inspection.length ? (

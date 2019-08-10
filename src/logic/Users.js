@@ -11,7 +11,8 @@ import {
   getUsersList,
   modelOpenRequest,
   addUserSuccess,
-  editUserSuccess
+  editUserSuccess,
+  getSingleUserSuccess
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 
@@ -30,8 +31,8 @@ const getUsersLogic = createLogic({
         action.payload && action.payload.input
           ? action.payload.input
           : action.payload && action.payload.search
-          ? action.payload.search
-          : null,
+            ? action.payload.search
+            : null,
       sort: action.payload && action.payload.sort ? action.payload.sort : null,
       status:
         action.payload && action.payload.status ? action.payload.status : null,
@@ -211,10 +212,39 @@ const updateUserStatusLogic = createLogic({
   }
 });
 
+const getSingleUserDetailsLogic = createLogic({
+  type: usersActions.GET_SINGLE_USER_DETAILS_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    logger(action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/user",
+      "/singleUser",
+      "Get",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(getSingleUserSuccess(result.data.data))
+      toast.success(result.messages[0]);
+      done();
+    }
+  }
+});
+
+
 export const UsersLogic = [
   getUsersLogic,
   addUsersLogic,
   deleteUserLogic,
   editUsersLogic,
-  updateUserStatusLogic
+  updateUserStatusLogic,
+  getSingleUserDetailsLogic
 ];

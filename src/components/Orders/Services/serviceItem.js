@@ -351,7 +351,7 @@ class ServiceItem extends Component {
     }
   }
 
-  handleRemoveService = async (index) => {
+  handleRemoveService = async (index, serviceId) => {
     const { value } = await ConfirmBox({
       text: "Do you want to remove this service?"
     });
@@ -382,6 +382,9 @@ class ServiceItem extends Component {
           this.props.updateOrderDetails(payload);
         }
       });
+      if (serviceId) {
+        this.props.deleteService({ serviceId: serviceId })
+      }
     }
   };
 
@@ -1092,7 +1095,7 @@ class ServiceItem extends Component {
                         <Button className={"mr-3 btn-dashed"} onClick={() => this.handleAddCannedService(item, index)} >Save as canned service</Button>
                         <Button
                           className="btn btn-remove btn-outline-danger"
-                          onClick={() => this.handleRemoveService(index)}
+                          onClick={() => this.handleRemoveService(index, item._id)}
                           id={`remove-service-${index}`}
                         >
                           <i className="fa fa-trash" /> &nbsp;Remove

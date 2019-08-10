@@ -23,6 +23,7 @@ import {
   getMessageListSuccess,
   verifyLinkRequest,
   getPaymentSuccess,
+  getCannedServiceList
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -171,7 +172,7 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
-    dispatch(getOrderDetailsRequest({_id: action.payload.orderId}))
+    dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }))
     done();
   }
 });
@@ -437,8 +438,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         _id: action.payload && action.payload._id ? action.payload._id : null,
         customerId:
           action.payload && action.payload.customerId
@@ -447,7 +448,10 @@ const getOrderDetails = createLogic({
         vehicleId:
           action.payload && action.payload.vehicleId
             ? action.payload.vehicleId
-            : null
+            : null,
+        technicianId: action.payload && action.payload.technicianId
+          ? action.payload.technicianId
+          : null
       },
       undefined
     );
@@ -496,6 +500,7 @@ const getOrderDetails = createLogic({
           vehicleOrders: !action.payload.customerId ? result.data.data : []
         })
       );
+      dispatch(getCannedServiceList())
       dispatch(hideLoader());
       done();
     }

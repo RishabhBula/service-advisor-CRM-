@@ -53,7 +53,8 @@ import {
   addNewCannedService,
   deleteCannedServiceRequest,
   getOrderList,
-  updateOrderStatus
+  updateOrderStatus,
+  deleteService
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -111,7 +112,8 @@ class Order extends Component {
       sentModal: false,
       mesageModal: false,
       pdfBlob: "",
-      isOrderUpdate: true
+      isOrderUpdate: true,
+      isCustomerVehicleUpdate: false
     };
     this.orderNameRef = React.createRef();
   }
@@ -193,29 +195,33 @@ class Order extends Component {
     this.props.addInventoryPart({ data });
   };
 
-  customerVehicleData = (customer, vehicle) => {
+  customerVehicleData = (customer, vehicle, isCustomerVehicleUpdate) => {
     if (customer && vehicle) {
       this.setState({
         customerData: customer,
-        vehicleData: vehicle
+        vehicleData: vehicle,
+        isCustomerVehicleUpdate
       });
     } else if (customer && !vehicle) {
       this.setState({
         customerData: customer,
         vehicleData: "",
-        isOrderUpdate: false
+        isOrderUpdate: false,
+        isCustomerVehicleUpdate
       });
     } else if (vehicle && !customer) {
       this.setState({
         customerData: "",
         vehicleData: vehicle,
-        isOrderUpdate: false
+        isOrderUpdate: false,
+        isCustomerVehicleUpdate
       });
     } else {
       this.setState({
         customerData: "",
         vehicleData: "",
-        isOrderUpdate: false
+        isOrderUpdate: false,
+        isCustomerVehicleUpdate
       });
     }
 
@@ -251,7 +257,8 @@ class Order extends Component {
     };
     logger("*******payload*****", payload);
     this.setState({
-      isOrderUpdate: true
+      isOrderUpdate: true,
+      isCustomerVehicleUpdate: false
     });
     this.props.updateOrderDetails(payload);
   };
@@ -324,7 +331,8 @@ class Order extends Component {
       orderName,
       orderId,
       pdfBlob,
-      isOrderUpdate
+      isOrderUpdate,
+      isCustomerVehicleUpdate
     } = this.state;
     const {
       getVehicleData,
@@ -377,7 +385,8 @@ class Order extends Component {
       addNewCannedService,
       deleteCannedServiceRequest,
       updateOrderStatus,
-      updateOrderDetails
+      updateOrderDetails,
+      deleteService
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
 
@@ -433,6 +442,7 @@ class Order extends Component {
                     {this.props.orderReducer.orderItems &&
                       (!this.props.orderReducer.orderItems.customerId ||
                         !isOrderUpdate ||
+                        isCustomerVehicleUpdate ||
                         !this.props.orderReducer.orderItems.vehicleId) ? (
                         <div className={"service-overlay"}>
                           <img
@@ -526,6 +536,7 @@ class Order extends Component {
                               deleteCannedServiceRequest
                             }
                             updateOrderDetails={updateOrderDetails}
+                            deleteService={deleteService}
                             {...this.props}
                           />
                         ) : null}
@@ -784,7 +795,8 @@ const mapDispatchToProps = dispatch => ({
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
   deleteCannedServiceRequest: (data) => {
     dispatch(deleteCannedServiceRequest(data))
-  }
+  },
+  deleteService: data => dispatch(deleteService(data)),
 });
 export default connect(
   mapStateToProps,
