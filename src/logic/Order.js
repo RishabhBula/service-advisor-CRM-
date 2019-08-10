@@ -332,9 +332,9 @@ const addOrderLogic = createLogic({
 const updateOrderDetailsLogic = createLogic({
   type: orderActions.UPDATE_ORDER_DETAILS,
   async process({ action }, dispatch, done) {
-    if (!action.payload.isChangedOrderStatus) {
-      dispatch(showLoader());
-    }
+    // if (!action.payload.isChangedOrderStatus) {
+    //   dispatch(showLoader());
+    // }
     logger(action.aypload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -347,13 +347,15 @@ const updateOrderDetailsLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      if (!action.payload.isChangedOrderStatus) {
-        dispatch(hideLoader());
-      }
+      // if (!action.payload.isChangedOrderStatus) {
+      //   dispatch(hideLoader());
+      // }
       done();
       return;
     } else {
-      if (!action.payload.isChangedOrderStatus) {
+      if (
+        !action.payload.isChangedOrderStatus
+      ) {
         toast.success(result.messages[0]);
       }
       if (action.payload.status === true) {
@@ -385,7 +387,7 @@ const updateOrderDetailsLogic = createLogic({
 
       dispatch(updateOrderDetailsSuccess());
 
-      dispatch(hideLoader());
+      // dispatch(hideLoader());
       done();
     }
   }

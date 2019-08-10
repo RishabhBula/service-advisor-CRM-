@@ -38,13 +38,13 @@ export const inspectionReducer = handleActions(
         isSuccess: false
       }
     }),
-    [InspectionActions.ADD_INSPCETION_TEMPLATE_SUCCESS]: (state, action) => ({
-      ...state,
-      inspectionData: {
-        templateData: action.payload,
-        isSuccess: true
-      }
-    }),
+    // [InspectionActions.ADD_INSPCETION_TEMPLATE_SUCCESS]: (state, action) => ({
+    //   ...state,
+    //   inspectionData: {
+    //     templateData: action.payload,
+    //     isSuccess: true
+    //   }
+    // }),
     [InspectionActions.GET_INSPECTION_LIST]: (state, action) => ({
       ...state,
       inspectionData: {

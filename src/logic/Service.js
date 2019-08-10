@@ -10,7 +10,8 @@ import {
    getCannedServiceListSuccess,
    getCannedServiceList,
    updateOrderDetailsRequest,
-   getAllServiceListSuccess
+   getAllServiceListSuccess,
+   genrateInvoice
 } from "./../actions";
 
 const addServiceLogic = createLogic({
@@ -64,6 +65,12 @@ const addServiceLogic = createLogic({
                   _id: action.payload.orderId,
                   customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
                }
+               dispatch(
+                 genrateInvoice({
+                   html: action.payload.html,
+                   _id: action.payload.orderId
+                 })
+               );
                dispatch(updateOrderDetailsRequest(payload))
             }
          }

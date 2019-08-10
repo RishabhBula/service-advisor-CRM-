@@ -4,9 +4,7 @@ import { withRouter } from "react-router-dom";
 import React, { Component, Suspense } from "react";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "../Loader/Loader";
-import { invoicePDF } from "./invoicePDF"
-import * as jsPDF from "jspdf";
-import "jspdf-autotable";
+import InvoiceTable from "./invoiceTable";
 import {
   getOrderIdRequest,
   customerGetRequest,
@@ -54,7 +52,8 @@ import {
   deleteCannedServiceRequest,
   getOrderList,
   updateOrderStatus,
-  deleteService
+  deleteService,
+  genrateInvoice
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -157,7 +156,8 @@ class Order extends Component {
     if (
       (serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
         inspectionReducer.inspectionData.isSuccess !==
-        this.props.inspectionReducer.inspectionData.isSuccess) && !this.props.serviceReducers.isAddServiceItem
+        this.props.inspectionReducer.inspectionData.isSuccess) &&
+      !this.props.serviceReducers.isAddServiceItem
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     }
@@ -224,7 +224,6 @@ class Order extends Component {
         isCustomerVehicleUpdate
       });
     }
-
   };
   handleEditOrder = () => {
     const { customerData, vehicleData, orderId, orderName } = this.state;
@@ -294,7 +293,6 @@ class Order extends Component {
     this.setState({
       sentModal: !this.state.sentModal
     });
-    this.printInvoice({ sentinvoice: true });
   };
 
   toggleMessageTemplate = ele => {
@@ -303,24 +301,17 @@ class Order extends Component {
     });
   };
 
-  printInvoice = sentinvoice => {
-    const orderData = this.props.orderReducer.orderItems;
-    const customerData = orderData.customerId;
-    const serviceData = this.props.orderReducer.orderItems.serviceId;
-    const comapnyInfo = this.props.profileInfoReducer.profileInfo;
-    const vehilceInfo =
-      orderData.vehicleId.year +
-      " " +
-      orderData.vehicleId.make +
-      " " +
-      orderData.vehicleId.modal;
-    var doc = new jsPDF("p", "pt");
-    var pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfBlob = invoicePDF(sentinvoice, orderData, customerData, serviceData, comapnyInfo, vehilceInfo, doc, pdfWidth)
-    this.setState({
-      pdfBlob
-    });
+  getPdf = () => {
+    const { orderReducer } = this.props
+    let filename = orderReducer && orderReducer.orderItems ? orderReducer.orderItems.invoiceURL : '';
+    let pdfWindow = window.open("");
+    pdfWindow.document.body.style.margin = "0px";
+    pdfWindow.document.body.innerHTML =
+      "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
+      filename +
+      "'></embed></body></html>";
   };
+
 
   render() {
     const {
@@ -330,7 +321,6 @@ class Order extends Component {
       isError,
       orderName,
       orderId,
-      pdfBlob,
       isOrderUpdate,
       isCustomerVehicleUpdate
     } = this.state;
@@ -386,10 +376,10 @@ class Order extends Component {
       deleteCannedServiceRequest,
       updateOrderStatus,
       updateOrderDetails,
-      deleteService
+      deleteService,
+      genrateInvoice,
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
-
     return (
       <div className="animated fadeIn">
         {!orderReducer.isOrderLoading ? (
@@ -475,7 +465,7 @@ class Order extends Component {
                             <span
                               id="add-Appointment"
                               className="print-btn"
-                              onClick={() => this.printInvoice(false)}
+                              onClick={this.getPdf}
                             >
                               <i className="icon-printer icons " />
                               &nbsp; Print
@@ -560,6 +550,7 @@ class Order extends Component {
                             profileReducer={profileInfoReducer}
                             updateOrderDetails={updateOrderDetails}
                             orderReducer={orderReducer}
+                            genrateInvoiceSuccess={genrateInvoice}
                           />
                         ) : null}
                         {activeTab === 2 ? (
@@ -617,34 +608,41 @@ class Order extends Component {
               />
               {this.props.orderReducer.orderItems &&
                 this.props.orderReducer.orderItems.customerId &&
-                this.props.orderReducer.orderItems.vehicleId ?
-                <>
-                  <SendInspection
-                    isOpen={this.state.sentModal}
-                    toggle={this.handelTemplateModal}
-                    customerData={customerData}
-                    vehicleData={vehicleData}
-                    searchMessageTemplateList={
-                      this.props.searchMessageTemplateList
-                    }
-                    toggleMessageTemplate={this.toggleMessageTemplate}
-                    sendMessageTemplate={this.props.sendMessageTemplate}
-                    pdfBlob={pdfBlob}
-                    isOrder
-                    orderReducer={orderReducer}
-                    profileReducer={profileInfoReducer}
-                  />
-                  <MessageTemplate
-                    isOpen={this.state.mesageModal}
-                    toggle={this.toggleMessageTemplate}
-                    inspectionData={this.props.inspectionReducer}
-                    addMessageTemplate={this.props.addMessageTemplate}
-                    getMessageTemplate={this.props.getMessageTemplate}
-                    updateMessageTemplate={this.props.updateMessageTemplate}
-                    deleteMessageTemplate={this.props.deleteMessageTemplate}
-                  />
-                </> :
-                null}
+                this.props.orderReducer.orderItems.vehicleId ? (
+                  <>
+
+                    <SendInspection
+                      isOpen={this.state.sentModal}
+                      toggle={this.handelTemplateModal}
+                      customerData={customerData}
+                      vehicleData={vehicleData}
+                      searchMessageTemplateList={
+                        this.props.searchMessageTemplateList
+                      }
+                      toggleMessageTemplate={this.toggleMessageTemplate}
+                      sendMessageTemplate={this.props.sendMessageTemplate}
+                      isOrder
+                      orderReducer={orderReducer}
+                      profileReducer={profileInfoReducer}
+                    />
+                    <MessageTemplate
+                      isOpen={this.state.mesageModal}
+                      toggle={this.toggleMessageTemplate}
+                      inspectionData={this.props.inspectionReducer}
+                      addMessageTemplate={this.props.addMessageTemplate}
+                      getMessageTemplate={this.props.getMessageTemplate}
+                      updateMessageTemplate={this.props.updateMessageTemplate}
+                      deleteMessageTemplate={this.props.deleteMessageTemplate}
+                    />
+                    <div id="customers" className={"invoiceTableCompnent"}>
+                      <InvoiceTable
+                        orderReducer={orderReducer}
+                        vehicleData={vehicleData}
+                        profileReducer={profileInfoReducer}
+                      />
+                    </div>
+                  </>
+                ) : null}
             </div>
           </Card>
         ) : (
@@ -665,7 +663,8 @@ const mapStateToProps = state => ({
   timelogReducer: state.timelogReducer,
   messageReducer: state.messageReducer,
   activityReducer: state.activityReducer,
-  paymentReducer: state.paymentReducer
+  paymentReducer: state.paymentReducer,
+  pdfReducer: state.pdfReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -789,7 +788,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addPaymentRequest(data));
   },
   addNewCannedService: data => {
-    dispatch(addNewCannedService(data))
+    dispatch(addNewCannedService(data));
   },
   getOrders: () => dispatch(getOrderList()),
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
@@ -797,6 +796,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteCannedServiceRequest(data))
   },
   deleteService: data => dispatch(deleteService(data)),
+  genrateInvoice: data => {
+    dispatch(genrateInvoice(data));
+  }
 });
 export default connect(
   mapStateToProps,

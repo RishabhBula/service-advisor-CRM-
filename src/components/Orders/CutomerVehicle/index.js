@@ -49,6 +49,8 @@ class CutomerVehicle extends Component {
     }
   }
   componentDidUpdate = ({ orderReducer }) => {
+  
+
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
         this.props.orderReducer.orderItems.customerId ||
