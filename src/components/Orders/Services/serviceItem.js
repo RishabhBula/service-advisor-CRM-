@@ -547,8 +547,6 @@ class ServiceItem extends Component {
       isCannedServiceSumbmit: false
     })
     const HTML = document.getElementById("customers").innerHTML;
-    console.log(HTML, "HTML");
-
     let ele
     for (let index = 0; index < serviceData.length; index++) {
       const serviceContent = [...this.state.services]

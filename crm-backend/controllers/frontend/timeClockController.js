@@ -101,8 +101,6 @@ const startTimer = async (req, res) => {
     orderId,
     startDateTime: new Date
   });
-  console.log("*********************", timeClock);
-
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -163,8 +161,6 @@ const stopTimer = async (req, res) => {
      })
    } */
   const convertedDuration = result.duration / 3600
-  console.log("########################", convertedDuration, result.duration);
-
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
       endDateTime: new Date(),

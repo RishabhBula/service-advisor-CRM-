@@ -123,7 +123,6 @@ class Templates extends Component {
 
   render() {
     const { templateData, search, isClearable } = this.state;
-    console.log(search, "isClearable");
     return (
       <>
         <Modal

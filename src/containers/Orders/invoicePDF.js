@@ -206,10 +206,10 @@ export const invoicePDF = (
             ? discountValue + "%"
             : "$" + discountValue
           : 0;
-          console.log(
-            val + " " + (partnumber || "") + " " + note,
-            "note"
-          );
+          // console.log(
+          //   val + " " + (partnumber || "") + " " + note,
+          //   "note"
+          // );
       rows.push({
         "Service Title": val + " " + (partnumber || "") + " " + (note),
 
