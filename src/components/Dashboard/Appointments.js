@@ -143,6 +143,7 @@ class DashboardAppointments extends Component {
                 numberOfMonths={1}
                 onOutsideClick={this.toggleCalendar}
                 weekDayFormat="ddd"
+                hideKeyboardShortcutsPanel
               />
             ) : null}
           </Col>
@@ -155,10 +156,12 @@ class DashboardAppointments extends Component {
             ) : (
               <Table bordered>
                 <thead>
-                  <th>Title</th>
-                  <th>Note</th>
-                  <th>Customer</th>
-                  <th>Appointment Date Time</th>
+                  <tr>
+                    <th>Title</th>
+                    <th>Note</th>
+                    <th>Customer</th>
+                    <th>Appointment Date Time</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {data && data.length ? (

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-// import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
+
 import {
   getSubscriptionPlanRequest,
   addSubscriptionRequest,
@@ -84,7 +84,7 @@ class Dashboard extends Component {
       appointment: oldAppointment,
       appStart: oldAppStart,
       appEnd: oldAppEnd
-    } = qs.parse(search);
+    } = qs.parse(search.replace("?", ""));
     const {
       customerSales: oldCustomerSales,
       start,
@@ -92,7 +92,7 @@ class Dashboard extends Component {
       appointment,
       appStart,
       appEnd
-    } = qs.parse(oldSearch);
+    } = qs.parse(oldSearch.replace("?", ""));
     if (
       customerSales !== oldCustomerSales ||
       customerStart !== start ||
@@ -114,7 +114,7 @@ class Dashboard extends Component {
   getCustomerSales = () => {
     const { location } = this.props.history;
     const { search } = location;
-    let { customerSales, start, end } = qs.parse(search);
+    let { customerSales, start, end } = qs.parse(search.replace("?", ""));
     this.setState({
       type: customerSales
     });
@@ -140,7 +140,9 @@ class Dashboard extends Component {
   getDashboardAppointments = () => {
     const { location } = this.props.history;
     const { search } = location;
-    let { appointment, appStart: start, appEnd: end } = qs.parse(search);
+    let { appointment, appStart: start, appEnd: end } = qs.parse(
+      search.replace("?", "")
+    );
     this.setState({
       appointmentType: appointment
     });
@@ -215,7 +217,7 @@ class Dashboard extends Component {
     if (!search) {
       search = {};
     } else {
-      search = qs.parse(search);
+      search = qs.parse(search.replace("?", ""));
     }
     search = {
       ...search,
@@ -242,7 +244,7 @@ class Dashboard extends Component {
     if (!search) {
       search = {};
     } else {
-      search = qs.parse(search);
+      search = qs.parse(search.replace("?", ""));
     }
     search = {
       ...search,
@@ -258,18 +260,7 @@ class Dashboard extends Component {
    *
    */
   render() {
-    const {
-      //modelInfoReducer,
-      // modelOperate,
-      // getSubscriptionPlanRequest,
-      // subscriptionReducer,
-      // addSubscriptionRequest,
-      dashboardData,
-      redirectTo
-      // profileInfo
-    } = this.props;
-    // const { modelDetails } = modelInfoReducer;
-    // const { openSubscriptionModel, openSubPayementModel } = modelDetails;
+    const { dashboardData, redirectTo } = this.props;
     const {
       cards,
       customerStartDate,

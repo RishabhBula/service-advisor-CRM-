@@ -98,9 +98,6 @@ class WorkflowListView extends React.Component {
         </td>
         <td width={200}>
           <Select
-            // defaultValue={groupedOptions.filter(
-            //   item => item.id === order.workflowStatus
-            // )}
             value={statusValue[0]}
             options={groupedOptions}
             className="w-100 form-select"
