@@ -3,7 +3,6 @@ import moment from "moment";
 
 import {
   calculateSubTotal,
-  getSumOfArray,
   calculateValues,
   serviceTotalsCalculation
 } from "../../helpers";
@@ -15,14 +14,7 @@ class InvoiceTable extends Component {
   }
 
   getServiceItems = serviceItemData => {
-    const serviceTd = {
-      fontSize: "12px",
-      borderBottom: "1px solid #ddd",
-      borderRight: "1px solid #ddd",
-      padding: "3px",
-      fontFamily: "Open Sans"
-    };
-    let  calSubTotal = 0;
+    let calSubTotal = 0;
     var table = [];
     for (let j = 0; j < serviceItemData.length; j++) {
       let service = serviceItemData[j];
@@ -30,8 +22,9 @@ class InvoiceTable extends Component {
       var note =
         (service.serviceType === "part" &&
         service.partOptions &&
-        service.partOptions.showNoteOnQuoteAndInvoice
-          ? "Note : " + service.note
+        service.partOptions.showNoteOnQuoteAndInvoice &&
+        service.note !== ""
+          ? (`Note : ${service.note}`)
           : "") ||
         (service.serviceType === "tire" &&
         service.tierPermission &&
@@ -81,8 +74,13 @@ class InvoiceTable extends Component {
           : 0;
       table.push(
         <tr key={j}>
-          <td style={serviceTd}>{val}</td>
-          <td style={serviceTd}>
+          <td>
+            <span className="parts-name">
+              {val} {partnumber}
+            </span>
+            <span className="note-text">{note}</span>
+          </td>
+          <td>
             {service.serviceType === "part" &&
             service.partOptions &&
             service.partOptions.showPriceOnQuoteAndInvoice
@@ -91,7 +89,7 @@ class InvoiceTable extends Component {
               ? "$" + cost
               : "-" || "-"}
           </td>
-          <td style={serviceTd}>
+          <td>
             {service.serviceType === "part" &&
             service.partOptions &&
             service.partOptions.showPriceOnQuoteAndInvoice
@@ -100,9 +98,9 @@ class InvoiceTable extends Component {
               ? qty
               : "-" || "-"}
           </td>
-          <td style={serviceTd}>{hours || "-"}</td>
-          <td style={serviceTd}>{discountMainVal}</td>
-          <td style={serviceTd}>{servicesSubTotal}</td>
+          <td>{hours || "-"}</td>
+          <td>{discountMainVal}</td>
+          <td>${servicesSubTotal}</td>
         </tr>
       );
     }
@@ -110,325 +108,297 @@ class InvoiceTable extends Component {
   };
 
   render() {
-    const invoiceWarp = {
-        width: "520px",
-        marginRight: "5px",
-        float: "left",
-        fontSize: "13px",
-        fontFamily: "Open Sans"
-      },
-      invoiceHeader = {
-        width: "100%",
-        clear: "both",
-        float: "left"
-      },
-      totalTable = {
-        width: "220px",
-        border: "0px",
-        float: "right",
-        fontSize: "12px",
-        fontFamily: "Open Sans"
-      },
-      totalTd = {
-        width: "220px",
-        fontSize: "12px",
-        fontFamily: "Open Sans"
-      },
-      totalDivTitle = {
-        width: "50%",
-        display: "inline-block",
-        fontFamily: "Open Sans"
-      },
-      totalDiv = {
-        width: "50%",
-        display: "inline-block",
-        fontFamily: "Open Sans",
-      },
-      totalDivSpan = {
-        paddingLeft : '20px'
-      },
-      serviceTableWarp = {
-        width: "100%",
-        clear: "both",
-        float: "left",
-        marginBottom: "20px",
-        border: "1px solid #ddd",
-        fontFamily: "Open Sans"
-      },
-      serviceTable = {
-        width: "100%"
-      },
-      serviceTr = {
-        textAlign: "left",
-        fontSize: "11px",
-        borderBottom: "1px solid #ddd",
-        borderRight: "1px solid #ddd",
-        padding: "3px",
-        fontWeight: "normal",
-        fontFamily: "Open Sans"
-      },
-      serviceTitle = {
-        background: "#d8d5d5",
-        color: "#000",
-        textAlign: "left",
-        padding: "5px",
-        fontSize: "12px",
-        fontFamily: "Open Sans"
-      },
-      InvoiceTitleBlock = {
-        width: "50%",
-        float: "left",
-        fontFamily: "Open Sans"
-      },
-      InvoiceTitle = {
-        width: "100%",
-        fontSize: "12px",
-        marginBottom: "5px",
-        fontFamily: "Open Sans"
-      },
-      epaRow = {
-        width: "100%",
-        float: "left",
-        fontSize: "11px",
-        background: "#ccc",
-        fontFamily: "Open Sans"
-      },
-      epaColumn = {
-        display: "inline-block",
-        marginRight: "10px",
-        padding: "2px",
-        fontFamily: "Open Sans"
-      },
-      epaServiceTotal = {
-        float: "right",
-        marginRight: "45px",
-        display: "inline-block",
-        padding: "2px",
-        fontFamily: "Open Sans"
-      },
-      companyHeading = {
-        width: "100%",
-        fontSize: "12px",
-        textAlign: "center",
-        paddingRight: "30px",
-        fontFamily: "Open Sans"
-      },
-      totalLine = {
-        margin: "5px 0",
-        background: "#dddddd",
-        height: "1px",
-        fontFamily: "Open Sans"
-      },
-      comapnyNameDiv = {
-        width: "40%",
-        float: "right",
-        fontFamily: "Open Sans"
-      },
-      customerDetail = {
-        width: "100%",
-        clear: "both",
-        float: "left",
-        border: "1px solid #ddd",
-        padding: "5px 0",
-        margin: "5px 0 10px",
-        fontFamily: "Open Sans"
-      },
-      customerDetailLeft = {
-        width: "49%",
-        float: "left",
-        borderRight: "1px solid #ddd",
-        paddingTop: "5px",
-        paddingLeft: "5px",
-        fontFamily: "Open Sans"
-      },
-      customerDetailRight = {
-        width: "49%",
-        float: "left",
-        fontFamily: "Open Sans"
-      },
-      vehicelDetail = {
-        margin: "0px",
-        fontSize: "12px",
-        paddingLeft: "10px",
-        paddingTop: "5px",
-        fontFamily: "Open Sans"
-      };
-
+     const signature = {
+         width: "100%",
+         float: "left",
+         marginTop: "20px"
+       },
+       disclamair = {
+         float: "left",
+         fontSize: "10px",
+         width: "230px",
+         paddingRight: "40px"
+       },
+       orderTableBlock = {
+         float: "left",
+         width: "50%"
+       },
+       headerStyle = {
+         marginLeft: "8px",
+         marginRight: "8px"
+       },
+       invoceTableTitle = {
+         fontSize: "12px"
+       },
+       servicePrice = {
+         width: "150px",
+         float: "left",
+         display: "block",
+         textAlign: "right",
+         fontSize: "11px",
+         clear: "right"
+       };
     const { orderReducer, profileReducer } = this.props;
-
     const orderData = this.props.orderReducer.orderItems;
-    const customerData = orderData.customerId;
+    const customerData = orderData.customerId ? orderData.customerId :'';
     const comapnyInfo = profileReducer ? profileReducer.profileInfo : "";
-      console.log(orderData, "orderData");
-    const serviceData =
-      orderReducer && orderReducer.orderItems
-        ? orderReducer.orderItems.serviceId
-        : "";
-    const orderName =
-      orderReducer && orderReducer.orderItems
-        ? orderReducer.orderItems.orderName
-        : "";
+    const serviceData = this.props.services;
+    // const orderName =
+    //   orderReducer && orderReducer.orderItems
+    //     ? orderReducer.orderItems.orderName
+    //     : "";
     const orderId = orderData.orderId || "";
     const orderDate = moment(orderData.createdAt || "").format("MMM Do YYYY");
     const companyName = comapnyInfo.companyName;
-    const vehilceInfo =
-      orderData.vehicleIdorderData.vehicleId.year +
-      " " +
-      orderData.vehicleId.make +
-      " " +
-      orderData.vehicleId.modal;
+    const vehilceInfo = orderData.vehicleId ? (
+      orderData.vehicleId.year +
+        " " +
+        orderData.vehicleId.make +
+        " " +
+        orderData.vehicleId.modal
+    ) : '';
 
-    const serviceCal = serviceTotalsCalculation(serviceData);
     const serviceTableInnner = [];
-    let seriveItemTr;
-    for (let i = 0; i < serviceData.length; i++) {
+    const servieArray = [];
+    let serviceEpaPer ,serviceDiscountPer,serviceTaxPer,servicesId;
+    let seriveItemTr, serviceCal;
+    if (serviceData && serviceData.length) {
+      serviceData.map(item => {
+        servieArray.push({ serviceId: item });
+        serviceCal = serviceTotalsCalculation(servieArray);
+        return true;
+      });
+    }
+    for (let i = 0; i < servieArray.length; i++) {
+      servicesId = servieArray[i].serviceId;
+      serviceEpaPer =
+        servicesId && servicesId.epa.value && servicesId.epa.type === "%"
+          ? `(${servicesId.epa.value}%)`
+          : "";
+      serviceDiscountPer =
+        servicesId &&
+        servicesId.discount.value &&servicesId.discount.type === "%"
+          ? `(${servicesId.discount.value}%)`
+          : "";
+      serviceTaxPer =
+        servicesId && servicesId.taxes.value &&servicesId.taxes.type === "%"
+          ? `(${servicesId.taxes.value}%)`
+          : "";
+
       serviceTableInnner.push(
-        <div style={serviceTableWarp} className={"invoceTableDesign"} key={i}>
-          <div style={serviceTitle}>{serviceData[i].serviceId.serviceName}</div>
+        <div className={"invoceTableDesign"} key={i}>
+          <div className={"invoceTableTitle"}>
+            <span style={invoceTableTitle}>{servicesId.serviceName}</span>
+          </div>
           <table
             id="tbl"
-            style={serviceTable}
             cellPadding="0"
             cellSpacing="0"
             border="0"
+            className={"invoice-table"}
           >
             <thead>
               <tr>
-                <th style={serviceTr} width="200">
+                <th width="200" className="service-title">
                   Service Title
                 </th>
-                <th style={serviceTr}>Price</th>
-                <th style={serviceTr}>Qty</th>
-                <th style={serviceTr}>Hours</th>
-                <th style={serviceTr}>Discount</th>
-                <th style={serviceTr}>Sub total</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Hours</th>
+                <th>Discount</th>
+                <th>Sub total</th>
               </tr>
             </thead>
             <tbody>
               {
                 (seriveItemTr = this.getServiceItems(
-                  serviceData[i].serviceId.serviceItems
+                  servieArray[i].serviceId.serviceItems
                 ))
               }
             </tbody>
           </table>
-          <div style={epaRow}>
-            <div style={epaColumn}>
-              Epa : {parseFloat(serviceCal.serviceEpa[i]).toFixed(2)}
+          <div className={"total-amount"}>
+            <div className={"total-amount-left"}>
+              <div className="epa-price">
+                Epa : $
+                {parseFloat(
+                  serviceCal.serviceEpa &&
+                    serviceCal.serviceEpa.length &&
+                    !isNaN(serviceCal.serviceEpa[i])
+                    ? serviceCal.serviceEpa[i]
+                    : 0
+                ).toFixed(2)}{" "}
+                {serviceEpaPer}
+              </div>
+              <div className="discount-price">
+                Discount: $
+                {parseFloat(
+                  serviceCal.serviceEpa &&
+                    serviceCal.serviceEpa.length &&
+                    !isNaN(serviceCal.serviceDiscount[i])
+                    ? serviceCal.serviceTax[i]
+                    : 0
+                ).toFixed(2)}{" "}
+                {serviceDiscountPer}
+              </div>
+              <div className="tax-price">
+                Tax : $
+                {parseFloat(
+                  serviceCal.serviceEpa &&
+                    serviceCal.serviceEpa.length &&
+                    !isNaN(serviceCal.serviceTax[i])
+                    ? serviceCal.serviceTax[i]
+                    : 0
+                ).toFixed(2)}{" "}
+                {serviceTaxPer}
+              </div>
             </div>
-            <div style={epaColumn}>
-              Discount: {parseFloat(serviceCal.serviceTax[i]).toFixed(2)}
+            <div className="service-price" style={servicePrice}>
+              Service Total: $
+              {serviceCal.serviceEpa &&
+              serviceCal.serviceEpa.length &&
+              !isNaN(serviceCal.serviceCount[i])
+                ? serviceCal.serviceCount[i]
+                : 0}
             </div>
-            <div style={epaColumn}>
-              Tax : {parseFloat(serviceCal.serviceDiscount[i]).toFixed(2)}
-            </div>
-            <div style={epaServiceTotal}>
-              Service Total: ${serviceCal.serviceCount[i]}
-            </div>
+            <div className={"clearfix"} />
           </div>
         </div>
       );
     }
 
+   
+      
+
     return (
-      <div id={"invoicePDF"} style={invoiceWarp}>
-        <div style={invoiceHeader}>
-          <div style={InvoiceTitleBlock}>
-            <div style={InvoiceTitle}>Invoice : #{orderId}</div>
-            <div style={InvoiceTitle}>Created : {orderDate}</div>
-          </div>
-          <div style={comapnyNameDiv}>
-            <div style={companyHeading}>{companyName}</div>
-          </div>
-        </div>
-
-        <div style={customerDetail}>
-          <div style={customerDetailLeft}>
-            <div style={InvoiceTitle}>
-              {customerData.firstName + " " + customerData.lastName}
+      <div id={"invoicePDF"} className={"pdf-container"}>
+        <div id="pageHeader" style={headerStyle}>
+          <div>
+            <div className="invoice">
+              <div className="invoice-name">Invoice : #{orderId}</div>
+              <div className="invoice-date">Created : {orderDate}</div>
             </div>
-            <div style={InvoiceTitle}>{customerData.email}</div>
+            <div className="company-name">
+              <div>{companyName}</div>
+            </div>
+            <div className="clearfix" />
           </div>
-          <div style={customerDetailRight}>
-            <div style={vehicelDetail}>{vehilceInfo}</div>
+          <div className="user-details">
+            <div className="width-50">
+              <div className="user-details-left">
+                <div>
+                  {customerData.firstName + " " + customerData.lastName}
+                </div>
+                <div className="user-email">{customerData.email}</div>
+              </div>
+            </div>
+            <div className="width-50">
+              <div className="user-details-right">{vehilceInfo}</div>
+            </div>
+            <div className="clearfix" />
           </div>
         </div>
-
         {serviceTableInnner}
-
-        <table style={totalTable} id="invoiceTable">
-          <thead>
-            <tr>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalDivTitle}>Total Parts </div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>${serviceCal.totalParts}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalDivTitle}>Total Tires</div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>${serviceCal.totalTires}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalDivTitle}>Total Labor</div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>${serviceCal.totalLabor}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalLine} />
-                <div style={totalDivTitle}>Sub Total</div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>${serviceCal.orderSubTotal}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalDivTitle}>Total Tax</div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>+ ${serviceCal.totalTax}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalDivTitle}>Total Discount</div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>- ${serviceCal.totalDiscount}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style={totalTd}>
-                <div style={totalDivTitle}>Grand Total</div>
-                <div style={totalDiv}>
-                  : <span style={totalDivSpan}>${serviceCal.orderGrandTotal}</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div>
-          <img
-            src="http://serviceadvisor.io/images/banner-right-img.png"
-            alt="logo"
-            width="100"
-          />
+        <div style={disclamair}>
+          Quotes are an approximation of charges to you for the services
+          requested. They are based on the anticipated details of the work
+          to be done. It is possible for unexpected complications to cause
+          some deviation from the quote. I hereby authorize the repair work
+          hereinafter set forth to be done along with the necessary material
+          and agree that you are not responsible for loss or damage to
+          vehicle or articles left in vehicle in case of fre, theft or any
+          other cause beyond your control or for any delays caused by
+          unavailability of parts or delays in parts by the supplier or
+          transporter. I understand that I have the right to know before
+          authorizing my repairs what the repairs to my car will be and what
+          their costs will be. You need not obtain approval from me prior to
+          performing repairs what the repairs will be or their cost if the
+          total amount for such repairs does not exceed authorized amount.
         </div>
+        <div style={orderTableBlock}>
+          <table id="invoiceTable" className="order-table" align="right">
+            <tbody>
+              <tr>
+                <td>Total Parts</td>
+                <td>
+                  <span className="colon">:</span>
+                  <span className="plus-width" />$
+                  {serviceCal && serviceCal.totalParts
+                    ? serviceCal.totalParts
+                    : 0}
+                </td>
+              </tr>
+              <tr>
+                <td>Total Tires</td>
+                <td>
+                  <span className="colon">:</span>
+                  <span className="plus-width" />$
+                  {serviceCal && serviceCal.totalTires
+                    ? serviceCal.totalTires
+                    : 0}
+                </td>
+              </tr>
+              <tr>
+                <td className="border-bottom">Total Labor</td>
+                <td className="border-bottom">
+                  <span className="colon">:</span>
+                  <span className="plus-width" />$
+                  {serviceCal && serviceCal.totalLabor
+                    ? serviceCal.totalLabor
+                    : 0}
+                </td>
+              </tr>
+              <tr>
+                <td>Sub Total</td>
+                <td>
+                  <span className="colon">:</span>
+                  <span className="plus-width" />$
+                  {serviceCal && serviceCal.orderSubTotal
+                    ? serviceCal.orderSubTotal
+                    : 0}
+                </td>
+              </tr>
+              <tr>
+                <td>Total Tax</td>
+                <td>
+                  <span className="colon">:</span>
+                  <span className="plus-width">+</span>$
+                  {serviceCal && serviceCal.totalTax
+                    ? serviceCal.totalTax
+                    : 0}
+                </td>
+              </tr>
+              <tr>
+                <td>Total Discount</td>
+                <td>
+                  <span className="colon">:</span>
+                  <span className="plus-width">-</span>$
+                  {serviceCal && serviceCal.totalDiscount
+                    ? serviceCal.totalDiscount
+                    : 0}
+                </td>
+              </tr>
+              <tr className="grand-total">
+                <td>
+                  <b>Grand Total</b>
+                </td>
+                <td>
+                  <span className="colon">:</span>
+                  <span className="plus-width" />$
+                  {serviceCal && serviceCal.orderGrandTotal
+                    ? serviceCal.orderGrandTotal
+                    : 0}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style={signature}>
+          Signature _______________________________
+        </div>
+
+        <div id="pageFooter">Default footer</div>
       </div>
     );
   }

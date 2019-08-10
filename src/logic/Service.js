@@ -3,13 +3,14 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
 import {
-   showLoader,
-   hideLoader,
-   serviceActions,
-   addServiceSuccess,
-   getCannedServiceListSuccess,
-   getCannedServiceList,
-   updateOrderDetailsRequest
+  showLoader,
+  hideLoader,
+  serviceActions,
+  addServiceSuccess,
+  getCannedServiceListSuccess,
+  getCannedServiceList,
+  updateOrderDetailsRequest,
+  genrateInvoice
 } from "./../actions";
 
 const addServiceLogic = createLogic({
@@ -64,6 +65,12 @@ const addServiceLogic = createLogic({
                   _id: action.payload.orderId,
                   customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
                }
+               dispatch(
+                 genrateInvoice({
+                   html: action.payload.html,
+                   _id: action.payload.orderId
+                 })
+               );
                dispatch(updateOrderDetailsRequest(payload))
             }
          }

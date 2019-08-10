@@ -1953,6 +1953,35 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   position: relative;
   font-size: 21px;
 }
+.inspection-list-table{
+  max-height: 500px;
+  overflow-y: auto;
+}
+.btn-clear{
+  color: hsl(0,0%,80%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  padding: 6px;
+  justify-content: center;
+  display: flex;
+  -webkit-transition: color 150ms;
+  transition: color 150ms;
+  box-sizing: border-box;
+  position: absolute;
+  right: 71px;
+  top: 34px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  text-align: center;
+  opacity: 0.2;
+}
+.btn-clear img{
+  width: 10px;
+  height: 24px;
+}
 .custom-form-modal .form-group label.message-temp-label {
   min-width: 100px;
 }
@@ -2763,4 +2792,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .add-appointment-form .custom-form-modal .form-group label {
   min-width: 10%;
+}
+
+.invoiceTableCompnent,.inspectionTable{
+  display: none;
 }

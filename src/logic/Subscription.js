@@ -6,6 +6,7 @@ import {
    getSubscriptionPlanSuccess,
    hideLoader,
    modelOpenRequest,
+   profileInfoRequest
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
@@ -39,6 +40,7 @@ const addSubscriptionLogic = createLogic({
                }
             })
          );
+         dispatch(profileInfoRequest())
          dispatch(hideLoader());
          done();
       }

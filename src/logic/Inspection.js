@@ -16,6 +16,7 @@ import {
   searchMessageTemplateListSuccess,
   sendMessageTemplateSuccess,
   updateOrderDetailsRequest,
+  genrateInvoice,
   showLoader,
   hideLoader,
 } from "../actions"
@@ -46,7 +47,15 @@ const addInspectionLogic = createLogic({
         inspectionIds.push(inspection._id)
         return true
       })
+       
       dispatch(addInspectionSuccess(result.data.data))
+      dispatch(
+        genrateInvoice({
+          html: action.payload.html,
+          isInspection:true,
+          _id: action.payload.orderId
+        })
+      );
       if (inspectionIds.length) {
         let inspectionIdData = []
         inspectionIds.map((item, index) => {
@@ -61,6 +70,13 @@ const addInspectionLogic = createLogic({
           inspectionId: inspectionIdData,
           _id: action.payload.orderId
         }
+        dispatch(
+          genrateInvoice({
+            html: action.payload.html,
+            isInspection: true,
+            _id: action.payload.orderId
+          })
+        );
         dispatch(updateOrderDetailsRequest(payload))
       }
       dispatch(hideLoader());
@@ -89,7 +105,7 @@ const addInspectionTemplateLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(addInspectionTemplateSuccess(result.data.data));
+      //dispatch(addInspectionTemplateSuccess(result.data.data));
       dispatch(
         getTemplateList()
       );
@@ -177,7 +193,7 @@ const addMessageTemplateLogic = createLogic({
 const getMessageTemplateListLogic = createLogic({
   type: InspectionActions.GET_MESSAGE_TEMPLATE,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    //dispatch(showLoader());
     logger(action.payload)
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -190,7 +206,7 @@ const getMessageTemplateListLogic = createLogic({
       }
     );
     if (result.isError) {
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       dispatch(
         getMessageTemplateSuccess({
           isLoading: false,
@@ -205,7 +221,7 @@ const getMessageTemplateListLogic = createLogic({
         value: template._id
       }));
       logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       dispatch(
         getMessageTemplateSuccess({
           isLoading: false,

@@ -2,7 +2,18 @@ const Inspection = require("../../models/inspection");
 const commonValidation = require("../../common");
 const mongoose = require("mongoose");
 const { validationResult } = require("express-validator/check");
-
+const fs = require("fs");
+const path = require("path");
+const __basedir = path.join(__dirname, "../../public");
+const { resizeImage, imagePath } = require("../../common/imageThumbnail");
+const types = {
+  "/": "jpg",
+  i: "png",
+  R: "gif",
+  U: "webp",
+  t: "jpeg",
+  f: "pdf"
+};
 /* get order number */
 const creteNewInspection = async (req, res) => {
   const { body, currentUser } = req
@@ -18,9 +29,71 @@ const creteNewInspection = async (req, res) => {
     let inspectionContent
     for (let index = 0; index < body.inspection.length; index++) {
       const element = body.inspection[index];
+      let inspectionItems = []
+      for (let index = 0; index < element.items.length; index++) {
+        const inspection = element.items[index];
+        let S3ImapectionImg = [], S3ImapectionImgThumb = []
+        for (let index = 0; index < inspection.itemImagePreview.length; index++) {
+          const inspectionImage = inspection.itemImagePreview[index];
+          let inspectionImageUrl = []
+          if (typeof inspectionImage === "string") {
+            inspectionImageUrl = inspectionImage.split("https")
+          }
+          let fileName, originalImagePath, inspectionImageThumb, inspectionImageOriginal, fileData
+          if (!inspectionImageUrl[1] ||inspectionImageUrl[1] === "undefined") {
+            const base64Image = inspectionImage.dataURL.replace(
+              /^data:image\/\w+;base64,/,
+              ""
+            );
+            var buf = new Buffer.from(base64Image, "base64");
+            const type = types[base64Image.charAt(0)];
+            // const randomConst = Math.floor(Math.random() * 90 + 10)
+            fileName = [inspectionImage.name].join(
+              ""
+            );
+            originalImagePath = path.join(__basedir, "inspection-img", fileName);
+            fileData = fs.writeFileSync(originalImagePath, buf)
+            var thumbnailImagePath = path.join(
+              __basedir,
+              "inspection-img-thumb",
+              fileName
+            );
+            //console.log("$$$$$$$$$$$$$$$", inspectionImage.name.split('.'), type);
+            await resizeImage(originalImagePath, thumbnailImagePath, 300);
+            inspectionImageThumb = await imagePath(thumbnailImagePath, "inpection-thumbnail");
+            inspectionImageOriginal = await imagePath(originalImagePath, "inpection")
+            S3ImapectionImgThumb.push(inspectionImageThumb)
+            S3ImapectionImg.push(inspectionImageOriginal)
+          } else {
+            S3ImapectionImgThumb.push(inspectionImage)
+            S3ImapectionImg.push(inspectionImage)
+          }
+          if (S3ImapectionImgThumb && S3ImapectionImg && !inspectionImageUrl[1]) {
+            console.log("!@@@@@@@@!",S3ImapectionImgThumb, S3ImapectionImg);
+            
+            console.log("****************Uploaded Successfully******************");
+            
+            fs.unlinkSync(originalImagePath)
+            fs.unlinkSync(thumbnailImagePath)
+          }
+          //console.log("inspectionImage", S3ImapectionImgThumb);
+        }
+        inspectionItems.push(
+          {
+            aprovedStatus: inspection.aprovedStatus,
+            color: inspection.color,
+            itemImage: S3ImapectionImg,
+            itemImagePreview: S3ImapectionImg,
+            name: inspection.name,
+            note: inspection.note
+          }
+        )
+      }
+     // console.log("####################", inspectionItems);
+
       const inspectionDataModal = {
         inspectionName: element.inspectionName,
-        items: element.items,
+        items: inspectionItems,
         isTemplate: false,
         userId: currentUser.id,
         parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,

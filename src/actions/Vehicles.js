@@ -14,6 +14,9 @@ export const vehicleActions = {
   DELETE_VEHICLE: "Delete vehicle Requested!",
   UPDATE_VEHICLE_STATUS: "Update vehicle status Requested!",
 
+  GET_CUSTOMER_VEHICLE_REQUEST: "Get all vehicle associted with customer",
+  GET_CUSTOMER_VEHICLE_SUCCESS: "Vehicle associted with customer list success",
+
   EDIT_VEHICLE_REQUESTED: "Edit VEHICLE Requested!",
   EDIT_VEHICLE_SUCCESS: "Edit VEHICLE Success!",
   IMPORT_VEHICLE_REQUEST: "Request to import VEHICLE!",
@@ -68,3 +71,6 @@ export const updateImportVehicleReq = createAction(
 );
 
 export const exportVehicles = createAction(vehicleActions.EXPORT_VEHICLES);
+
+export const customerVehicleReq = createAction(vehicleActions.GET_CUSTOMER_VEHICLE_REQUEST);
+export const customerVehicleSuccess = createAction(vehicleActions.GET_CUSTOMER_VEHICLE_SUCCESS)

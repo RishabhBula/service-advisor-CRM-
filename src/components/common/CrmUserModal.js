@@ -178,7 +178,6 @@ export class CrmUserModal extends Component {
       if (!isEditMode) {
         this.props.addUser(payload);
       } else {
-        console.log(payload, " for edit")
         this.props.updateUser(this.props.userData._id, payload);
       }
     } catch (error) {

@@ -7,7 +7,6 @@ import Loader from "../Loader/Loader";
 import { invoicePDF } from "./invoicePDF";
 import InvoiceTable from "./invoiceTable";
 import * as jsPDF from "jspdf";
-import "jspdf-autotable";
 import {
   getOrderIdRequest,
   customerGetRequest,
@@ -289,7 +288,6 @@ class Order extends Component {
     this.setState({
       sentModal: !this.state.sentModal
     });
-    this.printInvoice({ sentinvoice: true });
   };
 
   toggleMessageTemplate = ele => {
@@ -299,37 +297,16 @@ class Order extends Component {
   };
 
   getPdf = () => {
-    const HTML = document.getElementById("customers").innerHTML;
-    this.props.genrateInvoice({ html: HTML });
+    const {orderReducer} = this.props
+    let filename = orderReducer && orderReducer.orderItems ? orderReducer.orderItems.invoiceURL : '';
+    let pdfWindow = window.open("");
+    pdfWindow.document.body.style.margin = "0px";
+    pdfWindow.document.body.innerHTML =
+      "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
+      filename +
+      "'></embed></body></html>";
   };
 
-  printInvoice = sentinvoice => {
-    const orderData = this.props.orderReducer.orderItems;
-    const customerData = orderData.customerId;
-    const serviceData = this.props.orderReducer.orderItems.serviceId;
-    const comapnyInfo = this.props.profileInfoReducer.profileInfo;
-    const vehilceInfo =
-      orderData.vehicleId.year +
-      " " +
-      orderData.vehicleId.make +
-      " " +
-      orderData.vehicleId.modal;
-    var doc = new jsPDF("p", "pt");
-    var pdfWidth = doc.internal.pageSize.getWidth();
-    const pdfBlob = invoicePDF(
-      sentinvoice,
-      orderData,
-      customerData,
-      serviceData,
-      comapnyInfo,
-      vehilceInfo,
-      doc,
-      pdfWidth
-    );
-    this.setState({
-      pdfBlob
-    });
-  };
 
   render() {
     const {
@@ -398,7 +375,6 @@ class Order extends Component {
       pdfReducer
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
-    console.log(pdfReducer, "pdfReducer");
     return (
       <div className="animated fadeIn">
         {!orderReducer.isOrderLoading ? (
@@ -480,7 +456,6 @@ class Order extends Component {
                           <UncontrolledTooltip target={"sentInvoice"}>
                             Click to Send Invoice
                           </UncontrolledTooltip>
-                          {/* onClick={() => this.printInvoice(false)} */}
                           <span
                             id="add-Appointment"
                             className="print-btn"
@@ -624,38 +599,43 @@ class Order extends Component {
                 paymentReducer={paymentReducer}
                 updateOrderStatus={updateOrderStatus}
               />
-              <SendInspection
-                isOpen={this.state.sentModal}
-                toggle={this.handelTemplateModal}
-                customerData={customerData}
-                vehicleData={vehicleData}
-                searchMessageTemplateList={
-                  this.props.searchMessageTemplateList
-                }
-                toggleMessageTemplate={this.toggleMessageTemplate}
-                sendMessageTemplate={this.props.sendMessageTemplate}
-                pdfBlob={pdfBlob}
-                isOrder
-                orderReducer={orderReducer}
-                profileReducer={profileInfoReducer}
-              />
-              <MessageTemplate
-                isOpen={this.state.mesageModal}
-                toggle={this.toggleMessageTemplate}
-                inspectionData={this.props.inspectionReducer}
-                addMessageTemplate={this.props.addMessageTemplate}
-                getMessageTemplate={this.props.getMessageTemplate}
-                updateMessageTemplate={this.props.updateMessageTemplate}
-                deleteMessageTemplate={this.props.deleteMessageTemplate}
-              />
-            </div>
-
-            <div id="customers">
-              <InvoiceTable
-                orderReducer={orderReducer}
-                vehicleData={vehicleData}
-                profileReducer={profileInfoReducer}
-              />
+              {this.props.orderReducer.orderItems &&
+              this.props.orderReducer.orderItems.customerId &&
+              this.props.orderReducer.orderItems.vehicleId ? (
+                <>
+                  
+                  <SendInspection
+                    isOpen={this.state.sentModal}
+                    toggle={this.handelTemplateModal}
+                    customerData={customerData}
+                    vehicleData={vehicleData}
+                    searchMessageTemplateList={
+                      this.props.searchMessageTemplateList
+                    }
+                    toggleMessageTemplate={this.toggleMessageTemplate}
+                    sendMessageTemplate={this.props.sendMessageTemplate}
+                    isOrder
+                    orderReducer={orderReducer}
+                    profileReducer={profileInfoReducer}
+                  />
+                  <MessageTemplate
+                    isOpen={this.state.mesageModal}
+                    toggle={this.toggleMessageTemplate}
+                    inspectionData={this.props.inspectionReducer}
+                    addMessageTemplate={this.props.addMessageTemplate}
+                    getMessageTemplate={this.props.getMessageTemplate}
+                    updateMessageTemplate={this.props.updateMessageTemplate}
+                    deleteMessageTemplate={this.props.deleteMessageTemplate}
+                  />
+                  <div id="customers" className={"invoiceTableCompnent"}>
+                    <InvoiceTable
+                      orderReducer={orderReducer}
+                      vehicleData={vehicleData}
+                      profileReducer={profileInfoReducer}
+                    />
+                  </div>
+                </>
+              ) : null}
             </div>
           </Card>
         ) : (

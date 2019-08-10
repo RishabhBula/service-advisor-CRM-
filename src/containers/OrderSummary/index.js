@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-} from "reactstrap";
+import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import {
@@ -11,7 +9,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import OrderSummary from "../../components/OrderSummary";
-import Message from "../../components/Orders/Message"
+import Message from "../../components/Orders/Message";
 
 class OrderSummaryView extends Component {
   constructor(props) {
@@ -19,7 +17,7 @@ class OrderSummaryView extends Component {
     this.state = {
       orderId: "",
       query: "",
-      orderStatus:false
+      orderStatus: false
     };
   }
   componentDidMount = () => {
@@ -27,60 +25,99 @@ class OrderSummaryView extends Component {
     // if is summary true to check payload
     this.setState({
       query
-    })
-    this.props.verifyLinkRequest(
-      query
-    )
-  }
-  componentDidUpdate = ({summaryReducer}) => {
-    const propData = this.props.summaryReducer
-    if (summaryReducer.orderData.status !== propData.orderData.status ){
+    });
+    this.props.verifyLinkRequest(query);
+  };
+  componentDidUpdate = ({ summaryReducer }) => {
+    const propData = this.props.summaryReducer;
+    if (summaryReducer.orderData.status !== propData.orderData.status) {
       this.setState({
         orderStatus: propData.orderData.status
-      })
+      });
     }
-  }
-  authorizStatus = (customerId) => {
-    const {summaryReducer} = this.props
+  };
+  authorizStatus = customerId => {
+    const { summaryReducer } = this.props;
     const payload = {
       status: true,
       _id: summaryReducer.orderData._id,
       authorizerId: customerId,
       query: this.state.query,
-      isSummary:true
-    }
-    this.props.updateOrderDetailsRequest(payload)
-  }
+      isSummary: true
+    };
+    this.props.updateOrderDetailsRequest(payload);
+  };
 
   scrollTomessage = () => {
     var elmnt = document.getElementById("message-warp");
     elmnt.scrollIntoView();
-  }
+  };
+
+  getPdf = () => {
+    const { summaryReducer } = this.props;
+    let filename =
+      summaryReducer && summaryReducer.orderData
+        ? summaryReducer.orderData.invoiceURL
+        : "";
+    let pdfWindow = window.open("");
+    pdfWindow.document.body.style.margin = "0px";
+    pdfWindow.document.body.innerHTML =
+      "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
+      filename +
+      "'></embed></body></html>";
+  };
 
   render() {
     const {
       summaryReducer,
       sendMessage,
       updateOrderDetailsRequest
-    } = this.props
-    const { orderStatus } = this.state
-    const customerInfo = summaryReducer ? summaryReducer.orderData.customerId : "";
+    } = this.props;
+    const { orderStatus } = this.state;
+    const customerInfo = summaryReducer
+      ? summaryReducer.orderData.customerId
+      : "";
     return (
       <>
         <div className={"summary-warp mt-4 mb-2 border"}>
           <div className={"pull-right"}>
-            <Button color={"warning"} className={"mr-1"} size={"sm"} onClick={this.scrollTomessage}>Send Message</Button>
-            {!orderStatus ? <Button color={"success"} className={"mr-1"} size={"sm"} onClick={(e) => this.authorizStatus(customerInfo._id)} >Authorize Work</Button>  :
-              <Button color={"success"} className={"mr-1"} size={"sm"}  ><i className={"fas fa-check"}></i> Work is Authorize</Button>
-            }
-            <Button color={"primary"} className={"mr-1"} size={"sm"}>More Options</Button>
+            <Button
+              color={"warning"}
+              className={"mr-1"}
+              size={"sm"}
+              onClick={this.scrollTomessage}
+            >
+              Send Message
+            </Button>
+            {!orderStatus ? (
+              <Button
+                color={"success"}
+                className={"mr-1"}
+                size={"sm"}
+                onClick={e => this.authorizStatus(customerInfo._id)}
+              >
+                Authorize Work
+              </Button>
+            ) : (
+              <Button color={"success"} className={"mr-1"} size={"sm"}>
+                <i className={"fas fa-check"} /> Work is Authorize
+              </Button>
+            )}
+            <Button
+              color={"primary"}
+              className={"mr-1"}
+              size={"sm"}
+              onClick={this.getPdf}
+            >
+              More Options
+            </Button>
           </div>
-          <OrderSummary 
-          summaryReducer={summaryReducer}
-          updateOrderDetailsRequest={updateOrderDetailsRequest}
+          <OrderSummary
+            summaryReducer={summaryReducer}
+            updateOrderDetailsRequest={updateOrderDetailsRequest}
           />
-          
-          <div className="p-1 border-top mb-2"></div>
+
+          <div className="p-1 border-top mb-2" />
           <Message
             messagesList={summaryReducer.messageData}
             summaryReducer={summaryReducer}
@@ -92,25 +129,25 @@ class OrderSummaryView extends Component {
           />
         </div>
       </>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
   orderReducer: state.orderReducer,
   summaryReducer: state.summaryReducer,
-  inspectionReducer: state.inspectionReducer,
+  inspectionReducer: state.inspectionReducer
 });
 
 const mapDispatchToProps = dispatch => ({
-  verifyLinkRequest: (data) => {
+  verifyLinkRequest: data => {
     dispatch(verifyLinkRequest(data));
   },
   sendMessage: data => {
     dispatch(sendMessage(data));
   },
-  updateOrderDetailsRequest: data=>{
-    dispatch(updateOrderDetailsRequest(data))
+  updateOrderDetailsRequest: data => {
+    dispatch(updateOrderDetailsRequest(data));
   }
 });
 
