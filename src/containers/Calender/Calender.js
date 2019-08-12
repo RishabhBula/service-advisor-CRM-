@@ -31,7 +31,7 @@ class Calender extends Component {
    *
    */
   componentDidMount() {
-    this.props.getAppointments({});
+    this.props.getAppointments({ technicianId: null, vehicleId: null });
   }
   /**
    *
@@ -160,12 +160,12 @@ class Calender extends Component {
             {isLoading ? (
               <Loader />
             ) : (
-              <Appointments
-                addAppointment={this.toggleAddAppointModal}
-                data={data}
-                onEventClick={this.onEventClick}
-              />
-            )}
+                <Appointments
+                  addAppointment={this.toggleAddAppointModal}
+                  data={data}
+                  onEventClick={this.onEventClick}
+                />
+              )}
           </CardBody>
         </Card>
         <AddAppointment

@@ -23,6 +23,7 @@ import {
   getMessageListSuccess,
   verifyLinkRequest,
   getPaymentSuccess,
+  getCannedServiceList
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -171,7 +172,7 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
-    dispatch(getOrderDetailsRequest({_id: action.payload.orderId}))
+    dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }))
     done();
   }
 });
@@ -331,9 +332,9 @@ const addOrderLogic = createLogic({
 const updateOrderDetailsLogic = createLogic({
   type: orderActions.UPDATE_ORDER_DETAILS,
   async process({ action }, dispatch, done) {
-    if (!action.payload.isChangedOrderStatus) {
-      dispatch(showLoader());
-    }
+    // if (!action.payload.isChangedOrderStatus) {
+    //   dispatch(showLoader());
+    // }
     logger(action.aypload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -346,13 +347,15 @@ const updateOrderDetailsLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      if (!action.payload.isChangedOrderStatus) {
-        dispatch(hideLoader());
-      }
+      // if (!action.payload.isChangedOrderStatus) {
+      //   dispatch(hideLoader());
+      // }
       done();
       return;
     } else {
-      if (!action.payload.isChangedOrderStatus) {
+      if (
+        !action.payload.isChangedOrderStatus
+      ) {
         toast.success(result.messages[0]);
       }
       if (action.payload.status === true) {
@@ -384,7 +387,7 @@ const updateOrderDetailsLogic = createLogic({
 
       dispatch(updateOrderDetailsSuccess());
 
-      dispatch(hideLoader());
+      // dispatch(hideLoader());
       done();
     }
   }
@@ -437,8 +440,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         _id: action.payload && action.payload._id ? action.payload._id : null,
         customerId:
           action.payload && action.payload.customerId
@@ -447,7 +450,10 @@ const getOrderDetails = createLogic({
         vehicleId:
           action.payload && action.payload.vehicleId
             ? action.payload.vehicleId
-            : null
+            : null,
+        technicianId: action.payload && action.payload.technicianId
+          ? action.payload.technicianId
+          : null
       },
       undefined
     );
@@ -496,6 +502,7 @@ const getOrderDetails = createLogic({
           vehicleOrders: !action.payload.customerId ? result.data.data : []
         })
       );
+      dispatch(getCannedServiceList())
       dispatch(hideLoader());
       done();
     }

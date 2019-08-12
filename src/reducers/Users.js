@@ -5,6 +5,7 @@ const initialState = {
   users: [],
   isLoading: true,
   totalUsers: 0,
+  technicianData: [],
   userData: {
     isSuccess: false,
     isEditSuccess: false,
@@ -44,7 +45,15 @@ export const usersReducer = handleActions(
       userData: {
         ...state.userData,
         isEditSuccess: true
-      }
+      },
+    }),
+    [usersActions.GET_SINGLE_USER_DETAILS_REQUEST]: (state, action) => ({
+      ...state,
+      technicianData: []
+    }),
+    [usersActions.GET_SINGLE_USER_DETAILS_SUCCESS]: (state, action) => ({
+      ...state,
+      technicianData: action.payload
     })
   },
   initialState

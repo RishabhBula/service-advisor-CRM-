@@ -120,7 +120,8 @@ const startTimer = async (req, res) => {
       {
         technicianId,
         serviceId,
-        orderId
+        orderId,
+        _id: timeClock.id
       },
       {
         $inc: {
@@ -223,13 +224,13 @@ const getTimeLogByTechnician = async (req, res) => {
 /**
  *
  */
-const getTimeLogByOrderId = async (req, res) => {
+const getTimeLogOfTechnician = async (req, res) => {
   try {
     const { query } = req;
-    const { orderId } = query;
+    const { technicianId } = query;
     const result = await TimeClock.find({
-      orderId
-    });
+      technicianId: technicianId
+    }).populate("technicianId orderId")
     return res.status(200).json({
       message: "Timer get success!",
       data: result || []
@@ -390,7 +391,7 @@ module.exports = {
   startTimer,
   getTimeLogByTechnician,
   updateTimeLogOfTechnician,
-  getTimeLogByOrderId,
+  getTimeLogOfTechnician,
   stopTimer,
   switchService
 };

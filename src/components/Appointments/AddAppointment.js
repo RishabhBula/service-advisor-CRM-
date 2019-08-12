@@ -714,6 +714,7 @@ export default class AddAppointment extends Component {
                         className={classnames("w-100 form-select", {
                           "is-invalid": errors.selectedTechincians
                         })}
+                        isDisabled={this.props.isTechnician}
                         value={selectedTechincians}
                         isClearable={true}
                         noOptionsMessage={() =>

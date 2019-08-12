@@ -148,7 +148,7 @@ class TimeLogList extends Component {
               <th> End Date Time</th>
               <th> Duration</th>
               {/* <th>Activity</th> */}
-              <th width={"80"}>Tech Rate</th>
+              <th width={"100px"}>Tech Rate/<small>Hrs</small></th>
               <th width={"80"}>Total</th>
               <th width={"90"} className={"text-center"}>Action</th>
             </tr>

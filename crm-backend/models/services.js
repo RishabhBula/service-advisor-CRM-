@@ -18,6 +18,10 @@ const serviceSchema = new Schema({
       type: String,
       default: null
    },
+   orderId: {
+      type: Schema.Types.ObjectId,
+      ref: "Order"
+   },
    technician: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -47,9 +51,9 @@ const serviceSchema = new Schema({
       type: Object,
       default: null
    },
-   serviceSubTotalValue:{
+   serviceSubTotalValue: {
       type: [Number],
-      default:[]
+      default: []
    },
    isCannedService: {
       type: Boolean,

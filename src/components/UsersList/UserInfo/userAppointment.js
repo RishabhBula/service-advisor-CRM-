@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import AppointmentDetails from "../../Appointments/AppointmentDetails";
 import { Table, Button, UncontrolledTooltip } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
 import NoDataFound from "../../common/NoFound";
 import { AppConfig } from "../../../config/AppConfig";
 import moment from "moment";
 import { AppRoutes } from "../../../config/AppRoutes";
-export class VehicleAppointment extends Component {
+import AppointmentDetails from "../../Appointments/AppointmentDetails";
+export class UserAppointments extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,11 +29,11 @@ export class VehicleAppointment extends Component {
   /*
   /*  
   */
- handleTechnicianDetails = (technicianId) => {
+  handleVehicleDetails = (vehicleId) => {
     this.props.redirectTo(
-      `${AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(
+      `${AppRoutes.VEHICLES_DETAILS.url.replace(
         ":id",
-        technicianId
+        vehicleId
       )}`
     );
   }
@@ -72,12 +72,9 @@ export class VehicleAppointment extends Component {
       showAppointmentDetailModal: !showAppointmentDetailModal
     });
   };
-  /*
-  /*  
-  */
   render() {
     const {
-      vehicleAppointment,
+      appoitmentData,
       isLoading,
       modelInfoReducer,
       appointmentDetailsReducer,
@@ -108,7 +105,7 @@ export class VehicleAppointment extends Component {
                 Customer Name
               </th>
               <th width={"50"}>
-                Technician Name
+                Vehicle Name
               </th>
               <th width={"50"}>
                 Order Id
@@ -123,8 +120,8 @@ export class VehicleAppointment extends Component {
           </thead>
           <tbody>
             {!isLoading ? (
-              vehicleAppointment && vehicleAppointment.length ? (
-                vehicleAppointment.map((appoitment, index) => {
+              appoitmentData && appoitmentData.length ? (
+                appoitmentData.map((appoitment, index) => {
                   return (
                     <tr key={index}>
                       <td >
@@ -152,19 +149,12 @@ export class VehicleAppointment extends Component {
                       </UncontrolledTooltip>
                       <td>
                         {
-                          appoitment.techinicians && appoitment.techinicians.length ?
-                            appoitment.techinicians.map((techinician, index) => {
-                              return (
-                                <React.Fragment key={index}>
-                                  <div onClick={() => { this.handleTechnicianDetails(techinician._id) }} id={`technician-details-${techinician._id}`} className={"cursor_pointer text-primary"}>
-                                    {`${techinician.firstName}${" "}${techinician.lastName}`}
-                                  </div>
-                                  <UncontrolledTooltip target={`technician-details-${techinician._id}`}>
-                                    View Technician
-                                  </UncontrolledTooltip>
-                                </React.Fragment>
-                              )
-                            })
+                          appoitment.vehicleId ? <><div onClick={() => { this.handleVehicleDetails(appoitment.vehicleId._id) }} id={`vehicle-details-${appoitment._id}`} className={"cursor_pointer text-primary"}>
+                            {`${appoitment.vehicleId.make}${" "}${appoitment.vehicleId.modal}`} </div>
+                            <UncontrolledTooltip target={`vehicle-details-${appoitment._id}`}>
+                              View Vehicle
+                            </UncontrolledTooltip>
+                          </>
                             : "Not Assigned"
                         }
 

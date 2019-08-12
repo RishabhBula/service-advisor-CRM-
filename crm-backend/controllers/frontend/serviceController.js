@@ -36,6 +36,7 @@ const addNewService = async (req, res) => {
             isConfirmedValue: element.isConfirmedValue,
             serviceTotal: element.serviceTotal,
             userId: currentUser.id,
+            orderId: body.orderId,
             parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
             status: true,
             isDeleted: false
@@ -46,9 +47,18 @@ const addNewService = async (req, res) => {
          // }, {
          //       $set: serviceData
          //    })
-         const serviceContent = new Service(serviceData);
-         const result = await serviceContent.save();
-         serviceResultData.push(result)
+         if (element._id) {
+            await Service.findByIdAndUpdate(element._id, {
+               $set: serviceData
+            })
+
+            serviceResultData.push({ _id: element._id })
+            console.log("This is updated service Data", serviceResultData);
+         } else {
+            const serviceContent = new Service(serviceData);
+            const result = await serviceContent.save();
+            serviceResultData.push(result)
+         }
       }
       const customerAndUserContent = new CustomerAndUser(cutomerUser);
       const commentResult = await customerAndUserContent.save();
@@ -85,8 +95,6 @@ const addNewCannedService = async (req, res) => {
             userId: currentUser.id,
             parentId: currentUser.parentId ? currentUser.parentId : currentUser.id
          })
-         console.log("##################",CannedServiceData);
-         
          if (CannedServiceData.length) {
             return res.status(400).json({
                message: "Canned service name already exist,enter new name.",
@@ -211,9 +219,82 @@ const updateCannedService = async (req, res) => {
       });
    }
 }
+const getAllServiceData = async (req, res) => {
+   const { currentUser, query } = req;
+   try {
+      const id = currentUser.id;
+      const technicianId = query.technicianId
+      const parentId = currentUser.parentId || currentUser.id;
+      let condition = {};
+      condition["$and"] = [
+         {
+            $or: [
+               {
+                  userId: mongoose.Types.ObjectId(id)
+               },
+               {
+                  parentId: mongoose.Types.ObjectId(parentId)
+               }
+            ],
+            isDeleted: false
+         }
+      ];
+      if (technicianId) {
+         condition["$and"].push({
+            technician: mongoose.Types.ObjectId(technicianId)
+         })
+      }
+      const getAllServices = await Service.find(condition).populate({
+         path: 'orderId',
+         match: { isDeleted: false }
+      })
+      const servicePopulatedData = await Service.populate(getAllServices, { path: "orderId.customerId orderId.vehicleId orderId.serviceId.serviceId" })
+      return res.status(200).json({
+         data: servicePopulatedData,
+         success: true
+      })
+   } catch (error) {
+      console.log("this is get service error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
+/*
+/*  
+*/
+const updateServiceData = async (req, res) => {
+   const { body } = req
+   try {
+      if (body.serviceId) {
+         await Service.findByIdAndUpdate(body.serviceId, {
+            $set: {
+               isDeleted: true
+            }
+         })
+         return res.status(200).json({
+            success: true
+         })
+      } else {
+         return res.status(400).json({
+            message: "Service Id not provided",
+            success: false
+         })
+      }
+   } catch (error) {
+      console.log("this is update service error", error);
+      return res.status(500).json({
+         message: error.message ? error.message : "Unexpected error occure.",
+         success: false
+      });
+   }
+}
 module.exports = {
    addNewService,
    getAllCannedServices,
    addNewCannedService,
-   updateCannedService
+   updateCannedService,
+   getAllServiceData,
+   updateServiceData
 };

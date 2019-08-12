@@ -1,6 +1,6 @@
 import { handleActions } from "redux-actions";
 
-import { orderActions } from "../actions";
+import { orderActions, serviceActions } from "../actions";
 
 const initialState = {
   orderId: {},
@@ -12,6 +12,7 @@ const initialState = {
   orderItems: [],
   customerOrders: [],
   vehicleOrders: [],
+  technicianOrders: [],
   data: [],
   isOrderLoading: true
 };
@@ -57,6 +58,16 @@ export const orderReducer = handleActions(
       orderId: payload.orderId,
       customerOrders: payload.customerOrders,
       vehicleOrders: payload.vehicleOrders,
+      isOrderLoading: false
+    }),
+    [serviceActions.GET_ALL_SERVICE_LIST_REQUEST]: (state, { payload }) => ({
+      ...state,
+      technicianOrders: [],
+      isOrderLoading: true
+    }),
+    [serviceActions.GET_ALL_SERVICE_LIST_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      technicianOrders: payload,
       isOrderLoading: false
     })
   },

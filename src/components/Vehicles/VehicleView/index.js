@@ -5,7 +5,9 @@ import {
    modelOpenRequest,
    getOrderDetailsRequest,
    vehicleEditRequest,
-   addOrderRequest
+   addOrderRequest,
+   getAppointments,
+   getAppointmentDetails
 } from "../../../actions"
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
@@ -42,6 +44,7 @@ class CustomerView extends Component {
       const query = qs.parse(this.props.location.search);
       const vehicleId = this.props.match.params.id
       this.props.getOrderDetailsRequest({ vehicleId: vehicleId })
+      this.props.getAppointments({ vehicleId: vehicleId, isVehicle: true })
       this.setState({
          vehicleId: this.props.match.params.id,
          activeTab: query.tab
@@ -75,7 +78,16 @@ class CustomerView extends Component {
    };
    render() {
       const { activeTab, vehicleData } = this.state;
-      const { orderReducer, vehicleGetRequest, modelInfoReducer, modelOperate, vehicleEditRequest,addOrderRequest } = this.props
+      const {
+         orderReducer,
+         vehicleGetRequest,
+         modelInfoReducer,
+         modelOperate,
+         vehicleEditRequest,
+         addOrderRequest,
+         getAppointmentDetails,
+         appointmentReducer,
+         appointmentDetailsReducer } = this.props
       return (
          <>
             <div className={"p-3"}>
@@ -119,6 +131,13 @@ class CustomerView extends Component {
                         />) : null}
                      {activeTab === 1 ?
                         (<VehicleAppointment
+                           vehicleAppointment={appointmentReducer.vehicleAppoitment}
+                           isLoading={appointmentReducer.isLoading}
+                           getAppointmentDetails={getAppointmentDetails}
+                           appointmentDetailsReducer={appointmentDetailsReducer}
+                           modelInfoReducer={modelInfoReducer}
+                           modelOperate={modelOperate}
+                           {...this.props}
                         />) : null}
                      {activeTab === 2 ? (
                         <VehicleInfo
@@ -141,6 +160,8 @@ const mapStateToProps = state => ({
    vehicleListReducer: state.vehicleListReducer,
    modelInfoReducer: state.modelInfoReducer,
    orderReducer: state.orderReducer,
+   appointmentReducer: state.appointmentReducer,
+   appointmentDetailsReducer: state.appointmentDetailsReducer
 });
 const mapDispatchToProps = dispatch => ({
    vehicleGetRequest: (data) => {
@@ -152,12 +173,18 @@ const mapDispatchToProps = dispatch => ({
    getOrderDetailsRequest: data => {
       dispatch(getOrderDetailsRequest(data))
    },
-   vehicleEditRequest: data =>{
+   vehicleEditRequest: data => {
       dispatch(vehicleEditRequest(data))
    },
-   addOrderRequest: data =>{
+   addOrderRequest: data => {
       dispatch(addOrderRequest(data))
-   }
+   },
+   getAppointments: data => {
+      dispatch(getAppointments(data))
+   },
+   getAppointmentDetails: data => {
+      dispatch(getAppointmentDetails(data))
+   },
 })
 export default connect(
    mapStateToProps,

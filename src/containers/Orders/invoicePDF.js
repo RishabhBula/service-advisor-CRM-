@@ -86,7 +86,7 @@ export const invoicePDF = (
       calSubTotal = 0;
 
     var columns = [
-      { title: "Service Tile", dataKey: "Service Tile" },
+      { title: "Service Title", dataKey: "Service Title" },
       { title: "Price", dataKey: "Price" },
       { title: "Qty", dataKey: "Qty" },
       { title: "Hours", dataKey: "Hours" },
@@ -100,7 +100,7 @@ export const invoicePDF = (
       startY: columnHeight + 21,
       tableWidth: pdfWidth - 45,
       columnStyles: {
-        "Service Tile": { cellWidth: 150 },
+        "Service Title": { cellWidth: 150 },
         Price: { halign: "left" },
         Qty: { halign: "left", cellWidth: 30 },
         Hours: { halign: "left", cellWidth: 30 },
@@ -134,13 +134,13 @@ export const invoicePDF = (
         (service.serviceType === "part" &&
         service.partOptions &&
         service.partOptions.showNoteOnQuoteAndInvoice
-          ? "{ " + service.note + " }"
+          ? "Note : " + service.note
           : "") ||
         (service.serviceType === "tire" &&
         service.tierPermission &&
         service.tierPermission.showNoteOnQuotesInvoices &&
         service.tierSize[0].notes !== ""
-          ? "{ " + service.tierSize[0].notes + " }"
+          ? "Note : " + service.tierSize[0].notes 
           : "");
 
       var partnumber =
@@ -206,8 +206,12 @@ export const invoicePDF = (
             ? discountValue + "%"
             : "$" + discountValue
           : 0;
+          // console.log(
+          //   val + " " + (partnumber || "") + " " + note,
+          //   "note"
+          // );
       rows.push({
-        "Service Title": val + " " + (partnumber || "") + " " + (note || ""),
+        "Service Title": val + " " + (partnumber || "") + " " + (note),
 
         Price:
           service.serviceType === "part" &&

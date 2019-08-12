@@ -6,7 +6,10 @@ export const appointmentActions = {
   ADD_APPOINTMENT_REQUEST: "Add Appointment Request!",
   UPDATE_APPOINTMENT_REQUEST: "Update Appointment Request!",
   GET_APPOINTMENT_DETAILS_REQUEST: "Get Appointment details Request!",
-  GET_APPOINTMENT_DETAILS_SUCCESS: "Get Appointment details list success!"
+  GET_APPOINTMENT_DETAILS_SUCCESS: "Get Appointment details list success!",
+  GET_TECHNICIAN_APPOITMENT_REQUEST: "Get Technician apointment request",
+  GET_TECHNICIAN_APPOITMENT_SUCCESS: "Get Technician apointment success",
+  GET_VEHICLE_APPOITMENT_SUCCESS: "Get Vehicle apointment success",
 };
 
 export const getAppointments = createAction(
@@ -26,4 +29,13 @@ export const getAppointmentDetails = createAction(
 );
 export const getAppointmentDetailsSuccess = createAction(
   appointmentActions.GET_APPOINTMENT_DETAILS_SUCCESS
+);
+export const getTechnicianAppoitmentRequest = createAction(
+  appointmentActions.GET_TECHNICIAN_APPOITMENT_REQUEST
+);
+export const getTechnicianAppoitmentSuccess = createAction(
+  appointmentActions.GET_TECHNICIAN_APPOITMENT_SUCCESS
+);
+export const getVehicleAppoitmentSuccess = createAction(
+  appointmentActions.GET_VEHICLE_APPOITMENT_SUCCESS
 );

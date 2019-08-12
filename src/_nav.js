@@ -163,6 +163,10 @@ export const ValidatedRoutes = [
     authKey: "isAllowedCompanySettings"
   },
   {
+    url: AppRoutes.STAFF_MEMBERS_DETAILS.url,
+    authKey: "isAllowedCompanySettings"
+  },
+  {
     url: AppRoutes.CUSTOMERS.url,
     authKey: "isAllowedCompanySettings"
   },

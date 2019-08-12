@@ -6,7 +6,8 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
-  getOrderDetailsRequest
+  getOrderDetailsRequest,
+  getTechinicianTimeLogSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
@@ -192,7 +193,32 @@ const updateTimeLogLogic = createLogic({
     }
   }
 });
-
+/**
+ *
+ */
+const getTechnicianTimeLogLogic = createLogic({
+  type: timelogActions.GET_TECHNICIAN_TIME_LOGS_REQUEST,
+  async process({ action }, dispatch, done) {
+    dispatch(showLoader());
+    const result = await new ApiHelper().FetchFromServer(
+      "/timeClock",
+      "/technicianTimeLogs",
+      "GET",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      dispatch(getTechinicianTimeLogSuccess(result.data.data));
+      dispatch(hideLoader());
+      done();
+    }
+  }
+});
 /**
  *
  */
@@ -201,5 +227,6 @@ export const TimeClockLogic = [
   stopTimerLogic,
   switchTaskLogic,
   addTimeLogLogic,
-  updateTimeLogLogic
+  updateTimeLogLogic,
+  getTechnicianTimeLogLogic
 ];
