@@ -4,8 +4,6 @@ import { ApiHelper } from "../helpers/ApiHelper";
 //import { logger } from "../helpers/Logger";
 import {
   genrateInvoiceSuccess,
-  showLoader,
-  hideLoader,
   PdfActions,
   updateOrderDetailsRequest
 } from "../actions";
@@ -13,7 +11,6 @@ import {
 const genrateInvoiceLogic = createLogic({
   type: PdfActions.GENRATE_INVOICE,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/inspection",
@@ -25,7 +22,6 @@ const genrateInvoiceLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
       done();
       return;
     } else {
@@ -44,12 +40,11 @@ const genrateInvoiceLogic = createLogic({
           updateOrderDetailsRequest({
             _id: action.payload._id,
             invoiceURL: result.data.data,
-            isChangedOrderStatus: true
+            isPdfGenerated: true
           })
         );
       }
     }
-    dispatch(hideLoader());
     done();
   }
 });

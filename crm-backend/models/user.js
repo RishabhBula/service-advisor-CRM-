@@ -109,16 +109,16 @@ const userSchema = new Schema({
     type: [String],
     default: null
   },
-  companyNumber:{
+  companyNumber: {
     type: String
   },
-  currency:{
+  currency: {
     type: String
   },
-  timeZone:{
-    type: String
+  timeZone: {
+    type: Object
   },
-  vatNumber:{
+  vatNumber: {
     type: String
   },
   vehicleService: {
@@ -144,6 +144,9 @@ const userSchema = new Schema({
   planExiprationDate: {
     type: Date,
     default: Date.now
+  },
+  address: {
+    type: String
   },
   isInTrialPeriod: {
     type: Boolean,

@@ -17,7 +17,7 @@ import CrmDiscountBtn from "../../common/CrmDiscountBtn";
 import { toast } from "react-toastify";
 import Async from "react-select/lib/Async";
 import { LabelColorOptions } from "../../../config/Color"
-import { getSumOfArray, calculateValues, calculateSubTotal } from "../../../helpers"
+import { getSumOfArray, calculateValues, calculateSubTotal, serviceTotalsCalculation } from "../../../helpers"
 import { CrmCannedServiceModal } from "../../common/CrmCannedServiceModal"
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 import recommandUser from "../../../assets/recommand-user.png"
@@ -547,10 +547,13 @@ class ServiceItem extends Component {
       isCannedServiceSumbmit: false
     })
     const HTML = document.getElementById("customers").innerHTML;
-    let ele
+    let ele, serviceElelments = [], serviceCalculation
     for (let index = 0; index < serviceData.length; index++) {
       const serviceContent = [...this.state.services]
       ele = serviceContent[index];
+      serviceElelments.push({
+        serviceId: ele
+      })
       if (ele.hasOwnProperty('serviceName') && ele.serviceName === '') {
         serviceContent[index].isError = true
         this.setState({
@@ -563,6 +566,7 @@ class ServiceItem extends Component {
         })
       }
     }
+    serviceCalculation = serviceTotalsCalculation(serviceElelments)
     if (ele.serviceName !== '') {
       const payload = {
         services: serviceData,
@@ -570,6 +574,7 @@ class ServiceItem extends Component {
         userRecommendations: userRecommendations,
         orderId: this.props.orderId,
         isServiceSubmit: true,
+        orderTotal: serviceCalculation.orderGrandTotal,
         html: HTML
       };
       this.props.addNewService(payload)
