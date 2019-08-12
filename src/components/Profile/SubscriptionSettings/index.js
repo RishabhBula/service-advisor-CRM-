@@ -68,18 +68,18 @@ class SubscriptionSettings extends Component {
                     Allowed:{" "}
                     <span className={"pl-2 text-dark"}>{planUser} User(s)</span>
                   </span>
-                  <span className={"plan-detail text-muted"}>
+                  {/* <span className={"plan-detail text-muted"}>
                     Amount:{" "}
                     <span className={"pl-2 text-dark"}>
                       <Dollor value={planAmount} /> paid{" "}
                     </span>
-                  </span>
-                  <div className={"pt-3 mb-2"}>
+                  </span> */}
+                  {/* <div className={"pt-3 mb-2"}>
                     <Button color={""} className={"btn-theme-line"}>
                       <i className={"fa fa-paper-plane mr-2"} />
                       Upgrade Now
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className={"expire-block pr-3"}>

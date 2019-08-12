@@ -300,6 +300,7 @@
   align-items: center;
   padding-left: 30px;
 }
+
 .workflow-mode .mode-inner {
   display: table;
   margin: 0 auto;
@@ -1184,6 +1185,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   position: absolute;
   right: 8px;
   top: -52px;
+}
+.title-right-section .invt-add-btn-block{
+  top: -56px;
 }
 .inventory-card .invt-add-btn-block {
   right: 8px;
@@ -2788,7 +2792,14 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 
 .add-appointment-form .DayPicker-Day--today {
-  color: #000 !important;
+    color: #fff !important;
+    display: table-cell;
+    padding: 0.5em;
+    border-radius: 50%;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    background-color: #4A90E2 !important;
 }
 .add-appointment-form .custom-form-modal .form-group label {
   min-width: 10%;
