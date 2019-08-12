@@ -1,14 +1,7 @@
 import React, { Component } from "react";
-import {
-  Col,
-  Row,
-  UncontrolledTooltip,
-  Button,
-  Card,
-  CardBody
-} from "reactstrap";
+import { Col, Row, Card, CardBody } from "reactstrap";
 import SalesByCusomerAge from "../../components/Reports/SalesByCusomerAge";
-import { getDashboardCustomerSale } from "../../actions";
+import { getCustomerInoiveReport } from "../../actions";
 import { connect } from "react-redux";
 import { logger } from "../../helpers";
 import { AppRoutes } from "../../config/AppRoutes";
@@ -142,7 +135,7 @@ class Reports extends Component {
    *
    */
   render() {
-    const { customerSales } = this.props;
+    const { customerReport } = this.props;
 
     return (
       <div className="animated fadeIn">
@@ -155,25 +148,11 @@ class Reports extends Component {
                   <div className={"mode-inner"} />
                 </div>
               </Col>
-              <Col className={"title-right-section"}>
-                <div className={"invt-add-btn-block"}>
-                  <Button
-                    onClick={this.handleOrder}
-                    color={"primary"}
-                    id={"add-Appointment"}
-                  >
-                    <i className={"fa fa-plus mr-1"} /> New Quote
-                  </Button>
-                  <UncontrolledTooltip target={"add-Appointment"}>
-                    Add a New Quote
-                  </UncontrolledTooltip>
-                </div>
-              </Col>
             </Row>
             <Row>
               <Col sm={"12"}>
                 <SalesByCusomerAge
-                  customerSales={customerSales}
+                  customerReport={customerReport}
                   onFilterChange={this.onCustomerSaleRangeChange}
                 />
               </Col>
@@ -186,10 +165,10 @@ class Reports extends Component {
 }
 
 const mapStateToProps = state => ({
-  customerSales: state.dashboardReducer.customerSales
+  customerReport: state.reportReducer.customerReport
 });
 const mapDispatchToProps = dispatch => ({
-  getCustomerSales: data => dispatch(getDashboardCustomerSale(data))
+  getCustomerSales: data => dispatch(getCustomerInoiveReport(data))
 });
 export default connect(
   mapStateToProps,

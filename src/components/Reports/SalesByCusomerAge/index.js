@@ -1,17 +1,6 @@
 import React, { Component } from "react";
 
-import {
-  Form,
-  Row,
-  Col,
-  FormGroup,
-  Label,
-  InputGroup,
-  Input,
-  Table
-} from "reactstrap";
-import { DayPickerRangeController } from "react-dates";
-import CalendarIcon from "./../../../assets/calendar.svg";
+import { Form, Row, Col, Table } from "reactstrap";
 import { AppConfig } from "../../../config/AppConfig";
 import Loader from "../../../containers/Loader/Loader";
 
@@ -100,33 +89,16 @@ class SalesByCusomerAge extends Component {
    *
    */
   render() {
-    const { customerSales } = this.props;
-    const { isLoading, invoices, invoiceTotal } = customerSales;
-    const customers = [];
-    for (const key in invoices) {
-      if (invoices.hasOwnProperty(key)) {
-        const inv = invoices[key];
-        customers.push({
-          invoiceTotal: invoiceTotal[key],
-          numberOfInvoices: inv,
-          customerRange: key
-        });
-      }
-    }
-    const {
-      openDatePicker,
-      startDate,
-      endDate,
-      focusedInput,
-      selectedFilter
-    } = this.state;
+    const { customerReport } = this.props;
+    const { isLoading, data } = customerReport;
+    let total = 0;
     return (
       <>
         <div className={"filter-block"}>
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
-                <FormGroup className="mb-0">
+                {/* <FormGroup className="mb-0">
                   <InputGroup>
                     <Label>Select Date Range</Label>
                     &nbsp;
@@ -144,9 +116,9 @@ class SalesByCusomerAge extends Component {
                       <option value={"custom"}>Custom</option>
                     </Input>
                   </InputGroup>
-                </FormGroup>
+                </FormGroup> */}
               </Col>
-              <Col sm={"2"} className={"chart-datepicker-container"}>
+              {/* <Col sm={"2"} className={"chart-datepicker-container"}>
                 <div
                   onClick={this.toggleCalendar}
                   className={"calendar-icon-container"}
@@ -166,7 +138,7 @@ class SalesByCusomerAge extends Component {
                     hideKeyboardShortcutsPanel
                   />
                 ) : null}
-              </Col>
+              </Col> */}
             </Row>
           </Form>
         </div>
@@ -175,36 +147,79 @@ class SalesByCusomerAge extends Component {
             <tr>
               <th width="60px">S No.</th>
               <th width={"150"}>
-                <i className={"fa fa-calendar"} /> Customer Age
+                <i className={"fa fa-user"} /> Customer Name
               </th>
               <th width={"90"}>
-                <i className={"fa fa-dollar"} /> Number of invoices
+                <i className={"fa fa-calendar"} /> 0-30 Days
               </th>
               <th width={"120"}>
-                <i className={"fa fa-dollar"} /> Invoice Total
+                <i className={"fa fa-calendar"} /> 31-60 Days
+              </th>
+              <th width={"120"}>
+                <i className={"fa fa-calendar"} /> 61-90 Days
+              </th>
+              <th width={"120"}>
+                <i className={"fa fa-calendar"} /> 91 days and above
+              </th>
+              <th width={"150"}>
+                <i className={"fa fa-dollar"} /> Credit
+              </th>
+              <th width={"150"}>
+                <i className={"fa fa-dollar"} /> Due
               </th>
             </tr>
           </thead>
           <tbody>
             {!isLoading ? (
-              customers && customers.length ? (
-                customers.map((customer, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>{(1 - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.</td>
-                      <td>
-                        <div
-                          className={"vehicle-type-img d-inline-block"}
-                          id={`type${index}`}
-                        >
-                          {customer.customerRange}
-                        </div>
-                      </td>
-                      <td>{customer.numberOfInvoices || 0}</td>
-                      <td>{customer.invoiceTotal}</td>
-                    </tr>
-                  );
-                })
+              data && data.length ? (
+                <>
+                  {data.map((customer, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>
+                          {(1 - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                        </td>
+                        <td>
+                          <div
+                            className={
+                              "vehicle-type-img d-inline-block cursor_pointer text-primary text-bold font-weight-semibold text-capitalize"
+                            }
+                            id={`type${index}`}
+                            onClick={undefined}
+                          >
+                            {[
+                              customer.customerId.firstName,
+                              customer.customerId.lastName
+                            ]
+                              .join(" ")
+                              .trim()}
+                          </div>
+                        </td>
+                        <td>${customer["0-30 Days"] || 0}</td>
+                        <td>${customer["31-60 Days"] || 0}</td>
+                        <td>${customer["61-90 Days"] || 0}</td>
+                        <td>${customer["91 Days and above"] || 0}</td>
+                        <td className={"font-weight-semibold"}>
+                          ${customer["due"] || 0}
+                        </td>
+                        <td className={"font-weight-semibold"}>
+                          ${customer["paid"] || 0}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  <tr>
+                    <td
+                      className={"text-left font-weight-semibold"}
+                      colSpan={7}
+                    >
+                      Total
+                    </td>
+                    <td className={"text-left"}>
+                      <b>${total}</b>
+                    </td>
+                  </tr>
+                </>
               ) : null
             ) : (
               <tr>
