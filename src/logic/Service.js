@@ -17,7 +17,7 @@ import {
 const addServiceLogic = createLogic({
    type: serviceActions.ADD_SERVICE,
    async process({ action }, dispatch, done) {
-      dispatch(showLoader());
+      //dispatch(showLoader());
       logger(action.payload);
       let api = new ApiHelper();
       let result = await api.FetchFromServer(
@@ -30,7 +30,7 @@ const addServiceLogic = createLogic({
       );
       if (result.isError) {
          toast.error(result.messages[0]);
-         dispatch(hideLoader());
+         //dispatch(hideLoader());
          done();
          return;
       } else {
@@ -62,20 +62,22 @@ const addServiceLogic = createLogic({
             if (!action.payload.thisIsCannedService) {
                const payload = {
                   serviceId: serviceIdData,
+                  remainingAmount: action.payload.orderTotal,
+                  orderTotal: action.payload.orderTotal,
                   _id: action.payload.orderId,
                   customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
                }
                dispatch(
-                 genrateInvoice({
-                   html: action.payload.html,
-                   _id: action.payload.orderId
-                 })
+                  genrateInvoice({
+                     html: action.payload.html,
+                     _id: action.payload.orderId
+                  })
                );
                dispatch(updateOrderDetailsRequest(payload))
             }
          }
          dispatch(getCannedServiceList())
-         dispatch(hideLoader());
+         //dispatch(hideLoader());
          done();
       }
    }

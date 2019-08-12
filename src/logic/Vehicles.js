@@ -7,7 +7,6 @@ import {
   showLoader,
   hideLoader,
   vehicleActions,
-  vehicleAddStarted,
   vehicleAddSuccess,
   vehicleAddFailed,
   modelOpenRequest,
@@ -39,9 +38,8 @@ const vehicleAddLogic = createLogic({
     }
     dispatch(showLoader());
     dispatch(
-      vehicleAddStarted({
-        vehicleAddInfo: [],
-        isLoading: true
+      vehicleAddSuccess({
+        vehicleAddInfo: {}
       })
     );
     let api = new ApiHelper();
@@ -66,12 +64,13 @@ const vehicleAddLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(
-        vehicleAddSuccess({
-          vehicleAddInfo: result.data.data,
-          isLoading: false
-        })
-      );
+      if (action.payload.workFlowVehicle) {
+        dispatch(
+          vehicleAddSuccess({
+            vehicleAddInfo: result.data.data
+          })
+        );
+      }
       dispatch(hideLoader());
       if (data.isCustomerDetails) {
         dispatch(customerGetRequest())
@@ -126,12 +125,18 @@ const getVehiclesLogic = createLogic({
       done();
       return;
     } else {
+      var defaultOptions = [
+        {
+          label: "+ Add New Vehicle",
+          value: "",
+        }
+      ];
       const options = result.data.data.map(vehicle => ({
         label: `${vehicle.make} ${vehicle.modal}`,
         value: vehicle._id,
         data: vehicle
       }));
-      logger(action.payload && action.payload.callback ? action.payload.callback(options) : null)
+      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(hideLoader());
       dispatch(
         vehicleGetSuccess({

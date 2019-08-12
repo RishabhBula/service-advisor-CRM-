@@ -2,7 +2,7 @@ import { handleActions } from "redux-actions";
 import { customersAddActions } from "./../actions";
 
 const initialAuthState = {
-  customerAddInfo: []
+  customerAddInfo: {}
 };
 
 const listCustomerState = {

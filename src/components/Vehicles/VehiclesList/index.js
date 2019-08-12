@@ -445,7 +445,7 @@ class VehiclesList extends Component {
                       <td style={{ maxWidth: 100 }}>
                         {vehicle.vin ? vehicle.vin : notExist}
                       </td>
-                      <td>
+                      <td className={"text-uppercase"}>
                         {vehicle.licensePlate ? vehicle.licensePlate : notExist}
                       </td>
                       <td className={"text-center"}>
