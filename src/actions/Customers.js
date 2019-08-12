@@ -17,7 +17,7 @@ export const customersAddActions = {
   EDIT_CUSTOMER_SUCCESS: "Edit CUSTOMER Success!",
   IMPORT_CUSTOMER_REQUEST: "Request to import customers!",
   IMPORT_CUSTOMER_REQ_UPDATE: "Update request to import customers!",
-  EXPORT_CUSTOMERS: "Export customers!"
+  EXPORT_CUSTOMERS: "Export customers!",
 };
 
 export const customerAddRequest = createAction(

@@ -76,6 +76,12 @@ const orderSchema = new Schema({
   inspectionURL: {
     type: String
   },
+  remainingAmount:{
+    type: Number
+  },
+  orderTotal:{
+    type: Number
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",

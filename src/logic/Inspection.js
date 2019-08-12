@@ -24,7 +24,7 @@ import {
 const addInspectionLogic = createLogic({
   type: InspectionActions.ADD_INSPCETION,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    //dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/inspection",
@@ -36,7 +36,7 @@ const addInspectionLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       done();
       return;
     } else {
@@ -78,7 +78,7 @@ const addInspectionLogic = createLogic({
         );
         dispatch(updateOrderDetailsRequest(payload))
       }
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       done();
     }
   }

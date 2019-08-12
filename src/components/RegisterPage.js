@@ -25,6 +25,7 @@ import { SingupValidations, SingupValidationsMessaages } from "../validations";
 import MailIcon from "./../assets/img/mail-icon.svg";
 import { Link } from "react-router-dom";
 import { validUrlCheck, isValidSubdomain } from "../helpers/Object";
+import ServiceAdvisorLogo from "../assets/logo-white.svg";
 const ResendInvitation = props => {
   return (
     <div className={"confirm-block"}>
@@ -176,7 +177,7 @@ class RegisterPage extends Component {
             <Col className="text-center">
               <h4 className="logo-title">
                 <img
-                  src={"/assets/img/logo-white.svg"}
+                  src={ServiceAdvisorLogo}
                   alt={"logo"}
                   style={{ width: 120 }}
                 />

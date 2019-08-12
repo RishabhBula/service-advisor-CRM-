@@ -427,8 +427,9 @@ const getOrderDetails = async (req, res) => {
         ]
       });
     }
-    const result2 = await Orders.find(condition).populate(
-      "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId paymentId"
+    const result2 = await Orders.find(condition).populate({
+      path: "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId paymentId"
+    }
     );
     const result1 = await Orders.populate(result2, {
       path:
@@ -463,7 +464,7 @@ const getOrderDetails = async (req, res) => {
           if (
             element.messageId &&
             element.messageId.receiverId.toString() ===
-              currentUser.id.toString()
+            currentUser.id.toString()
           ) {
             element.messageId.isSender = false;
           }

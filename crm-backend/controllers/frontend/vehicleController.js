@@ -39,6 +39,7 @@ const addNewVehicle = async (req, res) => {
     }
     return res.status(200).json({
       responsecode: 200,
+      data: vehicles,
       message: !body.customerId
         ? "Vehicle data uploaded successfully!"
         : "Vehicle assigned to customer successfully!",
@@ -148,7 +149,7 @@ const getAllVehicleList = async (req, res) => {
     }
     if (vehicleId) {
       condition["$and"].push({
-        _id: mongoose.Types.ObjectId(vehicleId) 
+        _id: mongoose.Types.ObjectId(vehicleId)
       });
     }
     const getAllVehicle = await vehicleModal

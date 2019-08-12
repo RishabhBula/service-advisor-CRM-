@@ -3,25 +3,25 @@ import { vehicleActions } from "./../actions";
 
 const initialAuthState = {
   vehicleAddInfo: {},
-  isLoading: true
+  //isLoading: true
 };
 
 export const vehicleAddInfoReducer = handleActions(
   {
-    [vehicleActions.PROFILE_INFO_START]: (state, action) => ({
+    [vehicleActions.VEHICLES_ADD_REQUEST]: (state, action) => ({
       ...state,
-      vehicleAddInfo: action.payload.vehicleAddInfo,
-      isLoading: action.payload.isLoading
+      vehicleAddInfo: {},
+      // isLoading: true
     }),
-    [vehicleActions.PROFILE_INFO_SUCCESS]: (state, action) => ({
+    [vehicleActions.VEHICLES_ADD_SUCCESS]: (state, action) => ({
       ...state,
-      vehicleAddInfo: action.payload.vehicleAddInfo,
-      isLoading: action.payload.isLoading
+      vehicleAddInfo: action.payload.vehicleAddInfo ? action.payload.vehicleAddInfo : {},
+      //isLoading: action.payload.isLoading
     }),
-    [vehicleActions.PROFILE_INFO_FAILED]: (state, action) => ({
+    [vehicleActions.VEHICLES_ADD_FAILED]: (state, action) => ({
       ...state,
-      vehicleAddInfo: action.payload.vehicleAddInfo,
-      isLoading: action.payload.isLoading
+      vehicleAddInfo: {},
+      //isLoading: action.payload.isLoading
     })
   },
   initialAuthState

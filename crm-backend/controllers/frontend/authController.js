@@ -25,6 +25,8 @@ const signUp = async (req, res) => {
         success: false
       });
     }
+    const planExpDate = moment(new Date(), "DD-MM-YYYY").add(30, 'days');
+
     const roleType = await roleModel.findOne({
       userType: new RegExp("admin", "i")
     });
@@ -42,6 +44,7 @@ const signUp = async (req, res) => {
     $data.userSideActivationValue = confirmationNumber;
     $data.subdomain = $data.workspace;
     $data.shopLogo = $data.companyLogo;
+    $data.planExiprationDate = planExpDate
     $data.website = $data.companyWebsite;
     let result = await userModel($data).save();
     const emailVar = new Email(req);
@@ -90,7 +93,7 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 /*  */
 const confirmationSignUp = async (req, res) => {
@@ -200,7 +203,7 @@ const loginApp = async (req, res) => {
     if (
       result.parentId &&
       mongoose.Types.ObjectId(result._id) !==
-        mongoose.Types.ObjectId(result.parentId)
+      mongoose.Types.ObjectId(result.parentId)
     ) {
       companyData = await userModel.findOne({
         _id: result.parentId
@@ -582,13 +585,13 @@ const imageDelete = async (req, res) => {
       var originalImagePath = __basedir + "/images/" + currentUser.id;
       var thumbnailImagePath =
         __basedir + "/images-thumbnail/" + currentUser.id + "image-thumb";
-      fs.unlinkSync(originalImagePath, buf, function(err) {
+      fs.unlinkSync(originalImagePath, buf, function (err) {
         if (err) {
           return console.log(err);
         }
         console.log("The file was deleted!");
       });
-      fs.unlinkSync(thumbnailImagePath, buf, function(err) {
+      fs.unlinkSync(thumbnailImagePath, buf, function (err) {
         if (err) {
           return console.log(err);
         }

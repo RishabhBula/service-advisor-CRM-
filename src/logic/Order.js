@@ -332,9 +332,6 @@ const addOrderLogic = createLogic({
 const updateOrderDetailsLogic = createLogic({
   type: orderActions.UPDATE_ORDER_DETAILS,
   async process({ action }, dispatch, done) {
-    // if (!action.payload.isChangedOrderStatus) {
-    //   dispatch(showLoader());
-    // }
     logger(action.aypload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -347,48 +344,55 @@ const updateOrderDetailsLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      // if (!action.payload.isChangedOrderStatus) {
-      //   dispatch(hideLoader());
-      // }
       done();
       return;
     } else {
-      if (
-        !action.payload.isChangedOrderStatus
-      ) {
-        toast.success(result.messages[0]);
-      }
-      if (action.payload.status === true) {
-        const data = {
-          name: "Order status changed to authorised",
-          type: "AUTHORISED_ORDER",
-          orderId: action.payload._id
-        };
-        dispatch(addNewActivity(data));
-      }
-      if (action.payload.status === false) {
-        const data = {
-          name: "Order status changed to Unauthorised",
-          type: "UNAUTHORISED_ORDER",
-          orderId: action.payload._id
-        };
-        dispatch(addNewActivity(data));
-      }
-      if (!action.payload.isSummary) {
-        dispatch(
-          getOrderDetailsRequest({
-            _id:
-              action.payload && action.payload._id ? action.payload._id : null
-          })
-        );
+      if (!action.payload.isPdfGenerated) {
+        if (
+          !action.payload.isChangedOrderStatus
+        ) {
+          toast.success(result.messages[0]);
+        }
+        if (action.payload.status === true) {
+          const data = {
+            name: "Order status changed to authorised",
+            type: "AUTHORISED_ORDER",
+            orderId: action.payload._id
+          };
+          dispatch(addNewActivity(data));
+        }
+        if (action.payload.status === false) {
+          const data = {
+            name: "Order status changed to Unauthorised",
+            type: "UNAUTHORISED_ORDER",
+            orderId: action.payload._id
+          };
+          dispatch(addNewActivity(data));
+        }
+        if (action.payload.isInvoiceStatus) {
+          const data = {
+            name: `Order status updated to ${action.payload.isInvoice ? 'Invoice' : 'Estimate'}`,
+            type: "INVOICE_ORDER",
+            orderId: action.payload._id
+          };
+          dispatch(addNewActivity(data));
+        }
+        if (!action.payload.isSummary) {
+          dispatch(
+            getOrderDetailsRequest({
+              _id:
+                action.payload && action.payload._id ? action.payload._id : null
+            })
+          );
+        } else {
+          dispatch(verifyLinkRequest(action.payload.query));
+        }
+
+        dispatch(updateOrderDetailsSuccess());
+        done();
       } else {
-        dispatch(verifyLinkRequest(action.payload.query));
+        done();
       }
-
-      dispatch(updateOrderDetailsSuccess());
-
-      // dispatch(hideLoader());
-      done();
     }
   }
 });
@@ -427,7 +431,7 @@ const deleteOrderLogic = createLogic({
 const getOrderDetails = createLogic({
   type: orderActions.GET_ORDER_DETAILS_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    // dispatch(showLoader());
     logger(action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -459,7 +463,7 @@ const getOrderDetails = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
+      // dispatch(hideLoader());
       done();
       return;
     } else {
@@ -503,7 +507,7 @@ const getOrderDetails = createLogic({
         })
       );
       dispatch(getCannedServiceList())
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       done();
     }
   }
