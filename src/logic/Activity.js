@@ -3,8 +3,6 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 import { logger } from "../helpers/Logger";
 import {
-   showLoader,
-   hideLoader,
    activityAction,
    addActivitySuccess,
    getActivityListSuccess,
@@ -15,7 +13,6 @@ import {
 const addActivityLogic = createLogic({
    type: activityAction.ADD_ACTIVITY,
    async process({ action }, dispatch, done) {
-      dispatch(showLoader());
       logger(action.payload);
       let api = new ApiHelper();
       let result = await api.FetchFromServer(
@@ -29,7 +26,6 @@ const addActivityLogic = createLogic({
       if (result.isError) {
          toast.error(result.messages[0]);
          dispatch(getActivityList());
-         dispatch(hideLoader());
          done();
          return;
       } else {
@@ -37,7 +33,6 @@ const addActivityLogic = createLogic({
          dispatch(getActivityList({
             orderId: action.payload.orderId
          }));
-         dispatch(hideLoader());
          done();
       }
    }
@@ -71,7 +66,6 @@ const getActivityLogic = createLogic({
          done();
          return;
       } else {
-         dispatch(hideLoader());
          dispatch(
             getActivityListSuccess({
                isLoading: false,

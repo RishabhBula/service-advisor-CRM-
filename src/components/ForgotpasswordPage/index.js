@@ -21,6 +21,8 @@ import {
   ForgetPasswordValidations,
   ForgetPasswordValidationsMessaages
 } from "../../validations";
+import ServiceAdvisorLogo from "../../assets/logo-white.svg";
+
 class ForgotpasswordPage extends Component {
   constructor(props) {
     super(props);
@@ -64,7 +66,7 @@ class ForgotpasswordPage extends Component {
             <Col className="text-center">
               <h4 className="logo-title">
                 <img
-                  src={"/assets/img/logo-white.svg"}
+                  src={ServiceAdvisorLogo}
                   alt={"logo"}
                   style={{ width: 120 }}
                 />

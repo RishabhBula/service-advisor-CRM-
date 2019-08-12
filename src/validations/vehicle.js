@@ -35,6 +35,9 @@ export const VehicleValidations = {
   notes: {
     [ValidationTypes.REQUIRED]: true,
   },
+  licensePlate: {
+    [ValidationTypes.REQUIRED]: true,
+  }
 };
 
 export const VehicleValidationMessage = {
@@ -72,4 +75,7 @@ export const VehicleValidationMessage = {
   notes: {
     [ValidationTypes.REQUIRED]: 'Notes is required',
   },
+  licensePlate: {
+    [ValidationTypes.REQUIRED]: "Please enter license plate data."
+  }
 };

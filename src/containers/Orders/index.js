@@ -53,7 +53,9 @@ import {
   getOrderList,
   updateOrderStatus,
   deleteService,
-  genrateInvoice
+  genrateInvoice,
+  customerAddRequest,
+  vehicleAddRequest
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -283,7 +285,10 @@ class Order extends Component {
     } else {
       payload = {
         isInvoice: value,
-        _id: orderReducer.orderItems._id
+        _id: orderReducer.orderItems._id,
+        authorizerId: comapnyId,
+        isChangedOrderStatus: true,
+        isInvoiceStatus: true
       };
     }
     this.props.updateOrderDetails(payload);
@@ -378,6 +383,11 @@ class Order extends Component {
       updateOrderDetails,
       deleteService,
       genrateInvoice,
+      customerAddRequest,
+      customerFleetReducer,
+      customerInfoReducer,
+      vehicleAddRequest,
+      vehicleAddInfoReducer
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -426,6 +436,14 @@ class Order extends Component {
                       isError={isError}
                       handleEditOrder={this.handleEditOrder}
                       orderReducer={orderReducer}
+                      profileInfoReducer={profileInfoReducer}
+                      addCustomer={customerAddRequest}
+                      customerFleetReducer={customerFleetReducer}
+                      modelOperate={modelOperate}
+                      modelInfoReducer={modelInfoReducer}
+                      customerInfoReducer={customerInfoReducer}
+                      addVehicle={vehicleAddRequest}
+                      vehicleAddInfoReducer={vehicleAddInfoReducer}
                     />
                   </div>
                   <div className={"position-relative"}>
@@ -485,7 +503,7 @@ class Order extends Component {
                         />
                       </Suspense>
                     </div>
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={""}>
                       <React.Fragment>
                         {activeTab === 0 ? (
                           <Services
@@ -664,7 +682,10 @@ const mapStateToProps = state => ({
   messageReducer: state.messageReducer,
   activityReducer: state.activityReducer,
   paymentReducer: state.paymentReducer,
-  pdfReducer: state.pdfReducer
+  pdfReducer: state.pdfReducer,
+  customerFleetReducer: state.fleetReducer,
+  customerInfoReducer: state.customerInfoReducer,
+  vehicleAddInfoReducer: state.vehicleAddInfoReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -798,6 +819,12 @@ const mapDispatchToProps = dispatch => ({
   deleteService: data => dispatch(deleteService(data)),
   genrateInvoice: data => {
     dispatch(genrateInvoice(data));
+  },
+  customerAddRequest: data => {
+    dispatch(customerAddRequest(data));
+  },
+  vehicleAddRequest: data => {
+    dispatch(vehicleAddRequest(data));
   }
 });
 export default connect(

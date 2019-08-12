@@ -266,7 +266,8 @@ export class CrmEditVehicleModal extends Component {
     let validationData = {
       year: this.state.year,
       make: this.state.make,
-      modal: this.state.modal
+      modal: this.state.modal,
+      licensePlate: this.state.licensePlate
     };
 
     if (this.state.miles !== "") {
@@ -364,13 +365,13 @@ export class CrmEditVehicleModal extends Component {
                       onChange={this._onInputChange}
                       value={this.state.make}
                       maxLength="25"
-                      invalid={errors.make}
+                      invalid={errors.make && !this.state.make}
                     />
                     {/* {!make && errors.make ? (
                     <p className="text-danger">{errors.make}</p>
                   ) : null} */}
                     <FormFeedback>
-                      {errors.make ? errors.make : null}
+                      {errors.make && !this.state.make ? errors.make : null}
                     </FormFeedback>
                   </div>
                 </FormGroup>
@@ -392,13 +393,13 @@ export class CrmEditVehicleModal extends Component {
                       onChange={this._onInputChange}
                       value={this.state.modal}
                       maxLength="25"
-                      invalid={errors.modal}
+                      invalid={errors.modal && !this.state.modal}
                     />
                     {/* {!modal && errors.modal ? (
                     <p className="text-danger">{errors.modal}</p>
                   ) : null} */}
                     <FormFeedback>
-                      {errors.modal ? errors.modal : null}
+                      {errors.modal && !this.state.modal ? errors.modal : null}
                     </FormFeedback>
                   </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
@@ -467,16 +468,22 @@ export class CrmEditVehicleModal extends Component {
               <Col md="6">
                 <FormGroup>
                   <Label htmlFor="name" className="customer-modal-text-style">
-                    Licence Plate
+                    Licence Plate <span className={"asteric"}>*</span>
                   </Label>
-                  <Input
-                    type="text"
-                    placeholder="AUM 100"
-                    name="licensePlate"
-                    onChange={this._onInputChange}
-                    value={this.state.licensePlate}
-                    maxLength={15}
-                  />
+                  <div className={"input-block"}>
+                    <Input
+                      type="text"
+                      placeholder="AUM 100"
+                      name="licensePlate"
+                      onChange={this._onInputChange}
+                      value={this.state.licensePlate}
+                      maxLength={15}
+                      invalid={errors.licensePlate && !this.state.licensePlate}
+                    />
+                    <FormFeedback>
+                      {errors.licensePlate && !this.state.licensePlate ? errors.licensePlate : null}
+                    </FormFeedback>
+                  </div>
                 </FormGroup>
               </Col>
               <Col md="6">

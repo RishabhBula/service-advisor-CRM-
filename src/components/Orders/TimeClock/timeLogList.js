@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import {
-  Col,
-  Input,
-  FormGroup,
-  InputGroup,
-  Row,
+  // Col,
+  // Input,
+  // FormGroup,
+  // InputGroup,
+  // Row,
   Button,
   UncontrolledTooltip,
-  Form,
-  Label,
+  // Form,
+  // Label,
   Table,
 } from "reactstrap";
 import NoDataFound from "../../common/NoFound"
@@ -68,7 +68,7 @@ class TimeLogList extends Component {
     const { page, timeLogEle } = this.state
     return (
       <div>
-        <div className={"filter-block"}>
+        {/* <div className={"filter-block"}>
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
@@ -136,7 +136,7 @@ class TimeLogList extends Component {
               </Col>
             </Row>
           </Form>
-        </div>
+        </div> */}
         <Table responsive className={"time-log-table"}>
           <thead>
             <tr>

@@ -16,7 +16,7 @@ import {
   customerEditSuccess,
   customerAddSuccess,
   redirectTo,
-  updateImportCustomersReq
+  updateImportCustomersReq,
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
@@ -60,7 +60,6 @@ const addCustomerLogic = createLogic({
       );
 
       toast.error(result.messages[0] || DefaultErrorMessage);
-
       dispatch(hideLoader());
       done();
       return;
@@ -77,11 +76,13 @@ const addCustomerLogic = createLogic({
           })
         );
       }
-      dispatch(
-        customerAddSuccess({
-          customerAddInfo: result.data.data
-        })
-      );
+      if (action.payload.workFlowCustomer) {
+        dispatch(
+          customerAddSuccess({
+            customerAddInfo: result.data.data
+          })
+        );
+      }
       dispatch(modelOpenRequest({ modelDetails: { customerModel: false } }));
       dispatch(customerGetRequest());
       dispatch(hideLoader());
@@ -138,6 +139,12 @@ const getCustomersLogic = createLogic({
       done();
       return;
     } else {
+      var defaultOptions = [
+        {
+          label: "+ Add New Customer",
+          value: "",
+        }
+      ];
       const options = result.data.data.map(customer => ({
         label: `${customer.firstName} ${customer.lastName}`,
         value: customer._id,
@@ -145,7 +152,7 @@ const getCustomersLogic = createLogic({
       }));
       logger(
         action.payload && action.payload.callback
-          ? action.payload.callback(options)
+          ? action.payload.callback(defaultOptions.concat(options))
           : null
       );
       dispatch(hideLoader());

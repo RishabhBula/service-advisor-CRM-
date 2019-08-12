@@ -406,7 +406,7 @@ class OrderDetails extends Component {
           </h6>
           <Button
             size={"sm"}
-            onClick={this.handlePaymentModal}
+            // onClick={this.handlePaymentModal}
             className={"btn btn-success btn-rounded"}
           >
             New Payment
@@ -485,7 +485,7 @@ class OrderDetails extends Component {
                         }
                       >
                         {activity.type !== "NEW_ORDER" &&
-                        activity.type !== "ADD_PAYMENT" ? (
+                        activity.type !== "ADD_PAYMENT" && activity.type !== "INVOICE_ORDER" ? (
                           <i className={"fa fa-check"} />
                         ) : null}
                         {activity.type === "ADD_PAYMENT" ? (

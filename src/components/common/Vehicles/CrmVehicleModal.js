@@ -121,19 +121,8 @@ export class CrmVehicleModal extends Component {
     let validationData = {
       year: this.state.year,
       make: this.state.make,
-      modal: this.state.modal
-      // type: this.state.typeSelected,
-      // color: this.state.colorSelected,
-      // miles: this.state.miles,
-      // licensePlate: this.state.licensePlate,
-      // unit: this.state.unit,
-      // vin: this.state.vin,
-      // subModal: this.state.subModal,
-      // engineSize: this.state.engineSize,
-      // productionDate: this.state.productionDate,
-      // transmission: this.state.transmissionSelected,
-      // drivetrain: this.state.drivetrainSelected,
-      // notes: this.state.year,
+      modal: this.state.modal,
+      licensePlate: this.state.licensePlate,
     };
 
     if (this.state.miles !== "") {
@@ -355,7 +344,7 @@ export class CrmVehicleModal extends Component {
                       onKeyPress={this.yearValidation} */
                       onChange={this._onInputChange}
                       value={year}
-                      invalid={errors.year}
+                      invalid={errors.year && !this.state.year}
                     />
                     <FormFeedback>
                       {(!year && errors.year) || errors.hasOwnProperty("year")
@@ -380,13 +369,13 @@ export class CrmVehicleModal extends Component {
                       name="make"
                       onChange={this._onInputChange}
                       maxLength="25"
-                      invalid={errors.make}
+                      invalid={errors.make && !this.state.make}
                     />
                     {/* {!make && errors.make ? (
                       <p className="text-danger">{errors.make}</p>
                     ) : null} */}
                     <FormFeedback>
-                      {errors.make ? errors.make : null}
+                      {errors.make && !this.state.make ? errors.make : null}
                     </FormFeedback>
                   </div>
                 </FormGroup>
@@ -403,17 +392,17 @@ export class CrmVehicleModal extends Component {
                       type="text"
                       className="customer-modal-text-style"
                       id="type"
-                      placeholder="Accord OR Q3 Or WR..."
+                      placeholder="Accord Or Q3 Or WRV..."
                       name="modal"
                       onChange={this._onInputChange}
                       maxLength="25"
-                      invalid={errors.modal}
+                      invalid={errors.modal && !this.state.modal}
                     />
                     {/* {!modal && errors.modal ? (
                       <p className="text-danger">{errors.modal}</p>
                     ) : null} */}
                     <FormFeedback>
-                      {errors.modal ? errors.modal : null}
+                      {errors.modal && !this.state.modal ? errors.modal : null}
                     </FormFeedback>
                   </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
@@ -485,15 +474,21 @@ export class CrmVehicleModal extends Component {
               <Col md="6">
                 <FormGroup>
                   <Label htmlFor="name" className="customer-modal-text-style">
-                    Licence Plate
+                    Licence Plate <span className={"asteric"}>*</span>
                   </Label>
-                  <Input
-                    type="text"
-                    placeholder="AUM 100"
-                    name="licensePlate"
-                    onChange={this._onInputChange}
-                    maxLength={15}
-                  />
+                  <div className={"input-block"}>
+                    <Input
+                      type="text"
+                      placeholder="AUM 100"
+                      name="licensePlate"
+                      onChange={this._onInputChange}
+                      maxLength={15}
+                      invalid={errors.licensePlate && !this.state.licensePlate}
+                    />
+                    <FormFeedback>
+                      {errors.licensePlate && !this.state.licensePlate ? errors.licensePlate : null}
+                    </FormFeedback>
+                  </div>
                 </FormGroup>
               </Col>
               <Col md="6">

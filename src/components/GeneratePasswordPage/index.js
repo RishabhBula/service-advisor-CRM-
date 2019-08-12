@@ -20,7 +20,7 @@ import {
   ResetPasswordValidations,
   ResetPasswordValidationsMessaages
 } from "../../validations";
-
+import ServiceAdvisorLogo from "../../assets/logo-white.svg";
 class GeneratePasswordPage extends Component {
   constructor(props) {
     super(props);
@@ -74,7 +74,7 @@ class GeneratePasswordPage extends Component {
           <Col md="6">
             <Col className="text-center">
               <h4 className="logo-title">
-                <img src={"/assets/img/logo-white.svg"} alt={"logo"} />
+                <img src={ServiceAdvisorLogo} alt={"logo"} />
               </h4>
             </Col>
             <CardGroup>
