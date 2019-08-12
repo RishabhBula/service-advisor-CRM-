@@ -206,9 +206,11 @@ class DashboardAppointments extends Component {
                       );
                     })
                   ) : (
-                    <td colSpan={6} className={"text-center"}>
-                      No Appointments
-                    </td>
+                    <tr>
+                      <td colSpan={6} className={"text-center"}>
+                        No Appointments
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </Table>

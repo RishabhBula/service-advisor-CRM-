@@ -122,11 +122,14 @@ export const AdminDefaultPermissions = {
 
 export const allPeopleArray = ["1-2", "3-6", "7-10", "11+"];
 export const CustomerPermissionsText = [
-  { key: "isCorporateFleetTaxExempt", text: "Is associted customer tax exempt?" },
+  {
+    key: "isCorporateFleetTaxExempt",
+    text: "Is associted customer tax exempt?"
+  },
   {
     key: "shouldReceiveDiscount",
     text: "Does associted customer receive a discount?"
-  },
+  }
   // {
   //   key: "shouldLaborRateOverride",
   //   text: "Does this customer have a labor rate override?"
@@ -426,9 +429,7 @@ export const DefaultErrorMessage =
   "We are having some issues while completing your request. Please try after some time.";
 
 export const notExist = "-";
-export const WildCardRoutes = [
-  AppRoutes.PROFILE.url
-];
+export const WildCardRoutes = [AppRoutes.PROFILE.url];
 
 export const CustomerSheetHeaderToJSONKey = {
   "First Name": "firstName",
@@ -483,3 +484,13 @@ export const AppointmentColors = [
     value: "#82675F"
   }
 ];
+
+/**
+ *
+ */
+export const CustomerAgeTypes = {
+  THIRTY_DAYS: "0-30 Days",
+  SIXTY_DAYS: "31-60 Days",
+  NINETY_DAYS: "61-90 Days",
+  NINENTY_PLUS: "91 Days and above"
+};

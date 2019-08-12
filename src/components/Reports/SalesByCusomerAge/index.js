@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-
+import { Link } from "react-router-dom";
 import { Form, Row, Col, Table } from "reactstrap";
 import { AppConfig } from "../../../config/AppConfig";
 import Loader from "../../../containers/Loader/Loader";
+import { CustomerAgeTypes } from "../../../config/Constants";
+import { AppRoutes } from "../../../config/AppRoutes";
 
 class SalesByCusomerAge extends Component {
   constructor(props) {
@@ -91,7 +93,12 @@ class SalesByCusomerAge extends Component {
   render() {
     const { customerReport } = this.props;
     const { isLoading, data } = customerReport;
-    let total = 0;
+    let totalPaid = 0;
+    let totalUnPaid = 0;
+    let totalThirty = 0;
+    let totalSixty = 0;
+    let totalNinenty = 0;
+    let ninentyPlus = 0;
     return (
       <>
         <div className={"filter-block"}>
@@ -174,6 +181,20 @@ class SalesByCusomerAge extends Component {
               data && data.length ? (
                 <>
                   {data.map((customer, index) => {
+                    totalPaid += parseFloat(customer["paid"]);
+                    totalUnPaid += parseFloat(customer["due"]);
+                    totalThirty += parseFloat(
+                      customer[CustomerAgeTypes.THIRTY_DAYS] || 0
+                    );
+                    totalSixty += parseFloat(
+                      customer[CustomerAgeTypes.SIXTY_DAYS] || 0
+                    );
+                    totalNinenty += parseFloat(
+                      customer[CustomerAgeTypes.NINETY_DAYS] || 0
+                    );
+                    ninentyPlus += parseFloat(
+                      customer[CustomerAgeTypes.NINENTY_PLUS] || 0
+                    );
                     return (
                       <tr key={index}>
                         <td>
@@ -185,14 +206,21 @@ class SalesByCusomerAge extends Component {
                               "vehicle-type-img d-inline-block cursor_pointer text-primary text-bold font-weight-semibold text-capitalize"
                             }
                             id={`type${index}`}
-                            onClick={undefined}
                           >
-                            {[
-                              customer.customerId.firstName,
-                              customer.customerId.lastName
-                            ]
-                              .join(" ")
-                              .trim()}
+                            <Link
+                              to={AppRoutes.CUSTOMER_DETAILS.url.replace(
+                                ":id",
+                                customer.customerId._id
+                              )}
+                            >
+                              {" "}
+                              {[
+                                customer.customerId.firstName,
+                                customer.customerId.lastName
+                              ]
+                                .join(" ")
+                                .trim()}
+                            </Link>
                           </div>
                         </td>
                         <td>${customer["0-30 Days"] || 0}</td>
@@ -211,12 +239,27 @@ class SalesByCusomerAge extends Component {
                   <tr>
                     <td
                       className={"text-left font-weight-semibold"}
-                      colSpan={7}
+                      colSpan={2}
                     >
                       Total
                     </td>
-                    <td className={"text-left"}>
-                      <b>${total}</b>
+                    <td>
+                      <b>${totalThirty}</b>
+                    </td>
+                    <td>
+                      <b>${totalSixty}</b>
+                    </td>
+                    <td>
+                      <b>${totalNinenty}</b>
+                    </td>
+                    <td>
+                      <b>${ninentyPlus}</b>
+                    </td>
+                    <td>
+                      <b>${totalUnPaid}</b>
+                    </td>
+                    <td>
+                      <b>${totalPaid}</b>
                     </td>
                   </tr>
                 </>
