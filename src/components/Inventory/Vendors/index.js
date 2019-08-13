@@ -252,7 +252,8 @@ class Vendors extends Component {
                 <i className="fa fa-id-badge" /> Vendor Details
               </th>
               <th width={"300"}>
-                <i className="fa fa-user-circle-o " /> Contact Person Details
+                <i className="fa fa-user-circle-o " /> Contact Person
+                Details
               </th>
               <th width="350">
                 <i className="fa fa-address-card-o" /> Address Details
@@ -275,7 +276,9 @@ class Vendors extends Component {
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
                       <td>
-                        <div className={"font-weight-semibold"}>{vendor.name}</div>
+                        <div className={"font-weight-semibold"}>
+                          {vendor.name}
+                        </div>
                         <div>
                           {vendor.url ? (
                             <a
@@ -285,69 +288,113 @@ class Vendors extends Component {
                             >
                               {vendor.url}
                             </a>
-                          ) : notExist}
+                          ) : (
+                            notExist
+                          )}
                         </div>
                         <div>
                           A/C :{" "}
-                          {vendor.accountNumber ? vendor.accountNumber : notExist}
+                          {vendor.accountNumber
+                            ? vendor.accountNumber
+                            : notExist}
                         </div>
                       </td>
                       <td>
-                      {!vendor.contactPerson.firstName && !vendor.contactPerson.lastName && !vendor.contactPerson.phoneNumber.value && !vendor.contactPerson.email ? notExist :
-                      <>
-                        <div className={"text-capitalize font-weight-semibold"}>
-                          {vendor.contactPerson.firstName ? (
-                            <span>{vendor.contactPerson.firstName} </span>
-                          ) : " "}
-                          {vendor.contactPerson.firstName &&
-                          vendor.contactPerson.lastName
-                            ? vendor.contactPerson.lastName
-                            : null}
-                        </div>
-                        {vendor.contactPerson.email
-                          ? <a href={`mailto:${vendor.contactPerson.email}`} className={"text-body"}> {vendor.contactPerson.email}</a>
-                          : null}
-                        <div className={"text-capitalize dfsd"}>
-                          {vendor.contactPerson.phoneNumber &&
-                          vendor.contactPerson.phoneNumber.phone &&
-                          vendor.contactPerson.phoneNumber.value !== ""
-                            ? vendor.contactPerson.phoneNumber.phone
-                            : null}
-                          {vendor.contactPerson.phoneNumber.value ? (
-                            <span>
-                              &nbsp;<b>|</b>&nbsp;
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {vendor.contactPerson.phoneNumber &&
-                          vendor.contactPerson.phoneNumber.value
-                            ? <a href={`tel:${vendor.contactPerson.phoneNumber.value}`} className={"text-body"}>{vendor.contactPerson.phoneNumber.value}</a>
-                           : null}
-                        </div>
-                         </>  }
-                      </td>
-                      <td>
-                        
-                        {!vendor.address.address && !vendor.address.state && !vendor.address.city && !vendor.address.zip ? notExist : <>
-                          <div className="pr-3">{vendor.address.address || null}</div>
-                          <div className={"font-weight-semibold pr-3"}>
-                            {vendor.address.state ? vendor.address.state : null}
-                            {vendor.address.city
-                              ? ", " + vendor.address.city
-                              : null}
-                            {vendor.address.zip
-                              ? " - " + vendor.address.zip
-                              : null}
-                          </div>
+                        {!vendor.contactPerson.firstName &&
+                        !vendor.contactPerson.lastName &&
+                        !vendor.contactPerson.phoneNumber.value &&
+                        !vendor.contactPerson.email ? (
+                          notExist
+                        ) : (
+                          <>
+                            <div
+                              className={
+                                "text-capitalize font-weight-semibold"
+                              }
+                            >
+                              {vendor.contactPerson.firstName ? (
+                                <span>
+                                  {vendor.contactPerson.firstName}{" "}
+                                </span>
+                              ) : (
+                                " "
+                              )}
+                              {vendor.contactPerson.firstName &&
+                              vendor.contactPerson.lastName
+                                ? vendor.contactPerson.lastName
+                                : null}
+                            </div>
+                            {vendor.contactPerson.email ? (
+                              <a
+                                href={`mailto:${
+                                  vendor.contactPerson.email
+                                }`}
+                                className={"text-body"}
+                              >
+                                {" "}
+                                {vendor.contactPerson.email}
+                              </a>
+                            ) : null}
+                            <div className={"text-capitalize dfsd"}>
+                              {vendor.contactPerson.phoneNumber &&
+                              vendor.contactPerson.phoneNumber.phone &&
+                              vendor.contactPerson.phoneNumber.value !== ""
+                                ? vendor.contactPerson.phoneNumber.phone
+                                : null}
+                              {vendor.contactPerson.phoneNumber.value ? (
+                                <span>
+                                  &nbsp;<b>|</b>&nbsp;
+                                </span>
+                              ) : (
+                                ""
+                              )}
+                              {vendor.contactPerson.phoneNumber &&
+                              vendor.contactPerson.phoneNumber.value ? (
+                                <a
+                                  href={`tel:${
+                                    vendor.contactPerson.phoneNumber.value
+                                  }`}
+                                  className={"text-body"}
+                                >
+                                  {vendor.contactPerson.phoneNumber.value}
+                                </a>
+                              ) : null}
+                            </div>
                           </>
-                        }
+                        )}
+                      </td>
+                      <td>
+                        {!vendor.address.address &&
+                        !vendor.address.state &&
+                        !vendor.address.city &&
+                        !vendor.address.zip ? (
+                          notExist
+                        ) : (
+                          <>
+                            <div className="pr-3">
+                              {vendor.address.address || null}
+                            </div>
+                            <div className={"font-weight-semibold pr-3"}>
+                              {vendor.address.state
+                                ? vendor.address.state
+                                : null}
+                              {vendor.address.city
+                                ? ", " + vendor.address.city
+                                : null}
+                              {vendor.address.zip
+                                ? " - " + vendor.address.zip
+                                : null}
+                            </div>
+                          </>
+                        )}
                       </td>
                       <td>
                         <div>
                           {moment(vendor.createdAt).format("MMM Do YYYY")}
                         </div>
-                        <div>{moment(vendor.createdAt).format("h:mm a")}</div>
+                        <div>
+                          {moment(vendor.createdAt).format("h:mm a")}
+                        </div>
                       </td>
                       <td className={"text-center"}>
                         <Button
@@ -370,7 +417,9 @@ class Vendors extends Component {
                         >
                           <i className={"icons cui-trash"} />
                         </Button>
-                        <UncontrolledTooltip target={`delete-${vendor._id}`}>
+                        <UncontrolledTooltip
+                          target={`delete-${vendor._id}`}
+                        >
                           Delete
                         </UncontrolledTooltip>
                       </td>
@@ -390,7 +439,7 @@ class Vendors extends Component {
                     ) : (
                       <NoDataFound
                         showAddButton
-                        message={"Currently there are no Vendor details added."}
+                        message={"Currently there are no Vendors added."}
                         onAddClick={onAddClick}
                       />
                     )}

@@ -263,7 +263,7 @@ const generatePdfDoc = async (req, res) => {
 
       "base": `file://${path.join(__basedir, "css", "style.css")}`,
       "header": {
-          "height": "35mm",
+        "height": "35mm",
       },
       "footer": {
         "height": "30px",
@@ -288,7 +288,7 @@ const generatePdfDoc = async (req, res) => {
             font-family:'Roboto', Sans-serif ;
         }
         .pdf-container {
-          width:580px;
+          width:550px;
           margin:auto;
         }
         .invoice {
@@ -450,10 +450,10 @@ const generatePdfDoc = async (req, res) => {
         }
       </style>
       <link href=${path.join(
-        __basedir,
-        "css",
-        "style.css"
-      )} rel="stylesheet"/>
+      __basedir,
+      "css",
+      "style.css"
+    )} rel="stylesheet"/>
     </head>
       <body>
         ${body.html}

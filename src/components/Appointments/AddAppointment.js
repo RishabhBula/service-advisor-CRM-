@@ -448,9 +448,12 @@ export default class AddAppointment extends Component {
                     }}
                   />
                 </Col>
-                <Col sm={"6"}>
+                <Col sm={"6"} className={"pt-4"}>
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Title <span className={"asteric"}>*</span>
                     </Label>
                     <div className={"input-block"}>
@@ -464,12 +467,17 @@ export default class AddAppointment extends Component {
                         invalid={errors.appointmentTitle}
                       />
                       {errors.appointmentTitle ? (
-                        <FormFeedback>{errors.appointmentTitle}</FormFeedback>
+                        <FormFeedback>
+                          {errors.appointmentTitle}
+                        </FormFeedback>
                       ) : null}
                     </div>
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Start Time <span className="asteric">*</span>
                     </Label>
                     <div className={"input-block"}>
@@ -481,7 +489,9 @@ export default class AddAppointment extends Component {
                         })}
                         placeholder={"__:__"}
                         name={"startTime"}
-                        onTimeChange={e => this.onTimeChange(e, "startTime")}
+                        onTimeChange={e =>
+                          this.onTimeChange(e, "startTime")
+                        }
                       />
                       {errors.startTime ? (
                         <FormFeedback>Start time is required</FormFeedback>
@@ -489,7 +499,10 @@ export default class AddAppointment extends Component {
                     </div>
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       End Time <span className="asteric">*</span>
                     </Label>
                     <div className={"input-block"}>
@@ -510,7 +523,10 @@ export default class AddAppointment extends Component {
                     </div>
                   </FormGroup>
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Notes
                     </Label>
                     <div className={"input-block"}>
@@ -530,9 +546,12 @@ export default class AddAppointment extends Component {
                     </div>
                   </FormGroup>
                 </Col>
-                <Col sm={"12"}>
+                <Col sm={"12"} className={"pt-3"}>
                   <FormGroup className={"fleet-block"}>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Customer <span className="asteric">*</span>
                     </Label>
                     <div className={"input-block"}>
@@ -581,17 +600,22 @@ export default class AddAppointment extends Component {
                             ? "No customer found"
                             : "Type customer name"
                         }
-                      // menuIsOpen={true}
+                        // menuIsOpen={true}
                       />
                       {errors.selectedCustomer ? (
-                        <FormFeedback>{errors.selectedCustomer}</FormFeedback>
+                        <FormFeedback>
+                          {errors.selectedCustomer}
+                        </FormFeedback>
                       ) : null}
                     </div>
                   </FormGroup>
                 </Col>
                 <Col md={"12"}>
                   <FormGroup className={"fleet-block"}>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Vehicle
                     </Label>
                     <div className={"input-block"}>
@@ -620,14 +644,19 @@ export default class AddAppointment extends Component {
                         isDisabled={!selectedCustomer}
                       />
                       {errors.selectedVehicle ? (
-                        <FormFeedback>{errors.selectedVehicle}</FormFeedback>
+                        <FormFeedback>
+                          {errors.selectedVehicle}
+                        </FormFeedback>
                       ) : null}
                     </div>
                   </FormGroup>
                 </Col>
                 <Col md={"6"}>
                   <FormGroup className={"phone-field"}>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Phone Number
                     </Label>
                     <div className={"input-block"}>
@@ -649,7 +678,10 @@ export default class AddAppointment extends Component {
                 </Col>
                 <Col md={"6"}>
                   <FormGroup>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Email
                     </Label>
                     <div className={"input-block"}>
@@ -671,7 +703,10 @@ export default class AddAppointment extends Component {
                 </Col>
                 <Col md={"12"}>
                   <FormGroup className={"fleet-block"}>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Select Order
                     </Label>
                     <div className={"input-block"}>
@@ -703,7 +738,10 @@ export default class AddAppointment extends Component {
                 </Col>
                 <Col md={"12"}>
                   <FormGroup className={"fleet-block"}>
-                    <Label htmlFor="name" className="customer-modal-text-style">
+                    <Label
+                      htmlFor="name"
+                      className="customer-modal-text-style"
+                    >
                       Technician
                     </Label>
                     <div className={"input-block"}>
@@ -718,7 +756,8 @@ export default class AddAppointment extends Component {
                         value={selectedTechincians}
                         isClearable={true}
                         noOptionsMessage={() =>
-                          this.isTechnicianReqSent || selectedTechincians.length
+                          this.isTechnicianReqSent ||
+                          selectedTechincians.length
                             ? "No techinician found"
                             : "Type name of technician"
                         }

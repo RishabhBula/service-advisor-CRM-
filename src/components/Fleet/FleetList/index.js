@@ -310,7 +310,7 @@ class FleetList extends Component {
                         className="btn btn-theme-transparent"
                         id="Tooltip-1"
                       >
-                        <i className="icons cui-magnifying-glass"></i>
+                        <i className="icons cui-magnifying-glass" />
                       </Button>
                       <UncontrolledTooltip target="Tooltip-1">
                         Search
@@ -323,7 +323,7 @@ class FleetList extends Component {
                         id="Tooltip-2"
                         onClick={this.onReset}
                       >
-                        <i className="icon-refresh icons"></i>
+                        <i className="icon-refresh icons" />
                       </Button>
                       <UncontrolledTooltip target={"Tooltip-2"}>
                         Reset all filters
@@ -335,63 +335,84 @@ class FleetList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive >
+        <Table responsive>
           <thead>
             <tr>
-              <th width='90px'>
-                <div className='table-checkbox-wrap'>
-                  {fleetData.data && fleetData.data.length ?
-                    <span className='checkboxli checkbox-custom checkbox-default' >
+              <th width="90px">
+                <div className="table-checkbox-wrap">
+                  {fleetData.data && fleetData.data.length ? (
+                    <span className="checkboxli checkbox-custom checkbox-default">
                       <Input
-                        type='checkbox'
-                        name='checkbox'
-                        id='checkAll'
-                        checked={fleetData.data && fleetData.data.length ? selectedFleets.length === fleetData.data.length : null}
+                        type="checkbox"
+                        name="checkbox"
+                        id="checkAll"
+                        checked={
+                          fleetData.data && fleetData.data.length
+                            ? selectedFleets.length ===
+                              fleetData.data.length
+                            : null
+                        }
                         onChange={this.handleCheckAllCheckBox}
                       />
-                      <label className='' htmlFor='checkAll'></label>
-                    </span> :
-                    <span className='checkboxli checkbox-custom checkbox-default' >
-                      <label></label>
+                      <label className="" htmlFor="checkAll" />
                     </span>
-                  }
+                  ) : (
+                    <span className="checkboxli checkbox-custom checkbox-default">
+                      <label />
+                    </span>
+                  )}
 
                   {fleetData && fleetData.data && fleetData.data.length ? (
                     <Input
-                      className='commonstatus'
-                      type='select'
-                      id='exampleSelect'
+                      className="commonstatus"
+                      type="select"
+                      id="exampleSelect"
                       onChange={this.handleActionChange}
                     >
-                      <option value={''}>Select</option>
-                      <option value={'active'}>Active</option>
-                      <option value={'inactive'}>Inactive</option>
-                      <option value={'delete'}>Delete</option>
+                      <option value={""}>Select</option>
+                      <option value={"active"}>Active</option>
+                      <option value={"inactive"}>Inactive</option>
+                      <option value={"delete"}>Delete</option>
                     </Input>
-                  ) :
+                  ) : (
                     <Input
-                      className='commonstatus'
-                      type='select'
-                      id='exampleSelect'
+                      className="commonstatus"
+                      type="select"
+                      id="exampleSelect"
                       disabled
                       onChange={this.handleActionChange}
                     >
-                      <option value={''}>Select</option>
-                      <option value={'active'}>Active</option>
-                      <option value={'inactive'}>Inactive</option>
-                      <option value={'delete'}>Delete</option>
-                    </Input>}
+                      <option value={""}>Select</option>
+                      <option value={"active"}>Active</option>
+                      <option value={"inactive"}>Inactive</option>
+                      <option value={"delete"}>Delete</option>
+                    </Input>
+                  )}
                 </div>
               </th>
-              <th width={"250"}><i className={"fa fa-building-o"} /> Company Name</th>
-              <th width={"250"}><i className={"fa fa-phone"} /> Phone</th>
+              <th width={"250"}>
+                <i className={"fa fa-building-o"} /> Company Name
+              </th>
+              <th width={"250"}>
+                <i className={"fa fa-phone"} /> Phone
+              </th>
               {/* <th width={"250"}>Email</th> */}
-              <th><i className={"fa fa-calculator"} /> Tax Exempted</th>
-              <th><i className="fa fa-percent" /> Discount</th>
+              <th>
+                <i className={"fa fa-calculator"} /> Tax Exempted
+              </th>
+              <th>
+                <i className="fa fa-percent" /> Discount
+              </th>
               {/* <th><i className={"fa fa-bookmark"} /> Lables</th> */}
-              <th><i className={"fa fa-exclamation-circle"} /> Status</th>
-              <th><i className={"fa fa-clock-o"} /> Created</th>
-              <th width={"140"} className={"text-center"}>Action</th>
+              <th>
+                <i className={"fa fa-exclamation-circle"} /> Status
+              </th>
+              <th>
+                <i className={"fa fa-clock-o"} /> Created
+              </th>
+              <th width={"140"} className={"text-center"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -401,35 +422,84 @@ class FleetList extends Component {
                   return (
                     <tr key={index}>
                       <td>
-                        <div className='checkbox-custom checkbox-default coloum-checkbox'>
+                        <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
-                            type='checkbox'
+                            type="checkbox"
                             value={data._id}
                             checked={selectedFleets.indexOf(data._id) > -1}
-                            name='checkbox'
+                            name="checkbox"
                             onChange={this.handleCheckboxChange}
                           />
                           <label htmlFor={data._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                              index +
+                              1}
+                            .
                           </label>
                         </div>
                       </td>
                       <td>
-                        <div className={"text-capitalize font-weight-bold"}>{data.companyName || notExist}</div>
-                        <div>{data.email ? <a href={`mailto:${data.email}`} className={"text-body"}>{data.email}</a> : null}</div>
+                        <div className={"text-capitalize font-weight-bold"}>
+                          {data.companyName || notExist}
+                        </div>
+                        <div>
+                          {data.email ? (
+                            <a
+                              href={`mailto:${data.email}`}
+                              className={"text-body"}
+                            >
+                              {data.email}
+                            </a>
+                          ) : null}
+                        </div>
                       </td>
                       <td>
                         <div>
-                          {data.phoneDetail ?
-                            data.phoneDetail.map((data, index) => {
-                              return (
-                                <div className="text-capitalize">{data.phone ? data.phone : "mobile"}{"  "}<b>{data.phone ? "|" : null}</b>{"  "}{data.value ? <a href={`tel:${data.value}`} className={"text-body"}>{data.value}</a> : null}</div>
-                              )
-                            }) : "-"}
+                          {data.phoneDetail
+                            ? data.phoneDetail.map((data, index) => {
+                                return (
+                                  <div className="text-capitalize">
+                                    {data.phone ? data.phone : "mobile"}
+                                    {"  "}
+                                    <b>{data.phone ? "|" : null}</b>
+                                    {"  "}
+                                    {data.value ? (
+                                      <a
+                                        href={`tel:${data.value}`}
+                                        className={"text-body"}
+                                      >
+                                        {data.value}
+                                      </a>
+                                    ) : null}
+                                  </div>
+                                );
+                              })
+                            : "-"}
                         </div>
                       </td>
-                      <td className={"pl-4"}><span className={"qty-value"}>{data.fleetDefaultPermissions && !data.fleetDefaultPermissions.isCorporateFleetTaxExempt.status ? <i className={"fa fa-times text-danger"} /> : <i className="fa fa-check text-success" />}</span></td>
-                      <td className={"pl-4 qty-value"}><span className={"qty-value"}>{data.fleetDefaultPermissions && data.fleetDefaultPermissions.shouldReceiveDiscount.status ? `${data.fleetDefaultPermissions.shouldReceiveDiscount.percentageDiscount}%` : "0%"}</span></td>
+                      <td className={"pl-4"}>
+                        <span className={"qty-value"}>
+                          {data.fleetDefaultPermissions &&
+                          !data.fleetDefaultPermissions
+                            .isCorporateFleetTaxExempt.status ? (
+                            <i className={"fa fa-times text-danger"} />
+                          ) : (
+                            <i className="fa fa-check text-success" />
+                          )}
+                        </span>
+                      </td>
+                      <td className={"pl-4 qty-value"}>
+                        <span className={"qty-value"}>
+                          {data.fleetDefaultPermissions &&
+                          data.fleetDefaultPermissions.shouldReceiveDiscount
+                            .status
+                            ? `${
+                                data.fleetDefaultPermissions
+                                  .shouldReceiveDiscount.percentageDiscount
+                              }%`
+                            : "0%"}
+                        </span>
+                      </td>
                       {/* <td >
                         <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
                       </td> */}
@@ -448,26 +518,32 @@ class FleetList extends Component {
                                 }
                               );
                             }}
-                          >Active</Badge>
+                          >
+                            Active
+                          </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedFleets: [data._id]
-                                  },
-                                  () => {
-                                    this.activateUsers();
-                                  }
-                                );
-                              }}
-                            >Inactive</Badge>
-                          )}
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedFleets: [data._id]
+                                },
+                                () => {
+                                  this.activateUsers();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
+                          </Badge>
+                        )}
                       </td>
                       <td>
-                        <div>{moment(data.createdAt).format("MMM Do YYYY")}</div>
+                        <div>
+                          {moment(data.createdAt).format("MMM Do YYYY")}
+                        </div>
                         <div>{moment(data.createdAt).format("h:mm a")}</div>
                       </td>
                       <td className={"text-center"}>
@@ -494,7 +570,8 @@ class FleetList extends Component {
                                 },
                                 () => {
                                   this.onDelete();
-                                })
+                                }
+                              )
                             }
                             className={"btn-theme-transparent"}
                             id={"Tooltip-4"}
@@ -510,22 +587,32 @@ class FleetList extends Component {
                   );
                 })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={10}>
-                      {filterApplied ? <NoDataFound message={"No Fleet details found related to your search"} noResult /> :
-                        <NoDataFound showAddButton message={"Currently there are no Fleet details added."} onAddClick={this.props.onAddClick} />
-                      }
-                    </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    <Loader />
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={
+                          "No Fleet details found related to your search"
+                        }
+                        noResult
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={"Currently there are no Fleets added"}
+                        onAddClick={this.props.onAddClick}
+                      />
+                    )}
                   </td>
                 </tr>
               )
-            }
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={10}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         {fleetData.totalfleet && !isLoading ? (

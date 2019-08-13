@@ -11,9 +11,19 @@ import {
 } from "reactstrap";
 import { logger } from "../../../helpers/Logger";
 import Validator from "js-object-validation";
-import { ProfileValidations, ProfileValidationsMessaages } from "../../../validations/profile.js";
-import { countryWithTimezone, allServices, allVehicleServices, allPeopleArray } from "../../../config/Constants"
+import {
+  ProfileValidations,
+  ProfileValidationsMessaages
+} from "../../../validations/profile.js";
+import {
+  countryWithTimezone,
+  allServices,
+  allVehicleServices,
+  allPeopleArray
+} from "../../../config/Constants";
 import { isValidURL } from "../../../helpers/Object";
+import MaskedInput from "react-maskedinput";
+import Select from "react-select";
 
 class GenralSettings extends Component {
   constructor(props) {
@@ -23,7 +33,7 @@ class GenralSettings extends Component {
       firstName: "",
       lastName: "",
       email: "",
-      phoneNumber: "",
+      phone: "",
       address: "",
       companyName: "",
       companyNumber: "",
@@ -43,7 +53,8 @@ class GenralSettings extends Component {
         selectedVehicleServices: [],
         allVehicleServices
       },
-      validErrors: {}
+      validErrors: {},
+      phoneError:false
     };
   }
 
@@ -53,7 +64,7 @@ class GenralSettings extends Component {
         firstName,
         lastName,
         email,
-        phoneNumber,
+        phone,
         address,
         currency,
         timeZone,
@@ -67,7 +78,7 @@ class GenralSettings extends Component {
         firstName,
         lastName,
         email,
-        phoneNumber,
+        phone,
         address,
         companyName,
         companyNumber,
@@ -99,7 +110,7 @@ class GenralSettings extends Component {
       const {
         firstName,
         lastName,
-        phoneNumber,
+        phone,
         address,
         currency,
         companyName,
@@ -113,7 +124,7 @@ class GenralSettings extends Component {
       this.setState({
         firstName,
         lastName,
-        phoneNumber,
+        phone,
         address,
         currency,
         companyName,
@@ -151,7 +162,23 @@ class GenralSettings extends Component {
         [name]: null
       }
     });
-   
+  };
+
+  handleonInputChange = e => {
+    // console.log(e.value, "event");
+    if (e && e.value) {
+      this.setState({
+        timeZone: e
+      });
+    }
+    else{
+      this.setState({
+        timeZone: {
+          value: "",
+          label: "Select Timezone"
+        }
+      });
+    }
   };
 
   serviceOfferAction = event => {
@@ -221,10 +248,7 @@ class GenralSettings extends Component {
     });
   };
 
- 
-
   handleSubmit = e => {
-  
     e.preventDefault();
     try {
       let validErrors = {};
@@ -232,7 +256,7 @@ class GenralSettings extends Component {
       const {
         firstName,
         lastName,
-        phoneNumber,
+        phone,
         address,
         currency,
         companyName,
@@ -245,6 +269,7 @@ class GenralSettings extends Component {
         peopleWork
       } = this.state;
       const { selected } = peopleWork;
+
       if (!selected) {
         validErrors.peopleWork = "Please select number of employees.";
         hasErrors = true;
@@ -258,6 +283,12 @@ class GenralSettings extends Component {
       if (!selectedVehicleServices.length) {
         validErrors.vehicleService = "Please select at least one vehicle.";
         hasErrors = true;
+      }
+
+      if (Object.keys(phone).length < 13) {
+        this.setState({
+          phoneError: true
+        });
       }
 
       if (website && !isValidURL(website)) {
@@ -283,7 +314,7 @@ class GenralSettings extends Component {
       const payload = {
         firstName,
         lastName,
-        contactNumber: phoneNumber,
+        phone,
         address,
         currency,
         companyName,
@@ -295,13 +326,14 @@ class GenralSettings extends Component {
         servicesOffer: servicesOfferTemp,
         peopleWork: selected
       };
-
+      console.log(payload, "payload");
+    
       const { isValid, errors } = Validator(
         payload,
         ProfileValidations,
         ProfileValidationsMessaages
       );
-
+      
       if (
         (!isValid || (!isValid && hasErrors) || hasErrors) &&
         this.props.profileSetting
@@ -324,23 +356,20 @@ class GenralSettings extends Component {
       errors,
       firstName,
       lastName,
-      phoneNumber,
+      phone,
       address,
-      currency,
+      phoneError,
       timeZone
     } = this.state;
     const { profileData } = this.props;
     const timeZoneOptions = countryWithTimezone.filter(
       country => country.name === "United States"
     );
-    const options = timeZoneOptions[0].timezones.map((item, index) => {
-      return (
-        <option key={index} value={item} >
-          {item}
-        </option>
-      );
+    const options = [];
+    timeZoneOptions[0].timezones.map((item, index) => {
+      return options.push({ value: item, label: item });
     });
-    
+
     return (
       <div>
         <Row>
@@ -428,17 +457,32 @@ class GenralSettings extends Component {
                       Contact Number
                     </Label>
                     <div className="input-block">
+                      <MaskedInput
+                        mask="(111) 111-1111"
+                        name="phone"
+                        placeholder="(555) 055-05555"
+                        className={
+                          phoneError
+                            ? "is-invalid form-control"
+                            : "form-control"
+                        }
+                        size="20"
+                        value={phone || ""}
+                        onChange={this.handleInputChange}
+                        invalid={errors.phone}
+                      />
+                      {/* 
                       <Input
                         type="text"
                         placeholder="Contact Number"
                         onChange={this.handleInputChange}
-                        value={phoneNumber || ""}
-                        name="phoneNumber"
-                        invalid={errors.phoneNumber}
+                        value={phone || ""}
+                        name="phone"
+                        invalid={errors.phone}
                         maxLength={13}
-                      />
+                      /> */}
                       <FormFeedback>
-                        {errors.phoneNumber ? errors.phoneNumber : null}
+                        {phoneError ? "Please enter 10 numbers" : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -455,16 +499,13 @@ class GenralSettings extends Component {
                     </Label>
                     <div className="input-block">
                       <Input
-                        type="select"
+                        type="text"
                         placeholder="Currency"
-                        onChange={this.handleInputChange}
-                        value={currency || ""}
+                        value={"USD"}
                         name="currency"
                         invalid={errors.currency}
-                      >
-                        <option value={" "}>Select</option>
-                        <option value={"usd"}>USD</option>
-                      </Input>
+                        disabled
+                      />
                       <FormFeedback>
                         {errors.currency ? errors.currency : null}
                       </FormFeedback>
@@ -480,7 +521,7 @@ class GenralSettings extends Component {
                       Time Zone
                     </Label>
                     <div className="input-block">
-                      <Input
+                      {/* <Input
                         type="select"
                         placeholder="Time Zone"
                         onChange={this.handleInputChange}
@@ -489,7 +530,22 @@ class GenralSettings extends Component {
                         invalid={errors.timeZone}
                       >
                         {options}
-                      </Input>
+                      </Input> */}
+
+                      <Select
+                        defaultInputValue={""}
+                        value={timeZone}
+                        isSearchable={true}
+                        isClearable={
+                          timeZone && timeZone.value ? true : false
+                        }
+                        options={options}
+                        className="form-select simple-select"
+                        onChange={value => this.handleonInputChange(value)}
+                        classNamePrefix={"form-select-theme"}
+                        placeholder={"Select Timezone"}
+                        name="timeZone"
+                      />
 
                       <FormFeedback>
                         {errors.timeZone ? errors.timeZone : null}
@@ -515,6 +571,7 @@ class GenralSettings extends Component {
                         value={address || ""}
                         name="address"
                         invalid={errors.address}
+                        rows={"4"}
                       />
                       <FormFeedback>
                         {errors.address ? errors.address : null}
@@ -552,4 +609,4 @@ class GenralSettings extends Component {
   }
 }
 
-export default GenralSettings
+export default GenralSettings;

@@ -156,7 +156,7 @@ class Calender extends Component {
             <UncontrolledTooltip target={"add-Appointment"}>
               Create New Appointment
             </UncontrolledTooltip>
-            <CrmCircleIcon circleIconPass={"fa fa-cog fa-lg"} />
+            {/* <CrmCircleIcon circleIconPass={"fa fa-cog fa-lg"} /> */}
           </div>
           <CardBody className={"custom-card-body inventory-card"}>
             {isLoading ? (

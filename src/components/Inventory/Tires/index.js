@@ -326,7 +326,9 @@ class Tires extends Component {
                       Filter by
                     </option>
                     <option value={"critical"}>Critical Quantity</option>
-                    <option value={"ncritical"}>Non-Critical Quantity</option>
+                    <option value={"ncritical"}>
+                      Non-Critical Quantity
+                    </option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -349,8 +351,12 @@ class Tires extends Component {
                     <option value={"qhtol"}>Quantity(High to High)</option>
                     <option value={"cltoh"}>Cost(Low to High)</option>
                     <option value={"chtol"}>Cost(High to High)</option>
-                    <option value={"rpltoh"}>Retail Price(Low to High)</option>
-                    <option value={"rphtol"}>Retail Price(High to High)</option>
+                    <option value={"rpltoh"}>
+                      Retail Price(Low to High)
+                    </option>
+                    <option value={"rphtol"}>
+                      Retail Price(High to High)
+                    </option>
                     <option value={"cdltoh"}>Last created</option>
                   </Input>
                 </FormGroup>
@@ -373,7 +379,9 @@ class Tires extends Component {
                         }}
                         isClearable={true}
                         noOptionsMessage={() =>
-                          vendorInput ? "No vendor found" : "Type vendor name"
+                          vendorInput
+                            ? "No vendor found"
+                            : "Type vendor name"
                         }
                       />
                     </FormGroup>
@@ -459,12 +467,24 @@ class Tires extends Component {
                 </div> */}
                 S No.
               </th>
-              <th width={"280"}><i className="fa fa-cube"></i> Brand Info</th>
-              <th width={"200"}><i className="fa fa-life-saver"></i> Size</th>
-              <th width={"280"}><i className="fa fa-id-badge"></i> Vendor</th>
-              <th width={"280"}><i className="fa fa-cloud"></i> Seasonality</th>
-              <th width={"280"}><i className="fa fa-clock-o"></i> Created</th>
-              <th width={"130"} className={"text-center action-td"}>Action</th>
+              <th width={"280"}>
+                <i className="fa fa-cube" /> Brand Info
+              </th>
+              <th width={"200"}>
+                <i className="fa fa-life-saver" /> Size
+              </th>
+              <th width={"280"}>
+                <i className="fa fa-id-badge" /> Vendor
+              </th>
+              <th width={"280"}>
+                <i className="fa fa-cloud" /> Seasonality
+              </th>
+              <th width={"280"}>
+                <i className="fa fa-clock-o" /> Created
+              </th>
+              <th width={"130"} className={"text-center action-td"}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -486,38 +506,76 @@ class Tires extends Component {
                             <label htmlFor={tire._id}>
                             </label>
                           </div> */}
-                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                            index +
+                            1}
+                          .
                         </td>
                         <td className={"text-capitalize"}>
-                          <div className={"font-weight-semibold"}>{tire.brandName || "-"}</div>
-                          {tire.modalName ? <div className={"modal-info"}>
-                            Modal : <Badge>{tire.modalName}</Badge></div> : " "}
+                          <div className={"font-weight-semibold"}>
+                            {tire.brandName || "-"}
+                          </div>
+                          {tire.modalName ? (
+                            <div className={"modal-info"}>
+                              Modal : <Badge>{tire.modalName}</Badge>
+                            </div>
+                          ) : (
+                            " "
+                          )}
                         </td>
                         {/* <td className={"text-capitalize"}>{tire.modalName || "-"}</td> */}
-                        <td >
-
-                          {tire.tierSize && tire.tierSize.length ?
+                        <td>
+                          {tire.tierSize && tire.tierSize.length ? (
                             <Button
                               size={"sm"}
                               className={"btn-square btn-light second"}
-                              onClick={() => this.handleSize(tire._id, index)}
+                              onClick={() =>
+                                this.handleSize(tire._id, index)
+                              }
                             >
                               <b>Size Details</b>
-                              {isTireSizeOpen === index ? <i class="icons icon-arrow-up ml-2"></i> : <i class="icons icon-arrow-down ml-2"></i>}
-                            </Button> : notExist
-                          }
+                              {isTireSizeOpen === index ? (
+                                <i class="icons icon-arrow-up ml-2" />
+                              ) : (
+                                <i class="icons icon-arrow-down ml-2" />
+                              )}
+                            </Button>
+                          ) : (
+                            notExist
+                          )}
                         </td>
                         <td>
-                          {tire.vendorId && tire.vendorId.name ?
-                            <a href={`/inventory/vendors?page=1&search=${tire.vendorId && tire.vendorId.name ? tire.vendorId.name : null}`} target="_blank" rel="noopener noreferrer" className={"text-body"}>{tire.vendorId && tire.vendorId.name ? tire.vendorId.name : "-"}</a> :
-                            tire.vendorId && tire.vendorId.name ? tire.vendorId.name : notExist}
+                          {tire.vendorId && tire.vendorId.name ? (
+                            <a
+                              href={`/inventory/vendors?page=1&search=${
+                                tire.vendorId && tire.vendorId.name
+                                  ? tire.vendorId.name
+                                  : null
+                              }`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={"text-body"}
+                            >
+                              {tire.vendorId && tire.vendorId.name
+                                ? tire.vendorId.name
+                                : "-"}
+                            </a>
+                          ) : tire.vendorId && tire.vendorId.name ? (
+                            tire.vendorId.name
+                          ) : (
+                            notExist
+                          )}
                         </td>
                         <td className={"season-td text-capitalize"}>
                           {tire.seasonality || "-"}
                         </td>
                         <td>
-                          <div>{moment(tire.createdAt).format("MMM Do YYYY")}</div>
-                          <div>{moment(tire.createdAt).format("h:mm a")}</div>
+                          <div>
+                            {moment(tire.createdAt).format("MMM Do YYYY")}
+                          </div>
+                          <div>
+                            {moment(tire.createdAt).format("h:mm a")}
+                          </div>
                         </td>
                         <td className={"text-center action-td"}>
                           <Button
@@ -526,13 +584,13 @@ class Tires extends Component {
                             id={`edit-${tire._id}`}
                             className={"btn-theme-transparent"}
                           >
-                            <i className={"icons cui-pencil"}></i>
+                            <i className={"icons cui-pencil"} />
                           </Button>{" "}
                           <UncontrolledTooltip target={`edit-${tire._id}`}>
                             Edit
                           </UncontrolledTooltip>
                           &nbsp;
-                        <Button
+                          <Button
                             size={"sm"}
                             onClick={() =>
                               this.setState(
@@ -547,74 +605,135 @@ class Tires extends Component {
                             id={`delete-${tire._id}`}
                             className={"btn-theme-transparent"}
                           >
-                            <i className={"icons cui-trash"}></i>
+                            <i className={"icons cui-trash"} />
                           </Button>
-                          <UncontrolledTooltip target={`delete-${tire._id}`}>
+                          <UncontrolledTooltip
+                            target={`delete-${tire._id}`}
+                          >
                             Delete
                           </UncontrolledTooltip>
                         </td>
                       </tr>
                       {/* {isTireSizeOpen && tire.tierSize && tireSizeid === tire._id && tire.tierSize.length ? */}
 
-                      {tire.tierSize && tire.tierSize.length ? <tr className={isTireSizeOpen === index ? 'active' : 'inactive'}>
-                        <td colSpan={"7"} key={index} className={"p-0"}>
-                          <Table className={"size-desc-table"}>
-                            <thead>
-                              <tr>
-                                <th width={"90"} className={"s-no-th"}></th>
-                                <th className={"tire-th"} width={"280"}>Size</th>
-                                <th className={"tire-th"} width={"200"}>Part</th>
-                                <th className={"tire-th"} width={"280"}>Cost</th>
-                                <th className={"tire-th"} width={"280"}>Retails Price</th>
-                                <th className={"tire-th"} width={"280"}>Quatity</th>
-                                <th className={"tire-bin-th"} width={"130"}>BIN/Location</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {tire.tierSize.length ? tire.tierSize.map((size, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <td></td>
-                                    <td width={"100"}>{size.baseInfo.replace("_ __" || "_" || "___", "") || "-"}</td>
-                                    <td>{size.part || notExist}</td>
-                                    <td width={"70"}>{size.cost ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.cost}</span> : notExist}</td>
-                                    <td width={"70"}>{size.retailPrice ? <span class="dollar-price"><i class="fa fa-dollar dollar-icon"></i>{size.retailPrice}</span> : notExist}</td>
-                                    <td width={"70"}>{size.quantity || 0}&nbsp;
-                                      {size.quantity <= size.criticalQuantity ? (
-                                        <Badge color={"warning"}>Reorder</Badge>
-                                      ) : null}</td>
-                                    <td width={"70"}>{size.bin || notExist}</td>
-                                  </tr>
-                                )
-
-                              }) :
-                                null
-                              }
-                            </tbody>
-                          </Table>
-                        </td>
-                      </tr> : null}
-
+                      {tire.tierSize && tire.tierSize.length ? (
+                        <tr
+                          className={
+                            isTireSizeOpen === index ? "active" : "inactive"
+                          }
+                        >
+                          <td colSpan={"7"} key={index} className={"p-0"}>
+                            <Table className={"size-desc-table"}>
+                              <thead>
+                                <tr>
+                                  <th width={"90"} className={"s-no-th"} />
+                                  <th className={"tire-th"} width={"280"}>
+                                    Size
+                                  </th>
+                                  <th className={"tire-th"} width={"200"}>
+                                    Part
+                                  </th>
+                                  <th className={"tire-th"} width={"280"}>
+                                    Cost
+                                  </th>
+                                  <th className={"tire-th"} width={"280"}>
+                                    Retails Price
+                                  </th>
+                                  <th className={"tire-th"} width={"280"}>
+                                    Quatity
+                                  </th>
+                                  <th
+                                    className={"tire-bin-th"}
+                                    width={"130"}
+                                  >
+                                    BIN/Location
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {tire.tierSize.length
+                                  ? tire.tierSize.map((size, index) => {
+                                      return (
+                                        <tr key={index}>
+                                          <td />
+                                          <td width={"100"}>
+                                            {size.baseInfo.replace(
+                                              "_ __" || "_" || "___",
+                                              ""
+                                            ) || "-"}
+                                          </td>
+                                          <td>{size.part || notExist}</td>
+                                          <td width={"70"}>
+                                            {size.cost ? (
+                                              <span class="dollar-price">
+                                                <i class="fa fa-dollar dollar-icon" />
+                                                {size.cost}
+                                              </span>
+                                            ) : (
+                                              notExist
+                                            )}
+                                          </td>
+                                          <td width={"70"}>
+                                            {size.retailPrice ? (
+                                              <span class="dollar-price">
+                                                <i class="fa fa-dollar dollar-icon" />
+                                                {size.retailPrice}
+                                              </span>
+                                            ) : (
+                                              notExist
+                                            )}
+                                          </td>
+                                          <td width={"70"}>
+                                            {size.quantity || 0}&nbsp;
+                                            {size.quantity <=
+                                            size.criticalQuantity ? (
+                                              <Badge color={"warning"}>
+                                                Reorder
+                                              </Badge>
+                                            ) : null}
+                                          </td>
+                                          <td width={"70"}>
+                                            {size.bin || notExist}
+                                          </td>
+                                        </tr>
+                                      );
+                                    })
+                                  : null}
+                              </tbody>
+                            </Table>
+                          </td>
+                        </tr>
+                      ) : null}
                     </>
                   );
-                }
-                )
-
+                })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={12}>
-                      {filterApplied ? <NoDataFound message={"No Tire details found related to your search"} noResult /> : <NoDataFound showAddButton message={"Currently there are no Tire details added."} onAddClick={onAddClick} />}
-                    </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    <Loader />
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={
+                          "No Tire details found related to your search"
+                        }
+                        noResult
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={"Currently there are no Tires added."}
+                        onAddClick={onAddClick}
+                      />
+                    )}
                   </td>
                 </tr>
-              )}
-
+              )
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={12}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         {totalTires && !isLoading ? (
@@ -632,12 +751,11 @@ class Tires extends Component {
         <CrmTyreModal
           tyreModalOpen={tireEditModalOpen}
           handleTierModal={() => {
-            this.setState({ tier: {} })
+            this.setState({ tier: {} });
             modelOperate({
               tireEditModalOpen: !tireEditModalOpen
-            })
-          }
-          }
+            });
+          }}
           tireData={tire}
           updateTire={this.onUpdate}
           matrixList={matrixListReducer.matrixList}

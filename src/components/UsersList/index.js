@@ -454,23 +454,57 @@ class UserList extends Component {
                           <Input
                             type="checkbox"
                             value={user._id}
-                            checked={selectedUsers.indexOf(user._id) > -1}
+                            checked={
+                              selectedUsers.indexOf(
+                                user._id
+                              ) > -1
+                            }
                             name="checkbox"
-                            onChange={this.handleCheckboxChnage}
+                            onChange={
+                              this.handleCheckboxChnage
+                            }
                           />
                           <label htmlFor={user._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                            {(page - 1) *
+                              AppConfig.ITEMS_PER_PAGE +
+                              index +
+                              1}
+                            .
                           </label>
                         </div>
                       </td>
                       <td>
-                        <div className={"text-capitalize font-weight-semibold"}>
-                          {[user.firstName, user.lastName].join(" ").trim()}
+                        <div
+                          className={
+                            "text-capitalize font-weight-semibold"
+                          }
+                        >
+                          {[user.firstName, user.lastName]
+                            .join(" ")
+                            .trim()}
                         </div>
-                        <div>{user.email ? <a href={`mailto:${user.email}`} className={"text-body"}>{user.email}</a> : "-"} </div>
+                        <div>
+                          {user.email ? (
+                            <a
+                              href={`mailto:${user.email}`}
+                              className={"text-body"}
+                            >
+                              {user.email}
+                            </a>
+                          ) : (
+                            "-"
+                          )}{" "}
+                        </div>
                       </td>
                       <td>
-                        {user.rate ? <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{[user.rate.toFixed(2)]}</span> : "-"}
+                        {user.rate ? (
+                          <span className="dollar-price">
+                            <i className="fa fa-dollar dollar-icon" />
+                            {[user.rate.toFixed(2)]}
+                          </span>
+                        ) : (
+                          "-"
+                        )}
                       </td>
                       <td className={"text-capitalize"}>
                         {"Technician"}
@@ -480,10 +514,14 @@ class UserList extends Component {
                       </td> */}
                       <td className={"text-center"}>
                         {user.userSideActivation ? (
-                          <Badge color="success">Accepted</Badge>
+                          <Badge color="success">
+                            Accepted
+                          </Badge>
                         ) : (
-                            <Badge color="warning">Pending</Badge>
-                          )}
+                          <Badge color="warning">
+                            Pending
+                          </Badge>
+                        )}
                       </td>
                       <td className={"text-center"}>
                         {user.status ? (
@@ -504,51 +542,88 @@ class UserList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedUsers: [user._id]
-                                  },
-                                  () => {
-                                    this.activateUsers();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedUsers: [user._id]
+                                },
+                                () => {
+                                  this.activateUsers();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
                       <td>
                         <div id={`create${index}`}>
-                          {user.loggedInAt ? formateDate(user.loggedInAt) : " "}
-                          {user.loggedInAt ? <UncontrolledTooltip target={`create${index}`}>
-                            Created At
-                          </UncontrolledTooltip> : null}
+                          {user.loggedInAt
+                            ? formateDate(user.loggedInAt)
+                            : " "}
+                          {user.loggedInAt ? (
+                            <UncontrolledTooltip
+                              target={`create${index}`}
+                            >
+                              Created At
+                            </UncontrolledTooltip>
+                          ) : null}
                         </div>
                         <div id={`loginip-${index}`}>
                           {user.loggedInIp || "-"}
-                          {user.loggedInIp ? <UncontrolledTooltip target={`loginip-${index}`}>
-                            Last Login Ip Address
-                          </UncontrolledTooltip> : null}
+                          {user.loggedInIp ? (
+                            <UncontrolledTooltip
+                              target={`loginip-${index}`}
+                            >
+                              Last Login Ip Address
+                            </UncontrolledTooltip>
+                          ) : null}
                         </div>
                       </td>
                       <td className={"text-center"}>
-                        <span>
+                        <span className="mr-1">
+                          <Button
+                            className={
+                              "btn-theme-transparent"
+                            }
+                            size={"sm"}
+                            onClick={() =>
+                              this.handleUserView(user._id)
+                            }
+                            id={`view-${user._id}`}
+                          >
+                            <i className="fas fa-eye" />
+                          </Button>
+                          <UncontrolledTooltip
+                            target={`view-${user._id}`}
+                          >
+                            View
+                          </UncontrolledTooltip>
+                        </span>
+                        <span >
                           <Button
                             size={"sm"}
-                            onClick={() => this.editUser(user)}
+                            onClick={() =>
+                              this.editUser(user)
+                            }
                             id={`edit-${user._id}`}
-                            className={"btn-theme-transparent"}
+                            className={
+                              "btn-theme-transparent"
+                            }
                           >
-                            <i className={"icons cui-pencil"} />
+                            <i
+                              className={"icons cui-pencil"}
+                            />
                           </Button>{" "}
-                          <UncontrolledTooltip target={`edit-${user._id}`}>
+                          <UncontrolledTooltip
+                            target={`edit-${user._id}`}
+                          >
                             Edit
-                        </UncontrolledTooltip>
+                          </UncontrolledTooltip>
                         </span>
                         <span className="mr-1">
                           <Button
@@ -564,25 +639,18 @@ class UserList extends Component {
                               )
                             }
                             id={`delete-${user._id}`}
-                            className={"btn-theme-transparent"}
+                            className={
+                              "btn-theme-transparent"
+                            }
                           >
-                            <i className={"icons cui-trash"} />
+                            <i
+                              className={"icons cui-trash"}
+                            />
                           </Button>
-                          <UncontrolledTooltip target={`delete-${user._id}`}>
+                          <UncontrolledTooltip
+                            target={`delete-${user._id}`}
+                          >
                             Delete
-                        </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            className={"btn-theme-transparent"}
-                            size={"sm"}
-                            onClick={() => this.handleUserView(user._id)}
-                            id={`view-${user._id}`}
-                          >
-                            <i className="fas fa-eye" />
-                          </Button>
-                          <UncontrolledTooltip target={`view-${user._id}`}>
-                            View
                           </UncontrolledTooltip>
                         </span>
                       </td>

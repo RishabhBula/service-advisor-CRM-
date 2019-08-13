@@ -266,6 +266,7 @@ class WorkflowGridView extends React.Component {
               style={{
                 width: `${300 * orderStatus.length}px`
               }}
+              className={"workflow-grid-card-warp"}
             >
               {orderStatus.map((status, index) => (
                 <React.Fragment key={status._id}>

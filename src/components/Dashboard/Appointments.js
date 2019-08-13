@@ -6,6 +6,7 @@ import Loader from "../../containers/Loader/Loader";
 import { notExist } from "../../config/Constants";
 import { AppRoutes } from "../../config/AppRoutes";
 import moment from "moment";
+import NoDataFound from "../common/NoFound"
 class DashboardAppointments extends Component {
   constructor(props) {
     super(props);
@@ -107,7 +108,7 @@ class DashboardAppointments extends Component {
     const { isLoading, data } = appointments;
     return (
       <div className={"dashboard-block-container chart-container"}>
-        <Row>
+        <Row className={"m-0"}>
           <Col sm={"4"}>
             <h3>Appointments</h3>
           </Col>
@@ -148,7 +149,7 @@ class DashboardAppointments extends Component {
           </Col>
         </Row>
         <br />
-        <Row>
+        <Row className={"m-0"}>
           <Col sm={"12"}>
             {isLoading ? (
               <Loader />
@@ -193,31 +194,35 @@ class DashboardAppointments extends Component {
                             )}
                           </td>
                           <td>
-                            {moment(appointment.appointmentDate).format("LL")}
+                            {moment(appointment.appointmentDate).format(
+                              "LL"
+                            )}
                             <br />
                             {moment(appointment.startTime).format(
                               "hh:ssa"
-                            )} - {moment(appointment.endTime).format("hh:ssa")}
+                            )}{" "}
+                            - {moment(appointment.endTime).format("hh:ssa")}
                           </td>
                         </tr>
                       );
                     })
                   ) : (
                     <td colSpan={6} className={"text-center"}>
-                      No Appointments
+                      <NoDataFound message={"No Appointments"} />
                     </td>
                   )}
                 </tbody>
               </Table>
             )}
             <Button
-              className={"float-right"}
-              color={"primary"}
+              className={"float-right btn-theme"}
+              color={""}
+              size={"sm"}
               onClick={() => {
                 redirectTo(`${AppRoutes.CALENDER.url}`);
               }}
             >
-              View All
+              View All <i class="icon-arrow-right icons" />
             </Button>
             <div className={"clearfix"} />
           </Col>

@@ -410,7 +410,7 @@ class VehiclesList extends Component {
                 vehicleList.map((vehicle, index) => {
                   return (
                     <tr key={index}>
-                      <td >
+                      <td>
                         {/* <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
                             type="checkbox"
@@ -422,45 +422,93 @@ class VehiclesList extends Component {
                           <label htmlFor={vehicle._id}>
                           </label>
                         </div> */}
-                        {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                        {(page - 1) *
+                          AppConfig.ITEMS_PER_PAGE +
+                          index +
+                          1}
+                        .
                       </td>
                       <td>
-                        <div className={"vehicle-type-img d-inline-block"} id={`type${index}`}>
+                        <div
+                          className={
+                            "vehicle-type-img d-inline-block"
+                          }
+                          id={`type${index}`}
+                        >
                           <VehicleIcons
                             type={vehicle.type.value}
                             color={vehicle.color.color}
                           />
                         </div>
-                          <UncontrolledTooltip target={`type${index}`}>
-                            {vehicle.type.value}
-                          </UncontrolledTooltip> 
+                        <UncontrolledTooltip
+                          target={`type${index}`}
+                        >
+                          {vehicle.type.value}
+                        </UncontrolledTooltip>
                         {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
                       <td>{vehicle.year}</td>
-                      <td className={"text-capitalize"}>{vehicle.make}</td>
-                      <td className={"text-capitalize"}>{vehicle.modal}</td>
+                      <td className={"text-capitalize"}>
+                        {vehicle.make}
+                      </td>
+                      <td className={"text-capitalize"}>
+                        {vehicle.modal}
+                      </td>
                       <td style={{ maxWidth: 100 }}>
-                        {vehicle.miles ? vehicle.miles : notExist}
+                        {vehicle.miles
+                          ? vehicle.miles
+                          : notExist}
                       </td>
                       <td style={{ maxWidth: 100 }}>
                         {vehicle.vin ? vehicle.vin : notExist}
                       </td>
                       <td className={"text-uppercase"}>
-                        {vehicle.licensePlate ? vehicle.licensePlate : notExist}
+                        {vehicle.licensePlate
+                          ? vehicle.licensePlate
+                          : notExist}
                       </td>
                       <td className={"text-center"}>
-                        {vehicle.unit ? vehicle.unit : notExist}
+                        {vehicle.unit
+                          ? vehicle.unit
+                          : notExist}
                       </td>
 
                       <td className={"text-center"}>
                         <span className="mr-2">
                           <Button
+                            className={
+                              "btn-theme-transparent"
+                            }
                             size={"sm"}
-                            onClick={() => this.editUser(vehicle)}
-                            className={"btn-theme-transparent"}
+                            onClick={() =>
+                              this.handleVehicleDetails(
+                                vehicle._id
+                              )
+                            }
+                            id={`view-${vehicle._id}`}
+                          >
+                            <i className="fas fa-eye" />
+                          </Button>
+                          <UncontrolledTooltip
+                            target={`view-${vehicle._id}`}
+                          >
+                            View
+                          </UncontrolledTooltip>
+                        </span>
+                        <span className="mr-2">
+                          <Button
+                            size={"sm"}
+                            onClick={() =>
+                              this.editUser(vehicle)
+                            }
+                            className={
+                              "btn-theme-transparent"
+                            }
                             id={"Tooltip-3"}
                           >
-                            <i className={"icons cui-pencil"} />
+                            <i
+                              className={"icons cui-pencil"}
+                            />
                           </Button>
                           <UncontrolledTooltip target="Tooltip-3">
                             Edit
@@ -468,12 +516,16 @@ class VehiclesList extends Component {
                         </span>
                         <span className="mr-2">
                           <Button
-                            className={"btn-theme-transparent"}
+                            className={
+                              "btn-theme-transparent"
+                            }
                             size={"sm"}
                             onClick={() =>
                               this.setState(
                                 {
-                                  selectedVehicles: [vehicle._id]
+                                  selectedVehicles: [
+                                    vehicle._id
+                                  ]
                                 },
                                 () => {
                                   this.onDelete();
@@ -482,24 +534,14 @@ class VehiclesList extends Component {
                             }
                             id={`delete-${vehicle._id}`}
                           >
-                            <i className={"icons cui-trash"} />
+                            <i
+                              className={"icons cui-trash"}
+                            />
                           </Button>
-                          <UncontrolledTooltip target={`delete-${vehicle._id}`}>
-                            Delete
-                          </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            className={"btn-theme-transparent"}
-                            size={"sm"}
-                            onClick={() =>this.handleVehicleDetails(vehicle._id)
-                            }
-                            id={`view-${vehicle._id}`}
+                          <UncontrolledTooltip
+                            target={`delete-${vehicle._id}`}
                           >
-                            <i className="fas fa-eye"/>
-                          </Button>
-                          <UncontrolledTooltip target={`view-${vehicle._id}`}>
-                            View
+                            Delete
                           </UncontrolledTooltip>
                         </span>
                       </td>
