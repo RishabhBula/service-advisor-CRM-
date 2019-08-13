@@ -186,7 +186,7 @@ class SalesByCusomerAge extends Component {
                         <td>
                           <div
                             className={
-                              "vehicle-type-img d-inline-block cursor_pointer text-primary text-bold font-weight-semibold text-capitalize"
+                              "font-weight-semibold text-capitalize pb-1"
                             }
                             id={`type${index}`}
                           >
@@ -206,14 +206,16 @@ class SalesByCusomerAge extends Component {
                             </Link>
                           </div>
                           {customer.customerId.email ? (
-                            <a
-                              href={`mailto:${customer.customerId.email}`}
-                              target={"_blank"}
-                            >
-                              {customer.customerId.email}
-                            </a>
+                            <>
+                              <a
+                                href={`mailto:${customer.customerId.email}`}
+                                target={"_blank"}
+                              >
+                                {customer.customerId.email}
+                              </a>
+                              <br />
+                            </>
                           ) : null}
-                          <br />
                           {customer.customerId.phoneDetail &&
                           customer.customerId.phoneDetail[0] ? (
                             <a

@@ -69,7 +69,8 @@ const getReportsByCustomerdays = async (req, res) => {
         $addFields: {
           name: {
             $concat: ["$customerId.firstName", " ", "$customerId.lastName"]
-          }
+          },
+          email: "$customerId.email"
         }
       },
       {
