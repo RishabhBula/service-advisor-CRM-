@@ -1,204 +1,132 @@
 import React, { Component } from "react";
-import {
-  Col,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane
-} from "reactstrap";
-// import classnames from "classnames";
-import { CrmWelcomeModel } from "../../components/common/CrmWelcomeModel";
+import { Col, Row, Card, CardBody } from "reactstrap";
+import SalesByCusomerAge from "../../components/Reports/SalesByCusomerAge";
+import { getCustomerInoiveReport } from "../../actions";
+import { connect } from "react-redux";
+import { logger } from "../../helpers";
+import { AppRoutes } from "../../config/AppRoutes";
+import qs from "querystring";
+
 class Reports extends Component {
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
     this.state = {
-      activeTab: new Array(4).fill("1"),
-      modalOpen: false,
-      tabDetails: [
-        {
-          name: "Quotes",
-          details: [
-            {
-              abc: "name1"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        },
-        {
-          name: "In Progress",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        },
-        {
-          name: "Dropped Off",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        },
-        {
-          name: "Invoices",
-          details: [
-            {
-              abc: "name"
-            },
-            {
-              abc: "name"
-            }
-          ]
-        }
-      ]
+      customerSearch: ""
     };
   }
-
+  /**
+   *
+   */
   componentDidMount = () => {
-    this.toggleLarge();
+    const { search } = this.props.location;
+    const { customerSearch } = qs.parse(search.replace("?", ""));
+    this.setState(
+      {
+        customerSearch
+      },
+      () => {
+        this.getCustomerSales();
+      }
+    );
   };
-  toggleLarge = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    });
-  };
-  lorem(detailsData) {
-    return Object.keys(detailsData).map(function(key, index) {
-      return <li key={index}>{detailsData[key].abc}</li>;
-    });
-  }
-
-  toggle(tabPane, tab) {
-    const newArray = this.state.activeTab.slice();
-    newArray[tabPane] = tab;
-    this.setState({
-      activeTab: newArray
-    });
-  }
-
-  tabPane() {
-    const { tabDetails } = this.state;
-    return tabDetails.map((item, index) => {
-      return (
-        <TabPane tabId={(index + 1).toString()}>
-          {index + 1} {this.lorem(item.details)}
-        </TabPane>
+  /**
+   *
+   */
+  componentDidUpdate({ location }) {
+    const { search: oldSearch } = location;
+    const { search } = this.props.location;
+    const { customerSearch } = qs.parse(search.replace("?", ""));
+    const { customerSearch: oldCustomerSearch } = qs.parse(
+      oldSearch.replace("?", "")
+    );
+    if (customerSearch !== oldCustomerSearch) {
+      this.setState(
+        {
+          customerSearch
+        },
+        () => {
+          this.getCustomerSales();
+        }
       );
-    });
+    }
   }
-
+  /**
+   *
+   */
+  getCustomerSales = () => {
+    const { location } = this.props.history;
+    const { search } = location;
+    let { customerSearch } = qs.parse(search.replace("?", ""));
+    logger(customerSearch);
+    this.props.getCustomerSales({
+      search: customerSearch
+    });
+  };
+  /**
+   *
+   */
+  onCustomerSearch = value => {
+    this.props.redirectTo(
+      `${AppRoutes.REPORTS.url}?${qs.stringify({
+        customerSearch: value
+      })}`
+    );
+  };
+  /**
+   *
+   */
+  onCustomerSearchReset = () => {
+    const { location } = this.props.history;
+    const { search } = location;
+    let data = qs.parse(search.replace("?", ""));
+    if (data.customerSearch) {
+      delete data.customerSearch;
+    }
+    this.props.redirectTo(`${AppRoutes.REPORTS.url}?${qs.stringify(data)}`);
+  };
+  /**
+   *
+   */
   render() {
-    const { tabDetails, modalOpen } = this.state;
-
+    const { customerReport } = this.props;
+    const { customerSearch } = this.state;
     return (
       <div className="animated fadeIn">
-        <Row>
-          <Col xs="12" md="12" className="">
-            <div className="margin-top-10 page-title">
-              <h4 className="">WorkFlow</h4>
-              <div className="workflow-mode">
-                <div className="mode-inner">
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-list" />
-                  </div>
-                  <div className="mode-flow">
-                    <button class="nav-icon icon-grid" />
-                  </div>
+        <Card className={"white-card position-relative"}>
+          <CardBody className={"custom-card-body"}>
+            <Row className={"mb-2 ml-0"}>
+              <Col className={"title-left-section"}>
+                <h4 className={"card-title"}>Reports</h4>
+                <div className={"workflow-mode"}>
+                  <div className={"mode-inner"} />
                 </div>
-              </div>
-            </div>
-          </Col>
-          {/* <Col xs="4" md="4" className="mb-4">
-            
-          </Col> */}
-        </Row>
-        <Row>
-          <Col xs="12" md="12" className="mb-4">
-            <Nav tabs>
-              {tabDetails.map((item, index) => {
-                return (
-                  <NavItem>
-                    <NavLink
-                      active={this.state.activeTab[0] === parseInt(index) + 1}
-                      onClick={() => {
-                        this.toggle(0, (parseInt(index) + 1).toString());
-                      }}
-                    >
-                      {item.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })}
-              {/* <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "1"}
-                  onClick={() => {
-                    this.toggle(0, "1");
-                  }}
-                >
-                  Quotes
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "2"}
-                  onClick={() => {
-                    this.toggle(0, "2");
-                  }}
-                >
-                  In Progress
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "3"}
-                  onClick={() => {
-                    this.toggle(0, "3");
-                  }}
-                >
-                  Dropped Off
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={this.state.activeTab[0] === "4"}
-                  onClick={() => {
-                    this.toggle(0, "4");
-                  }}
-                >
-                  Invoices
-                </NavLink>
-              </NavItem> */}
-            </Nav>
-            <TabContent activeTab={this.state.activeTab[0]}>
-              {this.tabPane()}
-            </TabContent>
-          </Col>
-        </Row>
-        {modalOpen ? (
-          <CrmWelcomeModel
-            modalOpen={modalOpen}
-            toggleLarge={this.toggleLarge}
-          />
-        ) : (
-          ""
-        )}
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={"12"}>
+                <SalesByCusomerAge
+                  searchKey={customerSearch}
+                  customerReport={customerReport}
+                  onFilterChange={this.onCustomerSaleRangeChange}
+                  onSearch={this.onCustomerSearch}
+                  onReset={this.onCustomerSearchReset}
+                />
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
       </div>
     );
   }
 }
 
-export default Reports;
+const mapStateToProps = state => ({
+  customerReport: state.reportReducer.customerReport
+});
+const mapDispatchToProps = dispatch => ({
+  getCustomerSales: data => dispatch(getCustomerInoiveReport(data))
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Reports);

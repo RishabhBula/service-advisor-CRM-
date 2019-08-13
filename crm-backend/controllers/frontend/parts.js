@@ -4,7 +4,7 @@ const add = async (req, res) => {
   try {
     const { body, currentUser } = req;
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
-      currentUser.parentId = currentUser.id
+      currentUser.parentId = currentUser.id;
     }
     const {
       partDescription,
@@ -46,7 +46,7 @@ const add = async (req, res) => {
     }
     const part = new Parts(data);
     const result = await part.save();
-    res.status(200).json({
+    return res.status(200).json({
       message: "Part details added successfully.",
       result
     });
@@ -235,7 +235,7 @@ const update = async (req, res) => {
   try {
     const { body, currentUser } = req;
     if (currentUser.parentId === null || currentUser.parentId === "undefined") {
-      currentUser.parentId = currentUser.id
+      currentUser.parentId = currentUser.id;
     }
     const {
       partDescription,
@@ -275,7 +275,7 @@ const update = async (req, res) => {
     if (vendorId) {
       data.vendorId = vendorId;
     }
-    const today = new Date()
+    const today = new Date();
     const result = await Parts.updateOne(
       {
         _id: body.id

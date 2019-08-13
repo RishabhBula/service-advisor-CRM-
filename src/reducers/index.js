@@ -24,10 +24,10 @@ import { activityReducer } from "./Activity";
 import { messageReducer } from "./Message";
 import { summaryReducer } from "./OrderSummary";
 import { appointmentReducer, appointmentDetailsReducer } from "./Appointments";
-
 import { paymentReducer } from "./Payment";
 import { subscriptionReducer } from "./Subscription";
 import { dashboardReducer } from "./Dashboard";
+import { reportReducer } from "./Reports";
 import { pdfReducer } from "./Pdf";
 
 export const mainReducer = handleActions(
@@ -43,7 +43,9 @@ export const mainReducer = handleActions(
     showLoader: false
   }
 );
-
+/**
+ *
+ */
 const AppReducer = combineReducers({
   mainReducer,
   usersReducer,
@@ -74,6 +76,7 @@ const AppReducer = combineReducers({
   paymentReducer,
   subscriptionReducer,
   dashboardReducer,
+  reportReducer,
   pdfReducer,
   routing: routerReducer
 });

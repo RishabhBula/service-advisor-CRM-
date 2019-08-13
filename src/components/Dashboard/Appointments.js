@@ -6,7 +6,7 @@ import Loader from "../../containers/Loader/Loader";
 import { notExist } from "../../config/Constants";
 import { AppRoutes } from "../../config/AppRoutes";
 import moment from "moment";
-import NoDataFound from "../common/NoFound"
+import NoDataFound from "../common/NoFound";
 class DashboardAppointments extends Component {
   constructor(props) {
     super(props);
@@ -144,6 +144,7 @@ class DashboardAppointments extends Component {
                 numberOfMonths={1}
                 onOutsideClick={this.toggleCalendar}
                 weekDayFormat="ddd"
+                hideKeyboardShortcutsPanel
               />
             ) : null}
           </Col>
@@ -156,10 +157,12 @@ class DashboardAppointments extends Component {
             ) : (
               <Table bordered>
                 <thead>
-                  <th>Title</th>
-                  <th>Note</th>
-                  <th>Customer</th>
-                  <th>Appointment Date Time</th>
+                  <tr>
+                    <th>Title</th>
+                    <th>Note</th>
+                    <th>Customer</th>
+                    <th>Appointment Date Time</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {data && data.length ? (
@@ -194,14 +197,11 @@ class DashboardAppointments extends Component {
                             )}
                           </td>
                           <td>
-                            {moment(appointment.appointmentDate).format(
-                              "LL"
-                            )}
+                            {moment(appointment.appointmentDate).format("LL")}
                             <br />
                             {moment(appointment.startTime).format(
                               "hh:ssa"
-                            )}{" "}
-                            - {moment(appointment.endTime).format("hh:ssa")}
+                            )} - {moment(appointment.endTime).format("hh:ssa")}
                           </td>
                         </tr>
                       );

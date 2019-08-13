@@ -239,6 +239,7 @@ class InvoiceChart extends Component {
                 numberOfMonths={1}
                 onOutsideClick={this.toggleCalendar}
                 weekDayFormat="ddd"
+                hideKeyboardShortcutsPanel
               />
             ) : null}
           </Col>

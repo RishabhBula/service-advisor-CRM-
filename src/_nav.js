@@ -21,6 +21,12 @@ export default {
       authKey: "isAllowedCalendar"
     },
     {
+      name: AppRoutes.REPORTS.name,
+      url: AppRoutes.REPORTS.url,
+      icon: "fas fa-pie-chart",
+      authKey: "isAllowedReportCenter"
+    },
+    {
       name: AppRoutes.CUSTOMERS.name,
       url: AppRoutes.CUSTOMERS.url,
       icon: "icons icon-user",
@@ -196,4 +202,8 @@ export const ValidatedRoutes = [
     url: AppRoutes.CANNED_SERVICE.url,
     authKey: "isAllowedCannedJobs"
   },
+  {
+    url: AppRoutes.REPORTS.url,
+    authKey: "isAllowedReportCenter"
+  }
 ];

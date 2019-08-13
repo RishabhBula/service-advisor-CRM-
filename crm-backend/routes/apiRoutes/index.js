@@ -23,5 +23,6 @@ module.exports = {
   memberShipRoutes: require("./membership"),
   webhookRoutes: require("./webhook"),
   appointmentRoutes: require("./appointments"),
-  dashboardRoutes: require("./dashboard")
+  dashboardRoutes: require("./dashboard"),
+  reportRoutes: require("./reports")
 };
