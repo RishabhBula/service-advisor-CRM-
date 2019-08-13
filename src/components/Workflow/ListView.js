@@ -96,11 +96,11 @@ class WorkflowListView extends React.Component {
         <td className={"pl-2"}>
           <Dollor value={serviceCalculation.orderGrandTotal} />
         </td>
-        <td width={200}>
+        <td width={200} className={"fleet-block"}>
           <Select
             value={statusValue[0]}
             options={groupedOptions}
-            className="w-100 form-select"
+            className="w-100 form-select simple-select"
             onChange={e =>
               this.handleType(e, order.workflowStatus, order._id, index)
             }

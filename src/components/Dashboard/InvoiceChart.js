@@ -203,7 +203,7 @@ class InvoiceChart extends Component {
     const { isLoading } = customerSales;
     return (
       <div className={"dashboard-block-container chart-container text-right"}>
-        <Row>
+        <Row className={"m-0"}>
           <Col sm={"4"}>
             <h3>Sales Details</h3>
           </Col>

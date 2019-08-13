@@ -372,6 +372,7 @@ class VehiclesList extends Component {
                         <UncontrolledTooltip target={`type${index}`}>
                           {vehicle.type.value}
                         </UncontrolledTooltip>
+                        {/* <div className="vehicle-type-title">{vehicle.type ? vehicle.type.label : "N/A"}</div> */}
                       </td>
                       <td>{vehicle.year}</td>
                       <td className={"text-capitalize"}>{vehicle.make}</td>
@@ -390,6 +391,21 @@ class VehiclesList extends Component {
                       </td>
 
                       <td className={"text-center"}>
+                        <span className="mr-2">
+                          <Button
+                            className={"btn-theme-transparent"}
+                            size={"sm"}
+                            onClick={() =>
+                              this.handleVehicleDetails(vehicle._id)
+                            }
+                            id={`view-${vehicle._id}`}
+                          >
+                            <i className="fas fa-eye" />
+                          </Button>
+                          <UncontrolledTooltip target={`view-${vehicle._id}`}>
+                            View
+                          </UncontrolledTooltip>
+                        </span>
                         <span className="mr-2">
                           <Button
                             size={"sm"}
@@ -423,21 +439,6 @@ class VehiclesList extends Component {
                           </Button>
                           <UncontrolledTooltip target={`delete-${vehicle._id}`}>
                             Delete
-                          </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            className={"btn-theme-transparent"}
-                            size={"sm"}
-                            onClick={() =>
-                              this.handleVehicleDetails(vehicle._id)
-                            }
-                            id={`view-${vehicle._id}`}
-                          >
-                            <i className="fas fa-eye" />
-                          </Button>
-                          <UncontrolledTooltip target={`view-${vehicle._id}`}>
-                            View
                           </UncontrolledTooltip>
                         </span>
                       </td>

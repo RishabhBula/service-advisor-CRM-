@@ -195,7 +195,9 @@ class PriMatrixList extends Component {
                     <tr key={index}>
                       <td>
                         <div className="checkbox-custom checkbox-default coloum-checkbox">
-                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                            index +
+                            1}
                         </div>
                       </td>
                       <td>{matrix.matrixName || "-"}</td>
@@ -210,7 +212,8 @@ class PriMatrixList extends Component {
                                 </span>{" "}
                                 &nbsp;-&nbsp;
                                 <span class="dollar-price">
-                                  {matrix.matrixRange[0].upper !== "beyond" ? (
+                                  {matrix.matrixRange[0].upper !==
+                                  "beyond" ? (
                                     <i class="fa fa-dollar dollar-icon" />
                                   ) : null}
                                   {matrix.matrixRange[0].upper}
@@ -225,15 +228,20 @@ class PriMatrixList extends Component {
                             </div>
                             <div
                               className={
-                                isTireSizeOpen === index ? "active" : "inactive"
+                                isTireSizeOpen === index
+                                  ? "active"
+                                  : "inactive"
                               }
                             >
-                              {matrix.matrixRange && matrix.matrixRange.length
+                              {matrix.matrixRange &&
+                              matrix.matrixRange.length
                                 ? matrix.matrixRange.map((range, i) => {
                                     return i === 0 ? null : (
                                       <div
                                         key={i}
-                                        className={"d-flex matrix-range-th "}
+                                        className={
+                                          "d-flex matrix-range-th "
+                                        }
                                       >
                                         <span className={"p-1"}>
                                           <span class="dollar-price">
@@ -264,7 +272,9 @@ class PriMatrixList extends Component {
                             matrix.matrixRange[1] ? (
                               <span className={"m-1 d-block"}>
                                 <Badge
-                                  onClick={() => this.handleMatrixOpen(index)}
+                                  onClick={() =>
+                                    this.handleMatrixOpen(index)
+                                  }
                                   className={"cursor_pointer"}
                                 >
                                   {isTireSizeOpen === index
@@ -281,7 +291,9 @@ class PriMatrixList extends Component {
                         <div>
                           {moment(matrix.createdAt).format("MMM Do YYYY")}
                         </div>
-                        <div>{moment(matrix.createdAt).format("h:mm a")}</div>
+                        <div>
+                          {moment(matrix.createdAt).format("h:mm a")}
+                        </div>
                       </td>
 
                       <td width={"140"} className={"text-center"}>
@@ -310,7 +322,9 @@ class PriMatrixList extends Component {
                         >
                           <i className={"icons cui-trash"} />
                         </Button>
-                        <UncontrolledTooltip target={`Tooltip-${matrix._id}`}>
+                        <UncontrolledTooltip
+                          target={`Tooltip-${matrix._id}`}
+                        >
                           Delete
                         </UncontrolledTooltip>
                       </td>
@@ -330,7 +344,9 @@ class PriMatrixList extends Component {
                     ) : (
                       <NoDataFound
                         showAddButton
-                        message={"Currently there are no Matrix details added."}
+                        message={
+                          "Currently there are no Price Matrix added."
+                        }
                         onAddClick={this.props.onClick}
                       />
                     )}

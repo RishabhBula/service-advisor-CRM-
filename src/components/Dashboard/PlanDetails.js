@@ -1,14 +1,26 @@
 import React from "react";
-import CheckIcon from "./../../assets/check.svg";
-
-const DashboardPlanDetails = () => (
+import moment from "moment";
+const DashboardPlanDetails = props => (
   <div className={"dashboard-plan-container dashboard-block-container"}>
     <div className={"image-container"}>
-      <img src={CheckIcon} alt={""} />
+      {/* <img src={CheckIcon} alt={""} /> */}
+      <i class="icon-check icons font-2xl" />
     </div>
     <span>
-      Currently <b className="text-success">Plan Name</b> has been activated.
-      Your subscription will be renew on 20th July, 2020.
+      Hey{" "}
+      <b className={"text-capitalize"}>
+        {props.profileInfo.firstName}&nbsp;
+        {props.profileInfo.lastName}
+      </b>
+      ! Your{" "}
+      <span className={"text-capitalize"}>
+        {!props.profileInfo.planId
+          ? "Trial Period"
+          : props.profileInfo.planName}
+      </span>{" "}
+      membership plan will automatically renew on{" "}
+      {moment(props.profileInfo.planExiprationDate || "").format("MMM Do YYYY")}
+      .
     </span>
   </div>
 );

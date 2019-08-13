@@ -278,13 +278,19 @@ class CutomerVehicle extends Component {
                   placeholder={"Type Customer name"}
                   loadOptions={this.loadCustomers}
                   value={
-                    selectedCustomer.value !== "" ? selectedCustomer : customerId
+                    selectedCustomer.value !== ""
+                      ? selectedCustomer
+                      : customerId
                   }
                   isClearable={true}
                   className={classnames("w-100 form-select", {
                     "is-invalid": isError && !customerId
                   })}
-                  noOptionsMessage={() => this.state.customerInput ? "No customer found" : "Type customer name"}
+                  noOptionsMessage={() =>
+                    this.state.customerInput
+                      ? "No customer found"
+                      : "Type customer name"
+                  }
                   onChange={e => {
                     this.setState(
                       {
@@ -293,9 +299,8 @@ class CutomerVehicle extends Component {
                       () => {
                         this.handaleCustomerSelect(e, "customer");
                       }
-                    )
-                  }
-                  }
+                    );
+                  }}
                 />
                 {isError && !customerId ? (
                   <FormFeedback>Customer data is required.</FormFeedback>
@@ -326,10 +331,16 @@ class CutomerVehicle extends Component {
                     "is-invalid": isError && !vehicleId
                   })}
                   value={
-                    selectedVehicle.value !== "" ? selectedVehicle : vehicleId
+                    selectedVehicle.value !== ""
+                      ? selectedVehicle
+                      : vehicleId
                   }
                   isClearable={true}
-                  noOptionsMessage={() => this.state.vehicleInput ? "No vehicle found" : "Type vehicle name"}
+                  noOptionsMessage={() =>
+                    this.state.vehicleInput
+                      ? "No vehicle found"
+                      : "Type vehicle name"
+                  }
                   onChange={e => {
                     this.setState(
                       {
@@ -350,12 +361,13 @@ class CutomerVehicle extends Component {
           <Col md={"2"}>
             <div id={`orderUpdated`}>
               <Button
-                color={"secondary"}
+                color={""}
                 size={""}
                 onClick={this.props.handleEditOrder}
+                className={"btn-theme"}
               >
                 Update Order
-          </Button>
+              </Button>
             </div>
           </Col>
         </Row>

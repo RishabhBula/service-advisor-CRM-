@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col } from "reactstrap";
 import "../../../scss/subscription.scss";
-import Dollor from "../../common/Dollor";
 
 import moment from "moment";
 class SubscriptionSettings extends Component {
@@ -39,9 +38,6 @@ class SubscriptionSettings extends Component {
     const planName = profileData.profileInfo.planId
       ? profileData.profileInfo.planId.planStripeDetails.nickname
       : "" || "Trial Plan";
-    const planAmount = profileData.profileInfo.planId
-      ? profileData.profileInfo.planId.amount
-      : 0 || 0;
     const expirationDate = profileData.profileInfo.planExiprationDate;
     const planUser = profileData.profileInfo.planId
       ? profileData.profileInfo.planId.facilities.noOfLiscence
@@ -68,18 +64,6 @@ class SubscriptionSettings extends Component {
                     Allowed:{" "}
                     <span className={"pl-2 text-dark"}>{planUser} User(s)</span>
                   </span>
-                  <span className={"plan-detail text-muted"}>
-                    Amount:{" "}
-                    <span className={"pl-2 text-dark"}>
-                      <Dollor value={planAmount} /> paid{" "}
-                    </span>
-                  </span>
-                  <div className={"pt-3 mb-2"}>
-                    <Button color={""} className={"btn-theme-line"}>
-                      <i className={"fa fa-paper-plane mr-2"} />
-                      Upgrade Now
-                    </Button>
-                  </div>
                 </div>
               </div>
               <div className={"expire-block pr-3"}>

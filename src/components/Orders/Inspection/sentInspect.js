@@ -187,6 +187,14 @@ class SendInspection extends Component {
         : "";
     const companyName = profileReducer.profileInfo.companyName || "";
 
+    const receiverId = customerId;
+    const userId     = profileReducer ? profileReducer.profileInfo._id : '';
+    const senderId   = profileReducer.profileInfo._id;
+    const subdomain  = profileReducer.profileInfo.subdomain;
+    const orderId =
+      orderReducer && orderReducer.orderItems
+        ? orderReducer.orderItems._id
+        : "";
     try {
       var messageTextValue = document.getElementById("messageTextSent"),
         messageTextSent = messageTextValue.innerHTML;
@@ -233,7 +241,12 @@ class SendInspection extends Component {
         orderCreated: orderCreated,
         isInvoice: isOrder ? true : false,
         isEmail,
-        isSms
+        isSms,
+        receiverId,
+        userId,
+        senderId,
+        subdomain,
+        orderId
       };
 
       if (!isEmail && !isSms) {

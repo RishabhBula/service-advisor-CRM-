@@ -260,7 +260,7 @@ class Dashboard extends Component {
    *
    */
   render() {
-    const { dashboardData, redirectTo } = this.props;
+    const { dashboardData, redirectTo, profileInfo } = this.props;
     const {
       cards,
       customerStartDate,
@@ -276,14 +276,16 @@ class Dashboard extends Component {
       };
     });
     return (
-      <div className="animated fadeIn dashboard-container ">
-        <Row>
+      <div className="animated fadeIn dashboard-container dashboard-warp">
+        <Row className={"m-0"}>
           <Col xs="12" sm="12" lg="12">
             <Card className={"white-card"}>
               <CardBody className={"custom-card-body position-relative"}>
-                <Row>
+                <Row className={"m-0"}>
                   <Col sm={"12"}>
-                    <DashboardPlanDetails />
+                    <DashboardPlanDetails
+                      profileInfo={profileInfo.profileInfo}
+                    />
                   </Col>
                   {actualCards.map((card, index) => {
                     return (
@@ -294,7 +296,7 @@ class Dashboard extends Component {
                   })}
                 </Row>
                 <br />
-                <Row>
+                <Row className={"m-0"}>
                   <Col sm={"6"}>
                     <InvoiceChart
                       customerSales={customerSales}
