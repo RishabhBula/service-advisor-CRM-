@@ -5,6 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
 const { sendSMS } = require("./../../common/SMS");
+const commonCrypto = require("../../common/crypto");
+const { webURL } = require("../../config/app");
 /* Add new message Template */
 const addMessageTemplate = async (req, res) => {
    const { body, currentUser } = req;
@@ -212,13 +214,24 @@ const sendMailToCustomer = async (req, res) => {
                path: body.pdf
             }
          ])
+         let encryptedOrderId, encrypteCustomerId, encrypteUserId
+         if (body.isInvoice) {
+            encryptedOrderId = commonCrypto.encrypt(body.orderId);
+            encrypteCustomerId = commonCrypto.encrypt(body.customerId);
+            encrypteUserId = commonCrypto.encrypt(body.userId);
+         }
          await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
             body: body.message,
             orderTitle: body.orderTitle,
             createdAt: body.orderCreated,
             companyName: body.companyName,
+            encryptedOrderId: body.isInvoice ? encryptedOrderId : "",
+            encrypteCustomerId: body.isInvoice ? encrypteCustomerId : "",
+            encrypteUserId: body.isInvoice ? encrypteUserId : "",
+            url: webURL,
+            subDomain: body.subdomain,
             titleMessage: body.isInvoice ? "You got an invoice for" : "You got an inspection for",
-            displayStyle: `style="text-align:center; display: none";`
+            displayStyle: body.isInvoice ? `style="text-align:center; display: block";` : `style="text-align:center; display: none";`
          });
          await emailVar.sendEmail(body.email);
          return res.status(200).json({
@@ -227,7 +240,7 @@ const sendMailToCustomer = async (req, res) => {
          })
       }
       if (isSms) {
-         await sendSMS(body.phone, body.message,body.customerId);
+         await sendSMS(body.phone, body.message, body.customerId);
       }
       // var buf = new Buffer.from(body.pdf, "base64");
    } catch (error) {
