@@ -148,7 +148,6 @@ export class CrmUserModal extends Component {
         lastName,
         email,
         phone,
-        roleType,
         rate,
         permissions,
         companyName,
@@ -160,7 +159,7 @@ export class CrmUserModal extends Component {
         lastName,
         email,
         phone,
-        roleType,
+        roleType: "5ca3473d70537232f13ff1fa",
         companyName,
         rate: rate
           ? parseFloat(rate.toString().replace(/[$,\s]/g, "")).toFixed(2)

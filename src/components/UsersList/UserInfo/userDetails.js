@@ -5,16 +5,40 @@ import {
   FormGroup,
   Label,
   Input,
+  Button,
   InputGroup
 } from "reactstrap";
+import { CrmUserModal } from "../../common/CrmUserModal";
+
 export class UserDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: {},
+      technicianData: {}
     };
   }
+  editUser = (user) => {
+    this.setState({ user }, () => {
+      this.props.modelOperate({
+        editUserModal: true
+      });
+    });
+  };
+  /*
+  /*  
+  */
+  onUpdate = (id, data) => {
+    this.props.onUpdate(id, data);
+  };
+  /*
+  /*  
+  */
   render() {
-    const { technicianData } = this.props
+    const { technicianData, modelInfoReducer } = this.props
+    const { modelDetails } = modelInfoReducer;
+    const { editUserModal } = modelDetails;
+    const { user } = this.state
     return (
       <>
         <div className={"custom-form-modal"}>
@@ -170,6 +194,20 @@ export class UserDetails extends Component {
               : null}
           </Row> */}
         </div>
+        <div className={"text-center"}>
+          <Button onClick={() => this.editUser(technicianData)} className={"btn-theme"}>Update Techniican Details</Button>
+        </div>
+        <CrmUserModal
+          userModalOpen={editUserModal}
+          handleUserModal={() => {
+            this.setState({ user: {} });
+            this.props.modelOperate({
+              editUserModal: !editUserModal
+            });
+          }}
+          userData={user}
+          updateUser={this.onUpdate}
+        />
       </>
     );
   }

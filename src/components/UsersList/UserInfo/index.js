@@ -6,7 +6,8 @@ import {
   getAppointments,
   getAppointmentDetails,
   modelOpenRequest,
-  getTechinicianTimeLogRequest
+  getTechinicianTimeLogRequest,
+  editUser
 } from "../../../actions"
 import { withRouter } from "react-router-dom";
 import { UserOrders } from "./userOrders"
@@ -54,7 +55,7 @@ class UserInfo extends Component {
         : 0,
     });
   }
-  componentDidUpdate = ({ location }) => {
+  componentDidUpdate = ({ location, userReducer }) => {
     if (this.props.location.search !== location.search) {
       const query = qs.parse(this.props.location.search);
       this.setState({
@@ -62,6 +63,9 @@ class UserInfo extends Component {
           ? UserInfoTabs.findIndex(d => d.name === decodeURIComponent(query.tab))
           : 0
       });
+    }
+    if (userReducer.userData.isEditSuccess !== this.props.userReducer.userData.isEditSuccess) {
+      this.props.getSingleUserRequest({ id: this.props.match.params.id })
     }
   }
   onTabChange = activeTab => {
@@ -81,7 +85,8 @@ class UserInfo extends Component {
       appointmentDetailsReducer,
       modelOperate,
       modelInfoReducer,
-      timelogReducer
+      timelogReducer,
+      updateUser
     } = this.props;
     const { technicianData } = userReducer
 
@@ -134,6 +139,9 @@ class UserInfo extends Component {
             {activeTab === 3 ? (
               <UserDetails
                 technicianData={technicianData}
+                onUpdate={updateUser}
+                modelInfoReducer={modelInfoReducer}
+                modelOperate={modelOperate}
                 {...this.props}
               />
             ) : null}
@@ -169,6 +177,9 @@ const mapDispatchToProps = dispatch => ({
   },
   getTechinicianTimeLogRequest: data => {
     dispatch(getTechinicianTimeLogRequest(data))
+  },
+  updateUser: (id, data) => {
+    dispatch(editUser({ id, data }));
   },
 })
 export default connect(
