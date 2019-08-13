@@ -1,21 +1,42 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Form, Row, Col, Table } from "reactstrap";
+import {
+  Form,
+  Row,
+  Col,
+  Table,
+  FormGroup,
+  InputGroup,
+  Input,
+  UncontrolledTooltip,
+  Button,
+  Label
+} from "reactstrap";
 import { AppConfig } from "../../../config/AppConfig";
 import Loader from "../../../containers/Loader/Loader";
 import { CustomerAgeTypes } from "../../../config/Constants";
 import { AppRoutes } from "../../../config/AppRoutes";
+import { logger } from "../../../helpers";
+import NoDataFound from "../../common/NoFound";
 
 class SalesByCusomerAge extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFilter: "today",
-      startDate: null,
-      endDate: null,
-      openDatePicker: false,
-      focusedInput: "startDate"
+      selectedFilter: ""
     };
+  }
+  /**
+   *
+   */
+  componentDidUpdate({ searchKey: oldSearchKey }) {
+    const { searchKey } = this.props;
+    logger(searchKey, oldSearchKey);
+    if (searchKey !== oldSearchKey) {
+      this.setState({
+        selectedFilter: searchKey
+      });
+    }
   }
   /**
    *
@@ -29,63 +50,19 @@ class SalesByCusomerAge extends Component {
   /**
    *
    */
-  toggleCalendar = () => {
+  onSearch = e => {
+    e.preventDefault();
+    this.props.onSearch(this.state.selectedFilter);
+  };
+  /**
+   *
+   */
+  onReset = e => {
+    e.preventDefault();
     this.setState({
-      openDatePicker: !this.state.openDatePicker
+      selectedFilter: ""
     });
-  };
-  /**
-   *
-   */
-  onFilterChange = e => {
-    const { value } = e.target;
-    this.setState(
-      {
-        selectedFilter: value,
-        openDatePicker: value === "custom"
-      },
-      () => {
-        if (!this.state.openDatePicker) {
-          this.props.onFilterChange(value);
-        }
-      }
-    );
-  };
-  /**
-   *
-   */
-  onDatesChange = ({ startDate, endDate }) => {
-    if (this.state.focusedInput === "endDate") {
-      this.setState({
-        focusedInput: "startDate"
-      });
-    }
-    this.setState(
-      {
-        startDate,
-        endDate
-      },
-      () => {
-        if (startDate && endDate) {
-          this.setState({
-            openDatePicker: false,
-            startDate: null,
-            endDate: null
-          });
-        }
-      }
-    );
-  };
-  /**
-   *
-   */
-  onFocusChanged = focusedInput => {
-    if (!focusedInput) {
-      return;
-    }
-    this.setState({
-      focusedInput
-    });
+    this.props.onReset();
   };
   /**
    *
@@ -93,6 +70,7 @@ class SalesByCusomerAge extends Component {
   render() {
     const { customerReport } = this.props;
     const { isLoading, data } = customerReport;
+    const { selectedFilter } = this.state;
     let totalPaid = 0;
     let totalUnPaid = 0;
     let totalThirty = 0;
@@ -105,47 +83,52 @@ class SalesByCusomerAge extends Component {
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
-                {/* <FormGroup className="mb-0">
-                  <InputGroup>
-                    <Label>Select Date Range</Label>
-                    &nbsp;
-                    <Input
-                      type={"select"}
-                      className={"form-control"}
-                      value={selectedFilter}
-                      onChange={this.onFilterChange}
-                    >
-                      <option value={"today"}>Today</option>
-                      <option value={"week"}>This week</option>
-                      <option value={"month"}>This month</option>
-                      <option value={"quarter"}>This quarter</option>
-                      <option value={"all"}>All</option>
-                      <option value={"custom"}>Custom</option>
-                    </Input>
-                  </InputGroup>
-                </FormGroup> */}
+                {
+                  <FormGroup className="mb-0">
+                    <InputGroup>
+                      <Input
+                        type={"text"}
+                        className={"form-control"}
+                        value={selectedFilter}
+                        onChange={this.handleChange}
+                        name={"selectedFilter"}
+                        placeholder={"Enter customer name or email"}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                }
               </Col>
-              {/* <Col sm={"2"} className={"chart-datepicker-container"}>
-                <div
-                  onClick={this.toggleCalendar}
-                  className={"calendar-icon-container"}
-                >
-                  <img src={CalendarIcon} alt={""} />
+              <Col lg={"6"} md={"6"} className="mb-0">
+                <div className="filter-btn-wrap">
+                  <Label className="height17 label" />
+                  <div className="form-group mb-0">
+                    <span className="mr-2">
+                      <Button
+                        type="submit"
+                        className="btn btn-theme-transparent"
+                        id="Tooltip-1"
+                      >
+                        <i className="icons cui-magnifying-glass" />
+                      </Button>
+                      <UncontrolledTooltip target="Tooltip-1">
+                        Search
+                      </UncontrolledTooltip>
+                    </span>
+                    <span className="">
+                      <Button
+                        className="btn btn-theme-transparent"
+                        id="Tooltip-2"
+                        onClick={this.onReset}
+                      >
+                        <i className="icon-refresh icons" />
+                      </Button>
+                      <UncontrolledTooltip target={"Tooltip-2"}>
+                        Reset all filters
+                      </UncontrolledTooltip>
+                    </span>
+                  </div>
                 </div>
-                {openDatePicker ? (
-                  <DayPickerRangeController
-                    startDate={startDate}
-                    endDate={endDate}
-                    focusedInput={focusedInput}
-                    onDatesChange={this.onDatesChange}
-                    onFocusChange={this.onFocusChanged}
-                    numberOfMonths={1}
-                    onOutsideClick={this.toggleCalendar}
-                    weekDayFormat="ddd"
-                    hideKeyboardShortcutsPanel
-                  />
-                ) : null}
-              </Col> */}
+              </Col>
             </Row>
           </Form>
         </div>
@@ -154,7 +137,7 @@ class SalesByCusomerAge extends Component {
             <tr>
               <th width="60px">S No.</th>
               <th width={"150"}>
-                <i className={"fa fa-user"} /> Customer Name
+                <i className={"fa fa-user"} /> Customer
               </th>
               <th width={"90"}>
                 <i className={"fa fa-calendar"} /> 0-30 Days
@@ -222,6 +205,26 @@ class SalesByCusomerAge extends Component {
                                 .trim()}
                             </Link>
                           </div>
+                          {customer.customerId.email ? (
+                            <a
+                              href={`mailto:${customer.customerId.email}`}
+                              target={"_blank"}
+                            >
+                              {customer.customerId.email}
+                            </a>
+                          ) : null}
+                          <br />
+                          {customer.customerId.phoneDetail &&
+                          customer.customerId.phoneDetail[0] ? (
+                            <a
+                              href={`tel:${
+                                customer.customerId.phoneDetail[0].value
+                              }`}
+                              target={"_blank"}
+                            >
+                              {customer.customerId.phoneDetail[0].value}
+                            </a>
+                          ) : null}
                         </td>
                         <td>${customer["0-30 Days"] || 0}</td>
                         <td>${customer["31-60 Days"] || 0}</td>
@@ -236,34 +239,14 @@ class SalesByCusomerAge extends Component {
                       </tr>
                     );
                   })}
-                  <tr>
-                    <td
-                      className={"text-left font-weight-semibold"}
-                      colSpan={2}
-                    >
-                      Total
-                    </td>
-                    <td>
-                      <b>${totalThirty}</b>
-                    </td>
-                    <td>
-                      <b>${totalSixty}</b>
-                    </td>
-                    <td>
-                      <b>${totalNinenty}</b>
-                    </td>
-                    <td>
-                      <b>${ninentyPlus}</b>
-                    </td>
-                    <td>
-                      <b>${totalUnPaid}</b>
-                    </td>
-                    <td>
-                      <b>${totalPaid}</b>
-                    </td>
-                  </tr>
                 </>
-              ) : null
+              ) : (
+                <tr>
+                  <td className={"text-center"} colSpan={12}>
+                    <NoDataFound noResult />
+                  </td>
+                </tr>
+              )
             ) : (
               <tr>
                 <td className={"text-center"} colSpan={12}>
@@ -271,6 +254,29 @@ class SalesByCusomerAge extends Component {
                 </td>
               </tr>
             )}
+            <tr>
+              <td className={"text-left font-weight-semibold"} colSpan={2}>
+                Total
+              </td>
+              <td>
+                <b>${totalThirty}</b>
+              </td>
+              <td>
+                <b>${totalSixty}</b>
+              </td>
+              <td>
+                <b>${totalNinenty}</b>
+              </td>
+              <td>
+                <b>${ninentyPlus}</b>
+              </td>
+              <td>
+                <b>${totalUnPaid}</b>
+              </td>
+              <td>
+                <b>${totalPaid}</b>
+              </td>
+            </tr>
           </tbody>
         </Table>
       </>

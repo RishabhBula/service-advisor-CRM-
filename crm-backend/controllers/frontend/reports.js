@@ -7,42 +7,82 @@ const ObjectId = mongoose.Types.ObjectId;
  */
 const getReportsByCustomerdays = async (req, res) => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
+    const { search } = query;
     const { id, parentId } = currentUser;
     const orderStatusCondition = {
-      $or: [
+      $and: [
         {
-          isDeleted: false
+          $or: [
+            {
+              isDeleted: false
+            },
+            {
+              isDeleted: {
+                $exists: false
+              }
+            }
+          ]
         },
         {
-          isDeleted: {
-            $exists: false
+          parentId: parentId ? ObjectId(parentId) : ObjectId(id)
+        },
+        {
+          customerId: {
+            $exists: true,
+            $ne: null
           }
         }
-      ],
-      parentId: parentId ? ObjectId(parentId) : ObjectId(id),
-      customerId: {
-        $exists: true,
-        $ne: null
-      }
+      ]
     };
+    if (search) {
+      orderStatusCondition["$and"].push({
+        $or: [
+          {
+            name: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            email: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
     /*  */
     /*  */
-    const response = await OrderModel.aggregate([
+    const result = await OrderModel.aggregate([
+      {
+        $lookup: {
+          from: "customers",
+          localField: "customerId",
+          foreignField: "_id",
+          as: "customerId"
+        }
+      },
+      {
+        $unwind: "$customerId"
+      },
+      {
+        $addFields: {
+          name: {
+            $concat: ["$customerId.firstName", " ", "$customerId.lastName"]
+          }
+        }
+      },
       {
         $match: orderStatusCondition
       },
       {
         $group: {
-          _id: "$customerId",
-          customerId: { $first: "$customerId" }
+          _id: "$customerId._id",
+          customerId: { $first: "$customerId" },
+          name: { $first: "$name" }
         }
       }
     ]);
-    const result = await OrderModel.populate(response, {
-      path: "customerId",
-      model: "Customer"
-    });
     const resp = [];
     const dates = getDateRanges();
     for (let i = 0; i < result.length; i++) {

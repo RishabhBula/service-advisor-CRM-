@@ -6,17 +6,28 @@ import { connect } from "react-redux";
 import { logger } from "../../helpers";
 import { AppRoutes } from "../../config/AppRoutes";
 import qs from "querystring";
-import moment from "moment";
+
 class Reports extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      customerSearch: ""
+    };
   }
   /**
    *
    */
   componentDidMount = () => {
-    this.getCustomerSales();
+    const { search } = this.props.location;
+    const { customerSearch } = qs.parse(search.replace("?", ""));
+    this.setState(
+      {
+        customerSearch
+      },
+      () => {
+        this.getCustomerSales();
+      }
+    );
   };
   /**
    *
@@ -24,20 +35,19 @@ class Reports extends Component {
   componentDidUpdate({ location }) {
     const { search: oldSearch } = location;
     const { search } = this.props.location;
-    const {
-      customerSales,
-      start: customerStart,
-      end: oldCustomerEnd
-    } = qs.parse(search.replace("?", ""));
-    const { customerSales: oldCustomerSales, start, end } = qs.parse(
+    const { customerSearch } = qs.parse(search.replace("?", ""));
+    const { customerSearch: oldCustomerSearch } = qs.parse(
       oldSearch.replace("?", "")
     );
-    if (
-      customerSales !== oldCustomerSales ||
-      customerStart !== start ||
-      end !== oldCustomerEnd
-    ) {
-      this.getCustomerSales();
+    if (customerSearch !== oldCustomerSearch) {
+      this.setState(
+        {
+          customerSearch
+        },
+        () => {
+          this.getCustomerSales();
+        }
+      );
     }
   }
   /**
@@ -46,97 +56,40 @@ class Reports extends Component {
   getCustomerSales = () => {
     const { location } = this.props.history;
     const { search } = location;
-    let { customerSales, start, end } = qs.parse(search.replace("?", ""));
-    this.setState({
-      type: customerSales
-    });
-    if (!start || !end) {
-      let dates = this.getStartAndEnd(customerSales);
-      start = dates.start;
-      end = dates.end;
-    }
-    if (!start) {
-      start = moment().format("YYYY-MM-DD");
-    }
-    if (!end) {
-      end = moment().format("YYYY-MM-DD");
-    }
+    let { customerSearch } = qs.parse(search.replace("?", ""));
+    logger(customerSearch);
     this.props.getCustomerSales({
-      start,
-      end
+      search: customerSearch
     });
   };
   /**
    *
    */
-  getStartAndEnd = type => {
-    switch (type) {
-      case "week":
-        return {
-          start: moment()
-            .startOf("week")
-            .format("YYYY-MM-DD"),
-          end: moment().format("YYYY-MM-DD")
-        };
-      case "month":
-        return {
-          start: moment()
-            .startOf("month")
-            .format("YYYY-MM-DD"),
-          end: moment().format("YYYY-MM-DD")
-        };
-      case "quarter":
-        return {
-          start: moment()
-            .startOf("quarter")
-            .format("YYYY-MM-DD"),
-          end: moment().format("YYYY-MM-DD")
-        };
-      case "all":
-        return {
-          start: moment()
-            .subtract(10, "years")
-            .format("YYYY-MM-DD"),
-          end: moment().format("YYYY-MM-DD")
-        };
-      default:
-        return {
-          start: moment().format("YYYY-MM-DD"),
-          end: moment().format("YYYY-MM-DD")
-        };
-    }
+  onCustomerSearch = value => {
+    this.props.redirectTo(
+      `${AppRoutes.REPORTS.url}?${qs.stringify({
+        customerSearch: value
+      })}`
+    );
   };
   /**
    *
    */
-  onCustomerSaleRangeChange = (value, start, end) => {
-    if (value !== "custom") {
-      const dates = this.getStartAndEnd(value);
-      start = dates.start;
-      end = dates.end;
+  onCustomerSearchReset = () => {
+    const { location } = this.props.history;
+    const { search } = location;
+    let data = qs.parse(search.replace("?", ""));
+    if (data.customerSearch) {
+      delete data.customerSearch;
     }
-    let { search } = this.props.location;
-    if (!search) {
-      search = {};
-    } else {
-      search = qs.parse(search.replace("?", ""));
-    }
-    search = {
-      ...search,
-      customerSales: value,
-      start,
-      end
-    };
-    logger(qs.stringify(search));
-
-    this.props.redirectTo(`${AppRoutes.REPORTS.url}?${qs.stringify(search)}`);
+    this.props.redirectTo(`${AppRoutes.REPORTS.url}?${qs.stringify(data)}`);
   };
   /**
    *
    */
   render() {
     const { customerReport } = this.props;
-
+    const { customerSearch } = this.state;
     return (
       <div className="animated fadeIn">
         <Card className={"white-card position-relative"}>
@@ -152,8 +105,11 @@ class Reports extends Component {
             <Row>
               <Col sm={"12"}>
                 <SalesByCusomerAge
+                  searchKey={customerSearch}
                   customerReport={customerReport}
                   onFilterChange={this.onCustomerSaleRangeChange}
+                  onSearch={this.onCustomerSearch}
+                  onReset={this.onCustomerSearchReset}
                 />
               </Col>
             </Row>
