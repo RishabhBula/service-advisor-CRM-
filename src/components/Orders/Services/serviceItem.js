@@ -702,340 +702,980 @@ class ServiceItem extends Component {
                 <React.Fragment key={index}>
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal"}>
-                      <div className={"service-card-header-block d-flex flex-row"}>
+                      <div
+                        className={
+                          "service-card-header-block d-flex flex-row"
+                        }
+                      >
                         <div className={"service-card-header"}>
                           <Input
-                            placeholder={"Enter a name for this service"}
-                            onChange={(e) => this.handleChange(e, index)} name={"serviceName"}
-                            value={item && item.serviceName ? item.serviceName : ''}
+                            placeholder={
+                              "Enter a name for this service"
+                            }
+                            onChange={e =>
+                              this.handleChange(e, index)
+                            }
+                            name={"serviceName"}
+                            value={
+                              item && item.serviceName
+                                ? item.serviceName
+                                : ""
+                            }
                             maxLength={"100"}
-                            invalid={isServiceSubmitted && item.isError && !item.serviceName}
+                            invalid={
+                              isServiceSubmitted &&
+                              item.isError &&
+                              !item.serviceName
+                            }
                             size={"lg"}
                           />
                           <FormFeedback>
-                            {item.isError && isServiceSubmitted && !item.serviceName
+                            {item.isError &&
+                            isServiceSubmitted &&
+                            !item.serviceName
                               ? "Service name is required."
                               : null}
                           </FormFeedback>
                         </div>
-                        <div className={"service-card-btn-block flex-one d-flex align-items-center"}>
-                          <div className={((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue" : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue"} id={`tech${index}`}>
-                            <img className={""} src={"../../assets/img/expert.svg"} width={"30"} alt={"technician"} />
-                          </div>
-                          {((technicianData.value === null || technicianData.value === "") && (item.technician === null || item.technician === "")) || ((item.technician === null || item.technician === "")) ? <UncontrolledTooltip placement="top" target={`tech${index}`}>
-                            Assign a technician
-                          </UncontrolledTooltip>
-                            :
-                            <UncontrolledPopover className={"technician-popover"} placement="top" target={`tech${index}`} trigger={"hover"} >
-                              <PopoverHeader>Technician Details</PopoverHeader>
-                              <PopoverBody>
-                                <div className={"technician-detail"}>
-                                  <div className={"text-capitalize pb-1 border-bottom"}>{item.technician.firstName} {item.technician.lastName}</div>
-                                  <div className={"pt-1 pb-1"}>Rate/hour: <Dollor value={item.technician.rate} /> </div>
-                                  <div className={"pt-1 text-note"}>Click below to update Technician </div>
-                                </div>
-                              </PopoverBody>
-                            </UncontrolledPopover >
+                        <div
+                          className={
+                            "service-card-btn-block flex-one d-flex align-items-center"
                           }
-                          <div className={
-                            item.note ? "pb-1 cursor_pointer isValue" : "pb-1 cursor_pointer notValue"
-                          } id={`note${index}`}>
-                            <img className={""} src={"../../assets/img/writing .svg"} width={"30"} alt={"Notes"} />
+                        >
+                          <div
+                            className={
+                              ((technicianData.value === null ||
+                                technicianData.value === "") &&
+                                (item.technician === null ||
+                                  item.technician === "")) ||
+                              (item.technician === null ||
+                                item.technician === "")
+                                ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue"
+                                : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue"
+                            }
+                            id={`tech${index}`}
+                          >
+                            <img
+                              className={""}
+                              src={"../../assets/img/expert.svg"}
+                              width={"30"}
+                              alt={"technician"}
+                            />
                           </div>
-                          {item.note ?
-                            <UncontrolledPopover className={"technician-popover"} placement="top" target={`note${index}`} trigger={"hover"} >
-                              <PopoverHeader>Note Details</PopoverHeader>
+                          {((technicianData.value === null ||
+                            technicianData.value === "") &&
+                            (item.technician === null ||
+                              item.technician === "")) ||
+                          (item.technician === null ||
+                            item.technician === "") ? (
+                            <UncontrolledTooltip
+                              placement="top"
+                              target={`tech${index}`}
+                            >
+                              Assign a technician
+                            </UncontrolledTooltip>
+                          ) : (
+                            <UncontrolledPopover
+                              className={"technician-popover"}
+                              placement="top"
+                              target={`tech${index}`}
+                              trigger={"hover"}
+                            >
+                              <PopoverHeader>
+                                Technician Details
+                              </PopoverHeader>
                               <PopoverBody>
-                                <div className={"technician-detail"}>
-                                  <div className={"text-capitalize pb-1 border-bottom"}>{item.note} </div>
-                                  <div className={"pt-1 text-note"}>Click below to update note </div>
+                                <div
+                                  className={"technician-detail"}
+                                >
+                                  <div
+                                    className={
+                                      "text-capitalize pb-1 border-bottom"
+                                    }
+                                  >
+                                    {item.technician.firstName}{" "}
+                                    {item.technician.lastName}
+                                  </div>
+                                  <div className={"pt-1 pb-1"}>
+                                    Rate/hour:{" "}
+                                    <Dollor
+                                      value={item.technician.rate}
+                                    />{" "}
+                                  </div>
+                                  <div
+                                    className={"pt-1 text-note"}
+                                  >
+                                    Click below to update
+                                    Technician{" "}
+                                  </div>
                                 </div>
                               </PopoverBody>
-                            </UncontrolledPopover >
-                            :
-                            <UncontrolledTooltip placement="top" target={`note${index}`}>
+                            </UncontrolledPopover>
+                          )}
+                          <div
+                            className={
+                              item.note
+                                ? "pb-1 cursor_pointer isValue"
+                                : "pb-1 cursor_pointer notValue"
+                            }
+                            id={`note${index}`}
+                          >
+                            <img
+                              className={""}
+                              src={
+                                "../../assets/img/writing .svg"
+                              }
+                              width={"30"}
+                              alt={"Notes"}
+                            />
+                          </div>
+                          {item.note ? (
+                            <UncontrolledPopover
+                              className={"technician-popover"}
+                              placement="top"
+                              target={`note${index}`}
+                              trigger={"hover"}
+                            >
+                              <PopoverHeader>
+                                Note Details
+                              </PopoverHeader>
+                              <PopoverBody>
+                                <div
+                                  className={"technician-detail"}
+                                >
+                                  <div
+                                    className={
+                                      "text-capitalize pb-1 border-bottom"
+                                    }
+                                  >
+                                    {item.note}{" "}
+                                  </div>
+                                  <div
+                                    className={"pt-1 text-note"}
+                                  >
+                                    Click below to update note{" "}
+                                  </div>
+                                </div>
+                              </PopoverBody>
+                            </UncontrolledPopover>
+                          ) : (
+                            <UncontrolledTooltip
+                              placement="top"
+                              target={`note${index}`}
+                            >
                               Add note
                             </UncontrolledTooltip>
-                          }
+                          )}
 
-                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`tech${index}`} className={"service-note-popover"}>
+                          <UncontrolledPopover
+                            trigger="legacy"
+                            placement="bottom"
+                            target={`tech${index}`}
+                            className={"service-note-popover"}
+                          >
                             <Async
                               className={"w-100 form-select"}
                               placeholder={"Type Technician name"}
                               loadOptions={this.loadTechnician}
                               value={
-                                item.technician ?
-                                  technicianEle
+                                item.technician
+                                  ? technicianEle
                                   : selectedTechnician
                               }
-                              isClearable={technicianEle.value !== '' ? true : false}
-                              noOptionsMessage={() => "Type Technician name"}
-                              onChange={e => this.handleTechnicianAdd(e, index, item.technician)}
+                              isClearable={
+                                technicianEle.value !== ""
+                                  ? true
+                                  : false
+                              }
+                              noOptionsMessage={() =>
+                                "Type Technician name"
+                              }
+                              onChange={e =>
+                                this.handleTechnicianAdd(
+                                  e,
+                                  index,
+                                  item.technician
+                                )
+                              }
                             />
                           </UncontrolledPopover>
-                          <UncontrolledPopover trigger="legacy" placement="bottom" target={`note${index}`} className={"service-note-popover"}>
+                          <UncontrolledPopover
+                            trigger="legacy"
+                            placement="bottom"
+                            target={`note${index}`}
+                            className={"service-note-popover"}
+                          >
                             <Input
                               type={"textarea"}
-                              onChange={(e) => this.handleChange(e, index)}
+                              onChange={e =>
+                                this.handleChange(e, index)
+                              }
                               name={"note"}
                               value={item.note}
                               maxLength={"200"}
-                              rows={"5"} cols={"3"}
-                              placeholder={"Add Note for this service"}
+                              rows={"5"}
+                              cols={"3"}
+                              placeholder={
+                                "Add Note for this service"
+                              }
                             />
                           </UncontrolledPopover>
-
                         </div>
                       </div>
-                      <table className={"table matrix-table service-table"}>
+                      <table
+                        className={
+                          "table matrix-table service-table"
+                        }
+                      >
                         <thead>
                           <tr className={"service-table-head"}>
-                            <th width="430" className={"pl-3"}>DESCRIPTION</th>
-                            <th width="150" className={"text-center"}>PRICE</th>
-                            <th width="150" className={"text-center"}>QTY</th>
-                            <th width="200" className={"text-center"}>HRS</th>
-                            <th width="200" className={""}>DISCOUNT</th>
-                            <th width="150" className={"text-center"}>SUBTOTAL</th>
-                            <th width="200" className={"text-center"}>STATUS</th>
-                            <th width="30" className={"text-center"}></th>
+                            <th width="430" className={"pl-3"}>
+                              DESCRIPTION
+                            </th>
+                            <th
+                              width="150"
+                              className={"text-center"}
+                            >
+                              PRICE
+                            </th>
+                            <th
+                              width="150"
+                              className={"text-center"}
+                            >
+                              QTY
+                            </th>
+                            <th
+                              width="200"
+                              className={"text-center"}
+                            >
+                              HRS
+                            </th>
+                            <th width="200" className={""}>
+                              DISCOUNT
+                            </th>
+                            <th
+                              width="150"
+                              className={"text-center"}
+                            >
+                              SUBTOTAL
+                            </th>
+                            <th
+                              width="200"
+                              className={"text-center"}
+                            >
+                              STATUS
+                            </th>
+                            <th
+                              width="30"
+                              className={"text-center"}
+                            />
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.services[index] && this.state.services[index].serviceItems.length ?
-                              this.state.services[index].serviceItems.map((service, sIndex) => {
-                                const calSubTotal = calculateSubTotal(service.retailPrice || (service.tierSize ? service.tierSize[0].retailPrice : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
-                                const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
-                                const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
-                                mainserviceTotal.push(parseFloat(servicesSubTotal))
-                                const serviceTotalArray = getSumOfArray(mainserviceTotal)
-                                epa = calculateValues(serviceTotalArray || 0, item.epa.value || 0, item.epa.type);
-                                discount = calculateValues(serviceTotalArray || 0, item.discount.value || 0, item.discount.type);
-                                tax = calculateValues(serviceTotalArray || 0, item.taxes.value || 0, item.taxes.type);
-                                serviceTotal = (parseFloat(serviceTotalArray) + parseFloat(epa) + parseFloat(tax) - parseFloat(discount)).toFixed(2);
+                          {this.state.services[index] &&
+                          this.state.services[index].serviceItems
+                            .length ? (
+                            this.state.services[
+                              index
+                            ].serviceItems.map(
+                              (service, sIndex) => {
+                                const calSubTotal = calculateSubTotal(
+                                  service.retailPrice ||
+                                    (service.tierSize
+                                      ? service.tierSize[0]
+                                          .retailPrice
+                                      : null) ||
+                                    0,
+                                  service.qty || 0,
+                                  service.hours || 0,
+                                  service.rate
+                                    ? service.rate.hourlyRate
+                                    : 0
+                                );
+                                const subDiscount = calculateValues(
+                                  calSubTotal || 0,
+                                  service.discount.value || 0,
+                                  service.discount.type
+                                );
+                                const servicesSubTotal = (
+                                  parseFloat(calSubTotal) -
+                                  parseFloat(subDiscount)
+                                ).toFixed(2);
+                                mainserviceTotal.push(
+                                  parseFloat(servicesSubTotal)
+                                );
+                                const serviceTotalArray = getSumOfArray(
+                                  mainserviceTotal
+                                );
+                                epa = calculateValues(
+                                  serviceTotalArray || 0,
+                                  item.epa.value || 0,
+                                  item.epa.type
+                                );
+                                discount = calculateValues(
+                                  serviceTotalArray || 0,
+                                  item.discount.value || 0,
+                                  item.discount.type
+                                );
+                                tax = calculateValues(
+                                  serviceTotalArray || 0,
+                                  item.taxes.value || 0,
+                                  item.taxes.type
+                                );
+                                serviceTotal = (
+                                  parseFloat(serviceTotalArray) +
+                                  parseFloat(epa) +
+                                  parseFloat(tax) -
+                                  parseFloat(discount)
+                                ).toFixed(2);
                                 return (
                                   <tr key={sIndex}>
-                                    <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
-                                    <td>
-                                      {
-                                        (service.cost !== null || (service.tierSize ? service.tierSize[0].cost !== null : null)) && service.serviceType !== 'labor' ?
-                                          <Input
-                                            onChange={(e) => this.handleCostChange(e, index, sIndex)}
-                                            name={"retailPrice"}
-                                            type="text"
-                                            maxLength={"4"}
-                                            value={service.retailPrice || (service.tierSize ? service.tierSize[0].retailPrice : null) || 0}
-                                          /> :
-                                          null
+                                    <td
+                                      className={
+                                        "text-capitalize pl-3"
                                       }
+                                    >
+                                      <b>
+                                        {service.serviceType ||
+                                          "-"}
+                                      </b>
+                                      :{" "}
+                                      {service.description ||
+                                        service.brandName ||
+                                        service.discription ||
+                                        "-"}
                                     </td>
                                     <td>
-                                      {
-                                        (service.quantity !== null || (service.tierSize ? service.tierSize[0].quantity !== null : null)) && service.serviceType !== 'labor' ?
-                                          <Input
-                                            type="text"
-                                            onChange={(e) => this.handleQuantityChange(e, index, sIndex)}
-                                            name={"quantity"}
-                                            maxLength={"4"}
-                                            value={service.qty || 0}
-                                          /> :
-                                          null
-                                      }
+                                      {(service.cost !== null ||
+                                        (service.tierSize
+                                          ? service.tierSize[0]
+                                              .cost !== null
+                                          : null)) &&
+                                      service.serviceType !==
+                                        "labor" ? (
+                                        <Input
+                                          onChange={e =>
+                                            this.handleCostChange(
+                                              e,
+                                              index,
+                                              sIndex
+                                            )
+                                          }
+                                          name={"retailPrice"}
+                                          type="text"
+                                          maxLength={"4"}
+                                          value={
+                                            service.retailPrice ||
+                                            (service.tierSize
+                                              ? service
+                                                  .tierSize[0]
+                                                  .retailPrice
+                                              : null) ||
+                                            0
+                                          }
+                                        />
+                                      ) : null}
+                                    </td>
+                                    <td>
+                                      {(service.quantity !==
+                                        null ||
+                                        (service.tierSize
+                                          ? service.tierSize[0]
+                                              .quantity !== null
+                                          : null)) &&
+                                      service.serviceType !==
+                                        "labor" ? (
+                                        <Input
+                                          type="text"
+                                          onChange={e =>
+                                            this.handleQuantityChange(
+                                              e,
+                                              index,
+                                              sIndex
+                                            )
+                                          }
+                                          name={"quantity"}
+                                          maxLength={"4"}
+                                          value={service.qty || 0}
+                                        />
+                                      ) : null}
                                     </td>
                                     <td className={"text-center"}>
-                                      <div className={"hours-block"}>
-                                        {
-                                          service.hours !== '' && service.serviceType === 'labor' ?
-                                            <Input
-                                              type={"text"}
-                                              name={"hour"}
-                                              maxLength={"4"}
-                                              onChange={(e) => this.handleHourChange(e, index, sIndex)}
-                                              value={service.hours || 0}
-                                            /> :
-                                            <span className={"no-value"}>--:--</span>
+                                      <div
+                                        className={"hours-block"}
+                                      >
+                                        {service.hours !== "" &&
+                                        service.serviceType ===
+                                          "labor" ? (
+                                          <Input
+                                            type={"text"}
+                                            name={"hour"}
+                                            maxLength={"4"}
+                                            onChange={e =>
+                                              this.handleHourChange(
+                                                e,
+                                                index,
+                                                sIndex
+                                              )
+                                            }
+                                            value={
+                                              service.hours || 0
+                                            }
+                                          />
+                                        ) : (
+                                          <span
+                                            className={"no-value"}
+                                          >
+                                            --:--
+                                          </span>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div
+                                        className={
+                                          "labor-discount "
                                         }
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <div className={"labor-discount "}>
-                                        <div className={"labor-discount-input"}>
-                                          {service.discount.type === '$' ?
+                                      >
+                                        <div
+                                          className={
+                                            "labor-discount-input"
+                                          }
+                                        >
+                                          {service.discount
+                                            .type === "$" ? (
                                             <div className="input-icon dollar">
-                                              <i className={"fa fa-dollar"}></i>
-                                            </div> : null}
-                                          <Input id="discount" name="discount" type={"text"} value={service.discount.value}
-                                            onChange={(e) => {
-                                              this.setDiscountValue(e, index, sIndex)
-                                            }} maxLength="5" placeholder={"0"} />
-                                          {service.discount.type === '%' ?
+                                              <i
+                                                className={
+                                                  "fa fa-dollar"
+                                                }
+                                              />
+                                            </div>
+                                          ) : null}
+                                          <Input
+                                            id="discount"
+                                            name="discount"
+                                            type={"text"}
+                                            value={
+                                              service.discount
+                                                .value
+                                            }
+                                            onChange={e => {
+                                              this.setDiscountValue(
+                                                e,
+                                                index,
+                                                sIndex
+                                              );
+                                            }}
+                                            maxLength="5"
+                                            placeholder={"0"}
+                                          />
+                                          {service.discount
+                                            .type === "%" ? (
                                             <div className="input-icon percent">
-                                              <i className={"fa fa-percent"}></i>
-                                            </div> : null}
+                                              <i
+                                                className={
+                                                  "fa fa-percent"
+                                                }
+                                              />
+                                            </div>
+                                          ) : null}
                                         </div>
-                                        <div className={"service-customer-discount"}>
-                                          <CrmDiscountBtn index={index + `${sIndex}`} sIndex={sIndex} discountType={service.discount.type} handleClickDiscountType={(data) => this.handleClickDiscountType(data, sIndex, index)} />
+                                        <div
+                                          className={
+                                            "service-customer-discount"
+                                          }
+                                        >
+                                          <CrmDiscountBtn
+                                            index={
+                                              index + `${sIndex}`
+                                            }
+                                            sIndex={sIndex}
+                                            discountType={
+                                              service.discount
+                                                .type
+                                            }
+                                            handleClickDiscountType={data =>
+                                              this.handleClickDiscountType(
+                                                data,
+                                                sIndex,
+                                                index
+                                              )
+                                            }
+                                          />
                                         </div>
                                       </div>
                                     </td>
                                     <td className={"text-center"}>
-                                      <span className="dollar-price"><i className="fa fa-dollar dollar-icon"></i>{!isNaN(servicesSubTotal) ? servicesSubTotal : 0}</span>
+                                      <span className="dollar-price">
+                                        <i className="fa fa-dollar dollar-icon" />
+                                        {!isNaN(servicesSubTotal)
+                                          ? servicesSubTotal
+                                          : 0}
+                                      </span>
                                     </td>
                                     <td className={"text-center"}>
-
-                                      {
-                                        service.label && service.label.length ?
-                                          service.label.map((label, lIndex) => {
-                                            return (
-                                              <>
-                                                {
-                                                  label.isAddLabel ?
+                                      {service.label &&
+                                      service.label.length
+                                        ? service.label.map(
+                                            (label, lIndex) => {
+                                              return (
+                                                <>
+                                                  {label.isAddLabel ? (
                                                     <div>
-                                                      <span key={lIndex} style={{
-                                                        background: label.color
-                                                      }} className={"status-label-btn"} >
-                                                        {label.name}
+                                                      <span
+                                                        key={
+                                                          lIndex
+                                                        }
+                                                        style={{
+                                                          background:
+                                                            label.color
+                                                        }}
+                                                        className={
+                                                          "status-label-btn"
+                                                        }
+                                                      >
+                                                        {
+                                                          label.name
+                                                        }
 
-                                                        <span className={"close-icon"}
-                                                          onClick={() => this.handleRemoveLabel(index, sIndex, lIndex)}
+                                                        <span
+                                                          className={
+                                                            "close-icon"
+                                                          }
+                                                          onClick={() =>
+                                                            this.handleRemoveLabel(
+                                                              index,
+                                                              sIndex,
+                                                              lIndex
+                                                            )
+                                                          }
                                                         >
                                                           <i className="fas fa-times" />
                                                         </span>
                                                       </span>
                                                     </div>
-                                                    :
-                                                    null
-                                                }
-                                              </>
-                                            )
-                                          }) :
-                                          null
-                                      }
-                                      <Button id={`new${sIndex}${index}`} className={"btn-sm"} type="button">
+                                                  ) : null}
+                                                </>
+                                              );
+                                            }
+                                          )
+                                        : null}
+                                      <Button
+                                        id={`new${sIndex}${index}`}
+                                        className={"btn-sm"}
+                                        type="button"
+                                      >
                                         New +
                                       </Button>
-                                      <UncontrolledTooltip target={`new${sIndex}${index}`}>
-                                        Add Label For {`${service.serviceType}`}
+                                      <UncontrolledTooltip
+                                        target={`new${sIndex}${index}`}
+                                      >
+                                        Add Label For{" "}
+                                        {`${service.serviceType}`}
                                       </UncontrolledTooltip>
-                                      <UncontrolledPopover trigger="legacy" placement="bottom" target={`new${sIndex}${index}`}>
+                                      <UncontrolledPopover
+                                        trigger="legacy"
+                                        placement="bottom"
+                                        target={`new${sIndex}${index}`}
+                                      >
                                         <PopoverHeader>
                                           <div>
-                                            <FormGroup className={"mb-0"}>
-                                              <Input value={service.label[service.label.length - 1].name} onChange={(e) => this.handleLabelName(e, index, sIndex)} placeholder={"Enter a label name."} />
-                                              <ul className={"lable-color"} >
-                                                {this.labelColors(index, sIndex)}
+                                            <FormGroup
+                                              className={"mb-0"}
+                                            >
+                                              <Input
+                                                value={
+                                                  service.label[
+                                                    service.label
+                                                      .length - 1
+                                                  ].name
+                                                }
+                                                onChange={e =>
+                                                  this.handleLabelName(
+                                                    e,
+                                                    index,
+                                                    sIndex
+                                                  )
+                                                }
+                                                placeholder={
+                                                  "Enter a label name."
+                                                }
+                                              />
+                                              <ul
+                                                className={
+                                                  "lable-color"
+                                                }
+                                              >
+                                                {this.labelColors(
+                                                  index,
+                                                  sIndex
+                                                )}
                                               </ul>
                                             </FormGroup>
-                                            <Button disabled={(service.label ? !service.label[service.label.length - 1].name : null) && (service.label ? !service.label[service.label.length - 1].isButtonValue : null)} color="secondary" className={"btn-block btn-round"} onClick={() => this.handleLabelAdd(index, sIndex)}>Add Label</Button>
-                                            <Button disabled={(service.label ? !service.label[service.label.length - 1].name : null) && (service.label ? !service.label[service.label.length - 1].isButtonValue : null)} color="secondary" className={"btn-block btn-round"} onClick={() => this.handleSaveLabel(index, sIndex)}>Add To Saved Label</Button>
+                                            <Button
+                                              disabled={
+                                                (service.label
+                                                  ? !service
+                                                      .label[
+                                                      service
+                                                        .label
+                                                        .length -
+                                                        1
+                                                    ].name
+                                                  : null) &&
+                                                (service.label
+                                                  ? !service
+                                                      .label[
+                                                      service
+                                                        .label
+                                                        .length -
+                                                        1
+                                                    ]
+                                                      .isButtonValue
+                                                  : null)
+                                              }
+                                              color="secondary"
+                                              className={
+                                                "btn-block btn-round"
+                                              }
+                                              onClick={() =>
+                                                this.handleLabelAdd(
+                                                  index,
+                                                  sIndex
+                                                )
+                                              }
+                                            >
+                                              Add Label
+                                            </Button>
+                                            <Button
+                                              disabled={
+                                                (service.label
+                                                  ? !service
+                                                      .label[
+                                                      service
+                                                        .label
+                                                        .length -
+                                                        1
+                                                    ].name
+                                                  : null) &&
+                                                (service.label
+                                                  ? !service
+                                                      .label[
+                                                      service
+                                                        .label
+                                                        .length -
+                                                        1
+                                                    ]
+                                                      .isButtonValue
+                                                  : null)
+                                              }
+                                              color="secondary"
+                                              className={
+                                                "btn-block btn-round"
+                                              }
+                                              onClick={() =>
+                                                this.handleSaveLabel(
+                                                  index,
+                                                  sIndex
+                                                )
+                                              }
+                                            >
+                                              Add To Saved Label
+                                            </Button>
                                           </div>
                                         </PopoverHeader>
                                         <PopoverBody>
-                                          {
-                                            labelReducer.label && labelReducer.label.length ?
-                                              labelReducer.label.map((data, Lindex) => {
-                                                return (
-                                                  <div className={"d-flex"} key={Lindex}>
-                                                    <Button key={Lindex} style={{
-                                                      background: data.labelColor
-                                                    }} className={"btn-sm btn-block label-btn"} onClick={() => this.handleAddLabelFromList(index, sIndex, data.labelColor, data.labelName)} type="button">
-                                                      {data.labelName}
-                                                    </Button>
-                                                    <span id={`remove${Lindex}${sIndex}${index}`} className={"pl-2 mt-2"} style={{ cursor: "pointer" }} onClick={() => this.handleSavedLabelDelete(data)}><i className={"icons cui-trash"}></i></span>
-                                                    <UncontrolledTooltip target={`remove${Lindex}${sIndex}${index}`}>
-                                                      Remove {data.labelName}
-                                                    </UncontrolledTooltip>
-                                                  </div>
-                                                )
-                                              }) : null
-                                          }
+                                          {labelReducer.label &&
+                                          labelReducer.label
+                                            .length
+                                            ? labelReducer.label.map(
+                                                (
+                                                  data,
+                                                  Lindex
+                                                ) => {
+                                                  return (
+                                                    <div
+                                                      className={
+                                                        "d-flex"
+                                                      }
+                                                      key={Lindex}
+                                                    >
+                                                      <Button
+                                                        key={
+                                                          Lindex
+                                                        }
+                                                        style={{
+                                                          background:
+                                                            data.labelColor
+                                                        }}
+                                                        className={
+                                                          "btn-sm btn-block label-btn"
+                                                        }
+                                                        onClick={() =>
+                                                          this.handleAddLabelFromList(
+                                                            index,
+                                                            sIndex,
+                                                            data.labelColor,
+                                                            data.labelName
+                                                          )
+                                                        }
+                                                        type="button"
+                                                      >
+                                                        {
+                                                          data.labelName
+                                                        }
+                                                      </Button>
+                                                      <span
+                                                        id={`remove${Lindex}${sIndex}${index}`}
+                                                        className={
+                                                          "pl-2 mt-2"
+                                                        }
+                                                        style={{
+                                                          cursor:
+                                                            "pointer"
+                                                        }}
+                                                        onClick={() =>
+                                                          this.handleSavedLabelDelete(
+                                                            data
+                                                          )
+                                                        }
+                                                      >
+                                                        <i
+                                                          className={
+                                                            "icons cui-trash"
+                                                          }
+                                                        />
+                                                      </span>
+                                                      <UncontrolledTooltip
+                                                        target={`remove${Lindex}${sIndex}${index}`}
+                                                      >
+                                                        Remove{" "}
+                                                        {
+                                                          data.labelName
+                                                        }
+                                                      </UncontrolledTooltip>
+                                                    </div>
+                                                  );
+                                                }
+                                              )
+                                            : null}
                                         </PopoverBody>
                                       </UncontrolledPopover>
-
                                     </td>
                                     <td>
                                       <Button
                                         size={"sm"}
                                         id={`Delete${index}${sIndex}`}
-                                        onClick={() => { this.handleRemoveServiceItems(index, sIndex) }}
-                                        className={"btn-theme-transparent"}
+                                        onClick={() => {
+                                          this.handleRemoveServiceItems(
+                                            index,
+                                            sIndex
+                                          );
+                                        }}
+                                        className={
+                                          "btn-theme-transparent"
+                                        }
                                       >
-                                        <i className={"icons cui-trash"}></i>
+                                        <i
+                                          className={
+                                            "icons cui-trash"
+                                          }
+                                        />
                                       </Button>
-                                      <UncontrolledTooltip target={`Delete${index}${sIndex}`}>
-                                        Remove {`${service.serviceType}`}
+                                      <UncontrolledTooltip
+                                        target={`Delete${index}${sIndex}`}
+                                      >
+                                        Remove{" "}
+                                        {`${service.serviceType}`}
                                       </UncontrolledTooltip>
                                     </td>
                                   </tr>
-                                )
-                              }) :
-                              <tr>
-                                <td className={"text-center"} colSpan={12}>
-                                  <NoDataFound showAddButton={false} message={"Currently there are no Service details added."} />
-                                  <div className={"service-utility-btn no-service-data"}>
-                                    <Button
-                                      color={""}
-                                      size={"sm"}
-                                      className={"mr-2 btn-link"}
-                                      onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
-                                      <i className="nav-icon icons icon-puzzle"></i>&nbsp; Add Part
-                                    </Button>
-                                    <Button
-                                      color={""}
-                                      size={"sm"}
-                                      className={"mr-2 btn-link"}
-                                      onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
-                                      <i className="nav-icon icons icon-support"></i>&nbsp; Add Tire
-                                    </Button>
-                                    <Button
-                                      color={""}
-                                      size={"sm"}
-                                      className={"mr-2 btn-link"}
-                                      onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
-                                      <i className="nav-icon icons icon-user"></i>&nbsp; Add Labor
+                                );
+                              }
+                            )
+                          ) : (
+                            <tr>
+                              <td
+                                className={"text-center"}
+                                colSpan={12}
+                              >
+                                <NoDataFound
+                                  showAddButton={false}
+                                  message={
+                                    "Currently there are no Services created."
+                                  }
+                                />
+                                <div
+                                  className={
+                                    "service-utility-btn no-service-data"
+                                  }
+                                >
+                                  <Button
+                                    color={""}
+                                    size={"sm"}
+                                    className={"mr-2 btn-link"}
+                                    onClick={() =>
+                                      this.handleServiceModalOpenAdd(
+                                        index,
+                                        "part"
+                                      )
+                                    }
+                                  >
+                                    <i className="nav-icon icons icon-puzzle" />
+                                    &nbsp; Add Part
                                   </Button>
-                                  </div>
-                                </td>
-                              </tr>
-                          }
+                                  <Button
+                                    color={""}
+                                    size={"sm"}
+                                    className={"mr-2 btn-link"}
+                                    onClick={() =>
+                                      this.handleServiceModalOpenAdd(
+                                        index,
+                                        "tire"
+                                      )
+                                    }
+                                  >
+                                    <i className="nav-icon icons icon-support" />
+                                    &nbsp; Add Tire
+                                  </Button>
+                                  <Button
+                                    color={""}
+                                    size={"sm"}
+                                    className={"mr-2 btn-link"}
+                                    onClick={() =>
+                                      this.handleServiceModalOpenAdd(
+                                        index,
+                                        "labor"
+                                      )
+                                    }
+                                  >
+                                    <i className="nav-icon icons icon-user" />
+                                    &nbsp; Add Labor
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>
-                    <div className={"p-2 d-flex justify-content-between calculation-section"}>
-                      <div className={"position-relative d-flex align-items-end"}>
+                    <div
+                      className={
+                        "p-2 d-flex justify-content-between calculation-section"
+                      }
+                    >
+                      <div
+                        className={
+                          "position-relative d-flex align-items-end"
+                        }
+                      >
                         <div className={"tax-calculate-block"}>
-                          <div className={"tax-block"} >
+                          <div className={"tax-block"}>
                             <span className={"title"}>EPA</span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
-                                {item.epa && item.epa.type === '$' ?
+                                {item.epa &&
+                                item.epa.type === "$" ? (
                                   <div className="dollor-icon icon">
-                                    <i className={"fa fa-dollar"}></i>
+                                    <i
+                                      className={"fa fa-dollar"}
+                                    />
                                   </div>
-                                  : null}
-                                <Input id="EPA" name="epa" value={item.epa.value} onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"0"} />
-                                {item.epa && item.epa.type === '%' ?
+                                ) : null}
+                                <Input
+                                  id="EPA"
+                                  name="epa"
+                                  value={item.epa.value}
+                                  onChange={e => {
+                                    this.handleTaxesAdd(e, index);
+                                  }}
+                                  type={"text"}
+                                  maxLength="5"
+                                  placeholder={"0"}
+                                />
+                                {item.epa &&
+                                item.epa.type === "%" ? (
                                   <div className="percent-icons icon">
-                                    <i className={"fa fa-percent"}></i>
-                                  </div> : null}
-                                <CrmDiscountBtn discountType={item.epa && item.epa.type ? item.epa.type : "%"} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "epa")} index={`EPA-${index}`} />
+                                    <i
+                                      className={"fa fa-percent"}
+                                    />
+                                  </div>
+                                ) : null}
+                                <CrmDiscountBtn
+                                  discountType={
+                                    item.epa && item.epa.type
+                                      ? item.epa.type
+                                      : "%"
+                                  }
+                                  handleClickDiscountType={data =>
+                                    this.handleClickEpaType(
+                                      data,
+                                      index,
+                                      "epa"
+                                    )
+                                  }
+                                  index={`EPA-${index}`}
+                                />
                               </div>
                             </div>
                           </div>
                           <div className={"tax-block"}>
-                            <span className={"title"}>Discount</span>
+                            <span className={"title"}>
+                              Discount
+                            </span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
-                                {item.discount && item.discount.type === '$' ?
-                                  <div className={"dollor-icon icon"}>
-                                    <i className={"fa fa-dollar"}></i>
-                                  </div> : null}
-                                <Input id="discount" value={item.discount.value} name="discount" onChange={(e) => { this.handleTaxesAdd(e, index, "epa") }} type={"text"} maxLength="5" placeholder={"0"} />
-                                {item.discount && item.discount.type === '%' ?
-                                  <div className={"percent-icons icon"}>
-                                    <i className={"fa fa-percent"}></i>
-                                  </div> : null}
-                                <CrmDiscountBtn discountType={item.discount.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "discount")} index={`DISC-${index}`} />
+                                {item.discount &&
+                                item.discount.type === "$" ? (
+                                  <div
+                                    className={"dollor-icon icon"}
+                                  >
+                                    <i
+                                      className={"fa fa-dollar"}
+                                    />
+                                  </div>
+                                ) : null}
+                                <Input
+                                  id="discount"
+                                  value={item.discount.value}
+                                  name="discount"
+                                  onChange={e => {
+                                    this.handleTaxesAdd(
+                                      e,
+                                      index,
+                                      "epa"
+                                    );
+                                  }}
+                                  type={"text"}
+                                  maxLength="5"
+                                  placeholder={"0"}
+                                />
+                                {item.discount &&
+                                item.discount.type === "%" ? (
+                                  <div
+                                    className={
+                                      "percent-icons icon"
+                                    }
+                                  >
+                                    <i
+                                      className={"fa fa-percent"}
+                                    />
+                                  </div>
+                                ) : null}
+                                <CrmDiscountBtn
+                                  discountType={
+                                    item.discount.type
+                                  }
+                                  handleClickDiscountType={data =>
+                                    this.handleClickEpaType(
+                                      data,
+                                      index,
+                                      "discount"
+                                    )
+                                  }
+                                  index={`DISC-${index}`}
+                                />
                               </div>
                             </div>
                           </div>
@@ -1043,17 +1683,49 @@ class ServiceItem extends Component {
                             <span className={"title"}>Tax</span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
-                                {item.taxes && item.taxes.type === '$' ?
-                                  <div className={"dollor-icon icon"}>
-                                    <i className={"fa fa-dollar"}></i>
+                                {item.taxes &&
+                                item.taxes.type === "$" ? (
+                                  <div
+                                    className={"dollor-icon icon"}
+                                  >
+                                    <i
+                                      className={"fa fa-dollar"}
+                                    />
                                   </div>
-                                  : null}
-                                <Input name="taxes" value={item.taxes.value} onChange={(e) => { this.handleTaxesAdd(e, index) }} type={"text"} maxLength="5" placeholder={"0"} />
-                                {item.taxes && item.taxes.type === '%' ?
-                                  <div className={"percent-icons icon"}>
-                                    <i className={"fa fa-percent"}></i>
-                                  </div> : null}
-                                <CrmDiscountBtn discountType={item.taxes.type} handleClickDiscountType={(data) => this.handleClickEpaType(data, index, "taxes")} index={`TAX-${index}`} />
+                                ) : null}
+                                <Input
+                                  name="taxes"
+                                  value={item.taxes.value}
+                                  onChange={e => {
+                                    this.handleTaxesAdd(e, index);
+                                  }}
+                                  type={"text"}
+                                  maxLength="5"
+                                  placeholder={"0"}
+                                />
+                                {item.taxes &&
+                                item.taxes.type === "%" ? (
+                                  <div
+                                    className={
+                                      "percent-icons icon"
+                                    }
+                                  >
+                                    <i
+                                      className={"fa fa-percent"}
+                                    />
+                                  </div>
+                                ) : null}
+                                <CrmDiscountBtn
+                                  discountType={item.taxes.type}
+                                  handleClickDiscountType={data =>
+                                    this.handleClickEpaType(
+                                      data,
+                                      index,
+                                      "taxes"
+                                    )
+                                  }
+                                  index={`TAX-${index}`}
+                                />
                               </div>
                             </div>
                           </div>
@@ -1061,25 +1733,63 @@ class ServiceItem extends Component {
                       </div>
                       <div className={"service-total-block"}>
                         <div className="text-right">
-                          <h6><span className={"title"}>Epa :&nbsp;</span>
+                          <h6>
+                            <span className={"title"}>
+                              Epa :&nbsp;
+                            </span>
                             <span className={"value"}>
-                              <span className="dollar-price">+{" "}<i className="fa fa-dollar dollar-icon"></i>{!isNaN(epa) ? parseFloat(epa).toFixed(2) : 0}</span>
+                              <span className="dollar-price">
+                                +{" "}
+                                <i className="fa fa-dollar dollar-icon" />
+                                {!isNaN(epa)
+                                  ? parseFloat(epa).toFixed(2)
+                                  : 0}
+                              </span>
                             </span>
                           </h6>
                           <h6>
-                            <span className={"title"}>Taxes :&nbsp;</span>
-                            <span className={"value"}> <span className="dollar-price">+{" "}<i className="fa fa-dollar dollar-icon"></i>{!isNaN(tax) ? parseFloat(tax).toFixed(2) : 0}</span>
+                            <span className={"title"}>
+                              Taxes :&nbsp;
+                            </span>
+                            <span className={"value"}>
+                              {" "}
+                              <span className="dollar-price">
+                                +{" "}
+                                <i className="fa fa-dollar dollar-icon" />
+                                {!isNaN(tax)
+                                  ? parseFloat(tax).toFixed(2)
+                                  : 0}
+                              </span>
                             </span>
                           </h6>
                           <h6>
-                            <span className={"title"}>Discount :&nbsp;</span>
-                            <span className={"value"}> <span className="dollar-price">-{" "}<i className="fa fa-dollar dollar-icon"></i>{!isNaN(discount) ? parseFloat(discount).toFixed(2) : 0}</span>
+                            <span className={"title"}>
+                              Discount :&nbsp;
+                            </span>
+                            <span className={"value"}>
+                              {" "}
+                              <span className="dollar-price">
+                                -{" "}
+                                <i className="fa fa-dollar dollar-icon" />
+                                {!isNaN(discount)
+                                  ? parseFloat(discount).toFixed(
+                                      2
+                                    )
+                                  : 0}
+                              </span>
                             </span>
                           </h6>
                         </div>
-                        <h4 className={"mb-0 border-top pt-2"}>Service Total: <span className={"dollor-icon"}>${!isNaN(serviceTotal) ? serviceTotal : 0.00}</span></h4>
+                        <h4 className={"mb-0 border-top pt-2"}>
+                          Service Total:{" "}
+                          <span className={"dollor-icon"}>
+                            $
+                            {!isNaN(serviceTotal)
+                              ? serviceTotal
+                              : 0.0}
+                          </span>
+                        </h4>
                       </div>
-
                     </div>
 
                     <div className={"service-card-footer"}>
@@ -1088,41 +1798,80 @@ class ServiceItem extends Component {
                           color={""}
                           size={"sm"}
                           className={"mr-2 btn-link"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'part')}>
-                          <i className="nav-icon icons icon-puzzle"></i>&nbsp; Add Part
+                          onClick={() =>
+                            this.handleServiceModalOpenAdd(
+                              index,
+                              "part"
+                            )
+                          }
+                        >
+                          <i className="nav-icon icons icon-puzzle" />
+                          &nbsp; Add Part
                         </Button>
                         <Button
                           color={""}
                           size={"sm"}
                           className={"mr-2 btn-link"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'tire')} >
-                          <i className="nav-icon icons icon-support"></i>&nbsp; Add Tire
+                          onClick={() =>
+                            this.handleServiceModalOpenAdd(
+                              index,
+                              "tire"
+                            )
+                          }
+                        >
+                          <i className="nav-icon icons icon-support" />
+                          &nbsp; Add Tire
                         </Button>
                         <Button
                           color={""}
                           size={"sm"}
                           className={"mr-2 btn-link"}
-                          onClick={() => this.handleServiceModalOpenAdd(index, 'labor')}>
-                          <i className="nav-icon icons icon-user"></i>&nbsp; Add Labor
+                          onClick={() =>
+                            this.handleServiceModalOpenAdd(
+                              index,
+                              "labor"
+                            )
+                          }
+                        >
+                          <i className="nav-icon icons icon-user" />
+                          &nbsp; Add Labor
                         </Button>
                       </div>
-                      <div >
-                        <Button className={"mr-3 btn-dashed"} onClick={() => this.handleAddCannedService(item, index)} >Save as canned service</Button>
+                      <div>
+                        <Button
+                          className={"mr-3 btn-dashed"}
+                          onClick={() =>
+                            this.handleAddCannedService(
+                              item,
+                              index
+                            )
+                          }
+                        >
+                          Save as canned service
+                        </Button>
                         <Button
                           className="btn btn-remove btn-outline-danger"
-                          onClick={() => this.handleRemoveService(index, item._id)}
+                          onClick={() =>
+                            this.handleRemoveService(
+                              index,
+                              item._id
+                            )
+                          }
                           id={`remove-service-${index}`}
                         >
-                          <i className="fa fa-trash" /> &nbsp;Remove
-                          </Button>
-                        <UncontrolledTooltip target={`remove-service-${index}`}>
+                          <i className="fa fa-trash" />{" "}
+                          &nbsp;Remove
+                        </Button>
+                        <UncontrolledTooltip
+                          target={`remove-service-${index}`}
+                        >
                           Click to remove this service
-                          </UncontrolledTooltip>
+                        </UncontrolledTooltip>
                       </div>
                     </div>
                   </Card>
                 </React.Fragment>
-              )
+              );
             }) : null
           }
           <div className="d-flex pb-4 justify-content-between">

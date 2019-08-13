@@ -417,12 +417,22 @@ class CustomerList extends Component {
                           <Input
                             type="checkbox"
                             value={user._id}
-                            checked={selectedCustomers.indexOf(user._id) > -1}
+                            checked={
+                              selectedCustomers.indexOf(
+                                user._id
+                              ) > -1
+                            }
                             name="checkbox"
-                            onChange={this.handleCheckboxChnage}
+                            onChange={
+                              this.handleCheckboxChnage
+                            }
                           />
                           <label htmlFor={user._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                            {(page - 1) *
+                              AppConfig.ITEMS_PER_PAGE +
+                              index +
+                              1}
+                            .
                           </label>
                         </div>
                       </td>
@@ -432,7 +442,9 @@ class CustomerList extends Component {
                             "font-weight-semibold text-capitalize pb-1"
                           }
                         >
-                          {user.firstName + " " + user.lastName || notExist}
+                          {user.firstName +
+                            " " +
+                            user.lastName || notExist}
                         </div>
                         <div>
                           {user.email ? (
@@ -448,25 +460,34 @@ class CustomerList extends Component {
                       </td>
                       <td>
                         {user.phoneDetail
-                          ? user.phoneDetail.map((data, ind) => {
-                              return (
-                                <div className="text-capitalize" key={ind}>
-                                  {data.phone || notExist}
-                                  {" |"}
-                                  {"  "}
-                                  {data.value ? (
-                                    <a
-                                      href={`tel:${data.value}`}
-                                      className={"text-body"}
-                                    >
-                                      {data.value}
-                                    </a>
-                                  ) : (
-                                    notExist
-                                  )}
-                                </div>
-                              );
-                            })
+                          ? user.phoneDetail.map(
+                              (data, ind) => {
+                                return (
+                                  <div
+                                    className="text-capitalize"
+                                    key={ind}
+                                  >
+                                    {data.phone || notExist}
+                                    {" |"}
+                                    {"  "}
+                                    {data.value ? (
+                                      <a
+                                        href={`tel:${
+                                          data.value
+                                        }`}
+                                        className={
+                                          "text-body"
+                                        }
+                                      >
+                                        {data.value}
+                                      </a>
+                                    ) : (
+                                      notExist
+                                    )}
+                                  </div>
+                                );
+                              }
+                            )
                           : notExist}
                       </td>
                       {/* <td>
@@ -474,20 +495,33 @@ class CustomerList extends Component {
                         {user.state || ""} {user.zipCode || ""}{" "}
                       </td> */}
                       <td
-                        className={"pl-4 cursor_pointer text-primary"}
-                        onClick={() => this.handleCustomerVehicleView(user._id)}
+                        className={
+                          "pl-4 cursor_pointer text-primary"
+                        }
+                        onClick={() =>
+                          this.handleCustomerVehicleView(
+                            user._id
+                          )
+                        }
                       >
-                        <div id={`customer-vehicle-${user._id}`}>
-                          {user.vehicles && user.vehicles.length ? (
+                        <div
+                          id={`customer-vehicle-${user._id}`}
+                        >
+                          {user.vehicles &&
+                          user.vehicles.length ? (
                             <span className={"qty-value"}>
                               {user.vehicles.length}
                             </span>
                           ) : (
-                            <span className={"qty-no-value"}>Not Added</span>
+                            <span className={"qty-no-value"}>
+                              Not Added
+                            </span>
                           )}
                         </div>
                         <UncontrolledTooltip
-                          target={`customer-vehicle-${user._id}`}
+                          target={`customer-vehicle-${
+                            user._id
+                          }`}
                         >
                           Click to add vehicle
                         </UncontrolledTooltip>
@@ -503,7 +537,9 @@ class CustomerList extends Component {
                             onClick={() => {
                               this.setState(
                                 {
-                                  selectedCustomers: [user._id]
+                                  selectedCustomers: [
+                                    user._id
+                                  ]
                                 },
                                 () => {
                                   this.deactivateCustomers();
@@ -520,7 +556,9 @@ class CustomerList extends Component {
                             onClick={() => {
                               this.setState(
                                 {
-                                  selectedCustomers: [user._id]
+                                  selectedCustomers: [
+                                    user._id
+                                  ]
                                 },
                                 () => {
                                   this.activateCustomers();
@@ -535,21 +573,56 @@ class CustomerList extends Component {
                       <td>
                         {/* {user.createdAt ? formateDate(user.createdAt) : "-"} */}
                         <div>
-                          {moment(user.createdAt).format("MMM Do YYYY")}
+                          {moment(user.createdAt).format(
+                            "MMM Do YYYY"
+                          )}
                         </div>
-                        <div>{moment(user.createdAt).format("h:mm a")}</div>
+                        <div>
+                          {moment(user.createdAt).format(
+                            "h:mm a"
+                          )}
+                        </div>
                       </td>
                       <td className={"text-center"}>
+                        <span className="mr-2">
+                          <Button
+                            className={
+                              "btn-theme-transparent"
+                            }
+                            size={"sm"}
+                            onClick={() =>
+                              this.handleCustomerView(
+                                user._id
+                              )
+                            }
+                            id={`view-${user._id}`}
+                          >
+                            <i className="fas fa-eye" />
+                          </Button>
+                          <UncontrolledTooltip
+                            target={`view-${user._id}`}
+                          >
+                            View
+                          </UncontrolledTooltip>
+                        </span>
                         <span className={"mr-2"}>
                           <Button
                             size={"sm"}
-                            onClick={() => this.editUser(user)}
-                            className={"btn-theme-transparent"}
+                            onClick={() =>
+                              this.editUser(user)
+                            }
+                            className={
+                              "btn-theme-transparent"
+                            }
                             id={`edit-${user._id}`}
                           >
-                            <i className={"icons cui-pencil"} />
+                            <i
+                              className={"icons cui-pencil"}
+                            />
                           </Button>
-                          <UncontrolledTooltip target={`edit-${user._id}`}>
+                          <UncontrolledTooltip
+                            target={`edit-${user._id}`}
+                          >
                             Edit
                           </UncontrolledTooltip>
                         </span>
@@ -559,7 +632,9 @@ class CustomerList extends Component {
                             onClick={() =>
                               this.setState(
                                 {
-                                  selectedCustomers: [user._id]
+                                  selectedCustomers: [
+                                    user._id
+                                  ]
                                 },
                                 () => {
                                   this.onDelete();
@@ -567,25 +642,18 @@ class CustomerList extends Component {
                               )
                             }
                             id={`delete-${user._id}`}
-                            className={"btn-theme-transparent"}
+                            className={
+                              "btn-theme-transparent"
+                            }
                           >
-                            <i className={"icons cui-trash"} />
+                            <i
+                              className={"icons cui-trash"}
+                            />
                           </Button>
-                          <UncontrolledTooltip target={`delete-${user._id}`}>
+                          <UncontrolledTooltip
+                            target={`delete-${user._id}`}
+                          >
                             Delete
-                          </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            className={"btn-theme-transparent"}
-                            size={"sm"}
-                            onClick={() => this.handleCustomerView(user._id)}
-                            id={`view-${user._id}`}
-                          >
-                            <i className="fas fa-eye" />
-                          </Button>
-                          <UncontrolledTooltip target={`view-${user._id}`}>
-                            View
                           </UncontrolledTooltip>
                         </span>
                       </td>

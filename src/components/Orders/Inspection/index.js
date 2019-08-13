@@ -841,7 +841,6 @@ class Inspection extends Component {
                                                     }
                                                   >
                                                     Max limit 5
-                                                    images
                                                   </div>
                                                 </>
                                               )}

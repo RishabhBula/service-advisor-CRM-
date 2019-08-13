@@ -905,7 +905,7 @@ class CannedServiceUpdate extends Component {
                               }) :
                               <tr>
                                 <td className={"text-center"} colSpan={12}>
-                                  <NoDataFound showAddButton={false} message={"Currently there are no Service details added."} />
+                                  <NoDataFound showAddButton={false} message={"Currently there are no Services created."} />
                                   <div className={"service-utility-btn no-service-data"}>
                                     <Button
                                       color={""}

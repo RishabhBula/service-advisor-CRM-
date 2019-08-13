@@ -265,8 +265,8 @@ class Dashboard extends Component {
       // subscriptionReducer,
       // addSubscriptionRequest,
       dashboardData,
-      redirectTo
-      // profileInfo
+      redirectTo,
+      profileInfo
     } = this.props;
     // const { modelDetails } = modelInfoReducer;
     // const { openSubscriptionModel, openSubPayementModel } = modelDetails;
@@ -285,25 +285,31 @@ class Dashboard extends Component {
       };
     });
     return (
-      <div className="animated fadeIn dashboard-container ">
-        <Row>
+      <div className="animated fadeIn dashboard-container dashboard-warp">
+        <Row className={"m-0"}>
           <Col xs="12" sm="12" lg="12">
             <Card className={"white-card"}>
               <CardBody className={"custom-card-body position-relative"}>
-                <Row>
+                <Row className={"m-0"}>
                   <Col sm={"12"}>
-                    <DashboardPlanDetails />
+                    <DashboardPlanDetails
+                      profileInfo={profileInfo.profileInfo}
+                    />
                   </Col>
                   {actualCards.map((card, index) => {
                     return (
-                      <Col sm={"3"} key={index} className={"dashboard-card"}>
+                      <Col
+                        sm={"3"}
+                        key={index}
+                        className={"dashboard-card"}
+                      >
                         <CardComponent redirectTo={redirectTo} {...card} />
                       </Col>
                     );
                   })}
                 </Row>
                 <br />
-                <Row>
+                <Row className={"m-0"}>
                   <Col sm={"6"}>
                     <InvoiceChart
                       customerSales={customerSales}

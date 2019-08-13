@@ -96,7 +96,7 @@ export class VehicleInfo extends Component {
     const { vehicleData, modelInfoReducer } = this.props
     const { modelDetails } = modelInfoReducer
     return (
-      <div className={"custom-form-modal"}>
+      <div className={"custom-form-modal p-4"}>
         <Row className="justify-content-center">
           <Col md="6">
             <FormGroup>
@@ -247,10 +247,7 @@ export class VehicleInfo extends Component {
           </Col>
           <Col md="6">
             <FormGroup>
-              <Label
-                htmlFor="name"
-                className="customer-modal-text-style"
-              >
+              <Label htmlFor="name" className="customer-modal-text-style">
                 Sub Model
               </Label>
               <div className={"input-block"}>
@@ -268,10 +265,7 @@ export class VehicleInfo extends Component {
         <Row className="justify-content-center">
           <Col md="6">
             <FormGroup>
-              <Label
-                htmlFor="name"
-                className="customer-modal-text-style"
-              >
+              <Label htmlFor="name" className="customer-modal-text-style">
                 Engine Size
               </Label>
               <div className={"input-block"}>
@@ -288,10 +282,7 @@ export class VehicleInfo extends Component {
           </Col>
           <Col md="6">
             <FormGroup>
-              <Label
-                htmlFor="name"
-                className="customer-modal-text-style"
-              >
+              <Label htmlFor="name" className="customer-modal-text-style">
                 Production Date
               </Label>
               <div className={"input-block"}>
@@ -310,10 +301,7 @@ export class VehicleInfo extends Component {
         <Row className="justify-content-center">
           <Col md="6">
             <FormGroup>
-              <Label
-                htmlFor="name"
-                className="customer-modal-text-style"
-              >
+              <Label htmlFor="name" className="customer-modal-text-style">
                 Transmission
               </Label>
               <Input
@@ -322,16 +310,12 @@ export class VehicleInfo extends Component {
                 value={transmissionSelected}
                 name="transmissionSelected"
                 id="matrixId"
-              >
-              </Input>
+              />
             </FormGroup>
           </Col>
           <Col md="6">
             <FormGroup>
-              <Label
-                htmlFor="name"
-                className="customer-modal-text-style"
-              >
+              <Label htmlFor="name" className="customer-modal-text-style">
                 Drivetrain
               </Label>
               <Input
@@ -340,18 +324,14 @@ export class VehicleInfo extends Component {
                 name="drivetrainSelected"
                 value={drivetrainSelected}
                 id="matrixId"
-              >
-              </Input>
+              />
             </FormGroup>
           </Col>
         </Row>
         <Row className="justify-content-center">
           <Col md="12">
             <FormGroup>
-              <Label
-                htmlFor="name"
-                className="customer-modal-text-style"
-              >
+              <Label htmlFor="name" className="customer-modal-text-style">
                 Notes
               </Label>
               <Input
@@ -367,17 +347,22 @@ export class VehicleInfo extends Component {
           </Col>
         </Row>
         <div className={"text-center"}>
-          <Button onClick={this.toggleEditVehicle} color={"primary"}>Update Vehicle Details</Button>
+          <Button
+            onClick={this.toggleEditVehicle}
+            color={""}
+            className={"btn-theme"}
+          >
+            Update Vehicle Details
+          </Button>
         </div>
-        {
-          vehicleData ?
-            <CrmEditVehicleModal
-              vehicleEditModalOpen={modelDetails.vehicleEditModel}
-              handleEditVehicleModal={this.toggleEditVehicle}
-              submitUpdateVehicleFun={this.submitUpdateVehicle}
-              vehicleData={vehicleData}
-            /> : null
-        }
+        {vehicleData ? (
+          <CrmEditVehicleModal
+            vehicleEditModalOpen={modelDetails.vehicleEditModel}
+            handleEditVehicleModal={this.toggleEditVehicle}
+            submitUpdateVehicleFun={this.submitUpdateVehicle}
+            vehicleData={vehicleData}
+          />
+        ) : null}
       </div>
     );
   }

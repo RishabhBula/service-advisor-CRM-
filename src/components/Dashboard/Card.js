@@ -28,7 +28,8 @@ class CardComponent extends Component {
               redirectTo(url);
             }}
           >
-            View All
+            View All{" "}
+            <i class="icon-arrow-right icons" />
           </a>
         </div>
       </div>

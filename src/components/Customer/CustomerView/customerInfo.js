@@ -202,9 +202,9 @@ export class CustomerInfo extends Component {
       }
     }
     return (
-      <div className="custom-form-modal">
+      <div className="custom-form-modal pl-4 pr-4 pt-4">
         <div>
-          <Row className="justify-content-center">
+          <Row className="justify-content-center ">
             <Col md="6">
               <FormGroup>
                 <Label htmlFor="name" className="customer-modal-text-style">
@@ -643,7 +643,7 @@ export class CustomerInfo extends Component {
             : null}
         </Row> */}
         <div className={"text-center"}>
-          <Button onClick={this.toggleEditModal} color={"primary"}>Update Customer Details</Button>
+          <Button onClick={this.toggleEditModal} color={""} className={"btn-theme"}>Update Customer Details</Button>
         </div>
         {
           customerDetails && Object.entries(customerDetails) ?

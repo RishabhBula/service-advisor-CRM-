@@ -242,7 +242,9 @@ class Parts extends Component {
                       Filter by
                     </option>
                     <option value={"critical"}>Critical Quantity</option>
-                    <option value={"ncritical"}>Non-Critical Quantity</option>
+                    <option value={"ncritical"}>
+                      Non-Critical Quantity
+                    </option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -262,8 +264,12 @@ class Parts extends Component {
                     <option value={"qhtol"}>Quantity(High to High)</option>
                     <option value={"cltoh"}>Cost(Low to High)</option>
                     <option value={"chtol"}>Cost(High to High)</option>
-                    <option value={"rpltoh"}>Retail Price(Low to High)</option>
-                    <option value={"rphtol"}>Retail Price(High to High)</option>
+                    <option value={"rpltoh"}>
+                      Retail Price(Low to High)
+                    </option>
+                    <option value={"rphtol"}>
+                      Retail Price(High to High)
+                    </option>
                     <option value={"cdltoh"}>Last created</option>
                   </Input>
                 </FormGroup>
@@ -285,7 +291,9 @@ class Parts extends Component {
                         }}
                         isClearable={true}
                         noOptionsMessage={() =>
-                          vendorInput ? "No vendor found" : "Type vendor name"
+                          vendorInput
+                            ? "No vendor found"
+                            : "Type vendor name"
                         }
                       />
                     </FormGroup>
@@ -367,7 +375,9 @@ class Parts extends Component {
               parts.map((part, index) => {
                 return (
                   <tr key={index}>
-                    <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
+                    <td>
+                      {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
+                    </td>
                     <td className={"text-capitalize"}>
                       <div className={"font-weight-semibold"}>
                         {part.description || notExist}
@@ -436,7 +446,9 @@ class Parts extends Component {
                               <span className={"dollar-price"}>
                                 <i className="fa fa-dollar dollar-icon" />
                                 {part.retailPrice
-                                  ? currencyFormatter.format(part.retailPrice)
+                                  ? currencyFormatter.format(
+                                      part.retailPrice
+                                    )
                                   : "notExist"}
                               </span>
                             </div>
@@ -456,7 +468,9 @@ class Parts extends Component {
                     </td>
                     <td
                       className={
-                        part.quantity > part.criticalQuantity ? "pl-4" : null
+                        part.quantity > part.criticalQuantity
+                          ? "pl-4"
+                          : null
                       }
                     >
                       <span className={"qty-value"}>
@@ -469,7 +483,9 @@ class Parts extends Component {
                       )}
                     </td>
                     <td>
-                      <div>{moment(part.createdAt).format("MMM Do YYYY")}</div>
+                      <div>
+                        {moment(part.createdAt).format("MMM Do YYYY")}
+                      </div>
                       <div>{moment(part.createdAt).format("h:mm a")}</div>
                     </td>
                     <td className={"text-center"}>
@@ -514,13 +530,15 @@ class Parts extends Component {
                 <td className={"text-center"} colSpan={12}>
                   {filterApplied ? (
                     <NoDataFound
-                      message={"No Part details found related to your search"}
+                      message={
+                        "No Part details found related to your search"
+                      }
                       noResult
                     />
                   ) : (
                     <NoDataFound
                       showAddButton
-                      message={"Currently there are no Part details added."}
+                      message={"Currently there are no Parts added."}
                       onAddClick={onAddClick}
                     />
                   )}

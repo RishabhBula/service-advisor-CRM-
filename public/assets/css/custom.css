@@ -82,6 +82,7 @@
   color: #fff !important;
   font-size: 15px !important;
   font-weight: 600 !important;
+  font-family: "FrutigerNeueLTPro-Bold";
 }
 .btn-theme:hover {
   background-color: #df9c0f !important;
@@ -1240,6 +1241,11 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .inventory-nav li .nav-link.active {
   background-color: #8157ee;
   border-color: #8157ee;
+}
+.inventory-nav li .nav-link.active:hover{
+  background: linear-gradient(to bottom, #f6b42a, #df900c);
+  color: #fff;
+  border-color: #df900c;
 }
 .vehicles-select-color {
   display: inline-block;
@@ -2766,7 +2772,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .new-Order-btn{
   position: absolute;
-  top: 234px;
+  top: 240px;
   right: 19px;
 }
 .new-Order-btn button{
