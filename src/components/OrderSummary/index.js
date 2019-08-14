@@ -166,8 +166,8 @@ class OrderSummary extends Component {
           <div>Total Tires : <Dollor value={serviceCal.totalTires.toFixed(2)} /></div>
           <div>Total Labor : <Dollor value={serviceCal.totalLabor.toFixed(2)} /></div>
           <div className={"pt-2 border-top mt-2"}>Sub Total: <Dollor value={serviceCal.orderSubTotal.toFixed(2)} /></div>
-          <div>Total Tax : <Dollor value={serviceCal.totalTax.toFixed(2)} /></div>
-          <div>Total Discount : <Dollor value={serviceCal.totalDiscount.toFixed(2)} /></div>
+          <div>Total Tax : + <Dollor value={serviceCal.totalTax.toFixed(2)} /></div>
+          <div>Total Discount : - <Dollor value={serviceCal.totalDiscount.toFixed(2)} /></div>
                 <div className={"pt-2 border-top mt-2 grand-total"}>Grand Total : <Dollor value={serviceCal.orderGrandTotal.toFixed(2)} /></div>
           </div>
           <div className={"clearfix"}></div>

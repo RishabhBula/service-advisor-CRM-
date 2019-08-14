@@ -461,7 +461,7 @@ class FleetList extends Component {
                                   <div className="text-capitalize">
                                     {data.phone ? data.phone : "mobile"}
                                     {"  "}
-                                    <b>{data.phone ? "|" : null}</b>
+                                    <b>|</b>
                                     {"  "}
                                     {data.value ? (
                                       <a

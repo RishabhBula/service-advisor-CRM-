@@ -793,7 +793,7 @@ export class CrmFleetEditModal extends Component {
                                 Percent Discount
                               </Label>
                               <FormGroup>
-                                <Col md="5" className={"p-0"}>
+                                <Col md="6" className={"p-0"}>
                                   <div className={"input-block"}>
                                     <InputGroup>
                                       <Input

@@ -486,7 +486,7 @@ class Inspection extends Component {
                 onClick={this.toggleSentInspection}
               >
                 <i className="icons cui-cursor" />
-                &nbsp; Sent Inspection
+                &nbsp; Send Inspection
               </span>
               <span
                 onClick={() => this.downloadPDF(false)}
