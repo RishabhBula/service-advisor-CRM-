@@ -129,24 +129,10 @@ const getReportsByCustomerdays = async (req, res) => {
               }
             },
             {
-              $lookup: {
-                from: "paymentrecords",
-                localField: "paymentId",
-                foreignField: "_id",
-                as: "payments"
-              }
-            },
-            {
-              $unwind: "$payments"
-            },
-            {
-              $unwind: "$payments.payedAmount"
-            },
-            {
               $group: {
                 _id: null,
-                paid: { $sum: "$payments.payedAmount.amount" },
-                due: { $sum: "$payments.payedAmount.remainingAmount" }
+                paid: { $sum: "$orderTotal" },
+                due: { $sum: "$orderTotal" }
               }
             }
           ]);
