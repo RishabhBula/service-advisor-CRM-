@@ -79,9 +79,7 @@ const getDateRanges = () => {
       start: moment()
         .subtract(30, "days")
         .format("YYYY-MM-DD"),
-      end: moment()
-        .subtract(0, "days")
-        .format("YYYY-MM-DD")
+      end: moment().format("YYYY-MM-DD")
     },
     [CustomerAgeTypes.THIRTY_DAYS]: {
       start: moment()

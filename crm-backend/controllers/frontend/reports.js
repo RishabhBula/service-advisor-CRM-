@@ -94,6 +94,7 @@ const getReportsByCustomerdays = async (req, res) => {
         cusomer: customer,
         customerId: result[i].customerId
       };
+      console.log(customer);
       for (const key in dates) {
         if (dates.hasOwnProperty(key)) {
           const date = dates[key];
@@ -121,40 +122,25 @@ const getReportsByCustomerdays = async (req, res) => {
                       $gte: start,
                       $lte: end
                     }
-                  },
-                  {
-                    isInvoice: true
                   }
                 ]
               }
             },
             {
-              $lookup: {
-                from: "paymentrecords",
-                localField: "paymentId",
-                foreignField: "_id",
-                as: "payments"
-              }
-            },
-            {
-              $unwind: "$payments"
-            },
-            {
-              $unwind: "$payments.payedAmount"
-            },
-            {
               $group: {
-                _id: null,
-                paid: { $sum: "$payments.payedAmount.amount" },
-                due: { $sum: "$payments.payedAmount.remainingAmount" }
+                _id: "$_id",
+                paid: { $first: "$orderTotal" },
+                due: {
+                  $sum: { $subtract: ["$orderTotal", "$remainingAmount"] }
+                }
               }
             }
           ]);
           dataToSend[key] = invoice[0]
             ? parseFloat(invoice[0].paid) + parseFloat(invoice[0].due)
             : 0;
-          due += invoice[0] ? parseFloat(invoice[0].due) : 0;
-          paid += invoice[0] ? parseFloat(invoice[0].paid) : 0;
+          due += invoice[0] ? parseFloat(invoice[0].due || 0) : 0;
+          paid += invoice[0] ? parseFloat(invoice[0].paid || 0) : 0;
         }
       }
       resp.push({ ...dataToSend, due, paid });
