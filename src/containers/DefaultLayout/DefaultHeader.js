@@ -10,7 +10,7 @@ import {
   Nav,
   NavItem
 } from "reactstrap";
-import { AppRoutes } from "../../config/AppRoutes"
+import { AppRoutes } from "../../config/AppRoutes";
 // import SearchBar from "../../components/common/SearchBar";
 import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
@@ -29,31 +29,31 @@ class DefaultHeader extends Component {
     this.state = {
       openCreate: false,
       selectedDate: new Date()
-    }
+    };
   }
   toggleCustAndVehicle = () => {
     this.props.toggleCustAndVehicle();
   };
   handleNewOrder = () => {
-    this.props.addOrderRequest()
-  }
+    this.props.addOrderRequest();
+  };
   handleInventrySection = () => {
-    this.props.redirectTo(AppRoutes.INVENTORY_STATATICS.url)
-  }
+    this.props.redirectTo(AppRoutes.INVENTORY_STATATICS.url);
+  };
   toggleCreateModal = e => {
     e.preventDefault();
     this.setState({
-      openCreate: !this.state.openCreate,
+      openCreate: !this.state.openCreate
     });
   };
   handleAddFleet = data => {
     try {
       this.props.addFleet(data);
       this.setState({
-        openCreate: !this.state.openCreate,
+        openCreate: !this.state.openCreate
       });
     } catch (error) {
-      logger(error)
+      logger(error);
     }
   };
   onTypeHeadStdFun = data => {
@@ -65,9 +65,9 @@ class DefaultHeader extends Component {
   toggleAddAppointModal = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { showAddAppointmentModal } = modelDetails;
+    const { showAddAppointmentModalHeader } = modelDetails;
     this.props.modelOperate({
-      showAddAppointmentModal: !showAddAppointmentModal
+      showAddAppointmentModalHeader: !showAddAppointmentModalHeader
     });
     this.setState({
       editData: {},
@@ -79,21 +79,21 @@ class DefaultHeader extends Component {
       permissions,
       rateStandardListReducer,
       profileInfoReducer,
-      showAddAppointmentModal,
+      showAddAppointmentModalHeader,
       matrixListReducer,
       getCustomerData,
       getVehicleData,
       getOrders,
       addAppointment,
       getUserData,
-      getMatrix } = this.props;
-    const { openCreate, selectedDate } = this.state
+      getMatrix
+    } = this.props;
+    const { openCreate, selectedDate } = this.state;
     // eslint-disable-next-line
     return (
       <React.Fragment>
         <div className="custom-main-logo">
           <AppSidebarToggler className="d-lg-none" display="md" mobile />
-
 
           {/* <AppSidebarToggler
             children={<i className="fa fa-bars" />}
@@ -207,7 +207,7 @@ class DefaultHeader extends Component {
           getPriceMatrix={getMatrix}
         />
         <AddAppointment
-          isOpen={showAddAppointmentModal}
+          isOpen={showAddAppointmentModalHeader}
           toggleAddAppointModal={this.toggleAddAppointModal}
           getCustomerData={getCustomerData}
           getVehicleData={getVehicleData}

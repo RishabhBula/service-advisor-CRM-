@@ -99,7 +99,7 @@ const startTimer = async (req, res) => {
     technicianId,
     serviceId,
     orderId,
-    startDateTime: new Date
+    startDateTime: new Date()
   });
   await UserModel.updateOne(
     {
@@ -140,35 +140,36 @@ const startTimer = async (req, res) => {
  */
 const stopTimer = async (req, res) => {
   const { body } = req;
-  const { technicianId, serviceId, orderId } = body;
+  const { technicianId, serviceId } = body;
   if (timeClocks[`${technicianId}`]) {
     // return res.status(400).json({
     //   message: "This technician is not working on any task."
     // });
     timeClocks[`${technicianId}`].destroy();
   }
-  const result = await TimeClock.findOne(
-    {
-      technicianId: technicianId,
-      serviceId: serviceId,
-      isCompleted: false
-    },
-  ).populate("technicianId orderId");
+  const result = await TimeClock.findOne({
+    technicianId: technicianId,
+    serviceId: serviceId,
+    isCompleted: false
+  }).populate("technicianId orderId");
   /*  if (!result) {
      return res.status(400).json({
        message: "Time data not found",
        success: false
      })
    } */
-  const convertedDuration = result.duration / 3600
+  const convertedDuration = result.duration / 3600;
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
       endDateTime: new Date(),
-      total: parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) || 0,
-      activity: `Order (#${result.orderId.orderId}) ${result.orderId.orderName || 'N/A'}`,
+      total:
+        parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) ||
+        0,
+      activity: `Order (#${result.orderId.orderId}) ${result.orderId
+        .orderName || "N/A"}`,
       isCompleted: true
     }
-  })
+  });
   await UserModel.updateOne(
     {
       _id: technicianId
@@ -180,7 +181,7 @@ const stopTimer = async (req, res) => {
     }
   );
   if (result) {
-    const orderUpdate = await OrderModal.update(
+    await OrderModal.update(
       {
         _id: mongoose.Types.ObjectId(result.orderId._id)
       },
@@ -229,7 +230,7 @@ const getTimeLogOfTechnician = async (req, res) => {
     const { technicianId } = query;
     const result = await TimeClock.find({
       technicianId: technicianId
-    }).populate("technicianId orderId")
+    }).populate("technicianId orderId");
     return res.status(200).json({
       message: "Timer get success!",
       data: result || []

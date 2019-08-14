@@ -4,6 +4,7 @@ const {
   VehicleModel,
   UserModel
 } = require("./../../models");
+const { CustomerAgeTypes } = require("./../../config/cusomer");
 const moment = require("moment");
 const { Types } = require("mongoose");
 const { ObjectId } = Types;
@@ -72,17 +73,15 @@ const getOverview = async (req, res) => {
 /**
  *
  */
-const getCustomers = async (id, parentId) => {
-  const dates = {
-    "0-30 days": {
+const getDateRanges = () => {
+  return {
+    [CustomerAgeTypes.ZERO_DAYS]: {
       start: moment()
         .subtract(30, "days")
         .format("YYYY-MM-DD"),
-      end: moment()
-        .subtract(0, "days")
-        .format("YYYY-MM-DD")
+      end: moment().format("YYYY-MM-DD")
     },
-    "30-60 days": {
+    [CustomerAgeTypes.THIRTY_DAYS]: {
       start: moment()
         .subtract(60, "days")
         .format("YYYY-MM-DD"),
@@ -90,7 +89,7 @@ const getCustomers = async (id, parentId) => {
         .subtract(30, "days")
         .format("YYYY-MM-DD")
     },
-    "60-90 days": {
+    [CustomerAgeTypes.SIXTY_DAYS]: {
       start: moment()
         .subtract(60, "days")
         .format("YYYY-MM-DD"),
@@ -98,7 +97,7 @@ const getCustomers = async (id, parentId) => {
         .subtract(90, "days")
         .format("YYYY-MM-DD")
     },
-    "90 and above": {
+    [CustomerAgeTypes.NINETY_DAYS]: {
       start: moment()
         .subtract(90, "days")
         .format("YYYY-MM-DD"),
@@ -107,11 +106,17 @@ const getCustomers = async (id, parentId) => {
         .format("YYYY-MM-DD")
     }
   };
+};
+/**
+ *
+ */
+const getCustomers = async (id, parentId) => {
+  const dates = getDateRanges();
   let res = {
-    "0-30 days": [],
-    "30-60 days": [],
-    "60-90 days": [],
-    "90 and above": []
+    [CustomerAgeTypes.ZERO_DAYS]: [],
+    [CustomerAgeTypes.THIRTY_DAYS]: [],
+    [CustomerAgeTypes.SIXTY_DAYS]: [],
+    [CustomerAgeTypes.NINETY_DAYS]: []
   };
   for (const i in dates) {
     if (dates.hasOwnProperty(i)) {
@@ -259,4 +264,4 @@ const customerSales = async (req, res) => {
 /**
  *
  */
-module.exports = { getOverview, customerSales };
+module.exports = { getOverview, customerSales, getDateRanges };

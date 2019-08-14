@@ -357,7 +357,6 @@ const getOrderDetails = async (req, res) => {
     const orderId = query._id;
     const customerId = query.customerId;
     const vehicleId = query.vehicleId;
-    const technicianId = query.technicianId
     let condition = {};
     condition["$and"] = [
       {
@@ -428,9 +427,9 @@ const getOrderDetails = async (req, res) => {
       });
     }
     const result2 = await Orders.find(condition).populate({
-      path: "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId paymentId"
-    }
-    );
+      path:
+        "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId timeClockId paymentId"
+    });
     const result1 = await Orders.populate(result2, {
       path:
         "serviceId.serviceId.technician timeClockId.technicianId timeClockId.orderId"
@@ -464,7 +463,7 @@ const getOrderDetails = async (req, res) => {
           if (
             element.messageId &&
             element.messageId.receiverId.toString() ===
-            currentUser.id.toString()
+              currentUser.id.toString()
           ) {
             element.messageId.isSender = false;
           }

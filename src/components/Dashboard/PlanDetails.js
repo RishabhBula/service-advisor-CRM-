@@ -1,5 +1,4 @@
 import React from "react";
-import CheckIcon from "./../../assets/check.svg";
 import moment from "moment";
 const DashboardPlanDetails = props => (
   <div className={"dashboard-plan-container dashboard-block-container"}>
@@ -27,4 +26,3 @@ const DashboardPlanDetails = props => (
 );
 
 export default DashboardPlanDetails;
- 
