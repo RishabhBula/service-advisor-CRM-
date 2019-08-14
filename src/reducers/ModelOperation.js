@@ -29,6 +29,7 @@ const initialAuthState = {
     paymentModalOpen: false,
     showAddAppointmentModal: false,
     showAppointmentDetailModal: false,
+    showAddAppointmentModalHeader: false,
     openSubscriptionModel: false,
     openSubPayementModel: false
   }

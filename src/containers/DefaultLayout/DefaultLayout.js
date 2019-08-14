@@ -28,7 +28,7 @@ import {
 import routes, { BreadCrumbRoutes } from "../../routes";
 import FullPageLoader from "../Loader/FullPageLoader";
 import Loader from "./../Loader/Loader";
-import Avtar from "../../components/common/Avtar"
+import Avtar from "../../components/common/Avtar";
 import {
   AppAside,
   AppBreadcrumb,
@@ -64,7 +64,7 @@ class DefaultLayout extends Component {
       isCustVehiclemodal: false,
       isURLChecked: false,
       shopLogo: "",
-      parentId: ''
+      parentId: ""
     };
   }
 
@@ -101,9 +101,12 @@ class DefaultLayout extends Component {
       const ind = ValidatedRoutes.findIndex(d => d.url === currentPage);
 
       logger(ind, currentPage, location);
-      const isWildCardRoute = WildCardRoutes.indexOf(currentPage) > -1
+      const isWildCardRoute = WildCardRoutes.indexOf(currentPage) > -1;
       if (ind > -1 || isWildCardRoute) {
-        if (profileInfo.permissions[ValidatedRoutes[ind].authKey] || isWildCardRoute) {
+        if (
+          profileInfo.permissions[ValidatedRoutes[ind].authKey] ||
+          isWildCardRoute
+        ) {
           logger("Allowed to use");
           this.setState({
             hasAccess: true
@@ -132,9 +135,8 @@ class DefaultLayout extends Component {
       this.setState({
         shopLogo: this.props.profileInfoReducer.profileInfo.shopLogo,
         parentId: this.props.profileInfoReducer.profileInfo.parentId
-      })
+      });
     }
-
   }
   signOut() {
     this.props.logoutUser();
@@ -164,11 +166,7 @@ class DefaultLayout extends Component {
     }
   };
   renderSubscriptionModal = profileInfo => {
-    const {
-      isInTrialPeriod,
-      planId,
-      planExiprationDate
-    } = profileInfo
+    const { isInTrialPeriod, planId, planExiprationDate } = profileInfo;
     const {
       getSubscriptionPlanRequest,
       subscriptionReducer,
@@ -177,10 +175,8 @@ class DefaultLayout extends Component {
       modelInfoReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const {
-      openSubPayementModel
-    } = modelDetails;
-    const d1 = moment(new Date()).toDate()
+    const { openSubPayementModel } = modelDetails;
+    const d1 = moment(new Date()).toDate();
     const d2 = new Date(planExiprationDate);
     const diffTime = Math.abs(d1.getTime() - d2.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -198,7 +194,7 @@ class DefaultLayout extends Component {
     } else {
       return null;
     }
-  }
+  };
   navigation = permissions => {
     const navItems = {
       items: []
@@ -233,7 +229,8 @@ class DefaultLayout extends Component {
     );
   };
   render() {
-    const { profileInfoReducer,
+    const {
+      profileInfoReducer,
       addOrderRequest,
       rateStandardListReducer,
       matrixListReducer,
@@ -246,76 +243,73 @@ class DefaultLayout extends Component {
       getVehicleData,
       getOrders,
       addAppointment,
-      setLabourRateDefault } = this.props;
+      setLabourRateDefault
+    } = this.props;
     const { isLoading, profileInfo } = profileInfoReducer;
     const { permissions } = profileInfo;
     const { hasAccess, shopLogo } = this.state;
-    const parentId = profileInfoReducer.profileInfo.parentId || ''
-    const providerCompanyName = profileInfoReducer.profileInfo.companyName || parentId.companyName;
+    const parentId = profileInfoReducer.profileInfo.parentId || "";
+    const providerCompanyName =
+      profileInfoReducer.profileInfo.companyName || parentId.companyName;
     const isLogoLoading = profileInfoReducer.isLogoLoading;
     const { modelDetails } = modelInfoReducer;
-    const {
-      showAddAppointmentModal,
-    } = modelDetails;
+    const { showAddAppointmentModalHeader } = modelDetails;
     return isLoading ? (
       <FullPageLoader />
     ) : (
-        <div className="app">
-          {this.renderCompanyDetailsPopup(profileInfo || {})}
-          {this.renderSubscriptionModal(profileInfo || {})}
-          <AppHeader fixed>
-            <Suspense fallback={""}>
-              <DefaultHeader
-                onLogout={e => this.signOut(e)}
-                permissions={permissions || {}}
-                shopLogo={shopLogo ? shopLogo : null}
-                toggleCustAndVehicle={this.toggleCustAndVehicleProps}
-                addOrderRequest={addOrderRequest}
-                rateStandardListReducer={rateStandardListReducer}
-                matrixListReducer={matrixListReducer}
-                profileInfoReducer={profileInfoReducer}
-                addFleet={addFleet}
-                getMatrix={getMatrix}
-                getStdList={getStdList}
-                setLabourRateDefault={setLabourRateDefault}
-                showAddAppointmentModal={showAddAppointmentModal}
-                getUserData={getUserData}
-                getCustomerData={getCustomerData}
-                getVehicleData={getVehicleData}
-                getOrders={getOrders}
-                addAppointment={addAppointment}
-                {...this.props}
-              />
-            </Suspense>
-          </AppHeader>
-          <div className="app-body">
-            <AppSidebar className="custom-sidebar" fixed display="lg">
-              {shopLogo || parentId.shopLogo ? (
-                <div className={"provider-logo"}>
-                  {!isLogoLoading ? (
-                    <img src={shopLogo || parentId.shopLogo} alt={"logo"} />
-                  ) : (
-                      <img
-                        src={
-                          "https://loading.io/spinners/google/index.flip-circle-google-loader-gif.svg"
-                        }
-                        alt={"logo"}
-                      />
-                    )}
-                </div>
-              ) : (
-                  <div
-                    className={"provider-logo company-name"}
-                    id={"comapnyName"}
-                  >
-                    <Avtar value={providerCompanyName} class={"name"} />
-                    <UncontrolledTooltip target={"comapnyName"}>
-                      {profileInfo.companyName}
-                    </UncontrolledTooltip>
-                  </div>
+      <div className="app">
+        {this.renderCompanyDetailsPopup(profileInfo || {})}
+        {this.renderSubscriptionModal(profileInfo || {})}
+        <AppHeader fixed>
+          <Suspense fallback={""}>
+            <DefaultHeader
+              onLogout={e => this.signOut(e)}
+              permissions={permissions || {}}
+              shopLogo={shopLogo ? shopLogo : null}
+              toggleCustAndVehicle={this.toggleCustAndVehicleProps}
+              addOrderRequest={addOrderRequest}
+              rateStandardListReducer={rateStandardListReducer}
+              matrixListReducer={matrixListReducer}
+              profileInfoReducer={profileInfoReducer}
+              addFleet={addFleet}
+              getMatrix={getMatrix}
+              getStdList={getStdList}
+              setLabourRateDefault={setLabourRateDefault}
+              showAddAppointmentModalHeader={showAddAppointmentModalHeader}
+              getUserData={getUserData}
+              getCustomerData={getCustomerData}
+              getVehicleData={getVehicleData}
+              getOrders={getOrders}
+              addAppointment={addAppointment}
+              {...this.props}
+            />
+          </Suspense>
+        </AppHeader>
+        <div className="app-body">
+          <AppSidebar className="custom-sidebar" fixed display="lg">
+            {shopLogo || parentId.shopLogo ? (
+              <div className={"provider-logo"}>
+                {!isLogoLoading ? (
+                  <img src={shopLogo || parentId.shopLogo} alt={"logo"} />
+                ) : (
+                  <img
+                    src={
+                      "https://loading.io/spinners/google/index.flip-circle-google-loader-gif.svg"
+                    }
+                    alt={"logo"}
+                  />
                 )}
-              <div className={"company-logo"}>{providerCompanyName}</div>
-              {/* <AppNavbarBrand
+              </div>
+            ) : (
+              <div className={"provider-logo company-name"} id={"comapnyName"}>
+                <Avtar value={providerCompanyName} class={"name"} />
+                <UncontrolledTooltip target={"comapnyName"}>
+                  {profileInfo.companyName}
+                </UncontrolledTooltip>
+              </div>
+            )}
+            <div className={"company-logo"}>{providerCompanyName}</div>
+            {/* <AppNavbarBrand
                 full={{
                   src: shopLogo || "/assets/img/logo-white.svg",
                   alt: "Service Adviser",
@@ -328,77 +322,77 @@ class DefaultLayout extends Component {
                 }}
               /> */}
 
-              <AppSidebarHeader />
-              <AppSidebarForm />
+            <AppSidebarHeader />
+            <AppSidebarForm />
 
-              <Suspense>
-                <AppSidebarNav
-                  navConfig={this.navigation(permissions || {})}
-                  {...this.props}
-                />
-              </Suspense>
-              <div className={"text-center nav-footer-logo"}>
-                <img
-                  src={ServiceAdvisorLogo}
-                  alt={"service-advisor"}
-                  width={70}
-                />
-                <div>Service Adviser</div>
-                {/* <span className={"powered-by-line"}>Powered by</span> */}
-              </div>
-              <AppSidebarFooter />
-              <AppSidebarMinimizer />
-            </AppSidebar>
-            <main className="main">
-              <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
-              <Container fluid>
-                {hasAccess ? (
-                  <>
-                    <Suspense fallback={<Loader />}>
-                      <Switch>
-                        {routes.map((route, idx) => {
-                          return route.component ? (
-                            <Route
-                              key={idx}
-                              path={route.path}
-                              exact={route.exact}
-                              name={route.name}
-                              render={props => (
-                                <route.component
-                                  {...props}
-                                  {...this.props}
-                                  permissions={permissions || {}}
-                                />
-                              )}
-                            />
-                          ) : null;
-                        })}
-                        <Redirect
-                          from={AppRoutes.HOME.url}
-                          to={AppRoutes.DASHBOARD.url}
-                        />
-                      </Switch>
-                    </Suspense>
-                  </>
-                ) : (
-                    <NoAccess redirectTo={this.props.redirectTo} />
-                  )}
-              </Container>
-            </main>
-            <AppAside fixed>
-              <Suspense fallback={""}>
-                <DefaultAside />
-              </Suspense>
-            </AppAside>
-          </div>
-          <AppFooter>
-            <Suspense fallback={""}>
-              <DefaultFooter />
+            <Suspense>
+              <AppSidebarNav
+                navConfig={this.navigation(permissions || {})}
+                {...this.props}
+              />
             </Suspense>
-          </AppFooter>
-          {this.customerAndVehicleModal()}
+            <div className={"text-center nav-footer-logo"}>
+              <img
+                src={ServiceAdvisorLogo}
+                alt={"service-advisor"}
+                width={70}
+              />
+              <div>Service Adviser</div>
+              {/* <span className={"powered-by-line"}>Powered by</span> */}
+            </div>
+            <AppSidebarFooter />
+            <AppSidebarMinimizer />
+          </AppSidebar>
+          <main className="main">
+            <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
+            <Container fluid>
+              {hasAccess ? (
+                <>
+                  <Suspense fallback={<Loader />}>
+                    <Switch>
+                      {routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component
+                                {...props}
+                                {...this.props}
+                                permissions={permissions || {}}
+                              />
+                            )}
+                          />
+                        ) : null;
+                      })}
+                      <Redirect
+                        from={AppRoutes.HOME.url}
+                        to={AppRoutes.DASHBOARD.url}
+                      />
+                    </Switch>
+                  </Suspense>
+                </>
+              ) : (
+                <NoAccess redirectTo={this.props.redirectTo} />
+              )}
+            </Container>
+          </main>
+          <AppAside fixed>
+            <Suspense fallback={""}>
+              <DefaultAside />
+            </Suspense>
+          </AppAside>
         </div>
-      );
+        <AppFooter>
+          <Suspense fallback={""}>
+            <DefaultFooter />
+          </Suspense>
+        </AppFooter>
+        {this.customerAndVehicleModal()}
+      </div>
+    );
   }
 }
 
@@ -407,7 +401,7 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   rateStandardListReducer: state.rateStandardListReducer,
   matrixListReducer: state.matrixListReducer,
-  subscriptionReducer: state.subscriptionReducer,
+  subscriptionReducer: state.subscriptionReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -417,17 +411,25 @@ const mapDispatchToProps = dispatch => ({
   onCompanyDetailsUdpate: data => dispatch(updateCompanyDetails(data)),
   modelOperate: data => dispatch(modelOpenRequest({ modelDetails: data })),
   addOrderRequest: () => dispatch(addOrderRequest()),
-  addFleet: data => { dispatch(fleetAddRequest(data)) },
-  getMatrix: (data) => { dispatch(getMatrixList(data)) },
-  getStdList: () => { dispatch(getRateStandardListRequest()) },
-  setLabourRateDefault: data => { dispatch(setRateStandardListStart(data)) },
+  addFleet: data => {
+    dispatch(fleetAddRequest(data));
+  },
+  getMatrix: data => {
+    dispatch(getMatrixList(data));
+  },
+  getStdList: () => {
+    dispatch(getRateStandardListRequest());
+  },
+  setLabourRateDefault: data => {
+    dispatch(setRateStandardListStart(data));
+  },
   getUserData: data => dispatch(getUsersList(data)),
   getCustomerData: data => dispatch(customerGetRequest(data)),
   getVehicleData: data => dispatch(vehicleGetRequest(data)),
   getOrders: data => dispatch(getOrderListForSelect(data)),
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   getSubscriptionPlanRequest: () => dispatch(getSubscriptionPlanRequest()),
-  addSubscriptionRequest: (data) => dispatch(addSubscriptionRequest(data))
+  addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data))
 });
 
 export default connect(
