@@ -64,7 +64,7 @@ class SendInspection extends Component {
         customerData: propsCustomerData,
         vehicleData: propsVehicleData,
         isEmail: propsCustomerData && propsCustomerData.email ? true : false,
-         isSms: propsCustomerData && propsCustomerData.phoneDetail && propsCustomerData.phoneDetail[0].value ? true : false,
+        isSms: propsCustomerData && propsCustomerData.phoneDetail && propsCustomerData.phoneDetail[0].value ? true : false,
         phone:
           propsCustomerData && propsCustomerData.phoneDetail
             ? propsCustomerData.phoneDetail[0].value
@@ -188,9 +188,9 @@ class SendInspection extends Component {
     const companyName = profileReducer.profileInfo.companyName || "";
 
     const receiverId = customerId;
-    const userId     = profileReducer ? profileReducer.profileInfo._id : '';
-    const senderId   = profileReducer.profileInfo._id;
-    const subdomain  = profileReducer.profileInfo.subdomain;
+    const userId = profileReducer ? profileReducer.profileInfo._id : '';
+    const senderId = profileReducer.profileInfo._id;
+    const subdomain = profileReducer.profileInfo.subdomain;
     const orderId =
       orderReducer && orderReducer.orderItems
         ? orderReducer.orderItems._id
@@ -313,6 +313,8 @@ class SendInspection extends Component {
    */
   handleReminder = e => {
     const { name, checked } = e.target;
+    console.log("%%%%%%%%%%%%%%%%%", name, checked);
+
     this.setState({
       [name]: checked
     });

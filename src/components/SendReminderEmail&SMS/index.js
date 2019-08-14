@@ -19,9 +19,9 @@ export class SendEmailAndSMS extends Component {
         </div>
         <h4 className={"pb-2 pt-2"}>{headingTitle}</h4>
         {/* <img src={"/assets/img/email.svg"} width={"70"} alt={"Email"} /> */}
-          <p className={"text-muted"}>
-            Allow sent messages on Email or SMS.
-            Click any of one option or both to sent notification.
+        <p className={"text-muted"}>
+          Allow sent messages on Email or SMS.
+          Click any of one option or both to sent notification.
           </p>
         <div className={"d-flex notification-block"}>
           <div className={"notifiction-option"}>

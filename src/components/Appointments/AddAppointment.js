@@ -67,7 +67,7 @@ export default class AddAppointment extends Component {
     editData: oldEditData,
     isOpen: oldIsOpen
   }) {
-    const { isOpen, date, editData } = this.props;
+    const { isOpen, date, editData, orderData } = this.props;
     if (date !== prevDate) {
       this.setState({
         appointmentDate: date
@@ -75,6 +75,39 @@ export default class AddAppointment extends Component {
     }
     if (isOpen !== oldIsOpen) {
       this.resetState();
+    }
+    if (isOpen !== oldIsOpen && orderData) {
+      if (orderData) {
+        const customerId = orderData.customerId ? orderData.customerId : null
+        const vehicleId = orderData.vehicleId ? orderData.vehicleId : null
+        const orderId = orderData ? orderData : null
+        this.setState({
+          selectedCustomer: {
+            data: customerId,
+            label: `${customerId.firstName} ${customerId.lastName}`,
+            value: customerId._id
+          },
+          selectedVehicle: vehicleId
+            ? {
+              data: vehicleId,
+              label: `${vehicleId.make}`,
+              value: vehicleId._id
+            }
+            : null,
+          selectedOrder: orderId
+            ? {
+              data: orderId,
+              label: `${orderId.orderName ? orderId.orderName : "Unnamed Order"}`,
+              value: orderId._id
+            }
+            : null,
+          email: customerId.email ? customerId.email : null,
+          isEmail: customerId.email ? true : false,
+          isSms: customerId.phoneDetail && customerId.phoneDetail.length ? true : false,
+          phone: customerId.phoneDetail && customerId.phoneDetail.length ? customerId.phoneDetail[0].value : null
+        })
+
+      }
     }
     /**
      *
@@ -129,7 +162,9 @@ export default class AddAppointment extends Component {
               label: `${tech.firstName} ${tech.lastName}`,
               value: tech._id
             };
-          })
+          }),
+          isEmail: customerId.email ? true : false,
+          isSms: customerId.phoneDetail && customerId.phoneDetail.length ? true : false,
         });
       }
     }
@@ -149,6 +184,9 @@ export default class AddAppointment extends Component {
       })
     }
     if (e.target.name === "phone" && e.target.value) {
+      if (isNaN(e.target.value)) {
+        return
+      }
       this.setState({
         isSms: true
       })
@@ -600,7 +638,7 @@ export default class AddAppointment extends Component {
                             ? "No customer found"
                             : "Type customer name"
                         }
-                        // menuIsOpen={true}
+                      // menuIsOpen={true}
                       />
                       {errors.selectedCustomer ? (
                         <FormFeedback>
@@ -757,7 +795,7 @@ export default class AddAppointment extends Component {
                         isClearable={true}
                         noOptionsMessage={() =>
                           this.isTechnicianReqSent ||
-                          selectedTechincians.length
+                            selectedTechincians.length
                             ? "No techinician found"
                             : "Type name of technician"
                         }
