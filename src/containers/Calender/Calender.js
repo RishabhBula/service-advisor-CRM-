@@ -15,6 +15,7 @@ import {
   getAppointmentDetails,
   updateAppointmentRequest,
   getUsersList,
+  vehicleAddRequest,
   customerAddRequest
 } from "../../actions";
 import Loader from "../Loader/Loader";
@@ -135,7 +136,10 @@ class Calender extends Component {
       modelOperate,
       addCustomer,
       profileInfoReducer,
-      customerFleetReducer
+      customerFleetReducer,
+      addVehicle,
+      customerInfoReducer,
+      vehicleAddInfoReducer
     } = this.props;
     const { isLoading, data } = appointmentReducer;
     const { modelDetails } = modelInfoReducer;
@@ -188,7 +192,10 @@ class Calender extends Component {
           modelInfoReducer={modelInfoReducer}
           modelOperate={modelOperate}
           addCustomer={addCustomer}
+          addVehicle={addVehicle}
           customerFleetReducer={customerFleetReducer}
+          customerInfoReducer={customerInfoReducer}
+          vehicleAddInfoReducer={vehicleAddInfoReducer}
         />
         <AppointmentDetails
           isOpen={showAppointmentDetailModal}
@@ -209,7 +216,9 @@ const mapStateToProps = state => ({
   appointmentDetailsReducer: state.appointmentDetailsReducer,
   customerFleetReducer: state.fleetReducer,
   modelInfoReducer: state.modelInfoReducer,
-  profileInfoReducer: state.profileInfoReducer
+  profileInfoReducer: state.profileInfoReducer,
+  customerInfoReducer: state.customerInfoReducer,
+  vehicleAddInfoReducer: state.vehicleAddInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -222,6 +231,7 @@ const mapDispatchToProps = dispatch => ({
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   updateAppointment: data => dispatch(updateAppointmentRequest(data)),
   addCustomer: data => dispatch(customerAddRequest(data)),
+  addVehicle: data => dispatch(vehicleAddRequest(data))
 });
 
 export default connect(

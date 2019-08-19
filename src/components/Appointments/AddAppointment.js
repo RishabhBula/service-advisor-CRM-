@@ -24,7 +24,8 @@ import {
 } from "../../validations";
 import { toast } from "react-toastify";
 import { SendEmailAndSMS } from "../SendReminderEmail&SMS";
-// import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
+import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
+import { CrmVehicleModal } from "../../components/common/Vehicles/CrmVehicleModal";
 
 export default class AddAppointment extends Component {
   isCustomerReqSent;
@@ -66,7 +67,9 @@ export default class AddAppointment extends Component {
   componentDidUpdate({
     date: prevDate,
     editData: oldEditData,
-    isOpen: oldIsOpen
+    isOpen: oldIsOpen,
+    customerInfoReducer,
+    vehicleAddInfoReducer
   }) {
     const { isOpen, date, editData, orderData } = this.props;
     if (date !== prevDate) {
@@ -108,6 +111,33 @@ export default class AddAppointment extends Component {
           phone: customerId.phoneDetail && customerId.phoneDetail.length ? customerId.phoneDetail[0].value : null
         })
 
+      }
+    }
+    /**
+     *
+     */
+    if (this.props.customerInfoReducer && this.props.vehicleAddInfoReducer) {
+      if (customerInfoReducer.customerAddInfo !== this.props.customerInfoReducer.customerAddInfo) {
+        const customerId = this.props.customerInfoReducer.customerAddInfo
+        this.setState({
+          selectedCustomer: {
+            data: customerId,
+            label: customerId ? `${customerId.firstName} ${customerId.lastName}` : "Type to select customer",
+            value: customerId ? customerId._id : ""
+          },
+        });
+      }
+      if (vehicleAddInfoReducer.vehicleAddInfo !== this.props.vehicleAddInfoReducer.vehicleAddInfo) {
+        const vehicleId = this.props.vehicleAddInfoReducer.vehicleAddInfo
+        this.setState({
+          selectedVehicle: vehicleId
+            ? {
+              data: vehicleId,
+              label: `${vehicleId.make}`,
+              value: vehicleId._id
+            }
+            : null,
+        });
       }
     }
     /**
@@ -392,6 +422,27 @@ export default class AddAppointment extends Component {
   /**
    *
    */
+  handleVehicleModel = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      vehicleModel: !modelDetails.vehicleModel,
+      vehicleEditModel: false
+    };
+    this.props.modelOperate(data);
+  }
+  /**
+  *
+  */
+  handleVehicleCreate = (data) => {
+    const payload = {
+      ...data,
+      workFlowVehicle: true
+    }
+    this.props.addVehicle(payload)
+  }
+  /**
+    *
+    */
   handleCustomerCreate = (data) => {
     const payload = {
       ...data,
@@ -428,7 +479,9 @@ export default class AddAppointment extends Component {
     } = this.state;
 
     const { toggleAddAppointModal, isOpen, editData } = this.props;
-    // const { modelDetails } = this.props.modelInfoReducer
+
+    const modelDetails = this.props.modelInfoReducer ? this.props.modelInfoReducer.modelDetails : null
+    const customerFleetReducer = this.props.customerFleetReducer ? this.props.customerFleetReducer : null
     const isEditMode = editData && editData._id ? true : false;
     const headerText = isEditMode
       ? "Update Appointment Details"
@@ -628,35 +681,40 @@ export default class AddAppointment extends Component {
                               e = {
                                 data: {}
                               };
+                              this.setState({
+                                selectedCustomer: null
+                              })
                             }
                             if (e && e.label === "+ Add New Customer") {
                               this.handleCustomerModel()
-                            }
-                            const customer = e.data;
-                            const { phoneDetail } = customer;
-                            let phone = "";
-                            if (phoneDetail && phoneDetail.length) {
-                              const tempPhone = phoneDetail.filter(
-                                d => d.phone === "mobile"
-                              );
-                              if (tempPhone.length) {
-                                phone = tempPhone[0].value;
-                              }
-                            }
+                            } else {
 
-                            this.setState({
-                              selectedCustomer: e,
-                              email: customer.email || "",
-                              isEmail: customer.email ? true : false,
-                              isSms: phone ? true : false,
-                              phone,
-                              errors: {
-                                ...this.state.errors,
-                                selectedCustomer: null,
-                                email: null,
-                                phone: null
+                              const customer = e.data;
+                              const { phoneDetail } = customer;
+                              let phone = "";
+                              if (phoneDetail && phoneDetail.length) {
+                                const tempPhone = phoneDetail.filter(
+                                  d => d.phone === "mobile"
+                                );
+                                if (tempPhone.length) {
+                                  phone = tempPhone[0].value;
+                                }
                               }
-                            });
+
+                              this.setState({
+                                selectedCustomer: e,
+                                email: customer.email || "",
+                                isEmail: customer.email ? true : false,
+                                isSms: phone ? true : false,
+                                phone,
+                                errors: {
+                                  ...this.state.errors,
+                                  selectedCustomer: null,
+                                  email: null,
+                                  phone: null
+                                }
+                              });
+                            }
                           }}
                           isClearable={true}
                           noOptionsMessage={() =>
@@ -697,13 +755,17 @@ export default class AddAppointment extends Component {
                               : "Type vehicle name"
                           }
                           onChange={e => {
-                            this.setState({
-                              selectedVehicle: e,
-                              errors: {
-                                ...this.state.errors,
-                                selectedVehicle: null
-                              }
-                            });
+                            if (e && e.label === "+ Add New Vehicle") {
+                              this.handleVehicleModel()
+                            } else {
+                              this.setState({
+                                selectedVehicle: e,
+                                errors: {
+                                  ...this.state.errors,
+                                  selectedVehicle: null
+                                }
+                              });
+                            }
                           }}
                           isDisabled={!selectedCustomer}
                         />
@@ -854,16 +916,21 @@ export default class AddAppointment extends Component {
               </Col>
             </Row>
           </Form>
+          <CrmCustomerModal
+            customerModalOpen={modelDetails ? modelDetails.customerModel : false}
+            handleCustomerModalFun={this.handleCustomerModel}
+            addCustomerFun={this.handleCustomerCreate}
+            profileInfo={this.props.profileInfoReducer}
+            editMode={false}
+            customer={""}
+            getCustomerFleetList={customerFleetReducer ? customerFleetReducer.customerFleetData : null}
+          />
+          <CrmVehicleModal
+            vehicleModalOpen={modelDetails ? modelDetails.vehicleModel : false}
+            handleVehicleModal={this.handleVehicleModel}
+            submitCreateVehicleFun={this.handleVehicleCreate}
+          />
         </CRMModal>
-        {/* <CrmCustomerModal
-          customerModalOpen={modelDetails.customerModel}
-          handleCustomerModalFun={this.handleCustomerModel}
-          addCustomerFun={this.handleCustomerCreate}
-          profileInfo={this.props.profileInfoReducer}
-          editMode={false}
-          customer={""}
-          getCustomerFleetList={customerFleetReducer.customerFleetData}
-        /> */}
       </>
     );
   }
