@@ -24,7 +24,7 @@ import {
 } from "../../validations";
 import { toast } from "react-toastify";
 import { SendEmailAndSMS } from "../SendReminderEmail&SMS";
-import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
+// import { CrmCustomerModal } from "../../components/common/CrmCustomerModal";
 
 export default class AddAppointment extends Component {
   isCustomerReqSent;
@@ -427,7 +427,7 @@ export default class AddAppointment extends Component {
       isSms
     } = this.state;
 
-    const { toggleAddAppointModal, isOpen, editData, customerFleetReducer } = this.props;
+    const { toggleAddAppointModal, isOpen, editData } = this.props;
     // const { modelDetails } = this.props.modelInfoReducer
     const isEditMode = editData && editData._id ? true : false;
     const headerText = isEditMode
