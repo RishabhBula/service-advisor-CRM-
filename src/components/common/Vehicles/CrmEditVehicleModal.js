@@ -333,7 +333,10 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Year <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -354,7 +357,10 @@ export class CrmEditVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Make <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -380,7 +386,10 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Model <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -399,7 +408,9 @@ export class CrmEditVehicleModal extends Component {
                     <p className="text-danger">{errors.modal}</p>
                   ) : null} */}
                     <FormFeedback>
-                      {errors.modal && !this.state.modal ? errors.modal : null}
+                      {errors.modal && !this.state.modal
+                        ? errors.modal
+                        : null}
                     </FormFeedback>
                   </div>
                   {/* <div className="error-tool-tip">this field is </div> */}
@@ -407,7 +418,10 @@ export class CrmEditVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Type
                   </Label>
                   <Select
@@ -428,7 +442,10 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Miles
                   </Label>
                   <div className={"input-block"}>
@@ -448,7 +465,10 @@ export class CrmEditVehicleModal extends Component {
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Color
                   </Label>
                   <Select
@@ -467,7 +487,10 @@ export class CrmEditVehicleModal extends Component {
             <Row className="justify-content-center">
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Licence Plate <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
@@ -478,17 +501,24 @@ export class CrmEditVehicleModal extends Component {
                       onChange={this._onInputChange}
                       value={this.state.licensePlate}
                       maxLength={15}
-                      invalid={errors.licensePlate && !this.state.licensePlate}
+                      invalid={
+                        errors.licensePlate && !this.state.licensePlate
+                      }
                     />
                     <FormFeedback>
-                      {errors.licensePlate && !this.state.licensePlate ? errors.licensePlate : null}
+                      {errors.licensePlate && !this.state.licensePlate
+                        ? errors.licensePlate
+                        : null}
                     </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     Unit #
                   </Label>
                   <Input
@@ -505,7 +535,10 @@ export class CrmEditVehicleModal extends Component {
             <Row className="">
               <Col md="6">
                 <FormGroup>
-                  <Label htmlFor="name" className="customer-modal-text-style">
+                  <Label
+                    htmlFor="name"
+                    className="customer-modal-text-style"
+                  >
                     VIN
                   </Label>
                   <Input
@@ -544,8 +577,8 @@ export class CrmEditVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                  ""
-                )}
+                ""
+              )}
             </Row>
             {/* <Row className="justify-content-center">
               <Col md="12 text-center">
@@ -571,7 +604,7 @@ export class CrmEditVehicleModal extends Component {
                     className="customer-modal-text-style"
                   >
                     Engine Size
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <Input
                       type="text"
@@ -594,7 +627,7 @@ export class CrmEditVehicleModal extends Component {
                     className="customer-modal-text-style"
                   >
                     Production Date
-                      </Label>
+                  </Label>
                   <div className={"input-block"}>
                     <MaskedInput
                       name="productionDate"
@@ -626,7 +659,7 @@ export class CrmEditVehicleModal extends Component {
                     className="customer-modal-text-style"
                   >
                     Transmission
-                      </Label>
+                  </Label>
                   <Input
                     type="select"
                     className=""
@@ -637,16 +670,16 @@ export class CrmEditVehicleModal extends Component {
                     <option value={""}>Select</option>
                     {Transmission.length
                       ? Transmission.map((item, index) => {
-                        return (
-                          <option
-                            selected={item.key === transmissionSelected}
-                            value={item.key}
-                            key={index}
-                          >
-                            {item.text}
-                          </option>
-                        );
-                      })
+                          return (
+                            <option
+                              selected={item.key === transmissionSelected}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
                       : null}
                   </Input>
                   {!transmissionSelected && errors.transmission ? (
@@ -661,7 +694,7 @@ export class CrmEditVehicleModal extends Component {
                     className="customer-modal-text-style"
                   >
                     Drivetrain
-                      </Label>
+                  </Label>
                   <Input
                     type="select"
                     className=""
@@ -672,16 +705,16 @@ export class CrmEditVehicleModal extends Component {
                     <option value={""}>Select</option>
                     {Drivetrain.length
                       ? Drivetrain.map((item, index) => {
-                        return (
-                          <option
-                            selected={item.key === drivetrainSelected}
-                            value={item.key}
-                            key={index}
-                          >
-                            {item.text}
-                          </option>
-                        );
-                      })
+                          return (
+                            <option
+                              selected={item.key === drivetrainSelected}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
                       : null}
                   </Input>
                   {!drivetrainSelected && errors.drivetrain ? (
@@ -698,7 +731,7 @@ export class CrmEditVehicleModal extends Component {
                     className="customer-modal-text-style"
                   >
                     Notes
-                      </Label>
+                  </Label>
                   <Input
                     name="notes"
                     type="textarea"

@@ -14,7 +14,9 @@ import {
   getAppointments,
   getAppointmentDetails,
   updateAppointmentRequest,
-  getUsersList
+  getUsersList,
+  vehicleAddRequest,
+  customerAddRequest
 } from "../../actions";
 import Loader from "../Loader/Loader";
 import AppointmentDetails from "../../components/Appointments/AppointmentDetails";
@@ -130,7 +132,14 @@ class Calender extends Component {
       appointmentReducer,
       appointmentDetailsReducer,
       updateAppointment,
-      getUserData
+      getUserData,
+      modelOperate,
+      addCustomer,
+      profileInfoReducer,
+      customerFleetReducer,
+      addVehicle,
+      customerInfoReducer,
+      vehicleAddInfoReducer
     } = this.props;
     const { isLoading, data } = appointmentReducer;
     const { modelDetails } = modelInfoReducer;
@@ -160,12 +169,12 @@ class Calender extends Component {
             {isLoading ? (
               <Loader />
             ) : (
-              <Appointments
-                addAppointment={this.toggleAddAppointModal}
-                data={data}
-                onEventClick={this.onEventClick}
-              />
-            )}
+                <Appointments
+                  addAppointment={this.toggleAddAppointModal}
+                  data={data}
+                  onEventClick={this.onEventClick}
+                />
+              )}
           </CardBody>
         </Card>
         <AddAppointment
@@ -179,6 +188,14 @@ class Calender extends Component {
           updateAppointment={updateAppointment}
           editData={editData}
           getUserData={getUserData}
+          profileInfoReducer={profileInfoReducer}
+          modelInfoReducer={modelInfoReducer}
+          modelOperate={modelOperate}
+          addCustomer={addCustomer}
+          addVehicle={addVehicle}
+          customerFleetReducer={customerFleetReducer}
+          customerInfoReducer={customerInfoReducer}
+          vehicleAddInfoReducer={vehicleAddInfoReducer}
         />
         <AppointmentDetails
           isOpen={showAppointmentDetailModal}
@@ -196,7 +213,12 @@ class Calender extends Component {
 }
 const mapStateToProps = state => ({
   appointmentReducer: state.appointmentReducer,
-  appointmentDetailsReducer: state.appointmentDetailsReducer
+  appointmentDetailsReducer: state.appointmentDetailsReducer,
+  customerFleetReducer: state.fleetReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  profileInfoReducer: state.profileInfoReducer,
+  customerInfoReducer: state.customerInfoReducer,
+  vehicleAddInfoReducer: state.vehicleAddInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -207,7 +229,9 @@ const mapDispatchToProps = dispatch => ({
   getVehicleData: data => dispatch(vehicleGetRequest(data)),
   getOrders: data => dispatch(getOrderListForSelect(data)),
   addAppointment: data => dispatch(addAppointmentRequest(data)),
-  updateAppointment: data => dispatch(updateAppointmentRequest(data))
+  updateAppointment: data => dispatch(updateAppointmentRequest(data)),
+  addCustomer: data => dispatch(customerAddRequest(data)),
+  addVehicle: data => dispatch(vehicleAddRequest(data))
 });
 
 export default connect(

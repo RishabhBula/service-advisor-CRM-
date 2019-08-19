@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Modal,
   ModalBody,
@@ -9,9 +9,9 @@ import {
   Row,
   Col,
   FormGroup,
-  Label,
-} from 'reactstrap';
-import { stripHTML } from "../../../helpers"
+  Label
+} from "reactstrap";
+import { stripHTML } from "../../../helpers";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
 
 class MessageTemplate extends Component {
@@ -22,62 +22,76 @@ class MessageTemplate extends Component {
       isEditMode: false,
       eleId: "",
       templateListData: [],
-      singleTemplateData:
-      {
+      singleTemplateData: {
         templateName: "",
         subject: "",
-        messages: "",
+        messages: ""
       },
-      activeIndex: '' ,
-      errors:{}
+      activeIndex: "",
+      errors: {},
+      selectionVal: {}
     };
   }
 
   componentDidMount = () => {
-    this.props.getMessageTemplate()
-  }
+    this.props.getMessageTemplate();
+  };
 
   componentDidUpdate = ({ inspectionData }) => {
     let propdata = this.props.inspectionData;
     if (propdata.inspectionData && inspectionData !== propdata) {
       this.setState({
         templateListData: propdata.messageTemplateData
-      })
+      });
     }
-  }
+  };
 
-  handleChange = e => {
+  onKeyUp = e => {
+    document.getElementById("messageText");
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
+
+    range.deleteContents();
     this.setState({
-      singleTemplateData:{
-        ...this.state.singleTemplateData,
-        [e.target.name]: e.target.value,
-      },
-      errors:{
-        ...this.state.errors,
-        [e.target.name]:''
+      selectionVal: {
+        sel,
+        range
       }
     });
   };
 
-  handleAddtemplate = (e) => {
+  handleChange = e => {
+    this.setState({
+      singleTemplateData: {
+        ...this.state.singleTemplateData,
+        [e.target.name]: e.target.value
+      },
+      errors: {
+        ...this.state.errors,
+        [e.target.name]: ""
+      }
+    });
+  };
+
+  handleAddtemplate = e => {
     e.preventDefault();
-    var subjectValue = document.getElementById('tagInput'),
+    var subjectValue = document.getElementById("tagInput"),
       subject = subjectValue.textContent;
-    var messageTextValue = document.getElementById('messageText'),
+    var messageTextValue = document.getElementById("messageText"),
       messageText = messageTextValue.innerHTML;
-    const { singleTemplateData} = this.state;
-    try{
+    const { singleTemplateData } = this.state;
+    try {
       let errors = {};
       let hasErrors = false;
-      
-      if (singleTemplateData.templateName === '') {
+
+      if (singleTemplateData.templateName === "") {
         errors.templateName = "Please enter template name.";
         hasErrors = true;
       }
       if (!subject) {
         errors.subject = "Please enter subject for template.";
         hasErrors = true;
-      } 
+      }
       if (hasErrors) {
         this.setState({
           errors
@@ -87,78 +101,74 @@ class MessageTemplate extends Component {
       const payload = {
         templateName: singleTemplateData.templateName,
         subject,
-        messageText,
+        messageText
+      };
+      if (!this.state.isEditMode) {
+        this.props.addMessageTemplate(payload);
+        this.clearMessageForm();
+      } else {
+        payload._id = singleTemplateData._id;
+        this.props.updateMessageTemplate(payload);
       }
-      if(!this.state.isEditMode){
-        this.props.addMessageTemplate(payload)
-        this.clearMessageForm()
-      }
-      else{
-        payload._id = singleTemplateData._id
-        this.props.updateMessageTemplate(payload)
-      }
-      
     } catch (error) { }
-  }
+  };
 
-  handleFocus = (id) => {
+  handleFocus = id => {
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
     this.setState({
-      eleId: id
-    })
+      eleId: id,
+      selectionVal: {
+        sel,
+        range
+      }
+    });
+
+    range.deleteContents();
     document.getElementById(id).addEventListener("paste", function (e) {
       e.preventDefault();
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
     });
-  }
+  };
 
   handelTag = (e, label) => {
-    let id = this.state.eleId
-    var tagInput = document.getElementById(id)
-    // var sel, range;
-    // if (window.getSelection) {
-    //   // IE9 and non-IE
-    //   sel = window.getSelection();
-    //   if (sel.getRangeAt && sel.rangeCount) {
-    //     range = sel.getRangeAt(0);
-    //     range.deleteContents();
+    let id = this.state.eleId;
+    document.getElementById(id);
+    const { sel, range } = this.state.selectionVal;
 
-    //     console.log(sel, "range")
-    //     // Range.createContextualFragment() would be useful here but is
-    //     // non-standard and not supported in all browsers (IE9, for one)
-    //     var el = document.createElement("div");
-    //     el.innerHTML = label;
-    //     var frag = document.createDocumentFragment(), node, lastNode;
-    //     while ((node = el.firstChild)) {
-    //       lastNode = frag.appendChild(node);
-    //     }
-    //     range.insertNode(frag);
+    var text = label; // Textarea containing the text to add to the myInstance1 DIV
+    if (window.getSelection) {
+      if (sel) {
+        // range.deleteContents();
 
-    //     // Preserve the selection
-    //     if (lastNode) {
-    //       range = range.cloneRange();
-    //       range.setStartAfter(lastNode);
-    //       range.collapse(true);
-    //       sel.removeAllRanges();
-    //       sel.addRange(range);
-    //     }
-    //   }
-    // } else if (document.selection && document.selection.type !== "Control") {
-    //   // IE < 9
-    //   document.selection.createRange().pasteHTML(label);
-    // }
+        var lines = text.replace("\r\n", "\n").split("\n");
+        //var frag = document.createDocumentFragment();
+        var frag = document.createElement("span");
+        for (var i = 0, len = lines.length; i < len; ++i) {
+          if (i > 0) {
+            frag.appendChild(document.createElement("br"));
+          }
+          frag.appendChild(document.createTextNode(lines[i]));
+        }
 
-   tagInput.appendChild(document.createTextNode(label));
-  }
+        range.insertNode(frag);
+        sel.modify("move", "right", "word");
 
-  onKeyPress = (e) =>{
+      }
+    } else if (document.selection && document.selection.createRange) {
+      document.selection.createRange().text = text;
+    }
+  };
+
+  onKeyPress = e => {
     this.setState({
       errors: {
         ...this.state.errors,
-        subject: ''
+        subject: ""
       }
     });
-  }
+  };
 
   handleEditTemplate = (e, id, index) => {
     const { templateListData } = this.state;
@@ -169,12 +179,12 @@ class MessageTemplate extends Component {
           singleTemplateData: templateListData[i],
           isEditMode: true,
           activeIndex: index
-        })
+        });
       }
     }
-  }
+  };
 
-  handelTemplateDelete =async (e,id) =>{
+  handelTemplateDelete = async (e, id) => {
     const { value } = await ConfirmBox({
       text: "Do you want to delete this Template"
     });
@@ -182,29 +192,35 @@ class MessageTemplate extends Component {
       return;
     }
 
-    this.props.deleteMessageTemplate(id)
-    this.clearMessageForm()
-  }
+    this.props.deleteMessageTemplate(id);
+    this.clearMessageForm();
+  };
 
-  clearMessageForm = () =>{
-    var subjectValue = document.getElementById('tagInput');
-    var messageTextValue = document.getElementById('messageText');
+  clearMessageForm = () => {
+    var subjectValue = document.getElementById("tagInput");
+    var messageTextValue = document.getElementById("messageText");
     this.setState({
       singleTemplateData: {
         templateName: "",
         subject: "",
-        messages: "",
+        messages: ""
       },
       isEditMode: false,
-      activeIndex:null
-    })
-    subjectValue.textContent = '';
+      activeIndex: null
+    });
+    subjectValue.textContent = "";
     messageTextValue.textContent = "";
-  }
+  };
 
   render() {
-    const { templateListData, errors, isEditMode, singleTemplateData, activeIndex} = this.state;
-   
+    const {
+      templateListData,
+      errors,
+      isEditMode,
+      singleTemplateData,
+      activeIndex
+    } = this.state;
+
     return (
       <>
         <Modal
@@ -249,9 +265,7 @@ class MessageTemplate extends Component {
                               </div>
                               <div className={"text-message"}>
                                 {ele.messageText
-                                  ? stripHTML(
-                                      ele.messageText.substring(0, 500)
-                                    )
+                                  ? stripHTML(ele.messageText.substring(0, 500))
                                   : "-"}
                               </div>
                             </div>
@@ -268,8 +282,8 @@ class MessageTemplate extends Component {
                         );
                       })
                     ) : (
-                      <p>No Message Template has been added yet!</p>
-                    )}
+                        <p>No Message Template has been added yet!</p>
+                      )}
                   </div>
                 </Col>
                 <Col md={"7"} sm={"7"}>
@@ -301,10 +315,7 @@ class MessageTemplate extends Component {
                   <Row className="justify-content-center m-0">
                     <Col md="12">
                       <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="message-temp-label"
-                        >
+                        <Label htmlFor="name" className="message-temp-label">
                           Template Name <span className={"asteric"}>*</span>
                         </Label>
                         <div className={"input-block"}>
@@ -330,10 +341,7 @@ class MessageTemplate extends Component {
                     </Col>
                     <Col md="12">
                       <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="message-temp-label"
-                        >
+                        <Label htmlFor="name" className="message-temp-label">
                           Subject <span className={"asteric"}>*</span>
                         </Label>
                         <div className={"input-block"}>
@@ -341,6 +349,7 @@ class MessageTemplate extends Component {
                             <p
                               contentEditable={"true"}
                               onKeyPress={e => this.onKeyPress(e)}
+                              onKeyUp={e => this.onKeyUp(e)}
                               className={
                                 errors && errors.subject
                                   ? "tagInput mb-0 is-invalid"
@@ -366,10 +375,7 @@ class MessageTemplate extends Component {
 
                     <Col md="12">
                       <FormGroup>
-                        <Label
-                          htmlFor="name"
-                          className="message-temp-label"
-                        >
+                        <Label htmlFor="name" className="message-temp-label">
                           Message
                         </Label>
                         <div className={"input-block message-input-warp"}>
@@ -384,6 +390,7 @@ class MessageTemplate extends Component {
                                 ? { __html: singleTemplateData.messageText }
                                 : null
                             }
+                            onKeyUp={e => this.onKeyUp(e)}
                           />
                         </div>
                       </FormGroup>
@@ -403,9 +410,7 @@ class MessageTemplate extends Component {
                       Lastname
                     </span>
                     <span
-                      onClick={e =>
-                        this.handelTag(e, "{year} {make} {model}")
-                      }
+                      onClick={e => this.handelTag(e, "{year} {make} {model}")}
                       className={"tags"}
                     >
                       Vehicle
@@ -437,10 +442,7 @@ class MessageTemplate extends Component {
             <div className={"flex-1"}>
               <div className="required-fields">*Fields are Required.</div>
             </div>
-            <Button
-              color="primary"
-              onClick={e => this.handleAddtemplate(e)}
-            >
+            <Button color="primary" onClick={e => this.handleAddtemplate(e)}>
               {!isEditMode ? "Add New Template " : "Update Template"}
             </Button>{" "}
             <Button
@@ -459,4 +461,4 @@ class MessageTemplate extends Component {
   }
 }
 
-export default (MessageTemplate)
+export default MessageTemplate;
