@@ -822,6 +822,11 @@ body {
         padding: 0;
       }
     }
+    .appointmentNotes{
+      textarea{
+        max-height: 95px;
+      }
+    }
   }
   /* React Select Design  */
   // .css-11unzgr {

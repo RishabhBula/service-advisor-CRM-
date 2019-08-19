@@ -2037,7 +2037,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   background-clip: padding-box;
   color: #0c0d1c;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  word-break: break-all;
+  word-break: break-word;
   margin-bottom: 0px;
 }
 .message-input-warp.is-invalid {

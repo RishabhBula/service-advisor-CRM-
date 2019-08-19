@@ -529,7 +529,7 @@ export default class AddAppointment extends Component {
                     >
                       Notes
                     </Label>
-                    <div className={"input-block"}>
+                    <div className={"input-block appointmentNotes"}>
                       <Input
                         type="textarea"
                         className={classnames("form-control", {
