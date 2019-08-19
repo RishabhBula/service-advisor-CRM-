@@ -45,7 +45,8 @@ export class CrmUserModal extends Component {
       companyName: "",
       permissions: TechincianDefaultPermissions,
       errors: {},
-      isEditMode: false
+      isEditMode: false,
+      phoneError: false
     };
   }
   componentDidMount = () => {
@@ -151,7 +152,7 @@ export class CrmUserModal extends Component {
         rate,
         permissions,
         companyName,
-        isEditMode
+        isEditMode,
       } = this.state;
       // const companyName = this.props.companyName
       const payload = {
@@ -171,7 +172,21 @@ export class CrmUserModal extends Component {
         CreateUserValidations,
         CreateUserValidationsMessaages
       );
-      if (!isValid) {
+      let phError = false
+      const phoneTrimed = (phone.replace(/[- )(_]/g, ""))
+      const phoneLength = phoneTrimed.length <= 9
+      if (phone && phoneLength) {
+        this.setState({
+          phoneError: true
+        })
+        phError = true
+      } else {
+        this.setState({
+          phoneError: false
+        })
+        phError = false
+      }
+      if (!isValid || (phError)) {
         this.setState({
           errors
         });
@@ -197,9 +212,9 @@ export class CrmUserModal extends Component {
       rate,
       roleType,
       errors,
-      isEditMode
+      isEditMode,
+      phoneError
     } = this.state;
-
     return (
       <>
         <Form onSubmit={this.addUser}>
@@ -294,10 +309,12 @@ export class CrmUserModal extends Component {
                     </Label>
                     <div className={"input-block"}>
                       <MaskedInput
-                        mask="(111) 111-111"
+                        mask="(111) 111-1111"
                         name="phone"
                         placeholder="(555) 055-0555"
-                        className="form-control"
+                        className={classnames("form-control", {
+                          "is-invalid": phoneError && phone
+                        })}
                         size="20"
                         value={phone}
                         onChange={this.handleInputChange}
@@ -305,6 +322,7 @@ export class CrmUserModal extends Component {
 
                       <FormFeedback>
                         {errors.phone ? errors.phone : null}
+                        {phoneError && phone ? "Enter proper 10 dight phone number" : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
