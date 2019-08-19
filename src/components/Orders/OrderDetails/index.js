@@ -386,30 +386,48 @@ class OrderDetails extends Component {
                 }
               >
                 <div>
-                  Total Parts : <Dollor value={totalParts.toFixed(2)} />
+                  <span className={"title"}>Total Parts </span>:{" "}
+                  <span className={"price-block"}>
+                    <Dollor value={totalParts.toFixed(2)} />
+                  </span>
                 </div>
                 <div>
-                  Total Tires : <Dollor value={totalTires.toFixed(2)} />
+                  <span className={"title"}>Total Tires </span>:{" "}
+                  <span className={"price-block"}>
+                    <Dollor value={totalTires.toFixed(2)} />
+                  </span>
                 </div>
                 <div>
-                  Total Labor : <Dollor value={totalLabor.toFixed(2)} />
+                  <span className={"title"}>Total Labor </span>:{" "}
+                  <span className={"price-block"}>
+                    <Dollor value={totalLabor.toFixed(2)} />
+                  </span>
                 </div>
                 <div className={"pt-2 border-top mt-2"}>
-                  Sub Total: <Dollor value={orderSubTotal.toFixed(2)} />
+                  <span className={"title"}>Sub Total </span>:{" "}
+                  <span className={"price-block"}>
+                    <Dollor value={orderSubTotal.toFixed(2)} />
+                  </span>
                 </div>
                 <div>
-                  Total Tax :{" "}
-                  <Dollor
-                    value={!isNaN(totalTax) ? totalTax.toFixed(2) : 0.0}
-                  />
+                  <span className={"title"}>Total Tax </span>:
+                  <span className={"price-block"}>
+                    + <Dollor
+                      value={!isNaN(totalTax) ? totalTax.toFixed(2) : 0.0}
+                    />
+                  </span>
                 </div>
                 <div>
-                  Total Discount :{" "}
-                  <Dollor
-                    value={
-                      !isNaN(totalDiscount) ? totalDiscount.toFixed(2) : 0.0
-                    }
-                  />
+                  <span className={"title"}>Total Discount </span>: {" "}
+                  <span className={"price-block"}>
+                   - <Dollor
+                      value={
+                        !isNaN(totalDiscount)
+                          ? totalDiscount.toFixed(2)
+                          : 0.0
+                      }
+                    />
+                  </span>
                 </div>
                 <div className={"pt-2 border-top mt-2 grand-total"}>
                   Grand Total :{" "}

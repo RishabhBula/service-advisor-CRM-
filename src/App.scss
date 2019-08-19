@@ -139,11 +139,15 @@ body {
       padding-top: 55px;
     }
     .company-logo {
-      padding-bottom: 5px;
+      padding: 5px;
       border-bottom: 1px solid #fff;
       text-align: center;
       font-size: 15px;
       text-transform: capitalize;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      overflow: hidden;
     }
   }
   .sidebar {
@@ -816,6 +820,11 @@ body {
       .css-vj8t7z {
         border: 1px solid #f86c6b !important;
         padding: 0;
+      }
+    }
+    .appointmentNotes{
+      textarea{
+        max-height: 95px;
       }
     }
   }
