@@ -55,7 +55,9 @@ import {
   deleteService,
   genrateInvoice,
   customerAddRequest,
-  vehicleAddRequest
+  vehicleAddRequest,
+  getOrderListForSelect,
+  addAppointmentRequest
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -387,7 +389,9 @@ class Order extends Component {
       customerFleetReducer,
       customerInfoReducer,
       vehicleAddRequest,
-      vehicleAddInfoReducer
+      vehicleAddInfoReducer,
+      getOrdersData,
+      addAppointment
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -623,6 +627,11 @@ class Order extends Component {
                 addPaymentRequest={addPaymentRequest}
                 paymentReducer={paymentReducer}
                 updateOrderStatus={updateOrderStatus}
+                getCustomerData={getCustomerData}
+                getVehicleData={getVehicleData}
+                getOrders={getOrdersData}
+                addAppointment={addAppointment}
+                getUserData={getUserData}
               />
               {this.props.orderReducer.orderItems &&
                 this.props.orderReducer.orderItems.customerId &&
@@ -825,7 +834,9 @@ const mapDispatchToProps = dispatch => ({
   },
   vehicleAddRequest: data => {
     dispatch(vehicleAddRequest(data));
-  }
+  },
+  getOrdersData: data => dispatch(getOrderListForSelect(data)),
+  addAppointment: data => dispatch(addAppointmentRequest(data)),
 });
 export default connect(
   mapStateToProps,

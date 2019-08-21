@@ -47,7 +47,7 @@ class MessageTemplate extends Component {
   };
 
   onKeyUp = e => {
-    var ele = document.getElementById("messageText");
+    document.getElementById("messageText");
     var sel = window.getSelection();
     var range = sel.getRangeAt(0);
 
@@ -110,7 +110,7 @@ class MessageTemplate extends Component {
         payload._id = singleTemplateData._id;
         this.props.updateMessageTemplate(payload);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   handleFocus = id => {
@@ -125,7 +125,7 @@ class MessageTemplate extends Component {
     });
 
     range.deleteContents();
-    document.getElementById(id).addEventListener("paste", function(e) {
+    document.getElementById(id).addEventListener("paste", function (e) {
       e.preventDefault();
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
@@ -134,14 +134,14 @@ class MessageTemplate extends Component {
 
   handelTag = (e, label) => {
     let id = this.state.eleId;
-    var tagInput = document.getElementById(id);
+    document.getElementById(id);
     const { sel, range } = this.state.selectionVal;
 
     var text = label; // Textarea containing the text to add to the myInstance1 DIV
     if (window.getSelection) {
       if (sel) {
         // range.deleteContents();
-      
+
         var lines = text.replace("\r\n", "\n").split("\n");
         //var frag = document.createDocumentFragment();
         var frag = document.createElement("span");
@@ -282,8 +282,8 @@ class MessageTemplate extends Component {
                         );
                       })
                     ) : (
-                      <p>No Message Template has been added yet!</p>
-                    )}
+                        <p>No Message Template has been added yet!</p>
+                      )}
                   </div>
                 </Col>
                 <Col md={"7"} sm={"7"}>

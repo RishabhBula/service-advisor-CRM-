@@ -322,6 +322,8 @@ class SendInspection extends Component {
    */
   handleReminder = e => {
     const { name, checked } = e.target;
+    console.log("%%%%%%%%%%%%%%%%%", name, checked);
+
     this.setState({
       [name]: checked
     });

@@ -24,15 +24,15 @@ const addTimeLogs = async (req, res) => {
     let startTime = body.startDateTime.split(":");
     let dateDuration;
     dateDuration = new Date(body.date);
-    dateDuration.setHours(parseInt(startTime[0]));
-    dateDuration.setMinutes(parseInt(startTime[1]));
+    dateDuration.setUTCHours(parseInt(startTime[0]));
+    dateDuration.setUTCMinutes(parseInt(startTime[1]));
     const startDate = dateDuration.toISOString();
 
     let endTime = body.endDateTime.split(":");
     let dateDurationEnd;
     dateDurationEnd = new Date(body.date);
-    dateDurationEnd.setHours(parseInt(endTime[0]));
-    dateDurationEnd.setMinutes(parseInt(endTime[1]));
+    dateDurationEnd.setUTCHours(parseInt(endTime[0]));
+    dateDurationEnd.setUTCMinutes(parseInt(endTime[1]));
     const endDate = dateDurationEnd.toISOString();
 
     const duration = moment(body.duration, "HH:mm:ss: A").diff(
@@ -331,15 +331,15 @@ const updateTimeLogOfTechnician = async (req, res) => {
       let startTime = body.startDateTime.split(":");
       let dateDuration;
       dateDuration = new Date(body.date);
-      dateDuration.setHours(parseInt(startTime[0]));
-      dateDuration.setMinutes(parseInt(startTime[1]));
+      dateDuration.setUTCHours(parseInt(startTime[0]));
+      dateDuration.setUTCMinutes(parseInt(startTime[1]));
       const startDate = dateDuration.toISOString();
 
       let endTime = body.endDateTime.split(":");
       let dateDurationEnd;
       dateDurationEnd = new Date(body.date);
-      dateDurationEnd.setHours(parseInt(endTime[0]));
-      dateDurationEnd.setMinutes(parseInt(endTime[1]));
+      dateDurationEnd.setUTCHours(parseInt(endTime[0]));
+      dateDurationEnd.setUTCMinutes(parseInt(endTime[1]));
       const endDate = dateDurationEnd.toISOString();
 
       const duration = moment(body.duration, "HH:mm:ss: A").diff(

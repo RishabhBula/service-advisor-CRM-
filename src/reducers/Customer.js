@@ -15,8 +15,7 @@ const listCustomerState = {
 
 export const customerInfoReducer = handleActions(
   {
-    [customersAddActions.PROFILE_INFO_START]: (state, action) => ({
-      ...state,
+    [customersAddActions.CUSTOMER_ADD_REQUEST]: (state, action) => ({
       customerAddInfo: {}
     }),
     [customersAddActions.CUSTOMER_ADD_SUCCESS]: (state, action) => ({

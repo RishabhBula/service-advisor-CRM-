@@ -346,7 +346,7 @@ export class CrmVehicleModal extends Component {
                       onKeyPress={this.yearValidation} */
                       onChange={this._onInputChange}
                       value={year}
-                      invalid={errors.year && !this.state.year}
+                      invalid={errors.year}
                     />
                     <FormFeedback>
                       {(!year && errors.year) ||
