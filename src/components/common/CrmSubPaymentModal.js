@@ -45,6 +45,7 @@ export class CrmSubPaymentModalModel extends Component {
       expYear: expYear,
       cvv: cvv
     }
+    console.log(payload, "addSubscriptionRequest");
     this.props.addSubscriptionRequest(payload)
   }
   render() {

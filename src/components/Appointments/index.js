@@ -70,6 +70,7 @@ export default class Appointments extends Component {
         displayEventEnd={true}
         eventClick={this.onEventClick}
         dateClick={this.onDateClick}
+        eventLimit={4}
       />
     );
   }

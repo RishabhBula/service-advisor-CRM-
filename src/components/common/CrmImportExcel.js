@@ -17,7 +17,7 @@ import { logger } from "../../helpers/Logger";
 import XLSX from "xlsx";
 import { connect } from "react-redux";
 import { modelOpenRequest, showLoader, hideLoader } from "../../actions";
-
+import CrmExportSampleButton from "./CrmExportSampleButton";
 class CrmImportExcel extends Component {
   constructor(props) {
     super(props);
@@ -206,30 +206,85 @@ class CrmImportExcel extends Component {
     );
   };
   render() {
-    const { buttonText, btnColor, children, buttonIcon } = this.props;
+    const {
+      buttonText,
+      btnColor,
+      children,
+      buttonIcon,
+      sheetType
+    } = this.props;
+  
     const { isLoading, fileError, sheets } = this.state;
     logger(isLoading);
     return (
       <>
-        <Button color={btnColor || "primary"} onClick={this.toggleImportModal}>
+        <Button
+          color={btnColor || "primary"}
+          onClick={this.toggleImportModal}
+        >
           <i className={buttonIcon} />
           &nbsp;
           {buttonText || "Import Excel"}
         </Button>
         <CRMModal {...this.modalOptions()}>
           {children}
-          <Row>
-            <Col sm={{ size: 4, offset: 4 }}>
+          <Row className={"pt-4 pb-3"}>
+            <Col sm={{ size: 7 }} className={"pl-3"}>
+              <h4>Instructions to import customers</h4>
+              <ul className={"list-inline import-instruction-list"}>
+                <li>
+                  <i class="icon-arrow-right icons" />
+                  Click Here to{" "}
+                  <span className={""}>
+                    <CrmExportSampleButton sheetType={sheetType} />
+                  </span>
+                </li>
+                <li>
+                  <i class="icon-arrow-right icons" />
+                  Attach/Upload only csv or excel file to insert bulk
+                  records in the system.
+                </li>
+                <li>
+                  <i class="icon-arrow-right icons" /> Kindly Insert 250
+                  records at a time, for adding more records again create
+                  new file.
+                </li>
+                <li>
+                  <i class="icon-arrow-right icons" />
+                  Kindly make sure before inserting the data filed entity
+                  should be correct and formatted.
+                </li>
+                <li>
+                  <i class="icon-arrow-right icons" />
+                  Kindly follow the sample_data.csv to Import Bulk Data.
+                </li>
+              </ul>
+            </Col>
+            <Col sm={{ size: 5 }} className={"pt-3"}>
               <CrmDragDrop
                 accept={[".xlsx", ".xls", ".csv"]}
                 acceptMessage={"Only CSV/Excel files are allowed"}
                 onFileDrop={this.onFileDrop}
-                containerClass={fileError ? "dropzone-error text-danger" : null}
+                containerClass={
+                  fileError
+                    ? "dropzone-error text-danger welcome-image-select-background bg-white"
+                    : "welcome-image-select-background bg-white"
+                }
               />
-              {fileError ? <p className={"text-danger"}>{fileError}</p> : null}
+              {fileError ? (
+                <p className={"text-danger"}>{fileError}</p>
+              ) : null}
+              <p className={"pt-3"}>
+                <i className={"fas fa-file-excel-o"} />
+                <CrmExportSampleButton sheetType={sheetType} />
+              </p>
             </Col>
             <Col sm={12}>
-              {isLoading ? null : sheets.length ? this.renderSheets() : null}
+              {isLoading
+                ? null
+                : sheets.length
+                ? this.renderSheets()
+                : null}
             </Col>
           </Row>
         </CRMModal>

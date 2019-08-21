@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, UncontrolledTooltip } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap";
 import XLSX from "xlsx";
 import {
   CustomerSheetData,
@@ -39,14 +39,23 @@ class CrmExportSampleButton extends Component {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `${sheetType || "sheet"} 1`);
     /* generate XLSX file and send to client */
-    XLSX.writeFile(wb, `${sheetType || "sheet"}_sample_${Date.now()}.xlsx`);
+    //XLSX.writeFile(wb, `${sheetType || "sheet"}_sample_${Date.now()}.xlsx`);
+
+    XLSX.writeFile(wb, `${sheetType || "sheet"}_sample_data.xlsx`);
   };
   render() {
     return (
       <>
-        <Button className={"btn-download"} onClick={this.downloadSampleFile} id={"download-sample"}>
+        {/* <Button className={"btn-download"} onClick={this.downloadSampleFile} id={"download-sample"}>
           Download Sample
-        </Button>{" "}
+        </Button>{" "} */}
+        <span
+          onClick={this.downloadSampleFile}
+          id={"download-sample"}
+          className={"cursor_pointer sample-download-link"}
+        >
+          Download Sample
+        </span>
         <UncontrolledTooltip target={"download-sample"}>
           Download Sample
         </UncontrolledTooltip>

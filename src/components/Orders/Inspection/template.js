@@ -132,7 +132,7 @@ class Templates extends Component {
           className="customer-modal custom-form-modal custom-modal-lg"
         >
           <ModalHeader>
-            <Button className="close" onClick={this.handleCloseModal}>
+            <Button className="close" onClick={this.handleCloseModal} color={""}>
               <span aria-hidden="true">×</span>
             </Button>
             Template List

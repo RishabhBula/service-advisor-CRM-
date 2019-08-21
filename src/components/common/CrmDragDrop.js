@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 
-const CrmDragDropStyles = {
-  container: {
-    height: 250,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#fff",
-    borderRadius: "5",
-    padding: 20,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.16)",
-    cursor: "pointer"
-  }
-};
+// const CrmDragDropStyles = {
+//   container: {
+//     height: 250,
+//     display: "flex",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     background: "#fff",
+//     borderRadius: "5",
+//     padding: 20,
+//     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.16)",
+//     cursor: "pointer"
+//   }
+// };
 
 class CrmDragDrop extends Component {
   constructor(props) {
@@ -45,28 +45,32 @@ class CrmDragDrop extends Component {
         }}
       >
         {({ getRootProps, getInputProps }) => (
-          <div
-            {...getRootProps()}
-            className={containerClass}
-            style={CrmDragDropStyles.container}
-          >
+          <div {...getRootProps()} className={containerClass}>
             <input
               {...getInputProps()}
               accept={acceptedTypes.join(", ")}
-              multiple={typeof isMultiple === undefined ? false : isMultiple}
+              multiple={
+                typeof isMultiple === undefined ? false : isMultiple
+              }
             />
-            <div className={"text-center"}>
+            <div className={"text-center welcome-image-text"}>
               {files && files.length ? (
                 <>
-                  {`${files.length} ${files.length > 1 ? "files" : "file"}
+                  <i className={"fas fa-file-excel-o welcome-image-icon"} />
+                  <p className={"mb-0"}>
+                    {`${files.length} ${files.length > 1 ? "files" : "file"}
                   selected`}
-                  {files.map((file, index) => {
-                    return <div key={index}>{file.name}</div>;
-                  })}
+                    {files.map((file, index) => {
+                      return <div key={index}>{file.name}</div>;
+                    })}
+                  </p>
                 </>
               ) : (
                 <>
-                  <p>Drag & drop some files here, or click to select files</p>
+                  <i className={"fas fa-upload welcome-image-icon"} />
+                  <p className={"mb-0"}>
+                    Drag & drop some files here, or click to select files.
+                  </p>
                   <em>
                     (
                     {acceptMessage ||

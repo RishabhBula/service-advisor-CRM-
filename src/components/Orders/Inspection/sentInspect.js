@@ -64,7 +64,12 @@ class SendInspection extends Component {
         customerData: propsCustomerData,
         vehicleData: propsVehicleData,
         isEmail: propsCustomerData && propsCustomerData.email ? true : false,
-         isSms: propsCustomerData && propsCustomerData.phoneDetail && propsCustomerData.phoneDetail[0].value ? true : false,
+        isSms:
+          propsCustomerData &&
+          propsCustomerData.phoneDetail &&
+          propsCustomerData.phoneDetail[0].value
+            ? true
+            : false,
         phone:
           propsCustomerData && propsCustomerData.phoneDetail
             ? propsCustomerData.phoneDetail[0].value
@@ -172,15 +177,19 @@ class SendInspection extends Component {
     const customerId = customerData._id;
     const customerEmail = customerData.email;
 
-    const orderTitle = orderReducer && orderReducer.orderItems
-      ? orderReducer.orderItems.orderName
-      : "Untitled order";
+    const orderTitle =
+      orderReducer && orderReducer.orderItems
+        ? orderReducer.orderItems.orderName
+        : "Untitled order";
 
     const orderCreated =
       orderReducer && orderReducer.orderItems
         ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY")
         : "";
-    const invoiceURL = orderReducer && orderReducer.orderItems ? orderReducer.orderItems.invoiceURL : '';
+    const invoiceURL =
+      orderReducer && orderReducer.orderItems
+        ? orderReducer.orderItems.invoiceURL
+        : "";
     const inspectionURL =
       orderReducer && orderReducer.orderItems
         ? orderReducer.orderItems.inspectionURL
@@ -188,9 +197,9 @@ class SendInspection extends Component {
     const companyName = profileReducer.profileInfo.companyName || "";
 
     const receiverId = customerId;
-    const userId     = profileReducer ? profileReducer.profileInfo._id : '';
-    const senderId   = profileReducer.profileInfo._id;
-    const subdomain  = profileReducer.profileInfo.subdomain;
+    const userId = profileReducer ? profileReducer.profileInfo._id : "";
+    const senderId = profileReducer.profileInfo._id;
+    const subdomain = profileReducer.profileInfo.subdomain;
     const orderId =
       orderReducer && orderReducer.orderItems
         ? orderReducer.orderItems._id
@@ -256,7 +265,7 @@ class SendInspection extends Component {
           showCancelButton: false,
           confirmButtonText: "Ok"
         });
-        return
+        return;
       }
       this.props.sendMessageTemplate(payload);
 
@@ -268,7 +277,7 @@ class SendInspection extends Component {
         search: "",
         templateData: [{ messageText: "" }]
       });
-    } catch (error) { }
+    } catch (error) {}
   };
   /** */
   onKeyPress = e => {
@@ -278,7 +287,7 @@ class SendInspection extends Component {
   };
   /** */
   handleFocus = id => {
-    document.getElementById(id).addEventListener("paste", function (e) {
+    document.getElementById(id).addEventListener("paste", function(e) {
       e.preventDefault();
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
@@ -353,8 +362,8 @@ class SendInspection extends Component {
             {!isMessage && !isOrder
               ? "Send Inspection"
               : isMessage
-                ? "Message Template"
-                : "Sent Invoice"}
+              ? "Message Template"
+              : "Sent Invoice"}
           </ModalHeader>
           <ModalBody>
             <span
@@ -438,7 +447,7 @@ class SendInspection extends Component {
                               htmlFor="name"
                               className="customer-modal-text-style"
                             >
-                              Phone
+                              Phone dsf
                               {/* <span className={"asteric"}>*</span> */}
                             </Label>
                             <div className={"input-block"}>
@@ -456,6 +465,7 @@ class SendInspection extends Component {
                                   "-",
                                   /\d/,
                                   /\d/,
+                                  /\d/,
                                   /\d/
                                 ]}
                                 name="phone"
@@ -467,7 +477,7 @@ class SendInspection extends Component {
                                 placeholder="(555) 055-0555"
                                 size="20"
                                 value={phone}
-                                maxLength={13}
+                                maxLength={14}
                                 guide={false}
                                 onChange={e =>
                                   this.handleChangeInput(e, "phone")
@@ -504,12 +514,12 @@ class SendInspection extends Component {
                               search ? (
                                 "No template found"
                               ) : (
-                                  <span
-                                    onClick={this.props.toggleMessageTemplate}
-                                  >
-                                    Add template
+                                <span
+                                  onClick={this.props.toggleMessageTemplate}
+                                >
+                                  Add template
                                 </span>
-                                )
+                              )
                             }
                           />
                         </div>
@@ -556,7 +566,7 @@ class SendInspection extends Component {
                           <div
                             className={
                               messageTextSentError &&
-                                messageTextSentError !== ""
+                              messageTextSentError !== ""
                                 ? "input-block message-input-warp is-invalid"
                                 : "input-block message-input-warp"
                             }
@@ -578,11 +588,11 @@ class SendInspection extends Component {
                             />
                           </div>
                           {messageTextSentError &&
-                            messageTextSentError !== "" ? (
-                              <span className={" invalid-feedback "}>
-                                Please enter message
+                          messageTextSentError !== "" ? (
+                            <span className={" invalid-feedback "}>
+                              Please enter message
                             </span>
-                            ) : null}
+                          ) : null}
                         </div>
                       </FormGroup>
                     </Col>
@@ -612,10 +622,10 @@ class SendInspection extends Component {
                 {isOrder ? "Sent Invoice" : "Sent Inspection"}
               </Button>
             ) : (
-                <Button color="primary" onClick={this.handleAddtoMessage}>
-                  Add to message
+              <Button color="primary" onClick={this.handleAddtoMessage}>
+                Add to message
               </Button>
-              )}{" "}
+            )}{" "}
             <Button
               color="secondary"
               onClick={e => {

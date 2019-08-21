@@ -26,7 +26,7 @@ import {
 import { isEqual } from "../../helpers/Object";
 import CrmImportExcel from "../../components/common/CrmImportExcel";
 import { logger } from "../../helpers/Logger";
-import CrmExportSampleButton, {
+import  {
   DemoSupportedSheets
 } from "../../components/common/CrmExportSampleButton";
 
@@ -149,16 +149,17 @@ class Vehicles extends Component {
       <>
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
-              <div className={"text-right invt-add-btn-block"}>
-              <CrmExportSampleButton
+            <div className={"text-right invt-add-btn-block"}>
+              {/* <CrmExportSampleButton
                 sheetType={DemoSupportedSheets.VEHICLE}
               />{" "}
-              &nbsp;
-                <CrmImportExcel
+              &nbsp; */}
+              <CrmImportExcel
                 modalHeaderText={"Import Vehicle data"}
                 onImport={this.onImport}
                 buttonText={"Import Vehicles"}
                 buttonIcon={"fa fa-download"}
+                sheetType={DemoSupportedSheets.VEHICLE}
               >
                 {vehicleListReducer.importError ? (
                   <Row>
@@ -175,16 +176,16 @@ class Vehicles extends Component {
                 ) : null}
               </CrmImportExcel>
               &nbsp;&nbsp;
-                <Button
+              <Button
                 color="primary"
                 id="export-vehicle"
                 onClick={this.exportVehicles}
               >
                 <i className={"fa fa-upload"} />
                 &nbsp; Export Vehicles
-                </Button>
-                 &nbsp;&nbsp;
-                 <span>
+              </Button>
+              &nbsp;&nbsp;
+              <span>
                 <Button
                   color="primary"
                   id="add-user"
@@ -197,14 +198,14 @@ class Vehicles extends Component {
                   Add New Vehicle
                 </UncontrolledTooltip>
               </span>
-              </div>
+            </div>
             <VehicleList
               vehicleData={vehicleListReducer}
               onSearch={this.onSearch}
               onPageChange={this.onPageChange}
               updateModel={this.toggleUpdateVehicle}
               onDelete={this.deleteVehicle}
-              onStatusUpdate={this.onStatusUpdate} 
+              onStatusUpdate={this.onStatusUpdate}
               onAddClick={this.onAddClick}
             />
           </CardBody>

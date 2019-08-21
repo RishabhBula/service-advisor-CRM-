@@ -54,6 +54,7 @@ class VehiclesList extends Component {
       search: search || "",
       filterApplied
     });
+    
   }
 
   componentDidUpdate({ openEdit }) {

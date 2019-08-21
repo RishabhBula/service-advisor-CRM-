@@ -30,7 +30,7 @@ import {
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import { isEqual } from "../../helpers/Object";
-import CrmExportSampleButton, {
+import {
   DemoSupportedSheets
 } from "../../components/common/CrmExportSampleButton";
 import CrmImportExcel from "../../components/common/CrmImportExcel";
@@ -184,13 +184,14 @@ class Customers extends Component {
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
             <div className={"text-right invt-add-btn-block"}>
-              <CrmExportSampleButton sheetType={DemoSupportedSheets.CUSTOMER} />{" "}
-              &nbsp;
+              {/* <CrmExportSampleButton sheetType={DemoSupportedSheets.CUSTOMER} />{" "}
+              &nbsp; */}
               <CrmImportExcel
-                modalHeaderText={"Import customer data"}
+                modalHeaderText={"Import Customer data"}
                 onImport={this.onImport}
                 buttonText={"Import Customers"}
                 buttonIcon={"fa fa-download"}
+                sheetType={DemoSupportedSheets.CUSTOMER}
               >
                 {customerListReducer.importError ? (
                   <Row>

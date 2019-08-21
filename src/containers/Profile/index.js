@@ -8,7 +8,11 @@ import { connect } from "react-redux";
 import {
   updatePasswordRequest,
   profileSettingUpdateRequest,
-  updateCompanyLogo
+  updateCompanyLogo,
+  addSubscriptionRequest,
+  getSubscriptionPlanRequest,
+  modelOpenRequest,
+  logOutRequest
 } from "../../actions";
 class Profile extends Component {
   constructor(props) {
@@ -16,10 +20,27 @@ class Profile extends Component {
     this.state = {};
   }
 
+  componentDidMount =()=>{
+    this.props.getSubscriptionPlanRequest();
+  }
+
   render() {
-    const { profileInfo } = this.props;
+    const {
+      profileInfo,
+      subscriptionReducer,
+      modelInfoReducer,
+      modelOperate,
+      logoutUser,
+      addSubscriptionRequest
+    } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const {
+      openSubUpgradeModel,
+      openSubscriptionUpdateModel
+    } = modelDetails;
     const profileSetting =
       profileInfo.profileInfo.permissions.isAllowedCompanySettings;
+
     return (
       <Card className={"white-card"}>
         <CardBody className={"custom-card-body position-relative"}>
@@ -46,7 +67,16 @@ class Profile extends Component {
               <>
                 <hr className={"pb-3 mt-5"} />
 
-                <SubscriptionSettings profileData={profileInfo} />
+                <SubscriptionSettings
+                  profileData={profileInfo}
+                  openSubscriptionModel={openSubscriptionUpdateModel}
+                  modelOperate={modelOperate}
+                  openSubUpgradeModel={openSubUpgradeModel}
+                  getSubscriptionPlanRequest={getSubscriptionPlanRequest}
+                  subscriptionReducer={subscriptionReducer}
+                  addSubscriptionRequest={addSubscriptionRequest}
+                  logOutRequest={logoutUser}
+                />
                 <CompanySettings
                   profileData={profileInfo}
                   updateProfileSetting={
@@ -64,7 +94,9 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
-  profileInfo: state.profileInfoReducer
+  profileInfo: state.profileInfoReducer,
+  subscriptionReducer: state.subscriptionReducer,
+  modelInfoReducer: state.modelInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -74,7 +106,11 @@ const mapDispatchToProps = dispatch => ({
   profileSettingUpdateRequest: data => {
     dispatch(profileSettingUpdateRequest(data));
   },
-  updateCompanyLogo: data => dispatch(updateCompanyLogo(data))
+  updateCompanyLogo: data => dispatch(updateCompanyLogo(data)),
+  modelOperate: data => dispatch(modelOpenRequest({ modelDetails: data })),
+  getSubscriptionPlanRequest: () => dispatch(getSubscriptionPlanRequest()),
+  addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data)),
+  logoutUser: () => dispatch(logOutRequest())
 });
 
 export default connect(
