@@ -21,6 +21,12 @@ export default {
       authKey: "isAllowedCalendar"
     },
     {
+      name: AppRoutes.TIMESHEETS.name,
+      url: AppRoutes.TIMESHEETS.url,
+      icon: "icon-clock icons",
+      authKey: "isAllowedCalendar"
+    },
+    {
       name: AppRoutes.REPORTS.name,
       url: AppRoutes.REPORTS.url,
       icon: "fas fa-pie-chart",
@@ -136,6 +142,10 @@ export const ValidatedRoutes = [
   },
   {
     url: AppRoutes.CALENDER.url,
+    authKey: "isAllowedCalendar"
+  },
+  {
+    url: AppRoutes.TIMESHEETS.url,
     authKey: "isAllowedCalendar"
   },
   {

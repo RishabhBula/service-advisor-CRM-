@@ -9,7 +9,7 @@ class Avtar extends Component {
   render() {
     const avtarValue = this.props.value
     const classNames = this.props.class
-    return <span className={classNames !== '' ? classNames : ""}>{avtarValue.slice(0, 1)}</span>;
+    return <span className={classNames !== '' ? `text-capitalize ${classNames}` : ""}>{avtarValue.slice(0, 1)}</span>;
   }
 }
 export default Avtar

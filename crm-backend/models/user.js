@@ -181,6 +181,10 @@ const userSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: "order"
       },
+      generalService: {
+        type: Boolean,
+        default: false
+      },
       startTime: {
         type: Date,
         default: Date.now

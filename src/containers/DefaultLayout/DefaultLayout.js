@@ -176,11 +176,11 @@ class DefaultLayout extends Component {
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { openSubPayementModel } = modelDetails;
-    const d1 = moment(new Date()).toDate();
-    const d2 = new Date(planExiprationDate);
-    const diffTime = Math.abs(d1.getTime() - d2.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (!isInTrialPeriod && (isNaN(diffDays) || !planId)) {
+    // const d1 = moment(new Date()).toDate();
+    // const d2 = new Date(planExiprationDate);
+    // const diffTime = Math.abs(d1.getTime() - d2.getTime());
+    const isPlanExpiered = moment(planExiprationDate).isSameOrBefore(new Date(), 'day');
+    if (!isInTrialPeriod && (isPlanExpiered || !planId)) {
       return (
         <CrmSubscriptionModel
           openSubscriptionModel={true}

@@ -5,7 +5,7 @@ const UserModel = require("./../../models/user");
 const TransactionModel = require("./../../models/transaction");
 const { validationResult } = require("express-validator/check");
 const commonValidation = require("../../common");
-
+const moment = require("moment");
 /**
  *
  */
@@ -77,7 +77,7 @@ const subscribe = async (req, res) => {
           await stripe.subscriptions.del(userDetails.planId.stripeId);
           console.log(
             `Previous subscription for ${
-              userDetails.planId.name
+            userDetails.planId.name
             }) plan has been cancelled.`
           );
         } catch (error) {
@@ -97,12 +97,13 @@ const subscribe = async (req, res) => {
           });
           customerId = customer.id;
           console.log("Customer Created successfully!");
+          const planExpDate = moment(new Date(), "DD-MM-YYYY").add(30, 'days');
           await UserModel.updateOne(
             {
               _id: userId
             },
             {
-              $set: { stripeCustomerId: customerId, planId: plan._id }
+              $set: { stripeCustomerId: customerId, planId: plan._id, planExiprationDate: planExpDate }
             }
           );
         } catch (error) {
@@ -160,4 +161,5 @@ const getPlansList = async (req, res) => {
     });
   }
 };
+
 module.exports = { subscribe, getPlansList };

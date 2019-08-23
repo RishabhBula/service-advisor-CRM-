@@ -32,7 +32,6 @@ const addNewService = async (req, res) => {
             discount: element.discount,
             technician: element.technician ? element.technician._id : null,
             taxes: element.taxes,
-            isCannedService: false,
             isConfirmedValue: element.isConfirmedValue,
             serviceTotal: element.serviceTotal,
             userId: currentUser.id,
@@ -225,6 +224,7 @@ const getAllServiceData = async (req, res) => {
       const id = currentUser.id;
       const technicianId = query.technicianId
       const parentId = currentUser.parentId || currentUser.id;
+      const input = query.input
       let condition = {};
       condition["$and"] = [
          {
@@ -246,7 +246,9 @@ const getAllServiceData = async (req, res) => {
       }
       const getAllServices = await Service.find(condition).populate({
          path: 'orderId',
-         match: { isDeleted: false }
+         match: {
+            isDeleted: false
+         }
       })
       const servicePopulatedData = await Service.populate(getAllServices, { path: "orderId.customerId orderId.vehicleId orderId.serviceId.serviceId" })
       return res.status(200).json({

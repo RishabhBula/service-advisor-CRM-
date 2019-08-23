@@ -6,6 +6,7 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
+  getUsersList,
   getOrderDetailsRequest,
   getTechinicianTimeLogSuccess
 } from "../actions";
@@ -20,26 +21,34 @@ const startTimerLogic = createLogic({
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
     const { technicianId, serviceId, orderId } = action.payload;
-    const index = mainServices.findIndex(
-      d => d.serviceId.technician._id === technicianId
-    );
-    mainServices[index].serviceId.technician = {
-      ...mainServices[index].serviceId.technician,
-      currentlyWorking: {
-        serviceId,
-        orderId,
-        startTime: new Date().toUTCString()
-      }
-    };
+    if (serviceId) {
+      const index = mainServices.findIndex(
+        d => d.serviceId.technician._id === technicianId
+      );
+      mainServices[index].serviceId.technician = {
+        ...mainServices[index].serviceId.technician,
+        currentlyWorking: {
+          serviceId,
+          orderId,
+          startTime: new Date().toUTCString()
+        }
+      };
+    }
     await new ApiHelper().FetchFromServer(
       "/timeClock",
       "/start-time-clock",
       "POST",
       true,
       undefined,
-      { technicianId, serviceId, orderId }
+      {
+        technicianId,
+        serviceId: serviceId ? serviceId : null,
+        orderId: orderId ? orderId : null
+      }
     );
-
+    if (!serviceId) {
+      dispatch(getUsersList({ page: 1 }))
+    }
     dispatch(
       getOrderIdSuccess({
         ...orderItems,
@@ -58,13 +67,15 @@ const stopTimerLogic = createLogic({
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
     const { technicianId, serviceId, orderId } = action.payload;
-    const index = mainServices.findIndex(
-      d => d.serviceId.technician._id === technicianId
-    );
-    mainServices[index].serviceId.technician = {
-      ...mainServices[index].serviceId.technician,
-      currentlyWorking: {}
-    };
+    if (serviceId) {
+      const index = mainServices.findIndex(
+        d => d.serviceId.technician._id === technicianId
+      );
+      mainServices[index].serviceId.technician = {
+        ...mainServices[index].serviceId.technician,
+        currentlyWorking: {}
+      };
+    }
     await new ApiHelper().FetchFromServer(
       "/timeClock",
       "/stop-time-clock",
@@ -79,6 +90,9 @@ const stopTimerLogic = createLogic({
         serviceId: mainServices
       })
     );
+    if (!serviceId) {
+      dispatch(getUsersList({ page: 1 }))
+    }
     dispatch(getOrderDetailsRequest({ _id: orderId }))
     done();
   }

@@ -584,7 +584,7 @@ export class CrmFleetEditModal extends Component {
                                   phoneDetail[index].phone === "" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
@@ -610,7 +610,7 @@ export class CrmFleetEditModal extends Component {
                                   ) : (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         className="form-control"
                                         placeholder="(555) 055-0555 ext 1234"
@@ -663,7 +663,7 @@ export class CrmFleetEditModal extends Component {
                                   {phoneDetail[index].phone === "mobile" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
@@ -689,7 +689,7 @@ export class CrmFleetEditModal extends Component {
                                   ) : (
                                       <div className="input-block select-number-tile">
                                         <MaskedInput
-                                          mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+                                          mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                           name="phoneDetail"
                                           className="form-control"
                                           placeholder="(555) 055-0555 ext 1234"

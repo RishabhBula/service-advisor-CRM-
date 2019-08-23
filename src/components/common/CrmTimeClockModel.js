@@ -52,8 +52,8 @@ export class CrmTimeClockModal extends Component {
         duration,
         technicianId,
       } = this.props.timeLogEle
-      const startDateTime1 = moment(startDateTime).format("HH:mm")
-      const endDateTime1 = moment(endDateTime).format("HH:mm")
+      const startDateTime1 = moment.utc(startDateTime).format("HH:mm")
+      const endDateTime1 = moment.utc(endDateTime).format("HH:mm")
       const calDuration = calculateDurationFromSeconds(duration)
       this.setState({
         date,
@@ -139,7 +139,7 @@ export class CrmTimeClockModal extends Component {
       return
     } else {
       const { orderReducer, timeLogEle } = this.props
-      const calDuration = parseFloat(seconds)/3600
+      const calDuration = parseFloat(seconds) / 3600
       const totalValue = parseFloat(calDuration) * parseFloat(technicianData.rate)
       const payload = {
         type: "Manual",
@@ -165,7 +165,7 @@ export class CrmTimeClockModal extends Component {
     const { openTimeClockModal, handleTimeClockModal, orderReducer } = this.props;
     const { timeIn, timeOut, selectedTechnician, duration, isError, isEditTimeClock, notes } = this.state
     let technicianData = []
-    if (orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length) {
+    if (orderReducer.orderItems && orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length) {
       orderReducer.orderItems.serviceId.map((serviceData, index) => {
         if (serviceData.serviceId.technician && serviceData.serviceId.technician._id) {
           technicianData.push({
@@ -292,35 +292,35 @@ export class CrmTimeClockModal extends Component {
               </Row>
             </Col>
             <Row className={"m-0"}>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Activity <span className="asteric">*</span>
-                </Label>
-                <div className={"input-block"}>
-                  <Input
-                    value={`Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}`}
-                    disabled
-                  />
-                </div>
-              </FormGroup>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Label htmlFor="name" className="customer-modal-text-style">
-                  Date <span className="asteric">*</span>
-                </Label>
-                <div className={"input-block"}>
-                  <SingleDatePicker
-                    date={moment(this.state.date)} // momentPropTypes.momentObj or null
-                    onDateChange={date => this.setState({ date })} // PropTypes.func.isRequired
-                    id="Date" // PropTypes.string.isRequired,
-                    focused={this.state.focused} // PropTypes.bool
-                    onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
-                  />
-                </div>
-              </FormGroup>
-            </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label htmlFor="name" className="customer-modal-text-style">
+                    Activity <span className="asteric">*</span>
+                  </Label>
+                  <div className={"input-block"}>
+                    <Input
+                      value={orderReducer.orderItems?`Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}`:""}
+                      disabled
+                    />
+                  </div>
+                </FormGroup>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Label htmlFor="name" className="customer-modal-text-style">
+                    Date <span className="asteric">*</span>
+                  </Label>
+                  <div className={"input-block"}>
+                    <SingleDatePicker
+                      date={moment(this.state.date)} // momentPropTypes.momentObj or null
+                      onDateChange={date => this.setState({ date })} // PropTypes.func.isRequired
+                      id="Date" // PropTypes.string.isRequired,
+                      focused={this.state.focused} // PropTypes.bool
+                      onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                    />
+                  </div>
+                </FormGroup>
+              </Col>
             </Row>
             <Col md="12">
               <FormGroup>
