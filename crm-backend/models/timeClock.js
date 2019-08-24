@@ -69,7 +69,17 @@ const timeClockSchema = new Schema({
   updatedAt: {
     type: Date,
     default: null
-  }
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    default: null
+  },
+  parentId: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    default: null
+  },
 });
 
 module.exports = mongoose.model("TimeClock", timeClockSchema);

@@ -85,7 +85,7 @@ const addTimeLogs = async (req, res) => {
  *
  */
 const startTimer = async (req, res) => {
-  const { body } = req;
+  const { body, currentUser } = req;
   const { technicianId, serviceId, orderId } = body;
   console.log("Time Clock Restriction", timeClocks[`${technicianId}`]);
 
@@ -99,6 +99,11 @@ const startTimer = async (req, res) => {
     technicianId,
     serviceId,
     orderId,
+    userId: mongoose.Types.ObjectId(currentUser.id),
+    parentId: currentUser.parentId
+      ? mongoose.Types.ObjectId(currentUser.parentId)
+      : mongoose.Types.ObjectId(currentUser.id),
+    isDeleted: false,
     startDateTime: new Date()
   });
   await UserModel.updateOne(
@@ -140,7 +145,7 @@ const startTimer = async (req, res) => {
  *
  */
 const stopTimer = async (req, res) => {
-  const { body } = req;
+  const { body, currentUser } = req;
   const { technicianId, serviceId } = body;
   if (timeClocks[`${technicianId}`]) {
     // return res.status(400).json({
@@ -153,6 +158,11 @@ const stopTimer = async (req, res) => {
     result = await TimeClock.findOne({
       technicianId: technicianId,
       serviceId: serviceId,
+      userId: mongoose.Types.ObjectId(currentUser.id),
+      parentId: currentUser.parentId
+        ? mongoose.Types.ObjectId(currentUser.parentId)
+        : mongoose.Types.ObjectId(currentUser.id),
+      isDeleted: false,
       isCompleted: false
     }).populate("technicianId orderId");
   } else {
@@ -259,7 +269,7 @@ const getTimeLogOfTechnician = async (req, res) => {
  */
 const switchService = async (req, res) => {
   try {
-    const { body } = req;
+    const { body, currentUser } = req;
     const { technicianId, serviceId, orderId, oldService } = body;
     if (timeClocks[`${technicianId}`]) {
       timeClocks[`${technicianId}`].destroy();
@@ -280,6 +290,10 @@ const switchService = async (req, res) => {
       technicianId,
       serviceId,
       orderId,
+      userId: mongoose.Types.ObjectId(currentUser.id),
+      parentId: currentUser.parentId
+        ? mongoose.Types.ObjectId(currentUser.parentId)
+        : mongoose.Types.ObjectId(currentUser.id),
       startDateTime: Date.now()
     });
     await UserModel.updateOne(
@@ -398,10 +412,11 @@ const updateTimeLogOfTechnician = async (req, res) => {
  *
  */
 const getAllTimeLogs = async (req, res) => {
-  const { query } = req;
+  const { currentUser } = req;
   try {
     const result = await TimeClock.find({
-      isDeleted: false
+      isDeleted: false,
+      userId: mongoose.Types.ObjectId(currentUser.id)
     }).populate({
       path: "technicianId orderId", match: {
         isDeleted: false
