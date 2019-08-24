@@ -35,6 +35,7 @@ class Users extends Component {
   };
   componentDidUpdate({ userReducer, location }) {
     if (
+      userReducer.userData &&
       this.props.userReducer.userData &&
       this.props.userReducer.userData.isSuccess !==
         userReducer.userData.isSuccess
