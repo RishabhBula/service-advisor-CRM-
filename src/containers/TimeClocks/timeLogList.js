@@ -11,13 +11,14 @@ import {
   // Label,
   Table,
 } from "reactstrap";
-import NoDataFound from "../../common/NoFound"
-import { AppConfig } from "../../../config/AppConfig";
+import NoDataFound from "../../components/common/NoFound"
+import { AppConfig } from "../../config/AppConfig";
 import moment from "moment";
-import { CrmTimeClockModal } from "../../common/CrmTimeClockModel";
-import { calculateDurationFromSeconds } from "../../../helpers/Sum"
-import { ConfirmBox } from "../../../helpers/SweetAlert";
-import Dollor from "../../common/Dollor"
+import { CrmTimeClockModal } from "../../components/common/CrmTimeClockModel";
+import { calculateDurationFromSeconds } from "../../helpers/Sum"
+import { ConfirmBox } from "../../helpers/SweetAlert";
+import Dollor from "../../components/common/Dollor"
+import Loader from "../Loader/Loader";
 
 class TimeLogList extends Component {
   constructor(props) {
@@ -49,8 +50,9 @@ class TimeLogList extends Component {
     }
     const paylod = {
       isDeleted: true,
-      orderId: orderId,
-      _id: timeLogId
+      orderId: orderId ? orderId : null,
+      _id: timeLogId,
+      isTimerClock: true
     }
     this.props.editTimeLogRequest(paylod)
   }
@@ -62,7 +64,8 @@ class TimeLogList extends Component {
       getUserData,
       orderReducer,
       editTimeLogRequest,
-      modelInfoReducer, } = this.props;
+      modelInfoReducer,
+      isSuccess } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockEditModalOpen } = modelDetails;
     const { page, timeLogEle } = this.state
@@ -143,29 +146,31 @@ class TimeLogList extends Component {
               <th width='50px'>S No.</th>
               <th width={"80px"}>Type</th>
               <th width={"150px"}><i className="fa fa-user"></i> Technician</th>
-              {/* <th>Vehicle</th> */}
+              <th>Customer</th>
+              <th>Vehicle</th>
               <th> Start Date Time</th>
               <th> End Date Time</th>
               <th> Duration</th>
-              {/* <th>Activity</th> */}
+              <th>Activity</th>
               <th width={"100px"}>Tech Rate/<small>Hrs</small></th>
               <th width={"80"}>Total</th>
               <th width={"90"} className={"text-center"}>Action</th>
             </tr>
           </thead>
           <tbody>
-            {
+            {isSuccess ?
               timeLogData && timeLogData.length ? timeLogData.map((timeLog, index) => {
                 return (
                   <tr key={index}>
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td className={"text-capitalize"}>{timeLog.type}</td>
                     <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
-                    {/* <td>{timeLog.orderId && timeLog.orderId.vehicleId ? `${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}` : "-"}</td> */}
+                    <td className={"text-capitalize"}>{timeLog.orderId && timeLog.orderId.customerId ? `${timeLog.orderId.customerId.firstName} ${timeLog.orderId.customerId.lastName}` : "-"}</td>
+                    <td>{timeLog.orderId && timeLog.orderId.vehicleId ? `${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}` : "-"}</td>
                     <td>{moment.utc(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
                     <td>{moment.utc(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
-                    {/* <td>{timeLog.activity}</td>  */}
+                    <td>{timeLog.activity}</td>
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
                     <td><Dollor value={`${parseFloat(timeLog.total).toFixed(2)}`} /></td>
                     <td className={"text-center"}>
@@ -206,7 +211,14 @@ class TimeLogList extends Component {
                   <td className={"text-center"} colSpan={8}>
                     <NoDataFound showAddButton message={"Currently there are no time logs added."} noResult={false} onAddClick={handleTimeClockModal} />
                   </td>
+                </tr> :
+              (
+                <tr>
+                  <td className={"text-center"} colSpan={10}>
+                    <Loader />
+                  </td>
                 </tr>
+              )
             }
           </tbody>
         </Table>

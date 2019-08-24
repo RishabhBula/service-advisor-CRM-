@@ -31,7 +31,9 @@ const initialAuthState = {
     showAppointmentDetailModal: false,
     showAddAppointmentModalHeader: false,
     openSubscriptionModel: false,
-    openSubPayementModel: false
+    openSubPayementModel: false,
+    openSubscriptionUpdateModel: false,
+    openSubUpgradeModel: false
   }
 };
 

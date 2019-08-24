@@ -1,11 +1,12 @@
 import { handleActions } from "redux-actions";
-import { usersActions } from "../actions";
+import { usersActions, timelogActions } from "../actions";
 
 const initialState = {
   users: [],
   isLoading: true,
   totalUsers: 0,
   technicianData: [],
+  isStartTimer: [],
   userData: {
     isSuccess: false,
     isEditSuccess: false,
@@ -15,9 +16,15 @@ const initialState = {
 
 export const usersReducer = handleActions(
   {
+    [usersActions.GET_USER_LIST]: (state, { payload }) => ({
+      users: [],
+      isLoading: true
+    }),
     [usersActions.GET_USER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isStartTimer: [],
+      isLoading: false
     }),
     [usersActions.ADD_USER]: (state, action) => ({
       ...state,
@@ -54,6 +61,14 @@ export const usersReducer = handleActions(
     [usersActions.GET_SINGLE_USER_DETAILS_SUCCESS]: (state, action) => ({
       ...state,
       technicianData: action.payload
+    }),
+    [usersActions.IS_TIME_CLOCK_START]: (state, action) => ({
+      ...state,
+      isStartTimer: action.payload.isStartTimer
+    }),
+    [timelogActions.STOP_TIMER]: (state, action) => ({
+      ...state,
+      isStartTimer: false
     })
   },
   initialState

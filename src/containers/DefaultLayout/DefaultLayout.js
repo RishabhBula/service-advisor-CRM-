@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { Container, UncontrolledTooltip } from "reactstrap";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, Link } from "react-router-dom";
 import React, { Component, Suspense } from "react";
 
 // sidebar nav config
@@ -50,7 +50,8 @@ import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionMod
 import { WildCardRoutes } from "../../config/Constants";
 import { isValidObjectId } from "../../helpers";
 import moment from "moment";
-import ServiceAdvisorLogo from "./../../assets/logo-white.svg";
+
+import fav from "./../../assets/fav.png";
 
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
@@ -172,15 +173,16 @@ class DefaultLayout extends Component {
       subscriptionReducer,
       addSubscriptionRequest,
       modelOperate,
-      modelInfoReducer
+      modelInfoReducer,
+      logoutUser
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { openSubPayementModel } = modelDetails;
-    const d1 = moment(new Date()).toDate();
-    const d2 = new Date(planExiprationDate);
-    const diffTime = Math.abs(d1.getTime() - d2.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (!isInTrialPeriod && (isNaN(diffDays) || !planId)) {
+    // const d1 = moment(new Date()).toDate();
+    // const d2 = new Date(planExiprationDate);
+    // const diffTime = Math.abs(d1.getTime() - d2.getTime());
+    const isPlanExpiered = moment(planExiprationDate).isSameOrBefore(new Date(), 'day');
+    if (!isInTrialPeriod && (isPlanExpiered || !planId)) {
       return (
         <CrmSubscriptionModel
           openSubscriptionModel={true}
@@ -189,6 +191,7 @@ class DefaultLayout extends Component {
           getSubscriptionPlanRequest={getSubscriptionPlanRequest}
           subscriptionReducer={subscriptionReducer}
           addSubscriptionRequest={addSubscriptionRequest}
+          logOutRequest={logoutUser}
         />
       );
     } else {
@@ -301,14 +304,24 @@ class DefaultLayout extends Component {
                 )}
               </div>
             ) : (
-              <div className={"provider-logo company-name"} id={"comapnyName"}>
+              <div
+                className={"provider-logo company-name"}
+                id={"comapnyName"}
+              >
                 <Avtar value={providerCompanyName} class={"name"} />
                 <UncontrolledTooltip target={"comapnyName"}>
                   {profileInfo.companyName}
                 </UncontrolledTooltip>
               </div>
             )}
-            <div className={"company-logo"}>{providerCompanyName}</div>
+            <div className={"company-logo"}>
+              <Link
+                to={"/profile"}
+                className={"text-decoration-none text-white"}
+              >
+                {providerCompanyName}
+              </Link>
+            </div>
             {/* <AppNavbarBrand
                 full={{
                   src: shopLogo || "/assets/img/logo-white.svg",
@@ -331,15 +344,14 @@ class DefaultLayout extends Component {
                 {...this.props}
               />
             </Suspense>
-            <div className={"text-center nav-footer-logo"}>
+            {/* <div className={"text-center nav-footer-logo"}>
               <img
                 src={ServiceAdvisorLogo}
                 alt={"service-advisor"}
                 width={70}
               />
               <div>Service Adviser</div>
-              {/* <span className={"powered-by-line"}>Powered by</span> */}
-            </div>
+            </div> */}
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>
@@ -388,6 +400,25 @@ class DefaultLayout extends Component {
         <AppFooter>
           <Suspense fallback={""}>
             <DefaultFooter />
+            <div className={"d-flex align-items-center w-100"}>
+              Powered By
+              <a
+                href="http://serviceadvisor.io"
+                target={"_blank"}
+                className={
+                  "d-inline-flex align-items-center ml-2 mr-1 text-body text-bold"
+                }
+              >
+                <img
+                  src={fav}
+                  alt={"service-advisor"}
+                  width={25}
+                  className={"mr-1"}
+                />
+                <b>Service Adviser</b>
+              </a>
+              | All Rights Reserved.
+            </div>
           </Suspense>
         </AppFooter>
         {this.customerAndVehicleModal()}

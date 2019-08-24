@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  UncontrolledTooltip
-} from "reactstrap";
+import { Card, CardBody, Button, UncontrolledTooltip } from "reactstrap";
 import { CrmUserModal } from "../../components/common/CrmUserModal";
 import UsersList from "../../components/UsersList";
 import { connect } from "react-redux";
@@ -17,7 +12,7 @@ import {
 } from "../../actions";
 import * as qs from "query-string";
 import { isEqual } from "../../helpers/Object";
-import { AppRoutes } from "../../config/AppRoutes"
+import { AppRoutes } from "../../config/AppRoutes";
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -40,8 +35,9 @@ class Users extends Component {
   };
   componentDidUpdate({ userReducer, location }) {
     if (
+      this.props.userReducer.userData &&
       this.props.userReducer.userData.isSuccess !==
-      userReducer.userData.isSuccess
+        userReducer.userData.isSuccess
     ) {
       if (this.props.userReducer.userData.isSuccess) {
         const query = qs.parse(this.props.location.search);
@@ -49,8 +45,10 @@ class Users extends Component {
       }
     }
     if (
+      userReducer.userData &&
+      this.props.userReducer.userData &&
       userReducer.userData.isEditSuccess !==
-      this.props.userReducer.userData.isEditSuccess
+        this.props.userReducer.userData.isEditSuccess
     ) {
       if (this.props.userReducer.userData.isEditSuccess) {
         const query = qs.parse(this.props.location.search);
@@ -87,49 +85,54 @@ class Users extends Component {
     this.props.onStatusUpdate({ ...query, ...data });
   };
   render() {
-    const { userReducer, addUser, modelInfoReducer, modelOperate, profileInfoReducer } = this.props;
+    const {
+      userReducer,
+      addUser,
+      modelInfoReducer,
+      modelOperate,
+      profileInfoReducer
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { addUserModal, editUserModal } = modelDetails;
-    const companyName = profileInfoReducer.profileInfo.companyName
-    const planData = profileInfoReducer.profileInfo.planId
-    const isInTrialPeriod = profileInfoReducer.profileInfo.isInTrialPeriod
-    const userData = userReducer.users
+    const companyName = profileInfoReducer.profileInfo.companyName;
+    const planData = profileInfoReducer.profileInfo.planId;
+    const isInTrialPeriod = profileInfoReducer.profileInfo.isInTrialPeriod;
+    const userData = userReducer.users;
     return (
       <>
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
-            {
-              planData ?
-                userData.length < (planData.facilities.noOfLiscence) ?
-                  <div className={"text-right invt-add-btn-block"}>
-                    <Button
-                      color="primary"
-                      id="add-user"
-                      onClick={this.toggleCreateModal}
-                    >
-                      <i className={"fa fa-plus"} />
-                      &nbsp; {`Add New ${AppRoutes.STAFF_MEMBERS.name}`}
-                    </Button>
-                    <UncontrolledTooltip target={"add-user"}>
-                      {`Add New ${AppRoutes.STAFF_MEMBERS.name}`}
-                    </UncontrolledTooltip>
-                  </div> :
-                  null :
-                isInTrialPeriod ?
-                  <div className={"text-right invt-add-btn-block"}>
-                    <Button
-                      color="primary"
-                      id="add-user"
-                      onClick={this.toggleCreateModal}
-                    >
-                      <i className={"fa fa-plus"} />
-                      &nbsp; Add New Staff Member
+            {planData ? (
+              userData.length < planData.facilities.noOfLiscence ? (
+                <div className={"text-right invt-add-btn-block"}>
+                  <Button
+                    color="primary"
+                    id="add-user"
+                    onClick={this.toggleCreateModal}
+                  >
+                    <i className={"fa fa-plus"} />
+                    &nbsp; {`Add New ${AppRoutes.STAFF_MEMBERS.name}`}
                   </Button>
-                    <UncontrolledTooltip target={"add-user"}>
-                      Add New Staff Member
+                  <UncontrolledTooltip target={"add-user"}>
+                    {`Add New ${AppRoutes.STAFF_MEMBERS.name}`}
                   </UncontrolledTooltip>
-                  </div> : null
-            }
+                </div>
+              ) : null
+            ) : isInTrialPeriod ? (
+              <div className={"text-right invt-add-btn-block"}>
+                <Button
+                  color="primary"
+                  id="add-user"
+                  onClick={this.toggleCreateModal}
+                >
+                  <i className={"fa fa-plus"} />
+                  &nbsp; Add New Staff Member
+                </Button>
+                <UncontrolledTooltip target={"add-user"}>
+                  Add New Staff Member
+                </UncontrolledTooltip>
+              </div>
+            ) : null}
             <UsersList
               userData={userReducer}
               onPageChange={this.onPageChange}

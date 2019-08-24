@@ -56,6 +56,9 @@
   font-style: normal;
 }
 /*=========Pre Defined classes=============*/
+.text-bold{
+  font-family: "FrutigerNeueLTPro-Bold";
+}
 .btn-secondary.btn-download {
   background: #e5efe7;
   font-weight: 600;
@@ -287,6 +290,11 @@
 }
 .title-h5 {
   font-size: 16px;
+}
+.sample-download-link{
+  color: #1258ba;
+  display: inline-block;
+  padding-left: 3px;
 }
 /* workflow css */
 .page-title {

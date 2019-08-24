@@ -42,10 +42,10 @@ export default class AddAppointment extends Component {
       selectedVehicle: null,
       isEmail: false,
       isSms: false,
-      startTime: moment()
+      startTime: moment.utc()
         .add(1, "hour")
         .format("HH:00"),
-      endTime: moment()
+      endTime: moment.utc()
         .add(2, "hours")
         .format("HH:00"),
       appointmentTitle: "",
@@ -82,8 +82,12 @@ export default class AddAppointment extends Component {
     }
     if (isOpen !== oldIsOpen && orderData) {
       if (orderData) {
-        const customerId = orderData.customerId ? orderData.customerId : null
-        const vehicleId = orderData.vehicleId ? orderData.vehicleId : null
+        const customerId = orderData && orderData.customerId
+          ? orderData.customerId
+          : null;
+        const vehicleId = orderData && orderData.vehicleId
+          ? orderData.vehicleId
+          : null;
         const orderId = orderData ? orderData : null
         this.setState({
           selectedCustomer: {
@@ -166,8 +170,8 @@ export default class AddAppointment extends Component {
           phone,
           selectedColor: appointmentColor,
           appointmentDate: new Date(appointmentDate),
-          endTime: moment(endTime).format("HH:mm"),
-          startTime: moment(startTime).format("HH:mm"),
+          endTime: moment.utc(endTime).format("HH:mm"),
+          startTime: moment.utc(startTime).format("HH:mm"),
           selectedCustomer: {
             data: customerId,
             label: `${customerId.firstName} ${customerId.lastName}`,
@@ -315,10 +319,10 @@ export default class AddAppointment extends Component {
       errors: {},
       selectedCustomer: null,
       selectedVehicle: null,
-      startTime: moment()
+      startTime: moment.utc()
         .add(1, "hour")
         .format("HH:mm"),
-      endTime: moment()
+      endTime: moment.utc()
         .add(2, "hours")
         .format("HH:mm"),
       appointmentTitle: "",

@@ -3,6 +3,7 @@ import { createAction } from "redux-actions";
 export const serviceActions = {
     GET_SERVICE_LIST: "Service list Requested!",
     GET_SERVICE_LIST_SUCCESS: "Service list success!",
+    GET_SERVICE_DATA_SUCCESS: " Service data success!",
     ADD_SERVICE: "Add new service Requested!",
     ADD_SERVICE_SUCCESS: "Add new service Success!",
     ADD_CANNED_SERVICE: "Add new canned service Requested!",
@@ -35,3 +36,4 @@ export const deleteCannedServiceRequest = createAction(serviceActions.DELETE_CAN
 export const deleteCannedServiceSuccess = createAction(serviceActions.DELETE_CANNED_SERVICE_SUCCESS);
 export const getAllServiceListRequest = createAction(serviceActions.GET_ALL_SERVICE_LIST_REQUEST);
 export const getAllServiceListSuccess = createAction(serviceActions.GET_ALL_SERVICE_LIST_SUCCESS);
+export const getServiceDataSuccess = createAction(serviceActions.GET_SERVICE_DATA_SUCCESS)

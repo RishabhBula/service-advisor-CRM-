@@ -33,12 +33,14 @@ const addSubscriptionLogic = createLogic({
       } else {
          toast.success(result.messages[0]);
          dispatch(
-            modelOpenRequest({
-               modelDetails: {
-                  openSubscriptionModel: false,
-                  openSubPayementModel: false
-               }
-            })
+           modelOpenRequest({
+             modelDetails: {
+               openSubscriptionModel: false,
+               openSubPayementModel: false,
+               openSubUpgradeModel: false,
+               openSubscriptionUpdateModel:false
+             }
+           })
          );
          dispatch(profileInfoRequest())
          dispatch(hideLoader());

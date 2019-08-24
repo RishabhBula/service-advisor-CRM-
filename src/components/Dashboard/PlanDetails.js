@@ -4,7 +4,7 @@ const DashboardPlanDetails = props => (
   <div className={"dashboard-plan-container dashboard-block-container"}>
     <div className={"image-container"}>
       {/* <img src={CheckIcon} alt={""} /> */}
-      <i class="icon-check icons font-2xl" />
+      <i className="icon-check icons font-2xl" />
     </div>
     <span>
       Hey{" "}

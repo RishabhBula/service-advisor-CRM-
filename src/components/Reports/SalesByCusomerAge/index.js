@@ -18,6 +18,7 @@ import { CustomerAgeTypes } from "../../../config/Constants";
 import { AppRoutes } from "../../../config/AppRoutes";
 import { logger } from "../../../helpers";
 import NoDataFound from "../../common/NoFound";
+import Dollor from "../../common/Dollor"
 
 class SalesByCusomerAge extends Component {
   constructor(props) {
@@ -181,7 +182,11 @@ class SalesByCusomerAge extends Component {
                     return (
                       <tr key={index}>
                         <td>
-                          {(1 - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                          {(1 - 1) *
+                            AppConfig.ITEMS_PER_PAGE +
+                            index +
+                            1}
+                          .
                         </td>
                         <td>
                           <div
@@ -195,10 +200,14 @@ class SalesByCusomerAge extends Component {
                                 ":id",
                                 customer.customerId._id
                               )}
+                              className={
+                                "text-body font-weight-semibold"
+                              }
                             >
                               {" "}
                               {[
-                                customer.customerId.firstName,
+                                customer.customerId
+                                  .firstName,
                                 customer.customerId.lastName
                               ]
                                 .join(" ")
@@ -208,35 +217,79 @@ class SalesByCusomerAge extends Component {
                           {customer.customerId.email ? (
                             <>
                               <a
-                                href={`mailto:${customer.customerId.email}`}
+                                href={`mailto:${
+                                  customer.customerId.email
+                                }`}
                                 target={"_blank"}
+                                className={"text-body"}
                               >
                                 {customer.customerId.email}
                               </a>
                               <br />
                             </>
                           ) : null}
-                          {customer.customerId.phoneDetail &&
-                          customer.customerId.phoneDetail[0] ? (
+                          {customer.customerId
+                            .phoneDetail &&
+                          customer.customerId
+                            .phoneDetail[0] ? (
                             <a
                               href={`tel:${
-                                customer.customerId.phoneDetail[0].value
+                                customer.customerId
+                                  .phoneDetail[0].value
                               }`}
                               target={"_blank"}
+                              className={"text-body"}
                             >
-                              {customer.customerId.phoneDetail[0].value}
+                              {
+                                customer.customerId
+                                  .phoneDetail[0].value
+                              }
                             </a>
                           ) : null}
                         </td>
-                        <td>${customer["0-30 Days"] || 0}</td>
-                        <td>${customer["31-60 Days"] || 0}</td>
-                        <td>${customer["61-90 Days"] || 0}</td>
-                        <td>${customer["91 Days and above"] || 0}</td>
-                        <td className={"font-weight-semibold"}>
-                          ${customer["due"] || 0}
+                        <td>
+                          <Dollor
+                            value={
+                              customer["0-30 Days"] || 0
+                            }
+                          />
                         </td>
-                        <td className={"font-weight-semibold"}>
-                          ${customer["paid"] || 0}
+                        <td>
+                          <Dollor
+                            value={
+                              customer["31-60 Days"] || 0
+                            }
+                          />
+                        </td>
+                        <td>
+                          <Dollor
+                            value={
+                              customer["61-90 Days"] || 0
+                            }
+                          />
+                        </td>
+                        <td>
+                          <Dollor
+                            value={
+                              customer[
+                                "91 Days and above"
+                              ] || 0
+                            }
+                          />
+                        </td>
+                        <td
+                          className={"font-weight-semibold"}
+                        >
+                          <Dollor
+                            value={customer["due"] || 0}
+                          />
+                        </td>
+                        <td
+                          className={"font-weight-semibold"}
+                        >
+                          <Dollor
+                            value={customer["paid"] || 0}
+                          />
                         </td>
                       </tr>
                     );
@@ -261,22 +314,34 @@ class SalesByCusomerAge extends Component {
                 Total
               </td>
               <td>
-                <b>${totalThirty}</b>
+                <b>
+                  <Dollor value={totalThirty} />
+                </b>
               </td>
               <td>
-                <b>${totalSixty}</b>
+                <b>
+                  <Dollor value={totalSixty} />
+                </b>
               </td>
               <td>
-                <b>${totalNinenty}</b>
+                <b>
+                  <Dollor value={totalSixty} />
+                </b>
               </td>
               <td>
-                <b>${ninentyPlus}</b>
+                <b>
+                  <Dollor value={ninentyPlus} />
+                </b>
               </td>
               <td>
-                <b>${totalUnPaid}</b>
+                <b>
+                  <Dollor value={totalUnPaid} />
+                </b>
               </td>
               <td>
-                <b>${totalPaid}</b>
+                <b>
+                  <Dollor value={totalPaid} />
+                </b>
               </td>
             </tr>
           </tbody>

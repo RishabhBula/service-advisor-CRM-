@@ -57,7 +57,8 @@ import {
   customerAddRequest,
   vehicleAddRequest,
   getOrderListForSelect,
-  addAppointmentRequest
+  addAppointmentRequest,
+  getAppointments
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -390,8 +391,10 @@ class Order extends Component {
       customerInfoReducer,
       vehicleAddRequest,
       vehicleAddInfoReducer,
+      appointmentReducer,
       getOrdersData,
-      addAppointment
+      addAppointment,
+      getAppointments
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -411,10 +414,10 @@ class Order extends Component {
                         Order (
                         {`#${
                           typeof this.props.orderReducer.orderId !==
-                            "object"
+                          "object"
                             ? this.props.orderReducer.orderId
                             : null
-                          }`}
+                        }`}
                         )
                       </h3>
                       <div className="input-block">
@@ -452,51 +455,51 @@ class Order extends Component {
                   </div>
                   <div className={"position-relative"}>
                     {this.props.orderReducer.orderItems &&
-                      (!this.props.orderReducer.orderItems.customerId ||
-                        !isOrderUpdate ||
-                        isCustomerVehicleUpdate ||
-                        !this.props.orderReducer.orderItems.vehicleId) ? (
-                        <div className={"service-overlay"}>
-                          <img
-                            src="https://gramener.com/schoolminutes/img/arrow.png"
-                            alt={"arrow"}
-                          />
-                          <h3>Please Add Order Details first</h3>
-                        </div>
-                      ) : null}
+                    (!this.props.orderReducer.orderItems.customerId ||
+                      !isOrderUpdate ||
+                      isCustomerVehicleUpdate ||
+                      !this.props.orderReducer.orderItems.vehicleId) ? (
+                      <div className={"service-overlay"}>
+                        <img
+                          src="https://gramener.com/schoolminutes/img/arrow.png"
+                          alt={"arrow"}
+                        />
+                        <h3>Please Add Order Details first</h3>
+                      </div>
+                    ) : null}
 
                     <div className={"order-activity"}>
                       {this.props.orderReducer.orderItems &&
-                        this.props.orderReducer.orderItems.serviceId &&
-                        this.props.orderReducer.orderItems.serviceId.length &&
-                        this.props.orderReducer.orderItems.customerId &&
-                        this.props.orderReducer.orderItems.vehicleId ? (
-                          <>
-                            <span
-                              color=""
-                              className="print-btn"
-                              onClick={this.handelTemplateModal}
-                              id={"sentInvoice"}
-                            >
-                              <i className="icons cui-cursor" />
-                              &nbsp; Sent
+                      this.props.orderReducer.orderItems.serviceId &&
+                      this.props.orderReducer.orderItems.serviceId.length &&
+                      this.props.orderReducer.orderItems.customerId &&
+                      this.props.orderReducer.orderItems.vehicleId ? (
+                        <>
+                          <span
+                            color=""
+                            className="print-btn"
+                            onClick={this.handelTemplateModal}
+                            id={"sentInvoice"}
+                          >
+                            <i className="icons cui-cursor" />
+                            &nbsp; Sent
                           </span>
-                            <UncontrolledTooltip target={"sentInvoice"}>
-                              Click to Send Invoice
+                          <UncontrolledTooltip target={"sentInvoice"}>
+                            Click to Send Invoice
                           </UncontrolledTooltip>
-                            <span
-                              id="add-Appointment"
-                              className="print-btn"
-                              onClick={this.getPdf}
-                            >
-                              <i className="icon-printer icons " />
-                              &nbsp; Print
+                          <span
+                            id="add-Appointment"
+                            className="print-btn"
+                            onClick={this.getPdf}
+                          >
+                            <i className="icon-printer icons " />
+                            &nbsp; Print
                           </span>
-                            <UncontrolledTooltip target={"add-Appointment"}>
-                              Click to Print Invoice
+                          <UncontrolledTooltip target={"add-Appointment"}>
+                            Click to Print Invoice
                           </UncontrolledTooltip>
-                          </>
-                        ) : null}
+                        </>
+                      ) : null}
                     </div>
                     <div className={"position-relative"}>
                       <Suspense fallback={"Loading.."}>
@@ -632,49 +635,50 @@ class Order extends Component {
                 getOrders={getOrdersData}
                 addAppointment={addAppointment}
                 getUserData={getUserData}
+                getAppointments={getAppointments}
+                appointmentReducer={appointmentReducer}
               />
               {this.props.orderReducer.orderItems &&
-                this.props.orderReducer.orderItems.customerId &&
-                this.props.orderReducer.orderItems.vehicleId ? (
-                  <>
-
-                    <SendInspection
-                      isOpen={this.state.sentModal}
-                      toggle={this.handelTemplateModal}
-                      customerData={customerData}
-                      vehicleData={vehicleData}
-                      searchMessageTemplateList={
-                        this.props.searchMessageTemplateList
-                      }
-                      toggleMessageTemplate={this.toggleMessageTemplate}
-                      sendMessageTemplate={this.props.sendMessageTemplate}
-                      isOrder
+              this.props.orderReducer.orderItems.customerId &&
+              this.props.orderReducer.orderItems.vehicleId ? (
+                <>
+                  <SendInspection
+                    isOpen={this.state.sentModal}
+                    toggle={this.handelTemplateModal}
+                    customerData={customerData}
+                    vehicleData={vehicleData}
+                    searchMessageTemplateList={
+                      this.props.searchMessageTemplateList
+                    }
+                    toggleMessageTemplate={this.toggleMessageTemplate}
+                    sendMessageTemplate={this.props.sendMessageTemplate}
+                    isOrder
+                    orderReducer={orderReducer}
+                    profileReducer={profileInfoReducer}
+                  />
+                  <MessageTemplate
+                    isOpen={this.state.mesageModal}
+                    toggle={this.toggleMessageTemplate}
+                    inspectionData={this.props.inspectionReducer}
+                    addMessageTemplate={this.props.addMessageTemplate}
+                    getMessageTemplate={this.props.getMessageTemplate}
+                    updateMessageTemplate={this.props.updateMessageTemplate}
+                    deleteMessageTemplate={this.props.deleteMessageTemplate}
+                  />
+                  <div id="customers" className={"invoiceTableCompnent"}>
+                    <InvoiceTable
                       orderReducer={orderReducer}
+                      vehicleData={vehicleData}
                       profileReducer={profileInfoReducer}
                     />
-                    <MessageTemplate
-                      isOpen={this.state.mesageModal}
-                      toggle={this.toggleMessageTemplate}
-                      inspectionData={this.props.inspectionReducer}
-                      addMessageTemplate={this.props.addMessageTemplate}
-                      getMessageTemplate={this.props.getMessageTemplate}
-                      updateMessageTemplate={this.props.updateMessageTemplate}
-                      deleteMessageTemplate={this.props.deleteMessageTemplate}
-                    />
-                    <div id="customers" className={"invoiceTableCompnent"}>
-                      <InvoiceTable
-                        orderReducer={orderReducer}
-                        vehicleData={vehicleData}
-                        profileReducer={profileInfoReducer}
-                      />
-                    </div>
-                  </>
-                ) : null}
+                  </div>
+                </>
+              ) : null}
             </div>
           </Card>
         ) : (
-            <Loader />
-          )}
+          <Loader />
+        )}
       </div>
     );
   }
@@ -694,7 +698,8 @@ const mapStateToProps = state => ({
   pdfReducer: state.pdfReducer,
   customerFleetReducer: state.fleetReducer,
   customerInfoReducer: state.customerInfoReducer,
-  vehicleAddInfoReducer: state.vehicleAddInfoReducer
+  vehicleAddInfoReducer: state.vehicleAddInfoReducer,
+  appointmentReducer: state.appointmentReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -822,8 +827,8 @@ const mapDispatchToProps = dispatch => ({
   },
   getOrders: () => dispatch(getOrderList()),
   updateOrderStatus: data => dispatch(updateOrderStatus(data)),
-  deleteCannedServiceRequest: (data) => {
-    dispatch(deleteCannedServiceRequest(data))
+  deleteCannedServiceRequest: data => {
+    dispatch(deleteCannedServiceRequest(data));
   },
   deleteService: data => dispatch(deleteService(data)),
   genrateInvoice: data => {
@@ -837,6 +842,7 @@ const mapDispatchToProps = dispatch => ({
   },
   getOrdersData: data => dispatch(getOrderListForSelect(data)),
   addAppointment: data => dispatch(addAppointmentRequest(data)),
+  getAppointments: data => dispatch(getAppointments(data))
 });
 export default connect(
   mapStateToProps,

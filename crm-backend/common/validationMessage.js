@@ -24,8 +24,8 @@ const otherMessage = {
   newRegister: "You have Succesfully Registered.",
   confirmMessage: "A confirmation link has been sent to your email id.",
   insertUserMessage:
-    "Member details added successfully. A confirmation link has been sent to user email id.",
-  updatedUserMessage: "Member details updated successfully.",
+    "Technician details added successfully. A confirmation link has been sent to user email id.",
+  updatedUserMessage: "Technician details updated successfully.",
   updateUserDataMessage: "User details updated successfully.",
   userPasswordCreation: "New password created successfully.",
   linkExpiration: "Link has been expired.",

@@ -197,19 +197,24 @@ class DashboardAppointments extends Component {
                             )}
                           </td>
                           <td>
-                            {moment(appointment.appointmentDate).format("LL")}
+                            {moment(appointment.appointmentDate).format(
+                              "LL"
+                            )}
                             <br />
                             {moment(appointment.startTime).format(
                               "hh:ssa"
-                            )} - {moment(appointment.endTime).format("hh:ssa")}
+                            )}{" "}
+                            - {moment(appointment.endTime).format("hh:ssa")}
                           </td>
                         </tr>
                       );
                     })
                   ) : (
-                    <td colSpan={6} className={"text-center"}>
-                      <NoDataFound message={"No Appointments"} />
-                    </td>
+                    <tr>
+                      <td colSpan={6} className={"text-center"}>
+                        <NoDataFound message={"No Appointments"} />
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </Table>

@@ -29,17 +29,19 @@ class OrderSummary extends Component {
   
   render() {
     const { orderData } = this.state
+    const { summaryReducer } = this.props;
     const customerInfo = orderData ? orderData.customerId : "";
     //const orderStatus = orderData ? orderData.status: ""
     const vehicleInfo = orderData ? orderData.vehicleId : ""
     const orderID = orderData ? orderData.orderId : ""
     const createdDate = orderData ? orderData.createdAt : ""
     const serviceData = orderData ? orderData.serviceId : ""
-    let serviceTotalArray
+    let serviceTotalArray;
     
     const orderLabel = orderData && !orderData.isInvoice ? 'Estimate' : 'Invoice' 
-    const serviceCal = serviceData && serviceData.length ? serviceTotalsCalculation(serviceData) : ''
-   
+    const serviceCal = serviceData && serviceData.length ? serviceTotalsCalculation(serviceData) : '';
+    const companyName = summaryReducer && summaryReducer.companyData ? summaryReducer.companyData.companyName : null;
+   console.log(this.props.summaryReducer, "orderData");
     return (
       <>
         <div className={"summary-head d-flex flex-column  pt-2 pb-2"}>
@@ -51,7 +53,7 @@ class OrderSummary extends Component {
           </div>
         </div>
         <div className={"company-info-head d-flex flex-row justify-content-between pt-1 pb-1 pl-2 pr-2 border-bottom border-top  align-items-center"}>
-          <h4 className={"mb-0"}>D-company</h4>
+          <h4 className={"mb-0 text-capitalize"}>{companyName}</h4>
           <div>Created Date: {moment(createdDate || '').format("MMM Do YYYY")}</div>
         </div>
         <div className={"user-info d-flex justify-content-between"}>

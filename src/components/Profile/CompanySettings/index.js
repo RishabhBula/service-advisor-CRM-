@@ -75,10 +75,7 @@ class CompanySettings extends Component {
   }
 
   componentDidMount = () => {
-    console.log(
-      this.props.profileData.profileInfo,
-      "this.props.profileData.profileInfo"
-    );
+
     if (this.props.profileData.profileInfo) {
       const {
         firstName,
@@ -376,7 +373,6 @@ class CompanySettings extends Component {
         serviceOffer: servicesOfferTemp,
         peopleWork: selected
       };
-      console.log(payload, "payload");
       const { isValid, errors } = Validator(
         payload,
         ProfileValidations,

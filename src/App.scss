@@ -610,6 +610,7 @@ body {
   }
   .workflow-table {
     font-family: $ft-regular;
+    min-width: 1200px;
     td,
     th {
       padding: 5px 10px;
@@ -882,18 +883,20 @@ body {
       color: #817f88;
     }
     .date-block{
-      font-size: 13px;
+      font-size: 14px;
+      position: relative;
+      top: -10px;
+      font-weight: 500;
+      color: #5b5963;      
     }
     .title{
       text-transform: capitalize;
       color: #000;
-      border-left: 3px solid #7f6cb9;
       margin-bottom: 10px;
       margin-left: 6px;
       line-height: 18px;
-      background: #fff;
       padding-top: 4px !important;
-      padding-bottom: 4px !important;
+      font-size: 16px;
     }
     label{
       font-family: $ft-bold;
@@ -920,9 +923,14 @@ body {
     }
   }
   .fc-content-skeleton table tr td :not(.fc-content-skeleton table tr td.fc-event-container){
+    // cursor: not-allowed;
+  }
+  .fc-content-skeleton table tr td.fc-past{
     cursor: not-allowed;
   }
-
+  .fc-content-skeleton table tr td{
+    cursor: pointer;
+  }
   .fc-toolbar{
     .fc-left{
       min-width: 250px;
@@ -966,5 +974,40 @@ body {
   .DayPicker-Day{
     min-width: 40px;
   }
+  .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside){
+    background-color: #646a71;
+  }
+  .fc-popover{
+    .fc-header{
+      background: #413c4f !important;
+      color: #fff;
+      padding: 0.5rem 0.7rem;
+      .fc-close{
+        color: #fff !important;
+        opacity: 1 !important;
+      }
+    }
+    .fc-body{
+      .fc-event{
+        background: #464646;
+      }
+    }
+  }
+// Customer import modal
+.import-instruction-list{
+  li{
+    padding: 3px 10px 3px 20px;
+    font-family: $ft-regular;
+    font-size: 13px;
+    position: relative;
+    .icons {
+      position: absolute;
+      left: 0;
+      top: 7px;
+      font-size: 12px;
+    }
+  }
+}
+
 }
 

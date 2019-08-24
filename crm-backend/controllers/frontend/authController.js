@@ -236,6 +236,13 @@ const loginApp = async (req, res) => {
         expiresIn: 86400
       }
     );
+    const isPlanExpiered = moment(result.planExiprationDate).isSameOrBefore(new Date(), 'day');
+    if (isPlanExpiered && result.isInTrialPeriod) {
+      await userModel.findByIdAndUpdate(result._id, {
+        isInTrialPeriod: false,
+        planId: null
+      })
+    }
     return res.status(200).json({
       responseCode: 200,
       data: result,
