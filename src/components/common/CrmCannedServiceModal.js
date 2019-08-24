@@ -22,6 +22,7 @@ export class CrmCannedServiceModal extends Component {
          serviceIndex: -1,
          isToggelOpen: false,
          activeIndex: '',
+         input: ""
       };
    }
    componentDidMount = () => {
@@ -32,13 +33,19 @@ export class CrmCannedServiceModal extends Component {
          serviceData: cannedServiceList
       })
    }
-   componentDidUpdate = ({ serviceReducers }) => {
+   componentDidUpdate = ({ serviceReducers, openCannedService }) => {
       if (serviceReducers && (serviceReducers !== this.props.serviceReducers)) {
          const {
             cannedServiceList
          } = this.props.serviceReducers
          this.setState({
             serviceData: cannedServiceList
+         })
+      }
+      if (openCannedService !== this.props.openCannedService) {
+         this.setState({
+            input: "",
+            serviceId: "",
          })
       }
    }
@@ -56,8 +63,26 @@ export class CrmCannedServiceModal extends Component {
       }
    }
    searchCannedServices = (input, callback) => {
-      this.props.getCannedServiceList({ input, callback });
+      if (input.length > 1) {
+         this.setState({
+            input: input
+         });
+         this.props.getCannedServiceList({ input, callback });
+      } else {
+         this.setState({
+            input: ""
+         });
+         this.props.getCannedServiceList({ input: "", callback });
+      }
    }
+
+   onBlur = () => {
+      this.setState({
+         input: ""
+      });
+      this.props.getCannedServiceList({ input: "" });
+   };
+
    handleServiceCollaps = (index) => {
       const { serviceIndex } = this.state
       if (serviceIndex === index) {
@@ -112,7 +137,7 @@ export class CrmCannedServiceModal extends Component {
    }
    render() {
       const { openCannedService, handleCannedServiceModal } = this.props
-      const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex } = this.state
+      const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex, input } = this.state
       return (
          <>
             <Modal
@@ -134,11 +159,13 @@ export class CrmCannedServiceModal extends Component {
                               loadOptions={this.searchCannedServices}
                               className="w-100 form-select"
                               value={serviceId}
+                              onBlur={this.onBlur}
                               onChange={e => {
                                  this.handleAddCannedService(e)
                               }}
                               isClearable={true}
-                              noOptionsMessage={() => "Type Canned Service name"
+                              noOptionsMessage={() =>
+                                 input ? "No Service found" : "Type Canned Service name"
                               }
                            />
                         </div>
@@ -212,7 +239,7 @@ export class CrmCannedServiceModal extends Component {
                               }) :
                               <div>
                                  <div className={"text-center"} colSpan={12}>
-                                    <NoDataFound showAddButton={false} message={"Currently there are no Canned Service added."} />
+                                    <NoDataFound showAddButton={false} message={input !== "" ? "No canned service found according to your search" : "Currently there are no Canned Service added."} />
                                  </div>
                               </div>
                         }

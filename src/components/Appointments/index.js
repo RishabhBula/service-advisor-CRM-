@@ -37,10 +37,10 @@ export default class Appointments extends Component {
       data = [];
     }
     const events = data.map(event => {
-      const startHours = moment(event.startTime).format("HH");
-      const endHours = moment(event.endTime).format("HH");
-      const startMin = moment(event.startTime).format("HH");
-      const endMin = moment(event.endTime).format("HH");
+      const startHours = moment.utc(event.startTime).format("HH");
+      const endHours = moment.utc(event.endTime).format("HH");
+      const startMin = moment.utc(event.startTime).format("HH");
+      const endMin = moment.utc(event.endTime).format("HH");
 
       return {
         id: event._id,

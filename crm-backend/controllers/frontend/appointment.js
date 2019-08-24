@@ -16,6 +16,7 @@ const appointmentList = async (req, res) => {
     const vehicleId = query.vehicleId
     const customerId = query.customerId
     const techinicians = query.technicianId
+    const orderId = query.orderId
     let condition = {};
     condition["$and"] = [
       {
@@ -54,6 +55,11 @@ const appointmentList = async (req, res) => {
     if (techinicians) {
       condition["$and"].push({
         techinicians: Mongoose.Types.ObjectId(techinicians)
+      })
+    }
+    if (orderId) {
+      condition["$and"].push({
+        orderId: Mongoose.Types.ObjectId(orderId)
       })
     }
     if (start) {
@@ -121,8 +127,8 @@ const addAppointment = async (req, res) => {
       isEmail,
       isSms
     } = body;
-    const actualStartTime = new Date().setHours(parseInt(startTime.split()[0]));
-    const actualEndTime = new Date().setHours(parseInt(endTime.split()[0]));
+    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]));
+    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]));
     let dataToSave = {
       appointmentTitle,
       appointmentColor,
@@ -250,8 +256,8 @@ const updateAppointment = async (req, res) => {
       sendMessage,
       techinicians
     } = body;
-    const actualStartTime = new Date().setHours(parseInt(startTime.split()[0]));
-    const actualEndTime = new Date().setHours(parseInt(endTime.split()[0]));
+    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]));
+    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]));
     let dataToSave = {
       appointmentTitle,
       appointmentColor,

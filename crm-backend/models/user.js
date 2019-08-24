@@ -178,8 +178,12 @@ const userSchema = new Schema({
         ref: "service"
       },
       orderId: {
-        type: mongoose.Types.ObjectId,
-        ref: "order"
+        type: Schema.Types.ObjectId,
+        ref: "Order"
+      },
+      generalService: {
+        type: Boolean,
+        default: false
       },
       startTime: {
         type: Date,

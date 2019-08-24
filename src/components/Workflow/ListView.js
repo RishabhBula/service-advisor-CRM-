@@ -9,6 +9,7 @@ import { serviceTotalsCalculation } from "../../helpers";
 import Dollor from "../common/Dollor";
 import Select from "react-select";
 import moment from "moment";
+import { ConfirmBox } from "../../helpers/SweetAlert";
 import AddAppointment from "../Appointments/AddAppointment";
 import AppointmentDetails from "../Appointments/AppointmentDetails";
 
@@ -62,6 +63,23 @@ class WorkflowListView extends React.Component {
     this.setState({
       showAppointmentDetailModal: !showAppointmentDetailModal,
       appointmentDetail: details || {}
+    });
+  };
+
+  toggleAddAppointModal = async (e, task) => {
+    if (task && !task.customerId) {
+      await ConfirmBox({
+        text: "",
+        title: "Order doesn't have customer information",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
+    const { appointModalOpen } = this.state;
+    this.setState({
+      appointModalOpen: !appointModalOpen,
+      orderUserData: task
     });
   };
 
@@ -131,9 +149,7 @@ class WorkflowListView extends React.Component {
     const { orderStatus } = this.props;
     const groupedOptions = [];
     orderStatus.map((status, index) => {
-      return (
-        groupedOptions.push({ label: status.name, id: status._id })
-      );
+      return groupedOptions.push({ label: status.name, id: status._id });
     });
     const statusValue = groupedOptions.filter(
       item => item.id === order.workflowStatus

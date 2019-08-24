@@ -6,8 +6,11 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
+  getUsersList,
   getOrderDetailsRequest,
-  getTechinicianTimeLogSuccess
+  getTechinicianTimeLogSuccess,
+  getAllTimeLogSuccess,
+  getAllTimeLogRequest
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
@@ -20,26 +23,34 @@ const startTimerLogic = createLogic({
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
     const { technicianId, serviceId, orderId } = action.payload;
-    const index = mainServices.findIndex(
-      d => d.serviceId.technician._id === technicianId
-    );
-    mainServices[index].serviceId.technician = {
-      ...mainServices[index].serviceId.technician,
-      currentlyWorking: {
-        serviceId,
-        orderId,
-        startTime: new Date().toUTCString()
-      }
-    };
+    if (serviceId) {
+      const index = mainServices.findIndex(
+        d => d.serviceId.technician._id === technicianId
+      );
+      mainServices[index].serviceId.technician = {
+        ...mainServices[index].serviceId.technician,
+        currentlyWorking: {
+          serviceId,
+          orderId,
+          startTime: new Date().toUTCString()
+        }
+      };
+    }
     await new ApiHelper().FetchFromServer(
       "/timeClock",
       "/start-time-clock",
       "POST",
       true,
       undefined,
-      { technicianId, serviceId, orderId }
+      {
+        technicianId,
+        serviceId: serviceId ? serviceId : null,
+        orderId: orderId ? orderId : null
+      }
     );
-
+    if (!serviceId) {
+      dispatch(getUsersList({ page: 1 }))
+    }
     dispatch(
       getOrderIdSuccess({
         ...orderItems,
@@ -58,13 +69,15 @@ const stopTimerLogic = createLogic({
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
     const { technicianId, serviceId, orderId } = action.payload;
-    const index = mainServices.findIndex(
-      d => d.serviceId.technician._id === technicianId
-    );
-    mainServices[index].serviceId.technician = {
-      ...mainServices[index].serviceId.technician,
-      currentlyWorking: {}
-    };
+    if (serviceId) {
+      const index = mainServices.findIndex(
+        d => d.serviceId.technician._id === technicianId
+      );
+      mainServices[index].serviceId.technician = {
+        ...mainServices[index].serviceId.technician,
+        currentlyWorking: {}
+      };
+    }
     await new ApiHelper().FetchFromServer(
       "/timeClock",
       "/stop-time-clock",
@@ -79,7 +92,11 @@ const stopTimerLogic = createLogic({
         serviceId: mainServices
       })
     );
-    dispatch(getOrderDetailsRequest({ _id: orderId }))
+    if (!serviceId) {
+      dispatch(getUsersList({ page: 1 }))
+      dispatch(getAllTimeLogRequest())
+    }
+    // dispatch(getOrderDetailsRequest({ _id: orderId }))
     done();
   }
 });
@@ -164,7 +181,6 @@ const addTimeLogLogic = createLogic({
 const updateTimeLogLogic = createLogic({
   type: timelogActions.UPDATE_TIME_LOG_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
     const result = await new ApiHelper().FetchFromServer(
       "/timeClock",
       "/updateTimeLogs",
@@ -175,21 +191,24 @@ const updateTimeLogLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0] || DefaultErrorMessage);
-      dispatch(hideLoader());
       done();
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
-      dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            timeClockEditModalOpen: false
-          }
-        })
-      );
-      dispatch(hideLoader());
-      done();
+      if (action.payload.isTimerClock) {
+        dispatch(getAllTimeLogRequest());
+        done();
+      } else {
+        dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              timeClockEditModalOpen: false
+            }
+          })
+        );
+        done();
+      }
     }
   }
 });
@@ -222,11 +241,36 @@ const getTechnicianTimeLogLogic = createLogic({
 /**
  *
  */
+const getAllTimeLogLogic = createLogic({
+  type: timelogActions.GET_ALL_TIME_LOGS_REQUEST,
+  async process({ action }, dispatch, done) {
+    const result = await new ApiHelper().FetchFromServer(
+      "/timeClock",
+      "/allTimeLogs",
+      "GET",
+      true,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0] || DefaultErrorMessage);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      dispatch(getAllTimeLogSuccess(result.data.data));
+      done();
+    }
+  }
+});
+/**
+ *
+ */
 export const TimeClockLogic = [
   startTimerLogic,
   stopTimerLogic,
   switchTaskLogic,
   addTimeLogLogic,
   updateTimeLogLogic,
-  getTechnicianTimeLogLogic
+  getTechnicianTimeLogLogic,
+  getAllTimeLogLogic
 ];

@@ -109,7 +109,8 @@ const startTimer = async (req, res) => {
       $set: {
         currentlyWorking: {
           serviceId,
-          orderId
+          orderId: mongoose.Types.ObjectId(orderId),
+          generalService: (!serviceId && !orderId) ? true : false
         }
       }
     }
@@ -119,8 +120,8 @@ const startTimer = async (req, res) => {
     await TimeClock.updateOne(
       {
         technicianId,
-        serviceId,
-        orderId,
+        serviceId: serviceId ? serviceId : null,
+        orderId: orderId ? orderId : null,
         _id: timeClock.id
       },
       {
@@ -147,11 +148,20 @@ const stopTimer = async (req, res) => {
     // });
     timeClocks[`${technicianId}`].destroy();
   }
-  const result = await TimeClock.findOne({
-    technicianId: technicianId,
-    serviceId: serviceId,
-    isCompleted: false
-  }).populate("technicianId orderId");
+  let result
+  if (serviceId) {
+    result = await TimeClock.findOne({
+      technicianId: technicianId,
+      serviceId: serviceId,
+      isCompleted: false
+    }).populate("technicianId orderId");
+  } else {
+    result = await TimeClock.findOne({
+      technicianId: technicianId,
+      isCompleted: false
+    }).populate("technicianId orderId");
+  }
+
   /*  if (!result) {
      return res.status(400).json({
        message: "Time data not found",
@@ -159,14 +169,15 @@ const stopTimer = async (req, res) => {
      })
    } */
   const convertedDuration = result.duration / 3600;
+
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
       endDateTime: new Date(),
       total:
         parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) ||
         0,
-      activity: `Order (#${result.orderId.orderId}) ${result.orderId
-        .orderName || "N/A"}`,
+      activity: result.orderId ? `Order (#${result.orderId.orderId}) ${result.orderId
+        .orderName || "N/A"}` : "General",
       isCompleted: true
     }
   });
@@ -180,7 +191,7 @@ const stopTimer = async (req, res) => {
       }
     }
   );
-  if (result) {
+  if (result.orderId) {
     await OrderModal.update(
       {
         _id: mongoose.Types.ObjectId(result.orderId._id)
@@ -386,6 +397,32 @@ const updateTimeLogOfTechnician = async (req, res) => {
 /**
  *
  */
+const getAllTimeLogs = async (req, res) => {
+  const { query } = req;
+  try {
+    const result = await TimeClock.find({
+      isDeleted: false
+    }).populate({
+      path: "technicianId orderId", match: {
+        isDeleted: false
+      }
+    });
+    const timeLogData = await TimeClock.populate(result, { path: "orderId.vehicleId orderId.customerId" })
+    return res.status(200).json({
+      message: "Timer get success!",
+      data: timeLogData || []
+    });
+  } catch (error) {
+    console.log("this is update timelog error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
+/**
+ *
+ */
 module.exports = {
   addTimeLogs,
   startTimer,
@@ -393,5 +430,6 @@ module.exports = {
   updateTimeLogOfTechnician,
   getTimeLogOfTechnician,
   stopTimer,
-  switchService
+  switchService,
+  getAllTimeLogs
 };

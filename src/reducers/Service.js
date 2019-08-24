@@ -38,7 +38,8 @@ const serviceData = {
    isLoading: true,
    isServiceList: true,
    serviceIndex: 0,
-   isAddServiceItem: false
+   isAddServiceItem: false,
+   serviceDataList: []
 };
 
 export const serviceReducers = handleActions(
@@ -91,6 +92,10 @@ export const serviceReducers = handleActions(
          services: action.payload.services,
          customerUserComment: action.payload.customerCommentData,
          isServiceList: false
+      }),
+      [serviceActions.GET_SERVICE_DATA_SUCCESS]: (state, action) => ({
+         ...state,
+         serviceDataList: action.payload
       }),
    },
    serviceData

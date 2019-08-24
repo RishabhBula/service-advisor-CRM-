@@ -11,7 +11,8 @@ import {
    getCannedServiceList,
    updateOrderDetailsRequest,
    getAllServiceListSuccess,
-   genrateInvoice
+   genrateInvoice,
+   getServiceDataSuccess
 } from "./../actions";
 
 const addServiceLogic = createLogic({
@@ -215,7 +216,8 @@ const getAllServiceLogic = createLogic({
          "Get",
          true,
          {
-            technicianId: action.payload && action.payload.technicianId ? action.payload.technicianId : null
+            technicianId: action.payload && action.payload.technicianId ? action.payload.technicianId : null,
+            input: action.payload && action.payload.input ? action.payload.input : null
          }
       );
       if (result.isError) {
@@ -224,23 +226,27 @@ const getAllServiceLogic = createLogic({
          return;
       } else {
          let orderArray = []
-         if (result.data.data.length) {
-            result.data.data.map((element) => {
-               if (element.orderId) {
-                  if (orderArray && orderArray.length) {
-                     let index = orderArray.findIndex(order => (order._id === element.orderId._id))
-                     if (index === -1) {
+         if (action.payload && action.payload.technicianId) {
+            if (result.data.data.length) {
+               result.data.data.map((element) => {
+                  if (element.orderId) {
+                     if (orderArray && orderArray.length) {
+                        let index = orderArray.findIndex(order => (order._id === element.orderId._id))
+                        if (index === -1) {
+                           orderArray.push(element.orderId);
+                        }
+                     } else {
                         orderArray.push(element.orderId);
                      }
-                  } else {
-                     orderArray.push(element.orderId);
                   }
-               }
-               return true
-            })
+                  return true
+               })
+            }
+            dispatch(getAllServiceListSuccess(orderArray))
+            done();
+         }else{
+            dispatch(getServiceDataSuccess(result.data.data))
          }
-         dispatch(getAllServiceListSuccess(orderArray))
-         done();
       }
    }
 });
