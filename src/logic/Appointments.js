@@ -8,7 +8,8 @@ import {
   getTechnicianAppoitmentSuccess,
   getVehicleAppoitmentSuccess,
   modelOpenRequest,
-  getAppointmentDetailsSuccess
+  getAppointmentDetailsSuccess,
+  getOrderAppointmentSuccess
 } from "../actions";
 import { ApiHelper } from "../helpers";
 import { toast } from "react-toastify";
@@ -40,20 +41,14 @@ const getAppointmentLogic = createLogic({
       return;
     } else {
       if (action.payload.technicianId) {
-        dispatch(
-          getTechnicianAppoitmentSuccess(
-            result.data.data
-          )
-        )
+        dispatch(getTechnicianAppoitmentSuccess(result.data.data));
       } else if (action.payload.vehicleId) {
         dispatch(
           getVehicleAppoitmentSuccess({
             vehicleAppoitment: result.data.data
-          }
-          )
-        )
-      }
-      else {
+          })
+        );
+      } else {
         dispatch(
           getAppointmentsSuccess({
             data: result.data.data

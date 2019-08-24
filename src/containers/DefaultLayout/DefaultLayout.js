@@ -403,7 +403,7 @@ class DefaultLayout extends Component {
             <div className={"d-flex align-items-center w-100"}>
               Powered By
               <a
-                href="https://www.example.com"
+                href="http://serviceadvisor.io"
                 target={"_blank"}
                 className={
                   "d-inline-flex align-items-center ml-2 mr-1 text-body text-bold"

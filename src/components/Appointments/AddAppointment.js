@@ -82,8 +82,12 @@ export default class AddAppointment extends Component {
     }
     if (isOpen !== oldIsOpen && orderData) {
       if (orderData) {
-        const customerId = orderData.customerId ? orderData.customerId : null
-        const vehicleId = orderData.vehicleId ? orderData.vehicleId : null
+        const customerId = orderData && orderData.customerId
+          ? orderData.customerId
+          : null;
+        const vehicleId = orderData && orderData.vehicleId
+          ? orderData.vehicleId
+          : null;
         const orderId = orderData ? orderData : null
         this.setState({
           selectedCustomer: {

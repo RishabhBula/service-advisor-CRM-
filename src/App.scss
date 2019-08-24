@@ -610,6 +610,7 @@ body {
   }
   .workflow-table {
     font-family: $ft-regular;
+    min-width: 1200px;
     td,
     th {
       padding: 5px 10px;
@@ -973,7 +974,25 @@ body {
   .DayPicker-Day{
     min-width: 40px;
   }
-
+  .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside){
+    background-color: #646a71;
+  }
+  .fc-popover{
+    .fc-header{
+      background: #413c4f !important;
+      color: #fff;
+      padding: 0.5rem 0.7rem;
+      .fc-close{
+        color: #fff !important;
+        opacity: 1 !important;
+      }
+    }
+    .fc-body{
+      .fc-event{
+        background: #464646;
+      }
+    }
+  }
 // Customer import modal
 .import-instruction-list{
   li{

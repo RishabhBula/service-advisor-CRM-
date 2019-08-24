@@ -1,6 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import React from "react";
-
+import moment from "moment";
 import {
   DropdownItem,
   DropdownToggle,
@@ -17,15 +17,114 @@ import { AppRoutes } from "../../config/AppRoutes";
 import serviceUser from "../../assets/service-user.png";
 import serviceTyre from "../../assets/service-car.png";
 import { serviceTotalsCalculation } from "../../helpers";
+import AddAppointment from "../Appointments/AddAppointment";
+import AppointmentDetails from "../Appointments/AppointmentDetails";
+import { ConfirmBox } from "../../helpers/SweetAlert";
+
 import Dollor from "../common/Dollor";
 
 class WorkflowGridView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openAction: []
+      openAction: [],
+      appointModalOpen: false,
+      orderUserData: {},
+      orderAppointment: [],
+      showAppointmentDetailModal: false,
+      appointmentDetail: ""
     };
   }
+
+  componentDidMount = () => {
+    this.props.getAppointments({
+      technicianId: null,
+      vehicleId: null,
+      orderId: null
+    });
+  };
+
+  componentDidUpdate = () => {};
+
+  handleOrderDetails = orderId => {
+    this.props.redirectTo(
+      `${AppRoutes.WORKFLOW_ORDER.url.replace(":id", orderId)}`
+    );
+  };
+  /*
+  /*  
+  */
+  handleVehicleDetails = vehicleId => {
+    this.props.redirectTo(
+      `${AppRoutes.VEHICLES_DETAILS.url.replace(":id", vehicleId)}`
+    );
+  };
+  /*
+  /*  
+  */
+  handleCustomerDetails = customerId => {
+    this.props.redirectTo(
+      AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`)
+    );
+  };
+  /*
+  /*  
+  */
+  toggleAppointmentDetails = (e, details) => {
+    const { showAppointmentDetailModal } = this.state;
+    this.setState({
+      showAppointmentDetailModal: !showAppointmentDetailModal,
+      appointmentDetail: details || {}
+    });
+  };
+
+  getAppointmentDetails = (id, task) => {
+    const reducerData = this.props.appointmentReducer;
+    const orders = reducerData.data.filter(order => order.orderId);
+    let orderDetails = "";
+    const orderMain = orders.filter(orderName => orderName.orderId._id === id);
+
+    if (orderMain.length) {
+      var day = orderMain.length;
+      orderDetails = (
+        <>
+          <span
+            className={"pr-2 text-dark"}
+            onClick={e => this.toggleAppointmentDetails(e, orderMain[0])}
+          >
+            <span className={"text-success"} id={`appoint-status-${id}`}>
+              <i className="fa fa-calendar" />
+            </span>
+            <UncontrolledTooltip target={`appoint-status-${id}`}>
+              Schedule on
+              <br />
+              {moment(orderMain[day > 0 ? day - 1 : 0].appointmentDate).format(
+                "MMM Do YYYY"
+              )}
+            </UncontrolledTooltip>
+          </span>
+        </>
+      );
+    } else {
+      orderDetails = (
+        <>
+          <span
+            className={"pr-2 text-dark"}
+            onClick={e => this.toggleAddAppointModal(e, task)}
+          >
+            <span className={""} id={`appoint-status-${id}`}>
+              <i className="fa fa-calendar" />
+            </span>
+            <UncontrolledTooltip target={`appoint-status-${id}`}>
+              Click to schedule appointment
+            </UncontrolledTooltip>
+          </span>
+        </>
+      );
+    }
+    return orderDetails;
+  };
+
   onDragEnd = result => {
     logger(result);
     const { destination, source, draggableId: orderId } = result;
@@ -71,6 +170,23 @@ class WorkflowGridView extends React.Component {
     openAction[ind] = !openAction[ind];
     this.setState({
       openAction
+    });
+  };
+  /** */
+  toggleAddAppointModal = async (e, task) => {
+    if (task && !task.customerId) {
+      await ConfirmBox({
+        text: "",
+        title: "Order doesn't have customer information",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
+    const { appointModalOpen } = this.state;
+    this.setState({
+      appointModalOpen: !appointModalOpen,
+      orderUserData: task
     });
   };
   /**
@@ -148,6 +264,7 @@ class WorkflowGridView extends React.Component {
                           {"  "}
                           <span>{task.orderName || "Unnamed order"}</span>
                         </h5>
+
                         <div className={"content-title"}>
                           <span>
                             <img
@@ -185,10 +302,7 @@ class WorkflowGridView extends React.Component {
                           </span>
                         </div>
                       </div>
-                      <span
-                        className={"delete-icon"}
-                        id={`delete-${task._id}`}
-                      >
+                      <span className={"delete-icon"} id={`delete-${task._id}`}>
                         <i
                           className={"fa fa-trash pull-right"}
                           onClick={() => {
@@ -203,7 +317,7 @@ class WorkflowGridView extends React.Component {
                       <UncontrolledTooltip target={`delete-${task._id}`}>
                         Delete Order
                       </UncontrolledTooltip>
-                      <div className={"pt-2 position-relative"}>
+                      <div className={"pt-2 position-relative cursor_pointer"}>
                         <div className={"service-total"}>
                           <span className={"text-black-50"}>Total:</span>
                           <Dollor
@@ -215,7 +329,7 @@ class WorkflowGridView extends React.Component {
                           />
                         </div>
                         <span
-                          className={"pr-2"}
+                          className={"pr-3"}
                           id={`authorised-status-${task._id}`}
                         >
                           <i
@@ -231,9 +345,8 @@ class WorkflowGridView extends React.Component {
                         >
                           {task.status ? "Authorised" : "Not Authorised"}
                         </UncontrolledTooltip>
-                        <span className={"pr-2 text-dark"}>
-                          <i className="nav-icon icons icon-calendar" />
-                        </span>
+
+                        {this.getAppointmentDetails(task._id, task)}
                       </div>
                     </div>
                   )}
@@ -250,67 +363,95 @@ class WorkflowGridView extends React.Component {
    *
    */
   render() {
-    const { orderStatus, orderData } = this.props;
+    const { orderStatus, orderData, addAppointment } = this.props;
     const { orders, isLoading } = orderData;
+    const {
+      appointModalOpen,
+      orderUserData,
+      showAppointmentDetailModal,
+      appointmentDetail
+    } = this.state;
 
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable
-          droppableId={`dropableId`}
-          type="droppableItem"
-          direction={"horizontal"}
-        >
-          {provided => (
-            <div
-              ref={provided.innerRef}
-              style={{
-                width: `${300 * orderStatus.length}px`
-              }}
-              className={"workflow-grid-card-warp"}
-            >
-              {orderStatus.map((status, index) => (
-                <React.Fragment key={status._id}>
-                  <Draggable draggableId={status._id} index={index}>
-                    {provided => (
-                      <>
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          className={"workflow-grid-card"}
-                        >
+      <>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable
+            droppableId={`dropableId`}
+            type="droppableItem"
+            direction={"horizontal"}
+          >
+            {provided => (
+              <div
+                ref={provided.innerRef}
+                style={{
+                  width: `${300 * orderStatus.length}px`
+                }}
+                className={"workflow-grid-card-warp"}
+              >
+                {orderStatus.map((status, index) => (
+                  <React.Fragment key={status._id}>
+                    <Draggable draggableId={status._id} index={index}>
+                      {provided => (
+                        <>
                           <div
-                            {...provided.dragHandleProps}
-                            className={"title"}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            className={"workflow-grid-card"}
                           >
-                            <Row className={"m-0"}>
-                              <Col sm={"12"}>
-                                <div className={"workflow-heads"}>
-                                  <h5>{status.name}</h5>
-                                  <span>
-                                    {this.renderActions(status, index)}
-                                  </span>
-                                </div>
-                              </Col>
-                            </Row>
+                            <div
+                              {...provided.dragHandleProps}
+                              className={"title"}
+                            >
+                              <Row className={"m-0"}>
+                                <Col sm={"12"}>
+                                  <div className={"workflow-heads"}>
+                                    <h5>{status.name}</h5>
+                                    <span>
+                                      {this.renderActions(status, index)}
+                                    </span>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
+                            {this.renderOrders(
+                              status,
+                              orders[status._id] || [],
+                              orders,
+                              isLoading
+                            )}
                           </div>
-                          {this.renderOrders(
-                            status,
-                            orders[status._id] || [],
-                            orders,
-                            isLoading
-                          )}
-                        </div>
-                        {provided.placeholder}
-                      </>
-                    )}
-                  </Draggable>
-                </React.Fragment>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                          {provided.placeholder}
+                        </>
+                      )}
+                    </Draggable>
+                  </React.Fragment>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <AddAppointment
+          isOpen={appointModalOpen}
+          toggleAddAppointModal={this.toggleAddAppointModal}
+          date={new Date()}
+          editData={""}
+          orderData={orderUserData}
+          addAppointment={addAppointment}
+        />
+
+        <AppointmentDetails
+          isOpen={showAppointmentDetailModal}
+          toggle={this.toggleAppointmentDetails}
+          isLoading={false}
+          data={appointmentDetail}
+          // toggleEditAppointModal={this.toggleEditAppointModal}
+          orderClick={this.handleOrderDetails}
+          onCustomerClick={this.handleCustomerDetails}
+          onVehicleClick={this.handleVehicleDetails}
+          isTechnicianData={true}
+        />
+      </>
     );
   }
 }

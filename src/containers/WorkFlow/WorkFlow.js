@@ -27,6 +27,8 @@ import {
   updateOrderOfOrderStatus,
   addOrderRequest,
   deleteOrderRequest,
+  getAppointments,
+  addAppointmentRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -322,7 +324,11 @@ class WorkFlow extends Component {
       orderReducer,
       updateOrderStatus,
       updateOrderOfOrderStatus,
-      redirectTo
+      redirectTo,
+      modelInfoReducer,
+      getAppointments,
+      addAppointment,
+      appointmentReducer
     } = this.props;
     const { orderData, orderStatus } = orderReducer;
     const { listView } = this.state;
@@ -397,6 +403,10 @@ class WorkFlow extends Component {
                     deleteOrderStatus={this.deleteOrderStatus}
                     deleteOrder={this.deleteOrder}
                     redirectTo={redirectTo}
+                    modelInfoReducer={modelInfoReducer}
+                    addAppointment={addAppointment}
+                    getAppointments={getAppointments}
+                    appointmentReducer={appointmentReducer}
                   />
                 ) : (
                   <div style={{ overflowX: "auto" }}>
@@ -408,6 +418,10 @@ class WorkFlow extends Component {
                       updateOrderOfOrderStatus={updateOrderOfOrderStatus}
                       deleteOrder={this.deleteOrder}
                       redirectTo={redirectTo}
+                      modelInfoReducer={modelInfoReducer}
+                      addAppointment={addAppointment}
+                      getAppointments={getAppointments}
+                      appointmentReducer={appointmentReducer}
                     />
                   </div>
                 )}
@@ -422,7 +436,9 @@ class WorkFlow extends Component {
   }
 }
 const mapStateToProps = state => ({
-  orderReducer: state.orderReducer
+  orderReducer: state.orderReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  appointmentReducer: state.appointmentReducer
 });
 const mapDispatchToProps = dispatch => ({
   addOrderRequest: data => dispatch(addOrderRequest(data)),
@@ -432,6 +448,8 @@ const mapDispatchToProps = dispatch => ({
   addOrderStatus: data => dispatch(addOrderStatus(data)),
   updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data)),
   deleteOrder: data => dispatch(deleteOrderRequest(data)),
+  addAppointment: data => dispatch(addAppointmentRequest(data)),
+  getAppointments:data=> dispatch(getAppointments(data))
 });
 export default connect(
   mapStateToProps,

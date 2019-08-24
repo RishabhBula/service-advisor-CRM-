@@ -52,7 +52,7 @@ const AppointmentDetails = props => (
             </span>
           </Col>
           <Col sm={"12"} className={"pb-2 title pt-2 pl-0 border-bottom"}>
-            <i class="icon-arrow-right icons mr-2" />
+            <i className="icon-arrow-right icons mr-2" />
             {props.data.appointmentTitle}
           </Col>
           <Col sm={"2"} className={"d-flex  justify-content-center"}>

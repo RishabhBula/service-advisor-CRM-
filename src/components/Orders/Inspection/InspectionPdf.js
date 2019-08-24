@@ -127,7 +127,7 @@ class InspectionTable extends Component {
           >
             <thead>
               <tr>
-                <th width="200" class="service-title">
+                <th width="200" className="service-title">
                   Item Title
                 </th>
                 <th>Note</th>
