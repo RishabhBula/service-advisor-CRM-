@@ -41,6 +41,11 @@ router.get(
   token.authorisedUser,
   timeClockController.getTimeLogOfTechnician
 )
+router.get(
+  "/allTimeLogs",
+  token.authorisedUser,
+  timeClockController.getAllTimeLogs
+)
 /**
  *
  */

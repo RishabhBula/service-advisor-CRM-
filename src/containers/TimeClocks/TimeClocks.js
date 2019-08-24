@@ -13,7 +13,9 @@ import {
   startTimer,
   stopTimer,
   getOrderDetailsRequest,
-  getAllServiceListRequest
+  getAllServiceListRequest,
+  isTimeClockStart,
+  getAllTimeLogRequest,
 } from "../../actions"
 import TimeLogList from "./timeLogList";
 
@@ -25,14 +27,14 @@ class TimeClocks extends Component {
   }
   componentDidMount() {
     this.props.getUserData({ page: 1 })
+    this.props.getAllTimeLogRequest()
   }
   componentDidUpdate = ({ userReducer }) => {
     const userData = this.props.userReducer.users
-
     if ((userReducer.users !== userData) && (userData.length) && (userData[0].currentlyWorking)) {
-      const orderId = userData[0].currentlyWorking.orderId
+      const orderId = userData[0].currentlyWorking && userData[0].currentlyWorking.orderId ? userData[0].currentlyWorking.orderId._id : null
       this.props.getAllServiceListRequest()
-      if (userData[0].currentlyWorking.orderId) {
+      if (userData[0].currentlyWorking.orderId && userData[0].currentlyWorking.orderId._id) {
         this.props.getOrderDetailsRequest({ _id: orderId })
       }
     }
@@ -55,7 +57,10 @@ class TimeClocks extends Component {
       userReducer,
       startTimer,
       stopTimer,
-      serviceReducers
+      serviceReducers,
+      isTimeClockStart,
+      timelogReducer,
+      updateTimeLogRequest
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
@@ -72,8 +77,17 @@ class TimeClocks extends Component {
           startTimer={startTimer}
           stopTimer={stopTimer}
           serviceData={serviceReducers.serviceDataList}
+          isTimeClockStart={isTimeClockStart}
         />
-        <TimeLogList />
+        <TimeLogList
+          timeLogData={timelogReducer.allTimeData}
+          handleTimeClockModal={this.handleTimeClockModal}
+          getUserData={getUserData}
+          orderReducer={orderReducer}
+          modelInfoReducer={modelInfoReducer}
+          isSuccess={timelogReducer.isSuccess}
+          editTimeLogRequest={updateTimeLogRequest}
+        />
         <CrmTimeClockModal
           openTimeClockModal={timeClockModalOpen}
           getUserData={getUserData}
@@ -102,7 +116,9 @@ const mapDispatchToProps = dispatch => ({
   startTimer: data => dispatch(startTimer(data)),
   stopTimer: data => dispatch(stopTimer(data)),
   getOrderDetailsRequest: data => dispatch(getOrderDetailsRequest(data)),
-  getAllServiceListRequest: data => dispatch(getAllServiceListRequest(data))
+  getAllServiceListRequest: data => dispatch(getAllServiceListRequest(data)),
+  isTimeClockStart: data => dispatch(isTimeClockStart(data)),
+  getAllTimeLogRequest: () => dispatch(getAllTimeLogRequest())
 });
 
 export default connect(

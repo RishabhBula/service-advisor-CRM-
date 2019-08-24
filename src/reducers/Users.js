@@ -6,7 +6,7 @@ const initialState = {
   isLoading: true,
   totalUsers: 0,
   technicianData: [],
-  isStartTimer: false,
+  isStartTimer: [],
   userData: {
     isSuccess: false,
     isEditSuccess: false,
@@ -23,6 +23,7 @@ export const usersReducer = handleActions(
     [usersActions.GET_USER_LIST_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
+      isStartTimer: [],
       isLoading: false
     }),
     [usersActions.ADD_USER]: (state, action) => ({
@@ -61,9 +62,9 @@ export const usersReducer = handleActions(
       ...state,
       technicianData: action.payload
     }),
-    [timelogActions.START_TIMER]: (state, action) => ({
+    [usersActions.IS_TIME_CLOCK_START]: (state, action) => ({
       ...state,
-      isStartTimer: true
+      isStartTimer: action.payload.isStartTimer
     }),
     [timelogActions.STOP_TIMER]: (state, action) => ({
       ...state,

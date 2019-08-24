@@ -37,9 +37,7 @@ class TechnicianTimer extends Component {
         });
       });
     }
-    console.log("############", timer);
     if (timer) {
-      console.log(this.state.userData);
       this.setState(
         {
           userData: []
@@ -62,13 +60,11 @@ class TechnicianTimer extends Component {
       // })
     }
   };
-  startTimer = (techId, orderId) => {
-    console.log("#####################", orderId);
-    this.setState({
-      isTimerData: true
-    });
+  startTimer = (techId, orderId, index) => {
     this.props.startTimer({
-      technicianId: techId
+      technicianId: techId,
+      orderId: orderId ? orderId : null,
+      index: index
     });
   };
   /*
@@ -139,12 +135,12 @@ class TechnicianTimer extends Component {
                 users.currentlyWorking &&
                 (users.currentlyWorking.orderId ||
                   users.currentlyWorking.generalService ||
-                  timer);
+                  (timer && timer.length ? timer[index] : false));
 
               const startTime =
                 users &&
-                users.currentlyWorking &&
-                users.currentlyWorking.startTime
+                  users.currentlyWorking &&
+                  users.currentlyWorking.startTime
                   ? users.currentlyWorking.startTime
                   : false;
               const technicicanService = serviceData.filter(
@@ -155,7 +151,7 @@ class TechnicianTimer extends Component {
                   const dataObject = {
                     label: `Order(#${data.orderId.orderId}) ${
                       data.orderId.orderName
-                    }`,
+                      }`,
                     value: data.orderId._id
                   };
                   defaultOptions.push(dataObject);
@@ -187,14 +183,14 @@ class TechnicianTimer extends Component {
                               {this.startTempTimer(index, startTime)}
                               {SecondsToHHMMSS(
                                 duration[index] ||
-                                  moment().diff(moment(startTime), "seconds")
+                                moment().diff(moment(startTime), "seconds")
                               )}
                             </div>
                           ) : (
-                            <span className={"timer-running-manually"}>
-                              --:--:--
+                              <span className={"timer-running-manually"}>
+                                --:--:--
                             </span>
-                          )}
+                            )}
                         </div>
                         <Card className={"pb-2"}>
                           <Row className={"m-0"}>
@@ -228,10 +224,12 @@ class TechnicianTimer extends Component {
                                 ? users.currentlyWorking.generalService
                                   ? defaultOrderSelect
                                   : {
-                                      value: users.currentlyWorking.orderId,
-                                      label: "fasdfasf"
-                                    }
-                                : undefined
+                                    value: users.currentlyWorking.orderId,
+                                    label: users.currentlyWorking.orderId ? `Order(#${users.currentlyWorking.orderId.orderId}) ${
+                                      users.currentlyWorking.orderId.orderName
+                                      }` : ""
+                                  }
+                                : users.selectedOrder.value !== "" ? users.selectedOrder : defaultOrderSelect
                             }
                             onChange={e => this.handleOrderSelect(e, index)}
                             type="select"
@@ -242,29 +240,29 @@ class TechnicianTimer extends Component {
                             onClick={
                               users.selectedOrder.value !== ""
                                 ? () =>
-                                    this.startTimer(
-                                      users._id,
-                                      users.selectedOrder.value
-                                    )
-                                : () => this.startTimer(users._id)
+                                  this.startTimer(
+                                    users._id,
+                                    users.selectedOrder.value
+                                  )
+                                : () => this.startTimer(users._id, index)
                             }
                           >
                             Clock In
                           </Button>
                         ) : (
-                          <Button
-                            color={"danger"}
-                            onClick={() =>
-                              this.stopTimer(
-                                users._id,
-                                users.currentlyWorking.orderId,
-                                users.currentlyWorking.serviceId
-                              )
-                            }
-                          >
-                            Clock Out
+                            <Button
+                              color={"danger"}
+                              onClick={() =>
+                                this.stopTimer(
+                                  users._id,
+                                  users.currentlyWorking.orderId,
+                                  users.currentlyWorking.serviceId
+                                )
+                              }
+                            >
+                              Clock Out
                           </Button>
-                        )}
+                          )}
                       </CardBody>
                     </div>
                   </Card>
@@ -272,8 +270,8 @@ class TechnicianTimer extends Component {
               );
             })
           ) : (
-            <Loader />
-          )}
+              <Loader />
+            )}
         </Row>
       </div>
     );

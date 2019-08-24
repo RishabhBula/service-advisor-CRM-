@@ -109,8 +109,8 @@ const startTimer = async (req, res) => {
       $set: {
         currentlyWorking: {
           serviceId,
-          orderId,
-          generalService: !serviceId ? true : false
+          orderId: mongoose.Types.ObjectId(orderId),
+          generalService: (!serviceId && !orderId) ? true : false
         }
       }
     }
@@ -159,7 +159,7 @@ const stopTimer = async (req, res) => {
     result = await TimeClock.findOne({
       technicianId: technicianId,
       isCompleted: false
-    }).populate("technicianId");
+    }).populate("technicianId orderId");
   }
 
   /*  if (!result) {
@@ -397,6 +397,32 @@ const updateTimeLogOfTechnician = async (req, res) => {
 /**
  *
  */
+const getAllTimeLogs = async (req, res) => {
+  const { query } = req;
+  try {
+    const result = await TimeClock.find({
+      isDeleted: false
+    }).populate({
+      path: "technicianId orderId", match: {
+        isDeleted: false
+      }
+    });
+    const timeLogData = await TimeClock.populate(result, { path: "orderId.vehicleId orderId.customerId" })
+    return res.status(200).json({
+      message: "Timer get success!",
+      data: timeLogData || []
+    });
+  } catch (error) {
+    console.log("this is update timelog error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+}
+/**
+ *
+ */
 module.exports = {
   addTimeLogs,
   startTimer,
@@ -404,5 +430,6 @@ module.exports = {
   updateTimeLogOfTechnician,
   getTimeLogOfTechnician,
   stopTimer,
-  switchService
+  switchService,
+  getAllTimeLogs
 };
