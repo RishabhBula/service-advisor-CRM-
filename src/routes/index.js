@@ -33,6 +33,8 @@ const OrderSummary = React.lazy(() =>
 
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
+const HomePage = React.lazy(() => import("../containers/HomePage"));
+
 const Routes = [
   {
     exact: true,
@@ -92,13 +94,19 @@ const Routes = [
     exact: false,
     path: "/",
     name: "Home",
-    component: DefaultLayout
+    component: HomePage
   },
+  {
+    exact: true,
+    password: "/home",
+    name: "Home Page",
+    component: HomePage
+  }
 
 ];
 
 class AppRoutes extends Component {
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     const { appState } = this.props;
     const { showLoader } = appState;

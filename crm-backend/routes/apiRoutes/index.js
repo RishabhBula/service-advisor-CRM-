@@ -24,5 +24,6 @@ module.exports = {
   webhookRoutes: require("./webhook"),
   appointmentRoutes: require("./appointments"),
   dashboardRoutes: require("./dashboard"),
-  reportRoutes: require("./reports")
+  reportRoutes: require("./reports"),
+  homePageRoutes: require("./homePage")
 };

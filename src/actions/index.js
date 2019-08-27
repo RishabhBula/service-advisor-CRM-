@@ -29,6 +29,7 @@ export * from "./Subscription";
 export * from "./Dashboard";
 export * from "./Reports";
 export * from "./Pdf";
+export * from "./HomePage";
 
 //
 export const redirectTo = createAction("REDIRET_TO");
