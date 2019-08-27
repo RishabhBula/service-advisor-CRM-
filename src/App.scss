@@ -767,12 +767,12 @@ body {
           font-size: 18px;
           .dollar-price {
             font-size: 18px;
-            .dollar-price {
-              font-size: 18px;
-              .fa.dollar-icon {
-                font-size: 18px;
+              .fa {
+                &.dollar-icon{
+                  font-size: 16px ;
+                }
               }
-            }
+            
           }
         }
       }

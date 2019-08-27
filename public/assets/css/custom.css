@@ -2170,8 +2170,25 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   z-index: -1;
   opacity: 0;
 }
-
-.service-toggel-check label:after {
+.service-toggel-check input + label:after {
+ content: "\e095";
+  font-family: simple-line-icons;
+  font-style: normal;
+  font-weight: 600;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  top: 0.15625rem;
+  left: -1.7rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  font-size: 16px;
+}
+.service-toggel-check input:checked + label:after {
   content: "\e080";
   font-family: simple-line-icons;
   font-style: normal;

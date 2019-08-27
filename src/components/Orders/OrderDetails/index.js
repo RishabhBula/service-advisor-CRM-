@@ -28,7 +28,8 @@ class OrderDetails extends Component {
       orderStatus: false,
       activityLogs: [],
       serviceDataObject: {},
-      activeService: false
+      activeService: false,
+      isFleetAllow: false
     };
   }
 
@@ -45,10 +46,10 @@ class OrderDetails extends Component {
     });
   };
 
-  componentDidUpdate = ({ activityReducer, isPrint,appointmentReducer }) => {
+  componentDidUpdate = ({ activityReducer, isPrint, appointmentReducer }) => {
     const activityData = this.props.activityReducer;
     const orderId = this.props.orderReducer.orderItems._id;
-    const appointmentReducerData = this.props.appointmentReducer
+    const appointmentReducerData = this.props.appointmentReducer;
 
     if (activityReducer !== activityData) {
       this.setState({
@@ -104,49 +105,54 @@ class OrderDetails extends Component {
     const { orderReducer, appointmentReducer } = this.props;
     let orderOfId = "",
       scheduleDate = "",
-      finalDate = '';
-   if (orderReducer && orderReducer.orderItems && orderReducer.orderItems._id) {
-     orderOfId = orderReducer.orderItems._id;
-     finalDate = 
-       appointmentReducer.data.filter(
-         data =>
-           moment(data.appointmentDate).format("MMM Do YYYY") >=
-           moment(new Date()).format("MMM Do YYYY")
-       );
-     scheduleDate =
-       appointmentReducer && appointmentReducer.data && finalDate[0]
-         ? moment(finalDate[0].appointmentDate).format("MMM Do YYYY")
-         : null;
-   } else {
-     scheduleDate = null;
-   }
-   return (
-     <>
-       <span id={"dateId"} className={"cursor_pointer"}>
-         {scheduleDate}
-       </span>
-       <UncontrolledPopover
-         target={"dateId"}
-         trigger={"hover"}
-         placement="bottom"
-         className={"border scheduleDate-popover technician-popover"}
-       >
-         <PopoverHeader>
-           <i className={"fa fa-calendar"} /> Scheduled Dates
-         </PopoverHeader>
-         <PopoverBody className={"bg-light"}>
-           {finalDate.map((date, dateIndex) => {
-             return (
-               <div className={"pt-1 pb-1 border-bottom"} key={dateIndex}>
-                 {dateIndex + 1}.{" "}
-                 {moment(date.appointmentDate).format("MMM Do YYYY")}
-               </div>
-             );
-           })}
-         </PopoverBody>
-       </UncontrolledPopover>
-     </>
-   );
+      finalDate = "";
+    if (
+      orderReducer &&
+      orderReducer.orderItems &&
+      orderReducer.orderItems.customerId &&
+      orderReducer.orderItems.vehicleId &&
+      orderReducer.orderItems._id
+    ) {
+      orderOfId = orderReducer.orderItems._id;
+      finalDate = appointmentReducer.data.filter(
+        data =>
+          moment(data.appointmentDate).format("MMM Do YYYY") >=
+          moment(new Date()).format("MMM Do YYYY")
+      );
+      scheduleDate =
+        appointmentReducer && appointmentReducer.data && finalDate[0]
+          ? moment(finalDate[0].appointmentDate).format("MMM Do YYYY")
+          : null;
+    } else {
+      scheduleDate = null;
+    }
+    return (
+      <>
+        <span id={"dateId"} className={"cursor_pointer"}>
+          {scheduleDate}
+        </span>
+        <UncontrolledPopover
+          target={"dateId"}
+          trigger={"hover"}
+          placement="bottom"
+          className={"border scheduleDate-popover technician-popover"}
+        >
+          <PopoverHeader>
+            <i className={"fa fa-calendar"} /> Scheduled Dates
+          </PopoverHeader>
+          <PopoverBody className={"bg-light"}>
+            {finalDate ? finalDate.map((date, dateIndex) => {
+              return (
+                <div className={"pt-1 pb-1 border-bottom"} key={dateIndex}>
+                  {dateIndex + 1}.{" "}
+                  {moment(date.appointmentDate).format("MMM Do YYYY")}
+                </div>
+              );
+            }) : null}
+          </PopoverBody>
+        </UncontrolledPopover>
+      </>
+    );
   };
 
   render() {
@@ -161,7 +167,7 @@ class OrderDetails extends Component {
       getVehicleData,
       getOrders,
       addAppointment,
-      getUserData,
+      getUserData
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { paymentModalOpen, showAddAppointmentModal } = modelDetails;
@@ -199,15 +205,29 @@ class OrderDetails extends Component {
       totalTax = 0,
       totalDiscount = 0,
       totalPaiedAmount = 0;
+
+    const fleetStatus =
+      orderReducer &&
+      orderReducer.orderItems &&
+      orderReducer.orderItems.customerId &&
+      orderReducer.orderItems.customerId.fleet
+        ? true
+        : false;
+    let fleetDiscount =
+      orderReducer &&
+      orderReducer.orderItems &&
+      orderReducer.orderItems.customerId &&
+      orderReducer.orderItems.customerId.fleet ? orderReducer.orderItems.customerId.fleet.fleetDefaultPermissions
+        .shouldReceiveDiscount.percentageDiscount : 0;
+
+    console.log(fleetDiscount, "fleetDiscount");
     const orderStatus = orderReducer.orderStatus;
     const groupedOptions = [];
     orderStatus.map((status, index) => {
-      return (
-        groupedOptions.push({
-          label: status.name,
-          id: status._id
-        })
-      );
+      return groupedOptions.push({
+        label: status.name,
+        id: status._id
+      });
     });
 
     const scheduleStatus =
@@ -465,10 +485,23 @@ class OrderDetails extends Component {
                           }
                         )
                       : ""}
-
                     <span className={"d-none"}>
-                      {(orderGandTotal += parseFloat(serviceTotal) || 0)}
+                      {
+                        ((orderGandTotal += parseFloat(serviceTotal) || 0),
+                        fleetStatus
+                          ? (fleetDiscount = calculateValues(
+                              orderGandTotal,
+                              fleetDiscount,
+                              "%"
+                            ))
+                          : 0,
+                        fleetStatus
+                          ? (orderGandTotal =
+                              orderGandTotal - fleetDiscount)
+                          : 0)
+                      }
                     </span>
+
                     <span className={"d-none"}>
                       {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
                     </span>
@@ -541,6 +574,14 @@ class OrderDetails extends Component {
                     />
                   </span>
                 </div>
+                {fleetStatus ? (
+                  <div className={"border-top pt-2 mt-2"}>
+                    <span className={"title"}>Fleet Discount </span>:{" "}
+                    <span className={"price-block"}>
+                      - <Dollor value={fleetDiscount.toFixed(2)} />
+                    </span>
+                  </div>
+                ) : null}
                 <div className={"pt-2 border-top mt-2 grand-total"}>
                   Grand Total :{" "}
                   <Dollor

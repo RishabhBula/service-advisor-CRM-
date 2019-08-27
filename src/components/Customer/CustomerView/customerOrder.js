@@ -77,7 +77,16 @@ export class CustomerOrders extends Component {
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
                       <td>#{order.orderId}</td>
-                      <td>{order.orderName || "Unnammed"}</td>
+                      <td>
+                        {" "}
+                        <div
+                          className={
+                            "font-weight-semibold text-capitalize pb-1"
+                          }
+                        >
+                          {order.orderName || "Unnammed"}
+                        </div>
+                      </td>
                       {order.status ? (
                         <td className={"text-capitalize text-success"}>
                           authorized
@@ -97,9 +106,7 @@ export class CustomerOrders extends Component {
                           <>
                             <div
                               onClick={() => {
-                                this.handleVehicleDetails(
-                                  order.vehicleId._id
-                                );
+                                this.handleVehicleDetails(order.vehicleId._id);
                               }}
                               id={`vehicle-details-${order._id}`}
                               className={"cursor_pointer"}

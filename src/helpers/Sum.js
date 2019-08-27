@@ -35,7 +35,11 @@ export const calculateDurationFromSeconds = Seconds => {
 /** 
 /* 
  */
-export const serviceTotalsCalculation = serviceData => {
+export const serviceTotalsCalculation = (
+  serviceData,
+  fleetStatus,
+  fleetDiscount
+) => {
   let totalParts = 0,
     totalTires = 0,
     totalLabor = 0,
@@ -125,6 +129,10 @@ export const serviceTotalsCalculation = serviceData => {
     totalTax += parseFloat(epa) + parseFloat(tax) || 0;
     totalDiscount += parseFloat(discount) || 0;
     orderGrandTotal += parseFloat(serviceTotal) || 0;
+    fleetDiscount = fleetStatus ? calculateValues(orderGrandTotal, fleetDiscount, "%") : 0;
+    orderGrandTotal = fleetStatus
+      ? orderGrandTotal - fleetDiscount
+      : orderGrandTotal;
     return true;
   });
 
@@ -139,7 +147,8 @@ export const serviceTotalsCalculation = serviceData => {
     serviceEpa,
     serviceTax,
     serviceDiscount,
-    serviceCount
+    serviceCount,
+    fleetDiscount
   };
   return data;
 };

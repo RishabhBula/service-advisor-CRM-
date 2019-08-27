@@ -435,7 +435,7 @@ class Message extends Component {
                         }
                         key={Index}
                       >
-                        <div className={"user-name"} id={`userId-${Index}`}>
+                        <div className={"user-name "} id={`userId-${Index}`}>
                           <span>
                             {isSummary
                               ? ele.senderId === ele.userId && ele.isSender

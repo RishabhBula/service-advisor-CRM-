@@ -109,7 +109,7 @@ class OrderSummaryView extends Component {
               size={"sm"}
               onClick={this.getPdf}
             >
-              More Options
+              Print
             </Button>
           </div>
           <OrderSummary
