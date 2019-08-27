@@ -231,7 +231,9 @@ class OrderDetails extends Component {
     });
 
     const scheduleStatus =
-      orderReducer && orderReducer.orderItems.customerId ? true : false;
+      orderReducer && orderReducer.orderItems && orderReducer.orderItems.customerId
+        ? true
+        : false;
     return (
       <div className={"workflow-right"}>
         <div className={""}>
