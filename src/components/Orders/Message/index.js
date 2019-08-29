@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import {
-   Button,
-   UncontrolledTooltip,
-   Nav,
-   NavItem,
-   NavLink
-} from "reactstrap";
+import { Button, UncontrolledTooltip, Nav, NavItem, NavLink } from "reactstrap";
 import SendInspection from "../Inspection/sentInspect";
-import MessageTemplate from "../Inspection/messageTemplate"
+import MessageTemplate from "../Inspection/messageTemplate";
 import Dropzone from "react-dropzone";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
-import Notes from './notes';
+import Notes from "./notes";
 import moment from "moment";
-import "../../../scss/messages.scss"
+import "../../../scss/messages.scss";
 class Message extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +15,7 @@ class Message extends Component {
       messageData: "",
       messages: [],
       mesageModal: false,
+      refreshData: true,
       attachment: {
         itemImagePreview: [],
         itemImage: []
@@ -157,7 +152,20 @@ class Message extends Component {
         : orderReducer.orderItems.orderName
     };
     if (payload.email !== "") {
+      const data = {
+        ...payload,
+        isSender: true,
+        createdAt: new Date()
+      };
+      this.state.messages.splice(0, 0, data);
+      this.props.newMsgSend(this.state.messages);
+      // this.state.messages.splice(0, 0, data);
       this.props.sendMessage(payload);
+      this.setState({
+        btnStatus: false,
+        messageData: "",
+        refreshData: false
+      });
     } else {
       ConfirmBox({
         text: "Please provide valid email address of Customer",
@@ -362,9 +370,7 @@ class Message extends Component {
                     ) : null}
                     {!isSummary ? (
                       <span
-                        className={
-                          "btn btn-outline-info btn-sm cursor_pointer"
-                        }
+                        className={"btn btn-outline-info btn-sm cursor_pointer"}
                         onClick={this.handelTemplateModal}
                       >
                         Use a Template
@@ -435,7 +441,7 @@ class Message extends Component {
                         }
                         key={Index}
                       >
-                        <div className={"user-name"} id={`userId-${Index}`}>
+                        <div className={"user-name "} id={`userId-${Index}`}>
                           <span>
                             {isSummary
                               ? ele.senderId === ele.userId && ele.isSender
@@ -477,11 +483,8 @@ class Message extends Component {
                               }}
                             />
                             {ele.messageAttachment &&
-                            ele.messageAttachment.itemImagePreview
-                              .length ? (
-                              <ul
-                                className={"attachment-preview-group  p-1"}
-                              >
+                            ele.messageAttachment.itemImagePreview.length ? (
+                              <ul className={"attachment-preview-group  p-1"}>
                                 {ele.messageAttachment
                                   ? ele.messageAttachment.itemImagePreview.map(
                                       (imgele, index) => {
@@ -501,13 +504,9 @@ class Message extends Component {
                                                 }
                                               >
                                                 <i
-                                                  className={
-                                                    "fa fa-file-pdf-o"
-                                                  }
+                                                  className={"fa fa-file-pdf-o"}
                                                 />
-                                                <span
-                                                  className={"file-name"}
-                                                >
+                                                <span className={"file-name"}>
                                                   {imgele.name}
                                                 </span>
                                               </span>

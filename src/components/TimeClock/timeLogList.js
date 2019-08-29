@@ -30,6 +30,7 @@ class TimeLogList extends Component {
       page: 1,
       timeLogEle: "",
       search: "",
+      sort: ""
     };
   }
   componentDidMount() {
@@ -72,10 +73,11 @@ class TimeLogList extends Component {
     this.setState({
       page: 1,
     });
-    const { search } = this.state;
+    const { search, sort } = this.state;
     const query = {
       page: 1,
       search,
+      sort
     };
     this.setState({
       filterApplied: true,
@@ -141,7 +143,7 @@ class TimeLogList extends Component {
       isSuccess } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockEditModalOpen } = modelDetails;
-    const { page, timeLogEle, search } = this.state
+    const { page, timeLogEle, search, sort } = this.state
     return (
       <div>
         <div className={""}>
@@ -158,7 +160,12 @@ class TimeLogList extends Component {
                     <span className={"text-uppercase"}>HOURS TRACKED</span>
                   </div>
                   <div className={"pl-4"}>
-                    <span className={"hours-tracked"}>{(totalDuration / 3600).toFixed(2)}</span>
+                    <span className={"hours-tracked"}>{
+                      isSuccess ?
+                        !isNaN((totalDuration / 3600).toFixed(2)) ? (totalDuration / 3600).toFixed(2) : 0.00 :
+                        <Loader />
+                    }
+                    </span>
                   </div>
                 </div>
               </Card>
@@ -190,12 +197,14 @@ class TimeLogList extends Component {
                     name="sort"
                     id="SortFilter"
                     onChange={this.handleChange}
-                    value={"sort"}
+                    value={sort}
                   >
                     <option className="form-control" value={""}>
-                      Sort
+                      All
                     </option>
-                    <option value={"createddesc"}>Last Created</option>
+                    <option value={"today"}>Today</option>
+                    <option value={"thisWeek"}>This Week</option>
+                    <option value={"thisMonth"}>This Month</option>
                   </Input>
                 </FormGroup>
               </Col>

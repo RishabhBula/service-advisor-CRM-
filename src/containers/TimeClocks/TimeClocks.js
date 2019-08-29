@@ -15,8 +15,9 @@ import {
   stopTimer,
   getOrderDetailsRequest,
   getAllServiceListRequest,
-  isTimeClockStart,
   getAllTimeLogRequest,
+  timmerStartForTechnician,
+  timmerStopForTechnician
 } from "../../actions"
 import TimeLogList from "../../components/TimeClock/timeLogList";
 import { isEqual } from "../../helpers/Object";
@@ -68,9 +69,10 @@ class TimeClocks extends Component {
       startTimer,
       stopTimer,
       serviceReducers,
-      isTimeClockStart,
       timelogReducer,
-      updateTimeLogRequest
+      updateTimeLogRequest,
+      timmerStartForTechnician,
+      timmerStopForTechnician
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
@@ -87,7 +89,8 @@ class TimeClocks extends Component {
           startTimer={startTimer}
           stopTimer={stopTimer}
           serviceData={serviceReducers.serviceDataList}
-          isTimeClockStart={isTimeClockStart}
+          timmerStartForTechnician={timmerStartForTechnician}
+          timmerStopForTechnician={timmerStopForTechnician}
         />
         <TimeLogList
           timeLogData={timelogReducer.allTimeData}
@@ -130,8 +133,9 @@ const mapDispatchToProps = dispatch => ({
   stopTimer: data => dispatch(stopTimer(data)),
   getOrderDetailsRequest: data => dispatch(getOrderDetailsRequest(data)),
   getAllServiceListRequest: data => dispatch(getAllServiceListRequest(data)),
-  isTimeClockStart: data => dispatch(isTimeClockStart(data)),
-  getAllTimeLogRequest: (data) => dispatch(getAllTimeLogRequest(data))
+  getAllTimeLogRequest: (data) => dispatch(getAllTimeLogRequest(data)),
+  timmerStartForTechnician: data => dispatch(timmerStartForTechnician(data)),
+  timmerStopForTechnician: data => dispatch(timmerStopForTechnician(data)),
 });
 
 export default connect(

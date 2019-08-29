@@ -28,7 +28,8 @@ class OrderDetails extends Component {
       orderStatus: false,
       activityLogs: [],
       serviceDataObject: {},
-      activeService: false
+      activeService: false,
+      isFleetAllow: false
     };
   }
 
@@ -45,10 +46,10 @@ class OrderDetails extends Component {
     });
   };
 
-  componentDidUpdate = ({ activityReducer, isPrint,appointmentReducer }) => {
+  componentDidUpdate = ({ activityReducer, isPrint, appointmentReducer }) => {
     const activityData = this.props.activityReducer;
     const orderId = this.props.orderReducer.orderItems._id;
-    const appointmentReducerData = this.props.appointmentReducer
+    const appointmentReducerData = this.props.appointmentReducer;
 
     if (activityReducer !== activityData) {
       this.setState({
@@ -102,51 +103,54 @@ class OrderDetails extends Component {
 
   getScheduleDate = () => {
     const { orderReducer, appointmentReducer } = this.props;
-    //  let orderOfId = "",
-      let scheduleDate = "",
-      finalDate = '';
-   if (orderReducer && orderReducer.orderItems && orderReducer.orderItems._id) {
-    // orderOfId = orderReducer.orderItems._id;
-     finalDate = 
-       appointmentReducer.data.filter(
-         data =>
-           moment(data.appointmentDate).format("MMM Do YYYY") >=
-           moment(new Date()).format("MMM Do YYYY")
-       );
-     scheduleDate =
-       appointmentReducer && appointmentReducer.data && finalDate[0]
-         ? moment(finalDate[0].appointmentDate).format("MMM Do YYYY")
-         : null;
-   } else {
-     scheduleDate = null;
-   }
-   return (
-     <>
-       <span id={"dateId"} className={"cursor_pointer"}>
-         {scheduleDate}
-       </span>
-       <UncontrolledPopover
-         target={"dateId"}
-         trigger={"hover"}
-         placement="bottom"
-         className={"border scheduleDate-popover technician-popover"}
-       >
-         <PopoverHeader>
-           <i className={"fa fa-calendar"} /> Scheduled Dates
-         </PopoverHeader>
-         <PopoverBody className={"bg-light"}>
-           {finalDate.map((date, dateIndex) => {
-             return (
-               <div className={"pt-1 pb-1 border-bottom"} key={dateIndex}>
-                 {dateIndex + 1}.{" "}
-                 {moment(date.appointmentDate).format("MMM Do YYYY")}
-               </div>
-             );
-           })}
-         </PopoverBody>
-       </UncontrolledPopover>
-     </>
-   );
+    let scheduleDate = "",
+      finalDate = "";
+    if (
+      orderReducer &&
+      orderReducer.orderItems &&
+      orderReducer.orderItems.customerId &&
+      orderReducer.orderItems.vehicleId &&
+      orderReducer.orderItems._id
+    ) {
+      finalDate = appointmentReducer.data.filter(
+        data =>
+          moment(data.appointmentDate).format("MMM Do YYYY") >=
+          moment(new Date()).format("MMM Do YYYY")
+      );
+      scheduleDate =
+        appointmentReducer && appointmentReducer.data && finalDate[0]
+          ? moment(finalDate[0].appointmentDate).format("MMM Do YYYY")
+          : null;
+    } else {
+      scheduleDate = null;
+    }
+    return (
+      <>
+        <span id={"dateId"} className={"cursor_pointer"}>
+          {scheduleDate}
+        </span>
+        <UncontrolledPopover
+          target={"dateId"}
+          trigger={"hover"}
+          placement="bottom"
+          className={"border scheduleDate-popover technician-popover"}
+        >
+          <PopoverHeader>
+            <i className={"fa fa-calendar"} /> Scheduled Dates
+          </PopoverHeader>
+          <PopoverBody className={"bg-light"}>
+            {finalDate ? finalDate.map((date, dateIndex) => {
+              return (
+                <div className={"pt-1 pb-1 border-bottom"} key={dateIndex}>
+                  {dateIndex + 1}.{" "}
+                  {moment(date.appointmentDate).format("MMM Do YYYY")}
+                </div>
+              );
+            }) : null}
+          </PopoverBody>
+        </UncontrolledPopover>
+      </>
+    );
   };
 
   render() {
@@ -161,7 +165,7 @@ class OrderDetails extends Component {
       getVehicleData,
       getOrders,
       addAppointment,
-      getUserData,
+      getUserData
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { paymentModalOpen, showAddAppointmentModal } = modelDetails;
@@ -170,9 +174,9 @@ class OrderDetails extends Component {
       : [];
     const payedAmountList =
       paymentList &&
-      paymentList.length &&
-      paymentList[0].payedAmount &&
-      paymentList[0].payedAmount.length
+        paymentList.length &&
+        paymentList[0].payedAmount &&
+        paymentList[0].payedAmount.length
         ? paymentList[0].payedAmount
         : null;
     const { activityLogs } = this.state;
@@ -199,19 +203,34 @@ class OrderDetails extends Component {
       totalTax = 0,
       totalDiscount = 0,
       totalPaiedAmount = 0;
+
+    const fleetStatus =
+      orderReducer &&
+        orderReducer.orderItems &&
+        orderReducer.orderItems.customerId &&
+        orderReducer.orderItems.customerId.fleet
+        ? true
+        : false;
+    let fleetDiscount =
+      orderReducer &&
+        orderReducer.orderItems &&
+        orderReducer.orderItems.customerId &&
+        orderReducer.orderItems.customerId.fleet ? orderReducer.orderItems.customerId.fleet.fleetDefaultPermissions
+          .shouldReceiveDiscount.percentageDiscount : 0;
+
     const orderStatus = orderReducer.orderStatus;
     const groupedOptions = [];
     orderStatus.map((status, index) => {
-      return (
-        groupedOptions.push({
-          label: status.name,
-          id: status._id
-        })
-      );
+      return groupedOptions.push({
+        label: status.name,
+        id: status._id
+      });
     });
 
     const scheduleStatus =
-      orderReducer && orderReducer.orderItems.customerId ? true : false;
+      orderReducer && orderReducer.orderItems && orderReducer.orderItems.customerId
+        ? true
+        : false;
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -254,19 +273,19 @@ class OrderDetails extends Component {
                   </UncontrolledTooltip>
                 </>
               ) : (
-                <>
-                  <Button
-                    color={"secondary"}
-                    className={"btn btn-sm"}
-                    id={"ScheduleStatus"}
-                  >
-                    Schedule
+                  <>
+                    <Button
+                      color={"secondary"}
+                      className={"btn btn-sm"}
+                      id={"ScheduleStatus"}
+                    >
+                      Schedule
                   </Button>
-                  <UncontrolledTooltip target={"ScheduleStatus"}>
-                    Please update user and vehicle details
+                    <UncontrolledTooltip target={"ScheduleStatus"}>
+                      Please update user and vehicle details
                   </UncontrolledTooltip>
-                </>
-              )}
+                  </>
+                )}
             </span>
           </div>
           <div className={"d-flex justify-content-between pb-2 pl-2"}>
@@ -299,8 +318,8 @@ class OrderDetails extends Component {
                   {orderReducer && !orderReducer.orderItems.status ? (
                     <span className={"bg-danger authoris-dot"} />
                   ) : (
-                    ""
-                  )}{" "}
+                      ""
+                    )}{" "}
                   Not Authorised
                 </Button>
                 <Button
@@ -317,8 +336,8 @@ class OrderDetails extends Component {
                   {orderReducer && orderReducer.orderItems.status ? (
                     <span className={"bg-success authoris-dot"} />
                   ) : (
-                    ""
-                  )}{" "}
+                      ""
+                    )}{" "}
                   Authorised
                 </Button>
               </ButtonGroup>
@@ -385,108 +404,121 @@ class OrderDetails extends Component {
         <div className={"service-warp"}>
           {serviceData && serviceData.length
             ? serviceData.map((item, index) => {
-                let mainserviceTotal = [],
-                  serviceTotal,
-                  epa,
-                  discount,
-                  tax;
-                return (
-                  <div key={index} className={""}>
-                    {item.serviceId &&
+              let mainserviceTotal = [],
+                serviceTotal,
+                epa,
+                discount,
+                tax;
+              return (
+                <div key={index} className={""}>
+                  {item.serviceId &&
                     item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
-                      ? item.serviceId.serviceItems.map(
-                          (service, sIndex) => {
-                            const calSubTotal = calculateSubTotal(
-                              service.retailPrice ||
-                                (service.tierSize
-                                  ? service.tierSize[0].retailPrice
-                                  : null) ||
-                                0,
-                              service.qty || 0,
-                              service.hours || 0,
-                              service.rate ? service.rate.hourlyRate : 0
-                            ).toFixed(2);
-                            const subDiscount = calculateValues(
-                              calSubTotal || 0,
-                              service.discount.value || 0,
-                              service.discount.type
-                            );
-                            const servicesSubTotal = (
-                              parseFloat(calSubTotal) -
-                              parseFloat(subDiscount)
-                            ).toFixed(2);
-                            mainserviceTotal.push(
-                              parseFloat(servicesSubTotal)
-                            );
-                            serviceTotalArray = getSumOfArray(
-                              mainserviceTotal
-                            );
-                            epa = calculateValues(
-                              serviceTotalArray || 0,
-                              item.serviceId.epa.value || 0,
-                              item.serviceId.epa
-                                ? item.serviceId.epa.type
-                                : "$"
-                            );
-                            discount = calculateValues(
-                              serviceTotalArray || 0,
-                              item.serviceId.discount.value || 0,
-                              item.serviceId.discount
-                                ? item.serviceId.discount.type
-                                : "$"
-                            );
-                            tax = calculateValues(
-                              serviceTotalArray || 0,
-                              item.serviceId.taxes.value || 0,
-                              item.serviceId.taxes
-                                ? item.serviceId.taxes.type
-                                : "$"
-                            );
+                    ? item.serviceId.serviceItems.map(
+                      (service, sIndex) => {
+                        const calSubTotal = calculateSubTotal(
+                          service.retailPrice ||
+                          (service.tierSize
+                            ? service.tierSize[0].retailPrice
+                            : null) ||
+                          0,
+                          service.qty || 0,
+                          service.hours || 0,
+                          service.rate ? service.rate.hourlyRate : 0
+                        ).toFixed(2);
+                        const subDiscount = calculateValues(
+                          calSubTotal || 0,
+                          service.discount.value || 0,
+                          service.discount.type
+                        );
+                        const servicesSubTotal = (
+                          parseFloat(calSubTotal) -
+                          parseFloat(subDiscount)
+                        ).toFixed(2);
+                        mainserviceTotal.push(
+                          parseFloat(servicesSubTotal)
+                        );
+                        serviceTotalArray = getSumOfArray(
+                          mainserviceTotal
+                        );
+                        epa = calculateValues(
+                          serviceTotalArray || 0,
+                          item.serviceId.epa.value || 0,
+                          item.serviceId.epa
+                            ? item.serviceId.epa.type
+                            : "$"
+                        );
+                        discount = calculateValues(
+                          serviceTotalArray || 0,
+                          item.serviceId.discount.value || 0,
+                          item.serviceId.discount
+                            ? item.serviceId.discount.type
+                            : "$"
+                        );
+                        tax = calculateValues(
+                          serviceTotalArray || 0,
+                          item.serviceId.taxes.value || 0,
+                          item.serviceId.taxes
+                            ? item.serviceId.taxes.type
+                            : "$"
+                        );
 
-                            serviceTotal = (
-                              parseFloat(serviceTotalArray) +
-                              parseFloat(epa) +
-                              parseFloat(tax) -
-                              parseFloat(discount)
-                            ).toFixed(2);
-                            if (service.serviceType === "part") {
-                              totalParts += parseFloat(servicesSubTotal);
-                            }
-                            if (service.serviceType === "tire") {
-                              totalTires += parseFloat(servicesSubTotal);
-                            }
-                            if (service.serviceType === "labor") {
-                              totalLabor += parseFloat(servicesSubTotal);
-                            }
-                            orderSubTotal += parseFloat(servicesSubTotal);
+                        serviceTotal = (
+                          parseFloat(serviceTotalArray) +
+                          parseFloat(epa) +
+                          parseFloat(tax) -
+                          parseFloat(discount)
+                        ).toFixed(2);
+                        if (service.serviceType === "part") {
+                          totalParts += parseFloat(servicesSubTotal);
+                        }
+                        if (service.serviceType === "tire") {
+                          totalTires += parseFloat(servicesSubTotal);
+                        }
+                        if (service.serviceType === "labor") {
+                          totalLabor += parseFloat(servicesSubTotal);
+                        }
+                        orderSubTotal += parseFloat(servicesSubTotal);
 
-                            return true;
-                          }
-                        )
-                      : ""}
+                        return true;
+                      }
+                    )
+                    : ""}
+                  <span className={"d-none"}>
+                    {
+                      ((orderGandTotal += parseFloat(serviceTotal) || 0),
+                        fleetStatus
+                          ? (fleetDiscount = calculateValues(
+                            orderGandTotal,
+                            fleetDiscount,
+                            "%"
+                          ))
+                          : 0,
+                        fleetStatus
+                          ? (orderGandTotal =
+                            orderGandTotal - fleetDiscount)
+                          : 0)
+                    }
+                  </span>
 
-                    <span className={"d-none"}>
-                      {(orderGandTotal += parseFloat(serviceTotal) || 0)}
-                    </span>
-                    <span className={"d-none"}>
-                      {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
-                    </span>
-                    <span className={"d-none"}>
-                      {(totalDiscount += parseFloat(discount) || 0)}
-                    </span>
-                  </div>
-                );
-              })
+                  <span className={"d-none"}>
+                    {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
+                  </span>
+                  <span className={"d-none"}>
+                    {(totalDiscount += parseFloat(discount) || 0)}
+                  </span>
+                </div>
+              );
+            })
             : ""}
           {paymentList && paymentList.length
             ? paymentList.map(paymentData => {
-                totalPaiedAmount +=
-                  paymentData.payedAmount[
-                    paymentData.payedAmount.length - 1
-                  ].amount;
-                return true;
-              })
+              totalPaiedAmount +=
+                paymentData.payedAmount[
+                  paymentData.payedAmount.length - 1
+                ].amount;
+              return true;
+            })
             : null}
           {serviceData && serviceData.length ? (
             <>
@@ -541,6 +573,14 @@ class OrderDetails extends Component {
                     />
                   </span>
                 </div>
+                {fleetStatus ? (
+                  <div className={"border-top pt-2 mt-2"}>
+                    <span className={"title"}>Fleet Discount </span>:{" "}
+                    <span className={"price-block"}>
+                      - <Dollor value={fleetDiscount.toFixed(2)} />
+                    </span>
+                  </div>
+                ) : null}
                 <div className={"pt-2 border-top mt-2 grand-total"}>
                   Grand Total :{" "}
                   <Dollor
@@ -559,8 +599,8 @@ class OrderDetails extends Component {
               <div className={"clearfix"} />
             </>
           ) : (
-            ""
-          )}
+              ""
+            )}
         </div>
         <hr />
         <div className={"text-center payment-section"}>
@@ -592,33 +632,33 @@ class OrderDetails extends Component {
           ) : null}
           {paymentList && paymentList.length
             ? paymentList
-                .slice(0)
-                .reverse()
-                .map((paymentData, pIndex) => {
-                  return (
-                    <div key={pIndex} className={"activity-block p-3"}>
-                      <div className={"pr-3 text-left"}>
-                        <span>{`Paid $${paymentData.payedAmount[
-                          paymentData.payedAmount.length - 1
-                        ].amount.toFixed(2)} viea ${
-                          paymentData.paymentType
+              .slice(0)
+              .reverse()
+              .map((paymentData, pIndex) => {
+                return (
+                  <div key={pIndex} className={"activity-block p-3"}>
+                    <div className={"pr-3 text-left"}>
+                      <span>{`Paid $${paymentData.payedAmount[
+                        paymentData.payedAmount.length - 1
+                      ].amount.toFixed(2)} viea ${
+                        paymentData.paymentType
                         } on date`}</span>
-                      </div>
-                      <div className={"text-left activity-date"}>
-                        <span>
-                          {moment(
-                            paymentData.payedAmount[
-                              paymentData.payedAmount.length - 1
-                            ].date
-                          ).format("MMM Do YYYY, h:mm A")}
-                        </span>
-                      </div>
-                      <span className={"activity-icon payment-set"}>
-                        <i className={"fa fa-dollar-sign"} />
+                    </div>
+                    <div className={"text-left activity-date"}>
+                      <span>
+                        {moment(
+                          paymentData.payedAmount[
+                            paymentData.payedAmount.length - 1
+                          ].date
+                        ).format("MMM Do YYYY, h:mm A")}
                       </span>
                     </div>
-                  );
-                })
+                    <span className={"activity-icon payment-set"}>
+                      <i className={"fa fa-dollar-sign"} />
+                    </span>
+                  </div>
+                );
+              })
             : null}
         </div>
         <hr />
@@ -628,48 +668,48 @@ class OrderDetails extends Component {
           ) : null}
           {activityLogs && activityLogs.length
             ? activityLogs
-                .slice(0)
-                .reverse()
-                .map((activity, index) => {
-                  return (
-                    <div key={index} className={"activity-block p-3"}>
-                      <div className={"pr-3 text-left"}>
-                        <span>
-                          {activity.activityPerson.firstName}{" "}
-                          {activity.activityPerson.lastName}{" "}
-                          {activity.type !== "NEW_ORDER" &&
-                          activity.type !== "ADD_PAYMENT"
-                            ? "changed"
-                            : null}{" "}
-                          {activity.name}
-                        </span>
-                      </div>
-                      <div className={"text-left activity-date"}>
-                        <span>
-                          {moment(activity.createdAt).format(
-                            "MMM Do YYYY, h:mm A"
-                          )}
-                        </span>
-                      </div>
-                      <span
-                        className={
-                          activity.type === "MESSAGE"
-                            ? "activity-icon activity-message"
-                            : "activity-icon activity-set"
-                        }
-                      >
+              .slice(0)
+              .reverse()
+              .map((activity, index) => {
+                return (
+                  <div key={index} className={"activity-block p-3"}>
+                    <div className={"pr-3 text-left"}>
+                      <span>
+                        {activity.activityPerson.firstName}{" "}
+                        {activity.activityPerson.lastName}{" "}
                         {activity.type !== "NEW_ORDER" &&
+                          activity.type !== "ADD_PAYMENT"
+                          ? "changed"
+                          : null}{" "}
+                        {activity.name}
+                      </span>
+                    </div>
+                    <div className={"text-left activity-date"}>
+                      <span>
+                        {moment(activity.createdAt).format(
+                          "MMM Do YYYY, h:mm A"
+                        )}
+                      </span>
+                    </div>
+                    <span
+                      className={
+                        activity.type === "MESSAGE"
+                          ? "activity-icon activity-message"
+                          : "activity-icon activity-set"
+                      }
+                    >
+                      {activity.type !== "NEW_ORDER" &&
                         activity.type !== "ADD_PAYMENT" &&
                         activity.type !== "INVOICE_ORDER" ? (
                           <i className={"fa fa-check"} />
                         ) : null}
-                        {activity.type === "ADD_PAYMENT" ? (
-                          <i className={"fa fa-dollar-sign"} />
-                        ) : null}
-                      </span>
-                    </div>
-                  );
-                })
+                      {activity.type === "ADD_PAYMENT" ? (
+                        <i className={"fa fa-dollar-sign"} />
+                      ) : null}
+                    </span>
+                  </div>
+                );
+              })
             : ""}
         </div>
 

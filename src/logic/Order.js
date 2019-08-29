@@ -23,7 +23,9 @@ import {
   getMessageListSuccess,
   verifyLinkRequest,
   getPaymentSuccess,
-  getCannedServiceList
+  getCannedServiceList,
+  genrateInvoiceSuccess,
+  genrateInspectionSuccess
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -172,7 +174,7 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
-    dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }))
+    dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
     done();
   }
 });
@@ -348,9 +350,7 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       if (!action.payload.isPdfGenerated) {
-        if (
-          !action.payload.isChangedOrderStatus
-        ) {
+        if (!action.payload.isChangedOrderStatus) {
           toast.success(result.messages[0]);
         }
         if (action.payload.status === true) {
@@ -371,19 +371,26 @@ const updateOrderDetailsLogic = createLogic({
         }
         if (action.payload.isInvoiceStatus) {
           const data = {
-            name: `Order status updated to ${action.payload.isInvoice ? 'Invoice' : 'Estimate'}`,
+            name: `Order status updated to ${
+              action.payload.isInvoice ? "Invoice" : "Estimate"
+            }`,
             type: "INVOICE_ORDER",
             orderId: action.payload._id
           };
           dispatch(addNewActivity(data));
         }
         if (!action.payload.isSummary) {
-          dispatch(
-            getOrderDetailsRequest({
-              _id:
-                action.payload && action.payload._id ? action.payload._id : null
-            })
-          );
+          if (action.payload.isOrderDetails) {
+            dispatch(
+              getOrderDetailsRequest({
+                _id:
+                  action.payload && action.payload._id
+                    ? action.payload._id
+                    : null,
+                isAuthStatus: action.payload.isAuthStatus ? true : false
+              })
+            );
+          }
         } else {
           dispatch(verifyLinkRequest(action.payload.query));
         }
@@ -391,7 +398,13 @@ const updateOrderDetailsLogic = createLogic({
         dispatch(updateOrderDetailsSuccess());
         done();
       } else {
-        done();
+        if (action.payload.inspectionPdf) {
+          dispatch(genrateInspectionSuccess(action.payload.inspectionURL));
+          done();
+        } else {
+          dispatch(genrateInvoiceSuccess(action.payload.invoiceURL));
+          done();
+        }
       }
     }
   }
@@ -444,8 +457,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-              ? action.payload.search
-              : null,
+            ? action.payload.search
+            : null,
         _id: action.payload && action.payload._id ? action.payload._id : null,
         customerId:
           action.payload && action.payload.customerId
@@ -455,9 +468,10 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.vehicleId
             ? action.payload.vehicleId
             : null,
-        technicianId: action.payload && action.payload.technicianId
-          ? action.payload.technicianId
-          : null
+        technicianId:
+          action.payload && action.payload.technicianId
+            ? action.payload.technicianId
+            : null
       },
       undefined
     );
@@ -506,7 +520,7 @@ const getOrderDetails = createLogic({
           vehicleOrders: !action.payload.customerId ? result.data.data : []
         })
       );
-      dispatch(getCannedServiceList())
+      dispatch(getCannedServiceList());
       //dispatch(hideLoader());
       done();
     }

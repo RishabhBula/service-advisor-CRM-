@@ -13,7 +13,9 @@ export const timelogActions = {
   GET_TECHNICIAN_TIME_LOGS_REQUEST: "Get technician time logs request!",
   GET_TECHNICIAN_TIME_LOGS_SUCCESS: "Get technician time logs success!",
   GET_ALL_TIME_LOGS_REQUEST: "Get all time logs request!",
-  GET_ALL_TIME_LOGS_SUCCESS: "Get all time logs success!"
+  GET_ALL_TIME_LOGS_SUCCESS: "Get all time logs success!",
+  START_TECHNICIAN_TIMMER:"Timmer Start for technician",
+  STOP_TECHNICIAN_TIMMER:"Timmer Stop for technician"
 };
 
 export const startTimer = createAction(timelogActions.START_TIMER);
@@ -32,3 +34,6 @@ export const getTechinicianTimeLogSuccess = createAction(timelogActions.GET_TECH
 
 export const getAllTimeLogRequest = createAction(timelogActions.GET_ALL_TIME_LOGS_REQUEST);
 export const getAllTimeLogSuccess = createAction(timelogActions.GET_ALL_TIME_LOGS_SUCCESS);
+
+export const timmerStartForTechnician = createAction(timelogActions.START_TECHNICIAN_TIMMER);
+export const timmerStopForTechnician = createAction(timelogActions.STOP_TECHNICIAN_TIMMER);

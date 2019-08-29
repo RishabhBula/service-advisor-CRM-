@@ -80,7 +80,7 @@ class WorkflowGridView extends React.Component {
 
   getAppointmentDetails = (id, task) => {
     const reducerData = this.props.appointmentReducer;
-    const orders = reducerData.data.filter(order => order.orderId);
+    const orders = reducerData ? reducerData.data.filter(order => order.orderId) : null;
     let orderDetails = "";
     const orderMain = orders.filter(orderName => orderName.orderId._id === id);
 

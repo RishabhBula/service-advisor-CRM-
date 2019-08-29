@@ -6,7 +6,7 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
-  getUsersList,
+  // getUsersList,
   getOrderDetailsRequest,
   getTechinicianTimeLogSuccess,
   getAllTimeLogSuccess,
@@ -49,9 +49,9 @@ const startTimerLogic = createLogic({
         orderId: orderId ? orderId : null
       }
     );
-    if (!serviceId) {
-      dispatch(getUsersList({ page: 1 }))
-    }
+    // if (!serviceId) {
+    //   dispatch(getUsersList({ page: 1 }))
+    // }
     dispatch(
       getOrderIdSuccess({
         ...orderItems,
@@ -87,14 +87,16 @@ const stopTimerLogic = createLogic({
       undefined,
       { technicianId, serviceId, orderId }
     );
-    dispatch(
-      getOrderIdSuccess({
-        ...orderItems,
-        serviceId: mainServices
-      })
-    );
+    if (serviceId) {
+      dispatch(
+        getOrderIdSuccess({
+          ...orderItems,
+          serviceId: mainServices
+        })
+      );
+    }
     if (!serviceId) {
-      dispatch(getUsersList({ page: 1 }))
+      // dispatch(getUsersList({ page: 1 }))
       dispatch(getAllTimeLogRequest())
     }
     if (serviceId) {

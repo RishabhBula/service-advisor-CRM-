@@ -58,7 +58,7 @@ export class CrmSubPaymentModalModel extends Component {
       })
       isError = true
       console.log("@@@@@@@@@@");
-      
+
     }
     else if (parseInt(payload.expYear) < n && payload.expYear) {
       this.setState({
@@ -76,7 +76,7 @@ export class CrmSubPaymentModalModel extends Component {
       isError = false
     }
     console.log("################", isError);
-    
+
     if (!isError) {
       this.props.addSubscriptionRequest(payload)
     }
@@ -93,7 +93,7 @@ export class CrmSubPaymentModalModel extends Component {
         >
           <ModalHeader toggle={handleSubPaymentModal}>Subscription Payment</ModalHeader>
           <ModalBody>
-            <Form>
+            <Form onSubmit={this.handleSubscriptionPayment}>
               <div>
                 <Col md={"12"}>
                   <FormGroup>

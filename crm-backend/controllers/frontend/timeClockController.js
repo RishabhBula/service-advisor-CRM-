@@ -511,6 +511,8 @@ const getAllTimeLogs = async (req, res) => {
         $match: { ...condition }
       }
     ])
+      .skip(offset)
+      .limit(limit);
     // const result = await TimeClock.find(condition).populate({
     //   path: "technicianId orderId", match: {
     //     isDeleted: false
