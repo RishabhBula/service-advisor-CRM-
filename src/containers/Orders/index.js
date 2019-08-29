@@ -58,7 +58,8 @@ import {
   vehicleAddRequest,
   getOrderListForSelect,
   addAppointmentRequest,
-  getAppointments
+  getAppointments,
+  newMsgSend
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -161,7 +162,7 @@ class Order extends Component {
     if (
       (serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
         inspectionReducer.inspectionData.isSuccess !==
-        this.props.inspectionReducer.inspectionData.isSuccess) &&
+          this.props.inspectionReducer.inspectionData.isSuccess) &&
       !this.props.serviceReducers.isAddServiceItem
     ) {
       this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
@@ -170,7 +171,7 @@ class Order extends Component {
       orderReducer.orderItems !== this.props.orderReducer.orderItems ||
       orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
       messageReducer.messageData.isSuccess !==
-      this.props.messageReducer.messageData.isSuccess
+        this.props.messageReducer.messageData.isSuccess
     ) {
       const {
         orderName,
@@ -257,6 +258,7 @@ class Order extends Component {
       customerId: customerValue ? customerValue : null,
       vehicleId: vehicleValue ? vehicleValue : null,
       orderName: orderName,
+      isOrderDetails: true,
       _id: orderId
     };
     logger("*******payload*****", payload);
@@ -283,7 +285,9 @@ class Order extends Component {
         status: value,
         _id: orderReducer.orderItems._id,
         authorizerId: comapnyId,
-        isChangedOrderStatus: true
+        isChangedOrderStatus: true,
+        isAuthStatus: true,
+        isOrderDetails: true
       };
     } else {
       payload = {
@@ -291,7 +295,9 @@ class Order extends Component {
         _id: orderReducer.orderItems._id,
         authorizerId: comapnyId,
         isChangedOrderStatus: true,
-        isInvoiceStatus: true
+        isInvoiceStatus: true,
+        isAuthStatus: true,
+        isOrderDetails: true
       };
     }
     this.props.updateOrderDetails(payload);
@@ -310,8 +316,16 @@ class Order extends Component {
   };
 
   getPdf = () => {
-    const { orderReducer } = this.props
-    let filename = orderReducer && orderReducer.orderItems ? orderReducer.orderItems.invoiceURL : '';
+    const { orderReducer, pdfReducer } = this.props;
+    let filename;
+    if (pdfReducer.invoiceUrl !== "") {
+      filename = pdfReducer.invoiceUrl;
+    } else {
+      filename =
+        orderReducer && orderReducer.orderItems
+          ? orderReducer.orderItems.invoiceURL
+          : "";
+    }
     let pdfWindow = window.open("");
     pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
@@ -319,7 +333,6 @@ class Order extends Component {
       filename +
       "'></embed></body></html>";
   };
-
 
   render() {
     const {
@@ -394,9 +407,11 @@ class Order extends Component {
       appointmentReducer,
       getOrdersData,
       addAppointment,
-      getAppointments
+      getAppointments,
+      newMsgSend
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
+    console.log(orderReducer, " *********  orderReducer");
     return (
       <div className="animated fadeIn">
         {!orderReducer.isOrderLoading ? (
@@ -413,8 +428,7 @@ class Order extends Component {
                       <h3 className={"mr-3 orderId"}>
                         Order (
                         {`#${
-                          typeof this.props.orderReducer.orderId !==
-                          "object"
+                          typeof this.props.orderReducer.orderId !== "object"
                             ? this.props.orderReducer.orderId
                             : null
                         }`}
@@ -489,11 +503,16 @@ class Order extends Component {
                           </UncontrolledTooltip>
                           <span
                             id="add-Appointment"
-                            className="print-btn"
-                            onClick={this.getPdf}
+                            className={`print-btn ${
+                              orderReducer.isPdfLoading ? "disabled" : ""
+                            }`}
+                            onClick={
+                              orderReducer.isPdfLoading ? "" : this.getPdf
+                            }
                           >
                             <i className="icon-printer icons " />
-                            &nbsp; Print
+                            &nbsp;{" "}
+                            {orderReducer.isPdfLoading ? "Printing" : "Print"}
                           </span>
                           <UncontrolledTooltip target={"add-Appointment"}>
                             Click to Print Invoice
@@ -539,12 +558,8 @@ class Order extends Component {
                             getStdList={getStdList}
                             addRate={addRate}
                             profileInfoReducer={profileInfoReducer}
-                            rateStandardListReducer={
-                              rateStandardListReducer
-                            }
-                            getInventoryPartsVendors={
-                              getInventoryPartsVendors
-                            }
+                            rateStandardListReducer={rateStandardListReducer}
+                            getInventoryPartsVendors={getInventoryPartsVendors}
                             orderReducer={orderReducer}
                             addNewCannedService={addNewCannedService}
                             deleteCannedServiceRequest={
@@ -613,6 +628,7 @@ class Order extends Component {
                             deleteMessageTemplate={deleteMessageTemplate}
                             deleteNotes={deleteNotes}
                             isSummary={false}
+                            newMsgSend={newMsgSend}
                           />
                         ) : null}
                       </React.Fragment>
@@ -842,7 +858,8 @@ const mapDispatchToProps = dispatch => ({
   },
   getOrdersData: data => dispatch(getOrderListForSelect(data)),
   addAppointment: data => dispatch(addAppointmentRequest(data)),
-  getAppointments: data => dispatch(getAppointments(data))
+  getAppointments: data => dispatch(getAppointments(data)),
+  newMsgSend: data => dispatch(newMsgSend(data))
 });
 export default connect(
   mapStateToProps,

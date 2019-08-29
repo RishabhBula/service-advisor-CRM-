@@ -15,6 +15,9 @@ class InvoiceTable extends Component {
 
   getServiceItems = serviceItemData => {
     let calSubTotal = 0;
+    const styleTr = {
+      border:'0px'
+    }
     var table = [];
     for (let j = 0; j < serviceItemData.length; j++) {
       let service = serviceItemData[j];
@@ -73,7 +76,7 @@ class InvoiceTable extends Component {
             : "$" + discountValue
           : 0;
       table.push(
-        <tr key={j}>
+        <tr key={j} style={styleTr}>
           <td>
             <span className="parts-name">
               {val} {partnumber}
@@ -82,21 +85,21 @@ class InvoiceTable extends Component {
           </td>
           <td>
             {service.serviceType === "part" &&
-              service.partOptions &&
-              service.partOptions.showPriceOnQuoteAndInvoice
+            service.partOptions &&
+            service.partOptions.showPriceOnQuoteAndInvoice
               ? "$" + cost
               : service.serviceType === "tire"
-                ? "$" + cost
-                : "-" || "-"}
+              ? "$" + cost
+              : "-" || "-"}
           </td>
           <td>
             {service.serviceType === "part" &&
-              service.partOptions &&
-              service.partOptions.showPriceOnQuoteAndInvoice
+            service.partOptions &&
+            service.partOptions.showPriceOnQuoteAndInvoice
               ? qty
               : service.serviceType === "tire"
-                ? qty
-                : "-" || "-"}
+              ? qty
+              : "-" || "-"}
           </td>
           <td>{hours || "-"}</td>
           <td>{discountMainVal}</td>
@@ -117,19 +120,19 @@ class InvoiceTable extends Component {
         float: "left",
         fontSize: "10px",
         width: "230px",
-        paddingRight: "40px"
+        paddingRight: "40px",
+        paddingBottom:"20px"
       },
       orderTableBlock = {
         float: "left",
-        width: "50%"
+        width: "50%",
+        paddingBottom:"20px"
       },
       headerStyle = {
         marginLeft: "8px",
         marginRight: "8px"
       },
-      invoceTableTitle = {
-        fontSize: "12px"
-      },
+      
       servicePrice = {
         width: "150px",
         float: "left",
@@ -142,6 +145,10 @@ class InvoiceTable extends Component {
     const orderData = this.props.orderReducer.orderItems;
     const customerData = orderData.customerId ? orderData.customerId : '';
     const comapnyInfo = profileReducer ? profileReducer.profileInfo : "";
+    const address =
+      profileReducer && profileReducer.profileInfo
+        ? profileReducer.profileInfo.address
+        : "";
     const serviceData = this.props.services;
     // const orderName =
     //   orderReducer && orderReducer.orderItems
@@ -157,6 +164,7 @@ class InvoiceTable extends Component {
       " " +
       orderData.vehicleId.modal
     ) : '';
+    const licensePlate = orderData.vehicleId ? orderData.vehicleId.licensePlate : ''
 
     const serviceTableInnner = [];
     const servieArray = [];
@@ -188,7 +196,7 @@ class InvoiceTable extends Component {
       serviceTableInnner.push(
         <div className={"invoceTableDesign"} key={i}>
           <div className={"invoceTableTitle"}>
-            <span style={invoceTableTitle}>{servicesId.serviceName}</span>
+            <span >{servicesId.serviceName}</span>
           </div>
           <table
             id="tbl"
@@ -278,8 +286,11 @@ class InvoiceTable extends Component {
               <div className="invoice-name">Invoice : #{orderId}</div>
               <div className="invoice-date">Created : {orderDate}</div>
             </div>
-            <div className="company-name">
-              <div>{companyName}</div>
+            <div className={"company-name-warp"}>
+              <div className="company-name">
+                <div>{companyName}</div>
+              </div>
+              <div className="company-address">{address}</div>
             </div>
             <div className="clearfix" />
           </div>
@@ -293,7 +304,12 @@ class InvoiceTable extends Component {
               </div>
             </div>
             <div className="width-50">
-              <div className="user-details-right">{vehilceInfo}</div>
+              <div className="user-details-right">
+                <div>{vehilceInfo}</div>
+                <div className={"plateName"}>
+                  License Plate : {licensePlate}
+                </div>
+              </div>
             </div>
             <div className="clearfix" />
           </div>
@@ -301,22 +317,26 @@ class InvoiceTable extends Component {
         {serviceTableInnner}
         <div style={disclamair}>
           Quotes are an approximation of charges to you for the services
-          requested. They are based on the anticipated details of the work
-          to be done. It is possible for unexpected complications to cause
-          some deviation from the quote. I hereby authorize the repair work
-          hereinafter set forth to be done along with the necessary material
-          and agree that you are not responsible for loss or damage to
-          vehicle or articles left in vehicle in case of fre, theft or any
-          other cause beyond your control or for any delays caused by
-          unavailability of parts or delays in parts by the supplier or
-          transporter. I understand that I have the right to know before
-          authorizing my repairs what the repairs to my car will be and what
-          their costs will be. You need not obtain approval from me prior to
-          performing repairs what the repairs will be or their cost if the
-          total amount for such repairs does not exceed authorized amount.
+          requested. They are based on the anticipated details of the work to be
+          done. It is possible for unexpected complications to cause some
+          deviation from the quote. I hereby authorize the repair work
+          hereinafter set forth to be done along with the necessary material and
+          agree that you are not responsible for loss or damage to vehicle or
+          articles left in vehicle in case of fre, theft or any other cause
+          beyond your control or for any delays caused by unavailability of
+          parts or delays in parts by the supplier or transporter. I understand
+          that I have the right to know before authorizing my repairs what the
+          repairs to my car will be and what their costs will be. You need not
+          obtain approval from me prior to performing repairs what the repairs
+          will be or their cost if the total amount for such repairs does not
+          exceed authorized amount.
         </div>
         <div style={orderTableBlock}>
-          <table id="invoiceTable" className="order-table" align="right">
+          <table
+            id="invoiceTable"
+            className="order-table order-total-table"
+            align="right"
+          >
             <tbody>
               <tr>
                 <td>Total Parts</td>
@@ -324,7 +344,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width" />$
                   {serviceCal && serviceCal.totalParts
-                    ? serviceCal.totalParts
+                    ? serviceCal.totalParts.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -334,7 +354,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width" />$
                   {serviceCal && serviceCal.totalTires
-                    ? serviceCal.totalTires
+                    ? serviceCal.totalTires.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -344,7 +364,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width" />$
                   {serviceCal && serviceCal.totalLabor
-                    ? serviceCal.totalLabor
+                    ? serviceCal.totalLabor.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -354,7 +374,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width" />$
                   {serviceCal && serviceCal.orderSubTotal
-                    ? serviceCal.orderSubTotal
+                    ? serviceCal.orderSubTotal.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -364,7 +384,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width">+</span>$
                   {serviceCal && serviceCal.totalTax
-                    ? serviceCal.totalTax
+                    ? serviceCal.totalTax.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -374,7 +394,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width">-</span>$
                   {serviceCal && serviceCal.totalDiscount
-                    ? serviceCal.totalDiscount
+                    ? serviceCal.totalDiscount.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -386,7 +406,7 @@ class InvoiceTable extends Component {
                   <span className="colon">:</span>
                   <span className="plus-width" />$
                   {serviceCal && serviceCal.orderGrandTotal
-                    ? serviceCal.orderGrandTotal
+                    ? serviceCal.orderGrandTotal.toFixed(2)
                     : 0}
                 </td>
               </tr>
@@ -394,9 +414,7 @@ class InvoiceTable extends Component {
           </table>
         </div>
 
-        <div style={signature}>
-          Signature _______________________________
-        </div>
+        <div style={signature}>Signature _______________________________</div>
 
         <div id="pageFooter">Default footer</div>
       </div>

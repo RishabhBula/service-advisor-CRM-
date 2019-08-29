@@ -12,6 +12,7 @@
 .timer-display{
     border-width: 2px solid;
     box-shadow: 2px 3px 6px -4px #000;
+    font-family: "FrutigerNeueLTPro-Regular";
     .isWorking{
       border: 2px solid #089a0694;      
     }
@@ -30,5 +31,8 @@
           font-size: 12px;
           font-weight: 300;
         }
+    }
+    .technician-name{
+      font-family: "FrutigerNeueLTPro-Regular";
     }
 }

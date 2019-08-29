@@ -173,7 +173,7 @@ class TechnicianTimer extends Component {
                             class={"avtar-component"}
                           />
                         </div>
-                        <h5>
+                        <h5 className={"technician-name"}>
                           {users.firstName} {users.lastName}
                         </h5>
                         <h6>Clocked out at 11:28am</h6>

@@ -220,7 +220,6 @@ class OrderDetails extends Component {
       orderReducer.orderItems.customerId.fleet ? orderReducer.orderItems.customerId.fleet.fleetDefaultPermissions
         .shouldReceiveDiscount.percentageDiscount : 0;
 
-    console.log(fleetDiscount, "fleetDiscount");
     const orderStatus = orderReducer.orderStatus;
     const groupedOptions = [];
     orderStatus.map((status, index) => {

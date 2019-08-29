@@ -16,7 +16,7 @@ import {
 const sentMessageLogic = createLogic({
   type: MessageAction.SEND_MESSAGE,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    // dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/message",
@@ -37,11 +37,11 @@ const sentMessageLogic = createLogic({
       const data = {
         "_id": action.payload.orderId
       }
-      dispatch(getOrderDetailsRequest(data))
+      // dispatch(getOrderDetailsRequest(data))
       if (action.payload.isSummary) {
         dispatch(verifyLinkRequest(action.payload.query))
       }
-      dispatch(hideLoader());
+      // dispatch(hideLoader());
       done();
     }
   }

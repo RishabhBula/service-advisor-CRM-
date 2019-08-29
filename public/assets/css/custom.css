@@ -1964,6 +1964,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border: 1px solid transparent;
   transition: all ease 0.5s;
 }
+.print-btn.disabled{
+  cursor: not-allowed;
+}
 .print-btn:hover {
   border-color: #474257;
 }
