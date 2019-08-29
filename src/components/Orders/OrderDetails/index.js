@@ -102,11 +102,11 @@ class OrderDetails extends Component {
 
   getScheduleDate = () => {
     const { orderReducer, appointmentReducer } = this.props;
-    let orderOfId = "",
-      scheduleDate = "",
+    //  let orderOfId = "",
+      let scheduleDate = "",
       finalDate = '';
    if (orderReducer && orderReducer.orderItems && orderReducer.orderItems._id) {
-     orderOfId = orderReducer.orderItems._id;
+    // orderOfId = orderReducer.orderItems._id;
      finalDate = 
        appointmentReducer.data.filter(
          data =>

@@ -14,6 +14,7 @@ import {
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
+import { AppConfig } from "../config/AppConfig";
 /**
  *
  */
@@ -96,7 +97,9 @@ const stopTimerLogic = createLogic({
       dispatch(getUsersList({ page: 1 }))
       dispatch(getAllTimeLogRequest())
     }
-    // dispatch(getOrderDetailsRequest({ _id: orderId }))
+    if (serviceId) {
+      dispatch(getOrderDetailsRequest({ _id: orderId }))
+    }
     done();
   }
 });
@@ -249,7 +252,11 @@ const getAllTimeLogLogic = createLogic({
       "/allTimeLogs",
       "GET",
       true,
-      undefined
+      {
+        search: action.payload && action.payload.search ? action.payload.search : null,
+        page: action.payload && action.payload.page ? action.payload.page : null,
+        limit: AppConfig.ITEMS_PER_PAGE,
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0] || DefaultErrorMessage);
@@ -257,7 +264,13 @@ const getAllTimeLogLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(getAllTimeLogSuccess(result.data.data));
+      dispatch(getAllTimeLogSuccess(
+        {
+          timeLogs: result.data.data,
+          totalDuration: result.data.totalDuration,
+          totalTimeLogs: result.data.totalTimeLogs
+        }
+      ));
       done();
     }
   }

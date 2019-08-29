@@ -412,20 +412,142 @@ const updateTimeLogOfTechnician = async (req, res) => {
  *
  */
 const getAllTimeLogs = async (req, res) => {
-  const { currentUser } = req;
+  const { currentUser, query } = req;
   try {
-    const result = await TimeClock.find({
-      isDeleted: false,
-      userId: mongoose.Types.ObjectId(currentUser.id)
-    }).populate({
-      path: "technicianId orderId", match: {
-        isDeleted: false
+    const limit = parseInt(query.limit || 10);
+    const page = parseInt(query.page || 1);
+    const offset = page < 1 ? 0 : (page - 1) * limit;
+    const searchValue = query.search;
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
+    let condition = {};
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: mongoose.Types.ObjectId(parentId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
+            }
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      },
+      {
+        _id: { $ne: mongoose.Types.ObjectId(id) }
       }
-    });
-    const timeLogData = await TimeClock.populate(result, { path: "orderId.vehicleId orderId.customerId" })
+    ];
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            "technicianId.firstName": {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            "technicianId.LastName": {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            activity: {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
+    const data = await TimeClock.aggregate([
+      {
+        $lookup:
+        {
+          from: "users",
+          localField: "technicianId",
+          foreignField: "_id",
+          as: "technicianId"
+        }
+      },
+      {
+        $lookup:
+        {
+          from: "orders",
+          localField: "orderId",
+          foreignField: "_id",
+          as: "orderId"
+        }
+      },
+      {
+        $lookup:
+        {
+          from: "vehicles",
+          localField: "orderId.vehicleId",
+          foreignField: "_id",
+          as: "vehicleId"
+        }
+      },
+      {
+        $lookup:
+        {
+          from: "customers",
+          localField: "orderId.customerId",
+          foreignField: "_id",
+          as: "customerId"
+        }
+      },
+      { $unwind: "$technicianId" },
+      {
+        $match: { ...condition }
+      }
+    ])
+    // const result = await TimeClock.find(condition).populate({
+    //   path: "technicianId orderId", match: {
+    //     isDeleted: false
+    //   }
+    // }).skip(offset)
+    //   .limit(limit);
+    const getAllTimeLogCount = await TimeClock.aggregate([
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
+    const getSumOfDuration = await TimeClock.aggregate([
+      {
+        $match: { ...condition }
+      },
+      {
+        $group: {
+          _id: null,
+          duration: {
+            $sum: "$duration"
+          },
+          total: {
+            $sum: "$total"
+          }
+        }
+      }
+    ])
+
     return res.status(200).json({
       message: "Timer get success!",
-      data: timeLogData || []
+      data: data || [],
+      totalDuration: getSumOfDuration[0] ? getSumOfDuration[0].duration : 0,
+      totalTimeLogs: getAllTimeLogCount[0] ? getAllTimeLogCount[0].count : 0,
+      totalEarning: getSumOfDuration[0] ? getSumOfDuration[0].total : 0,
     });
   } catch (error) {
     console.log("this is update timelog error", error);

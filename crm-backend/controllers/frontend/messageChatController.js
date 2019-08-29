@@ -103,7 +103,7 @@ const sendMessageChat = async (req, res) => {
 const verifyUserMessageLink = async (req, res) => {
   const { body } = req;
   try {
-    let orderDetails,
+    let orderDetails, result,
       userData,
       messageData = [];
     if (body.order && body.customer) {
@@ -114,13 +114,16 @@ const verifyUserMessageLink = async (req, res) => {
       orderDetails = await OrderModal.findById(decryptedOrderId).populate(
         "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
       );
+      result = await OrderModal.populate(orderDetails,
+        "customerId.fleet"
+      );
       if (orderDetails.messageId) {
         for (let index = 0; index < orderDetails.messageId.length; index++) {
           const element = orderDetails.messageId[index];
           if (
             element.messageId &&
             element.messageId.receiverId.toString() ===
-              decryptedCustomerId.toString()
+            decryptedCustomerId.toString()
           ) {
             element.messageId.isSender = false;
           }
@@ -130,6 +133,9 @@ const verifyUserMessageLink = async (req, res) => {
     } else {
       orderDetails = await OrderModal.findById(body.orderId).populate(
         "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
+      );
+      result = await OrderModal.populate(orderDetails,
+        "customerId.fleet"
       );
       userData = await UserModal.findById(body.companyIDurl);
       if (orderDetails.messageId) {
@@ -145,9 +151,9 @@ const verifyUserMessageLink = async (req, res) => {
         }
       }
     }
-    if (orderDetails) {
+    if (result) {
       return res.status(200).json({
-        data: orderDetails,
+        data: result,
         messageData: messageData,
         companyData: userData,
         message: "Message Link Verified Successfully.",

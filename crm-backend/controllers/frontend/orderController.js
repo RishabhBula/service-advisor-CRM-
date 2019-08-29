@@ -432,7 +432,7 @@ const getOrderDetails = async (req, res) => {
     });
     const result1 = await Orders.populate(result2, {
       path:
-        "serviceId.serviceId.technician timeClockId.technicianId timeClockId.orderId"
+        "serviceId.serviceId.technician timeClockId.technicianId timeClockId.orderId customerId.fleet"
     });
     const resultExtended = await Orders.populate(result1, {
       path: "timeClockId.orderId.vehicleId"

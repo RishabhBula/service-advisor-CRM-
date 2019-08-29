@@ -32,3 +32,19 @@
         }
     }
 }
+.time-clock-icon{
+  background: #7450e8;
+  border-radius: 100%;
+  color: #fff;
+  padding: 0px 10px 4px 6px;
+  position: relative;
+  font-size: 20px;
+  i{
+    position: relative;
+    top: 2px;
+    right: -2px;
+  } 
+}
+.hours-tracked{
+  font-size: 40px;
+}

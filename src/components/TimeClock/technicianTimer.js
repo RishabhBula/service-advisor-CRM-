@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Card, CardBody, Col, Row, FormGroup, Label, Button } from "reactstrap";
-import Avtar from "../../components/common/Avtar";
+import Avtar from "../common/Avtar";
 import "./index.scss";
 import Select from "react-select";
 import moment from "moment";
 import { SecondsToHHMMSS } from "../../helpers";
-import Loader from "../Loader/Loader";
+import NoDataFound from "../common/NoFound"
 
 class TechnicianTimer extends Component {
   constructor(props) {
@@ -270,7 +270,11 @@ class TechnicianTimer extends Component {
               );
             })
           ) : (
-              <Loader />
+              <NoDataFound
+                showAddButton
+                message={"Currently there are no technician added"}
+                onAddClick={this.props.onAddClick}
+              />
             )}
         </Row>
       </div>
