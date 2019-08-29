@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Card, CardBody, Col, Row, FormGroup, Label, Button } from "reactstrap";
-import Avtar from "../../components/common/Avtar";
+import Avtar from "../common/Avtar";
 import "./index.scss";
 import Select from "react-select";
 import moment from "moment";
 import { SecondsToHHMMSS } from "../../helpers";
-import Loader from "../Loader/Loader";
+import NoDataFound from "../common/NoFound"
 
 class TechnicianTimer extends Component {
   constructor(props) {
@@ -60,7 +60,14 @@ class TechnicianTimer extends Component {
       // })
     }
   };
-  startTimer = (techId, orderId, index) => {
+  startTimer = (techId, orderId, index, orderData) => {
+    const users = [...this.state.userData]
+    if (users[index] && users[index].currentlyWorking) {
+      users[index].currentlyWorking.generalService = orderId ? false : true
+      users[index].currentlyWorking.orderId = orderId ? orderData : null
+      users[index].currentlyWorking.startTime = new Date().toJSON()
+    }
+    this.props.timmerStartForTechnician(users)
     this.props.startTimer({
       technicianId: techId,
       orderId: orderId ? orderId : null,
@@ -85,10 +92,20 @@ class TechnicianTimer extends Component {
   /*
    *
    */
-  stopTimer = (techId, orderId, serviceId) => {
+  stopTimer = (techId, orderId, serviceId, index) => {
     this.setState({
       isTimerData: true
     });
+    const users = [...this.state.userData]
+    users[index].currentlyWorking = {
+      generalService: false,
+      startTime: new Date().toJSON(),
+      _id: users[index].currentlyWorking._id
+    }
+    this.props.timmerStopForTechnician(users)
+    this.setState({
+      userData: users
+    })
     this.props.stopTimer({
       technicianId: techId,
       orderId,
@@ -103,6 +120,7 @@ class TechnicianTimer extends Component {
       const userData = [...this.state.userData];
       userData[index].selectedOrder.label = e.label;
       userData[index].selectedOrder.value = e.value;
+      userData[index].selectedOrder.data = e.data;
       this.setState({
         userData
       });
@@ -152,7 +170,8 @@ class TechnicianTimer extends Component {
                     label: `Order(#${data.orderId.orderId}) ${
                       data.orderId.orderName
                       }`,
-                    value: data.orderId._id
+                    value: data.orderId._id,
+                    data: data.orderId
                   };
                   defaultOptions.push(dataObject);
                 }
@@ -173,7 +192,7 @@ class TechnicianTimer extends Component {
                             class={"avtar-component"}
                           />
                         </div>
-                        <h5>
+                        <h5 className={"technician-name"}>
                           {users.firstName} {users.lastName}
                         </h5>
                         <h6>Clocked out at 11:28am</h6>
@@ -242,9 +261,11 @@ class TechnicianTimer extends Component {
                                 ? () =>
                                   this.startTimer(
                                     users._id,
-                                    users.selectedOrder.value
+                                    users.selectedOrder.value,
+                                    index,
+                                    users.selectedOrder.data
                                   )
-                                : () => this.startTimer(users._id, index)
+                                : () => this.startTimer(users._id, null, index, null)
                             }
                           >
                             Clock In
@@ -256,7 +277,8 @@ class TechnicianTimer extends Component {
                                 this.stopTimer(
                                   users._id,
                                   users.currentlyWorking.orderId,
-                                  users.currentlyWorking.serviceId
+                                  users.currentlyWorking.serviceId,
+                                  index
                                 )
                               }
                             >
@@ -270,7 +292,11 @@ class TechnicianTimer extends Component {
               );
             })
           ) : (
-              <Loader />
+              <NoDataFound
+                showAddButton
+                message={"Currently there are no technician added"}
+                onAddClick={this.props.onAddClick}
+              />
             )}
         </Row>
       </div>

@@ -111,39 +111,38 @@ export class UserAppointments extends Component {
                       <td>
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
-                      <td>{appoitment.appointmentTitle || "Unnammed"}</td>
+                      <td className={"text-capitalize"}>
+                        {appoitment.appointmentTitle || "Unnammed"}
+                      </td>
                       <td>
                         {moment(appoitment.appointmentDate).format(
                           "MM/DD/YYYY"
                         )}
                       </td>
-                      <td>
-                        {moment(appoitment.startTime).format("hh:mm A")}
-                      </td>
+                      <td>{moment(appoitment.startTime).format("hh:mm A")}</td>
                       <td
                         onClick={() => {
-                          this.handleCustomerDetails(
-                            appoitment.customerId._id
-                          );
+                          this.handleCustomerDetails(appoitment.customerId._id);
                         }}
-                        id={`customer-details-${appoitment._id}`}
                         className={"text-primary cursor_pointer"}
                       >
-                        {appoitment.customerId
-                          ? `${appoitment.customerId.firstName}${" "}${
-                              appoitment.customerId.lastName
-                            }`
-                          : null}
+                        <span id={`customer-details-${appoitment._id}`}>
+                          {appoitment.customerId
+                            ? `${appoitment.customerId.firstName}${" "}${
+                                appoitment.customerId.lastName
+                              }`
+                            : null}
+                        </span>
+                        <UncontrolledTooltip
+                          target={`customer-details-${appoitment._id}`}
+                        >
+                          View Customer Details
+                        </UncontrolledTooltip>
                       </td>
-                      <UncontrolledTooltip
-                        target={`customer-details-${appoitment._id}`}
-                      >
-                        View Customer
-                      </UncontrolledTooltip>
                       <td>
                         {appoitment.vehicleId ? (
                           <>
-                            <div
+                            <span
                               onClick={() => {
                                 this.handleVehicleDetails(
                                   appoitment.vehicleId._id
@@ -155,11 +154,11 @@ export class UserAppointments extends Component {
                               {`${appoitment.vehicleId.make}${" "}${
                                 appoitment.vehicleId.modal
                               }`}{" "}
-                            </div>
+                            </span>
                             <UncontrolledTooltip
                               target={`vehicle-details-${appoitment._id}`}
                             >
-                              View Vehicle
+                              View Vehicle Details
                             </UncontrolledTooltip>
                           </>
                         ) : (
@@ -174,17 +173,15 @@ export class UserAppointments extends Component {
                       <td>
                         {appoitment.orderId ? (
                           <>
-                            <div
+                            <span
                               onClick={() =>
-                                this.handleOrderDetails(
-                                  appoitment.orderId._id
-                                )
+                                this.handleOrderDetails(appoitment.orderId._id)
                               }
                               id={`order-${appoitment.orderId.orderId}`}
                               className={"text-primary cursor_pointer"}
                             >
                               {appoitment.orderId.orderName || "Unnamed"}
-                            </div>
+                            </span>
                             <UncontrolledTooltip
                               target={`order-${appoitment.orderId.orderId}`}
                             >

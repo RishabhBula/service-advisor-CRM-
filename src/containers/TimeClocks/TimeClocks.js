@@ -3,7 +3,8 @@ import {
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
-import TechnicianTimer from "./technicianTimer";
+import * as qs from "query-string";
+import TechnicianTimer from "../../components/TimeClock/technicianTimer";
 import { CrmTimeClockModal } from "../../components/common/CrmTimeClockModel";
 import {
   modelOpenRequest,
@@ -14,10 +15,12 @@ import {
   stopTimer,
   getOrderDetailsRequest,
   getAllServiceListRequest,
-  isTimeClockStart,
   getAllTimeLogRequest,
+  timmerStartForTechnician,
+  timmerStopForTechnician
 } from "../../actions"
-import TimeLogList from "./timeLogList";
+import TimeLogList from "../../components/TimeClock/timeLogList";
+import { isEqual } from "../../helpers/Object";
 
 class TimeClocks extends Component {
   constructor(props) {
@@ -27,15 +30,23 @@ class TimeClocks extends Component {
   }
   componentDidMount() {
     this.props.getUserData({ page: 1 })
-    this.props.getAllTimeLogRequest()
+    const currQuery = qs.parse(this.props.location.search);
+    this.props.getAllTimeLogRequest({ ...currQuery, page: currQuery.page || 1 });
   }
-  componentDidUpdate = ({ userReducer }) => {
+  componentDidUpdate = ({ userReducer, location }) => {
     const userData = this.props.userReducer.users
     if ((userReducer.users !== userData) && (userData.length) && (userData[0].currentlyWorking)) {
       const orderId = userData[0].currentlyWorking && userData[0].currentlyWorking.orderId ? userData[0].currentlyWorking.orderId._id : null
       this.props.getAllServiceListRequest()
       if (userData[0].currentlyWorking.orderId && userData[0].currentlyWorking.orderId._id) {
         this.props.getOrderDetailsRequest({ _id: orderId })
+      }
+    }
+    if (location) {
+      const prevQuery = qs.parse(location.search);
+      const currQuery = qs.parse(this.props.location.search);
+      if (!isEqual(prevQuery, currQuery)) {
+        this.props.getAllTimeLogRequest({ ...currQuery, page: currQuery.page || 1 });
       }
     }
   }
@@ -58,9 +69,10 @@ class TimeClocks extends Component {
       startTimer,
       stopTimer,
       serviceReducers,
-      isTimeClockStart,
       timelogReducer,
-      updateTimeLogRequest
+      updateTimeLogRequest,
+      timmerStartForTechnician,
+      timmerStopForTechnician
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
@@ -77,16 +89,20 @@ class TimeClocks extends Component {
           startTimer={startTimer}
           stopTimer={stopTimer}
           serviceData={serviceReducers.serviceDataList}
-          isTimeClockStart={isTimeClockStart}
+          timmerStartForTechnician={timmerStartForTechnician}
+          timmerStopForTechnician={timmerStopForTechnician}
         />
         <TimeLogList
           timeLogData={timelogReducer.allTimeData}
+          totalDuration={timelogReducer.totalDuration}
+          totalTimeLogs={timelogReducer.totalTimeLogs}
           handleTimeClockModal={this.handleTimeClockModal}
           getUserData={getUserData}
           orderReducer={orderReducer}
           modelInfoReducer={modelInfoReducer}
           isSuccess={timelogReducer.isSuccess}
           editTimeLogRequest={updateTimeLogRequest}
+          {...this.props}
         />
         <CrmTimeClockModal
           openTimeClockModal={timeClockModalOpen}
@@ -117,8 +133,9 @@ const mapDispatchToProps = dispatch => ({
   stopTimer: data => dispatch(stopTimer(data)),
   getOrderDetailsRequest: data => dispatch(getOrderDetailsRequest(data)),
   getAllServiceListRequest: data => dispatch(getAllServiceListRequest(data)),
-  isTimeClockStart: data => dispatch(isTimeClockStart(data)),
-  getAllTimeLogRequest: () => dispatch(getAllTimeLogRequest())
+  getAllTimeLogRequest: (data) => dispatch(getAllTimeLogRequest(data)),
+  timmerStartForTechnician: data => dispatch(timmerStartForTechnician(data)),
+  timmerStopForTechnician: data => dispatch(timmerStopForTechnician(data)),
 });
 
 export default connect(

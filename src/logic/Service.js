@@ -6,7 +6,7 @@ import {
    showLoader,
    hideLoader,
    serviceActions,
-   addServiceSuccess,
+   // addServiceSuccess,
    getCannedServiceListSuccess,
    getCannedServiceList,
    updateOrderDetailsRequest,
@@ -43,13 +43,13 @@ const addServiceLogic = createLogic({
             serviceIds.push(service._id)
             return true
          })
-         dispatch(addServiceSuccess(
-            {
-               serviceIds: serviceIds,
-               customerCommentId: result.data.commentResult._id,
-               services: result.data.serviceResultData
-            }
-         ));
+         // dispatch(addServiceSuccess(
+         //    {
+         //       serviceIds: serviceIds,
+         //       customerCommentId: result.data.commentResult._id,
+         //       services: result.data.serviceResultData
+         //    }
+         // ));
          if (serviceIds.length) {
             let serviceIdData = []
             serviceIds.map((item, index) => {

@@ -66,10 +66,18 @@ export const usersReducer = handleActions(
       ...state,
       isStartTimer: action.payload.isStartTimer
     }),
-    [timelogActions.STOP_TIMER]: (state, action) => ({
+    // [timelogActions.STOP_TIMER]: (state, action) => ({
+    //   ...state,
+    //   isStartTimer: false
+    // }),
+    [timelogActions.START_TECHNICIAN_TIMMER]: (state, { payload }) => ({
       ...state,
-      isStartTimer: false
-    })
+      ...payload,
+    }),
+    [timelogActions.STOP_TECHNICIAN_TIMMER]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+    }),
   },
   initialState
 );

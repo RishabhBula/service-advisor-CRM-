@@ -51,7 +51,7 @@ const timeClockSchema = new Schema({
     default: null
   },
   total: {
-    type: String,
+    type: Number,
     default: null
   },
   isDeleted: {
