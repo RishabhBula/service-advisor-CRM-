@@ -161,10 +161,7 @@ class TimeLogList extends Component {
                   </div>
                   <div className={"pl-4"}>
                     <span className={"hours-tracked"}>{
-                      isSuccess ?
-                        !isNaN((totalDuration / 3600).toFixed(2)) ? (totalDuration / 3600).toFixed(2) : 0.00 :
-                        <Loader />
-                    }
+                      !isNaN((totalDuration / 3600).toFixed(2)) ? (totalDuration / 3600).toFixed(2) : 0.00}
                     </span>
                   </div>
                 </div>

@@ -133,6 +133,7 @@ class TechnicianTimer extends Component {
       });
     }
   };
+
   render() {
     const { serviceData, userReducer } = this.props;
     const { duration, userData } = this.state;
@@ -166,11 +167,26 @@ class TechnicianTimer extends Component {
               );
               technicicanService.map(data => {
                 if (users._id === data.technician && data.orderId) {
+                  let serviceArray = []
+                  if ((data.orderId && data.orderId.serviceId)) {
+                    data.orderId.serviceId.map((service) => {
+                      if (users._id === service.serviceId.technician) {
+                        serviceArray.push(
+                          {
+                            label: ` ${service.serviceId.serviceName}`,
+                            value: service.serviceId._id
+                          }
+                        )
+                      }
+                      return true
+                    })
+                  }
                   const dataObject = {
                     label: `Order(#${data.orderId.orderId}) ${
                       data.orderId.orderName
-                      }`,
-                    value: data.orderId._id,
+                    }`,
+                    options: serviceArray,
+                    // value: data.orderId._id,
                     data: data.orderId
                   };
                   defaultOptions.push(dataObject);
@@ -235,24 +251,26 @@ class TechnicianTimer extends Component {
                         </Card>
                         <FormGroup className={"d-flex align-items-center"}>
                           <Label className={"mr-2 mb-0"}>Activity</Label>
-                          <Select
-                            className={"w-100 form-select"}
-                            options={defaultOptions}
-                            value={
-                              isWorking
-                                ? users.currentlyWorking.generalService
-                                  ? defaultOrderSelect
-                                  : {
-                                    value: users.currentlyWorking.orderId,
-                                    label: users.currentlyWorking.orderId ? `Order(#${users.currentlyWorking.orderId.orderId}) ${
-                                      users.currentlyWorking.orderId.orderName
-                                      }` : ""
-                                  }
-                                : users.selectedOrder.value !== "" ? users.selectedOrder : defaultOrderSelect
-                            }
-                            onChange={e => this.handleOrderSelect(e, index)}
-                            type="select"
-                          />
+                          <div className={"text-left w-100 form-select"}>
+                            <Select
+                              className={"w-100 form-select"}
+                              options={defaultOptions}
+                              value={
+                                isWorking
+                                  ? users.currentlyWorking.generalService
+                                    ? defaultOrderSelect
+                                    : {
+                                      value: users.currentlyWorking.orderId,
+                                      label: users.currentlyWorking.orderId ? `Order(#${users.currentlyWorking.orderId.orderId}) ${
+                                        users.currentlyWorking.orderId.orderName
+                                        }` : ""
+                                    }
+                                  : users.selectedOrder.value !== "" ? users.selectedOrder : defaultOrderSelect
+                              }
+                              onChange={e => this.handleOrderSelect(e, index)}
+                              type="select"
+                            />
+                          </div>
                         </FormGroup>
                         {!isWorking ? (
                           <Button

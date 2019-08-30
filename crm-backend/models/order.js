@@ -76,10 +76,14 @@ const orderSchema = new Schema({
   inspectionURL: {
     type: String
   },
-  remainingAmount:{
+  isFullyPaid: {
+    type: Boolean,
+    default: false
+  },
+  remainingAmount: {
     type: Number
   },
-  orderTotal:{
+  orderTotal: {
     type: Number
   },
   userId: {
