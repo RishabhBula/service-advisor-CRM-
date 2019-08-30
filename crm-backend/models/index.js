@@ -29,5 +29,6 @@ module.exports = {
   VendorModel: require("./vendor"),
   VehicleModel: require("./vehicle"),
   VendorCommonObjectModel: require("./vendorCommanObject"),
-  HomePageModel: require("./homePage")
+  HomePageModel: require("./homePage"),
+  SettingsModel: require("./siteSetting")
 };

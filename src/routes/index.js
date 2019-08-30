@@ -38,6 +38,12 @@ const HomePage = React.lazy(() => import("../containers/HomePage"));
 const Routes = [
   {
     exact: true,
+    path: "/home",
+    name: "Home Page",
+    component: HomePage
+  },
+  {
+    exact: true,
     path: "/login",
     name: "Login Page",
     component: Login
@@ -94,15 +100,9 @@ const Routes = [
     exact: false,
     path: "/",
     name: "Home",
-    component: HomePage
-  },
-  {
-    exact: true,
-    password: "/home",
-    name: "Home Page",
-    component: HomePage
+    //component: !localStorage.getItem("token") ? HomePage : DefaultLayout
+    component: DefaultLayout
   }
-
 ];
 
 class AppRoutes extends Component {

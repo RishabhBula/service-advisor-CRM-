@@ -4,7 +4,9 @@ import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 import {
    homePageActions,
+   siteSettingActions,
    getHomePageSucc,
+   getSiteSettingSucc,
    showLoader,
    hideLoader,
 } from "./../actions";
@@ -21,7 +23,7 @@ const getHomePageLogic = createLogic({
          "/home-page",
          "/home",
          "GET",
-         true,
+         false,
          undefined,
          undefined
       );
@@ -43,6 +45,42 @@ const getHomePageLogic = createLogic({
    }
 });
 
+const getSiteSettingLogic = createLogic({
+   type:siteSettingActions.GET_SITE_SETTING_REQUEST,
+   cancelType:siteSettingActions.GET_SITE_SETTING_FAILED,
+   async process({ action }, dispatch, done) {
+      dispatch(showLoader());
+      let api = new ApiHelper();
+      let result = await api.FetchFromServer(
+         "/site-setting",
+         "/",
+         "GET",
+         false,
+         undefined,
+         undefined
+      );
+      if (result.isError) {
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(result.messages[0] || DefaultErrorMessage);
+         }
+         dispatch(hideLoader());
+         dispatch(getSiteSettingSucc({
+            isLoading: false
+         }))
+         done();
+         return;
+      } else {
+         dispatch(hideLoader());
+         dispatch(getSiteSettingSucc({
+            settingDetails: result.data.data,
+            isLoading: false
+         }))
+         done();
+      }
+   }
+})
+
 export const HomePageLogic = [
-   getHomePageLogic
+   getHomePageLogic,
+   getSiteSettingLogic
 ];

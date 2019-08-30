@@ -25,5 +25,6 @@ module.exports = {
   appointmentRoutes: require("./appointments"),
   dashboardRoutes: require("./dashboard"),
   reportRoutes: require("./reports"),
-  homePageRoutes: require("./homePage")
+  homePageRoutes: require("./homePage"),
+  siteSettingRoutes: require("./siteSettingsRoutes")
 };

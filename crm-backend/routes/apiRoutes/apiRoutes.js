@@ -29,7 +29,8 @@ const {
   appointmentRoutes,
   dashboardRoutes,
   reportRoutes,
-  homePageRoutes
+  homePageRoutes,
+  siteSettingRoutes,
 } = require("./index");
 /**
  *
@@ -69,6 +70,7 @@ router.use("/appointment", appointmentRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/reports", reportRoutes);
 router.use("/home-page",homePageRoutes);
+router.use("/site-setting",siteSettingRoutes);
 
 /**
  *

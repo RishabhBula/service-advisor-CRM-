@@ -11,6 +11,8 @@ class InvoiceChart extends Component {
       selectedFilter: "today",
       startDate: null,
       endDate: null,
+      start: null,
+      end: null,
       openDatePicker: false,
       focusedInput: "startDate"
     };
@@ -128,6 +130,12 @@ class InvoiceChart extends Component {
    */
   onFilterChange = e => {
     const { value } = e.target;
+    if (value !== "custom") {
+      this.setState({
+        start: null,
+        end: null
+      })
+    }
     this.setState(
       {
         selectedFilter: value,
@@ -152,7 +160,9 @@ class InvoiceChart extends Component {
     this.setState(
       {
         startDate,
-        endDate
+        endDate,
+        start: startDate ? startDate.format("MM-DD-YYYY") : null,
+        end: endDate ? endDate.format("MM-DD-YYYY") : null
       },
       () => {
         if (startDate && endDate) {
@@ -197,17 +207,19 @@ class InvoiceChart extends Component {
       focusedInput,
       startDate,
       endDate,
-      openDatePicker
+      openDatePicker,
+      start,
+      end
     } = this.state;
     const { customerSales } = this.props;
     const { isLoading } = customerSales;
     return (
       <div className={"dashboard-block-container chart-container text-right"}>
         <Row className={"m-0"}>
-          <Col sm={"4"}>
+          <Col sm={"3"} className="pr-0">
             <h3>Sales Details</h3>
           </Col>
-          <Col sm={"6"}>
+          <Col sm={"3"}>
             <Input
               type={"select"}
               className={"form-control"}
@@ -221,6 +233,9 @@ class InvoiceChart extends Component {
               <option value={"all"}>All</option>
               <option value={"custom"}>Custom</option>
             </Input>
+          </Col>
+          <Col sm={"4"} className="pr-0">
+            {selectedFilter === "custom" && start && end ? <div>{[start + ' / ' + end]}</div> : ""}
           </Col>
           <Col sm={"2"} className={"chart-datepicker-container"}>
             <div

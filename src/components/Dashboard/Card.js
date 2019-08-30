@@ -16,7 +16,7 @@ class CardComponent extends Component {
           </Col>
           <Col sm={"8"}>
             <h3>{text}</h3>
-            <p>{value}</p>
+            <p>Total: {value}</p>
           </Col>
         </Row>
         <hr />

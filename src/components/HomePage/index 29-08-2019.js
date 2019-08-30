@@ -2,11 +2,6 @@ import React, { Component } from "react";
 import "./index.scss"
 import logoImg from "../../assets/home-img/logo.png"
 import bannerImg from "../../assets/home-img/banner-right-img.png";
-import facebookIcon from "../../assets/home-img/facebook-icon.svg";
-import twitterIcon from "../../assets/home-img/twitter-icon.svg";
-import linkdinIcon from "../../assets/home-img/linkedin-icon.svg";
-import instagramIcon from "../../assets/home-img/instagram-icon.svg";
-
 class HomePageComponent extends Component {
    constructor(props) {
       super(props);
@@ -22,17 +17,7 @@ class HomePageComponent extends Component {
          ],
          section3: [
             { title: "", description: "", video: "" }
-         ],
-         mobClass: false,
-         facebook: "",
-         twitter: "",
-         instagram: "",
-         linkedin: "",
-         email: "",
-         support_email: "",
-         website: "",
-         address: "",
-         contact: "",
+         ]
       }
    }
 
@@ -46,7 +31,7 @@ class HomePageComponent extends Component {
          this.setState({ backgroundClass: "" })
       }
    }
-   componentDidUpdate = ({ pageData, settingData }) => {
+   componentDidUpdate = ({ pageData }) => {
       if (this.props.pageData && this.props.pageData.homePageDetails && this.props.pageData.homePageDetails !== {} && pageData.homePageDetails && this.props.pageData.homePageDetails !== pageData.homePageDetails) {
          const {
             title,
@@ -63,38 +48,7 @@ class HomePageComponent extends Component {
             section3,
          });
       }
-      if (this.props.settingData && this.props.settingData.settingDetails && this.props.settingData.settingDetails !== {} && this.props.settingData.settingDetails !== null && settingData.settingDetails && settingData.settingDetails !== this.props.settingData.settingDetails) {
-         const {
-            facebook,
-            twitter,
-            instagram,
-            linkedin,
-            email,
-            support_email,
-            website,
-            contact,
-            address
-         } = this.props.settingData.settingDetails;
-         this.setState({
-            facebook,
-            twitter,
-            instagram,
-            linkedin,
-            email,
-            support_email,
-            website,
-            contact,
-            address
-
-         })
-      }
    };
-
-   handleMobileToggle = () => {
-      this.setState({
-         mobClass: !this.state.mobClass
-      })
-   }
    validateYouTubeUrl = (url) => {
       let result = "";
       if (url !== undefined || url !== '') {
@@ -113,25 +67,15 @@ class HomePageComponent extends Component {
       window.open(pageUrl, "_blank");
    };
    render() {
-      const {
-         section2Title,
-         section1,
-         section2,
-         section3,
-         backgroundClass,
-         mobClass,
-         facebook,
-         twitter,
-         instagram,
-         linkedin
-      } = this.state;
+      const { section2Title, section1, section2, section3, backgroundClass } = this.state;
+
       return (
          <>
             <div className="main-body">
                <nav class={`navbar navbar-expand-md navbar-dark main-header fixed-top ${backgroundClass}`} id="banner">
                   <div class="container">
                      <a class="navbar-brand" href="#"><img src={logoImg} alt="" /></a>
-                     <button onClick={this.handleMobileToggle} class={mobClass ? "navbar-toggler mob-nav" : "navbar-toggler"} type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                         <span class="navbar-toggler-icon"></span>
                      </button>
                      <div class="collapse navbar-collapse" id="collapsibleNavbar">
@@ -140,7 +84,7 @@ class HomePageComponent extends Component {
                               <a class="nav-link1 active" href="#"><span>Home</span></a>
                            </li>
                            <li class="nav-item">
-                              <a class="nav-link1" href="#"><span>Features</span></a>
+                              <a class="nav-link1" href="#our-features"><span>Features</span></a>
                            </li>
                            <li class="nav-item">
                               <a class="nav-link1" href="#"><span>Pricing</span></a>
@@ -176,25 +120,19 @@ class HomePageComponent extends Component {
                      </div>
                   </div>
                </section>
-               <section class="main-content main-info-section">
+               <section class="main-content">
                   <div class="container">
                      {section1 && section1.length ? section1.map((data, index) => {
                         let title = (data.title).split(" ");
                         return (
                            <React.Fragment key={index}>
                               {index % 2 === 0 ?
-                                 <div class="row align-items-center pt-3 mob-row">
+                                 <div class="row align-items-center pt-3">
                                     <div class="col-sm-7">
                                        <div class="content-wrap text-right">
                                           <div class="main-heading-wrap">
                                              <p>{data.subTitle ? data.subTitle : ""}</p>
-                                             <h2>{title.map((value, index) => {
-                                                return (
-                                                   <React.Fragment key={index}>
-                                                      {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                                   </React.Fragment>
-                                                )
-                                             })} </h2>
+                                             <h2>{title.map((value, index) => { return index < (title.length - 1) ? <span>{value} </span> : <span class="heading-highlighter">{value}</span> })} </h2>
                                           </div>
                                           <p class="padding-left">{data.description ? <div
                                              dangerouslySetInnerHTML={{
@@ -218,14 +156,8 @@ class HomePageComponent extends Component {
                                     <div class="col-sm-7">
                                        <div class="content-wrap text-left">
                                           <div class="main-heading-wrap">
-                                             <p>{data.subTitle ? data.subTitle : ""}</p>
-                                             <h2>{title.map((value, index) => {
-                                                return (
-                                                   <React.Fragment key={index}>
-                                                      {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                                   </React.Fragment>
-                                                )
-                                             })} </h2>
+                                          <p>{data.subTitle ? data.subTitle : ""}</p>
+                                             <h2>{title.map((value, index) => { return index < (title.length - 1) ? <span>{value} </span> : <span class="heading-highlighter">{value}</span> })} </h2>
                                           </div>
                                           <p class="padding-right">{data.description ? <div
                                              dangerouslySetInnerHTML={{
@@ -250,7 +182,7 @@ class HomePageComponent extends Component {
                         return (
                            <React.Fragment key={index}>
                               {index % 2 === 0 ?
-                                 <div class="row align-items-center p-3 text-right mob-row">
+                                 <div class="row align-items-center p-3 text-right">
                                     <div class="col-sm-6">
                                        <h3>{data.title ? data.title : ""}</h3>
                                        <p>{data.description ? <div
@@ -280,25 +212,15 @@ class HomePageComponent extends Component {
                         )
                      })
                         : null}
-                     <div class="our-features-note">
-                        <h4 class="text-center">Invoicing, Inspections, CRM, Texting, Workflow and much more...!</h4>
-                     </div>
                   </div>
                </section>
-               <section class="main-content why-choose-section" style={{ padding: "30px" }}>
+               <section class="main-content" style={{ padding: "30px" }}>
                   <div class="container">
                      {section3 && section3.length ? section3.map((data, index) => {
-                        let title = (data.title).split(" ");
                         return (
                            <React.Fragment key={index}>
-                              <div class="main-heading-wrap text-center">
-                                 <h2>{title.map((value, index) => {
-                                    return (
-                                       <React.Fragment key={index}>
-                                          {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                       </React.Fragment>
-                                    )
-                                 })} </h2>
+                              <div class="zmain-heading-wrap text-center">
+                                 <h2>Why Choose <span class="heading-highlighter">Service Advisor</span></h2>
                                  <p>{data.description ? <div
                                     dangerouslySetInnerHTML={{
                                        __html: `${data.description}`
@@ -316,54 +238,24 @@ class HomePageComponent extends Component {
                      }) : null}
                   </div>
                </section>
-               <section class="main-content" >
+               <section class="main-content" style={{ padding: "50px", position: "relative" }}>
                   <div class="container">
-                     <div class="get-started-wrap">
-                        <div class="get-started">
-                           <div class="get-started-left">
-                              <h3>Get Started for <span class="heading-highlighter">Free</span></h3>
-                              <p>No Contracts. No hidden fees. Get started in minutes. </p>
-                           </div>
-                           <div class="get-started-right">
-                              <div onClick={() => this.onGoPage('/register')} class="btn btn-primary">Start Free Trial
-                              </div>
-                           </div>
+                     <div class="row align-items-center text-center">
+                        <div class="col-sm-7">
+                           <h3>Get Started for <span class="heading-highlighter">Free</span></h3>
+                           <p>No Contracts. No hidden fees. Get started in minutes. </p>
+                        </div>
+                        <div class="col-sm-5">
+                           <div onClick={() => this.onGoPage('/register')} class="btn btn-primary">Start Free Trial</div>
                         </div>
                      </div>
                   </div>
                </section>
-               <footer>
-                  <div class="footer-wrap">
-                     <div class="container">
-                        <div class="row align-items-center">
-                           <div class="col-sm-3">
-                              <a class="navbar-brand" href="#"><img src={logoImg} /></a>
-                           </div>
-                           <div class="col-sm-6">
-                              <ul>
-                                 <ul class="footer-nav-listing text-center">
-                                    <li><a href="javascript:;">Home</a></li>
-                                    <li><a href="javascript:;">Features</a></li>
-                                    <li><a href="javascript:;">Pricing</a></li>
-                                    <li><a href="javascript:;">About Us</a></li>
-                                 </ul>
-                              </ul>
-                           </div>
-                           <div class="col-sm-3">
-                              <ul class="social-icon-listing text-center">
-                                 <li><a href={facebook ? facebook : ""} target="_blank"><img src={facebookIcon} /></a></li>
-                                 <li><a href={twitter ? twitter : ""} target="_blank"><img src={twitterIcon} /></a></li>
-                                 <li><a href={linkedin ? linkedin : ""} target="_blank"><img src={linkdinIcon} /></a></li>
-                                 <li><a href={instagram ? instagram : ""} target="_blank"><img src={instagramIcon} /></a></li>
-                              </ul>
-                           </div>
-                        </div>
-                     </div>
+               <section class="our-features-section">
+                  <div class="container">
+                     <a class="navbar-brand" href="#"><img src={logoImg} /></a>
                   </div>
-                  <div class="copyright-wrap text-center">
-                     All Copyrights Reserved by CRM 2019
-                     </div>
-               </footer>
+               </section>
             </div>
          </>
       )

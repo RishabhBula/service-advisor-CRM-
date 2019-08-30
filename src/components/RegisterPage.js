@@ -135,6 +135,13 @@ class RegisterPage extends Component {
         errors.workspace = "Workspace can only have a-z, 0-9 and -";
         isValid = false;
       }
+      if (d.password && !errors.password) {
+        let res = (d.password).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+        if (!res) {
+          isValid = false;
+          errors.password = "Password should have both alpha & numeric characters."
+        }
+      }
       if (!isValid) {
         this.setState({
           errors,
@@ -485,10 +492,10 @@ class RegisterPage extends Component {
                       </Row>
                     </Form>
                   ) : (
-                    <ResendInvitation
-                      resendConfimationLink={this.resendConfimationLink}
-                    />
-                  )}
+                      <ResendInvitation
+                        resendConfimationLink={this.resendConfimationLink}
+                      />
+                    )}
                 </CardBody>
               </Card>
             </CardGroup>
