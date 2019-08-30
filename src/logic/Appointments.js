@@ -9,7 +9,6 @@ import {
   getVehicleAppoitmentSuccess,
   modelOpenRequest,
   getAppointmentDetailsSuccess,
-  getOrderAppointmentSuccess
 } from "../actions";
 import { ApiHelper } from "../helpers";
 import { toast } from "react-toastify";

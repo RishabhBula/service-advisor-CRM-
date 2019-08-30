@@ -6,7 +6,7 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
-  getUsersList,
+  // getUsersList,
   getOrderDetailsRequest,
   getTechinicianTimeLogSuccess,
   getAllTimeLogSuccess,
@@ -14,6 +14,7 @@ import {
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
+import { AppConfig } from "../config/AppConfig";
 /**
  *
  */
@@ -48,9 +49,9 @@ const startTimerLogic = createLogic({
         orderId: orderId ? orderId : null
       }
     );
-    if (!serviceId) {
-      dispatch(getUsersList({ page: 1 }))
-    }
+    // if (!serviceId) {
+    //   dispatch(getUsersList({ page: 1 }))
+    // }
     dispatch(
       getOrderIdSuccess({
         ...orderItems,
@@ -86,17 +87,21 @@ const stopTimerLogic = createLogic({
       undefined,
       { technicianId, serviceId, orderId }
     );
-    dispatch(
-      getOrderIdSuccess({
-        ...orderItems,
-        serviceId: mainServices
-      })
-    );
+    if (serviceId) {
+      dispatch(
+        getOrderIdSuccess({
+          ...orderItems,
+          serviceId: mainServices
+        })
+      );
+    }
     if (!serviceId) {
-      dispatch(getUsersList({ page: 1 }))
+      // dispatch(getUsersList({ page: 1 }))
       dispatch(getAllTimeLogRequest())
     }
-    // dispatch(getOrderDetailsRequest({ _id: orderId }))
+    if (serviceId) {
+      dispatch(getOrderDetailsRequest({ _id: orderId }))
+    }
     done();
   }
 });
@@ -249,7 +254,11 @@ const getAllTimeLogLogic = createLogic({
       "/allTimeLogs",
       "GET",
       true,
-      undefined
+      {
+        search: action.payload && action.payload.search ? action.payload.search : null,
+        page: action.payload && action.payload.page ? action.payload.page : null,
+        limit: AppConfig.ITEMS_PER_PAGE,
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0] || DefaultErrorMessage);
@@ -257,7 +266,13 @@ const getAllTimeLogLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(getAllTimeLogSuccess(result.data.data));
+      dispatch(getAllTimeLogSuccess(
+        {
+          timeLogs: result.data.data,
+          totalDuration: result.data.totalDuration,
+          totalTimeLogs: result.data.totalTimeLogs
+        }
+      ));
       done();
     }
   }

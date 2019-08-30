@@ -97,6 +97,12 @@ export const serviceReducers = handleActions(
          ...state,
          serviceDataList: action.payload
       }),
+      [serviceActions.SUBMIT_SERVICE_DATA_SUCCESS]: (state, action) => ({
+         ...state,
+         services: action.payload.services,
+         customerUserComment: action.payload.customerCommentData,
+         isServiceList: false
+      }),
    },
    serviceData
 );

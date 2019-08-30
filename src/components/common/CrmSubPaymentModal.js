@@ -8,9 +8,11 @@ import {
   Button,
   Label,
   FormGroup,
+  FormFeedback,
   Col
 } from "reactstrap";
 import MaskedInput from "react-text-mask";
+import * as classnames from "classnames";
 
 export class CrmSubPaymentModalModel extends Component {
   constructor(props) {
@@ -20,7 +22,9 @@ export class CrmSubPaymentModalModel extends Component {
       expMonth: "",
       expYear: "",
       cvv: "",
-      expireDate: ""
+      expireDate: "",
+      expireYearError: "",
+      expireMonthError: ""
     };
   }
   handleChange = (e) => {
@@ -45,12 +49,41 @@ export class CrmSubPaymentModalModel extends Component {
       expYear: expYear,
       cvv: cvv
     }
-    console.log(payload, "addSubscriptionRequest");
-    this.props.addSubscriptionRequest(payload)
+    let isError = false
+    var d = new Date();
+    var n = d.getYear();
+    if (parseInt(payload.expMonth) > 12 && payload.expYear) {
+      this.setState({
+        expireMonthError: "Enter valid month."
+      })
+      isError = true
+      console.log("@@@@@@@@@@");
+
+    }
+    else if (parseInt(payload.expYear) < n && payload.expYear) {
+      this.setState({
+        expireYearError: "Expiretion year should be greater than current year",
+        expireMonthError: null
+      })
+      isError = true
+      console.log("!!!!!!!!!");
+    } else {
+      this.setState({
+        expireYearError: "",
+        expireMonthError: ""
+      })
+      console.log("%%%%%%%%");
+      isError = false
+    }
+    console.log("################", isError);
+
+    if (!isError) {
+      this.props.addSubscriptionRequest(payload)
+    }
   }
   render() {
     const { openSubPayementModel, handleSubPaymentModal } = this.props
-    const { cardNumber, cvv, expireDate } = this.state
+    const { cardNumber, cvv, expireDate, expireMonthError, expireYearError } = this.state
     return (
       <>
         <Modal
@@ -60,7 +93,7 @@ export class CrmSubPaymentModalModel extends Component {
         >
           <ModalHeader toggle={handleSubPaymentModal}>Subscription Payment</ModalHeader>
           <ModalBody>
-            <Form>
+            <Form onSubmit={this.handleSubscriptionPayment}>
               <div>
                 <Col md={"12"}>
                   <FormGroup>
@@ -107,15 +140,28 @@ export class CrmSubPaymentModalModel extends Component {
                   <Col md={"12"}>
                     <FormGroup>
                       <Label htmlFor="expiry">Expiration</Label>
-                      <MaskedInput
-                        mask={[/[0-9]/, /\d/, '/', /\d/, /\d/]}
-                        className={'form-control'}
-                        placeholder="Enter expiry date"
-                        id="expireDate"
-                        name="expireDate"
-                        value={expireDate}
-                        onChange={this.handleChange}
-                      />
+                      <div className={"input-block"}>
+                        <MaskedInput
+                          mask={[/[0-9]/, /\d/, '/', /\d/, /\d/]}
+                          className={classnames("form-control", {
+                            "is-invalid":
+                              (expireYearError || expireMonthError) &&
+                              expireDate
+                          })}
+                          placeholder="Enter expiry date"
+                          id="expireDate"
+                          name="expireDate"
+                          value={expireDate}
+                          onChange={this.handleChange}
+
+                        />
+                        <FormFeedback>
+                          {expireYearError ? expireYearError : null}
+                        </FormFeedback>
+                        <FormFeedback>
+                          {expireMonthError ? expireMonthError : null}
+                        </FormFeedback>
+                      </div>
                     </FormGroup>
                   </Col>
                   <Col md={"12"}>

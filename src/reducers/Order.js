@@ -12,8 +12,11 @@ const initialState = {
   orderItems: [],
   customerOrders: [],
   vehicleOrders: [],
+  invoiceURL: "",
+  inspectionURL: "",
   technicianOrders: [],
   data: [],
+  isPdfLoading: false,
   isOrderLoading: true
 };
 
@@ -42,7 +45,8 @@ export const orderReducer = handleActions(
     }),
     [orderActions.UPDATE_ORDER_DETAILS]: (state, { payload }) => ({
       ...state,
-      isLoading: true
+      isLoading: !payload.isPdfGenerated ? true : false,
+      isPdfLoading: payload.isPdfLoading ? true : false
     }),
     [orderActions.UPDATE_ORDER_DETAILS_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -50,7 +54,7 @@ export const orderReducer = handleActions(
     }),
     [orderActions.GET_ORDER_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,
-      isOrderLoading: true
+      isOrderLoading: payload.isAuthStatus ? false : true
     }),
     [orderActions.GET_ORDER_DETAILS_SUCCESS]: (state, { payload }) => ({
       ...state,

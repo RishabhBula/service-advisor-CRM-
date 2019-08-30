@@ -70,8 +70,8 @@ export const AppRoutes = {
     exact: true
   },
   INVENTORY_STATATICS: {
-    url: "/inventory/statatics",
-    name: "Statatics",
+    url: "/inventory/statistics",
+    name: "Statistics",
     exact: true
   },
   TIMESHEETS: {

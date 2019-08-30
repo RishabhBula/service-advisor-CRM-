@@ -100,30 +100,36 @@ export class CrmCannedServiceModal extends Component {
          activeIndex: index
       })
    }
-   handleAddToService = (service, index) => {
+
+   handleAddNewService = (service, index) => {
       const ServiceData = [...this.state.serviceData]
-      ServiceData[index].isCannedAdded = true
-      this.setState({
-         serviceData: ServiceData
-      })
-      this.props.handleAddToService(service)
+      ServiceData[index].isCannedAdded = true;
+      let payload = '';
+      ServiceData[index].serviceItems.map((item,indexT)=>{
+          if (item.isItemChecked === false) {
+             console.log(item ," $$$$$ Item")
+            ServiceData[index].serviceItems.splice(indexT, 1);
+          }
+          return true
+       });
+       payload = ServiceData[index];
+       console.log(payload, "*********  payload *******");
+      // this.setState({
+      //    serviceData: ServiceData
+      // })
+      this.props.handleAddToService(payload);
    }
+
    handleServiceItems = (e, serviceItem, index, sIndex) => {
-      const { value } = e.target
-      const ServiceData = [...this.state.serviceData]
-      var bool_value = value === "true" ? false : true
-      ServiceData[index].serviceItems[sIndex].isItemChecked = bool_value
+      const { value } = e.target;
+      const ServiceData = [...this.state.serviceData];
+      var bool_value = value === "true" ? false : true;
+      ServiceData[index].serviceItems[sIndex].isItemChecked = bool_value;
+
+      console.log(value, "value");
       this.setState({
          serviceData: ServiceData
-      }, () => {
-         if (serviceItem && !serviceItem.isItemChecked) {
-            const ServiceData = [...this.state.serviceData]
-            ServiceData[index].serviceItems.splice(sIndex, 1)
-            this.setState({
-               serviceData: ServiceData
-            })
-         }
-      })
+      });
    }
    handleDeleteCannedService = async (serviceId) => {
       const { value } = await ConfirmBox({
@@ -138,6 +144,8 @@ export class CrmCannedServiceModal extends Component {
    render() {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex, input } = this.state
+
+      console.log(serviceData, "serviceData");
       return (
          <>
             <Modal
@@ -181,61 +189,143 @@ export class CrmCannedServiceModal extends Component {
                            serviceData && serviceData.length ?
                               serviceData.map((item, index) => {
                                  return (
-                                    <div key={index}>
-                                       <div onClick={() => this.handleServiceCollaps(index)} className={activeIndex === index ? 'services-list-block active' : 'services-list-block'}>
-                                          {
-                                             item.serviceItems && item.serviceItems.length ?
-                                                isToggelOpen && (serviceIndex === index) ? <i className="icons icon-arrow-down arrow"></i> : <i className="icons arrow icon-arrow-right"></i> : <i className="icons arrow icon-arrow-right"></i>
-                                          }
-
-                                          <span>{item.serviceName}</span>
-                                          <div>
-                                             <span className={"mr-2"}>
-                                                <Button size={"sm"} color={""} disabled={item.isCannedAdded} className={"btn btn-theme"} onClick={() => this.handleAddToService(item, index)}>
-                                                   +
-                                                   {
-                                                      item.isCannedAdded ?
-                                                         <>Service Added <i className={"fa fa-check"} /></>
-                                                         : "Add to service"
-                                                   }
-                                                </Button>
-                                             </span>
-                                             <span>
-                                                <Button
-                                                   size={"sm"}
-                                                   id={`delete-${item._id}`}
-                                                   onClick={() => this.handleDeleteCannedService(item._id)}
-                                                   className={"btn-theme-transparent"}>
-                                                   <i className={"icon-trash icons"} />
-                                                </Button>
-                                                <UncontrolledTooltip target={`delete-${item._id}`}>
-                                                   Delete Canned Service
-                                                </UncontrolledTooltip>
-                                             </span>
-                                          </div>
-                                       </div>
-                                       {
-                                          (serviceIndex === index) && isToggelOpen ?
-                                             item.serviceItems && item.serviceItems.length ?
-                                                item.serviceItems.map((serviceItem, sIndex) => {
-                                                   return (
-                                                      <>
-                                                         <div key={index} className={'service-toggel-block'}>
-                                                            <div className={"service-toggel-check"} >
-                                                               <Input type="checkbox" id={sIndex} checked={serviceItem.isItemChecked} value={serviceItem.isItemChecked} onChange={(e) => this.handleServiceItems(e, serviceItem, index, sIndex)} className={""} />
-                                                               <label htmlFor={sIndex} className={""}>{serviceItem.description || serviceItem.brandName || serviceItem.discription || '-'}</label>
-                                                            </div>
-                                                         </div>
-                                                      </>
-                                                   )
-                                                }) : <div key={index} className={'service-toggel-block text-center'}>
-                                                   No any Service Item Added
-                                                   </div>
-                                             :
-                                             null
+                                   <div key={index}>
+                                     <div
+                                       onClick={() =>
+                                         this.handleServiceCollaps(index)
                                        }
-                                    </div>
-                                 )
+                                       className={
+                                         activeIndex === index
+                                           ? "services-list-block active"
+                                           : "services-list-block"
+                                       }
+                                     >
+                                       {item.serviceItems &&
+                                       item.serviceItems.length ? (
+                                         isToggelOpen &&
+                                         serviceIndex === index ? (
+                                           <i className="icons icon-arrow-down arrow"></i>
+                                         ) : (
+                                           <i className="icons arrow icon-arrow-right"></i>
+                                         )
+                                       ) : (
+                                         <i className="icons arrow icon-arrow-right"></i>
+                                       )}
+
+                                       <span>{item.serviceName}</span>
+                                       <div>
+                                         <span className={"mr-2"}>
+                                           <Button
+                                             size={"sm"}
+                                             color={""}
+                                             disabled={item.isCannedAdded}
+                                             className={"btn btn-theme"}
+                                             onClick={() =>
+                                               this.handleAddNewService(
+                                                 item,
+                                                 index
+                                               )
+                                             }
+                                           >
+                                             +
+                                             {item.isCannedAdded ? (
+                                               <>
+                                                 Service Added{" "}
+                                                 <i className={"fa fa-check"} />
+                                               </>
+                                             ) : (
+                                               "Add to service"
+                                             )}
+                                           </Button>
+                                         </span>
+                                         <span>
+                                           <Button
+                                             size={"sm"}
+                                             id={`delete-${item._id}`}
+                                             onClick={() =>
+                                               this.handleDeleteCannedService(
+                                                 item._id
+                                               )
+                                             }
+                                             className={"btn-theme-transparent"}
+                                           >
+                                             <i
+                                               className={"icon-trash icons"}
+                                             />
+                                           </Button>
+                                           <UncontrolledTooltip
+                                             target={`delete-${item._id}`}
+                                           >
+                                             Delete Canned Service
+                                           </UncontrolledTooltip>
+                                         </span>
+                                       </div>
+                                     </div>
+                                     {serviceIndex === index && isToggelOpen ? (
+                                       item.serviceItems &&
+                                       item.serviceItems.length ? (
+                                         item.serviceItems.map(
+                                           (serviceItem, sIndex) => {
+                                             return (
+                                               <>
+                                                 <div
+                                                   key={index}
+                                                   className={
+                                                     "service-toggel-block"
+                                                   }
+                                                 >
+                                                   <div
+                                                     className={
+                                                       "service-toggel-check"
+                                                     }
+                                                   >
+                                                     <Input
+                                                       type="checkbox"
+                                                       id={sIndex}
+                                                       checked={
+                                                         serviceItem.isItemChecked
+                                                       }
+                                                       value={
+                                                         serviceItem.isItemChecked
+                                                       }
+                                                       onChange={e =>
+                                                         this.handleServiceItems(
+                                                           e,
+                                                           serviceItem,
+                                                           index,
+                                                           sIndex
+                                                         )
+                                                       }
+                                                       className={""}
+                                                     />
+                                                     <label
+                                                       htmlFor={sIndex}
+                                                       className={""}
+                                                     >
+                                                       {serviceItem.description ||
+                                                         serviceItem.brandName ||
+                                                         serviceItem.discription ||
+                                                         "-"}
+                                                     </label>
+                                                   </div>
+                                                 </div>
+                                               </>
+                                             );
+                                           }
+                                         )
+                                       ) : (
+                                         <div
+                                           key={index}
+                                           className={
+                                             "service-toggel-block text-center"
+                                           }
+                                         >
+                                           No any Service Item Added
+                                         </div>
+                                       )
+                                     ) : null}
+                                   </div>
+                                 );
                               }) :
                               <div>
                                  <div className={"text-center"} colSpan={12}>

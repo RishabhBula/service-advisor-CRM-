@@ -46,7 +46,7 @@ const addNewService = async (req, res) => {
          // }, {
          //       $set: serviceData
          //    })
-         if (element._id) {
+         if (element._id && !element.isCannedService) {
             await Service.findByIdAndUpdate(element._id, {
                $set: serviceData
             })
@@ -116,17 +116,17 @@ const addNewCannedService = async (req, res) => {
             status: true,
             isDeleted: false
          }
-         const addedService = await Service.findByIdAndUpdate(element._id, {
-            $set: serviceData
-         })
-         if (!addedService) {
+         // const addedService = await Service.findByIdAndUpdate(element._id, {
+         //    $set: serviceData
+         // })
+         // if (!addedService) {
             const serviceContent = new Service(serviceData);
             const result = await serviceContent.save();
             serviceResultData.push(result)
-         } else {
-            const seviceData = await Service.findById(element._id)
-            serviceResultData.push(seviceData)
-         }
+         // } else {
+         //    const seviceData = await Service.findById(element._id)
+         //    serviceResultData.push(seviceData)
+         // }
       }
       return res.status(200).json({
          message: "Canned Service added successfully",

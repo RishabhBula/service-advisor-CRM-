@@ -41,7 +41,7 @@ export class UserDetails extends Component {
     const { user } = this.state
     return (
       <>
-        <div className={"custom-form-modal"}>
+        <div className={"custom-form-modal pt-3"}>
           <Row className="justify-content-center">
             <Col md="6">
               <FormGroup>
@@ -195,7 +195,7 @@ export class UserDetails extends Component {
           </Row> */}
         </div>
         <div className={"text-center"}>
-          <Button onClick={() => this.editUser(technicianData)} className={"btn-theme"}>Update Techniican Details</Button>
+          <Button onClick={() => this.editUser(technicianData)} className={"btn-theme"}>Update Technician Details</Button>
         </div>
         <CrmUserModal
           userModalOpen={editUserModal}

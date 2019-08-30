@@ -392,56 +392,60 @@ class VehiclesList extends Component {
                       </td>
 
                       <td className={"text-center"}>
-                        <span className="mr-2">
-                          <Button
-                            className={"btn-theme-transparent"}
-                            size={"sm"}
-                            onClick={() =>
-                              this.handleVehicleDetails(vehicle._id)
-                            }
-                            id={`view-${vehicle._id}`}
-                          >
-                            <i className="fas fa-eye" />
-                          </Button>
-                          <UncontrolledTooltip target={`view-${vehicle._id}`}>
-                            View
-                          </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            size={"sm"}
-                            onClick={() => this.editUser(vehicle)}
-                            className={"btn-theme-transparent"}
-                            id={"Tooltip-3"}
-                          >
-                            <i className={"icons cui-pencil"} />
-                          </Button>
-                          <UncontrolledTooltip target="Tooltip-3">
-                            Edit
-                          </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            className={"btn-theme-transparent"}
-                            size={"sm"}
-                            onClick={() =>
-                              this.setState(
-                                {
-                                  selectedVehicles: [vehicle._id]
-                                },
-                                () => {
-                                  this.onDelete();
-                                }
-                              )
-                            }
-                            id={`delete-${vehicle._id}`}
-                          >
-                            <i className={"icons cui-trash"} />
-                          </Button>
-                          <UncontrolledTooltip target={`delete-${vehicle._id}`}>
-                            Delete
-                          </UncontrolledTooltip>
-                        </span>
+                        <div className={"d-flex justify-content-center"}>
+                          <span className="mr-2">
+                            <Button
+                              className={"btn-theme-transparent"}
+                              size={"sm"}
+                              onClick={() =>
+                                this.handleVehicleDetails(vehicle._id)
+                              }
+                              id={`view-${vehicle._id}`}
+                            >
+                              <i className="fas fa-eye" />
+                            </Button>
+                            <UncontrolledTooltip target={`view-${vehicle._id}`}>
+                              View Details
+                            </UncontrolledTooltip>
+                          </span>
+                          <span className="mr-2">
+                            <Button
+                              size={"sm"}
+                              onClick={() => this.editUser(vehicle)}
+                              className={"btn-theme-transparent"}
+                              id={"Tooltip-3"}
+                            >
+                              <i className={"icons cui-pencil"} />
+                            </Button>
+                            <UncontrolledTooltip target="Tooltip-3">
+                              Edit Details
+                            </UncontrolledTooltip>
+                          </span>
+                          <span className="mr-2">
+                            <Button
+                              className={"btn-theme-transparent"}
+                              size={"sm"}
+                              onClick={() =>
+                                this.setState(
+                                  {
+                                    selectedVehicles: [vehicle._id]
+                                  },
+                                  () => {
+                                    this.onDelete();
+                                  }
+                                )
+                              }
+                              id={`delete-${vehicle._id}`}
+                            >
+                              <i className={"icons cui-trash"} />
+                            </Button>
+                            <UncontrolledTooltip
+                              target={`delete-${vehicle._id}`}
+                            >
+                              Delete
+                            </UncontrolledTooltip>
+                          </span>
+                        </div>
                       </td>
                     </tr>
                   );
