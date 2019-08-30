@@ -578,6 +578,14 @@ class ServiceItem extends Component {
         html: HTML
       };
       this.props.submitServiceDataSuccess(payload)
+      const serviceId = []
+      payload.services.map((items) => {
+        serviceId.push({
+          serviceId: items
+        })
+        return true
+      })
+      this.props.updateOrderServiceData(serviceId)
       this.props.addNewService(payload)
     }
   }
@@ -1892,11 +1900,21 @@ class ServiceItem extends Component {
             </div>
             {
               this.state.services && this.state.services.length ?
-                <Button color={""} className={"btn-blue pull-right"} onClick={
-                  () => {
-                    this.handleServiceSubmit(services, customerComment, userRecommendations)
+                <Button
+                  color={""}
+                  disabled={serviceReducers.isServiceAdded ? false : true}
+                  className={"btn-blue pull-right"}
+                  onClick={
+                    () => {
+                      this.handleServiceSubmit(services, customerComment, userRecommendations)
+                    }
+                  }>
+                  {
+                    serviceReducers.isServiceAdded ?
+                      "Submit Services" :
+                      "Please Wait..."
                   }
-                }>Submit Services</Button> : null
+                </Button> : null
             }
           </div>
           <CrmCannedServiceModal

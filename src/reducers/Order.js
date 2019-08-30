@@ -73,6 +73,13 @@ export const orderReducer = handleActions(
       ...state,
       technicianOrders: payload,
       isOrderLoading: false
+    }),
+    [serviceActions.UPDATE_ORDER_SERVICE_DATA]: (state, { payload }) => ({
+      ...state,
+      orderItems: {
+        ...state.orderItems,
+        serviceId: payload
+      },
     })
   },
   initialState

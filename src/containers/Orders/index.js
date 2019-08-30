@@ -60,7 +60,8 @@ import {
   addAppointmentRequest,
   getAppointments,
   newMsgSend,
-  submitServiceDataSuccess
+  submitServiceDataSuccess,
+  updateOrderServiceData
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -410,10 +411,10 @@ class Order extends Component {
       addAppointment,
       getAppointments,
       newMsgSend,
-      submitServiceDataSuccess
+      submitServiceDataSuccess,
+      updateOrderServiceData
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
-    console.log(orderReducer, " *********  orderReducer");
     return (
       <div className="animated fadeIn">
         {!orderReducer.isOrderLoading ? (
@@ -570,6 +571,7 @@ class Order extends Component {
                             updateOrderDetails={updateOrderDetails}
                             deleteService={deleteService}
                             submitServiceDataSuccess={submitServiceDataSuccess}
+                            updateOrderServiceData={updateOrderServiceData}
                             {...this.props}
                           />
                         ) : null}
@@ -863,7 +865,8 @@ const mapDispatchToProps = dispatch => ({
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   getAppointments: data => dispatch(getAppointments(data)),
   newMsgSend: data => dispatch(newMsgSend(data)),
-  submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data))
+  submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data)),
+  updateOrderServiceData: data => dispatch(updateOrderServiceData(data))
 });
 export default connect(
   mapStateToProps,

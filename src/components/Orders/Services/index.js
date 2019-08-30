@@ -201,7 +201,8 @@ class Services extends Component {
       updateOrderDetails,
       deleteService,
       profileInfoReducer,
-      submitServiceDataSuccess
+      submitServiceDataSuccess,
+      updateOrderServiceData
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
@@ -231,6 +232,7 @@ class Services extends Component {
               deleteService={deleteService}
               profileInfoReducer={profileInfoReducer}
               submitServiceDataSuccess={submitServiceDataSuccess}
+              updateOrderServiceData={updateOrderServiceData}
               {...this.props}
             />
           </React.Fragment>

@@ -463,7 +463,7 @@ const getOrderDetails = async (req, res) => {
           if (
             element.messageId &&
             element.messageId.receiverId.toString() ===
-              currentUser.id.toString()
+            currentUser.id.toString()
           ) {
             element.messageId.isSender = false;
           }
