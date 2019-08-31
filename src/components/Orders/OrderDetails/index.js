@@ -91,13 +91,16 @@ class OrderDetails extends Component {
     });
   };
 
-  handleType = (e, workflowStatus, orderId) => {
+  handleType = (e, workflowStatus, orderId, groupedOptions) => {
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
       to: e.id,
       orderId,
       destinationIndex: 0,
-      sourceIndex: 0
+      sourceIndex: 0,
+      toStatusName: e.label,
+      fromStatusName:fromStatus[0].label
     });
   };
 
@@ -393,7 +396,8 @@ class OrderDetails extends Component {
                 this.handleType(
                   e,
                   orderReducer.orderItems.workflowStatus,
-                  orderReducer.orderItems._id
+                  orderReducer.orderItems._id,
+                  groupedOptions
                 )
               }
               classNamePrefix={"form-select-theme"}
@@ -671,14 +675,19 @@ class OrderDetails extends Component {
               .slice(0)
               .reverse()
               .map((activity, index) => {
+                let dateA = moment(activity.createdAt).format("L");
+                let dateB = moment().format('L');
+                let dayDiff = moment(dateB).diff(moment(dateA), 'days');
                 return (
                   <div key={index} className={"activity-block p-3"}>
                     <div className={"pr-3 text-left"}>
-                      <span>
+                      <span className="text-capitalize">
                         {activity.activityPerson.firstName}{" "}
                         {activity.activityPerson.lastName}{" "}
                         {activity.type !== "NEW_ORDER" &&
-                          activity.type !== "ADD_PAYMENT"
+                          activity.type !== "ADD_PAYMENT" &&
+                          activity.type !== "NEW_MESSAGE" &&
+                          activity.type !== "UPDATE_STATUS"
                           ? "changed"
                           : null}{" "}
                         {activity.name}
@@ -686,25 +695,28 @@ class OrderDetails extends Component {
                     </div>
                     <div className={"text-left activity-date"}>
                       <span>
-                        {moment(activity.createdAt).format(
-                          "MMM Do YYYY, h:mm A"
-                        )}
+                        {dayDiff >= 1 ? moment(activity.createdAt).format("MMM Do YYYY, h:mm A") : moment(activity.createdAt).startOf('seconds').fromNow()}
                       </span>
                     </div>
                     <span
                       className={
-                        activity.type === "MESSAGE"
+                        activity.type === "NEW_MESSAGE"
                           ? "activity-icon activity-message"
                           : "activity-icon activity-set"
                       }
                     >
                       {activity.type !== "NEW_ORDER" &&
                         activity.type !== "ADD_PAYMENT" &&
-                        activity.type !== "INVOICE_ORDER" ? (
+                        activity.type !== "INVOICE_ORDER" &&
+                        activity.type !== "UPDATE_STATUS" &&
+                        activity.type !== "NEW_MESSAGE" ? (
                           <i className={"fa fa-check"} />
                         ) : null}
                       {activity.type === "ADD_PAYMENT" ? (
                         <i className={"fa fa-dollar-sign"} />
+                      ) : null}
+                      {activity.type === "NEW_MESSAGE" ? (
+                        <i className="fas fa-bars mt-1" />
                       ) : null}
                     </span>
                   </div>

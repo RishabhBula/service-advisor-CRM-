@@ -2842,3 +2842,9 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 .invoiceTableCompnent,.inspectionTable{
   display: none;
 }
+.workFlow-filter{
+  width: 23px;
+  height: 33px;
+  text-align: center;
+  padding-top: 7px;
+}

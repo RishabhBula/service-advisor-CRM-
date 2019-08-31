@@ -88,7 +88,7 @@ class WorkFlow extends Component {
          {
             [name]: value,
          },
-         () => this.props.getOrders({ search: value })
+         () => this.props.getOrders({ filter: value })
       );
       if (value !== "") {
          this.props.redirectTo(`${AppRoutes.WORKFLOW.url}?${qs.stringify({ filter: value })}`);
@@ -201,13 +201,13 @@ class WorkFlow extends Component {
                <button className={"nav-icon icon-plus btn btn-outline-dark"} id={"modify-order"} />
                <UncontrolledTooltip target={"modify-order"} >
                   Select to modify order
-          </UncontrolledTooltip>
+               </UncontrolledTooltip>
             </DropdownToggle>
             <DropdownMenu right>
                <DropdownItem onClick={this.handleOrder}>New Quote</DropdownItem>
                <DropdownItem onClick={this.toggleAddNewOrderStatus}>
                   New Order Status
-          </DropdownItem>
+               </DropdownItem>
             </DropdownMenu>
          </Dropdown>
       );
@@ -370,7 +370,7 @@ class WorkFlow extends Component {
                                  />
                                  <UncontrolledTooltip target={"list-view"}>
                                     Click to view List
-                      </UncontrolledTooltip>
+                                 </UncontrolledTooltip>
                               </div>
                               <div className="mode-flow">
                                  <button
@@ -386,7 +386,7 @@ class WorkFlow extends Component {
                                  />
                                  <UncontrolledTooltip target={"grid-view"}>
                                     Click to view Grid
-                      </UncontrolledTooltip>
+                                 </UncontrolledTooltip>
                               </div>
                            </div>
                            {this.renderAddNew()}
@@ -400,24 +400,30 @@ class WorkFlow extends Component {
                               id={"add-Appointment"}
                            >
                               <i className={"fa fa-plus mr-1"} /> New Quote
-                  </Button>
+                           </Button>
                            <UncontrolledTooltip target={"add-Appointment"}>
                               Add a New Quote
-                  </UncontrolledTooltip>
+                           </UncontrolledTooltip>
                         </div>
-                        <Input
-                           type={"select"}
-                           name="selectedFilter"
-                           className={"form-control"}
-                           value={selectedFilter}
-                           onChange={this.handleInputChange}
-                        >
-                           <option value={""}>Select Filter</option>
-                           <option value={"authorized"}>Authorized</option>
-                           <option value={"unauthorized"}>Unauthorized</option>
-                           <option value={"paid"}>Paid</option>
-                           <option value={"Archive"}>Archive</option>
-                        </Input>
+                        <div>
+                           <div className="border workFlow-filter"><i className="fas fa-filter" /></div>                           
+                        </div>
+                        <div>
+                           <Input
+                              type={"select"}
+                              name="selectedFilter"
+                              // className={"form-control"}
+                              value={selectedFilter}
+                              onChange={this.handleInputChange}
+                           >
+                              <option value={""}>All</option>
+                              <option value={"authorized"}>Authorized</option>
+                              <option value={"unauthorized"}>Unauthorized</option>
+                              <option value={"paid"}>Paid</option>
+                              <option value={"unpaid"}>Unpaid</option>
+                              {/* <option value={"Archive"}>Archive</option> */}
+                           </Input>
+                        </div>
                      </Col>
                   </Row>
                   <Row>

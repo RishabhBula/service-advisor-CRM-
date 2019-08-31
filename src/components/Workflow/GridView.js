@@ -44,7 +44,7 @@ class WorkflowGridView extends React.Component {
     });
   };
 
-  componentDidUpdate = () => {};
+  componentDidUpdate = () => { };
 
   handleOrderDetails = orderId => {
     this.props.redirectTo(
@@ -153,12 +153,20 @@ class WorkflowGridView extends React.Component {
       });
       return;
     }
+    let toStatus = "";
+    let fromStatus = "";
+    if (this.props.orderStatus) {
+      toStatus = this.props.orderStatus.filter(item => item._id === destination.droppableId);
+      fromStatus = this.props.orderStatus.filter(item => item._id === source.droppableId)
+    }
     this.props.updateOrderStatus({
       from: source.droppableId,
       to: destination.droppableId,
       orderId,
       destinationIndex: destination.index,
-      sourceIndex: source.index
+      sourceIndex: source.index,
+      toStatusName: toStatus[0].name,
+      fromStatusName: fromStatus[0].name
     });
   };
   /**
@@ -278,8 +286,8 @@ class WorkflowGridView extends React.Component {
                             {"  "}
                             {task.customerId
                               ? `${task.customerId.firstName} ${" "} ${
-                                  task.customerId.lastName
-                                }`
+                              task.customerId.lastName
+                              }`
                               : "No Customer"}
                           </span>{" "}
                         </div>
@@ -296,8 +304,8 @@ class WorkflowGridView extends React.Component {
                             {"  "}
                             {task.vehicleId
                               ? `${task.vehicleId.make} ${" "} ${
-                                  task.vehicleId.modal
-                                }`
+                              task.vehicleId.modal
+                              }`
                               : "No Vehicle"}
                           </span>
                         </div>

@@ -9,7 +9,8 @@ import {
   hideLoader,
   getOrderDetailsRequest,
   verifyLinkRequest,
-  deleteNotesSuccess
+  deleteNotesSuccess,
+  addNewActivity
 } from "../actions"
 
 
@@ -38,6 +39,12 @@ const sentMessageLogic = createLogic({
       //   "_id": action.payload.orderId
       // }
       // dispatch(getOrderDetailsRequest(data))
+      const data = {
+        name: `added a new message`,
+        type: "NEW_MESSAGE",
+        orderId: action.payload.orderId
+      };
+      dispatch(addNewActivity(data));
       if (action.payload.isSummary) {
         dispatch(verifyLinkRequest(action.payload.query))
       }

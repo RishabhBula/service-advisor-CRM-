@@ -155,7 +155,7 @@ const updateOrderWorkflowStatusLogic = createLogic({
     const { orderReducer } = getState();
     const { orderData, orderStatus } = orderReducer;
     let { orders } = orderData;
-    const { orderId, from, to, destinationIndex, sourceIndex } = action.payload;
+    const { orderId, from, to, destinationIndex, sourceIndex,toStatusName, fromStatusName } = action.payload;
     if (!orders[to]) {
       orders[to] = [];
     }
@@ -175,6 +175,12 @@ const updateOrderWorkflowStatusLogic = createLogic({
       }
     );
     dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
+    const data = {
+      name: `updated the workflow status from ${fromStatusName} to ${toStatusName}`,
+      type: "UPDATE_STATUS",
+      orderId: action.payload.orderId
+    };
+    dispatch(addNewActivity(data));
     done();
   }
 });
