@@ -175,7 +175,7 @@ const userSchema = new Schema({
     type: new Schema({
       serviceId: {
         type: mongoose.Types.ObjectId,
-        ref: "service"
+        ref: "Service"
       },
       orderId: {
         type: Schema.Types.ObjectId,

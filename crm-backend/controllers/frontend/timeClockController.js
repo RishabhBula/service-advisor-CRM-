@@ -538,10 +538,56 @@ const getAllTimeLogs = async (req, res) => {
         }
       }
     ])
+    var nowDate = new Date();
+    const today = (nowDate.getMonth() + 1) + '-' + nowDate.getDate() + '-' + nowDate.getFullYear();
+    const startDate = new Date(new Date(today).setUTCHours(0, 0, 0));
+
+    //const currentMonthStart = moment(today).startOf('month').format('YYYY-MM-DD');
+    //const currentMonthEnd = moment(today).endOf('month').format('YYYY-MM-DD');
+
+    //const currentWeekStart = moment(today).startOf('week').format('YYYY-MM-DD');
+    //const currentWeekEnd = moment(today).endOf('week').format('YYYY-MM-DD');
+
+    //const monthStartDate = new Date(new Date(currentMonthStart).setUTCHours(0, 0, 0));
+    //const monthEndDate = new Date(new Date(currentMonthEnd).setUTCHours(0, 0, 0));
+
+    //const weekStartDate = new Date(new Date(currentWeekStart).setUTCHours(0, 0, 0));
+    //const weekEndDate = new Date(new Date(currentWeekEnd).setUTCHours(0, 0, 0));
+
+    const getTodayDurationOfTechnician = await TimeClock.aggregate([
+      {
+        $match: {
+          startDateTime: {
+            $gte: startDate
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$technicianId",
+          duration: {
+            $sum: "$duration"
+          }
+        }
+      }
+    ])
+
+    // const getWeekDurationOfTechnician = await TimeClock.find({
+    //   startDateTime: {
+    //     $gte: weekStartDate,
+    //     $lte: weekEndDate
+    //   }
+    // }, {
+    //     duration: 1,
+    //     technicianId: 1
+    //   })
+    console.log("getTodayDurationOfTechnician", getTodayDurationOfTechnician);
 
     return res.status(200).json({
       message: "Timer get success!",
       data: data || [],
+      technicianTodayData: getTodayDurationOfTechnician,
+      //technicianWeekData: getWeekDurationOfTechnician,
       totalDuration: getSumOfDuration[0] ? getSumOfDuration[0].duration : 0,
       totalTimeLogs: getAllTimeLogCount[0] ? getAllTimeLogCount[0].count : 0,
       totalEarning: getSumOfDuration[0] ? getSumOfDuration[0].total : 0,

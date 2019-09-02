@@ -7,6 +7,7 @@ const initialState = {
   timeLogData: [],
   technicianTime: [],
   allTimeData: [],
+  technicianTodayData: [],
   totalduration: 0,
   totalTimeLogs: 0
 };
@@ -55,6 +56,7 @@ export const timelogReducer = handleActions(
       allTimeData: payload.timeLogs,
       totalDuration: payload.totalDuration,
       totalTimeLogs: payload.totalTimeLogs,
+      technicianTodayData: payload.technicianTodayData,
       isSuccess: true
     })
   },

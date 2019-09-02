@@ -267,8 +267,8 @@ class TimeLogList extends Component {
                     <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
                     <td className={"text-capitalize"}>{timeLog.customerId && timeLog.customerId.length ? `${timeLog.customerId[0].firstName} ${timeLog.customerId[0].lastName}` : "-"}</td>
                     <td>{timeLog.vehicleId && timeLog.vehicleId.length ? `${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}` : "-"}</td>
-                    <td>{moment.utc(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
-                    <td>{moment.utc(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
+                    <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
+                    <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
                     <td>{timeLog.activity}</td>
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>

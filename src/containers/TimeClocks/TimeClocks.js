@@ -86,6 +86,7 @@ class TimeClocks extends Component {
         </div>
         <TechnicianTimer
           userReducer={userReducer}
+          technicianTodayData={timelogReducer.technicianTodayData}
           startTimer={startTimer}
           stopTimer={stopTimer}
           serviceData={serviceReducers.serviceDataList}

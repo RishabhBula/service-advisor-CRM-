@@ -536,8 +536,13 @@ const deleteOrder = async (req, res) => {
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
   }
 };
+
 module.exports = {
   countOrderNumber,
   createNewOrder,
