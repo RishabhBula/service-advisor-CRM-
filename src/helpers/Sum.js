@@ -29,7 +29,7 @@ export const calculateDurationFromSeconds = Seconds => {
   Seconds = Seconds % 60;
   var hours = Math.floor(minutes / 60);
   minutes = minutes % 60;
-  const duration = `${hours}:${minutes}:${Seconds}`;
+  const duration = `${hours > 9 ? hours : `0${hours}`}:${minutes > 9 ? minutes : `0${minutes}`}:${Seconds > 9 ? Seconds : `0${Seconds}`}`;
   return duration;
 };
 /** 
