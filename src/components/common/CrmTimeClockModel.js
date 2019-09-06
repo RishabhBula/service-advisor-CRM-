@@ -219,7 +219,17 @@ export class CrmTimeClockModal extends Component {
         technicianId: selectedTechnician.value,
         startDateTime: timeIn,
         endDateTime: timeOut,
-        activity: isEditTimeClock ? activity : !isTimeClockData ? `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}` : `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}`,
+        activity:
+          isEditTimeClock ?
+            activity :
+            !isTimeClockData ?
+              orderReducer.orderItems &&
+                orderReducer.orderItems.orderId ?
+                `Order (#${orderReducer.orderItems ? orderReducer.orderItems.orderId : ""}) ${orderReducer.orderItems.orderName || 'N/A'}` :
+                "General" :
+              selectedActivity.orderData &&
+              selectedActivity.orderData.orderId?
+              `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}`:"General",
         duration: duration,
         date: date,
         orderId: isEditTimeClock ? orderId : !isTimeClockData ? orderReducer.orderItems._id : selectedActivity.orderId,
