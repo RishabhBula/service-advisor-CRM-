@@ -394,7 +394,7 @@ export class CrmCustomerModal extends Component {
         });
         return;
       }
-      //this.props.addCustomerFun(customerData);
+      this.props.addCustomerFun(customerData);
     } catch (error) {
       logger(error);
     }
