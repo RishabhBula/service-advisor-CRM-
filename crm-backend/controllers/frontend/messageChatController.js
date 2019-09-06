@@ -8,6 +8,19 @@ const { Email, AvailiableTemplates } = require("../../common/Email");
 const commonCrypto = require("../../common/crypto");
 const moment = require("moment");
 const { webURL } = require("../../config/app");
+const fs = require("fs");
+const path = require("path");
+const base64 = require('base64topdf');
+const __basedir = path.join(__dirname, "../../public");
+const { resizeImage, imagePath } = require("../../common/imageThumbnail");
+const types = {
+  "/": "jpg",
+  i: "png",
+  R: "gif",
+  U: "webp",
+  t: "jpeg",
+  f: "pdf"
+};
 
 const sendMessageChat = async (req, res) => {
   const { body } = req;
@@ -19,11 +32,116 @@ const sendMessageChat = async (req, res) => {
     });
   }
   try {
+    let S3MessageImg = [],
+      S3MessageImgThumb = [];
+    if (body.messageAttachment &&
+      body.messageAttachment.itemImagePreview &&
+      body.messageAttachment.itemImagePreview.length) {
+      for (
+        let index = 0;
+        index < body.messageAttachment.itemImagePreview.length;
+        index++
+      ) {
+        const messageImage = body.messageAttachment.itemImagePreview[index];
+        let messageImageUrl = [];
+        if (messageImage.type === 'image') {
+          if (typeof messageImage === "string") {
+            messageImageUrl = messageImage.split("https");
+          }
+          let fileName,
+            originalImagePath,
+            messageImageThumb,
+            messageImageOriginal,
+            fileData;
+          if (!messageImageUrl[1] || messageImageUrl[1] === "undefined") {
+            const base64Image = messageImage.dataURL.replace(
+              /^data:image\/\w+;base64,/,
+              ""
+            );
+            var buf = new Buffer.from(base64Image, "base64");
+            const type = types[base64Image.charAt(0)];
+            fileName = [messageImage.name].join("");
+            originalImagePath = path.join(
+              __basedir,
+              "message-img",
+              fileName
+            );
+            fileData = fs.writeFileSync(originalImagePath, buf);
+            var thumbnailImagePath = path.join(
+              __basedir,
+              "message-img-thumb",
+              fileName
+            );
+            await resizeImage(originalImagePath, thumbnailImagePath, 300);
+            messageImageThumb = await imagePath(
+              thumbnailImagePath,
+              "message-thumbnail"
+            );
+            messageImageOriginal = await imagePath(
+              originalImagePath,
+              "message"
+            );
+            S3MessageImgThumb.push(messageImageThumb);
+            S3MessageImg.push({
+              image: messageImageOriginal,
+              name: messageImage.name
+            });
+          } else {
+            S3MessageImgThumb.push(messageImage);
+            S3MessageImg.push(messageImage);
+          }
+          if (
+            S3MessageImgThumb &&
+            S3MessageImg &&
+            !messageImageUrl[1]
+          ) {
+            fs.unlinkSync(originalImagePath);
+            fs.unlinkSync(thumbnailImagePath);
+          }
+        } else {
+          const base64Pdf = messageImage.dataURL.replace(
+            "data:application/pdf;base64,",
+            ""
+          );
+
+          var buf = new Buffer.from(base64Pdf, "base64");
+          fileName = [messageImage.name].join("");
+          ordeiginalPdfPath = path.join(
+            __basedir,
+            "message-pdf",
+            fileName
+          );
+          const fileData = fs.writeFileSync(ordeiginalPdfPath, buf);
+          const messagePdfOriginal = await imagePath(
+            ordeiginalPdfPath,
+            "message-pdf"
+          );
+          S3MessageImg.push({
+            image: messagePdfOriginal,
+            name: messageImage.name
+          });
+          if (S3MessageImg) {
+            fs.unlinkSync(ordeiginalPdfPath);
+          }
+        }
+      }
+    }
+    let itemImagePreview = []
+    for (let index = 0; index < S3MessageImg.length; index++) {
+      const element = S3MessageImg[index];
+      itemImagePreview.push({
+        fileUrl: element.image,
+        name: element.name
+      })
+    }
+    const messageAttachment = {
+      itemImagePreview: itemImagePreview
+    }
     const messageData = {
       senderId: mongoose.Types.ObjectId(body.senderId),
       receiverId: mongoose.Types.ObjectId(body.receiverId),
       orderId: mongoose.Types.ObjectId(body.orderId),
-      messageAttachment: body.messageAttachment,
+      messageAttachment: messageAttachment,
       messageData: body.messageData,
       isInternalNotes: body.isInternalNotes || false,
       userId: mongoose.Types.ObjectId(body.senderId),
@@ -89,7 +207,7 @@ const sendMessageChat = async (req, res) => {
 
     return res.status(200).json({
       data: messageElements,
-      message: "Message send successfully!",
+      message: body.isInternalNotes ? "Note saved successfully" : "Message send successfully!",
       success: true
     });
   } catch (error) {
@@ -187,7 +305,7 @@ const updateInternalNotes = async (req, res) => {
     );
 
     return res.status(200).json({
-      message: "Note added successfully",
+      message: "Note Deleted successfully",
       success: true
     });
   } catch (error) {

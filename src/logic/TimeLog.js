@@ -10,7 +10,7 @@ import {
   getOrderDetailsRequest,
   getTechinicianTimeLogSuccess,
   getAllTimeLogSuccess,
-  getAllTimeLogRequest
+  getAllTimeLogRequest,
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
@@ -23,8 +23,8 @@ const startTimerLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
-    const { technicianId, serviceId, orderId } = action.payload;
-    if (serviceId) {
+    const { technicianId, serviceId, orderId, isMainTimeClock } = action.payload;
+    if (serviceId && !isMainTimeClock) {
       const index = mainServices.findIndex(
         d => d.serviceId.technician._id === technicianId
       );
@@ -69,8 +69,8 @@ const stopTimerLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     const { orderItems } = getState().orderReducer;
     const { serviceId: mainServices } = orderItems;
-    const { technicianId, serviceId, orderId } = action.payload;
-    if (serviceId) {
+    const { technicianId, serviceId, orderId, isMainTimeClock } = action.payload;
+    if (serviceId && !isMainTimeClock) {
       const index = mainServices.findIndex(
         d => d.serviceId.technician._id === technicianId
       );
@@ -95,11 +95,11 @@ const stopTimerLogic = createLogic({
         })
       );
     }
-    if (!serviceId) {
+    if (isMainTimeClock) {
       // dispatch(getUsersList({ page: 1 }))
-      dispatch(getAllTimeLogRequest())
+      dispatch(getAllTimeLogRequest({ page: 1 }))
     }
-    if (serviceId) {
+    if (serviceId && !isMainTimeClock) {
       dispatch(getOrderDetailsRequest({ _id: orderId }))
     }
     done();
@@ -170,16 +170,29 @@ const addTimeLogLogic = createLogic({
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
-      dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            timeClockModalOpen: false
-          }
-        })
-      );
-      dispatch(hideLoader());
-      done();
+      if (action.payload.isTimeClockData) {
+        dispatch(getAllTimeLogRequest({ page: 1 }))
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              timeClockModalOpen: false
+            }
+          })
+        );
+        dispatch(hideLoader());
+        done();
+      } else {
+        dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              timeClockModalOpen: false
+            }
+          })
+        );
+        dispatch(hideLoader());
+        done();
+      }
     }
   }
 });
@@ -201,18 +214,30 @@ const updateTimeLogLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       if (action.payload.isTimerClock) {
-        dispatch(getAllTimeLogRequest());
+        dispatch(getAllTimeLogRequest({ page: 1 }))
         done();
       } else {
-        dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
-        dispatch(
-          modelOpenRequest({
-            modelDetails: {
-              timeClockEditModalOpen: false
-            }
-          })
-        );
-        done();
+        if (action.payload.isTimeClockData) {
+          dispatch(getAllTimeLogRequest({ page: 1 }))
+          dispatch(
+            modelOpenRequest({
+              modelDetails: {
+                timeClockEditModalOpen: false
+              }
+            })
+          );
+          done();
+        } else {
+          dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
+          dispatch(
+            modelOpenRequest({
+              modelDetails: {
+                timeClockEditModalOpen: false
+              }
+            })
+          );
+          done();
+        }
       }
     }
   }
@@ -256,6 +281,7 @@ const getAllTimeLogLogic = createLogic({
       true,
       {
         search: action.payload && action.payload.search ? action.payload.search : null,
+        sort: action.payload && action.payload.sort ? action.payload.sort : null,
         page: action.payload && action.payload.page ? action.payload.page : null,
         limit: AppConfig.ITEMS_PER_PAGE,
       }
@@ -270,7 +296,10 @@ const getAllTimeLogLogic = createLogic({
         {
           timeLogs: result.data.data,
           totalDuration: result.data.totalDuration,
-          totalTimeLogs: result.data.totalTimeLogs
+          totalTimeLogs: result.data.totalTimeLogs,
+          technicianTodayData: result.data.technicianTodayData,
+          technicianWeekData: result.data.technicianWeekData,
+          technicianMonthData: result.data.technicianMonthData
         }
       ));
       done();

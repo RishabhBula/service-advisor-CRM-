@@ -44,7 +44,7 @@ class WorkflowGridView extends React.Component {
     });
   };
 
-  componentDidUpdate = () => {};
+  componentDidUpdate = () => { };
 
   handleOrderDetails = orderId => {
     this.props.redirectTo(
@@ -153,13 +153,27 @@ class WorkflowGridView extends React.Component {
       });
       return;
     }
+    let toStatus = "";
+    let fromStatus = "";
+    if (this.props.orderStatus) {
+      toStatus = this.props.orderStatus.filter(item => item._id === destination.droppableId);
+      fromStatus = this.props.orderStatus.filter(item => item._id === source.droppableId)
+    }
     this.props.updateOrderStatus({
       from: source.droppableId,
       to: destination.droppableId,
       orderId,
       destinationIndex: destination.index,
-      sourceIndex: source.index
+      sourceIndex: source.index,
+      toStatusName: toStatus[0].name,
+      fromStatusName: fromStatus[0].name
     });
+    if (toStatus[0].name === "Invoices") {
+      this.props.orderStatus1("invoiceStatus", true);
+    }
+    else {
+      this.props.orderStatus1("invoiceStatus", false)
+    }
   };
   /**
    *
@@ -236,7 +250,7 @@ class WorkflowGridView extends React.Component {
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((task, index) => (
               <React.Fragment key={task._id}>
-                <Draggable draggableId={task._id} index={index}>
+                <Draggable  draggableId={task._id} index={index}>
                   {/* {task.serviceId ?
                     serviceCalculation = serviceTotalsCalculation(task.serviceId) : null
                   } */}
@@ -278,8 +292,8 @@ class WorkflowGridView extends React.Component {
                             {"  "}
                             {task.customerId
                               ? `${task.customerId.firstName} ${" "} ${
-                                  task.customerId.lastName
-                                }`
+                              task.customerId.lastName
+                              }`
                               : "No Customer"}
                           </span>{" "}
                         </div>
@@ -296,8 +310,8 @@ class WorkflowGridView extends React.Component {
                             {"  "}
                             {task.vehicleId
                               ? `${task.vehicleId.make} ${" "} ${
-                                  task.vehicleId.modal
-                                }`
+                              task.vehicleId.modal
+                              }`
                               : "No Vehicle"}
                           </span>
                         </div>
@@ -347,6 +361,13 @@ class WorkflowGridView extends React.Component {
                         </UncontrolledTooltip>
 
                         {this.getAppointmentDetails(task._id, task)}
+                        {task.serviceId && task.serviceId.length ?
+                          <span className={""}>
+                            {task.isFullyPaid ? <span className="pl-3 text-success">Fully Paid</span> :
+                              null
+                            }
+                          </span>
+                          : null}
                       </div>
                     </div>
                   )}
@@ -390,7 +411,7 @@ class WorkflowGridView extends React.Component {
               >
                 {orderStatus.map((status, index) => (
                   <React.Fragment key={status._id}>
-                    <Draggable draggableId={status._id} index={index}>
+                    <Draggable draggableId={status._id} index={index} >
                       {provided => (
                         <>
                           <div

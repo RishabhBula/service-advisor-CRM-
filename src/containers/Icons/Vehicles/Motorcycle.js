@@ -12,7 +12,7 @@ const Motorcycle = props => (
       width={props.size||"349.813px"}
       height="223.84px"
       viewBox="0 0 349.813 223.84"
-      enable-background="new 0 0 349.813 223.84"
+      enableBackground="new 0 0 349.813 223.84"
       space="preserve"
     >
       <g>

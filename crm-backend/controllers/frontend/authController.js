@@ -533,7 +533,7 @@ const imageUpload = async (req, res) => {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         }; */
-        const shopLogo = await imagePath(thumbnailImagePath, "profile-thumb");
+        const shopLogo = await imagePath(originalImagePath, "profile-thumb");
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
           shopLogo: shopLogo
         });

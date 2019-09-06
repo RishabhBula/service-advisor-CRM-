@@ -743,7 +743,7 @@ export class CrmTyreModal extends Component {
                                                    rows={"1"}
                                                    value={tierSize[index].notes}
                                                    name="notes"
-                                                   maxLength="100"
+                                                   maxLength={"1000"}
                                                    onChange={e => this.handleTireSizeStates(index, e)}
                                                 />
                                              </FormGroup>

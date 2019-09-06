@@ -12,7 +12,7 @@ const Truck = props => (
       width={props.size||"428.312px"}
       height="145.149px"
       viewBox="0 0 428.312 145.149"
-      enable-background="new 0 0 428.312 145.149"
+      enableBackground="new 0 0 428.312 145.149"
       space="preserve"
     >
       <g>

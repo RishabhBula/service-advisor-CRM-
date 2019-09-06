@@ -53,7 +53,7 @@ export const SingupValidationsMessaages = {
   password: {
     [ValidationTypes.REQUIRED]: "Please enter password.",
     [ValidationTypes.MINLENGTH]: "Please enter atleast 6 characters.",
-    [ValidationTypes.MAXLENGTH]: "Password cannot have more that 20 characters",
+    [ValidationTypes.MAXLENGTH]: "Password cannot have more that 20 characters.",
   },
   confirmPassword: {
     [ValidationTypes.REQUIRED]: "Please enter confirm password.",

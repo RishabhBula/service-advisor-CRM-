@@ -12,7 +12,7 @@ const Van = props => (
       width={props.size||"355.568px"}
       height="144.335px"
       viewBox="0 0 355.568 144.335"
-      enable-background="new 0 0 355.568 144.335"
+      enableBackground="new 0 0 355.568 144.335"
       space="preserve"
     >
       <g>

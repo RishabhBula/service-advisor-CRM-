@@ -96,7 +96,7 @@ class Reports extends Component {
           <CardBody className={"custom-card-body"}>
             <Row className={"mb-2 ml-0"}>
               <Col className={"title-left-section"}>
-                <h4 className={"card-title"}>Reports</h4>
+                <h4 className={"card-title"}>Sales Summary</h4>
                 <div className={"workflow-mode"}>
                   <div className={"mode-inner"} />
                 </div>

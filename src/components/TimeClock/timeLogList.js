@@ -95,6 +95,7 @@ class TimeLogList extends Component {
     this.setState({
       page: 1,
       search: "",
+      sort: "",
       filterApplied: false
     });
     const { location } = this.props;
@@ -144,6 +145,7 @@ class TimeLogList extends Component {
     const { modelDetails } = modelInfoReducer;
     const { timeClockEditModalOpen } = modelDetails;
     const { page, timeLogEle, search, sort } = this.state
+    let activity, orderId
     return (
       <div>
         <div className={""}>
@@ -161,10 +163,7 @@ class TimeLogList extends Component {
                   </div>
                   <div className={"pl-4"}>
                     <span className={"hours-tracked"}>{
-                      isSuccess ?
-                        !isNaN((totalDuration / 3600).toFixed(2)) ? (totalDuration / 3600).toFixed(2) : 0.00 :
-                        <Loader />
-                    }
+                      !isNaN((totalDuration / 3600).toFixed(2)) ? (totalDuration / 3600).toFixed(2) : 0.00}
                     </span>
                   </div>
                 </div>
@@ -263,6 +262,8 @@ class TimeLogList extends Component {
           <tbody>
             {isSuccess ?
               timeLogData && timeLogData.length ? timeLogData.map((timeLog, index) => {
+                activity = timeLog.activity
+                orderId = timeLog.orderId && timeLog.orderId.length ? timeLog.orderId[0]._id : null
                 return (
                   <tr key={index}>
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
@@ -270,12 +271,12 @@ class TimeLogList extends Component {
                     <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
                     <td className={"text-capitalize"}>{timeLog.customerId && timeLog.customerId.length ? `${timeLog.customerId[0].firstName} ${timeLog.customerId[0].lastName}` : "-"}</td>
                     <td>{timeLog.vehicleId && timeLog.vehicleId.length ? `${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}` : "-"}</td>
-                    <td>{moment.utc(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
-                    <td>{moment.utc(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
+                    <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm")}</td>
+                    <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
                     <td>{timeLog.activity}</td>
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
-                    <td><Dollor value={`${parseFloat(timeLog.total).toFixed(2)}`} /></td>
+                    <td><Dollor value={!isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
                     <td className={"text-center"}>
                       {
                         timeLog.type !== "timeclock" ?
@@ -342,6 +343,10 @@ class TimeLogList extends Component {
           timeLogEle={timeLogEle}
           handleTimeClockModal={this.handleEditTimeClockModal}
           orderReducer={orderReducer}
+          activity={activity}
+          isWholeTimeClock={true}
+          isTimeClockData={true}
+          orderId={orderId}
           editTimeLogRequest={editTimeLogRequest}
         />
       </div>

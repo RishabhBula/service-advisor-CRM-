@@ -309,6 +309,14 @@ const importVehicleLogic = createLogic({
           }</b> sheet.`
         );
       }
+      if (!element["Licence Plate"]) {
+        hasError = true;
+        errroredRows.push(
+          `Licence number not found on row <b>${element.rowNumber}</b> of <b>${
+          element.sheetName
+          }</b> sheet.`
+        );
+      }
       return {
         year: parseInt(element["Year"]),
         make: element["Make"],

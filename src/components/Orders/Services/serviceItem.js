@@ -578,6 +578,14 @@ class ServiceItem extends Component {
         html: HTML
       };
       this.props.submitServiceDataSuccess(payload)
+      const serviceId = []
+      payload.services.map((items) => {
+        serviceId.push({
+          serviceId: items
+        })
+        return true
+      })
+      this.props.updateOrderServiceData(serviceId)
       this.props.addNewService(payload)
     }
   }
@@ -672,7 +680,7 @@ class ServiceItem extends Component {
                 <img src={recommandUser} alt={"recommandUser"} />
               </span>
               <FormGroup className={"flex-one mb-0"}>
-                <Input type={"textarea"} maxLength={"250"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
+                <Input type={"textarea"} maxLength={"1000"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
               </FormGroup>
             </Col>
             <Col md={"6"} className={"d-flex pr-0 column"}>
@@ -680,7 +688,7 @@ class ServiceItem extends Component {
                 <img src={recommandTech} alt={"recommandTech"} />
               </span>
               <FormGroup className={"flex-one mb-0"}>
-                <Input type={"textarea"} maxLength={"250"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
+                <Input type={"textarea"} maxLength={"1000"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
               </FormGroup>
             </Col>
           </Row>
@@ -913,7 +921,7 @@ class ServiceItem extends Component {
                               }
                               name={"note"}
                               value={item.note}
-                              maxLength={"200"}
+                              maxLength={"1000"}
                               rows={"5"}
                               cols={"3"}
                               placeholder={
@@ -1892,11 +1900,21 @@ class ServiceItem extends Component {
             </div>
             {
               this.state.services && this.state.services.length ?
-                <Button color={""} className={"btn-blue pull-right"} onClick={
-                  () => {
-                    this.handleServiceSubmit(services, customerComment, userRecommendations)
+                <Button
+                  color={""}
+                  disabled={serviceReducers.isServiceAdded ? false : true}
+                  className={"btn-blue pull-right"}
+                  onClick={
+                    () => {
+                      this.handleServiceSubmit(services, customerComment, userRecommendations)
+                    }
+                  }>
+                  {
+                    serviceReducers.isServiceAdded ?
+                      "Submit Services" :
+                      "Please Wait..."
                   }
-                }>Submit Services</Button> : null
+                </Button> : null
             }
           </div>
           <CrmCannedServiceModal

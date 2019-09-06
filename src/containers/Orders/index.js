@@ -60,7 +60,8 @@ import {
   addAppointmentRequest,
   getAppointments,
   newMsgSend,
-  submitServiceDataSuccess
+  submitServiceDataSuccess,
+  updateOrderServiceData
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -275,7 +276,22 @@ class Order extends Component {
       [name]: value
     });
   };
-
+  onUpdate = (type, value) => {
+    const { profileInfoReducer } = this.props;
+    const comapnyId = profileInfoReducer.profileInfo._id;
+    const { orderReducer } = this.props;
+    let payload = {};
+    payload = {
+      poNumber: value,
+      _id: orderReducer.orderItems._id,
+      authorizerId: comapnyId,
+      // isChangedOrderStatus: true,
+      // isInvoiceStatus: true,
+      // isAuthStatus: true,
+      // isOrderDetails: true
+    }
+    this.props.updateOrderDetails(payload);
+  }
   orderStatus = (type, value) => {
     const { profileInfoReducer } = this.props;
     const comapnyId = profileInfoReducer.profileInfo._id;
@@ -410,10 +426,10 @@ class Order extends Component {
       addAppointment,
       getAppointments,
       newMsgSend,
-      submitServiceDataSuccess
+      submitServiceDataSuccess,
+      updateOrderServiceData
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
-    console.log(orderReducer, " *********  orderReducer");
     return (
       <div className="animated fadeIn">
         {!orderReducer.isOrderLoading ? (
@@ -570,6 +586,7 @@ class Order extends Component {
                             updateOrderDetails={updateOrderDetails}
                             deleteService={deleteService}
                             submitServiceDataSuccess={submitServiceDataSuccess}
+                            updateOrderServiceData={updateOrderServiceData}
                             {...this.props}
                           />
                         ) : null}
@@ -642,6 +659,7 @@ class Order extends Component {
               <OrderDetails
                 profileReducer={profileInfoReducer}
                 orderReducer={orderReducer}
+                onUpdate={this.onUpdate}
                 orderStatus={this.orderStatus}
                 activityReducer={activityReducer}
                 modelInfoReducer={modelInfoReducer}
@@ -863,7 +881,8 @@ const mapDispatchToProps = dispatch => ({
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   getAppointments: data => dispatch(getAppointments(data)),
   newMsgSend: data => dispatch(newMsgSend(data)),
-  submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data))
+  submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data)),
+  updateOrderServiceData: data => dispatch(updateOrderServiceData(data))
 });
 export default connect(
   mapStateToProps,

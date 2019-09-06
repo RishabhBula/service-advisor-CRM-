@@ -10,15 +10,13 @@ export const CustomerSheetData = {
     "City",
     "State",
     "Zip Code",
-    "Refral Source",
-    "Is Tax Exempt",
-    "Is Receive A Discount?"
+    "Refral Source"
   ],
   data: [
     {
       "First Name": "John",
       "Last Name": "Doe",
-      Phone: "+1-222845-245",
+      Phone: "(222)222-2222",
       "Phone Type": "one of mobile/work/home/office/fax/other",
       Email: "john@example.com",
       Company: "Chapter247 Infotech",
@@ -26,9 +24,7 @@ export const CustomerSheetData = {
       City: "Indore",
       State: "MP",
       "Zip Code": "452001",
-      "Refral Source": "Google",
-      "Is Tax Exempt": "yes/no",
-      "Is Receive A Discount?": "yes/no"
+      "Refral Source": "Google"
     }
   ]
 };
@@ -37,7 +33,6 @@ export const VehicleSheetData = {
     "Year",
     "Make",
     "Model",
-    "Submodel",
     "Type",
     "Miles",
     "Color",
@@ -50,5 +45,21 @@ export const VehicleSheetData = {
     "Drivetrain",
     "Notes"
   ],
-  data: []
+  data: [
+    {
+      "Year": "2012",
+      "Make": "Honda",
+      "Model": "Civic",
+      "Type": "sedan",
+      "Miles": "2500",
+      "Color": "black",
+      "Licence Plate": "US BR XXXXX 34 R",
+      "Unit #": "1",
+      "VIN": "19UAYF3158T0000",
+      "Engine Size": "1.3L",
+      "Production Date": "10/2012",
+      "Transmission": "manual",
+      "Drivetrain": "2x4"
+    }
+  ]
 };

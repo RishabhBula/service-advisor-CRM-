@@ -70,7 +70,7 @@ const logOutLogic = createLogic({
   type: loginActions.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
     localStorage.removeItem("token");
-    window.location.href = `http://${APP_URL}`;
+    window.location.href = `http://${APP_URL}/login`;
     done();
   }
 });

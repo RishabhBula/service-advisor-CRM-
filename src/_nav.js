@@ -9,6 +9,12 @@ export default {
       authKey: "isAllowedDashboard"
     },
     {
+      name: AppRoutes.CUSTOMERS.name,
+      url: AppRoutes.CUSTOMERS.url,
+      icon: "icons icon-user",
+      authKey: "isAllowedCompanySettings"
+    },
+    {
       name: AppRoutes.WORKFLOW.name,
       url: AppRoutes.WORKFLOW.url,
       icon: "fas fa-network-wired",
@@ -25,24 +31,6 @@ export default {
       url: AppRoutes.TIMESHEETS.url,
       icon: "icon-clock icons",
       authKey: "isAllowedCalendar"
-    },
-    {
-      name: AppRoutes.REPORTS.name,
-      url: AppRoutes.REPORTS.url,
-      icon: "fas fa-pie-chart",
-      authKey: "isAllowedReportCenter"
-    },
-    {
-      name: AppRoutes.CUSTOMERS.name,
-      url: AppRoutes.CUSTOMERS.url,
-      icon: "icons icon-user",
-      authKey: "isAllowedCompanySettings"
-    },
-    {
-      name: AppRoutes.VEHICLES.name,
-      url: AppRoutes.VEHICLES.url,
-      icon: "fas fa-truck",
-      authKey: "isAllowedCompanySettings"
     },
     {
       name: AppRoutes.INVENTORY.name,
@@ -81,6 +69,18 @@ export default {
           icon: "fa fa-handshake-o"
         }
       ]
+    },
+    {
+      name: AppRoutes.VEHICLES.name,
+      url: AppRoutes.VEHICLES.url,
+      icon: "fas fa-truck",
+      authKey: "isAllowedCompanySettings"
+    },
+    {
+      name: AppRoutes.REPORTS.name,
+      url: AppRoutes.REPORTS.url,
+      icon: "fas fa-pie-chart",
+      authKey: "isAllowedReportCenter"
     },
     {
       name: AppRoutes.SETTINGS.name,

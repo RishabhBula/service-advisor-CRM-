@@ -316,16 +316,10 @@ export class CrmEditCustomerModal extends Component {
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
     const IncorrectNumber = [...this.state.inCorrectNumber]
-    if (parseInt(value.length) < 12) {
-      IncorrectNumber[index] = true
-      this.setState({
-        inCorrectNumber: IncorrectNumber
-      })
-    } else {
-      this.setState({
-        inCorrectNumber: []
-      })
-    }
+    IncorrectNumber[index] = false
+    this.setState({
+      inCorrectNumber: IncorrectNumber
+    })
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
@@ -344,22 +338,26 @@ export class CrmEditCustomerModal extends Component {
               value: ""
             }
           ]),
-          phoneErrors: state.phoneErrors.concat([""])
+          phoneErrors: state.phoneErrors.concat([""]),
+          inCorrectNumber: state.inCorrectNumber.concat([false])
         };
       });
     }
   };
 
   handleRemovePhoneDetails = index => {
-    const { phoneDetail, phoneErrors } = this.state;
+    const { phoneDetail, phoneErrors, inCorrectNumber } = this.state;
     let t = [...phoneDetail];
     let u = [...phoneErrors];
+    let v = [...inCorrectNumber];
     t.splice(index, 1);
     u.splice(index, 1);
+    v.splice(index, 1);
     if (phoneDetail.length) {
       this.setState({
         phoneDetail: t,
-        phoneErrors: u
+        phoneErrors: u,
+        inCorrectNumber: v
       });
     }
   };
@@ -455,18 +453,28 @@ export class CrmEditCustomerModal extends Component {
         );
         await this.setStateAsync({ phoneErrors: t });
       }
-
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         validationdata,
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
-
+      let IncorrectNumber = [...this.state.inCorrectNumber]
+      if (phoneDetail && phoneDetail.length) {
+        for (let i = 0; i < phoneDetail.length; i++) {
+          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+          if (phoneTrimed.length <= 9) {
+            IncorrectNumber[i] = true
+            this.setState({
+              inCorrectNumber: IncorrectNumber
+            });
+            isValid = false;
+          }
+        }
+      }
       if (
         !isValid ||
         Object.keys(this.state.phoneErrors).length > 0 ||
-        customerData.firstName === "" || this.state.percentageError ||
-        this.state.inCorrectNumber.length
+        customerData.firstName === "" || this.state.percentageError
       ) {
         this.setState({
           errors: errors,
@@ -498,6 +506,7 @@ export class CrmEditCustomerModal extends Component {
       errors: {},
       phoneErrors: [""],
       customerDefaultPermissions: CustomerDefaultPermissions,
+      inCorrectNumber:[]
     });
   }
 
@@ -684,7 +693,7 @@ export class CrmEditCustomerModal extends Component {
                                 {phoneDetail[index].phone === "mobile" ? (
                                   <div className="input-block select-number-tile">
                                     <MaskedInput
-                                      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                      mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                                       name="phoneDetail"
                                       placeholder="(555) 055-0555"
                                       className={classnames("form-control", {
@@ -694,7 +703,6 @@ export class CrmEditCustomerModal extends Component {
                                       })}
                                       size="20"
                                       value={item.value}
-                                      maxLength={13}
                                       guide={false}
                                       onChange={e =>
                                         this.handlePhoneValueChange(index, e)
@@ -716,7 +724,6 @@ export class CrmEditCustomerModal extends Component {
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
-                                        maxLength={22}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -802,7 +809,6 @@ export class CrmEditCustomerModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
-                                        maxLength={13}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -824,7 +830,6 @@ export class CrmEditCustomerModal extends Component {
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
                                           value={item.value}
-                                          maxLength={22}
                                           guide={false}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)

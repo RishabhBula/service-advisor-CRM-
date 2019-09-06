@@ -5,7 +5,6 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import moment from "moment";
 import { logger } from "../../helpers";
-
 export default class Appointments extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +17,8 @@ export default class Appointments extends Component {
    */
   onDateClick = ({ date, ...props }) => {
     logger(props);
+    console.log("$$$$$$$$$$$$$$$$$",moment(date).diff(moment(), "days"));
+    
     if (moment(date).diff(moment(), "days") >= 0) {
       this.props.addAppointment(null, date);
     }
@@ -32,7 +33,7 @@ export default class Appointments extends Component {
    *
    */
   render() {
-    let { data } = this.props;
+    let { data, filter } = this.props;
     if (!data) {
       data = [];
     }
@@ -62,7 +63,7 @@ export default class Appointments extends Component {
           center: "prev,next today",
           right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
         }}
-        defaultView="dayGridMonth"
+         defaultView={filter && filter !== {} && filter.search ? (filter.search !== "today" && filter.search !== "week" ? "dayGridMonth" : (filter.search === "today" ? "timeGridDay" : "timeGridWeek")) : "dayGridMonth"}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         weekends={true}
         events={events}
@@ -71,6 +72,9 @@ export default class Appointments extends Component {
         eventClick={this.onEventClick}
         dateClick={this.onDateClick}
         eventLimit={4}
+        showNonCurrentDates={false}
+        fixedWeekCount={false}
+
       />
     );
   }

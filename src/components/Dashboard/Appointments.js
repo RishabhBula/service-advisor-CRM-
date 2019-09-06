@@ -7,6 +7,7 @@ import { notExist } from "../../config/Constants";
 import { AppRoutes } from "../../config/AppRoutes";
 import moment from "moment";
 import NoDataFound from "../common/NoFound";
+import qs from "query-string";
 class DashboardAppointments extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +15,8 @@ class DashboardAppointments extends Component {
       selectedFilter: "today",
       startDate: null,
       endDate: null,
+      start: null,
+      end: null,
       openDatePicker: false,
       focusedInput: "startDate"
     };
@@ -34,6 +37,12 @@ class DashboardAppointments extends Component {
    */
   onFilterChange = e => {
     const { value } = e.target;
+    if (value !== "custom") {
+      this.setState({
+        start: null,
+        end: null
+      })
+    }
     this.setState(
       {
         selectedFilter: value,
@@ -58,7 +67,9 @@ class DashboardAppointments extends Component {
     this.setState(
       {
         startDate,
-        endDate
+        endDate,
+        start: startDate ? startDate.format("MM-DD-YYYY") : null,
+        end: endDate ? endDate.format("MM-DD-YYYY") : null
       },
       () => {
         if (startDate && endDate) {
@@ -101,7 +112,9 @@ class DashboardAppointments extends Component {
       openDatePicker,
       startDate,
       endDate,
-      focusedInput
+      focusedInput,
+      start,
+      end
     } = this.state;
     const { appointments, redirectTo } = this.props;
 
@@ -109,10 +122,10 @@ class DashboardAppointments extends Component {
     return (
       <div className={"dashboard-block-container chart-container"}>
         <Row className={"m-0"}>
-          <Col sm={"4"}>
+          <Col sm={"3"} className="pr-0 pl-0">
             <h3>Appointments</h3>
           </Col>
-          <Col sm={"6"}>
+          <Col sm={"3"}>
             <Input
               type={"select"}
               className={"form-control"}
@@ -126,6 +139,9 @@ class DashboardAppointments extends Component {
               <option value={"all"}>All</option>
               <option value={"custom"}>Custom</option>
             </Input>
+          </Col>
+          <Col sm={"4"} className="pr-0">
+            {selectedFilter === "custom" && start && end ? <div>{[start + ' / ' + end]}</div> : ""}
           </Col>
           <Col sm={"2"} className={"chart-datepicker-container"}>
             <div
@@ -155,79 +171,79 @@ class DashboardAppointments extends Component {
             {isLoading ? (
               <Loader />
             ) : (
-              <Table bordered>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Note</th>
-                    <th>Customer</th>
-                    <th>Appointment Date Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data && data.length ? (
-                    data.map((appointment, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>{appointment.appointmentTitle}</td>
-                          <td>{appointment.note || notExist}</td>
-                          <td>
-                            {appointment.customerId.firstName ? (
-                              <a
-                                href="/"
-                                onClick={e => {
-                                  e.preventDefault();
-                                  redirectTo(
-                                    `${AppRoutes.CUSTOMER_DETAILS.url.replace(
-                                      ":id",
-                                      appointment.customerId._id
-                                    )}`
-                                  );
-                                }}
-                              >
-                                {[
-                                  appointment.customerId.firstName,
-                                  appointment.customerId.lastName
-                                ]
-                                  .join(" ")
-                                  .trim()}
-                              </a>
-                            ) : (
-                              notExist
-                            )}
-                          </td>
-                          <td>
-                            {moment(appointment.appointmentDate).format(
-                              "LL"
-                            )}
-                            <br />
-                            {moment(appointment.startTime).format(
-                              "hh:ssa"
-                            )}{" "}
-                            - {moment(appointment.endTime).format("hh:ssa")}
+                <Table bordered>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Note</th>
+                      <th>Customer</th>
+                      <th>Appointment Date Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data && data.length ? (
+                      data.map((appointment, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>{appointment.appointmentTitle}</td>
+                            <td>{appointment.note || notExist}</td>
+                            <td>
+                              {appointment.customerId.firstName ? (
+                                <a
+                                  href="/"
+                                  onClick={e => {
+                                    e.preventDefault();
+                                    redirectTo(
+                                      `${AppRoutes.CUSTOMER_DETAILS.url.replace(
+                                        ":id",
+                                        appointment.customerId._id
+                                      )}`
+                                    );
+                                  }}
+                                >
+                                  {[
+                                    appointment.customerId.firstName,
+                                    appointment.customerId.lastName
+                                  ]
+                                    .join(" ")
+                                    .trim()}
+                                </a>
+                              ) : (
+                                  notExist
+                                )}
+                            </td>
+                            <td>
+                              {moment(appointment.appointmentDate).format(
+                                "LL"
+                              )}
+                              <br />
+                              {moment(appointment.startTime).format(
+                                "hh:ssa"
+                              )}{" "}
+                              - {moment(appointment.endTime).format("hh:ssa")}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                        <tr>
+                          <td colSpan={6} className={"text-center"}>
+                            <NoDataFound message={"No Appointments"} />
                           </td>
                         </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={6} className={"text-center"}>
-                        <NoDataFound message={"No Appointments"} />
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
-            )}
+                      )}
+                  </tbody>
+                </Table>
+              )}
             <Button
               className={"float-right btn-theme"}
               color={""}
               size={"sm"}
               onClick={() => {
-                redirectTo(`${AppRoutes.CALENDER.url}`);
+                redirectTo(`${AppRoutes.CALENDER.url}?${qs.stringify({ search: selectedFilter })}`);
               }}
             >
-              View All <i class="icon-arrow-right icons" />
+              View All <i className="icon-arrow-right icons" />
             </Button>
             <div className={"clearfix"} />
           </Col>

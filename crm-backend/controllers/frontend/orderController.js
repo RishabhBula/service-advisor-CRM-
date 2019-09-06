@@ -104,7 +104,7 @@ const createNewOrder = async (req, res) => {
 const listOrders = async (req, res) => {
   try {
     const { currentUser, query } = req;
-    const { search: searchValue, customerId } = query;
+    const { search: searchValue, customerId, filter } = query;
     const { id, parentId } = currentUser;
     const orderStatusCondition = {
       $or: [
@@ -151,6 +151,28 @@ const listOrders = async (req, res) => {
           }
         ]
       });
+    }
+    if (filter) {
+      if (filter === "authorized") {
+        condition["$and"].push({
+          status: true
+        });
+      }
+      else if (filter === "unauthorized") {
+        condition["$and"].push({
+          status: false
+        });
+      }
+      else if (filter === "paid") {
+        condition["$and"].push({
+          isFullyPaid: true
+        });
+      }
+      else if (filter === "unpaid") {
+        condition["$and"].push({
+          isFullyPaid: false
+        });
+      }
     }
     const result = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
@@ -463,11 +485,12 @@ const getOrderDetails = async (req, res) => {
           if (
             element.messageId &&
             element.messageId.receiverId.toString() ===
-              currentUser.id.toString()
+            currentUser.id.toString()
           ) {
             element.messageId.isSender = false;
           }
           if (
+            element.messageId &&
             element.messageId.isInternalNotes &&
             !element.messageId.isDeleted
           ) {
@@ -536,8 +559,13 @@ const deleteOrder = async (req, res) => {
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
   }
 };
+
 module.exports = {
   countOrderNumber,
   createNewOrder,

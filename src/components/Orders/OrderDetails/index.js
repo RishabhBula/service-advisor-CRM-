@@ -6,7 +6,9 @@ import {
   UncontrolledTooltip,
   UncontrolledPopover,
   PopoverHeader,
-  PopoverBody
+  PopoverBody,
+  FormGroup,
+  Input
 } from "reactstrap";
 import {
   getSumOfArray,
@@ -25,6 +27,8 @@ class OrderDetails extends Component {
     this.state = {
       orderId: "",
       query: "",
+      poNumber: "",
+      isTextField: false,
       orderStatus: false,
       activityLogs: [],
       serviceDataObject: {},
@@ -37,7 +41,9 @@ class OrderDetails extends Component {
     const { activityReducer, orderReducer } = this.props;
     const orderId = orderReducer.orderItems._id;
     this.setState({
-      activityLogs: activityReducer.activity
+      activityLogs: activityReducer.activity,
+      poNumber: this.props.orderReducer && this.props.orderReducer.orderItems && this.props.orderReducer.orderItems.poNumber !== null ? this.props.orderReducer.orderItems.poNumber : "",
+      isTextField: false
     });
     this.props.getAppointments({
       technicianId: null,
@@ -46,7 +52,7 @@ class OrderDetails extends Component {
     });
   };
 
-  componentDidUpdate = ({ activityReducer, isPrint, appointmentReducer }) => {
+  componentDidUpdate = ({ activityReducer, isPrint, appointmentReducer, orderReducer }) => {
     const activityData = this.props.activityReducer;
     const orderId = this.props.orderReducer.orderItems._id;
     const appointmentReducerData = this.props.appointmentReducer;
@@ -71,6 +77,12 @@ class OrderDetails extends Component {
         orderId: orderId
       });
     }
+    if (this.props.orderReducer && this.props.orderReducer.orderItems && this.props.orderReducer.orderItems.poNumber && orderReducer.orderItems && orderReducer.orderItems.poNumber && this.props.orderReducer.orderItems.poNumber !== orderReducer.orderItems.poNumber) {
+      this.setState({
+        poNumber: this.props.orderReducer.orderItems.poNumber,
+        isTextField: false
+      })
+    }
   };
 
   toggleAddAppointModal = () => {
@@ -91,13 +103,41 @@ class OrderDetails extends Component {
     });
   };
 
-  handleType = (e, workflowStatus, orderId) => {
+  handleType = (e, workflowStatus, orderId, groupedOptions) => {
+    console.log("groupedOptions",groupedOptions);
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
       to: e.id,
       orderId,
       destinationIndex: 0,
-      sourceIndex: 0
+      sourceIndex: 0,
+      toStatusName: e.label,
+      fromStatusName: fromStatus[0].label
+    });
+    if (e.label === "Invoices") {
+      this.props.orderStatus("invoiceStatus", true);
+    }
+    else {
+      this.props.orderStatus("invoiceStatus", false)
+    }
+  };
+  handleType1 = (workflowStatus, orderId, groupedOptions,orderStatus) => {
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
+    let toStatus = ""
+    if(orderStatus === true){
+      toStatus = groupedOptions.filter(item => item.label === "Invoices");
+    } else {
+      toStatus = groupedOptions.filter(item => item.label === "Estimate")
+    }
+    this.props.updateOrderStatus({
+      from: workflowStatus,
+      to: toStatus[0].id,
+      orderId,
+      destinationIndex: 0,
+      sourceIndex: 0,
+      toStatusName: toStatus[0].label,
+      fromStatusName: fromStatus[0].label
     });
   };
 
@@ -110,7 +150,10 @@ class OrderDetails extends Component {
       orderReducer.orderItems &&
       orderReducer.orderItems.customerId &&
       orderReducer.orderItems.vehicleId &&
-      orderReducer.orderItems._id
+      orderReducer.orderItems._id &&
+      appointmentReducer &&
+      appointmentReducer.data &&
+      appointmentReducer.data.length
     ) {
       finalDate = appointmentReducer.data.filter(
         data =>
@@ -152,6 +195,22 @@ class OrderDetails extends Component {
       </>
     );
   };
+  handleChange = () => {
+    this.setState({
+      isTextField: !this.state.isTextField
+    })
+  };
+  onInputChange = e => {
+    const { target } = e;
+    const { name, value } = target;
+    this.setState({
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
+    });
+  };
 
   render() {
     const {
@@ -179,7 +238,7 @@ class OrderDetails extends Component {
         paymentList[0].payedAmount.length
         ? paymentList[0].payedAmount
         : null;
-    const { activityLogs } = this.state;
+    const { activityLogs, isTextField, poNumber } = this.state;
     const orderData = orderReducer.orderItems ? orderReducer.orderItems : {};
     const createdDate = orderReducer.orderItems
       ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY LT")
@@ -291,9 +350,51 @@ class OrderDetails extends Component {
           <div className={"d-flex justify-content-between pb-2 pl-2"}>
             <span className={"name-label"}>PO Number</span>
             <span>
-              <Button color={"secondary"} className={"btn btn-sm"}>
-                + Add
-              </Button>
+              {poNumber !== "" || isTextField ? (isTextField === true ?
+                <FormGroup>
+                  <Input
+                    type="text"
+                    name="poNumber"
+                    value={poNumber ? poNumber : ""}
+                    onChange={this.onInputChange}
+                    placeholder="Enter PO number"
+                  />
+                  <div className="d-flex pt-1 ">
+                    <Button
+                      type="button"
+                      className="btn-sm mr-2 update-btn"
+                      onClick={
+                        () => {
+                          this.props.onUpdate("poNumber", poNumber);
+                          this.handleChange();
+                        }}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      type="button"
+                      className="btn-sm cancel-btn"
+                      onClick={(e) => this.handleChange()}
+                    >
+                      Cancle
+                    </Button>
+                  </div>
+                </FormGroup> :
+                <span>
+                  <div>{poNumber}</div>
+                  <div><Button
+                    type="button"
+                    color={"secondary"} className={"btn btn-sm"}
+                    onClick={(e) => this.handleChange()}
+                  >
+                    Edit
+                    </Button></div>
+                </span>
+              ) : (
+                  <Button color={"secondary"} className={"btn btn-sm"} onClick={(e) => this.handleChange()}>
+                    + Add
+                  </Button>
+                )}
             </span>
           </div>
           <div
@@ -356,8 +457,15 @@ class OrderDetails extends Component {
                   className={
                     !isInvoice ? "btn btn-sm active" : "btn btn-sm"
                   }
-                  onClick={e =>
-                    this.props.orderStatus("invoiceStatus", false)
+                  onClick={e => {
+                    this.props.orderStatus("invoiceStatus", false);
+                    this.handleType1(
+                      orderReducer.orderItems.workflowStatus,
+                      orderReducer.orderItems._id,
+                      groupedOptions,
+                      false
+                    )
+                  }
                   }
                 >
                   Estimate
@@ -365,8 +473,15 @@ class OrderDetails extends Component {
                 <Button
                   color={""}
                   className={isInvoice ? "btn btn-sm active" : "btn btn-sm"}
-                  onClick={e =>
-                    this.props.orderStatus("invoiceStatus", true)
+                  onClick={e =>{
+                    this.props.orderStatus("invoiceStatus", true);
+                    this.handleType1(
+                      orderReducer.orderItems.workflowStatus,
+                      orderReducer.orderItems._id,
+                      groupedOptions,
+                      true
+                    )
+                  }
                   }
                 >
                   Invoice
@@ -393,7 +508,8 @@ class OrderDetails extends Component {
                 this.handleType(
                   e,
                   orderReducer.orderItems.workflowStatus,
-                  orderReducer.orderItems._id
+                  orderReducer.orderItems._id,
+                  groupedOptions
                 )
               }
               classNamePrefix={"form-select-theme"}
@@ -671,14 +787,19 @@ class OrderDetails extends Component {
               .slice(0)
               .reverse()
               .map((activity, index) => {
+                let dateA = moment(activity.createdAt).format("L");
+                let dateB = moment().format('L');
+                let dayDiff = moment(dateB).diff(moment(dateA), 'days');
                 return (
                   <div key={index} className={"activity-block p-3"}>
                     <div className={"pr-3 text-left"}>
-                      <span>
+                      <span className="text-capitalize">
                         {activity.activityPerson.firstName}{" "}
                         {activity.activityPerson.lastName}{" "}
                         {activity.type !== "NEW_ORDER" &&
-                          activity.type !== "ADD_PAYMENT"
+                          activity.type !== "ADD_PAYMENT" &&
+                          activity.type !== "NEW_MESSAGE" &&
+                          activity.type !== "UPDATE_STATUS"
                           ? "changed"
                           : null}{" "}
                         {activity.name}
@@ -686,25 +807,28 @@ class OrderDetails extends Component {
                     </div>
                     <div className={"text-left activity-date"}>
                       <span>
-                        {moment(activity.createdAt).format(
-                          "MMM Do YYYY, h:mm A"
-                        )}
+                        {dayDiff >= 1 ? moment(activity.createdAt).format("MMM Do YYYY, h:mm A") : moment(activity.createdAt).startOf('seconds').fromNow()}
                       </span>
                     </div>
                     <span
                       className={
-                        activity.type === "MESSAGE"
+                        activity.type === "NEW_MESSAGE"
                           ? "activity-icon activity-message"
                           : "activity-icon activity-set"
                       }
                     >
                       {activity.type !== "NEW_ORDER" &&
                         activity.type !== "ADD_PAYMENT" &&
-                        activity.type !== "INVOICE_ORDER" ? (
+                        activity.type !== "INVOICE_ORDER" &&
+                        activity.type !== "UPDATE_STATUS" &&
+                        activity.type !== "NEW_MESSAGE" ? (
                           <i className={"fa fa-check"} />
                         ) : null}
                       {activity.type === "ADD_PAYMENT" ? (
                         <i className={"fa fa-dollar-sign"} />
+                      ) : null}
+                      {activity.type === "NEW_MESSAGE" ? (
+                        <i className="fas fa-bars mt-1" />
                       ) : null}
                     </span>
                   </div>
