@@ -512,7 +512,7 @@ const generatePdfDoc = async (req, res) => {
         ${body.html}
       </body>
     </html>`;
-    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$", htmlBody);
+    //console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$", htmlBody);
 
     const originalPdfPath = path.join(__basedir, "inspection-pdf", fileName);
     fs.writeFileSync(originalPdfPath);

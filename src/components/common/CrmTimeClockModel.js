@@ -20,8 +20,69 @@ import "../../scss/timeclock.scss"
 import moment from "moment";
 import TimeInput from 'react-time-input';
 import * as classnames from "classnames";
+import chroma from 'chroma-js';
 import { calculateDurationFromSeconds } from "../../helpers/Sum"
 // import CrmTimeMaridonBtn from "../common/CrmTimeMaridonBtn";
+
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = chroma("#8157ef45");
+    return {
+      ...styles,
+      backgroundColor: isDisabled
+        ? null
+        : isSelected
+          ? "#8157ef"
+          : isFocused
+            ? color.alpha(0.1).css()
+            : null,
+      "font-size": "13px",
+      "padding-left": "17px",
+      "font-weight": "500",
+      color: isDisabled
+        ? ""
+        : isSelected
+          ? chroma.contrast(color, 'black') > 2
+            ? 'white'
+            : '#0e0e0ea6'
+          : data.color,
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+
+      ':active': {
+        ...styles[':active'],
+        backgroundColor: !isDisabled && (isSelected ? "white" : color.alpha(0.3).css()),
+      },
+    };
+  },
+  groupHeading: (styles) => {
+    return {
+      ...styles,
+      color: "#0e0e0e",
+      cursor: "not-allowed",
+      display: "block",
+      "font-size": "13px",
+      "font-weight": "500",
+      "margin-bottom": "0.25em",
+      "padding-left": "6px",
+      "padding-right": "12px",
+      "text-transform": "capitalize",
+      "box-sizing": "border-box",
+      "background": "#efefee",
+      padding: "5px 5px 6px 4px"
+    }
+  },
+  group: (styles) => {
+    return {
+      ...styles,
+      "padding-top": "0px",
+      "padding-bottom": "0px",
+    }
+  },
+  input: styles => ({ ...styles }),
+  placeholder: styles => ({ ...styles }),
+  singleValue: (styles, { data }) => ({ ...styles }),
+};
 
 export class CrmTimeClockModal extends Component {
   constructor(props) {
@@ -40,7 +101,12 @@ export class CrmTimeClockModal extends Component {
       notes: "",
       isError: false,
       seconds: 0,
-      isEditTimeClock: false
+      isEditTimeClock: false,
+      activityOptions: [],
+      selectedActivity: {
+        label: "Select one technician",
+        value: ""
+      }
     };
   }
   componentDidUpdate = ({ timeLogEle }) => {
@@ -121,24 +187,31 @@ export class CrmTimeClockModal extends Component {
         },
         technicianData: e.technician
       })
+      if (this.props.isTimeClockData) {
+        const options = this.getAllServiceOptions(e.technician)
+        this.setState({
+          activityOptions: options
+        })
+      }
     } else {
       this.setState({
         selectedTechnician: {
           label: "Select technician",
           value: ""
         },
+        activityOptions: []
       })
     }
   }
   handleAddTimeLogs = () => {
-    const { selectedTechnician, timeIn, timeOut, duration, technicianData, date, notes, seconds } = this.state
-    if (!timeIn || !timeOut || !duration || !selectedTechnician.value) {
+    const { selectedTechnician, timeIn, timeOut, duration, technicianData, date, notes, seconds, selectedActivity, isEditTimeClock } = this.state
+    if (!timeIn || !timeOut || !duration || !selectedTechnician.value || (!isEditTimeClock && this.props.isTimeClockData && selectedActivity.value === '')) {
       this.setState({
         isError: true
       })
       return
     } else {
-      const { orderReducer, timeLogEle } = this.props
+      const { orderReducer, timeLogEle, isTimeClockData, activity, orderId } = this.props
       const calDuration = parseFloat(seconds) / 3600
       const totalValue = parseFloat(calDuration) * parseFloat(technicianData.rate)
       const payload = {
@@ -146,26 +219,116 @@ export class CrmTimeClockModal extends Component {
         technicianId: selectedTechnician.value,
         startDateTime: timeIn,
         endDateTime: timeOut,
-        activity: `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}`,
+        activity: isEditTimeClock ? activity : !isTimeClockData ? `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}` : `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}`,
         duration: duration,
         date: date,
-        orderId: orderReducer.orderItems._id,
+        orderId: isEditTimeClock ? orderId : !isTimeClockData ? orderReducer.orderItems._id : selectedActivity.orderId,
         total: totalValue || "0",
         notes: notes,
-        _id: timeLogEle ? timeLogEle._id : null
+        _id: timeLogEle ? timeLogEle._id : null,
+        isTimeClockData: isTimeClockData ? true : false
       }
-      if (this.state.isEditTimeClock) {
+      if (isEditTimeClock) {
         this.props.editTimeLogRequest(payload)
       } else {
         this.props.addTimeLogRequest(payload)
       }
     }
   }
+  /*
+  /*  
+  */
+  getAllServiceOptions = (users) => {
+    const { serviceData } = this.props;
+    let optionsData = []
+    let defaultOptions = [
+      {
+        label: "General",
+        value: "general"
+      }
+    ];
+    const technicicanService = serviceData.filter(
+      service => service.technician === users._id
+    );
+    technicicanService.map(data => {
+      if (users._id === data.technician && data.orderId) {
+        let serviceArray = []
+        if ((data.orderId && data.orderId.serviceId)) {
+          data.orderId.serviceId.map((service) => {
+            if (users._id === service.serviceId.technician) {
+              serviceArray.push(
+                {
+                  label: ` ${service.serviceId.serviceName}`,
+                  value: service.serviceId._id,
+                  serviceData: service.serviceId,
+                  orderId: service.serviceId.orderId,
+                  orderData: data.orderId
+                }
+              )
+            }
+            return true
+          })
+        }
+        const dataObject = {
+          label: `Order(#${data.orderId.orderId}) ${
+            data.orderId.orderName
+            }`,
+          options: serviceArray,
+          data: data.orderId
+        };
+        defaultOptions.push(dataObject);
+      }
+      return true;
+    });
+    defaultOptions.map((item) => {
+      if (optionsData && optionsData.length) {
+
+        let index = optionsData.findIndex(data => {
+          return (
+            (data.label === item.label)
+          )
+        })
+        if (index === -1) {
+          optionsData.push(item);
+        }
+      } else {
+        optionsData.push(item);
+      }
+      return true
+    })
+    return optionsData
+  }
+  /*
+  /*  
+  */
+  handleOrderSelect = (e) => {
+    if (e && e.value !== "") {
+      this.setState({
+        selectedActivity: {
+          label: e.label,
+          value: e.value,
+          orderData: e.orderData,
+          orderId: e.orderId,
+          serviceData: e.serviceData
+        }
+      });
+    } else {
+      this.setState({
+        selectedActivity: {
+          label: "",
+          value: ""
+        }
+      });
+    }
+  }
+  /*
+  /*  
+  */
   render() {
-    const { openTimeClockModal, handleTimeClockModal, orderReducer } = this.props;
-    const { timeIn, timeOut, selectedTechnician, duration, isError, isEditTimeClock, notes } = this.state
+    const { openTimeClockModal, handleTimeClockModal, orderReducer, isTimeClockData, userData, isWholeTimeClock, activity } = this.props;
+    const { timeIn, timeOut, selectedTechnician, duration, isError, isEditTimeClock, notes, activityOptions, selectedActivity } = this.state
     let technicianData = []
-    if (orderReducer.orderItems && orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length) {
+    if (orderReducer.orderItems && orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length && !isTimeClockData) {
       orderReducer.orderItems.serviceId.map((serviceData, index) => {
         if (serviceData.serviceId.technician && serviceData.serviceId.technician._id) {
           technicianData.push({
@@ -174,6 +337,16 @@ export class CrmTimeClockModal extends Component {
             technician: serviceData.serviceId.technician
           })
         }
+        return true
+      })
+    }
+    if (isTimeClockData && userData && userData.length) {
+      userData.map((data) => {
+        technicianData.push({
+          label: `${data.firstName} ${data.lastName}`,
+          value: data._id,
+          technician: data
+        })
         return true
       })
     }
@@ -298,10 +471,37 @@ export class CrmTimeClockModal extends Component {
                     Activity <span className="asteric">*</span>
                   </Label>
                   <div className={"input-block"}>
-                    <Input
-                      value={orderReducer.orderItems?`Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}`:""}
-                      disabled
-                    />
+                    {
+                      (isTimeClockData && isEditTimeClock) || (!isTimeClockData && !isEditTimeClock) ?
+                        <Input
+                          value={
+                            !isWholeTimeClock ?
+                              orderReducer.orderItems ? `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}` : "" :
+                              activity
+                          }
+                          disabled
+                        /> :
+                        <Select
+                          options={activityOptions}
+                          placeholder={activityOptions && !activityOptions.length ? "Select one technician" : "Select service for technician"}
+                          isClearable={true}
+                          className={classnames("w-100 form-select", {
+                            "is-invalid":
+                              isError && selectedActivity.value === ''
+                          })}
+                          isDisabled={activityOptions && !activityOptions.length ? true : false}
+                          //menuIsOpen={true}
+                          value={(selectedActivity.value !== "" && selectedActivity) ? selectedActivity : ""}
+                          onChange={e => this.handleOrderSelect(e)}
+                          type="select"
+                          styles={colourStyles}
+                        />
+                    }
+                    {
+                      isError && selectedActivity.value === "" ?
+                        <FormFeedback>Activity is required</FormFeedback> :
+                        null
+                    }
                   </div>
                 </FormGroup>
               </Col>

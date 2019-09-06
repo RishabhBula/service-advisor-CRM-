@@ -17,15 +17,18 @@ import {
   getAllServiceListRequest,
   getAllTimeLogRequest,
   timmerStartForTechnician,
-  timmerStopForTechnician
+  timmerStopForTechnician,
+  addNewUser
 } from "../../actions"
 import TimeLogList from "../../components/TimeClock/timeLogList";
 import { isEqual } from "../../helpers/Object";
+import { CrmUserModal } from "../../components/common/CrmUserModal";
 
 class TimeClocks extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userData: ""
     };
   }
   componentDidMount() {
@@ -58,7 +61,20 @@ class TimeClocks extends Component {
       timeClockModalOpen: !timeClockModalOpen
     });
   };
-
+  /* 
+  */
+  handleUserModel = () => {
+    this.props.modelOperate({
+      addUserModal: !this.props.modelInfoReducer.modelDetails.addUserModal
+    });
+  }
+  /* 
+  */
+  usersDetails = (userData) => {
+    this.setState({
+      userData
+    })
+  }
   render() {
     const {
       modelInfoReducer,
@@ -72,10 +88,16 @@ class TimeClocks extends Component {
       timelogReducer,
       updateTimeLogRequest,
       timmerStartForTechnician,
-      timmerStopForTechnician
+      timmerStopForTechnician,
+      profileInfoReducer,
+      addUser
     } = this.props;
+    const {
+      userData,
+    } = this.state
     const { modelDetails } = modelInfoReducer;
-    const { timeClockModalOpen } = modelDetails;
+    const { timeClockModalOpen, addUserModal } = modelDetails;
+    const companyName = profileInfoReducer.profileInfo.companyName;
     return (
       <div className={"pl-3"}>
         <div className={"d-flex justify-content-between"}>
@@ -86,11 +108,16 @@ class TimeClocks extends Component {
         </div>
         <TechnicianTimer
           userReducer={userReducer}
+          technicianTodayData={timelogReducer.technicianTodayData}
+          technicianWeekData={timelogReducer.technicianWeekData}
+          technicianMonthData={timelogReducer.technicianMonthData}
           startTimer={startTimer}
+          usersDetails={this.usersDetails}
           stopTimer={stopTimer}
           serviceData={serviceReducers.serviceDataList}
           timmerStartForTechnician={timmerStartForTechnician}
           timmerStopForTechnician={timmerStopForTechnician}
+          onAddClick={this.onAddClick}
         />
         <TimeLogList
           timeLogData={timelogReducer.allTimeData}
@@ -108,8 +135,18 @@ class TimeClocks extends Component {
           openTimeClockModal={timeClockModalOpen}
           getUserData={getUserData}
           orderReducer={orderReducer}
+          userData={userData}
+          serviceData={serviceReducers.serviceDataList}
           handleTimeClockModal={this.handleTimeClockModal}
           addTimeLogRequest={addTimeLogRequest}
+          isTimeClockData={true}
+        />
+
+        <CrmUserModal
+          userModalOpen={addUserModal}
+          handleUserModal={this.handleUserModel}
+          addUser={addUser}
+          companyName={companyName}
         />
       </div>
     );
@@ -122,6 +159,7 @@ const mapStateToProps = state => ({
   timelogReducer: state.timelogReducer,
   userReducer: state.usersReducer,
   serviceReducers: state.serviceReducers,
+  profileInfoReducer: state.profileInfoReducer
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -136,6 +174,7 @@ const mapDispatchToProps = dispatch => ({
   getAllTimeLogRequest: (data) => dispatch(getAllTimeLogRequest(data)),
   timmerStartForTechnician: data => dispatch(timmerStartForTechnician(data)),
   timmerStopForTechnician: data => dispatch(timmerStopForTechnician(data)),
+  addUser: data => dispatch(addNewUser(data)),
 });
 
 export default connect(

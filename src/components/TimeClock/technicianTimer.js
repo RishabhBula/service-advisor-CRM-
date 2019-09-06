@@ -4,8 +4,69 @@ import Avtar from "../common/Avtar";
 import "./index.scss";
 import Select from "react-select";
 import moment from "moment";
-import { SecondsToHHMMSS } from "../../helpers";
+import { SecondsToHHMMSS, calculateDurationFromSeconds } from "../../helpers";
 import NoDataFound from "../common/NoFound"
+import chroma from 'chroma-js';
+
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = chroma("#8157ef45");
+    return {
+      ...styles,
+      backgroundColor: isDisabled
+        ? null
+        : isSelected
+          ? "#8157ef"
+          : isFocused
+            ? color.alpha(0.1).css()
+            : null,
+      "font-size": "13px",
+      "padding-left": "17px",
+      "font-weight": "500",
+      color: isDisabled
+        ? ""
+        : isSelected
+          ? chroma.contrast(color, 'black') > 2
+            ? 'white'
+            : '#0e0e0ea6'
+          : data.color,
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+
+      ':active': {
+        ...styles[':active'],
+        backgroundColor: !isDisabled && (isSelected ? "white" : color.alpha(0.3).css()),
+      },
+    };
+  },
+  groupHeading: (styles) => {
+    return {
+      ...styles,
+      color: "#0e0e0e",
+      cursor: "not-allowed",
+      display: "block",
+      "font-size": "13px",
+      "font-weight": "500",
+      "margin-bottom": "0.25em",
+      "padding-left": "6px",
+      "padding-right": "12px",
+      "text-transform": "capitalize",
+      "box-sizing": "border-box",
+      "background": "#efefee",
+      padding: "5px 5px 6px 4px"
+    }
+  },
+  group: (styles) => {
+    return {
+      ...styles,
+      "padding-top": "0px",
+      "padding-bottom": "0px",
+    }
+  },
+  input: styles => ({ ...styles }),
+  placeholder: styles => ({ ...styles }),
+  singleValue: (styles, { data }) => ({ ...styles }),
+};
 
 class TechnicianTimer extends Component {
   constructor(props) {
@@ -35,6 +96,7 @@ class TechnicianTimer extends Component {
             value: ""
           }
         });
+        this.props.usersDetails(this.state.userData)
       });
     }
     if (timer) {
@@ -43,7 +105,7 @@ class TechnicianTimer extends Component {
           userData: []
         },
         () => {
-          userNewReducer.users.map(data => {
+          userNewReducer.users.forEach(data => {
             this.state.userData.push({
               ...data,
               selectedOrder: {
@@ -51,27 +113,28 @@ class TechnicianTimer extends Component {
                 value: ""
               }
             });
+            this.props.usersDetails(this.state.userData)
             return true;
           });
         }
       );
-      // this.setState({
-      //   userData: userNewReducer.users
-      // })
     }
   };
-  startTimer = (techId, orderId, index, orderData) => {
+  startTimer = (techId, serviceId, index, orderId, orderData, serviceData) => {
     const users = [...this.state.userData]
     if (users[index] && users[index].currentlyWorking) {
       users[index].currentlyWorking.generalService = orderId ? false : true
       users[index].currentlyWorking.orderId = orderId ? orderData : null
+      users[index].currentlyWorking.serviceId = serviceId ? serviceData : null
       users[index].currentlyWorking.startTime = new Date().toJSON()
     }
     this.props.timmerStartForTechnician(users)
     this.props.startTimer({
       technicianId: techId,
       orderId: orderId ? orderId : null,
-      index: index
+      serviceId: serviceId ? serviceId : null,
+      index: index,
+      isMainTimeClock: true
     });
   };
   /*
@@ -109,7 +172,8 @@ class TechnicianTimer extends Component {
     this.props.stopTimer({
       technicianId: techId,
       orderId,
-      serviceId
+      serviceId,
+      isMainTimeClock: true
     });
   };
   /*
@@ -120,7 +184,9 @@ class TechnicianTimer extends Component {
       const userData = [...this.state.userData];
       userData[index].selectedOrder.label = e.label;
       userData[index].selectedOrder.value = e.value;
-      userData[index].selectedOrder.data = e.data;
+      userData[index].selectedOrder.orderData = e.orderData;
+      userData[index].selectedOrder.orderId = e.orderId;
+      userData[index].selectedOrder.serviceData = e.serviceData;
       this.setState({
         userData
       });
@@ -133,9 +199,108 @@ class TechnicianTimer extends Component {
       });
     }
   };
+  /*
+  /* 
+  */
+  getAllServiceOptions = (users) => {
+    const { serviceData } = this.props;
+    let optionsData = []
+    let defaultOptions = [
+      {
+        label: "General",
+        value: ""
+      }
+    ];
+    const technicicanService = serviceData.filter(
+      service => service.technician === users._id
+    );
+    technicicanService.map(data => {
+      if (users._id === data.technician && data.orderId) {
+        let serviceArray = []
+        if ((data.orderId && data.orderId.serviceId)) {
+          data.orderId.serviceId.map((service) => {
+            if (users._id === service.serviceId.technician) {
+              serviceArray.push(
+                {
+                  label: ` ${service.serviceId.serviceName}`,
+                  value: service.serviceId._id,
+                  serviceData: service.serviceId,
+                  orderId: service.serviceId.orderId,
+                  orderData: data.orderId
+                }
+              )
+            }
+            return true
+          })
+        }
+        const dataObject = {
+          label: `Order(#${data.orderId.orderId}) ${
+            data.orderId.orderName
+            }`,
+          options: serviceArray,
+          data: data.orderId
+        };
+        defaultOptions.push(dataObject);
+      }
+      return true;
+    });
+    defaultOptions.map((item) => {
+      if (optionsData && optionsData.length) {
+
+        let index = optionsData.findIndex(data => {
+          return (
+            (data.label === item.label)
+          )
+        })
+        if (index === -1) {
+          optionsData.push(item);
+        }
+      } else {
+        optionsData.push(item);
+      }
+      return true
+    })
+    return optionsData
+  }
+  getTechnicianTimeData = (users) => {
+    const { technicianTodayData, technicianWeekData, technicianMonthData } = this.props
+    let technicianTodayTime, technicianWeekTime, technicianMonthTime
+    technicianTodayData && technicianTodayData.length ?
+      technicianTodayData.map((data) => {
+        if (users._id === data._id) {
+          technicianTodayTime = data.duration
+        }
+        return true
+      }) :
+      technicianTodayTime = "0.00"
+
+    technicianWeekData && technicianWeekData.length ?
+      technicianWeekData.map((data) => {
+        if (users._id === data._id) {
+          technicianWeekTime = data.duration
+        }
+        return true
+      }) :
+      technicianWeekTime = "0.00"
+
+    technicianMonthData && technicianMonthData.length ?
+      technicianMonthData.map((data) => {
+        if (users._id === data._id) {
+          technicianMonthTime = data.duration
+        }
+        return true
+      }) :
+      technicianMonthTime = "0.00"
+    const timeData = {
+      technicianTodayTime,
+      technicianWeekTime,
+      technicianMonthTime
+    }
+    return (timeData)
+  }
 
   render() {
-    const { serviceData, userReducer } = this.props;
+    const { userReducer } = this.props;
     const { duration, userData } = this.state;
     const timer = userReducer.isStartTimer;
     return (
@@ -143,12 +308,7 @@ class TechnicianTimer extends Component {
         <Row>
           {userData && userData.length ? (
             userData.map((users, index) => {
-              let defaultOptions = [
-                {
-                  label: "General",
-                  value: ""
-                }
-              ];
+              const timeData = this.getTechnicianTimeData(users)
               const isWorking =
                 users &&
                 users.currentlyWorking &&
@@ -162,37 +322,8 @@ class TechnicianTimer extends Component {
                   users.currentlyWorking.startTime
                   ? users.currentlyWorking.startTime
                   : false;
-              const technicicanService = serviceData.filter(
-                service => service.technician === users._id
-              );
-              technicicanService.map(data => {
-                if (users._id === data.technician && data.orderId) {
-                  let serviceArray = []
-                  if ((data.orderId && data.orderId.serviceId)) {
-                    data.orderId.serviceId.map((service) => {
-                      if (users._id === service.serviceId.technician) {
-                        serviceArray.push(
-                          {
-                            label: ` ${service.serviceId.serviceName}`,
-                            value: service.serviceId._id
-                          }
-                        )
-                      }
-                      return true
-                    })
-                  }
-                  const dataObject = {
-                    label: `Order(#${data.orderId.orderId}) ${
-                      data.orderId.orderName
-                    }`,
-                    options: serviceArray,
-                    // value: data.orderId._id,
-                    data: data.orderId
-                  };
-                  defaultOptions.push(dataObject);
-                }
-                return true;
-              });
+
+              const options = this.getAllServiceOptions(users)
               const defaultOrderSelect = {
                 label: "General",
                 value: ""
@@ -211,7 +342,13 @@ class TechnicianTimer extends Component {
                         <h5 className={"technician-name"}>
                           {users.firstName} {users.lastName}
                         </h5>
-                        <h6>Clocked out at 11:28am</h6>
+                        <h6>
+                          {
+                            isWorking ?
+                              `Clocked in at ${moment(users.currentlyWorking.startTime).format("hh:mm a")}` :
+                              `Clocked out at ${moment(users.currentlyWorking.startTime).startOf('seconds').fromNow()}`
+                          }
+                        </h6>
                         <div className={"pb-2"}>
                           {isWorking ? (
                             <div className={"timer-running-manually"}>
@@ -232,19 +369,19 @@ class TechnicianTimer extends Component {
                             <div className={"task-area"}>
                               <span className={"text-day"}>Today</span>
                               <div>
-                                <span>00:00</span>
+                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianTodayTime) ? timeData.technicianTodayTime : "0.00")}</span>
                               </div>
                             </div>
                             <div className={"task-area"}>
                               <span className={"text-day"}>This Week</span>
                               <div>
-                                <span>00:00</span>
+                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianWeekTime) ? timeData.technicianWeekTime : "0.00")}</span>
                               </div>
                             </div>
                             <div className={"task-area"}>
                               <span className={"text-day"}>This Month</span>
                               <div>
-                                <span>00:00</span>
+                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianMonthTime) ? timeData.technicianMonthTime : "0.00")}</span>
                               </div>
                             </div>
                           </Row>
@@ -254,21 +391,21 @@ class TechnicianTimer extends Component {
                           <div className={"text-left w-100 form-select"}>
                             <Select
                               className={"w-100 form-select"}
-                              options={defaultOptions}
+                              options={options}
+                              //menuIsOpen={true}
                               value={
                                 isWorking
                                   ? users.currentlyWorking.generalService
                                     ? defaultOrderSelect
                                     : {
-                                      value: users.currentlyWorking.orderId,
-                                      label: users.currentlyWorking.orderId ? `Order(#${users.currentlyWorking.orderId.orderId}) ${
-                                        users.currentlyWorking.orderId.orderName
-                                        }` : ""
+                                      value: users.currentlyWorking.serviceId,
+                                      label: users.currentlyWorking.serviceId ? `${users.currentlyWorking.serviceId.serviceName}` : ""
                                     }
                                   : users.selectedOrder.value !== "" ? users.selectedOrder : defaultOrderSelect
                               }
                               onChange={e => this.handleOrderSelect(e, index)}
                               type="select"
+                              styles={colourStyles}
                             />
                           </div>
                         </FormGroup>
@@ -281,9 +418,11 @@ class TechnicianTimer extends Component {
                                     users._id,
                                     users.selectedOrder.value,
                                     index,
-                                    users.selectedOrder.data
+                                    users.selectedOrder.orderId,
+                                    users.selectedOrder.orderData,
+                                    users.selectedOrder.serviceData
                                   )
-                                : () => this.startTimer(users._id, null, index, null)
+                                : () => this.startTimer(users._id, null, index, null, null, null)
                             }
                           >
                             Clock In
@@ -310,11 +449,13 @@ class TechnicianTimer extends Component {
               );
             })
           ) : (
-              <NoDataFound
-                showAddButton
-                message={"Currently there are no technician added"}
-                onAddClick={this.props.onAddClick}
-              />
+              <div className={"text-center"}>
+                <NoDataFound
+                  showAddButton
+                  message={"Currently there are no technician added"}
+                  onAddClick={this.props.onAddClick}
+                />
+              </div>
             )}
         </Row>
       </div>

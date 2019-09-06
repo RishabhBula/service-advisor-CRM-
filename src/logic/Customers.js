@@ -334,24 +334,24 @@ const importCustomerLogic = createLogic({
         city: element["City"],
         state: element["State"],
         zipCode: element["Zip Code"],
-        permission: {
-          isCorporateFleetTaxExempt: {
-            status: element["Is Tax Exempt"]
-              ? element["Is Tax Exempt"].toLowerCase() === "yes"
-                ? true
-                : false
-              : false
-          },
-          shouldReceiveDiscount: {
-            status: element["Is Receive A Discount?"]
-              ? element["Is Receive A Discount?"].toLowerCase() === "yes"
-                ? true
-                : false
-              : false
-          },
-          shouldLaborRateOverride: { status: false, laborRate: null },
-          shouldPricingMatrixOverride: { status: false, pricingMatrix: null }
-        },
+        // permission: {
+        //   isCorporateFleetTaxExempt: {
+        //     status: element["Is Tax Exempt"]
+        //       ? element["Is Tax Exempt"].toLowerCase() === "yes"
+        //         ? true
+        //         : false
+        //       : false
+        //   },
+        //   shouldReceiveDiscount: {
+        //     status: element["Is Receive A Discount?"]
+        //       ? element["Is Receive A Discount?"].toLowerCase() === "yes"
+        //         ? true
+        //         : false
+        //       : false
+        //   },
+        //   shouldLaborRateOverride: { status: false, laborRate: null },
+        //   shouldPricingMatrixOverride: { status: false, pricingMatrix: null }
+        // },
         parentId:
           profileStateData.profileInfo.parentId ||
           profileStateData.profileInfo._id,
