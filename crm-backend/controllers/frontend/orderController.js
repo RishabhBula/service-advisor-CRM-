@@ -104,7 +104,7 @@ const createNewOrder = async (req, res) => {
 const listOrders = async (req, res) => {
   try {
     const { currentUser, query } = req;
-    const { search: searchValue, customerId } = query;
+    const { search: searchValue, customerId, filter } = query;
     const { id, parentId } = currentUser;
     const orderStatusCondition = {
       $or: [
@@ -151,6 +151,28 @@ const listOrders = async (req, res) => {
           }
         ]
       });
+    }
+    if (filter) {
+      if (filter === "authorized") {
+        condition["$and"].push({
+          status: true
+        });
+      }
+      else if (filter === "unauthorized") {
+        condition["$and"].push({
+          status: false
+        });
+      }
+      else if (filter === "paid") {
+        condition["$and"].push({
+          isFullyPaid: true
+        });
+      }
+      else if (filter === "unpaid") {
+        condition["$and"].push({
+          isFullyPaid: false
+        });
+      }
     }
     const result = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"

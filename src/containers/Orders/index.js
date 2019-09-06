@@ -276,7 +276,22 @@ class Order extends Component {
       [name]: value
     });
   };
-
+  onUpdate = (type, value) => {
+    const { profileInfoReducer } = this.props;
+    const comapnyId = profileInfoReducer.profileInfo._id;
+    const { orderReducer } = this.props;
+    let payload = {};
+    payload = {
+      poNumber: value,
+      _id: orderReducer.orderItems._id,
+      authorizerId: comapnyId,
+      // isChangedOrderStatus: true,
+      // isInvoiceStatus: true,
+      // isAuthStatus: true,
+      // isOrderDetails: true
+    }
+    this.props.updateOrderDetails(payload);
+  }
   orderStatus = (type, value) => {
     const { profileInfoReducer } = this.props;
     const comapnyId = profileInfoReducer.profileInfo._id;
@@ -644,6 +659,7 @@ class Order extends Component {
               <OrderDetails
                 profileReducer={profileInfoReducer}
                 orderReducer={orderReducer}
+                onUpdate={this.onUpdate}
                 orderStatus={this.orderStatus}
                 activityReducer={activityReducer}
                 modelInfoReducer={modelInfoReducer}

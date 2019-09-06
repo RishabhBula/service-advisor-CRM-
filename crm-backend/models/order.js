@@ -123,6 +123,10 @@ const orderSchema = new Schema({
   updatedAt: {
     type: Date,
     default: null
+  },
+  poNumber: {
+    type: String,
+    default:null
   }
 });
 

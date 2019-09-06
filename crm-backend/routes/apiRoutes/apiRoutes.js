@@ -28,7 +28,9 @@ const {
   webhookRoutes,
   appointmentRoutes,
   dashboardRoutes,
-  reportRoutes
+  reportRoutes,
+  homePageRoutes,
+  siteSettingRoutes,
 } = require("./index");
 /**
  *
@@ -67,6 +69,8 @@ router.use("/webhooks", webhookRoutes);
 router.use("/appointment", appointmentRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/reports", reportRoutes);
+router.use("/home-page",homePageRoutes);
+router.use("/site-setting",siteSettingRoutes);
 
 /**
  *

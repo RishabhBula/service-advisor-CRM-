@@ -29,6 +29,8 @@ import { subscriptionReducer } from "./Subscription";
 import { dashboardReducer } from "./Dashboard";
 import { reportReducer } from "./Reports";
 import { pdfReducer } from "./Pdf";
+import { homePageDetailsReducer } from "./HomePage";
+import { siteSettingDetailsReducer } from "./SiteSetting";
 
 export const mainReducer = handleActions(
   {
@@ -78,6 +80,8 @@ const AppReducer = combineReducers({
   dashboardReducer,
   reportReducer,
   pdfReducer,
+  homePageDetailsReducer,
+  siteSettingDetailsReducer,
   routing: routerReducer
 });
 

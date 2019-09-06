@@ -94,7 +94,7 @@ export class CrmTimeClockModal extends Component {
       timeOut: '00:00',
       duration: "0",
       selectedTechnician: {
-        label: "Type to select technician",
+        label: "Select technician",
         value: ""
       },
       technicianData: "",
@@ -128,7 +128,7 @@ export class CrmTimeClockModal extends Component {
         duration: calDuration,
         technicianData: technicianId,
         selectedTechnician: {
-          label: technicianId ? `${technicianId.firstName} ${technicianId.lastName}` : "Type to select technician",
+          label: technicianId ? `${technicianId.firstName} ${technicianId.lastName}` : "Select technician",
           value: technicianId ? technicianId._id : ""
         },
         isEditTimeClock: true
@@ -196,7 +196,7 @@ export class CrmTimeClockModal extends Component {
     } else {
       this.setState({
         selectedTechnician: {
-          label: "Type to select technician",
+          label: "Select technician",
           value: ""
         },
         activityOptions: []
@@ -528,7 +528,7 @@ export class CrmTimeClockModal extends Component {
                   Notes
                 </Label>
                 <div className={"input-block"}>
-                  <Input value={notes} onChange={this.handleChange} type={"textarea"} cols={"10"} rows={"3"} />
+                  <Input value={notes} onChange={this.handleChange} type={"textarea"} cols={"10"} rows={"3"} maxLength={"1000"} />
                 </div>
               </FormGroup>
             </Col>

@@ -29,6 +29,8 @@ export * from "./Subscription";
 export * from "./Dashboard";
 export * from "./Reports";
 export * from "./Pdf";
+export * from "./HomePage";
+export * from "./SiteSetting";
 
 //
 export const redirectTo = createAction("REDIRET_TO");

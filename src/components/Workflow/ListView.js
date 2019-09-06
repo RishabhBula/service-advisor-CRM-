@@ -130,14 +130,23 @@ class WorkflowListView extends React.Component {
     return orderDetails;
   };
 
-  handleType = (e, workflowStatus, orderId, index) => {
+  handleType = (e, workflowStatus, orderId, index,groupedOptions ) => {
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
       to: e.id,
       orderId,
       destinationIndex: 0,
-      sourceIndex: index
+      sourceIndex: index,
+      toStatusName: e.label,
+      fromStatusName:fromStatus[0].label
     });
+    if (e.label === "Invoices") {
+      this.props.orderStatus1("invoiceStatus", true);
+    }
+    else {
+      this.props.orderStatus1("invoiceStatus", false)
+    }
   };
   /**
    *
@@ -213,7 +222,7 @@ class WorkflowListView extends React.Component {
             options={groupedOptions}
             className="w-100 form-select simple-select"
             onChange={e =>
-              this.handleType(e, order.workflowStatus, order._id, index)
+              this.handleType(e, order.workflowStatus, order._id, index, groupedOptions)
             }
             classNamePrefix={"form-select-theme"}
           />
@@ -280,23 +289,23 @@ class WorkflowListView extends React.Component {
         <Nav pills className={"inventory-nav"}>
           {orderStatus
             ? orderStatus.map((tab, index) => {
-                return (
-                  <NavItem key={index}>
-                    <NavLink
-                      href={tab.url}
-                      active={tab._id === activeTab}
-                      onClick={e => {
-                        e.preventDefault();
-                        this.setState({
-                          activeTab: tab._id
-                        });
-                      }}
-                    >
-                      {tab.name}
-                    </NavLink>
-                  </NavItem>
-                );
-              })
+              return (
+                <NavItem key={index}>
+                  <NavLink
+                    href={tab.url}
+                    active={tab._id === activeTab}
+                    onClick={e => {
+                      e.preventDefault();
+                      this.setState({
+                        activeTab: tab._id
+                      });
+                    }}
+                  >
+                    {tab.name}
+                  </NavLink>
+                </NavItem>
+              );
+            })
             : null}
         </Nav>
         <div className={"table-responsive"}>
@@ -323,12 +332,12 @@ class WorkflowListView extends React.Component {
               ) : orders && orders[activeTab] && orders[activeTab].length ? (
                 orders[activeTab].map(this.renderRow)
               ) : (
-                <tr>
-                  <td className={"text-center"} colSpan={6}>
-                    <NoDataFound />
-                  </td>
-                </tr>
-              )}
+                    <tr>
+                      <td className={"text-center"} colSpan={6}>
+                        <NoDataFound />
+                      </td>
+                    </tr>
+                  )}
             </tbody>
           </Table>
         </div>

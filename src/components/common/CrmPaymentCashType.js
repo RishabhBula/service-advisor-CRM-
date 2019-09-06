@@ -45,7 +45,7 @@ export class CrmPaymentCashType extends Component {
                 <FormGroup>
                   <Label>Notes</Label>
                   <div className={"input-block"}>
-                    <Input value={notes} onChange={handleChange} name={"notes"} type={"textarea"} cols={"3"} rows={"4"} />
+                    <Input value={notes} onChange={handleChange} name={"notes"} type={"textarea"} cols={"3"} rows={"4"} maxLength={"1000"}/>
                   </div>
                 </FormGroup>
               </Col>

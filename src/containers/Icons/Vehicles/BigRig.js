@@ -12,7 +12,7 @@ const BigRig = props => (
       width={props.size||"383.021px"}
       height="203.979px"
       viewBox="0 0 383.021 203.979"
-      enable-background="new 0 0 383.021 203.979"
+      enableBackground="new 0 0 383.021 203.979"
       space="preserve"
     >
       <g>

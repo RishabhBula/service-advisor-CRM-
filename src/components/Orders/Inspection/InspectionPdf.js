@@ -147,26 +147,26 @@ class InspectionTable extends Component {
       <div id={"invoicePDF"} className={"pdf-container"}>
         <div id="pageHeader" style={headerStyle}>
           <div>
-            <div class="invoice">
-              <div class="invoice-name">Inspection : #{orderId}</div>
-              <div class="invoice-date">Created : {orderDate}</div>
+            <div className="invoice">
+              <div className="invoice-name">Inspection : #{orderId}</div>
+              <div className="invoice-date">Created : {orderDate}</div>
             </div>
-            <div class="company-name">
+            <div className="company-name">
               <div>{companyName}</div>
             </div>
-            <div class="clearfix" />
+            <div className="clearfix" />
           </div>
-          <div class="user-details">
-            <div class="width-50">
-              <div class="user-details-left">
+          <div className="user-details">
+            <div className="width-50">
+              <div className="user-details-left">
                 <div className={"text-capitalize"}>{fullName}</div>
-                <div class="user-email">{email}</div>
+                <div className="user-email">{email}</div>
               </div>
             </div>
-            <div class="width-50">
-              <div class="user-details-right">{vehilceInfo}</div>
+            <div className="width-50">
+              <div className="user-details-right">{vehilceInfo}</div>
             </div>
-            <div class="clearfix" />
+            <div className="clearfix" />
           </div>
         </div>
         {invoiceTableInner}

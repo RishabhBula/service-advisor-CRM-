@@ -16,7 +16,7 @@ class CardComponent extends Component {
           </Col>
           <Col sm={"8"}>
             <h3>{text}</h3>
-            <p>{value}</p>
+            <p>Total: {value}</p>
           </Col>
         </Row>
         <hr />
@@ -29,7 +29,7 @@ class CardComponent extends Component {
             }}
           >
             View All{" "}
-            <i class="icon-arrow-right icons" />
+            <i className="icon-arrow-right icons" />
           </a>
         </div>
       </div>

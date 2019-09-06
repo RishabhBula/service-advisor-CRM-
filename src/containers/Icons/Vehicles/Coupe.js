@@ -12,7 +12,7 @@ const Coupe = props => (
       width={props.size||"470.86px"}
       height="144.955px"
       viewBox="0 0 470.86 144.955"
-      enable-background="new 0 0 470.86 144.955"
+      enableBackground="new 0 0 470.86 144.955"
       space="preserve"
     >
       <g>

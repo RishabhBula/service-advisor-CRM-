@@ -29,6 +29,7 @@ import { SubscriptionLogic } from "./Subscription";
 import { DashboardLogics } from "./Dashboard";
 import { ReportLogics } from "./Reports";
 import { PdfLogic } from "./Pdf";
+import { HomePageLogic } from "./HomePage";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -67,5 +68,6 @@ export default [
   ...DashboardLogics,
   ...ReportLogics,
   ...PdfLogic,
+  ...HomePageLogic,
   redirectToLogic
 ];

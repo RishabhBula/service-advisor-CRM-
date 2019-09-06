@@ -33,7 +33,15 @@ const OrderSummary = React.lazy(() =>
 
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
+const HomePage = React.lazy(() => import("../containers/HomePage"));
+
 const Routes = [
+  {
+    exact: true,
+    path: "/home",
+    name: "Home Page",
+    component: HomePage
+  },
   {
     exact: true,
     path: "/login",
@@ -92,13 +100,13 @@ const Routes = [
     exact: false,
     path: "/",
     name: "Home",
+    //component: !localStorage.getItem("token") ? HomePage : DefaultLayout
     component: DefaultLayout
-  },
-
+  }
 ];
 
 class AppRoutes extends Component {
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     const { appState } = this.props;
     const { showLoader } = appState;

@@ -184,7 +184,7 @@ export class CrmFleetModal extends Component {
       companyName: "",
       phoneDetail: [
         {
-          phone: "",
+          phone: "mobile",
           value: ""
         }
       ],
@@ -233,16 +233,10 @@ export class CrmFleetModal extends Component {
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
     const IncorrectNumber = [...this.state.inCorrectNumber]
-    if (parseInt(value.length) < 12) {
-      IncorrectNumber[index] = true
-      this.setState({
-        inCorrectNumber: IncorrectNumber
-      });
-    } else {
-      this.setState({
-        inCorrectNumber: []
-      });
-    }
+    IncorrectNumber[index] = false
+    this.setState({
+      inCorrectNumber: IncorrectNumber
+    })
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
@@ -272,22 +266,26 @@ export class CrmFleetModal extends Component {
               value: ""
             }
           ]),
-          phoneErrors: state.phoneErrors.concat([""])
+          phoneErrors: state.phoneErrors.concat([""]),
+          inCorrectNumber: state.inCorrectNumber.concat([false])
         };
       });
     }
   };
 
   handleRemovePhoneDetails = index => {
-    const { phoneDetail, phoneErrors } = this.state;
+    const { phoneDetail, phoneErrors, inCorrectNumber } = this.state;
     let t = [...phoneDetail];
     let u = [...phoneErrors];
+    let v = [...inCorrectNumber];
     t.splice(index, 1);
     u.splice(index, 1);
+    v.splice(index, 1);
     if (phoneDetail.length) {
       this.setState({
         phoneDetail: t,
-        phoneErrors: u
+        phoneErrors: u,
+        inCorrectNumber: v
       });
     }
   };
@@ -315,18 +313,29 @@ export class CrmFleetModal extends Component {
         );
         await this.setStateAsync({ phoneErrors: t });
       }
-
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         fleetData,
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
+      let IncorrectNumber = [...this.state.inCorrectNumber],checkPhoneLength=true
+      if (phoneDetail && phoneDetail.length) {
+        for (let i = 0; i < phoneDetail.length; i++) {
+          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+          if (phoneTrimed.length <= 9) {
+            IncorrectNumber[i] = true
+            this.setState({
+              inCorrectNumber: IncorrectNumber
+            });
+            checkPhoneLength = false;
+          }
+        }
+      }
       if (
         (!isValid && fleetData.email !== "") ||
         Object.keys(this.state.phoneErrors).length ||
         fleetData.companyName === "" ||
-        this.state.percentageError ||
-        this.state.inCorrectNumber.length
+        this.state.percentageError || !checkPhoneLength
       ) {
         this.setState({
           errors,
@@ -545,7 +554,6 @@ export class CrmFleetModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
-                                        maxLength={13}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -567,7 +575,6 @@ export class CrmFleetModal extends Component {
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
-                                        maxLength={22}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -585,7 +592,9 @@ export class CrmFleetModal extends Component {
                             <>
                               <Col md="6">
                                 <button
-                                  onClick={this.handleRemovePhoneDetails}
+                                  onClick={() =>
+                                    this.handleRemovePhoneDetails(index)
+                                  }
                                   className="btn btn-danger btn-sm btn-round input-close"
                                 >
                                   <i className="fa fa-close" />
@@ -621,7 +630,6 @@ export class CrmFleetModal extends Component {
                                           })}
                                           size="20"
                                           value={item.value}
-                                          maxLength={13}
                                           guide={false}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
@@ -650,7 +658,6 @@ export class CrmFleetModal extends Component {
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
                                           value={item.value}
-                                          maxLength={22}
                                           guide={false}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
@@ -879,7 +886,7 @@ export class CrmFleetModal extends Component {
                       placeholder="Enter a note..."
                       id="name"
                       value={notes}
-                      maxLength="500"
+                      maxLength={"1000"}
                       onChange={this.handleChange}
                       name="notes"
                     />

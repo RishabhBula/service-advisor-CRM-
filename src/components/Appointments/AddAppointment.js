@@ -657,6 +657,7 @@ export default class AddAppointment extends Component {
                           value={note}
                           onChange={this.handleInputChange}
                           placeholder={"Note"}
+                          maxLength={"1000"}
                         />
                         {errors.note ? (
                           <FormFeedback>{errors.note}</FormFeedback>

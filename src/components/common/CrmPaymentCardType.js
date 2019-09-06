@@ -118,6 +118,7 @@ export class CrmPaymentCardType extends Component {
                     onChange={handleChange}
                     name={"notes"}
                     rows={"4"}
+                    maxLength={"1000"}
                     placeholder={"notes"} />
                 </FormGroup>
               </Col>

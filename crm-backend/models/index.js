@@ -28,5 +28,7 @@ module.exports = {
   UserActivityModel: require("./userActivity"),
   VendorModel: require("./vendor"),
   VehicleModel: require("./vehicle"),
-  VendorCommonObjectModel: require("./vendorCommanObject")
+  VendorCommonObjectModel: require("./vendorCommanObject"),
+  HomePageModel: require("./homePage"),
+  SettingsModel: require("./siteSetting")
 };
