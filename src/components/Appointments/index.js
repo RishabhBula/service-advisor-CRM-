@@ -18,6 +18,8 @@ export default class Appointments extends Component {
    */
   onDateClick = ({ date, ...props }) => {
     logger(props);
+    console.log("$$$$$$$$$$$$$$$$$",moment(date).diff(moment(), "days"));
+    
     if (moment(date).diff(moment(), "days") >= 0) {
       this.props.addAppointment(null, date);
     }

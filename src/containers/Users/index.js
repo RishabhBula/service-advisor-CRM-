@@ -38,7 +38,7 @@ class Users extends Component {
       userReducer.userData &&
       this.props.userReducer.userData &&
       this.props.userReducer.userData.isSuccess !==
-        userReducer.userData.isSuccess
+      userReducer.userData.isSuccess
     ) {
       if (this.props.userReducer.userData.isSuccess) {
         const query = qs.parse(this.props.location.search);
@@ -49,7 +49,7 @@ class Users extends Component {
       userReducer.userData &&
       this.props.userReducer.userData &&
       userReducer.userData.isEditSuccess !==
-        this.props.userReducer.userData.isEditSuccess
+      this.props.userReducer.userData.isEditSuccess
     ) {
       if (this.props.userReducer.userData.isEditSuccess) {
         const query = qs.parse(this.props.location.search);

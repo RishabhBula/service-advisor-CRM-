@@ -96,6 +96,7 @@ class TechnicianTimer extends Component {
             value: ""
           }
         });
+        this.props.usersDetails(this.state.userData)
       });
     }
     if (timer) {
@@ -104,7 +105,7 @@ class TechnicianTimer extends Component {
           userData: []
         },
         () => {
-          userNewReducer.users.map(data => {
+          userNewReducer.users.forEach(data => {
             this.state.userData.push({
               ...data,
               selectedOrder: {
@@ -112,6 +113,7 @@ class TechnicianTimer extends Component {
                 value: ""
               }
             });
+            this.props.usersDetails(this.state.userData)
             return true;
           });
         }
@@ -197,7 +199,9 @@ class TechnicianTimer extends Component {
       });
     }
   };
-
+  /*
+  /* 
+  */
   getAllServiceOptions = (users) => {
     const { serviceData } = this.props;
     let optionsData = []
@@ -258,17 +262,53 @@ class TechnicianTimer extends Component {
     })
     return optionsData
   }
+  getTechnicianTimeData = (users) => {
+    const { technicianTodayData, technicianWeekData, technicianMonthData } = this.props
+    let technicianTodayTime, technicianWeekTime, technicianMonthTime
+    technicianTodayData && technicianTodayData.length ?
+      technicianTodayData.map((data) => {
+        if (users._id === data._id) {
+          technicianTodayTime = data.duration
+        }
+        return true
+      }) :
+      technicianTodayTime = "0.00"
+
+    technicianWeekData && technicianWeekData.length ?
+      technicianWeekData.map((data) => {
+        if (users._id === data._id) {
+          technicianWeekTime = data.duration
+        }
+        return true
+      }) :
+      technicianWeekTime = "0.00"
+
+    technicianMonthData && technicianMonthData.length ?
+      technicianMonthData.map((data) => {
+        if (users._id === data._id) {
+          technicianMonthTime = data.duration
+        }
+        return true
+      }) :
+      technicianMonthTime = "0.00"
+    const timeData = {
+      technicianTodayTime,
+      technicianWeekTime,
+      technicianMonthTime
+    }
+    return (timeData)
+  }
 
   render() {
-    const { userReducer, technicianTodayData } = this.props;
+    const { userReducer } = this.props;
     const { duration, userData } = this.state;
     const timer = userReducer.isStartTimer;
-    let technicianTodayTime
     return (
       <div>
         <Row>
           {userData && userData.length ? (
             userData.map((users, index) => {
+              const timeData = this.getTechnicianTimeData(users)
               const isWorking =
                 users &&
                 users.currentlyWorking &&
@@ -324,34 +364,24 @@ class TechnicianTimer extends Component {
                             </span>
                             )}
                         </div>
-                        {
-                          technicianTodayData && technicianTodayData.length ?
-                            technicianTodayData.map((data) => {
-                              if (users._id === data._id) {
-                                technicianTodayTime = data.duration
-                              }
-                              return true
-                            }) :
-                            technicianTodayTime = "0.00"
-                        }
                         <Card className={"pb-2"}>
                           <Row className={"m-0"}>
                             <div className={"task-area"}>
                               <span className={"text-day"}>Today</span>
                               <div>
-                                <span>{calculateDurationFromSeconds(!isNaN(technicianTodayTime)?technicianTodayTime:"0.00")}</span>
+                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianTodayTime) ? timeData.technicianTodayTime : "0.00")}</span>
                               </div>
                             </div>
                             <div className={"task-area"}>
                               <span className={"text-day"}>This Week</span>
                               <div>
-                                <span>00:00</span>
+                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianWeekTime) ? timeData.technicianWeekTime : "0.00")}</span>
                               </div>
                             </div>
                             <div className={"task-area"}>
                               <span className={"text-day"}>This Month</span>
                               <div>
-                                <span>00:00</span>
+                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianMonthTime) ? timeData.technicianMonthTime : "0.00")}</span>
                               </div>
                             </div>
                           </Row>
@@ -419,11 +449,13 @@ class TechnicianTimer extends Component {
               );
             })
           ) : (
-              <NoDataFound
-                showAddButton
-                message={"Currently there are no technician added"}
-                onAddClick={this.props.onAddClick}
-              />
+              <div className={"text-center"}>
+                <NoDataFound
+                  showAddButton
+                  message={"Currently there are no technician added"}
+                  onAddClick={this.props.onAddClick}
+                />
+              </div>
             )}
         </Row>
       </div>

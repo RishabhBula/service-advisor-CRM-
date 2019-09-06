@@ -97,7 +97,10 @@ export const serviceReducers = handleActions(
       [serviceActions.SUBMIT_SERVICE_DATA_SUCCESS]: (state, action) => ({
          ...state,
          services: action.payload.services,
-         customerUserComment: action.payload.customerCommentData,
+         customerUserComment: {
+            customerComment: action.payload.customerComment,
+            userRecommendations: action.payload.userRecommendations
+         },
          isServiceList: false
       }),
    },

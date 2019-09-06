@@ -468,6 +468,7 @@ const getOrderDetails = async (req, res) => {
             element.messageId.isSender = false;
           }
           if (
+            element.messageId &&
             element.messageId.isInternalNotes &&
             !element.messageId.isDeleted
           ) {
