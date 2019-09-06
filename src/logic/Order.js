@@ -155,10 +155,11 @@ const updateOrderWorkflowStatusLogic = createLogic({
     const { orderReducer } = getState();
     const { orderData, orderStatus } = orderReducer;
     let { orders } = orderData;
-    const { orderId, from, to, destinationIndex, sourceIndex,toStatusName, fromStatusName } = action.payload;
+    const { orderId, from, to, destinationIndex, sourceIndex, toStatusName, fromStatusName } = action.payload;
     if (!orders[to]) {
       orders[to] = [];
     }
+    console.log("action.payload", action.payload);
     orders[to].push(orders[from][sourceIndex]);
     orders[from].splice(sourceIndex, 1);
     dispatch(getOrderListSuccess({ data: orders, orderStatus }));
@@ -379,7 +380,7 @@ const updateOrderDetailsLogic = createLogic({
           const data = {
             name: `Order status updated to ${
               action.payload.isInvoice ? "Invoice" : "Estimate"
-            }`,
+              }`,
             type: "INVOICE_ORDER",
             orderId: action.payload._id
           };
@@ -463,8 +464,8 @@ const getOrderDetails = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         _id: action.payload && action.payload._id ? action.payload._id : null,
         customerId:
           action.payload && action.payload.customerId

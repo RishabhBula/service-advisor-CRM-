@@ -289,16 +289,10 @@ export class CrmFleetEditModal extends Component {
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
     const IncorrectNumber = [...this.state.inCorrectNumber]
-    if (parseInt(value.length) < 12) {
-      IncorrectNumber[index] = true
-      this.setState({
-        inCorrectNumber: IncorrectNumber
-      })
-    } else {
-      this.setState({
-        inCorrectNumber: []
-      })
-    }
+    IncorrectNumber[index] = false
+    this.setState({
+      inCorrectNumber: IncorrectNumber
+    })
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
@@ -318,22 +312,33 @@ export class CrmFleetEditModal extends Component {
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
     if (phoneDetail.length < 3) {
-      phoneDetail.push({
-        phone: "mobile",
-        value: ""
-      });
-      this.setState({
-        phoneDetail: phoneDetail
+      this.setState((state, props) => {
+        return {
+          phoneDetail: state.phoneDetail.concat([
+            {
+              phone: "mobile",
+              value: ""
+            }
+          ]),
+          phoneErrors: state.phoneErrors.concat([""]),
+          inCorrectNumber: state.inCorrectNumber.concat([false])
+        };
       });
     }
   };
-  handleRemovePhoneDetails = event => {
-    const { phoneDetail } = this.state;
+  handleRemovePhoneDetails = index => {
+    const { phoneDetail, phoneErrors, inCorrectNumber } = this.state;
+    let t = [...phoneDetail];
+    let u = [...phoneErrors];
+    let v = [...inCorrectNumber];
+    t.splice(index, 1);
+    u.splice(index, 1);
+    v.splice(index, 1);
     if (phoneDetail.length) {
-      let phoneArray = phoneDetail.findIndex(item => item.key === event.key);
-      phoneDetail.splice(phoneArray, 1);
       this.setState({
-        phoneDetail: phoneDetail
+        phoneDetail: t,
+        phoneErrors: u,
+        inCorrectNumber: v
       });
     }
   };
@@ -375,16 +380,28 @@ export class CrmFleetEditModal extends Component {
           email: fleetData.email
         };
       }
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         validationData,
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
+      let IncorrectNumber = [...this.state.inCorrectNumber], checkPhoneLength = true
+      if (phoneDetail && phoneDetail.length) {
+        for (let i = 0; i < phoneDetail.length; i++) {
+          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+          if (phoneTrimed.length <= 9) {
+            IncorrectNumber[i] = true
+            this.setState({
+              inCorrectNumber: IncorrectNumber
+            });
+            checkPhoneLength = false;
+          }
+        }
+      }
       if (
         (!isValid && fleetData.email !== "") ||
         Object.keys(this.state.phoneErrors).length ||
-        fleetData.companyName === "" || this.state.percentageError ||
-        this.state.inCorrectNumber.length
+        fleetData.companyName === "" || this.state.percentageError || !checkPhoneLength
       ) {
         this.setState({
           errors,
@@ -458,7 +475,7 @@ export class CrmFleetEditModal extends Component {
       percentageError
     } = this.state;
     const phoneOptions = PhoneOptions.map((item, index) => {
-      return <option value={item.key}>{item.text}</option>;
+      return (<React.Fragment key={index}><option value={item.key} key={index}>{item.text}</option></React.Fragment>);
     });
 
     let fleetDefaultPermissions = this.state.fleetDefaultPermissions;
@@ -557,7 +574,7 @@ export class CrmFleetEditModal extends Component {
                 {phoneDetail && phoneDetail.length
                   ? phoneDetail.map((item, index) => {
                     return (
-                      <>
+                      <React.Fragment key={index}>
                         {index < 1 ? (
                           <>
                             <Col md="6">
@@ -594,7 +611,6 @@ export class CrmFleetEditModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
-                                        maxLength={13}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -616,7 +632,6 @@ export class CrmFleetEditModal extends Component {
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
-                                        maxLength={22}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -637,7 +652,9 @@ export class CrmFleetEditModal extends Component {
                             <>
                               <Col md="6">
                                 <button
-                                  onClick={this.handleRemovePhoneDetails}
+                                  onClick={() =>
+                                    this.handleRemovePhoneDetails(index)
+                                  }
                                   className="btn btn-danger btn-sm btn-round input-close"
                                 >
                                   <i className="fa fa-close" />
@@ -673,7 +690,6 @@ export class CrmFleetEditModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
-                                        maxLength={13}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -695,7 +711,6 @@ export class CrmFleetEditModal extends Component {
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
                                           value={item.value}
-                                          maxLength={22}
                                           guide={false}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)
@@ -713,7 +728,7 @@ export class CrmFleetEditModal extends Component {
                               </Col>
                             </>
                           )}
-                      </>
+                      </React.Fragment>
                     );
                   })
                   : null}
@@ -759,7 +774,7 @@ export class CrmFleetEditModal extends Component {
                       <>
                         <Col
                           md="6"
-                          for={`fleet-permision-${index}`}
+                          htmlFor={`fleet-permision-${index}`}
                           key={index}
                           className={
                             permission.key === "shouldPricingMatrixOverride"
@@ -775,7 +790,7 @@ export class CrmFleetEditModal extends Component {
                                 fleetDefaultPermissions[permission.key].status
                               }
                               id={`fleet-permision-${index}`}
-                              onClick={this.handleClick.bind(
+                              onChange={this.handleClick.bind(
                                 this,
                                 permission.key
                               )}
@@ -803,7 +818,7 @@ export class CrmFleetEditModal extends Component {
                                         onChange={this.handlePercentageChange}
                                         className="form-control"
                                         invalid={fleetDefaultPermissions[permission.key]
-                                          .percentageDiscount && percentageError}
+                                          .percentageDiscount && percentageError ? true : false}
                                         value={
                                           fleetDefaultPermissions[permission.key]
                                             .percentageDiscount
@@ -918,7 +933,7 @@ export class CrmFleetEditModal extends Component {
                       placeholder="Enter a note..."
                       id="name"
                       value={notes}
-                      maxLength="500"
+                      maxLength={"1000"}
                       onChange={this.handleChange}
                       name="notes"
                     />

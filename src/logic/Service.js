@@ -249,7 +249,8 @@ const getAllServiceLogic = createLogic({
             dispatch(getAllServiceListSuccess(orderArray))
             done();
          } else {
-            dispatch(getServiceDataSuccess(result.data.data))
+            dispatch(getServiceDataSuccess(result.data.data));
+            done();
          }
       }
    }

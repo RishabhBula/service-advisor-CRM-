@@ -12,7 +12,7 @@ const Sedan = props => (
       width={props.size||"419.07px"} 
       height="142.039px"
       viewBox="0 0 419.07 142.039"
-      enable-background="new 0 0 419.07 142.039"
+      enableBackground="new 0 0 419.07 142.039"
       space="preserve"
     >
       <g>

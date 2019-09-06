@@ -168,6 +168,12 @@ class WorkflowGridView extends React.Component {
       toStatusName: toStatus[0].name,
       fromStatusName: fromStatus[0].name
     });
+    if (toStatus[0].name === "Invoices") {
+      this.props.orderStatus1("invoiceStatus", true);
+    }
+    else {
+      this.props.orderStatus1("invoiceStatus", false)
+    }
   };
   /**
    *
@@ -355,6 +361,13 @@ class WorkflowGridView extends React.Component {
                         </UncontrolledTooltip>
 
                         {this.getAppointmentDetails(task._id, task)}
+                        {task.serviceId && task.serviceId.length ?
+                          <span className={""}>
+                            {task.isFullyPaid ? <span className="pl-3 text-success">Fully Paid</span> :
+                              null
+                            }
+                          </span>
+                          : null}
                       </div>
                     </div>
                   )}
@@ -398,7 +411,7 @@ class WorkflowGridView extends React.Component {
               >
                 {orderStatus.map((status, index) => (
                   <React.Fragment key={status._id}>
-                    <Draggable draggableId={status._id} index={index}>
+                    <Draggable draggableId={status._id} index={index} >
                       {provided => (
                         <>
                           <div

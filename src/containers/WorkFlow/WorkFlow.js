@@ -28,7 +28,8 @@ import {
    addOrderRequest,
    deleteOrderRequest,
    getAppointments,
-   addAppointmentRequest
+   addAppointmentRequest,
+   updateOrderDetailsRequest
 } from "../../actions";
 import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -150,10 +151,20 @@ class WorkFlow extends Component {
     *
     */
    deleteOrderStatus = data => {
-      this.setState({
-         showMoveOptions: true,
-         selectedOrderStatusToDelete: data
-      });
+      const { orderReducer } = this.props;
+      let abc = (data.orderStatusId);
+      let check = orderReducer && orderReducer.orderData && orderReducer.orderData.orders ? orderReducer.orderData.orders : "";
+      let result = check[abc] ? check[abc] : "";
+      if (result && result.length > 0) {
+         this.setState({
+            showMoveOptions: true,
+            selectedOrderStatusToDelete: data
+         });
+      } else {
+         this.props.deleteOrderStatus({
+            statusId: abc
+         });
+      }
       logger(data);
    };
    toggleAddNewOptions = () => {
@@ -332,6 +343,36 @@ class WorkFlow extends Component {
       );
    };
    /**
+    * 
+    */
+   orderStatus = (type, value) => {
+      const { profileInfoReducer } = this.props;
+      const comapnyId = profileInfoReducer.profileInfo._id;
+      const { orderReducer } = this.props;
+      let payload = {};
+      if (type === "authorizStatus") {
+         payload = {
+            status: value,
+            _id: orderReducer.orderItems._id,
+            authorizerId: comapnyId,
+            isChangedOrderStatus: true,
+            isAuthStatus: true,
+            isOrderDetails: true
+         };
+      } else {
+         payload = {
+            isInvoice: value,
+            _id: orderReducer.orderItems._id,
+            authorizerId: comapnyId,
+            isChangedOrderStatus: true,
+            isInvoiceStatus: true,
+            isAuthStatus: true,
+            isOrderDetails: true
+         };
+      }
+      this.props.updateOrderDetails(payload);
+   };
+   /**
     *
     */
    render() {
@@ -406,13 +447,13 @@ class WorkFlow extends Component {
                            </UncontrolledTooltip>
                         </div>
                         <div>
-                           <div className="border workFlow-filter"><i className="fas fa-filter" /></div>                           
+                           <div className="border workFlow-filter"><i className="fas fa-filter" /></div>
                         </div>
                         <div>
                            <Input
                               type={"select"}
                               name="selectedFilter"
-                              // className={"form-control"}
+                              className={"form-control"}
                               value={selectedFilter}
                               onChange={this.handleInputChange}
                            >
@@ -432,6 +473,7 @@ class WorkFlow extends Component {
                            <WorkflowListView
                               orderData={orderData}
                               orderStatus={orderStatus}
+                              orderStatus1={this.orderStatus}
                               updateOrderStatus={updateOrderStatus}
                               updateOrderOfOrderStatus={updateOrderOfOrderStatus}
                               deleteOrderStatus={this.deleteOrderStatus}
@@ -447,6 +489,7 @@ class WorkFlow extends Component {
                                  <WorkflowGridView
                                     orderData={orderData}
                                     orderStatus={orderStatus}
+                                    orderStatus1={this.orderStatus}
                                     updateOrderStatus={updateOrderStatus}
                                     deleteOrderStatus={this.deleteOrderStatus}
                                     updateOrderOfOrderStatus={updateOrderOfOrderStatus}
@@ -483,7 +526,10 @@ const mapDispatchToProps = dispatch => ({
    updateOrderOfOrderStatus: data => dispatch(updateOrderOfOrderStatus(data)),
    deleteOrder: data => dispatch(deleteOrderRequest(data)),
    addAppointment: data => dispatch(addAppointmentRequest(data)),
-   getAppointments: data => dispatch(getAppointments(data))
+   getAppointments: data => dispatch(getAppointments(data)),
+   updateOrderDetails: data => {
+      dispatch(updateOrderDetailsRequest(data));
+   },
 });
 export default connect(
    mapStateToProps,

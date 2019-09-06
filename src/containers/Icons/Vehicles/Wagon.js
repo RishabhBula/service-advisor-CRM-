@@ -12,7 +12,7 @@ const Wagon = props => (
       width={props.size||"438.093px"}
       height="144.97px"
       viewBox="0 0 438.093 144.97"
-      enable-background="new 0 0 438.093 144.97"
+      enableBackground="new 0 0 438.093 144.97"
       space="preserve"
     >
       <g>

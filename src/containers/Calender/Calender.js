@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 import { Card, CardBody, Button, UncontrolledTooltip } from "reactstrap";
-
+import { withRouter } from "react-router-dom";
 import Appointments from "../../components/Appointments";
 import AddAppointment from "../../components/Appointments/AddAppointment";
 import { logger } from "../../helpers";
@@ -21,18 +21,25 @@ import {
 import Loader from "../Loader/Loader";
 import AppointmentDetails from "../../components/Appointments/AppointmentDetails";
 import { AppRoutes } from "./../../config/AppRoutes";
+import qs from "query-string";
+
 class Calender extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedDate: null,
-      editData: {}
+      editData: {},
+      filter:""
     };
   }
   /**
    *
    */
   componentDidMount() {
+    const {location}= this.props;
+    const {search}=location;
+    let filter = qs.parse(search)
+    this.setState({filter});
     this.props.getAppointments({ technicianId: null, vehicleId: null });
   }
   /**
@@ -148,7 +155,7 @@ class Calender extends Component {
       showAppointmentDetailModal
     } = modelDetails;
     logger("Show Add Modal", showAddAppointmentModal);
-    const { selectedDate, editData } = this.state;
+    const { selectedDate, editData, filter } = this.state;
     return (
       <div className="animated fadeIn">
         <Card className="white-card position-relative">
@@ -173,6 +180,7 @@ class Calender extends Component {
                   addAppointment={this.toggleAddAppointModal}
                   data={data}
                   onEventClick={this.onEventClick}
+                  filter={filter}
                 />
               )}
           </CardBody>
@@ -237,4 +245,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Calender);
+)(withRouter(Calender));

@@ -141,6 +141,12 @@ class WorkflowListView extends React.Component {
       toStatusName: e.label,
       fromStatusName:fromStatus[0].label
     });
+    if (e.label === "Invoices") {
+      this.props.orderStatus1("invoiceStatus", true);
+    }
+    else {
+      this.props.orderStatus1("invoiceStatus", false)
+    }
   };
   /**
    *

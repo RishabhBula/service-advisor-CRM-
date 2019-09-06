@@ -340,7 +340,7 @@ export class VehicleInfo extends Component {
                 disabled
                 placeholder="Enter a note..."
                 id="name"
-                maxLength={"300"}
+                maxLength={"1000"}
                 value={notes}
               />
             </FormGroup>

@@ -2848,3 +2848,12 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   text-align: center;
   padding-top: 7px;
 }
+/*PO number edit*/
+.update-btn{
+  background-color: #8358f0 !important;
+  color: #fff !important;
+}
+.cancel-btn{
+  background-color: #f6b42a !important;
+  color: #fff !important;
+}

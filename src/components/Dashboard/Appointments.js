@@ -7,6 +7,7 @@ import { notExist } from "../../config/Constants";
 import { AppRoutes } from "../../config/AppRoutes";
 import moment from "moment";
 import NoDataFound from "../common/NoFound";
+import qs from "query-string";
 class DashboardAppointments extends Component {
   constructor(props) {
     super(props);
@@ -239,10 +240,10 @@ class DashboardAppointments extends Component {
               color={""}
               size={"sm"}
               onClick={() => {
-                redirectTo(`${AppRoutes.CALENDER.url}`);
+                redirectTo(`${AppRoutes.CALENDER.url}?${qs.stringify({ search: selectedFilter })}`);
               }}
             >
-              View All <i class="icon-arrow-right icons" />
+              View All <i className="icon-arrow-right icons" />
             </Button>
             <div className={"clearfix"} />
           </Col>

@@ -12,7 +12,7 @@ const Bicycle = props => (
       width= {props.size||"280.307px"}
       height="171.306px"
       viewBox="0 0 280.307 171.306"
-      enable-background="new 0 0 280.307 171.306"
+      enableBackground="new 0 0 280.307 171.306"
       space="preserve"
     >
       <path

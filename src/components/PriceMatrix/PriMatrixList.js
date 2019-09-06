@@ -178,7 +178,7 @@ class PriMatrixList extends Component {
                 </div>
               </th>
               <th width={"200"}>
-                <i class="fa fa-clock-o" /> Created At
+                <i className="fa fa-clock-o" /> Created At
               </th>
               {/*<th width={"200"}>Markup</th> */}
               {/* <th width={"200"}>Creted At</th> */}

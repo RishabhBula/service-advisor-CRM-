@@ -349,7 +349,7 @@ class FleetList extends Component {
                         checked={
                           fleetData.data && fleetData.data.length
                             ? selectedFleets.length ===
-                              fleetData.data.length
+                            fleetData.data.length
                             : null
                         }
                         onChange={this.handleCheckAllCheckBox}
@@ -357,10 +357,10 @@ class FleetList extends Component {
                       <label className="" htmlFor="checkAll" />
                     </span>
                   ) : (
-                    <span className="checkboxli checkbox-custom checkbox-default">
-                      <label />
-                    </span>
-                  )}
+                      <span className="checkboxli checkbox-custom checkbox-default">
+                        <label />
+                      </span>
+                    )}
 
                   {fleetData && fleetData.data && fleetData.data.length ? (
                     <Input
@@ -375,19 +375,19 @@ class FleetList extends Component {
                       <option value={"delete"}>Delete</option>
                     </Input>
                   ) : (
-                    <Input
-                      className="commonstatus"
-                      type="select"
-                      id="exampleSelect"
-                      disabled
-                      onChange={this.handleActionChange}
-                    >
-                      <option value={""}>Select</option>
-                      <option value={"active"}>Active</option>
-                      <option value={"inactive"}>Inactive</option>
-                      <option value={"delete"}>Delete</option>
-                    </Input>
-                  )}
+                      <Input
+                        className="commonstatus"
+                        type="select"
+                        id="exampleSelect"
+                        disabled
+                        onChange={this.handleActionChange}
+                      >
+                        <option value={""}>Select</option>
+                        <option value={"active"}>Active</option>
+                        <option value={"inactive"}>Inactive</option>
+                        <option value={"delete"}>Delete</option>
+                      </Input>
+                    )}
                 </div>
               </th>
               <th width={"250"}>
@@ -420,44 +420,46 @@ class FleetList extends Component {
               fleetData && fleetData.data && fleetData.data.length ? (
                 fleetData.data.map((data, index) => {
                   return (
-                    <tr key={index}>
-                      <td>
-                        <div className="checkbox-custom checkbox-default coloum-checkbox">
-                          <Input
-                            type="checkbox"
-                            value={data._id}
-                            checked={selectedFleets.indexOf(data._id) > -1}
-                            name="checkbox"
-                            onChange={this.handleCheckboxChange}
-                          />
-                          <label htmlFor={data._id}>
-                            {(page - 1) * AppConfig.ITEMS_PER_PAGE +
-                              index +
-                              1}
-                            .
+                    <React.Fragment key={index}>
+                      <tr key={index}>
+                        <td>
+                          <div className="checkbox-custom checkbox-default coloum-checkbox">
+                            <Input
+                              type="checkbox"
+                              value={data._id}
+                              checked={selectedFleets.indexOf(data._id) > -1}
+                              name="checkbox"
+                              onChange={this.handleCheckboxChange}
+                            />
+                            <label htmlFor={data._id}>
+                              {(page - 1) * AppConfig.ITEMS_PER_PAGE +
+                                index +
+                                1}
+                              .
                           </label>
-                        </div>
-                      </td>
-                      <td>
-                        <div className={"text-capitalize font-weight-bold"}>
-                          {data.companyName || notExist}
-                        </div>
-                        <div>
-                          {data.email ? (
-                            <a
-                              href={`mailto:${data.email}`}
-                              className={"text-body"}
-                            >
-                              {data.email}
-                            </a>
-                          ) : null}
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          {data.phoneDetail
-                            ? data.phoneDetail.map((data, index) => {
+                          </div>
+                        </td>
+                        <td>
+                          <div className={"text-capitalize font-weight-bold"}>
+                            {data.companyName || notExist}
+                          </div>
+                          <div>
+                            {data.email ? (
+                              <a
+                                href={`mailto:${data.email}`}
+                                className={"text-body"}
+                              >
+                                {data.email}
+                              </a>
+                            ) : null}
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            {data.phoneDetail
+                              ? data.phoneDetail.map((data, index) => {
                                 return (
+                                  <React.Fragment key={index}>
                                   <div className="text-capitalize">
                                     {data.phone ? data.phone : "mobile"}
                                     {"  "}
@@ -472,147 +474,149 @@ class FleetList extends Component {
                                       </a>
                                     ) : null}
                                   </div>
+                                  </React.Fragment>
                                 );
                               })
-                            : "-"}
-                        </div>
-                      </td>
-                      <td className={"pl-4"}>
-                        <span className={"qty-value"}>
-                          {data.fleetDefaultPermissions &&
-                          !data.fleetDefaultPermissions
-                            .isCorporateFleetTaxExempt.status ? (
-                            <i className={"fa fa-times text-danger"} />
-                          ) : (
-                            <i className="fa fa-check text-success" />
-                          )}
-                        </span>
-                      </td>
-                      <td className={"pl-4 qty-value"}>
-                        <span className={"qty-value"}>
-                          {data.fleetDefaultPermissions &&
-                          data.fleetDefaultPermissions.shouldReceiveDiscount
-                            .status
-                            ? `${
-                                data.fleetDefaultPermissions
-                                  .shouldReceiveDiscount.percentageDiscount
+                              : "-"}
+                          </div>
+                        </td>
+                        <td className={"pl-4"}>
+                          <span className={"qty-value"}>
+                            {data.fleetDefaultPermissions &&
+                              !data.fleetDefaultPermissions
+                                .isCorporateFleetTaxExempt.status ? (
+                                <i className={"fa fa-times text-danger"} />
+                              ) : (
+                                <i className="fa fa-check text-success" />
+                              )}
+                          </span>
+                        </td>
+                        <td className={"pl-4 qty-value"}>
+                          <span className={"qty-value"}>
+                            {data.fleetDefaultPermissions &&
+                              data.fleetDefaultPermissions.shouldReceiveDiscount
+                                .status
+                              ? `${
+                              data.fleetDefaultPermissions
+                                .shouldReceiveDiscount.percentageDiscount
                               }%`
-                            : "0%"}
-                        </span>
-                      </td>
-                      {/* <td >
+                              : "0%"}
+                          </span>
+                        </td>
+                        {/* <td >
                         <button className="btn btn-sm btn-primary btn-round"><i className="fas fa-plus-square" /></button>
                       </td> */}
-                      <td>
-                        {data.status ? (
-                          <Badge
-                            className={"badge-button"}
-                            color="success"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedFleets: [data._id]
-                                },
-                                () => {
-                                  this.deactivateUsers();
-                                }
-                              );
-                            }}
-                          >
-                            Active
+                        <td>
+                          {data.status ? (
+                            <Badge
+                              className={"badge-button"}
+                              color="success"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedFleets: [data._id]
+                                  },
+                                  () => {
+                                    this.deactivateUsers();
+                                  }
+                                );
+                              }}
+                            >
+                              Active
                           </Badge>
-                        ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedFleets: [data._id]
-                                },
-                                () => {
-                                  this.activateUsers();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
+                          ) : (
+                              <Badge
+                                className={"badge-button"}
+                                color="danger"
+                                onClick={() => {
+                                  this.setState(
+                                    {
+                                      selectedFleets: [data._id]
+                                    },
+                                    () => {
+                                      this.activateUsers();
+                                    }
+                                  );
+                                }}
+                              >
+                                Inactive
                           </Badge>
-                        )}
-                      </td>
-                      <td>
-                        <div>
-                          {moment(data.createdAt).format("MMM Do YYYY")}
-                        </div>
-                        <div>{moment(data.createdAt).format("h:mm a")}</div>
-                      </td>
-                      <td className={"text-center"}>
-                        <span className="mr-2">
-                          <Button
-                            size={"sm"}
-                            onClick={() => this.editFleet(data)}
-                            className={"btn-theme-transparent"}
-                            id={"Tooltip-3"}
-                          >
-                            <i className={"icons cui-pencil"} />
-                          </Button>
-                          <UncontrolledTooltip target="Tooltip-3">
-                            Edit
+                            )}
+                        </td>
+                        <td>
+                          <div>
+                            {moment(data.createdAt).format("MMM Do YYYY")}
+                          </div>
+                          <div>{moment(data.createdAt).format("h:mm a")}</div>
+                        </td>
+                        <td className={"text-center"}>
+                          <span className="mr-2">
+                            <Button
+                              size={"sm"}
+                              onClick={() => this.editFleet(data)}
+                              className={"btn-theme-transparent"}
+                              id={"Tooltip-3"}
+                            >
+                              <i className={"icons cui-pencil"} />
+                            </Button>
+                            <UncontrolledTooltip target="Tooltip-3">
+                              Edit
                           </UncontrolledTooltip>
-                        </span>
-                        <span className="mr-2">
-                          <Button
-                            size={"sm"}
-                            onClick={() =>
-                              this.setState(
-                                {
-                                  selectedFleets: [data._id]
-                                },
-                                () => {
-                                  this.onDelete();
-                                }
-                              )
-                            }
-                            className={"btn-theme-transparent"}
-                            id={"Tooltip-4"}
-                          >
-                            <i className={"icons cui-trash"} />
-                          </Button>
-                          <UncontrolledTooltip target="Tooltip-4">
-                            Delete
+                          </span>
+                          <span className="mr-2">
+                            <Button
+                              size={"sm"}
+                              onClick={() =>
+                                this.setState(
+                                  {
+                                    selectedFleets: [data._id]
+                                  },
+                                  () => {
+                                    this.onDelete();
+                                  }
+                                )
+                              }
+                              className={"btn-theme-transparent"}
+                              id={"Tooltip-4"}
+                            >
+                              <i className={"icons cui-trash"} />
+                            </Button>
+                            <UncontrolledTooltip target="Tooltip-4">
+                              Delete
                           </UncontrolledTooltip>
-                        </span>
-                      </td>
-                    </tr>
+                          </span>
+                        </td>
+                      </tr>
+                    </React.Fragment>
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={10}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Fleet details found related to your search"
+                          }
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={"Currently there are no Fleets added"}
+                            onAddClick={this.props.onAddClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    {filterApplied ? (
-                      <NoDataFound
-                        message={
-                          "No Fleet details found related to your search"
-                        }
-                        noResult
-                      />
-                    ) : (
-                      <NoDataFound
-                        showAddButton
-                        message={"Currently there are no Fleets added"}
-                        onAddClick={this.props.onAddClick}
-                      />
-                    )}
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={10}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {fleetData.totalfleet && !isLoading ? (

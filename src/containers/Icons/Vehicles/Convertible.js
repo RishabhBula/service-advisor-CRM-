@@ -12,7 +12,7 @@ const Convertible = props => (
       width={props.size||"470.754px"}
       height="143.573px"
       viewBox="0 0 470.754 143.573"
-      enable-background="new 0 0 470.754 143.573"
+      enableBackground="new 0 0 470.754 143.573"
       space="preserve"
     >
       <g>

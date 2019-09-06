@@ -114,7 +114,8 @@ class Fleet extends Component {
   };
   handleEditFleet = (data) => {
     try {
-      this.props.updateFleet(data);
+      const query = qs.parse(this.props.location.search);
+      this.props.updateFleet({ ...data, ...query });
       const { modelDetails } = this.props.modelInfoReducer;
       let modaldata = {
         fleetEditModel: !modelDetails.fleetEditModel,
@@ -126,7 +127,8 @@ class Fleet extends Component {
   };
   handleAddFleet = data => {
     try {
-      this.props.addFleet(data);
+      const query = qs.parse(this.props.location.search);
+      this.props.addFleet({ ...data, ...query });
       this.setState({
         openCreate: !this.state.openCreate,
       });
@@ -147,7 +149,7 @@ class Fleet extends Component {
     };
     this.props.deleteFleet(data);
   };
-  onAddClick = () =>{
+  onAddClick = () => {
     this.setState({
       openCreate: !this.state.openCreate,
     });
@@ -171,19 +173,19 @@ class Fleet extends Component {
       <>
         <Card className={"white-card"}>
           <CardBody className={"custom-card-body position-relative"}>
-              <div className={"text-right invt-add-btn-block"}>
-                <Button
-                  color='primary'
-                  id='add-user'
-                  onClick={this.toggleCreateModal}
-                >
-                  <i className={'fa fa-plus'} />
-                  &nbsp; Add New Fleet
+            <div className={"text-right invt-add-btn-block"}>
+              <Button
+                color='primary'
+                id='add-user'
+                onClick={this.toggleCreateModal}
+              >
+                <i className={'fa fa-plus'} />
+                &nbsp; Add New Fleet
                 </Button>
-                <UncontrolledTooltip target={'add-user'}>
-                  Add New Fleet
+              <UncontrolledTooltip target={'add-user'}>
+                Add New Fleet
                 </UncontrolledTooltip>
-            </div>            
+            </div>
             <FleetList
               fleetListData={fleetReducer}
               handleEditFleet={this.handleEditFleet}

@@ -29,7 +29,7 @@ class CardComponent extends Component {
             }}
           >
             View All{" "}
-            <i class="icon-arrow-right icons" />
+            <i className="icon-arrow-right icons" />
           </a>
         </div>
       </div>
