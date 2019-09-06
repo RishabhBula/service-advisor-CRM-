@@ -317,7 +317,7 @@ class VehiclesList extends Component {
                 </div>
               </Col>
               {totalVehicles ?
-                <Col lg={"2"} md={"2"} className="mb-0">
+                <Col lg={"4"} md={"4"} className="mb-0 text-right">
                   <div className="font-weight-bold pt-2">
                     <span className="">Total Vehicles :</span>&nbsp;
                   <span>{totalVehicles ? totalVehicles : 0}</span>

@@ -347,7 +347,7 @@ class CustomerList extends Component {
                 </div>
               </Col>
               {totalCustomers ?
-                <Col lg={"2"} md={"2"} className="mb-0">
+                <Col lg={"2"} md={"2"} className="mb-0 text-right">
                   <div className="font-weight-bold pt-2">
                     <span className="">Total Customers :</span>&nbsp;
                   <span>{totalCustomers ? totalCustomers : 0}</span>

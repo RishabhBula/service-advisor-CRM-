@@ -39,6 +39,7 @@ export const orderReducer = handleActions(
       ...state,
       orderData: {
         isLoading: false,
+        totalOrders:payload.totalOrders,
         orders: payload.data
       },
       orderStatus: payload.orderStatus

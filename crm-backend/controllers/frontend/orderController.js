@@ -177,6 +177,9 @@ const listOrders = async (req, res) => {
     const result = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
+    const getAllOrdersCount = await Orders.countDocuments({
+      ...condition
+    });
     let orderStatus = await OrderStatus.find(orderStatusCondition, {
       name: 1,
       isInvoice: 1
@@ -204,7 +207,8 @@ const listOrders = async (req, res) => {
     return res.status(200).json({
       message: "Data fetched successfully",
       data: response,
-      orderStatus
+      orderStatus,
+      totalOrders:getAllOrdersCount?getAllOrdersCount:0
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
