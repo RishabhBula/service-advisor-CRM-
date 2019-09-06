@@ -1,5 +1,4 @@
 import Validator from "js-object-validation";
-
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -78,13 +77,15 @@ class LoginPage extends Component {
         <Row className="justify-content-center m-0">
           <Col md="12" lg="12" xl="12">
             <Col className="text-center">
-              <h4 className="logo-title">
-                <img
-                  src={ServiceAdvisorLogo}
-                  alt={"logo"}
-                  style={{ width: 120 }}
-                />
-              </h4>
+              <Link to="/home">
+                <h4 className="logo-title">
+                  <img
+                    src={ServiceAdvisorLogo}
+                    alt={"logo"}
+                    style={{ width: 120 }}
+                  />
+                </h4>
+              </Link>
             </Col>
             <CardGroup>
               <Card className="p-4 pl-4 pr-4">
