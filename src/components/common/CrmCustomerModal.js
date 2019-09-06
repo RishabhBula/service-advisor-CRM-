@@ -149,7 +149,7 @@ export class CrmCustomerModal extends Component {
             }
           });
           this.props.onStdAdd();
-          //this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
+          this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
         }
       }
     } catch (error) {
