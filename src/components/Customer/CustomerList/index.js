@@ -346,6 +346,14 @@ class CustomerList extends Component {
                   </div>
                 </div>
               </Col>
+              {totalCustomers ?
+                <Col lg={"2"} md={"2"} className="mb-0">
+                  <div className="font-weight-bold pt-2">
+                    <span className="">Total Customers :</span>&nbsp;
+                  <span>{totalCustomers ? totalCustomers : 0}</span>
+                  </div>
+                </Col>
+                : null}
             </Row>
           </Form>
         </div>
@@ -379,8 +387,8 @@ class CustomerList extends Component {
                     </Input>
                   </div>
                 ) : (
-                  "S No."
-                )}
+                    "S No."
+                  )}
               </th>
               <th width={"300"}>
                 <i className={"fa fa-user"} /> Cutomer Details
@@ -449,24 +457,24 @@ class CustomerList extends Component {
                       <td>
                         {user.phoneDetail
                           ? user.phoneDetail.map((data, ind) => {
-                              return (
-                                <div className="text-capitalize" key={ind}>
-                                  {data.phone || notExist}
-                                  {" |"}
-                                  {"  "}
-                                  {data.value ? (
-                                    <a
-                                      href={`tel:${data.value}`}
-                                      className={"text-body"}
-                                    >
-                                      {data.value}
-                                    </a>
-                                  ) : (
+                            return (
+                              <div className="text-capitalize" key={ind}>
+                                {data.phone || notExist}
+                                {" |"}
+                                {"  "}
+                                {data.value ? (
+                                  <a
+                                    href={`tel:${data.value}`}
+                                    className={"text-body"}
+                                  >
+                                    {data.value}
+                                  </a>
+                                ) : (
                                     notExist
                                   )}
-                                </div>
-                              );
-                            })
+                              </div>
+                            );
+                          })
                           : notExist}
                       </td>
                       {/* <td>
@@ -483,8 +491,8 @@ class CustomerList extends Component {
                               {user.vehicles.length}
                             </span>
                           ) : (
-                            <span className={"qty-no-value"}>Not Added</span>
-                          )}
+                              <span className={"qty-no-value"}>Not Added</span>
+                            )}
                         </div>
                         <UncontrolledTooltip
                           target={`customer-vehicle-${user._id}`}
@@ -514,23 +522,23 @@ class CustomerList extends Component {
                             Active
                           </Badge>
                         ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedCustomers: [user._id]
-                                },
-                                () => {
-                                  this.activateCustomers();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedCustomers: [user._id]
+                                  },
+                                  () => {
+                                    this.activateCustomers();
+                                  }
+                                );
+                              }}
+                            >
+                              Inactive
                           </Badge>
-                        )}
+                          )}
                       </td>
                       <td>
                         {/* {user.createdAt ? formateDate(user.createdAt) : "-"} */}
@@ -599,34 +607,34 @@ class CustomerList extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={10}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Customer details found related to your search"
+                          }
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={
+                              "Currently there are no Customer details added."
+                            }
+                            onAddClick={this.props.onAddClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    {filterApplied ? (
-                      <NoDataFound
-                        message={
-                          "No Customer details found related to your search"
-                        }
-                        noResult
-                      />
-                    ) : (
-                      <NoDataFound
-                        showAddButton
-                        message={
-                          "Currently there are no Customer details added."
-                        }
-                        onAddClick={this.props.onAddClick}
-                      />
-                    )}
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={10}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
         {totalCustomers && !isLoading ? (

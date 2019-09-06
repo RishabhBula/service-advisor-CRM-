@@ -316,6 +316,14 @@ class VehiclesList extends Component {
                   </div>
                 </div>
               </Col>
+              {totalVehicles ?
+                <Col lg={"2"} md={"2"} className="mb-0">
+                  <div className="font-weight-bold pt-2">
+                    <span className="">Total Vehicles :</span>&nbsp;
+                  <span>{totalVehicles ? totalVehicles : 0}</span>
+                  </div>
+                </Col>
+                : null}
             </Row>
           </Form>
         </div>
