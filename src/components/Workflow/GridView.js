@@ -400,6 +400,7 @@ class WorkflowGridView extends React.Component {
             droppableId={`dropableId`}
             type="droppableItem"
             direction={"horizontal"}
+            internalScroll
           >
             {provided => (
               <div

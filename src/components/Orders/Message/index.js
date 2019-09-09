@@ -39,7 +39,9 @@ class Message extends Component {
     }
     this.messageDataTextRef.current.focus();
   };
-
+  /**
+   *
+   */
   componentDidUpdate = ({ messageReducer, messagesList }) => {
     if (!this.props.isSummary) {
       let propdata = this.props.messageReducer;
@@ -57,23 +59,34 @@ class Message extends Component {
       }
     }
   };
+  /**
+   *
+   */
   handelTemplateModal = () => {
     this.setState({
       sentModal: !this.state.sentModal
     });
   };
+  /**
+   *
+   */
   messsageTemplateData = message => {
     this.setState({
       messageData: message,
       btnStatus: false
     });
   };
+  /**
+   *
+   */
   toggleMessageTemplate = ele => {
     this.setState({
       mesageModal: !this.state.mesageModal
     });
   };
-
+  /**
+   *
+   */
   onDrop = async files => {
     files.map(async (k, i) => {
       let picReader = new FileReader();
@@ -81,16 +94,24 @@ class Message extends Component {
       await picReader.addEventListener("load", async event => {
         let dataURL = picReader.result;
         const { attachment } = this.state;
-        attachment.itemImagePreview.push({ dataURL, name: file.name });
+
+        attachment.itemImagePreview.push({
+          dataURL,
+          name: file.name,
+          type: file.type === "application/pdf" ? "pdf" : "image"
+        });
         attachment.itemImage.push(file);
         await this.setState({
           attachment
         });
       });
+      
       await picReader.readAsDataURL(file);
     });
   };
-
+  /**
+   *
+   */
   onDropRejected = async files => {
     if (files && files.length) {
       await ConfirmBox({
@@ -101,7 +122,9 @@ class Message extends Component {
       });
     }
   };
-
+  /**
+   *
+   */
   handleSentMessage = (e, isNote) => {
     e.preventDefault();
     const { attachment } = this.state;
@@ -135,12 +158,13 @@ class Message extends Component {
           ? summaryReducer.orderData._id
           : this.props.orderId,
       messageData: textMessage,
-      messageAttachment: attachment,
+      messageAttachment: !isNote ? attachment : [],
       email: customerData ? customerData.email : "" || profileSummary.email,
       notToken: isSummary ? true : false,
       isSummary: isSummary,
       query: query,
       isInternalNotes: isNote ? true : false,
+      isDeleted:  false,
       subdomain: isSummary
         ? profileSummary.subdomain
         : profileReducer.profileInfo.subdomain,
@@ -155,11 +179,12 @@ class Message extends Component {
       const data = {
         ...payload,
         isSender: true,
+        isDeleted:false,
         createdAt: new Date()
       };
       this.state.messages.splice(0, 0, data);
+     
       this.props.newMsgSend(this.state.messages);
-      // this.state.messages.splice(0, 0, data);
       this.props.sendMessage(payload);
       this.setState({
         btnStatus: false,
@@ -181,9 +206,15 @@ class Message extends Component {
       attachment: {
         itemImagePreview: [],
         itemImage: []
-      }
+      },
+      btnStatus: true,
+      activeTab: isNote ? true : false,
+      activeTabName: isNote === true ? "tab2" : "tab1"
     });
   };
+  /**
+   *
+   */
   messageChange = event => {
     const subjectValue = document.getElementById("messageDataText").textContent;
     if (subjectValue !== "") {
@@ -196,6 +227,9 @@ class Message extends Component {
       });
     }
   };
+  /**
+   *
+   */
   // Delete mesage imagew
   removeImage = async previewindx => {
     const { attachment } = this.state;
@@ -213,14 +247,26 @@ class Message extends Component {
     attachment.itemImage = itemImage;
     this.setState({ attachment });
   };
+  /**
+   *
+   */
   // To view file in new window
   viewFile = (filename, type) => {
     let pdfWindow = window.open("");
+ pdfWindow.document.body.style.margin = "0px";
+
     pdfWindow.document.body.innerHTML =
       type === "pdf"
-        ? "<iframe width='100%' height='100%' src='" + filename + "'></iframe>"
+        ?  pdfWindow.document.body.innerHTML =
+   "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
+   filename +
+   "'></embed></body></html>"
         : "<img src=' " + filename + "' >";
+
   };
+  /**
+   *
+   */
   tabChange = tab => {
     this.setState({
       activeTab: !this.state.activeTab,
@@ -261,6 +307,7 @@ class Message extends Component {
         ? orderReducer.orderItems._id
         : ""
       : "";
+
     return (
       <div className={"message-warp"} id={"message-warp"}>
         {isSummary ? <h4 className={"mb-4 ml-3 pt-3"}>Messages</h4> : ""}
@@ -334,7 +381,7 @@ class Message extends Component {
                                   }}
                                   className={"remove-block"}
                                 >
-                                  <i class="icon-close icons font-x1" />{" "}
+                                  <i className="icon-close icons font-x1" />{" "}
                                   &nbsp;Remove
                                 </span>
                                 {type === "pdf" ? (
@@ -387,7 +434,9 @@ class Message extends Component {
                 >
                   <span>
                     <Dropzone
-                      accept={"image/jpeg, image/jpg, image/png"}
+                      accept={
+                        "image/jpeg, image/jpg, image/png, application/pdf"
+                      }
                       onDrop={files => this.onDrop(files)}
                       onDropRejected={this.onDropRejected}
                     >
@@ -482,6 +531,7 @@ class Message extends Component {
                                 __html: ele ? ele.messageData : ""
                               }}
                             />
+
                             {ele.messageAttachment &&
                             ele.messageAttachment.itemImagePreview.length ? (
                               <ul className={"attachment-preview-group  p-1"}>
@@ -489,8 +539,11 @@ class Message extends Component {
                                   ? ele.messageAttachment.itemImagePreview.map(
                                       (imgele, index) => {
                                         const type = imgele.dataURL
-                                          .split(";")[0]
-                                          .split("/")[1];
+                                          ? imgele.dataURL
+                                              .split(";")[0]
+                                              .split("/")[1]
+                                          : imgele.fileUrl.split(".").pop();
+
                                         return (
                                           <li key={index}>
                                             {type === "pdf" ? (
@@ -498,7 +551,8 @@ class Message extends Component {
                                                 className={"pdf-img"}
                                                 onClick={filename =>
                                                   this.viewFile(
-                                                    imgele.dataURL,
+                                                    imgele.dataURL ||
+                                                      imgele.fileUrl,
                                                     type
                                                   )
                                                 }
@@ -507,7 +561,8 @@ class Message extends Component {
                                                   className={"fa fa-file-pdf-o"}
                                                 />
                                                 <span className={"file-name"}>
-                                                  {imgele.name}
+                                                  {imgele.name ||
+                                                    "Untitled file"}
                                                 </span>
                                               </span>
                                             ) : (
@@ -515,14 +570,22 @@ class Message extends Component {
                                                 className={"img-block"}
                                                 onClick={filename =>
                                                   this.viewFile(
-                                                    imgele.dataURL,
+                                                    imgele.dataURL ||
+                                                      imgele.fileUrl,
                                                     type
                                                   )
                                                 }
                                               >
                                                 <img
-                                                  src={imgele.dataURL}
-                                                  alt={imgele.dataURL}
+                                                  src={
+                                                    imgele.dataURL
+                                                      ? imgele.dataURL
+                                                      : imgele.fileUrl
+                                                  }
+                                                  alt={
+                                                    imgele.dataURL ||
+                                                    imgele.fileUrl
+                                                  }
                                                 />
                                               </span>
                                             )}
@@ -552,6 +615,7 @@ class Message extends Component {
             companyName={companyName}
             deleteNotes={this.props.deleteNotes}
             orderId={orderId}
+            newMsgSend={this.props.newMsgSend}
           />
         )}
 

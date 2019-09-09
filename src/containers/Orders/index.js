@@ -60,6 +60,7 @@ import {
   addAppointmentRequest,
   getAppointments,
   newMsgSend,
+  addInspcetionToReducer,
   submitServiceDataSuccess,
   updateOrderServiceData
 } from "../../actions";
@@ -426,6 +427,8 @@ class Order extends Component {
       addAppointment,
       getAppointments,
       newMsgSend,
+      addInspcetionToReducer,
+      pdfReducer,
       submitServiceDataSuccess,
       updateOrderServiceData
     } = this.props;
@@ -611,6 +614,8 @@ class Order extends Component {
                             updateOrderDetails={updateOrderDetails}
                             orderReducer={orderReducer}
                             genrateInvoiceSuccess={genrateInvoice}
+                            addInspcetionToReducer={addInspcetionToReducer}
+                            pdfReducer={pdfReducer}
                           />
                         ) : null}
                         {activeTab === 2 ? (
@@ -881,6 +886,7 @@ const mapDispatchToProps = dispatch => ({
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   getAppointments: data => dispatch(getAppointments(data)),
   newMsgSend: data => dispatch(newMsgSend(data)),
+  addInspcetionToReducer: data=> dispatch(addInspcetionToReducer(data)),
   submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data)),
   updateOrderServiceData: data => dispatch(updateOrderServiceData(data))
 });

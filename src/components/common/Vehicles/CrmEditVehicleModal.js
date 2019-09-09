@@ -432,6 +432,7 @@ export class CrmEditVehicleModal extends Component {
                     onChange={this.handleType}
                     value={typeSelected}
                     classNamePrefix={"form-select-theme"}
+                    menuIsOpen={true}
                   />
                   {!typeSelected && errors.type ? (
                     <p className="text-danger">{errors.type}</p>
