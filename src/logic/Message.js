@@ -50,7 +50,7 @@ const sentMessageLogic = createLogic({
 const deleteNotesLogic = createLogic({
   type: MessageAction.DELETE_NOTES,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    //dispatch(showLoader());
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/message",
@@ -62,17 +62,17 @@ const deleteNotesLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
+     // dispatch(hideLoader());
       done();
       return;
     } else {
       toast.success(result.messages[0]);
       dispatch(deleteNotesSuccess(result.data.data));
-      const data = {
-        "_id": action.payload.orderId
-      }
-      dispatch(getOrderDetailsRequest(data))
-      dispatch(hideLoader());
+      // const data = {
+      //   "_id": action.payload.orderId
+      // }
+      //dispatch(getOrderDetailsRequest(data))
+      //dispatch(hideLoader());
       done();
     }
   }

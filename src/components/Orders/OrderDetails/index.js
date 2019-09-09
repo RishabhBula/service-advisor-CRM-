@@ -236,16 +236,16 @@ class OrderDetails extends Component {
     return (
       <div className={"workflow-right"}>
         <div className={""}>
-          <div className={"d-flex justify-content-between pb-2 pl-2"}>
+          <div
+            className={"d-flex justify-content-between pb-2 pl-2 border-bottom"}
+          >
+            <h5 className={"mb-0"}>Order Details</h5>
             <span>
-              <h4>Order Details</h4>
-            </span>
-            <span>
-              <h4>
+              <h5 className={"mb-0"}>
                 {typeof this.props.orderReducer.orderId !== "object"
                   ? `(#${this.props.orderReducer.orderId})`
                   : null}
-              </h4>
+              </h5>
             </span>
           </div>
           <div className={"d-flex justify-content-between pb-2 pl-2 pt-2"}>
@@ -300,88 +300,76 @@ class OrderDetails extends Component {
           </div>
           <div
             className={
-              "d-flex justify-content-between pb-3 pl-2 pt-3 border-top authoris-block "
+              "justify-content-between pb-2 pl-2 pt-2 border-top authoris-block align-items-center"
             }
           >
-            <span className={"name-label"}>Authorization</span>
-            <span>
-              <ButtonGroup>
-                <Button
-                  color={""}
-                  className={
-                    orderReducer && !orderReducer.orderItems.status
-                      ? "btn btn-sm active"
-                      : "btn btn-sm"
-                  }
-                  onClick={e =>
-                    this.props.orderStatus("authorizStatus", false)
-                  }
-                >
-                  {orderReducer && !orderReducer.orderItems.status ? (
-                    <span className={"bg-danger authoris-dot"} />
-                  ) : (
-                    ""
-                  )}{" "}
-                  Not Authorised
-                </Button>
-                <Button
-                  color={""}
-                  className={
-                    orderReducer && !orderReducer.orderItems.status
-                      ? "btn btn-sm"
-                      : "btn btn-sm active"
-                  }
-                  onClick={e =>
-                    this.props.orderStatus("authorizStatus", true)
-                  }
-                >
-                  {orderReducer && orderReducer.orderItems.status ? (
-                    <span className={"bg-success authoris-dot"} />
-                  ) : (
-                    ""
-                  )}{" "}
-                  Authorised
-                </Button>
-              </ButtonGroup>
-            </span>
+            <div className={"name-label"}>Authorization</div>
+
+            <ButtonGroup className={"w-100"}>
+              <Button
+                color={""}
+                className={
+                  orderReducer && !orderReducer.orderItems.status
+                    ? "btn btn-sm active"
+                    : "btn btn-sm"
+                }
+                onClick={e => this.props.orderStatus("authorizStatus", false)}
+              >
+                {orderReducer && !orderReducer.orderItems.status ? (
+                  <span className={"bg-danger authoris-dot"} />
+                ) : (
+                  <span className={"bg-secondary authoris-dot"} />
+                )}{" "}
+                Not Authorised
+              </Button>
+              <Button
+                color={""}
+                className={
+                  orderReducer && !orderReducer.orderItems.status
+                    ? "btn btn-sm"
+                    : "btn btn-sm active"
+                }
+                onClick={e => this.props.orderStatus("authorizStatus", true)}
+              >
+                {orderReducer && orderReducer.orderItems.status ? (
+                  <span className={"bg-success authoris-dot"} />
+                ) : (
+                  <span className={"bg-secondary authoris-dot"} />
+                )}{" "}
+                Authorised
+              </Button>
+            </ButtonGroup>
           </div>
           <div
             className={
-              "d-flex justify-content-between pb-2 pl-2 authoris-block"
+              "justify-content-between pb-2 pl-2 authoris-block align-items-center"
             }
           >
             <span className={"name-label"}>Order Status</span>
-            <span>
-              <ButtonGroup>
-                <Button
-                  color={""}
-                  className={
-                    !isInvoice ? "btn btn-sm active" : "btn btn-sm"
-                  }
-                  onClick={e =>
-                    this.props.orderStatus("invoiceStatus", false)
-                  }
-                >
-                  Estimate
-                </Button>
-                <Button
-                  color={""}
-                  className={isInvoice ? "btn btn-sm active" : "btn btn-sm"}
-                  onClick={e =>
-                    this.props.orderStatus("invoiceStatus", true)
-                  }
-                >
-                  Invoice
-                </Button>
-              </ButtonGroup>
-            </span>
+
+            <ButtonGroup className={"w-100"}>
+              <Button
+                color={""}
+                className={!isInvoice ? "btn btn-sm active" : "btn btn-sm"}
+                onClick={e => this.props.orderStatus("invoiceStatus", false)}
+              >
+                Estimate
+              </Button>
+              <Button
+                color={""}
+                className={isInvoice ? "btn btn-sm active" : "btn btn-sm"}
+                onClick={e => this.props.orderStatus("invoiceStatus", true)}
+              >
+                Invoice
+              </Button>
+            </ButtonGroup>
           </div>
           <div
             className={
-              "d-flex justify-content-between pb-2 pl-2 pt-2 fleet-block"
+              "justify-content-between pb-2 pl-2 fleet-block align-items-center"
             }
           >
-            <span className={"name-label"}>Workflow</span>
+            <div className={"name-label"}>Workflow</div>
             <Select
               defaultValue={groupedOptions.filter(
                 item => item.id === orderReducer.orderItems.workflowStatus
@@ -390,7 +378,7 @@ class OrderDetails extends Component {
                 item => item.id === orderReducer.orderItems.workflowStatus
               )}
               options={groupedOptions}
-              className="form-select w-50 simple-select"
+              className="form-select simple-select"
               onChange={e =>
                 this.handleType(
                   e,
@@ -401,9 +389,8 @@ class OrderDetails extends Component {
               classNamePrefix={"form-select-theme"}
             />
           </div>
-          <hr />
         </div>
-        <div className={"service-warp"}>
+        <div className={"service-warp border-top pt-2 mt-1"}>
           {serviceData && serviceData.length
             ? serviceData.map((item, index) => {
                 let mainserviceTotal = [],
@@ -416,75 +403,66 @@ class OrderDetails extends Component {
                     {item.serviceId &&
                     item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
-                      ? item.serviceId.serviceItems.map(
-                          (service, sIndex) => {
-                            const calSubTotal = calculateSubTotal(
-                              service.retailPrice ||
-                                (service.tierSize
-                                  ? service.tierSize[0].retailPrice
-                                  : null) ||
-                                0,
-                              service.qty || 0,
-                              service.hours || 0,
-                              service.rate ? service.rate.hourlyRate : 0
-                            ).toFixed(2);
-                            const subDiscount = calculateValues(
-                              calSubTotal || 0,
-                              service.discount.value || 0,
-                              service.discount.type
-                            );
-                            const servicesSubTotal = (
-                              parseFloat(calSubTotal) -
-                              parseFloat(subDiscount)
-                            ).toFixed(2);
-                            mainserviceTotal.push(
-                              parseFloat(servicesSubTotal)
-                            );
-                            serviceTotalArray = getSumOfArray(
-                              mainserviceTotal
-                            );
-                            epa = calculateValues(
-                              serviceTotalArray || 0,
-                              item.serviceId.epa.value || 0,
-                              item.serviceId.epa
-                                ? item.serviceId.epa.type
-                                : "$"
-                            );
-                            discount = calculateValues(
-                              serviceTotalArray || 0,
-                              item.serviceId.discount.value || 0,
-                              item.serviceId.discount
-                                ? item.serviceId.discount.type
-                                : "$"
-                            );
-                            tax = calculateValues(
-                              serviceTotalArray || 0,
-                              item.serviceId.taxes.value || 0,
-                              item.serviceId.taxes
-                                ? item.serviceId.taxes.type
-                                : "$"
-                            );
+                      ? item.serviceId.serviceItems.map((service, sIndex) => {
+                          const calSubTotal = calculateSubTotal(
+                            service.retailPrice ||
+                              (service.tierSize
+                                ? service.tierSize[0].retailPrice
+                                : null) ||
+                              0,
+                            service.qty || 0,
+                            service.hours || 0,
+                            service.rate ? service.rate.hourlyRate : 0
+                          ).toFixed(2);
+                          const subDiscount = calculateValues(
+                            calSubTotal || 0,
+                            service.discount.value || 0,
+                            service.discount.type
+                          );
+                          const servicesSubTotal = (
+                            parseFloat(calSubTotal) - parseFloat(subDiscount)
+                          ).toFixed(2);
+                          mainserviceTotal.push(parseFloat(servicesSubTotal));
+                          serviceTotalArray = getSumOfArray(mainserviceTotal);
+                          epa = calculateValues(
+                            serviceTotalArray || 0,
+                            item.serviceId.epa.value || 0,
+                            item.serviceId.epa ? item.serviceId.epa.type : "$"
+                          );
+                          discount = calculateValues(
+                            serviceTotalArray || 0,
+                            item.serviceId.discount.value || 0,
+                            item.serviceId.discount
+                              ? item.serviceId.discount.type
+                              : "$"
+                          );
+                          tax = calculateValues(
+                            serviceTotalArray || 0,
+                            item.serviceId.taxes.value || 0,
+                            item.serviceId.taxes
+                              ? item.serviceId.taxes.type
+                              : "$"
+                          );
 
-                            serviceTotal = (
-                              parseFloat(serviceTotalArray) +
-                              parseFloat(epa) +
-                              parseFloat(tax) -
-                              parseFloat(discount)
-                            ).toFixed(2);
-                            if (service.serviceType === "part") {
-                              totalParts += parseFloat(servicesSubTotal);
-                            }
-                            if (service.serviceType === "tire") {
-                              totalTires += parseFloat(servicesSubTotal);
-                            }
-                            if (service.serviceType === "labor") {
-                              totalLabor += parseFloat(servicesSubTotal);
-                            }
-                            orderSubTotal += parseFloat(servicesSubTotal);
-
-                            return true;
+                          serviceTotal = (
+                            parseFloat(serviceTotalArray) +
+                            parseFloat(epa) +
+                            parseFloat(tax) -
+                            parseFloat(discount)
+                          ).toFixed(2);
+                          if (service.serviceType === "part") {
+                            totalParts += parseFloat(servicesSubTotal);
                           }
-                        )
+                          if (service.serviceType === "tire") {
+                            totalTires += parseFloat(servicesSubTotal);
+                          }
+                          if (service.serviceType === "labor") {
+                            totalLabor += parseFloat(servicesSubTotal);
+                          }
+                          orderSubTotal += parseFloat(servicesSubTotal);
+
+                          return true;
+                        })
                       : ""}
                     <span className={"d-none"}>
                       {
@@ -497,8 +475,7 @@ class OrderDetails extends Component {
                             ))
                           : 0,
                         fleetStatus
-                          ? (orderGandTotal =
-                              orderGandTotal - fleetDiscount)
+                          ? (orderGandTotal = orderGandTotal - fleetDiscount)
                           : 0)
                       }
                     </span>
@@ -516,18 +493,15 @@ class OrderDetails extends Component {
           {paymentList && paymentList.length
             ? paymentList.map(paymentData => {
                 totalPaiedAmount +=
-                  paymentData.payedAmount[
-                    paymentData.payedAmount.length - 1
-                  ].amount;
+                  paymentData.payedAmount[paymentData.payedAmount.length - 1]
+                    .amount;
                 return true;
               })
             : null}
           {serviceData && serviceData.length ? (
             <>
               <div
-                className={
-                  "w-100 text-right pull-right pr-2 order-total-block"
-                }
+                className={"w-100 text-right pull-right pr-2 order-total-block"}
               >
                 <div>
                   <span className={"title"}>Total Parts </span>:{" "}
@@ -568,9 +542,7 @@ class OrderDetails extends Component {
                     -{" "}
                     <Dollor
                       value={
-                        !isNaN(totalDiscount)
-                          ? totalDiscount.toFixed(2)
-                          : 0.0
+                        !isNaN(totalDiscount) ? totalDiscount.toFixed(2) : 0.0
                       }
                     />
                   </span>
@@ -587,9 +559,7 @@ class OrderDetails extends Component {
                   Grand Total :{" "}
                   <Dollor
                     value={
-                      !isNaN(orderGandTotal)
-                        ? orderGandTotal.toFixed(2)
-                        : 0.0
+                      !isNaN(orderGandTotal) ? orderGandTotal.toFixed(2) : 0.0
                     }
                   />
                 </div>
@@ -615,9 +585,7 @@ class OrderDetails extends Component {
           >
             Remaining Balance{" "}
             <Dollor
-              value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(
-                2
-              )}
+              value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)}
             />
           </h6>
           <Button

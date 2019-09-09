@@ -334,8 +334,8 @@ class WorkFlow extends Component {
     const { listView } = this.state;
     return (
       <>
-        <Card className={"white-card position-relative"}>
-          <CardBody className={"custom-card-body"}>
+        <Card className={"white-card position-relative mb-0"}>
+          <CardBody className={"custom-card-body pt-0"}>
             <Row className={"mb-2 ml-0"}>
               <Col className={"title-left-section"}>
                 <h4 className={"card-title"}>Workflow</h4>
@@ -409,7 +409,7 @@ class WorkFlow extends Component {
                     appointmentReducer={appointmentReducer}
                   />
                 ) : (
-                  <div style={{ overflowX: "auto" }}>
+                  <div  className={"complete-workflow-warp"}>
                     <WorkflowGridView
                       orderData={orderData}
                       orderStatus={orderStatus}

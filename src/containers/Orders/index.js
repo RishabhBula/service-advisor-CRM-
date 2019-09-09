@@ -59,7 +59,8 @@ import {
   getOrderListForSelect,
   addAppointmentRequest,
   getAppointments,
-  newMsgSend
+  newMsgSend,
+  addInspcetionToReducer
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -159,14 +160,14 @@ class Order extends Component {
           : 0
       });
     }
-    if (
-      (serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
-        inspectionReducer.inspectionData.isSuccess !==
-          this.props.inspectionReducer.inspectionData.isSuccess) &&
-      !this.props.serviceReducers.isAddServiceItem
-    ) {
-      this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
-    }
+    // if (
+    //   (serviceReducers.isLoading !== this.props.serviceReducers.isLoading ||
+    //     inspectionReducer.inspectionData.isSuccess !==
+    //       this.props.inspectionReducer.inspectionData.isSuccess) &&
+    //   !this.props.serviceReducers.isAddServiceItem
+    // ) {
+    //   this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
+    // }
     if (
       orderReducer.orderItems !== this.props.orderReducer.orderItems ||
       orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
@@ -408,7 +409,9 @@ class Order extends Component {
       getOrdersData,
       addAppointment,
       getAppointments,
-      newMsgSend
+      newMsgSend,
+      addInspcetionToReducer,
+      pdfReducer
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     console.log(orderReducer, " *********  orderReducer");
@@ -591,6 +594,8 @@ class Order extends Component {
                             updateOrderDetails={updateOrderDetails}
                             orderReducer={orderReducer}
                             genrateInvoiceSuccess={genrateInvoice}
+                            addInspcetionToReducer={addInspcetionToReducer}
+                            pdfReducer={pdfReducer}
                           />
                         ) : null}
                         {activeTab === 2 ? (
@@ -859,7 +864,8 @@ const mapDispatchToProps = dispatch => ({
   getOrdersData: data => dispatch(getOrderListForSelect(data)),
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   getAppointments: data => dispatch(getAppointments(data)),
-  newMsgSend: data => dispatch(newMsgSend(data))
+  newMsgSend: data => dispatch(newMsgSend(data)),
+  addInspcetionToReducer: data=> dispatch(addInspcetionToReducer(data))
 });
 export default connect(
   mapStateToProps,
