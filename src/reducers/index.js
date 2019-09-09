@@ -31,6 +31,7 @@ import { reportReducer } from "./Reports";
 import { pdfReducer } from "./Pdf";
 import { homePageDetailsReducer } from "./HomePage";
 import { siteSettingDetailsReducer } from "./SiteSetting";
+import { faqPageReducer } from "./Faq";
 
 export const mainReducer = handleActions(
   {
@@ -82,6 +83,7 @@ const AppReducer = combineReducers({
   pdfReducer,
   homePageDetailsReducer,
   siteSettingDetailsReducer,
+  faqPageReducer,
   routing: routerReducer
 });
 

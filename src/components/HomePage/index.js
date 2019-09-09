@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "./index.scss"
 import bannerImg from "../../assets/home-img/banner-right-img.png";
 import HomeHeader from "./homeHeader";
@@ -128,7 +129,7 @@ class HomePageComponent extends Component {
                               <div className="banner-left-content">
                                  <h1>The Smart & Simple way to Run Your Auto Shop.</h1>
                                  <p>With the easy to use and customizable CRM for your marketing, sales, and customer service teams.</p>
-                                 <div onClick={() => this.onGoPage('/dev/register')} className="btn btn-primary">Start Free Trial</div>
+                                 <Link to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-primary">Start Free Trial</Link>
                               </div>
                            </div>
                         </div>
@@ -289,8 +290,8 @@ class HomePageComponent extends Component {
                               <p>No Contracts. No hidden fees. Get started in minutes. </p>
                            </div>
                            <div className="get-started-right">
-                              <div onClick={() => this.onGoPage('/register')} className="btn btn-primary">Start Free Trial
-                              </div>
+                              <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-primary">Start Free Trial
+                              </Link>
                            </div>
                         </div>
                      </div>

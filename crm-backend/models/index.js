@@ -30,5 +30,6 @@ module.exports = {
   VehicleModel: require("./vehicle"),
   VendorCommonObjectModel: require("./vendorCommanObject"),
   HomePageModel: require("./homePage"),
-  SettingsModel: require("./siteSetting")
+  SettingsModel: require("./siteSetting"),
+  FaqModel:require("./faq")
 };

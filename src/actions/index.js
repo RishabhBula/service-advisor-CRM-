@@ -31,6 +31,7 @@ export * from "./Reports";
 export * from "./Pdf";
 export * from "./HomePage";
 export * from "./SiteSetting";
+export * from "./Faq";
 
 //
 export const redirectTo = createAction("REDIRET_TO");

@@ -376,7 +376,7 @@ class OrderDetails extends Component {
                       className="btn-sm cancel-btn"
                       onClick={(e) => this.handleChange()}
                     >
-                      Cancle
+                      Cancel
                     </Button>
                   </div>
                 </FormGroup> :

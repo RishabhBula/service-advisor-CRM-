@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
-import ServiceAdvisorLogo from "../../assets/logo-white.svg";
+// import ServiceAdvisorLogo from "../../assets/logo-white.svg";
 import HomeHeader from "../HomePage/homeHeader";
 import HomeFooter from "../HomePage/homeFooter";
 class LoginPage extends Component {
@@ -183,7 +183,7 @@ class LoginPage extends Component {
             </Col>
           </Row>
         </div>
-        <HomeFooter/>
+        <HomeFooter />
       </>
     );
   }

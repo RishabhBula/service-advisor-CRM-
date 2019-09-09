@@ -27,8 +27,8 @@ class HomeHeader extends Component {
       })
    };
    onGoPage = (pageUrl) => {
-      //this.props.onGoPage(pageUrl);
-      window.open(pageUrl);
+      this.props.onGoPage(pageUrl);
+      // window.open(pageUrl);
    };
    render() {
       const {
@@ -57,10 +57,10 @@ class HomeHeader extends Component {
                         <Link className="nav-link1" to={"/home"}><span>About Us</span></Link>
                      </li>
                      <li className="nav-item">
-                        <Link className="nav-link1 cursor_pointer" to={""} onClick={() => this.onGoPage('/dev/login')}><span>Sign In</span></Link>
+                        <Link className="nav-link1 cursor_pointer" to={"/login"} /*onClick={() => this.onGoPage('/dev/login')}*/><span>Sign In</span></Link>
                      </li>
                   </ul>
-                  <div onClick={() => this.onGoPage('/dev/register')} className="btn btn-primary">Start Free Trial</div>
+                  <Link to={"/register"}/*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-primary">Start Free Trial</Link>
                </div>
             </div>
          </nav>
