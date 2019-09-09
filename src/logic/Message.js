@@ -9,7 +9,8 @@ import {
   hideLoader,
   getOrderDetailsRequest,
   verifyLinkRequest,
-  deleteNotesSuccess
+  deleteNotesSuccess,
+  addNewActivity
 } from "../actions"
 
 
@@ -34,10 +35,16 @@ const sentMessageLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       dispatch(sendMessageSuccess(result.data.data));
-      const data = {
-        "_id": action.payload.orderId
-      }
+      // const data = {
+      //   "_id": action.payload.orderId
+      // }
       // dispatch(getOrderDetailsRequest(data))
+      const data = {
+        name: `added a new message`,
+        type: "NEW_MESSAGE",
+        orderId: action.payload.orderId
+      };
+      dispatch(addNewActivity(data));
       if (action.payload.isSummary) {
         dispatch(verifyLinkRequest(action.payload.query))
       }

@@ -149,7 +149,7 @@ export class CrmCustomerModal extends Component {
             }
           });
           this.props.onStdAdd();
-          //this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
+          this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
         }
       }
     } catch (error) {
@@ -231,16 +231,10 @@ export class CrmCustomerModal extends Component {
   handlePhoneValueChange = (index, event) => {
     const { value } = event.target;
     const IncorrectNumber = [...this.state.inCorrectNumber]
-    if (parseInt(value.length) < 12) {
-      IncorrectNumber[index] = true
-      this.setState({
-        inCorrectNumber: IncorrectNumber
-      })
-    } else {
-      this.setState({
-        inCorrectNumber: []
-      })
-    }
+    IncorrectNumber[index] = false
+    this.setState({
+      inCorrectNumber: IncorrectNumber
+    })
     const phoneDetail = [...this.state.phoneDetail];
     phoneDetail[index].value = value;
     this.setState({
@@ -258,22 +252,26 @@ export class CrmCustomerModal extends Component {
               value: ""
             }
           ]),
-          phoneErrors: state.phoneErrors.concat([""])
+          phoneErrors: state.phoneErrors.concat([""]),
+          inCorrectNumber: state.inCorrectNumber.concat([false])
         };
       });
     }
   };
 
   handleRemovePhoneDetails = index => {
-    const { phoneDetail, phoneErrors } = this.state;
+    const { phoneDetail, phoneErrors, inCorrectNumber } = this.state;
     let t = [...phoneDetail];
     let u = [...phoneErrors];
+    let v = [...inCorrectNumber]
     t.splice(index, 1);
     u.splice(index, 1);
+    v.splice(index, 1);
     if (phoneDetail.length) {
       this.setState({
         phoneDetail: t,
-        phoneErrors: u
+        phoneErrors: u,
+        inCorrectNumber: v
       });
     }
   };
@@ -311,42 +309,41 @@ export class CrmCustomerModal extends Component {
   };
 
   addNewCustomer = async () => {
-    const {
-      firstName,
-      lastName,
-      phoneDetail,
-      email,
-      notes,
-      companyName,
-      referralSource,
-      address1,
-      address2,
-      city,
-      state,
-      zipCode,
-      customerDefaultPermissions,
-      fleet
-    } = this.state;
-
-    const customerData = {
-      firstName: firstName,
-      lastName: lastName,
-      phoneDetail: phoneDetail,
-      email: email,
-      notes: notes,
-      companyName: companyName,
-      referralSource: referralSource,
-      address1: address1,
-      address2: address2,
-      city: city,
-      state: state,
-      zipCode: zipCode,
-      fleet: fleet,
-      permission: customerDefaultPermissions,
-      status: true
-    };
-
     try {
+      const {
+        firstName,
+        lastName,
+        phoneDetail,
+        email,
+        notes,
+        companyName,
+        referralSource,
+        address1,
+        address2,
+        city,
+        state,
+        zipCode,
+        customerDefaultPermissions,
+        fleet
+      } = this.state;
+
+      const customerData = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneDetail: phoneDetail,
+        email: email,
+        notes: notes,
+        companyName: companyName,
+        referralSource: referralSource,
+        address1: address1,
+        address2: address2,
+        city: city,
+        state: state,
+        zipCode: zipCode,
+        fleet: fleet,
+        permission: customerDefaultPermissions,
+        status: true
+      };
       if (phoneDetail.length) {
         let t = [];
         this.setState({ phoneErrors: t });
@@ -367,17 +364,29 @@ export class CrmCustomerModal extends Component {
       if (email !== "") {
         validationData.email = email;
       }
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         validationData,
         CreateCustomerValidations,
         CreateCustomerValidMessaages
       );
       this.setState({ errors: {} });
+      let IncorrectNumber = [...this.state.inCorrectNumber]
+      if (phoneDetail && phoneDetail.length) {
+        for (let i = 0; i < phoneDetail.length; i++) {
+          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+          if (phoneTrimed.length <= 9) {
+            IncorrectNumber[i] = true
+            this.setState({
+              inCorrectNumber: IncorrectNumber
+            });
+            isValid = false;
+          }
+        }
+      }
       if (
         !isValid ||
         Object.keys(this.state.phoneErrors).length > 0 ||
-        customerData.firstName === "" || this.state.percentageError ||
-        this.state.inCorrectNumber.length
+        customerData.firstName === "" || this.state.percentageError
       ) {
         this.setState({
           errors: errors,
@@ -420,7 +429,8 @@ export class CrmCustomerModal extends Component {
       selectedPriceMatrix: { value: "", label: "Type to select" },
       selectedLabourRate: { value: "", label: "Select..." },
       modalIsOpen: true,
-      percentageError: ""
+      percentageError: "",
+      inCorrectNumber: []
     });
   }
 
@@ -531,7 +541,7 @@ export class CrmCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
-                        invalid={!firstName && errors.firstName}
+                        invalid={!firstName && errors.firstName ? true : false}
                       />
                       <FormFeedback>
                         {!firstName && errors.firstName
@@ -598,11 +608,10 @@ export class CrmCustomerModal extends Component {
                                       className={classnames("form-control", {
                                         "is-invalid":
                                           (this.state.phoneErrors[index] !== "" &&
-                                            !item.value) || (this.state.inCorrectNumber[index])
+                                            !item.value) || (this.state.inCorrectNumber[index] === true)
                                       })}
                                       size="20"
                                       value={item.value}
-                                      maxLength={13}
                                       guide={false}
                                       onChange={e =>
                                         this.handlePhoneValueChange(index, e)
@@ -624,7 +633,6 @@ export class CrmCustomerModal extends Component {
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
-                                        maxLength={22}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -709,7 +717,6 @@ export class CrmCustomerModal extends Component {
                                         })}
                                         size="20"
                                         value={item.value}
-                                        maxLength={13}
                                         guide={false}
                                         onChange={e =>
                                           this.handlePhoneValueChange(index, e)
@@ -731,7 +738,6 @@ export class CrmCustomerModal extends Component {
                                           placeholder="(555) 055-0555 ext 1234"
                                           size="20"
                                           value={item.value}
-                                          maxLength={22}
                                           guide={false}
                                           onChange={e =>
                                             this.handlePhoneValueChange(index, e)

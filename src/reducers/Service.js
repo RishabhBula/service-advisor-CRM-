@@ -39,7 +39,8 @@ const serviceData = {
    isServiceList: true,
    serviceIndex: 0,
    isAddServiceItem: false,
-   serviceDataList: []
+   serviceDataList: [],
+   isServiceAdded: true
 };
 
 export const serviceReducers = handleActions(
@@ -68,15 +69,11 @@ export const serviceReducers = handleActions(
       [serviceActions.ADD_SERVICE]: (state, action) => ({
          ...state,
          isLoading: true,
-         isAddServiceItem: false
+         isAddServiceItem: false,
       }),
       [serviceActions.ADD_SERVICE_SUCCESS]: (state, action) => ({
          ...state,
-         isLoading: false,
-         submittedServiceId: action.payload.serviceIds,
-         customerCommentId: action.payload.customerCommentId,
-         services: action.payload.services,
-         isAddServiceItem: false
+         isServiceAdded: action.payload.isServiceAdded
       }),
       [serviceActions.GET_CANNED_SERVICE_LIST_SUCCESS]: (state, action) => ({
          ...state,
@@ -96,6 +93,15 @@ export const serviceReducers = handleActions(
       [serviceActions.GET_SERVICE_DATA_SUCCESS]: (state, action) => ({
          ...state,
          serviceDataList: action.payload
+      }),
+      [serviceActions.SUBMIT_SERVICE_DATA_SUCCESS]: (state, action) => ({
+         ...state,
+         services: action.payload.services,
+         customerUserComment: {
+            customerComment: action.payload.customerComment,
+            userRecommendations: action.payload.userRecommendations
+         },
+         isServiceList: false
       }),
    },
    serviceData

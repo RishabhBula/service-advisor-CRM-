@@ -41,7 +41,7 @@ export const AppRoutes = {
   },
   CALENDER: {
     url: "/calender",
-    name: "Calender",
+    name: "Appointments",
     exact: true
   },
   INVENTORY: {
@@ -70,8 +70,8 @@ export const AppRoutes = {
     exact: true
   },
   INVENTORY_STATATICS: {
-    url: "/inventory/statatics",
-    name: "Statatics",
+    url: "/inventory/statistics",
+    name: "Statistics",
     exact: true
   },
   TIMESHEETS: {
@@ -126,7 +126,7 @@ export const AppRoutes = {
   },
   SETTINGS: {
     url: "/settings",
-    name: "Settings",
+    name: "Workspace",
     exact: true
   },
   PROFILE: {

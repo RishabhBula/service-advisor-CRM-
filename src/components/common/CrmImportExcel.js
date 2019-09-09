@@ -211,9 +211,10 @@ class CrmImportExcel extends Component {
       btnColor,
       children,
       buttonIcon,
-      sheetType
+      sheetType,
+      importSectionName
     } = this.props;
-  
+
     const { isLoading, fileError, sheets } = this.state;
     logger(isLoading);
     return (
@@ -230,7 +231,13 @@ class CrmImportExcel extends Component {
           {children}
           <Row className={"pt-4 pb-3"}>
             <Col sm={{ size: 7 }} className={"pl-3"}>
-              <h4>Instructions to import customers</h4>
+              <h4>
+                {
+                  importSectionName === 'customer' ?
+                    "Instructions to import customers" :
+                    "Instructions to import vehicles"
+                }
+              </h4>
               <ul className={"list-inline import-instruction-list"}>
                 <li>
                   <i class="icon-arrow-right icons" />
@@ -283,8 +290,8 @@ class CrmImportExcel extends Component {
               {isLoading
                 ? null
                 : sheets.length
-                ? this.renderSheets()
-                : null}
+                  ? this.renderSheets()
+                  : null}
             </Col>
           </Row>
         </CRMModal>

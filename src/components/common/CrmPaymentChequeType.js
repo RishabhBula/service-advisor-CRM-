@@ -65,6 +65,7 @@ export class CrmPaymentChequeType extends Component {
                       type={"textarea"}
                       cols={"3"}
                       rows={"4"}
+                      maxLength={"1000"}
                       name={"notes"} />
                   </div>
                 </FormGroup>

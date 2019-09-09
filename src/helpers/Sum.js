@@ -29,7 +29,7 @@ export const calculateDurationFromSeconds = Seconds => {
   Seconds = Seconds % 60;
   var hours = Math.floor(minutes / 60);
   minutes = minutes % 60;
-  const duration = `${hours}:${minutes}:${Seconds}`;
+  const duration = `${hours > 9 ? hours : `0${hours}`}:${minutes > 9 ? minutes : `0${minutes}`}:${Seconds > 9 ? Seconds : `0${Seconds}`}`;
   return duration;
 };
 /** 
@@ -59,12 +59,12 @@ export const serviceTotalsCalculation = (
       epa,
       discount,
       tax;
-    if (item.serviceId && item.serviceId.serviceItems.length) {
+    if (item.serviceId && item.serviceId.serviceItems && item.serviceId.serviceItems.length) {
       item.serviceId.serviceItems.map(service => {
         const calSubTotal = calculateSubTotal(
           service.retailPrice ||
-            (service.tierSize ? service.tierSize[0].retailPrice : null) ||
-            0,
+          (service.tierSize ? service.tierSize[0].retailPrice : null) ||
+          0,
           service.qty || 0,
           service.hours || 0,
           service.rate ? service.rate.hourlyRate : 0

@@ -12,7 +12,7 @@ const SUV = props => (
       width= {props.size||"377.246px"}
       height="144.68px"
       viewBox="0 0 377.246 144.68"
-      enable-background="new 0 0 377.246 144.68"
+      enableBackground="new 0 0 377.246 144.68"
       space="preserve"
     >
       <g>

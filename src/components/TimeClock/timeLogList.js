@@ -1,34 +1,53 @@
 import React, { Component } from "react";
 import {
-  // Col,
-  // Input,
-  // FormGroup,
-  // InputGroup,
-  // Row,
+  Col,
+  Input,
+  FormGroup,
+  InputGroup,
+  Row,
   Button,
   UncontrolledTooltip,
-  // Form,
-  // Label,
+  Form,
+  Label,
   Table,
+  Card
 } from "reactstrap";
-import NoDataFound from "../../components/common/NoFound"
+import NoDataFound from "../common/NoFound"
 import { AppConfig } from "../../config/AppConfig";
 import moment from "moment";
-import { CrmTimeClockModal } from "../../components/common/CrmTimeClockModel";
+import { CrmTimeClockModal } from "../common/CrmTimeClockModel";
 import { calculateDurationFromSeconds } from "../../helpers/Sum"
 import { ConfirmBox } from "../../helpers/SweetAlert";
-import Dollor from "../../components/common/Dollor"
-import Loader from "../Loader/Loader";
+import Dollor from "../common/Dollor"
+import Loader from "../../containers/Loader/Loader";
+import PaginationHelper from "../../helpers/Pagination";
+import * as qs from "query-string";
 
 class TimeLogList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 1,
-      timeLogEle: ""
+      timeLogEle: "",
+      search: "",
+      sort: ""
     };
   }
-
+  componentDidMount() {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page, search, sort } = qs.parse(lSearch);
+    let filterApplied = false;
+    if (search || sort) {
+      filterApplied = true;
+    }
+    this.setState({
+      page: parseInt(page) || 1,
+      sort: sort || "",
+      search: search || "",
+      filterApplied
+    })
+  }
   handleEditTimeClockModal = (timeLogs) => {
     const { modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -40,7 +59,52 @@ class TimeLogList extends Component {
       timeClockEditModalOpen: !timeClockEditModalOpen
     });
   };
-
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    })
+  }
+  /* 
+  /*
+  */
+  onSearch = e => {
+    e.preventDefault();
+    this.setState({
+      page: 1,
+    });
+    const { search, sort } = this.state;
+    const query = {
+      page: 1,
+      search,
+      sort
+    };
+    this.setState({
+      filterApplied: true,
+      page: 1
+    });
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo([pathname, qs.stringify(query)].join("?"))
+  };
+  /* 
+  /*
+  */
+  onReset = e => {
+    e.preventDefault();
+    this.setState({
+      page: 1,
+      search: "",
+      sort: "",
+      filterApplied: false
+    });
+    const { location } = this.props;
+    const { pathname } = location;
+    this.props.redirectTo(`${pathname}`);
+  };
+  /* 
+  /*
+  */
   handleTimeLogdelete = async (timeLogId, orderId) => {
     const { value } = await ConfirmBox({
       text: "You want to delete this time log?"
@@ -56,6 +120,16 @@ class TimeLogList extends Component {
     }
     this.props.editTimeLogRequest(paylod)
   }
+  /* 
+  */
+  onPageChange = page => {
+    const { location } = this.props;
+    const { search, pathname } = location;
+    const query = qs.parse(search);
+    this.props.redirectTo(
+      [pathname, qs.stringify({ ...query, page })].join('?')
+    );
+  };
 
   render() {
     const {
@@ -65,26 +139,52 @@ class TimeLogList extends Component {
       orderReducer,
       editTimeLogRequest,
       modelInfoReducer,
+      totalDuration,
+      totalTimeLogs,
       isSuccess } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockEditModalOpen } = modelDetails;
-    const { page, timeLogEle } = this.state
+    const { page, timeLogEle, search, sort } = this.state
+    let activity, orderId
     return (
       <div>
-        {/* <div className={"filter-block"}>
+        <div className={""}>
+          <Row>
+            <Col md={"3"}>
+              <Card className={"p-3"}>
+                <div className={"d-flex"}>
+                  <div className={"pt-2"}>
+                    <div className={"time-clock-icon"}>
+                      <i className={"fa fa-clock-o"} />
+                    </div>
+                  </div>
+                  <div className={"pt-3 pl-3"}>
+                    <span className={"text-uppercase"}>HOURS TRACKED</span>
+                  </div>
+                  <div className={"pl-4"}>
+                    <span className={"hours-tracked"}>{
+                      !isNaN((totalDuration / 3600).toFixed(2)) ? (totalDuration / 3600).toFixed(2) : 0.00}
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+        <div className={"filter-block"}>
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
                   <InputGroup className="mb-2">
-                    <input
+                    <Input
                       type="text"
                       name="search"
                       onChange={this.handleChange}
                       className="form-control"
-                      value={"search"}
+                      value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by Labor description"
+                      placeholder="Search by Technician"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -96,12 +196,14 @@ class TimeLogList extends Component {
                     name="sort"
                     id="SortFilter"
                     onChange={this.handleChange}
-                    value={"sort"}
+                    value={sort}
                   >
                     <option className="form-control" value={""}>
-                      Sort
+                      All
                     </option>
-                    <option value={"createddesc"}>Last Created</option>
+                    <option value={"today"}>Today</option>
+                    <option value={"thisWeek"}>This Week</option>
+                    <option value={"thisMonth"}>This Month</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -139,7 +241,7 @@ class TimeLogList extends Component {
               </Col>
             </Row>
           </Form>
-        </div> */}
+        </div>
         <Table responsive className={"time-log-table"}>
           <thead>
             <tr>
@@ -160,19 +262,21 @@ class TimeLogList extends Component {
           <tbody>
             {isSuccess ?
               timeLogData && timeLogData.length ? timeLogData.map((timeLog, index) => {
+                activity = timeLog.activity
+                orderId = timeLog.orderId && timeLog.orderId.length ? timeLog.orderId[0]._id : null
                 return (
                   <tr key={index}>
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td className={"text-capitalize"}>{timeLog.type}</td>
                     <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
-                    <td className={"text-capitalize"}>{timeLog.orderId && timeLog.orderId.customerId ? `${timeLog.orderId.customerId.firstName} ${timeLog.orderId.customerId.lastName}` : "-"}</td>
-                    <td>{timeLog.orderId && timeLog.orderId.vehicleId ? `${timeLog.orderId.vehicleId.make} ${timeLog.orderId.vehicleId.modal}` : "-"}</td>
-                    <td>{moment.utc(timeLog.startDateTime).format("MM/DD/YYYY  hh:mm A")}</td>
-                    <td>{moment.utc(timeLog.endDateTime).format("MM/DD/YYYY hh:mm A")}</td>
+                    <td className={"text-capitalize"}>{timeLog.customerId && timeLog.customerId.length ? `${timeLog.customerId[0].firstName} ${timeLog.customerId[0].lastName}` : "-"}</td>
+                    <td>{timeLog.vehicleId && timeLog.vehicleId.length ? `${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}` : "-"}</td>
+                    <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm")}</td>
+                    <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
                     <td>{timeLog.activity}</td>
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
-                    <td><Dollor value={`${parseFloat(timeLog.total).toFixed(2)}`} /></td>
+                    <td><Dollor value={!isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
                     <td className={"text-center"}>
                       {
                         timeLog.type !== "timeclock" ?
@@ -195,7 +299,7 @@ class TimeLogList extends Component {
                       <Button
                         size={"sm"}
                         id={`delete-${timeLog._id}`}
-                        onClick={() => this.handleTimeLogdelete(timeLog._id, timeLog.orderId._id)}
+                        onClick={() => this.handleTimeLogdelete(timeLog._id, timeLog.orderId && timeLog.orderId.length ? timeLog.orderId[0]._id : null)}
                         className={"btn-theme-transparent"}
                       >
                         <i className={"icons cui-trash"} />
@@ -222,12 +326,27 @@ class TimeLogList extends Component {
             }
           </tbody>
         </Table>
+        {totalTimeLogs && isSuccess ? (
+          <PaginationHelper
+            totalRecords={totalTimeLogs}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.onPageChange(page);
+            }}
+            currentPage={page}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
         <CrmTimeClockModal
           openTimeClockModal={timeClockEditModalOpen}
           getUserData={getUserData}
           timeLogEle={timeLogEle}
           handleTimeClockModal={this.handleEditTimeClockModal}
           orderReducer={orderReducer}
+          activity={activity}
+          isWholeTimeClock={true}
+          isTimeClockData={true}
+          orderId={orderId}
           editTimeLogRequest={editTimeLogRequest}
         />
       </div>

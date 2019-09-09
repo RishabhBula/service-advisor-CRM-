@@ -6,7 +6,12 @@ const initialState = {
   isSuccess: false,
   timeLogData: [],
   technicianTime: [],
-  allTimeData: []
+  allTimeData: [],
+  technicianTodayData: [],
+  technicianWeekData: [],
+  technicianMonthData: [],
+  totalduration: 0,
+  totalTimeLogs: 0
 };
 
 export const timelogReducer = handleActions(
@@ -50,7 +55,12 @@ export const timelogReducer = handleActions(
     }),
     [timelogActions.GET_ALL_TIME_LOGS_SUCCESS]: (state, { payload }) => ({
       ...state,
-      allTimeData: payload,
+      allTimeData: payload.timeLogs,
+      totalDuration: payload.totalDuration,
+      totalTimeLogs: payload.totalTimeLogs,
+      technicianTodayData: payload.technicianTodayData,
+      technicianWeekData: payload.technicianWeekData,
+      technicianMonthData: payload.technicianMonthData,
       isSuccess: true
     })
   },

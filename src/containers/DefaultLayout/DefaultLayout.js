@@ -71,7 +71,7 @@ class DefaultLayout extends Component {
 
   componentDidMount() {
     if (!localStorage.getItem("token")) {
-      this.props.redirectTo("/login");
+      this.props.redirectTo("/home");
     } else {
       this.props.profileInfoAction();
     }

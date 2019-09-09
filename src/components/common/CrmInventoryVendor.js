@@ -279,7 +279,7 @@ export class CrmInventoryVendor extends Component {
                         placeholder='http://google.com'
                         value={url}
                         id='name'
-                        invalid={urlError && url}
+                        invalid={urlError && url ? true : false}
                       />
                       <FormFeedback>
                         {urlError && url ? urlError : null}

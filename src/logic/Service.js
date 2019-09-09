@@ -19,6 +19,11 @@ const addServiceLogic = createLogic({
    type: serviceActions.ADD_SERVICE,
    async process({ action }, dispatch, done) {
       //dispatch(showLoader());
+      dispatch(addServiceSuccess(
+         {
+            isServiceAdded: false
+         }
+      ));
       logger(action.payload);
       let api = new ApiHelper();
       let result = await api.FetchFromServer(
@@ -45,9 +50,7 @@ const addServiceLogic = createLogic({
          })
          dispatch(addServiceSuccess(
             {
-               serviceIds: serviceIds,
-               customerCommentId: result.data.commentResult._id,
-               services: result.data.serviceResultData
+               isServiceAdded: true
             }
          ));
          if (serviceIds.length) {
@@ -64,6 +67,7 @@ const addServiceLogic = createLogic({
                const payload = {
                   serviceId: serviceIdData,
                   remainingAmount: action.payload.orderTotal,
+                  isFullyPaid: action.payload.orderTotal === 0 ? true : false,
                   orderTotal: action.payload.orderTotal,
                   _id: action.payload.orderId,
                   customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
@@ -244,8 +248,9 @@ const getAllServiceLogic = createLogic({
             }
             dispatch(getAllServiceListSuccess(orderArray))
             done();
-         }else{
-            dispatch(getServiceDataSuccess(result.data.data))
+         } else {
+            dispatch(getServiceDataSuccess(result.data.data));
+            done();
          }
       }
    }

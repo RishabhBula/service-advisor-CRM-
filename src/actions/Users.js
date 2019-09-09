@@ -11,8 +11,6 @@ export const usersActions = {
   UPDATE_USER_STATUS: "Update user status Requested!",
   GET_SINGLE_USER_DETAILS_REQUEST: "Get a user data request",
   GET_SINGLE_USER_DETAILS_SUCCESS: "Get a user data success",
-  IS_TIME_CLOCK_START: "Time clock started for technician!",
-  IS_TIME_CLOCK_STOP: "Time clock stopped for technician!",
 };
 
 export const getUsersList = createAction(usersActions.GET_USER_LIST);
@@ -28,6 +26,3 @@ export const updateUserStatus = createAction(usersActions.UPDATE_USER_STATUS);
 
 export const getSingleUserRequest = createAction(usersActions.GET_SINGLE_USER_DETAILS_REQUEST);
 export const getSingleUserSuccess = createAction(usersActions.GET_SINGLE_USER_DETAILS_SUCCESS);
-
-export const isTimeClockStart = createAction(usersActions.IS_TIME_CLOCK_START);
-export const isTimeClockStop = createAction(usersActions.IS_TIME_CLOCK_STOP)

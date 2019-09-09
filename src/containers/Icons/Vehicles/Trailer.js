@@ -12,7 +12,7 @@ const Trailer = props => (
       width={props.size||"380.307px"} 
       height="141.743px"
       viewBox="0 0 380.307 141.743"
-      enable-background="new 0 0 380.307 141.743"
+      enableBackground="new 0 0 380.307 141.743"
       space="preserve"
     >
       <g>

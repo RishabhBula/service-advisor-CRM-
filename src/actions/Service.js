@@ -16,7 +16,9 @@ export const serviceActions = {
     DELETE_CANNED_SERVICE_REQUEST: "Delete canned service request",
     DELETE_CANNED_SERVICE_SUCCESS: "Delete canned service success",
     GET_ALL_SERVICE_LIST_REQUEST: "All service list request",
-    GET_ALL_SERVICE_LIST_SUCCESS: "All service list success"
+    GET_ALL_SERVICE_LIST_SUCCESS: "All service list success",
+    SUBMIT_SERVICE_DATA_SUCCESS: "Submit service data success",
+    UPDATE_ORDER_SERVICE_DATA: "Update order service data!"
 };
 
 export const getServiceList = createAction(serviceActions.GET_SERVICE_LIST);
@@ -36,4 +38,8 @@ export const deleteCannedServiceRequest = createAction(serviceActions.DELETE_CAN
 export const deleteCannedServiceSuccess = createAction(serviceActions.DELETE_CANNED_SERVICE_SUCCESS);
 export const getAllServiceListRequest = createAction(serviceActions.GET_ALL_SERVICE_LIST_REQUEST);
 export const getAllServiceListSuccess = createAction(serviceActions.GET_ALL_SERVICE_LIST_SUCCESS);
-export const getServiceDataSuccess = createAction(serviceActions.GET_SERVICE_DATA_SUCCESS)
+export const getServiceDataSuccess = createAction(serviceActions.GET_SERVICE_DATA_SUCCESS);
+
+export const submitServiceDataSuccess = createAction(serviceActions.SUBMIT_SERVICE_DATA_SUCCESS)
+
+export const updateOrderServiceData = createAction(serviceActions.UPDATE_ORDER_SERVICE_DATA)

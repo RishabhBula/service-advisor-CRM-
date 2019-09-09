@@ -16,10 +16,10 @@ class InvoiceTable extends Component {
   getServiceItems = serviceItemData => {
     let calSubTotal = 0;
     const styleTr = {
-      border:'0px'
+      border: '0px'
     }
     var table = [];
-    for (let j = 0; j < serviceItemData.length; j++) {
+    for (let j = 0; j < (serviceItemData && serviceItemData.length ? serviceItemData.length : 0); j++) {
       let service = serviceItemData[j];
       var val = service.description || service.brandName || service.discription;
       var note =
@@ -85,21 +85,21 @@ class InvoiceTable extends Component {
           </td>
           <td>
             {service.serviceType === "part" &&
-            service.partOptions &&
-            service.partOptions.showPriceOnQuoteAndInvoice
+              service.partOptions &&
+              service.partOptions.showPriceOnQuoteAndInvoice
               ? "$" + cost
               : service.serviceType === "tire"
-              ? "$" + cost
-              : "-" || "-"}
+                ? "$" + cost
+                : "-" || "-"}
           </td>
           <td>
             {service.serviceType === "part" &&
-            service.partOptions &&
-            service.partOptions.showPriceOnQuoteAndInvoice
+              service.partOptions &&
+              service.partOptions.showPriceOnQuoteAndInvoice
               ? qty
               : service.serviceType === "tire"
-              ? qty
-              : "-" || "-"}
+                ? qty
+                : "-" || "-"}
           </td>
           <td>{hours || "-"}</td>
           <td>{discountMainVal}</td>
@@ -121,18 +121,18 @@ class InvoiceTable extends Component {
         fontSize: "10px",
         width: "230px",
         paddingRight: "40px",
-        paddingBottom:"20px"
+        paddingBottom: "20px"
       },
       orderTableBlock = {
         float: "left",
         width: "50%",
-        paddingBottom:"20px"
+        paddingBottom: "20px"
       },
       headerStyle = {
         marginLeft: "8px",
         marginRight: "8px"
       },
-      
+
       servicePrice = {
         width: "150px",
         float: "left",
@@ -180,16 +180,17 @@ class InvoiceTable extends Component {
     for (let i = 0; i < servieArray.length; i++) {
       servicesId = servieArray[i].serviceId;
       serviceEpaPer =
-        servicesId && servicesId.epa.value && servicesId.epa.type === "%"
+        servicesId && servicesId.epa && servicesId.epa.value && servicesId.epa.type === "%"
           ? `(${servicesId.epa.value}%)`
           : "";
       serviceDiscountPer =
         servicesId &&
+          servicesId.discount &&
           servicesId.discount.value && servicesId.discount.type === "%"
           ? `(${servicesId.discount.value}%)`
           : "";
       serviceTaxPer =
-        servicesId && servicesId.taxes.value && servicesId.taxes.type === "%"
+        servicesId && servicesId.taxes && servicesId.taxes.value && servicesId.taxes.type === "%"
           ? `(${servicesId.taxes.value}%)`
           : "";
 

@@ -572,6 +572,7 @@ class GenralSettings extends Component {
                         name="address"
                         invalid={errors.address}
                         rows={"4"}
+                        maxLength={"1000"}
                       />
                       <FormFeedback>
                         {errors.address ? errors.address : null}

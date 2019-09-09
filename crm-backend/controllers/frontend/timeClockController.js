@@ -169,7 +169,7 @@ const stopTimer = async (req, res) => {
     result = await TimeClock.findOne({
       technicianId: technicianId,
       isCompleted: false
-    }).populate("technicianId orderId");
+    }).populate("technicianId");
   }
 
   /*  if (!result) {
@@ -179,7 +179,6 @@ const stopTimer = async (req, res) => {
      })
    } */
   const convertedDuration = result.duration / 3600;
-
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
       endDateTime: new Date(),
@@ -412,20 +411,256 @@ const updateTimeLogOfTechnician = async (req, res) => {
  *
  */
 const getAllTimeLogs = async (req, res) => {
-  const { currentUser } = req;
+  const { currentUser, query } = req;
   try {
-    const result = await TimeClock.find({
-      isDeleted: false,
-      userId: mongoose.Types.ObjectId(currentUser.id)
-    }).populate({
-      path: "technicianId orderId", match: {
-        isDeleted: false
+    const limit = parseInt(query.limit || 10);
+    const page = parseInt(query.page || 1);
+    const offset = page < 1 ? 0 : (page - 1) * limit;
+    const searchValue = query.search;
+    const sort = query.sort;
+    const id = currentUser.id;
+    const parentId = currentUser.parentId || currentUser.id;
+    /*
+    /*  
+    */
+    var nowDate = new Date();
+    const today = (nowDate.getMonth() + 1) + '-' + nowDate.getDate() + '-' + nowDate.getFullYear();
+    const startDate = new Date(new Date(today).setHours(0, 0, 0));
+    const currentMonthStart = moment(today).startOf('month').format('YYYY-MM-DD');
+    const currentMonthEnd = moment(today).endOf('month').format('YYYY-MM-DD');
+
+    const currentWeekStart = moment(today).startOf('week').format('YYYY-MM-DD');
+    const currentWeekEnd = moment(today).endOf('week').format('YYYY-MM-DD');
+
+    const monthStartDate = new Date(new Date(currentMonthStart).setHours(0, 0, 0));
+    const monthEndDate = new Date(new Date(currentMonthEnd).setHours(0, 0, 0));
+
+    const weekStartDate = new Date(new Date(currentWeekStart).setHours(0, 0, 0));
+    const weekEndDate = new Date(new Date(currentWeekEnd).setHours(0, 0, 0));
+    /*
+    /*  
+    */
+    let sortBy = {};
+    switch (sort) {
+      case "today":
+        sortBy = {
+          startDateTime: {
+            $gte: startDate
+          }
+        }
+        break;
+      case "thisWeek":
+        sortBy = {
+          startDateTime: {
+            $gte: weekStartDate,
+            $lte: weekEndDate
+          }
+        };
+        break;
+      case "thisMonth":
+        sortBy = {
+          startDateTime: {
+            $gte: monthStartDate,
+            $lte: monthEndDate
+          }
+        };
+        break;
+      default:
+        sortBy = {
+          createdAt: -1
+        };
+        break;
+    }
+    let condition = {};
+    condition["$and"] = [
+      {
+        $or: [
+          {
+            parentId: mongoose.Types.ObjectId(id)
+          },
+          {
+            parentId: mongoose.Types.ObjectId(parentId)
+          }
+        ]
+      },
+      {
+        $or: [
+          {
+            isDeleted: {
+              $exists: false
+            }
+          },
+          {
+            isDeleted: false
+          }
+        ]
+      },
+      {
+        _id: { $ne: mongoose.Types.ObjectId(id) }
       }
-    });
-    const timeLogData = await TimeClock.populate(result, { path: "orderId.vehicleId orderId.customerId" })
+    ];
+    if (searchValue) {
+      condition["$and"].push({
+        $or: [
+          {
+            "technicianId.firstName": {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            "technicianId.LastName": {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            activity: {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
+    const data = await TimeClock.aggregate([
+      {
+        $lookup:
+        {
+          from: "users",
+          localField: "technicianId",
+          foreignField: "_id",
+          as: "technicianId"
+        }
+      },
+      {
+        $lookup:
+        {
+          from: "orders",
+          localField: "orderId",
+          foreignField: "_id",
+          as: "orderId"
+        }
+      },
+      {
+        $lookup:
+        {
+          from: "vehicles",
+          localField: "orderId.vehicleId",
+          foreignField: "_id",
+          as: "vehicleId"
+        }
+      },
+      {
+        $lookup:
+        {
+          from: "customers",
+          localField: "orderId.customerId",
+          foreignField: "_id",
+          as: "customerId"
+        }
+      },
+      { $unwind: "$technicianId" },
+      {
+        $match: { ...condition }
+      }
+    ])
+      .skip(offset)
+      .limit(limit)
+      .sort(sortBy);
+
+    const getAllTimeLogCount = await TimeClock.aggregate([
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
+    const getSumOfDuration = await TimeClock.aggregate([
+      {
+        $match: { ...condition }
+      },
+      {
+        $group: {
+          _id: null,
+          duration: {
+            $sum: "$duration"
+          },
+          total: {
+            $sum: "$total"
+          }
+        }
+      }
+    ])
+
+    const type = 'timeclock'
+    const getTodayDurationOfTechnician = await TimeClock.aggregate([
+      {
+        $match: {
+          startDateTime: {
+            $gte: startDate
+          },
+          isDeleted: false,
+          type: type
+        }
+      },
+      {
+        $group: {
+          _id: "$technicianId",
+          duration: {
+            $sum: "$duration"
+          }
+        }
+      }
+    ])
+
+    const getWeekDurationOfTechnician = await TimeClock.aggregate([
+      {
+        $match: {
+          startDateTime: {
+            $gte: weekStartDate,
+            $lte: weekEndDate
+          },
+          isDeleted: false,
+          type: type
+        }
+      },
+      {
+        $group: {
+          _id: "$technicianId",
+          duration: {
+            $sum: "$duration"
+          }
+        }
+      }
+    ])
+    const getMonthDurationOfTechnician = await TimeClock.aggregate([
+      {
+        $match: {
+          startDateTime: {
+            $gte: monthStartDate,
+            $lte: monthEndDate
+          },
+          isDeleted: false,
+          type: type
+        }
+      },
+      {
+        $group: {
+          _id: "$technicianId",
+          duration: {
+            $sum: "$duration"
+          }
+        }
+      }
+    ])
     return res.status(200).json({
       message: "Timer get success!",
-      data: timeLogData || []
+      data: data || [],
+      technicianTodayData: getTodayDurationOfTechnician,
+      technicianWeekData: getWeekDurationOfTechnician,
+      technicianMonthData: getMonthDurationOfTechnician,
+      totalDuration: getSumOfDuration[0] ? getSumOfDuration[0].duration : 0,
+      totalTimeLogs: getAllTimeLogCount[0] ? getAllTimeLogCount[0].count : 0,
+      totalEarning: getSumOfDuration[0] ? getSumOfDuration[0].total : 0,
     });
   } catch (error) {
     console.log("this is update timelog error", error);

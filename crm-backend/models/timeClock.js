@@ -23,18 +23,18 @@ const timeClockSchema = new Schema({
     default: null
   },
   startDateTime: {
-    type: String,
+    type: Date,
     default: null
   },
   endDateTime: {
-    type: String,
+    type: Date,
     default: null
   },
   notes: {
     type: String,
     default: null
   },
-  isCompleted:{
+  isCompleted: {
     type: Boolean,
     default: false
   },
@@ -51,7 +51,7 @@ const timeClockSchema = new Schema({
     default: null
   },
   total: {
-    type: String,
+    type: Number,
     default: null
   },
   isDeleted: {

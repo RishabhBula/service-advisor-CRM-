@@ -51,9 +51,7 @@ const fleetAddLogic = createLogic({
       dispatch(hideLoader());
       dispatch(fleetAddSuccess());
       dispatch(
-        fleetListRequest({
-          ...action.payload
-        })
+        fleetListRequest({ page: action.payload.page ? action.payload.page : 1, search: action.payload.search ? action.payload.search : null, sort: action.payload.sort ? action.payload.sort : null, status: action.payload.status ? action.payload.status : null })
       );
       done();
     }
@@ -93,7 +91,7 @@ const fleetListLogic = createLogic({
       dispatch(
         fleetListSuccess({
           fleetData: result.data,
-          isLoading:false
+          isLoading: false
         }),
         hideLoader()
       );
@@ -130,9 +128,7 @@ const editFleetLogic = createLogic({
         })
       );
       dispatch(
-        fleetListRequest({
-          ...action.payload
-        })
+        fleetListRequest({ page: action.payload.page ? action.payload.page : 1, search: action.payload.search ? action.payload.search : null, sort: action.payload.sort ? action.payload.sort : null, status: action.payload.status ? action.payload.status : null })
       );
       done();
     }

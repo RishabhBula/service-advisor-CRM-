@@ -713,7 +713,7 @@ class CannedServiceUpdate extends Component {
                               onChange={(e) => this.handleChange(e, index)}
                               name={"note"}
                               value={item.note}
-                              maxLength={"200"}
+                              maxLength={"1000"}
                               rows={"2"} cols={"3"}
                               placeholder={"Add Note for this service"}
                             />

@@ -6,7 +6,9 @@ import {
   UncontrolledTooltip,
   UncontrolledPopover,
   PopoverHeader,
-  PopoverBody
+  PopoverBody,
+  FormGroup,
+  Input
 } from "reactstrap";
 import {
   getSumOfArray,
@@ -25,6 +27,8 @@ class OrderDetails extends Component {
     this.state = {
       orderId: "",
       query: "",
+      poNumber: "",
+      isTextField: false,
       orderStatus: false,
       activityLogs: [],
       serviceDataObject: {},
@@ -37,7 +41,9 @@ class OrderDetails extends Component {
     const { activityReducer, orderReducer } = this.props;
     const orderId = orderReducer.orderItems._id;
     this.setState({
-      activityLogs: activityReducer.activity
+      activityLogs: activityReducer.activity,
+      poNumber: this.props.orderReducer && this.props.orderReducer.orderItems && this.props.orderReducer.orderItems.poNumber !== null ? this.props.orderReducer.orderItems.poNumber : "",
+      isTextField: false
     });
     this.props.getAppointments({
       technicianId: null,
@@ -46,7 +52,7 @@ class OrderDetails extends Component {
     });
   };
 
-  componentDidUpdate = ({ activityReducer, isPrint, appointmentReducer }) => {
+  componentDidUpdate = ({ activityReducer, isPrint, appointmentReducer, orderReducer }) => {
     const activityData = this.props.activityReducer;
     const orderId = this.props.orderReducer.orderItems._id;
     const appointmentReducerData = this.props.appointmentReducer;
@@ -71,6 +77,12 @@ class OrderDetails extends Component {
         orderId: orderId
       });
     }
+    if (this.props.orderReducer && this.props.orderReducer.orderItems && this.props.orderReducer.orderItems.poNumber && orderReducer.orderItems && orderReducer.orderItems.poNumber && this.props.orderReducer.orderItems.poNumber !== orderReducer.orderItems.poNumber) {
+      this.setState({
+        poNumber: this.props.orderReducer.orderItems.poNumber,
+        isTextField: false
+      })
+    }
   };
 
   toggleAddAppointModal = () => {
@@ -91,29 +103,58 @@ class OrderDetails extends Component {
     });
   };
 
-  handleType = (e, workflowStatus, orderId) => {
+  handleType = (e, workflowStatus, orderId, groupedOptions) => {
+    console.log("groupedOptions",groupedOptions);
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
       to: e.id,
       orderId,
       destinationIndex: 0,
-      sourceIndex: 0
+      sourceIndex: 0,
+      toStatusName: e.label,
+      fromStatusName: fromStatus[0].label
+    });
+    if (e.label === "Invoices") {
+      this.props.orderStatus("invoiceStatus", true);
+    }
+    else {
+      this.props.orderStatus("invoiceStatus", false)
+    }
+  };
+  handleType1 = (workflowStatus, orderId, groupedOptions,orderStatus) => {
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
+    let toStatus = ""
+    if(orderStatus === true){
+      toStatus = groupedOptions.filter(item => item.label === "Invoices");
+    } else {
+      toStatus = groupedOptions.filter(item => item.label === "Estimate")
+    }
+    this.props.updateOrderStatus({
+      from: workflowStatus,
+      to: toStatus[0].id,
+      orderId,
+      destinationIndex: 0,
+      sourceIndex: 0,
+      toStatusName: toStatus[0].label,
+      fromStatusName: fromStatus[0].label
     });
   };
 
   getScheduleDate = () => {
     const { orderReducer, appointmentReducer } = this.props;
-    let orderOfId = "",
-      scheduleDate = "",
+    let scheduleDate = "",
       finalDate = "";
     if (
       orderReducer &&
       orderReducer.orderItems &&
       orderReducer.orderItems.customerId &&
       orderReducer.orderItems.vehicleId &&
-      orderReducer.orderItems._id
+      orderReducer.orderItems._id &&
+      appointmentReducer &&
+      appointmentReducer.data &&
+      appointmentReducer.data.length
     ) {
-      orderOfId = orderReducer.orderItems._id;
       finalDate = appointmentReducer.data.filter(
         data =>
           moment(data.appointmentDate).format("MMM Do YYYY") >=
@@ -154,6 +195,22 @@ class OrderDetails extends Component {
       </>
     );
   };
+  handleChange = () => {
+    this.setState({
+      isTextField: !this.state.isTextField
+    })
+  };
+  onInputChange = e => {
+    const { target } = e;
+    const { name, value } = target;
+    this.setState({
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
+    });
+  };
 
   render() {
     const {
@@ -176,12 +233,12 @@ class OrderDetails extends Component {
       : [];
     const payedAmountList =
       paymentList &&
-      paymentList.length &&
-      paymentList[0].payedAmount &&
-      paymentList[0].payedAmount.length
+        paymentList.length &&
+        paymentList[0].payedAmount &&
+        paymentList[0].payedAmount.length
         ? paymentList[0].payedAmount
         : null;
-    const { activityLogs } = this.state;
+    const { activityLogs, isTextField, poNumber } = this.state;
     const orderData = orderReducer.orderItems ? orderReducer.orderItems : {};
     const createdDate = orderReducer.orderItems
       ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY LT")
@@ -208,17 +265,17 @@ class OrderDetails extends Component {
 
     const fleetStatus =
       orderReducer &&
-      orderReducer.orderItems &&
-      orderReducer.orderItems.customerId &&
-      orderReducer.orderItems.customerId.fleet
+        orderReducer.orderItems &&
+        orderReducer.orderItems.customerId &&
+        orderReducer.orderItems.customerId.fleet
         ? true
         : false;
     let fleetDiscount =
       orderReducer &&
-      orderReducer.orderItems &&
-      orderReducer.orderItems.customerId &&
-      orderReducer.orderItems.customerId.fleet ? orderReducer.orderItems.customerId.fleet.fleetDefaultPermissions
-        .shouldReceiveDiscount.percentageDiscount : 0;
+        orderReducer.orderItems &&
+        orderReducer.orderItems.customerId &&
+        orderReducer.orderItems.customerId.fleet ? orderReducer.orderItems.customerId.fleet.fleetDefaultPermissions
+          .shouldReceiveDiscount.percentageDiscount : 0;
 
     const orderStatus = orderReducer.orderStatus;
     const groupedOptions = [];
@@ -275,27 +332,69 @@ class OrderDetails extends Component {
                   </UncontrolledTooltip>
                 </>
               ) : (
-                <>
-                  <Button
-                    color={"secondary"}
-                    className={"btn btn-sm"}
-                    id={"ScheduleStatus"}
-                  >
-                    Schedule
+                  <>
+                    <Button
+                      color={"secondary"}
+                      className={"btn btn-sm"}
+                      id={"ScheduleStatus"}
+                    >
+                      Schedule
                   </Button>
-                  <UncontrolledTooltip target={"ScheduleStatus"}>
-                    Please update user and vehicle details
+                    <UncontrolledTooltip target={"ScheduleStatus"}>
+                      Please update user and vehicle details
                   </UncontrolledTooltip>
-                </>
-              )}
+                  </>
+                )}
             </span>
           </div>
           <div className={"d-flex justify-content-between pb-2 pl-2"}>
             <span className={"name-label"}>PO Number</span>
             <span>
-              <Button color={"secondary"} className={"btn btn-sm"}>
-                + Add
-              </Button>
+              {poNumber !== "" || isTextField ? (isTextField === true ?
+                <FormGroup>
+                  <Input
+                    type="text"
+                    name="poNumber"
+                    value={poNumber ? poNumber : ""}
+                    onChange={this.onInputChange}
+                    placeholder="Enter PO number"
+                  />
+                  <div className="d-flex pt-1 ">
+                    <Button
+                      type="button"
+                      className="btn-sm mr-2 update-btn"
+                      onClick={
+                        () => {
+                          this.props.onUpdate("poNumber", poNumber);
+                          this.handleChange();
+                        }}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      type="button"
+                      className="btn-sm cancel-btn"
+                      onClick={(e) => this.handleChange()}
+                    >
+                      Cancle
+                    </Button>
+                  </div>
+                </FormGroup> :
+                <span>
+                  <div>{poNumber}</div>
+                  <div><Button
+                    type="button"
+                    color={"secondary"} className={"btn btn-sm"}
+                    onClick={(e) => this.handleChange()}
+                  >
+                    Edit
+                    </Button></div>
+                </span>
+              ) : (
+                  <Button color={"secondary"} className={"btn btn-sm"} onClick={(e) => this.handleChange()}>
+                    + Add
+                  </Button>
+                )}
             </span>
           </div>
           <div
@@ -383,7 +482,8 @@ class OrderDetails extends Component {
                 this.handleType(
                   e,
                   orderReducer.orderItems.workflowStatus,
-                  orderReducer.orderItems._id
+                  orderReducer.orderItems._id,
+                  groupedOptions
                 )
               }
               classNamePrefix={"form-select-theme"}
@@ -393,14 +493,14 @@ class OrderDetails extends Component {
         <div className={"service-warp border-top pt-2 mt-1"}>
           {serviceData && serviceData.length
             ? serviceData.map((item, index) => {
-                let mainserviceTotal = [],
-                  serviceTotal,
-                  epa,
-                  discount,
-                  tax;
-                return (
-                  <div key={index} className={""}>
-                    {item.serviceId &&
+              let mainserviceTotal = [],
+                serviceTotal,
+                epa,
+                discount,
+                tax;
+              return (
+                <div key={index} className={""}>
+                  {item.serviceId &&
                     item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
                       ? item.serviceId.serviceItems.map((service, sIndex) => {
@@ -469,26 +569,26 @@ class OrderDetails extends Component {
                         ((orderGandTotal += parseFloat(serviceTotal) || 0),
                         fleetStatus
                           ? (fleetDiscount = calculateValues(
-                              orderGandTotal,
-                              fleetDiscount,
-                              "%"
-                            ))
+                            orderGandTotal,
+                            fleetDiscount,
+                            "%"
+                          ))
                           : 0,
                         fleetStatus
                           ? (orderGandTotal = orderGandTotal - fleetDiscount)
                           : 0)
-                      }
-                    </span>
+                    }
+                  </span>
 
-                    <span className={"d-none"}>
-                      {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
-                    </span>
-                    <span className={"d-none"}>
-                      {(totalDiscount += parseFloat(discount) || 0)}
-                    </span>
-                  </div>
-                );
-              })
+                  <span className={"d-none"}>
+                    {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
+                  </span>
+                  <span className={"d-none"}>
+                    {(totalDiscount += parseFloat(discount) || 0)}
+                  </span>
+                </div>
+              );
+            })
             : ""}
           {paymentList && paymentList.length
             ? paymentList.map(paymentData => {
@@ -571,8 +671,8 @@ class OrderDetails extends Component {
               <div className={"clearfix"} />
             </>
           ) : (
-            ""
-          )}
+              ""
+            )}
         </div>
         <hr />
         <div className={"text-center payment-section"}>
@@ -602,33 +702,33 @@ class OrderDetails extends Component {
           ) : null}
           {paymentList && paymentList.length
             ? paymentList
-                .slice(0)
-                .reverse()
-                .map((paymentData, pIndex) => {
-                  return (
-                    <div key={pIndex} className={"activity-block p-3"}>
-                      <div className={"pr-3 text-left"}>
-                        <span>{`Paid $${paymentData.payedAmount[
-                          paymentData.payedAmount.length - 1
-                        ].amount.toFixed(2)} viea ${
-                          paymentData.paymentType
+              .slice(0)
+              .reverse()
+              .map((paymentData, pIndex) => {
+                return (
+                  <div key={pIndex} className={"activity-block p-3"}>
+                    <div className={"pr-3 text-left"}>
+                      <span>{`Paid $${paymentData.payedAmount[
+                        paymentData.payedAmount.length - 1
+                      ].amount.toFixed(2)} viea ${
+                        paymentData.paymentType
                         } on date`}</span>
-                      </div>
-                      <div className={"text-left activity-date"}>
-                        <span>
-                          {moment(
-                            paymentData.payedAmount[
-                              paymentData.payedAmount.length - 1
-                            ].date
-                          ).format("MMM Do YYYY, h:mm A")}
-                        </span>
-                      </div>
-                      <span className={"activity-icon payment-set"}>
-                        <i className={"fa fa-dollar-sign"} />
+                    </div>
+                    <div className={"text-left activity-date"}>
+                      <span>
+                        {moment(
+                          paymentData.payedAmount[
+                            paymentData.payedAmount.length - 1
+                          ].date
+                        ).format("MMM Do YYYY, h:mm A")}
                       </span>
                     </div>
-                  );
-                })
+                    <span className={"activity-icon payment-set"}>
+                      <i className={"fa fa-dollar-sign"} />
+                    </span>
+                  </div>
+                );
+              })
             : null}
         </div>
         <hr />
@@ -638,48 +738,56 @@ class OrderDetails extends Component {
           ) : null}
           {activityLogs && activityLogs.length
             ? activityLogs
-                .slice(0)
-                .reverse()
-                .map((activity, index) => {
-                  return (
-                    <div key={index} className={"activity-block p-3"}>
-                      <div className={"pr-3 text-left"}>
-                        <span>
-                          {activity.activityPerson.firstName}{" "}
-                          {activity.activityPerson.lastName}{" "}
-                          {activity.type !== "NEW_ORDER" &&
-                          activity.type !== "ADD_PAYMENT"
-                            ? "changed"
-                            : null}{" "}
-                          {activity.name}
-                        </span>
-                      </div>
-                      <div className={"text-left activity-date"}>
-                        <span>
-                          {moment(activity.createdAt).format(
-                            "MMM Do YYYY, h:mm A"
-                          )}
-                        </span>
-                      </div>
-                      <span
-                        className={
-                          activity.type === "MESSAGE"
-                            ? "activity-icon activity-message"
-                            : "activity-icon activity-set"
-                        }
-                      >
+              .slice(0)
+              .reverse()
+              .map((activity, index) => {
+                let dateA = moment(activity.createdAt).format("L");
+                let dateB = moment().format('L');
+                let dayDiff = moment(dateB).diff(moment(dateA), 'days');
+                return (
+                  <div key={index} className={"activity-block p-3"}>
+                    <div className={"pr-3 text-left"}>
+                      <span className="text-capitalize">
+                        {activity.activityPerson.firstName}{" "}
+                        {activity.activityPerson.lastName}{" "}
                         {activity.type !== "NEW_ORDER" &&
-                        activity.type !== "ADD_PAYMENT" &&
-                        activity.type !== "INVOICE_ORDER" ? (
-                          <i className={"fa fa-check"} />
-                        ) : null}
-                        {activity.type === "ADD_PAYMENT" ? (
-                          <i className={"fa fa-dollar-sign"} />
-                        ) : null}
+                          activity.type !== "ADD_PAYMENT" &&
+                          activity.type !== "NEW_MESSAGE" &&
+                          activity.type !== "UPDATE_STATUS"
+                          ? "changed"
+                          : null}{" "}
+                        {activity.name}
                       </span>
                     </div>
-                  );
-                })
+                    <div className={"text-left activity-date"}>
+                      <span>
+                        {dayDiff >= 1 ? moment(activity.createdAt).format("MMM Do YYYY, h:mm A") : moment(activity.createdAt).startOf('seconds').fromNow()}
+                      </span>
+                    </div>
+                    <span
+                      className={
+                        activity.type === "NEW_MESSAGE"
+                          ? "activity-icon activity-message"
+                          : "activity-icon activity-set"
+                      }
+                    >
+                      {activity.type !== "NEW_ORDER" &&
+                        activity.type !== "ADD_PAYMENT" &&
+                        activity.type !== "INVOICE_ORDER" &&
+                        activity.type !== "UPDATE_STATUS" &&
+                        activity.type !== "NEW_MESSAGE" ? (
+                          <i className={"fa fa-check"} />
+                        ) : null}
+                      {activity.type === "ADD_PAYMENT" ? (
+                        <i className={"fa fa-dollar-sign"} />
+                      ) : null}
+                      {activity.type === "NEW_MESSAGE" ? (
+                        <i className="fas fa-bars mt-1" />
+                      ) : null}
+                    </span>
+                  </div>
+                );
+              })
             : ""}
         </div>
 

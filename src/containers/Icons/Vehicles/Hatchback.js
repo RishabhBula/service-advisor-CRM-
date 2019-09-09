@@ -12,7 +12,7 @@ const Hatchback = props => (
       width={props.size||"355.417px"}
       height="125.492px"
       viewBox="0 0 355.417 125.492"
-      enable-background="new 0 0 355.417 125.492"
+      enableBackground="new 0 0 355.417 125.492"
     >
       <g>
         <path

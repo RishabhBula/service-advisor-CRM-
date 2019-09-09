@@ -1,4 +1,6 @@
 const AppointmentModal = require("../../models/appointment");
+const Orders = require("../../models/order");
+const userModel = require("../../models/user");
 const Mongoose = require("mongoose");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const { sendSMS } = require("./../../common/SMS");
@@ -69,7 +71,6 @@ const appointmentList = async (req, res) => {
           $gte: start
         }
       });
-      console.log(start);
     }
     if (end) {
       end = new Date(new Date(end).setUTCHours(0, 0, 0, 0));
@@ -145,11 +146,13 @@ const addAppointment = async (req, res) => {
       userId: id,
       techinicians
     };
+    let Name = "";
     if (vehicleId) {
       dataToSave.vehicleId = Mongoose.Types.ObjectId(vehicleId);
     }
     if (orderId) {
       dataToSave.orderId = Mongoose.Types.ObjectId(orderId);
+      Name = await Orders.findOne({ _id: orderId }, { orderName: 1 });
     }
     const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
@@ -157,15 +160,16 @@ const addAppointment = async (req, res) => {
       await sendSMS(phone, "Hello", id);
     }
     if (isEmail) {
+      const result = await userModel.findOne({ _id: id }, { companyName: 1 });
       const emailVar = new Email(body);
       const scheduledDate = moment(appointmentDate).format("lll")
       await emailVar.setSubject("[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`);
       const message = `Your appointment has been scheduled for ${appointmentTitle}`
       await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
         body: message,
-        orderTitle: "Payment Info",
+        orderTitle: Name.orderName ? Name.orderName : "Unnamed Order",
         createdAt: scheduledDate,
-        companyName: "Fix It All",
+        companyName: result.companyName,
         titleMessage: "Your appointment has been scheduled for",
         displayStyle: `style="text-align:center; display: none";`
       });
@@ -254,7 +258,9 @@ const updateAppointment = async (req, res) => {
       email,
       sendEmail,
       sendMessage,
-      techinicians
+      techinicians,
+      isEmail,
+      isSms
     } = body;
     const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]));
     const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]));
@@ -274,11 +280,13 @@ const updateAppointment = async (req, res) => {
       userId: id,
       techinicians
     };
+    let Name = "";
     if (vehicleId) {
       dataToSave.vehicleId = Mongoose.Types.ObjectId(vehicleId);
     }
     if (orderId) {
       dataToSave.orderId = Mongoose.Types.ObjectId(orderId);
+      Name = await Orders.findOne({ _id: orderId }, { orderName: 1 });
     }
     const result = await AppointmentModal.updateOne(
       { _id: Mongoose.Types.ObjectId(appointmentId) },
@@ -286,7 +294,26 @@ const updateAppointment = async (req, res) => {
         $set: dataToSave
       }
     );
-
+    if (isSms) {
+      await sendSMS(phone, "Hello", id);
+    }
+    if (isEmail) {
+      const result = await userModel.findOne({ _id: id }, { companyName: 1 });
+      const emailVar = new Email(body);
+      const scheduledDate = moment(appointmentDate).format("lll")
+      await emailVar.setSubject("[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`);
+      const message = `Your appointment has been scheduled for ${appointmentTitle}`
+      await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+        body: message,
+        orderTitle: Name.orderName ? Name.orderName : "Unnamed Order",
+        createdAt: scheduledDate,
+        companyName: result.companyName,
+        titleMessage: "Your appointment has been scheduled for",
+        displayStyle: `style="text-align:center; display: none";`
+      });
+      await emailVar.sendEmail(email);
+    }
+    /* notify via sms */
     res.status(200).json({
       message: "Appointment updated successfully.",
       data: result

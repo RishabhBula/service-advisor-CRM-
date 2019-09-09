@@ -188,6 +188,7 @@ class Customers extends Component {
               &nbsp; */}
               <CrmImportExcel
                 modalHeaderText={"Import Customer data"}
+                importSectionName={"customer"}
                 onImport={this.onImport}
                 buttonText={"Import Customers"}
                 buttonIcon={"fa fa-download"}

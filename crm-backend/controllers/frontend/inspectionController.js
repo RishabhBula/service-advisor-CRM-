@@ -3,7 +3,7 @@ const commonValidation = require("../../common");
 const mongoose = require("mongoose");
 const { validationResult } = require("express-validator/check");
 const fs = require("fs");
-const pdf = require('html-pdf');
+const pdf = require("html-pdf");
 const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
 const { resizeImage, imagePath } = require("../../common/imageThumbnail");
@@ -17,7 +17,7 @@ const types = {
 };
 /* get order number */
 const creteNewInspection = async (req, res) => {
-  const { body, currentUser } = req
+  const { body, currentUser } = req;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -26,21 +26,30 @@ const creteNewInspection = async (req, res) => {
     });
   }
   try {
-    let result = []
-    let inspectionContent
+    let result = [];
+    let inspectionContent;
     for (let index = 0; index < body.inspection.length; index++) {
       const element = body.inspection[index];
-      let inspectionItems = []
+      let inspectionItems = [];
       for (let index = 0; index < element.items.length; index++) {
         const inspection = element.items[index];
-        let S3ImapectionImg = [], S3ImapectionImgThumb = []
-        for (let index = 0; index < inspection.itemImagePreview.length; index++) {
+        let S3ImapectionImg = [],
+          S3ImapectionImgThumb = [];
+        for (
+          let index = 0;
+          index < inspection.itemImagePreview.length;
+          index++
+        ) {
           const inspectionImage = inspection.itemImagePreview[index];
-          let inspectionImageUrl = []
+          let inspectionImageUrl = [];
           if (typeof inspectionImage === "string") {
-            inspectionImageUrl = inspectionImage.split("https")
+            inspectionImageUrl = inspectionImage.split("https");
           }
-          let fileName, originalImagePath, inspectionImageThumb, inspectionImageOriginal, fileData
+          let fileName,
+            originalImagePath,
+            inspectionImageThumb,
+            inspectionImageOriginal,
+            fileData;
           if (!inspectionImageUrl[1] || inspectionImageUrl[1] === "undefined") {
             const base64Image = inspectionImage.dataURL.replace(
               /^data:image\/\w+;base64,/,
@@ -48,11 +57,13 @@ const creteNewInspection = async (req, res) => {
             );
             var buf = new Buffer.from(base64Image, "base64");
             const type = types[base64Image.charAt(0)];
-            fileName = [inspectionImage.name].join(
-              ""
+            fileName = [inspectionImage.name].join("");
+            originalImagePath = path.join(
+              __basedir,
+              "inspection-img",
+              fileName
             );
-            originalImagePath = path.join(__basedir, "inspection-img", fileName);
-            fileData = fs.writeFileSync(originalImagePath, buf)
+            fileData = fs.writeFileSync(originalImagePath, buf);
             var thumbnailImagePath = path.join(
               __basedir,
               "inspection-img-thumb",
@@ -60,29 +71,37 @@ const creteNewInspection = async (req, res) => {
             );
             //console.log("$$$$$$$$$$$$$$$", inspectionImage.name.split('.'), type);
             await resizeImage(originalImagePath, thumbnailImagePath, 300);
-            inspectionImageThumb = await imagePath(thumbnailImagePath, "inpection-thumbnail");
-            inspectionImageOriginal = await imagePath(originalImagePath, "inpection")
-            S3ImapectionImgThumb.push(inspectionImageThumb)
-            S3ImapectionImg.push(inspectionImageOriginal)
+            inspectionImageThumb = await imagePath(
+              thumbnailImagePath,
+              "inpection-thumbnail"
+            );
+            inspectionImageOriginal = await imagePath(
+              originalImagePath,
+              "inpection"
+            );
+            S3ImapectionImgThumb.push(inspectionImageThumb);
+            S3ImapectionImg.push(inspectionImageOriginal);
           } else {
-            S3ImapectionImgThumb.push(inspectionImage)
-            S3ImapectionImg.push(inspectionImage)
+            S3ImapectionImgThumb.push(inspectionImage);
+            S3ImapectionImg.push(inspectionImage);
           }
-          if (S3ImapectionImgThumb && S3ImapectionImg && !inspectionImageUrl[1]) {
-            fs.unlinkSync(originalImagePath)
-            fs.unlinkSync(thumbnailImagePath)
+          if (
+            S3ImapectionImgThumb &&
+            S3ImapectionImg &&
+            !inspectionImageUrl[1]
+          ) {
+            fs.unlinkSync(originalImagePath);
+            fs.unlinkSync(thumbnailImagePath);
           }
         }
-        inspectionItems.push(
-          {
-            aprovedStatus: inspection.aprovedStatus,
-            color: inspection.color,
-            itemImage: S3ImapectionImg,
-            itemImagePreview: S3ImapectionImg,
-            name: inspection.name,
-            note: inspection.note
-          }
-        )
+        inspectionItems.push({
+          aprovedStatus: inspection.aprovedStatus,
+          color: inspection.color,
+          itemImage: S3ImapectionImg,
+          itemImagePreview: S3ImapectionImg,
+          name: inspection.name,
+          note: inspection.note
+        });
       }
       const inspectionDataModal = {
         inspectionName: element.inspectionName,
@@ -92,17 +111,17 @@ const creteNewInspection = async (req, res) => {
         parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
         status: true,
         isDeleted: false
-      }
+      };
       inspectionContent = new Inspection(inspectionDataModal);
-      const inspecResult = await inspectionContent.save()
-      result.push(inspecResult)
+      const inspecResult = await inspectionContent.save();
+      result.push(inspecResult);
     }
     if (result) {
       return res.status(200).json({
         message: `${body.inspection.length} Inspection added successfully!`,
         data: result,
         success: true
-      })
+      });
     }
   } catch (error) {
     console.log("this is create inspection error", error);
@@ -111,7 +130,7 @@ const creteNewInspection = async (req, res) => {
       success: false
     });
   }
-}
+};
 /* get Inpection Data */
 const getInspectionData = async (req, res) => {
   const { query, currentUser } = req;
@@ -120,7 +139,7 @@ const getInspectionData = async (req, res) => {
     const page = parseInt(query.page || 1);
     const offset = page < 1 ? 0 : (page - 1) * limit;
     const id = currentUser.id;
-    const isTemplate = query.isTemplate
+    const isTemplate = query.isTemplate;
     const searchValue = query.search;
     const parentId = currentUser.parentId || currentUser.id;
     let condition = {};
@@ -153,10 +172,10 @@ const getInspectionData = async (req, res) => {
         $or: [
           {
             inspectionName: {
-              $regex: new RegExp(searchValue.trim(), "i"),
-            },
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
           }
-        ],
+        ]
       });
     }
     if (typeof isTemplate !== "undefined") {
@@ -178,59 +197,62 @@ const getInspectionData = async (req, res) => {
       success: false
     });
   }
-}
+};
 /* inpection as template */
 const inspectionTemplate = async (req, res) => {
-  const { body, currentUser } = req
+  const { body, currentUser } = req;
   try {
-    let result = []
+    let result = [];
     for (let index = 0; index < body.length; index++) {
       const element = body[index];
-      const inspection = await Inspection.findById(element._id)
+      const inspection = await Inspection.findById(element._id);
       if (inspection) {
-        const inspectionUpdate = await Inspection.findByIdAndUpdate(mongoose.Types.ObjectId(inspection._id), {
-          $set: {
-            isDeleted: element.isDeleted
+        const inspectionUpdate = await Inspection.findByIdAndUpdate(
+          mongoose.Types.ObjectId(inspection._id),
+          {
+            $set: {
+              isDeleted: element.isDeleted
+            }
           }
-        })
+        );
         return res.status(200).json({
           message: "Template deleted successfully!",
           success: true
-        })
+        });
       } else {
-        let inspectionItems = []
+        let inspectionItems = [];
         for (let index = 0; index < element.items.length; index++) {
           const inspection = element.items[index];
-          inspectionItems.push(
-            {
-              aprovedStatus: inspection.aprovedStatus,
-              color: inspection.color,
-              itemImage: [],
-              itemImagePreview: [],
-              name: inspection.name,
-              note: inspection.note
-            }
-          )
+          inspectionItems.push({
+            aprovedStatus: inspection.aprovedStatus,
+            color: inspection.color,
+            itemImage: [],
+            itemImagePreview: [],
+            name: inspection.name,
+            note: inspection.note
+          });
         }
         const inspectionDataModal = {
           inspectionName: element.inspectionName,
           items: inspectionItems,
           isTemplate: element.isTemplate,
           userId: currentUser.id,
-          parentId: currentUser.parentId ? currentUser.parentId : currentUser.id,
+          parentId: currentUser.parentId
+            ? currentUser.parentId
+            : currentUser.id,
           status: true,
           isDeleted: false
-        }
+        };
         inspectionContent = new Inspection(inspectionDataModal);
-        const inspecResult = await inspectionContent.save()
-        result.push(inspecResult)
+        const inspecResult = await inspectionContent.save();
+        result.push(inspecResult);
       }
       if (result) {
         return res.status(200).json({
           message: `${body.length} Inspection added to template successfully!`,
           data: result,
           success: true
-        })
+        });
       }
     }
   } catch (error) {
@@ -239,40 +261,37 @@ const inspectionTemplate = async (req, res) => {
       success: false
     });
   }
-}
+};
 /* generate PDF document */
 const generatePdfDoc = async (req, res) => {
   const { body } = req;
   try {
-    const fileName = ["file.pdf"].join(
-      ""
-    );
+    const fileName = ["file.pdf"].join("");
     const config = {
-
       // Papersize Options: http://phantomjs.org/api/webpage/property/paper-size.html
-      "format": "A4",        // allowed units: A3, A4, A5, Legal, Letter, Tabloid
-      "orientation": "portrait", // portrait or landscape
+      format: "A4", // allowed units: A3, A4, A5, Legal, Letter, Tabloid
+      orientation: "portrait", // portrait or landscape
 
       // Page options
-      "border": {
-        "top": "15px",            // default is 0, units: mm, cm, in, px
-        "right": "15px",
-        "bottom": "15px",
-        "left": "15px"
+      border: {
+        top: "15px", // default is 0, units: mm, cm, in, px
+        right: "15px",
+        bottom: "15px",
+        left: "15px"
       },
 
-      "base": `file://${path.join(__basedir, "css", "style.css")}`,
-      "header": {
-        "height": "35mm",
+      base: `file://${path.join(__basedir, "css", "style.css")}`,
+      header: {
+        height: "35mm"
       },
-      "footer": {
-        "height": "30px",
-        "contents": {
-          default: '<div style="color: #444;text-align: center;padding-top:10px;font-size:11px;border-top:1px solid #ccc;">{{page}}</span>/<span>{{pages}}</div>'
+      footer: {
+        height: "30px",
+        contents: {
+          default:
+            '<div style="color: #444;text-align: center;padding-top:10px;font-size:11px;border-top:1px solid #ccc;"><span style="float:left;">{{page}}<span>/</span>{{pages}}</span><span>Powered By Serviceadvisor.io</span></div>'
         }
-      },
-
-    }
+      }
+    };
     const htmlBody = `
     <html>
     <head>
@@ -296,22 +315,38 @@ const generatePdfDoc = async (req, res) => {
         }
         .invoice-name
         {
-            font-size: 15px;
+          font-size: 14px;
+          padding-bottom:5px;
         }
         .invoice-date
         {
-            font-size: 11px;
+            font-size: 10px;
+        }
+        .company-name-warp{
+          float:right;          
         }
         .company-name
         {
-            float:right;
-            font-size: 14px;
-            font-weight:bold;
+            font-size: 15px;
+            font-weight:500;
+            text-transform:capitalize;
+            padding-top:0px;
+            width: 100%;
+             display:block;
+            text-align: right;
+        }
+        .company-address{
+            font-size: 10px;
+            font-weight:400;
+            padding-top:5px;
+            text-align:right;
+            display:block;
+             width: 100%;
         }
         .user-details {
             clear: both;
             float: none;
-            border: 2px solid #f0f0f1;
+            border: 1px solid #d4d4d4;
             padding: 6px 0px;
             font-size: 14px;
             margin: 10px 0px;
@@ -323,61 +358,72 @@ const generatePdfDoc = async (req, res) => {
         .user-details-left{
             padding: 0px 6px;
             border-right:2px solid #f0f0f1;
+            font-size:11px;
         }
         .user-details-right{
             padding: 0px 10px;
+            font-size:11px;
+        }
+        .user-details-right div{
+          display:block;
+          width:100%;
+        }
+        .user-details-right .plateName{
+          font-size:9px;
+          padding-top:4px;
         }
         .user-email{
-            font-size:11px;
+            font-size:9px;
+            padding-top:4px;
         }
         .clearfix {
             clear:both;
             float:none;
         }
         .invoceTableDesign {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .invoceTableTitle{
-            background: #f0f0f1;
-            padding: 5px 7px;
+            background: #dddddd;
+            padding: 4px 7px;
             color: #000;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             text-transform: capitalize;
         }
         .invoice-table {
-            border:1px solid #f0f0f1;
+            border-left: 1px solid #dddddd;
             width: 100%;
+             border-collapse: collapse;
             font-size: 10px;
         }
         .service-title{
             width:250px;
         }
         .invoice-table tr th {
-            border: 1px solid #e7e7e7;
-            font-size: 11px;
+            border-right: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+            font-size: 10px;
             color: #000;
-            padding: 4px;
-            vertical-align: middle;
-            text-align: left;
-            font-weight: 500;
-            border-collapse: collapse;
-        }
-        .invoice-table tr td{
-            border: 1px solid #e7e7e7;
-            font-size: 11px;
-            color: #000;
-            padding: 4px;
+            padding: 2px 4px;
             vertical-align: middle;
             text-align: left;
             font-weight: 400;
-            border-collapse: collapse;
+        }
+        .invoice-table tr td{
+            border-right: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+            font-size: 10px;
+            color: #000;
+            padding: 2px 4px;
+            vertical-align: middle;
+            text-align: left;
+            font-weight: 400;
         }
         .invoice-table tbody tr:nth-of-type(odd) {
-          background-color: #f7f7f7;
         }
         .invoice-table tr td .parts-name{
-            font-size: 11px;
+            font-size: 10px;
             display: block;
             padding-bottom: 2px;
             font-weight:400;
@@ -386,6 +432,7 @@ const generatePdfDoc = async (req, res) => {
             font-size: 10px;
             color: #8a8a8a;
             font-weight:400;
+            font-style: italic;
         }
         .total-amount
         {
@@ -401,14 +448,17 @@ const generatePdfDoc = async (req, res) => {
         .epa-price{
           display:inline-block;
           font-size:10px;
+          padding-right: 15px;
         }
         .discount-price{
           display:inline-block;
           font-size:10px;
+          padding-right: 15px;
         }
         .tax-price{
           display:inline-block;
           font-size:10px;
+          padding-right: 15px;
         }
         .service-price{
           width: 150px;
@@ -448,45 +498,49 @@ const generatePdfDoc = async (req, res) => {
           width: 10px;
           display: inline-block;
         }
+        .order-total-table{
+          padding-top:5px;
+        }
+         table { page-break-inside:auto;page-break-after: auto  }
+          tr    { page-break-inside:avoid; page-break-after:auto }
+          thead { display:table-header-group }
+          tfoot { display:table-footer-group }
       </style>
-      <link href=${path.join(
-      __basedir,
-      "css",
-      "style.css"
-    )} rel="stylesheet"/>
+      <link href=${path.join(__basedir, "css", "style.css")} rel="stylesheet"/>
     </head>
       <body>
         ${body.html}
       </body>
     </html>`;
-    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$", htmlBody);
+    //console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$", htmlBody);
 
     const originalPdfPath = path.join(__basedir, "inspection-pdf", fileName);
-    fs.writeFileSync(originalPdfPath)
-    pdf.create(htmlBody, config).toFile(originalPdfPath, async function (err, file) {
-      if (err) {
-        return res.status(400).json({
-          err,
-          success: false
-        })
-
-      }
-      const pdfURL = await imagePath(file.filename, "pdf-file")
-      if (pdfURL) {
-        fs.unlinkSync(originalPdfPath)
-      }
-      return res.status(200).json({
-        data: pdfURL,
-        success: true
-      })
-    });
+    fs.writeFileSync(originalPdfPath);
+    pdf
+      .create(htmlBody, config)
+      .toFile(originalPdfPath, async function(err, file) {
+        if (err) {
+          return res.status(400).json({
+            err,
+            success: false
+          });
+        }
+        const pdfURL = await imagePath(file.filename, "pdf-file");
+        if (pdfURL) {
+          fs.unlinkSync(originalPdfPath);
+        }
+        return res.status(200).json({
+          data: pdfURL,
+          success: true
+        });
+      });
   } catch (error) {
     return res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false
     });
   }
-}
+};
 module.exports = {
   creteNewInspection,
   getInspectionData,
