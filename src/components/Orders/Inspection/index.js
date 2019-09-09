@@ -37,11 +37,19 @@ class Inspection extends Component {
   }
 
   componentDidMount = () => {
+    let propdata = this.props.inspectionData;
     this.setState({
       customerData: this.props.customerData,
       vehicleData: this.props.vehicleData,
-      orderDetails: this.props.orderReducer
+      orderDetails: this.props.orderReducer,
+      inspection:
+        propdata &&
+        propdata.inspectionData.data &&
+        propdata.inspectionData.data.length
+          ? propdata.inspectionData.data
+          : []
     });
+    console.log(this.props.inspectionData, "this.props.inspectionData");
   };
 
   componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
@@ -73,6 +81,7 @@ class Inspection extends Component {
         orderDetails: orderdata
       });
     }
+    console.log("indid mount");
   };
   /**
    *
@@ -213,6 +222,13 @@ class Inspection extends Component {
       orderId: this.props.orderId,
       html: HTML
     };
+
+    const payloadData = {
+      inspection,
+      orderId: this.props.orderId
+    };
+    //this.state.inspection.push(0, 0, payloadData);
+    console.log(payloadData.inspection, "inspection of state");
     try {
       var inspectionArray = [...this.state.inspection];
       let i, ele;
@@ -226,6 +242,7 @@ class Inspection extends Component {
         }
       }
       if (!ele.error) {
+        this.props.addInspcetionToReducer(payloadData.inspection);
         this.props.addNewInspection(payload);
         this.setState({
           // inspection: [],
@@ -398,8 +415,8 @@ class Inspection extends Component {
   };
 
   onDropRejected = async files => {
-    if(files && files.length){
-       await ConfirmBox({
+    if (files && files.length) {
+      await ConfirmBox({
         text: "Allowed type 'JPG', 'JPEG', 'PNG'",
         title: "File type is not allowed",
         showCancelButton: false,
@@ -461,11 +478,17 @@ class Inspection extends Component {
   };
 
   downloadPDF = check => {
-    const { orderReducer } = this.props;
-    let filename =
-      orderReducer && orderReducer.orderItems
-        ? orderReducer.orderItems.inspectionURL
-        : "";
+    const { orderReducer, pdfReducer } = this.props;
+    let filename;
+    if (pdfReducer && pdfReducer.inspectionUrl) {
+      filename =
+        pdfReducer && pdfReducer.inspectionUrl ? pdfReducer.inspectionUrl : "";
+    } else {
+      filename =
+        orderReducer && orderReducer.orderItems
+          ? orderReducer.orderItems.inspectionURL
+          : "";
+    }
     let pdfWindow = window.open("");
     pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
@@ -484,12 +507,13 @@ class Inspection extends Component {
 
   render() {
     const { inspection, templateData, orderDetails } = this.state;
+    const { orderReducer, inspectionData } = this.props;
     const orderTitle = orderDetails
       ? orderDetails.orderItems.orderName
       : " Untitled";
     return (
       <div>
-        <div className={"mb-3 d-flex"}>
+        <div className={"mb-2 d-flex"}>
           {inspection && inspection.length ? (
             <>
               <span
@@ -506,7 +530,8 @@ class Inspection extends Component {
                 className={"print-btn"}
               >
                 <i className="icon-printer icons " />
-                &nbsp; View or Print
+                &nbsp;{" "}
+                {orderReducer.isPdfLoading ? "Printing..." : "View or Print"}
               </span>{" "}
             </>
           ) : null}
@@ -558,159 +583,7 @@ class Inspection extends Component {
                                         <Label htmlFor={`item ${itemIndex}`}>
                                           Item Description
                                         </Label>
-                                        <div>
-                                          <div className={"status-warp"}>
-                                            {val && val.color ? (
-                                              <>
-                                                <span
-                                                  onClick={e =>
-                                                    this.handleOptionReset(
-                                                      e,
-                                                      inspIndex,
-                                                      itemIndex
-                                                    )
-                                                  }
-                                                  id={`reset-${itemIndex}`}
-                                                  className={"reset-status"}
-                                                >
-                                                  <i
-                                                    className={
-                                                      "icon-reload icons"
-                                                    }
-                                                  />
-                                                </span>
-                                                <UncontrolledTooltip
-                                                  target={`reset-${itemIndex}`}
-                                                >
-                                                  Click to reset item status
-                                                </UncontrolledTooltip>
-                                              </>
-                                            ) : null}
-                                            <Label
-                                              className={
-                                                val.color === "default"
-                                                  ? "status-checkbox checked default"
-                                                  : "status-checkbox status-warning"
-                                              }
-                                            >
-                                              <Input
-                                                type="radio"
-                                                name={`color ${itemIndex}`}
-                                                value={"default"}
-                                                checked={
-                                                  val.color === "default"
-                                                }
-                                                onChange={e =>
-                                                  this.handleOptionChange(
-                                                    e,
-                                                    inspIndex,
-                                                    itemIndex
-                                                  )
-                                                }
-                                              />{" "}
-                                              {/* default */}
-                                            </Label>
-                                            <Label
-                                              className={
-                                                val.color === "danger"
-                                                  ? "status-checkbox checked danger "
-                                                  : "status-checkbox status-danger"
-                                              }
-                                            >
-                                              <Input
-                                                type="radio"
-                                                name={`color ${itemIndex}`}
-                                                value={"danger"}
-                                                checked={val.color === "danger"}
-                                                onChange={e =>
-                                                  this.handleOptionChange(
-                                                    e,
-                                                    inspIndex,
-                                                    itemIndex
-                                                  )
-                                                }
-                                              />{" "}
-                                              {/* danger */}
-                                            </Label>
-                                            <Label
-                                              className={
-                                                val.color === "success"
-                                                  ? "status-checkbox checked success"
-                                                  : "status-checkbox status-success"
-                                              }
-                                            >
-                                              <Input
-                                                type="radio"
-                                                name={`color ${itemIndex}`}
-                                                value={"success"}
-                                                checked={
-                                                  val.color === "success"
-                                                }
-                                                onChange={e =>
-                                                  this.handleOptionChange(
-                                                    e,
-                                                    inspIndex,
-                                                    itemIndex
-                                                  )
-                                                }
-                                              />{" "}
-                                              {/* success */}
-                                            </Label>
-                                            <span>
-                                              {val.color === "success" ||
-                                              val.color === "danger" ? (
-                                                <>
-                                                  <Button
-                                                    size={"sm"}
-                                                    outline
-                                                    color={
-                                                      val.aprovedStatus
-                                                        ? "success"
-                                                        : "dark"
-                                                    }
-                                                    className={"status-btn"}
-                                                    onClick={e =>
-                                                      this.handleApproval(
-                                                        e,
-                                                        inspIndex,
-                                                        itemIndex
-                                                      )
-                                                    }
-                                                    id={`item-status-${itemIndex}`}
-                                                  >
-                                                    <i
-                                                      className={"fa fa-check"}
-                                                    />{" "}
-                                                    Approved
-                                                  </Button>
-                                                  <UncontrolledTooltip
-                                                    target={`item-status-${itemIndex}`}
-                                                  >
-                                                    Click to change status of
-                                                    this inpection item
-                                                  </UncontrolledTooltip>
-                                                </>
-                                              ) : null}
-                                            </span>
-                                            <span
-                                              id={`status-warp-${inspIndex}${itemIndex}`}
-                                              className={"info-icon"}
-                                            >
-                                              <i
-                                                className={
-                                                  "fa fa-question-circle"
-                                                }
-                                              />
-                                            </span>
-                                            <UncontrolledTooltip
-                                              target={`status-warp-${inspIndex}${itemIndex}`}
-                                            >
-                                              Define the priority of this
-                                              Inspection item by adding
-                                              appropriate labels.
-                                            </UncontrolledTooltip>
-                                          </div>
-                                        </div>
+                                        <div></div>
                                         <div className={""}>
                                           <Input
                                             type="text"
@@ -747,9 +620,181 @@ class Inspection extends Component {
                                         </div>
                                       </Col>
                                       <Col lg={3} md={3} className={"mt-2 p-0"}>
+                                        <div className={"status-warp"}>
+                                          {val && val.color ? (
+                                            <>
+                                              <span
+                                                onClick={e =>
+                                                  this.handleOptionReset(
+                                                    e,
+                                                    inspIndex,
+                                                    itemIndex
+                                                  )
+                                                }
+                                                id={`reset-${itemIndex}`}
+                                                className={"reset-status"}
+                                              >
+                                                <i
+                                                  className={
+                                                    "icon-reload icons"
+                                                  }
+                                                />
+                                              </span>
+                                              <UncontrolledTooltip
+                                                target={`reset-${itemIndex}`}
+                                              >
+                                                Click to reset item status
+                                              </UncontrolledTooltip>
+                                            </>
+                                          ) : null}
+                                          <Label
+                                            className={
+                                              val.color === "default"
+                                                ? "status-checkbox checked default"
+                                                : "status-checkbox status-warning"
+                                            }
+                                          >
+                                            <Input
+                                              type="radio"
+                                              name={`color ${itemIndex}`}
+                                              value={"default"}
+                                              checked={val.color === "default"}
+                                              onChange={e =>
+                                                this.handleOptionChange(
+                                                  e,
+                                                  inspIndex,
+                                                  itemIndex
+                                                )
+                                              }
+                                            />{" "}
+                                            {/* default */}
+                                          </Label>
+                                          <Label
+                                            className={
+                                              val.color === "danger"
+                                                ? "status-checkbox checked danger "
+                                                : "status-checkbox status-danger"
+                                            }
+                                          >
+                                            <Input
+                                              type="radio"
+                                              name={`color ${itemIndex}`}
+                                              value={"danger"}
+                                              checked={val.color === "danger"}
+                                              onChange={e =>
+                                                this.handleOptionChange(
+                                                  e,
+                                                  inspIndex,
+                                                  itemIndex
+                                                )
+                                              }
+                                            />{" "}
+                                            {/* danger */}
+                                          </Label>
+                                          <Label
+                                            className={
+                                              val.color === "success"
+                                                ? "status-checkbox checked success"
+                                                : "status-checkbox status-success"
+                                            }
+                                          >
+                                            <Input
+                                              type="radio"
+                                              name={`color ${itemIndex}`}
+                                              value={"success"}
+                                              checked={val.color === "success"}
+                                              onChange={e =>
+                                                this.handleOptionChange(
+                                                  e,
+                                                  inspIndex,
+                                                  itemIndex
+                                                )
+                                              }
+                                            />{" "}
+                                            {/* success */}
+                                          </Label>
+                                          <span>
+                                            {val.color === "success" ||
+                                            val.color === "danger" ? (
+                                              <>
+                                                <Button
+                                                  size={"sm"}
+                                                  outline
+                                                  color={
+                                                    val.aprovedStatus
+                                                      ? "success"
+                                                      : "dark"
+                                                  }
+                                                  className={"status-btn"}
+                                                  onClick={e =>
+                                                    this.handleApproval(
+                                                      e,
+                                                      inspIndex,
+                                                      itemIndex
+                                                    )
+                                                  }
+                                                  id={`item-status-${itemIndex}`}
+                                                >
+                                                  <i
+                                                    className={"fa fa-check"}
+                                                  />{" "}
+                                                  Approved
+                                                </Button>
+                                                <UncontrolledTooltip
+                                                  target={`item-status-${itemIndex}`}
+                                                >
+                                                  Click to change status of this
+                                                  inpection item
+                                                </UncontrolledTooltip>
+                                              </>
+                                            ) : null}
+                                          </span>
+                                          <span
+                                            id={`status-warp-${inspIndex}${itemIndex}`}
+                                            className={"info-icon"}
+                                          >
+                                            <i
+                                              className={
+                                                "fa fa-question-circle"
+                                              }
+                                            />
+                                          </span>
+                                          <UncontrolledTooltip
+                                            target={`status-warp-${inspIndex}${itemIndex}`}
+                                          >
+                                            Define the priority of this
+                                            Inspection item by adding
+                                            appropriate labels.
+                                          </UncontrolledTooltip>
+
+                                          {itemIndex >= 1 ? (
+                                            <>
+                                              <span
+                                                onClick={() => {
+                                                  this.removeItem(
+                                                    inspIndex,
+                                                    itemIndex
+                                                  );
+                                                }}
+                                                color={"danger"}
+                                                className={"delete-icon"}
+                                                id={`delete-${itemIndex}`}
+                                              >
+                                                <i className={"fas fa-close"} />
+                                              </span>
+                                              <UncontrolledTooltip
+                                                target={`delete-${itemIndex}`}
+                                              >
+                                                Delete this Item
+                                              </UncontrolledTooltip>
+                                            </>
+                                          ) : null}
+                                        </div>
                                         <div className={"d-flex flex-row"}>
                                           <Dropzone
-                                            accept={"image/jpeg, image/jpg, image/png"}
+                                            accept={
+                                              "image/jpeg, image/jpg, image/png"
+                                            }
                                             rejected={"pdf"}
                                             onDropRejected={this.onDropRejected}
                                             onDrop={files =>
@@ -781,38 +826,11 @@ class Inspection extends Component {
                                                 <div
                                                   className={"drop-image-text"}
                                                 >
-                                                  Max limit 5
+                                                  Max upload limit 5 files
                                                 </div>
                                               </>
                                             )}
                                           </Dropzone>
-
-                                          {itemIndex >= 1 ? (
-                                            <>
-                                              <span
-                                                onClick={() => {
-                                                  this.removeItem(
-                                                    inspIndex,
-                                                    itemIndex
-                                                  );
-                                                }}
-                                                color={"danger"}
-                                                className={"delete-icon"}
-                                                id={`delete-${itemIndex}`}
-                                              >
-                                                <i
-                                                  className={
-                                                    "icons cui-circle-x"
-                                                  }
-                                                />
-                                              </span>
-                                              <UncontrolledTooltip
-                                                target={`delete-${itemIndex}`}
-                                              >
-                                                Delete this Item
-                                              </UncontrolledTooltip>
-                                            </>
-                                          ) : null}
                                         </div>
                                       </Col>
                                       <Col lg={12} md={12}>
@@ -931,6 +949,7 @@ class Inspection extends Component {
                             className={"btn-theme"}
                             onClick={() => this.addItem(inspIndex)}
                             id={`add-item-${inspIndex}`}
+                            size={"sm"}
                           >
                             {" "}
                             + Add Item
@@ -972,7 +991,7 @@ class Inspection extends Component {
                               id={`delete-${inspIndex}`}
                             >
                               {" "}
-                              <i className={"fa fa-trash"} />
+                              {/* <i className={"fa fa-trash"} /> */}
                               &nbsp; Remove
                             </Button>
                             <UncontrolledTooltip target={`delete-${inspIndex}`}>
@@ -989,15 +1008,24 @@ class Inspection extends Component {
 
           {inspection.length ? (
             <div className={"mb-3"}>
-              <Button
-                color={""}
-                className={"mr-3 pull-right btn-blue"}
-                size={"lg"}
-                onClick={this.handleInspection}
-              >
-                {" "}
-                Submit Inspection
-              </Button>
+              {inspectionData && inspectionData.isInspectionLoading ? (
+                <Button
+                  color={""}
+                  className={"mr-3 pull-right btn-blue"}
+                  size={"lg"}
+                >
+                  Loading..
+                </Button>
+              ) : (
+                <Button
+                  color={""}
+                  className={"mr-3 pull-right btn-blue"}
+                  size={"lg"}
+                  onClick={this.handleInspection}
+                >
+                  Submit Inspection
+                </Button>
+              )}
             </div>
           ) : null}
           <div className={"d-flex justify-content-center align-items-center"}>

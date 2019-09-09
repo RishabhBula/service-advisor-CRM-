@@ -49,6 +49,7 @@
     bottom: -19px;
     display: block;
     white-space: nowrap;
+    left: 62px;
   }
   .recive-date{
     font-size: 12px;
@@ -110,15 +111,19 @@
   left: 0;
   top: 0;
 }
+.message-input-block{
+  background: #fff;
+}
 .message-tile.recive .message-input-block{
   background: #eee;
   border-radius:4px;
   position: relative;
   max-width: 100%;
   margin-left: auto;
+  background: #fff;
 }
 .message-tile.recive .message-input{
-  background: #eee;
+  background: #fff;
 }
 .message-tile.recive .message-input-block:after{
   content: "";
@@ -139,7 +144,7 @@
   height: 0;
   border-style: solid;
   border-width: 8px 0 8px 10px;
-  border-color: transparent transparent transparent #eee;
+  border-color: transparent transparent transparent #fff;
   position: absolute;
   right: -9px;
   bottom: 18px;
@@ -150,6 +155,7 @@
   position: relative;
   max-width: 100%;
   margin-right: auto;
+  background: #fff;
 }
 .message-tile.send .message-input-block:after{
   content: "";

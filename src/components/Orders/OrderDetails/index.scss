@@ -1,9 +1,14 @@
 .activity-block{
-    position: relative;
+position: relative;
     border-left: 2px solid #e0eaec;
     margin-left: 2rem;
     padding-left: 2rem;
     padding-bottom: 2rem;
+    font-size: 13px;
+    color: #666171;
+    &::first-letter {
+        text-transform: uppercase;
+    }
     .activity-icon{
         width: 24px;
         height: 24px;

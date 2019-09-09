@@ -7,6 +7,8 @@ import {
   serviceTotalsCalculation
 } from "../../helpers";
 import Dollor from "../common/Dollor";
+import serviceUser from "../../assets/service-user.png";
+import serviceTyre from "../../assets/service-car.png";
 
 class OrderSummary extends Component {
   constructor(props) {
@@ -70,58 +72,105 @@ class OrderSummary extends Component {
       summaryReducer && summaryReducer.companyData
         ? summaryReducer.companyData.companyName
         : null;
-    console.log(orderData, "orderData");
-
-    console.log(fleetStatus, "fleetStatus");
+    
+    const shopLogo =
+      summaryReducer && summaryReducer.companyData
+        ? summaryReducer.companyData.shopLogo
+        : null;
+    const customerCommentId = summaryReducer && summaryReducer ? summaryReducer.orderData.customerCommentId : "";
     return (
       <>
-        <div className={"summary-head d-flex flex-column  pt-2 pb-2"}>
+        <div className={"summary-head d-flex flex-column  pt-2 pb-2 "}>
           <div className={"d-flex flex-row justify-content-between"}>
-            <h5 className={"mb-0"}>
-              {orderLabel} #{orderID || ""}
-            </h5>
-          </div>
-          <div>
-            <h4>
-              {orderData && orderData.orderItems
-                ? orderData.orderItems.orderName
-                : ""}
-            </h4>
-          </div>
-        </div>
-        <div
-          className={
-            "company-info-head d-flex flex-row justify-content-between pt-1 pb-1 pl-2 pr-2 border-bottom border-top  align-items-center"
-          }
-        >
-          <h4 className={"mb-0 text-capitalize"}>{companyName}</h4>
-          <div>
-            Created Date: {moment(createdDate || "").format("MMM Do YYYY")}
-          </div>
-        </div>
-        <div className={"user-info d-flex justify-content-between"}>
-          <div className={"border-right w-50 pt-2 pb-2 pl-2"}>
-            {customerInfo ? (
-              <>
-                <h4 className={"text-capitalize"}>{customerInfo.firstName}</h4>
-                <div>{customerInfo ? customerInfo.email : ""}</div>
-              </>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className={"w-50 pl-3 pt-2 pb-2 pr-2"}>
-            {vehicleInfo ? (
-              <h4>
-                {vehicleInfo.year} {vehicleInfo.make} {vehicleInfo.modal}
+            <div className={"text-muted"}>
+              <h4 className={"mb-0"}>
+                <b>
+                  {orderLabel} #{orderID || ""}
+                </b>
               </h4>
-            ) : (
-              ""
-            )}
+              <h4>
+                {orderData && orderData.orderItems
+                  ? orderData.orderItems.orderName
+                  : ""}
+              </h4>
+              <div>
+                Created Date: {moment(createdDate || "").format("MMM Do YYYY")}
+              </div>
+            </div>
+            <div className={"d-flex justify-content-center align-items-center"}>
+              {shopLogo ? (
+                <div className={"mr-2"}>
+                  <img src={shopLogo} alt={companyName} width={80} />
+                </div>
+              ) : null}
+              <h4 className={"mb-0 text-capitalize"}>{companyName}</h4>
+            </div>
           </div>
         </div>
 
-        <div className={"service-warp border-top"}>
+        <div className={"user-info d-flex justify-content-between border"}>
+          <div className={" w-50 d-flex align-items-center"}>
+            <div className={"pl-3 pr-3 pt-2 pb-2 mr-2"}>
+              <img src={serviceUser} alt={serviceUser} width={40} />
+            </div>
+            {customerInfo ? (
+              <div className={"pt-1 pb-2"}>
+                {/* <label className={"text-black-50 mb-1"}>
+                  Customer Information
+                </label> */}
+                <h4 className={"text-capitalize mb-1"}>
+                  {customerInfo.firstName}
+                </h4>
+                <div>{customerInfo ? customerInfo.email : ""}</div>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className={"w-50  d-flex align-items-center"}>
+            <div className={"pl-3 pr-3 pt-2 pb-2 mr-2"}>
+              <img src={serviceTyre} alt={serviceTyre} width={40} />
+            </div>
+            {vehicleInfo ? (
+              <div className={"pt-1 pb-2 pr-2 "}>
+                {/* <label className={"text-black-50 mb-1"}>
+                  Vehicle Information
+                </label> */}
+                <h4 className={"mb-1"}>
+                  {vehicleInfo.year} {vehicleInfo.make} {vehicleInfo.modal}
+                </h4>
+                <div>License Plate : {vehicleInfo.licensePlate}</div>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+        {customerCommentId && customerCommentId.customerComment ? (
+          <div
+            className={
+              "customer-comment d-flex justify-content-between border border-top-0"
+            }
+          >
+            <div className={" w-50 d-flex"}>
+              <div className={"p-2 pl-3"}>
+                <label>Customer Comment</label>
+                <p>
+                  {customerCommentId ? customerCommentId.customerComment : ""}
+                </p>
+              </div>
+            </div>
+            <div className={"w-50  d-flex"}>
+              <div className={"p-2 pl-3"}>
+                <label>Recommandations</label>
+                <p>
+                  {customerCommentId ? customerCommentId.customerComment : ""}
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : null}
+        <div className={"service-warp "}>
           {serviceData && serviceData.length ? (
             serviceData.map((item, index) => {
               let mainserviceTotal = [],

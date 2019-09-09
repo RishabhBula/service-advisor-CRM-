@@ -712,23 +712,15 @@ class ServiceItem extends Component {
                   <Card className={"service-card"}>
                     <div className={"custom-form-modal"}>
                       <div
-                        className={
-                          "service-card-header-block d-flex flex-row"
-                        }
+                        className={"service-card-header-block d-flex flex-row"}
                       >
                         <div className={"service-card-header"}>
                           <Input
-                            placeholder={
-                              "Enter a name for this service"
-                            }
-                            onChange={e =>
-                              this.handleChange(e, index)
-                            }
+                            placeholder={"Enter a name for this service"}
+                            onChange={e => this.handleChange(e, index)}
                             name={"serviceName"}
                             value={
-                              item && item.serviceName
-                                ? item.serviceName
-                                : ""
+                              item && item.serviceName ? item.serviceName : ""
                             }
                             maxLength={"100"}
                             invalid={
@@ -757,19 +749,20 @@ class ServiceItem extends Component {
                                 technicianData.value === "") &&
                                 (item.technician === null ||
                                   item.technician === "")) ||
-                                (item.technician === null ||
-                                  item.technician === "")
-                                ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue"
-                                : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue"
+                              (item.technician === null ||
+                                item.technician === "")
+                                ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue d-flex flex-row"
+                                : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue d-flex flex-row"
                             }
                             id={`tech${index}`}
                           >
                             <img
                               className={""}
                               src={"../../assets/img/expert.svg"}
-                              width={"30"}
+                              width={"22"}
                               alt={"technician"}
                             />
+                            <span className={"pl-2"}>Technician</span>
                           </div>
                           {((technicianData.value === null ||
                             technicianData.value === "") &&
@@ -824,19 +817,18 @@ class ServiceItem extends Component {
                           <div
                             className={
                               item.note
-                                ? "pb-1 cursor_pointer isValue"
-                                : "pb-1 cursor_pointer notValue"
+                                ? "pb-1 cursor_pointer isValue d-flex flex-row"
+                                : "pb-1 cursor_pointer notValue d-flex flex-row"
                             }
                             id={`note${index}`}
                           >
                             <img
                               className={""}
-                              src={
-                                "../../assets/img/writing .svg"
-                              }
-                              width={"30"}
+                              src={"../../assets/img/writing .svg"}
+                              width={"22"}
                               alt={"Notes"}
                             />
+                            <span className={"pl-2"}>Notes</span>
                           </div>
                           {item.note ? (
                             <UncontrolledPopover
@@ -845,13 +837,9 @@ class ServiceItem extends Component {
                               target={`note${index}`}
                               trigger={"hover"}
                             >
-                              <PopoverHeader>
-                                Note Details
-                              </PopoverHeader>
+                              <PopoverHeader>Note Details</PopoverHeader>
                               <PopoverBody>
-                                <div
-                                  className={"technician-detail"}
-                                >
+                                <div className={"technician-detail"}>
                                   <div
                                     className={
                                       "text-capitalize pb-1 border-bottom"
@@ -859,9 +847,7 @@ class ServiceItem extends Component {
                                   >
                                     {item.note}{" "}
                                   </div>
-                                  <div
-                                    className={"pt-1 text-note"}
-                                  >
+                                  <div className={"pt-1 text-note"}>
                                     Click below to update note{" "}
                                   </div>
                                 </div>
@@ -892,13 +878,9 @@ class ServiceItem extends Component {
                                   : selectedTechnician
                               }
                               isClearable={
-                                technicianEle.value !== ""
-                                  ? true
-                                  : false
+                                technicianEle.value !== "" ? true : false
                               }
-                              noOptionsMessage={() =>
-                                "Type Technician name"
-                              }
+                              noOptionsMessage={() => "Type Technician name"}
                               onChange={e =>
                                 this.handleTechnicianAdd(
                                   e,
@@ -916,68 +898,42 @@ class ServiceItem extends Component {
                           >
                             <Input
                               type={"textarea"}
-                              onChange={e =>
-                                this.handleChange(e, index)
-                              }
+                              onChange={e => this.handleChange(e, index)}
                               name={"note"}
                               value={item.note}
                               maxLength={"1000"}
                               rows={"5"}
                               cols={"3"}
-                              placeholder={
-                                "Add Note for this service"
-                              }
+                              placeholder={"Add Note for this service"}
                             />
                           </UncontrolledPopover>
                         </div>
                       </div>
-                      <table
-                        className={
-                          "table matrix-table service-table"
-                        }
-                      >
+                      <table className={"table matrix-table service-table"}>
                         <thead>
                           <tr className={"service-table-head"}>
                             <th width="430" className={"pl-3"}>
                               DESCRIPTION
                             </th>
-                            <th
-                              width="150"
-                              className={"text-center"}
-                            >
+                            <th width="150" className={"text-center"}>
                               PRICE
                             </th>
-                            <th
-                              width="150"
-                              className={"text-center"}
-                            >
+                            <th width="150" className={"text-center"}>
                               QTY
                             </th>
-                            <th
-                              width="200"
-                              className={"text-center"}
-                            >
+                            <th width="200" className={"text-center"}>
                               HRS
                             </th>
                             <th width="200" className={""}>
                               DISCOUNT
                             </th>
-                            <th
-                              width="150"
-                              className={"text-center"}
-                            >
+                            <th width="150" className={"text-center"}>
                               SUBTOTAL
                             </th>
-                            <th
-                              width="200"
-                              className={"text-center"}
-                            >
+                            <th width="200" className={"text-center"}>
                               STATUS
                             </th>
-                            <th
-                              width="30"
-                              className={"text-center"}
-                            />
+                            <th width="30" className={"text-center"} />
                           </tr>
                         </thead>
                         <tbody>
@@ -1234,35 +1190,16 @@ class ServiceItem extends Component {
                                                   {label.isAddLabel ? (
                                                     <div>
                                                       <span
-                                                        key={
-                                                          lIndex
-                                                        }
-                                                        style={{
-                                                          background:
-                                                            label.color
-                                                        }}
-                                                        className={
-                                                          "status-label-btn"
+                                                        className={"close-icon"}
+                                                        onClick={() =>
+                                                          this.handleRemoveLabel(
+                                                            index,
+                                                            sIndex,
+                                                            lIndex
+                                                          )
                                                         }
                                                       >
-                                                        {
-                                                          label.name
-                                                        }
-
-                                                        <span
-                                                          className={
-                                                            "close-icon"
-                                                          }
-                                                          onClick={() =>
-                                                            this.handleRemoveLabel(
-                                                              index,
-                                                              sIndex,
-                                                              lIndex
-                                                            )
-                                                          }
-                                                        >
-                                                          <i className="fas fa-times" />
-                                                        </span>
+                                                        <i className="fas fa-times" />
                                                       </span>
                                                     </div>
                                                   ) : null}
@@ -1406,15 +1343,11 @@ class ServiceItem extends Component {
                                                 ) => {
                                                   return (
                                                     <div
-                                                      className={
-                                                        "d-flex"
-                                                      }
+                                                      className={"d-flex"}
                                                       key={Lindex}
                                                     >
                                                       <Button
-                                                        key={
-                                                          Lindex
-                                                        }
+                                                        key={Lindex}
                                                         style={{
                                                           background:
                                                             data.labelColor
@@ -1432,18 +1365,13 @@ class ServiceItem extends Component {
                                                         }
                                                         type="button"
                                                       >
-                                                        {
-                                                          data.labelName
-                                                        }
+                                                        {data.labelName}
                                                       </Button>
                                                       <span
                                                         id={`remove${Lindex}${sIndex}${index}`}
-                                                        className={
-                                                          "pl-2 mt-2"
-                                                        }
+                                                        className={"pl-2 mt-2"}
                                                         style={{
-                                                          cursor:
-                                                            "pointer"
+                                                          cursor: "pointer"
                                                         }}
                                                         onClick={() =>
                                                           this.handleSavedLabelDelete(
@@ -1460,10 +1388,7 @@ class ServiceItem extends Component {
                                                       <UncontrolledTooltip
                                                         target={`remove${Lindex}${sIndex}${index}`}
                                                       >
-                                                        Remove{" "}
-                                                        {
-                                                          data.labelName
-                                                        }
+                                                        Remove {data.labelName}
                                                       </UncontrolledTooltip>
                                                     </div>
                                                   );
@@ -1576,9 +1501,7 @@ class ServiceItem extends Component {
                       }
                     >
                       <div
-                        className={
-                          "position-relative d-flex align-items-end"
-                        }
+                        className={"position-relative d-flex align-items-end"}
                       >
                         <div className={"tax-calculate-block"}>
                           <div className={"tax-block"}>
@@ -1619,11 +1542,7 @@ class ServiceItem extends Component {
                                       : "%"
                                   }
                                   handleClickDiscountType={data =>
-                                    this.handleClickEpaType(
-                                      data,
-                                      index,
-                                      "epa"
-                                    )
+                                    this.handleClickEpaType(data, index, "epa")
                                   }
                                   index={`EPA-${index}`}
                                 />
@@ -1631,9 +1550,7 @@ class ServiceItem extends Component {
                             </div>
                           </div>
                           <div className={"tax-block"}>
-                            <span className={"title"}>
-                              Discount
-                            </span>
+                            <span className={"title"}>Discount</span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
                                 {item.discount &&
@@ -1651,11 +1568,7 @@ class ServiceItem extends Component {
                                   value={item.discount ? item.discount.value : ""}
                                   name="discount"
                                   onChange={e => {
-                                    this.handleTaxesAdd(
-                                      e,
-                                      index,
-                                      "epa"
-                                    );
+                                    this.handleTaxesAdd(e, index, "epa");
                                   }}
                                   type={"text"}
                                   maxLength="5"
@@ -1744,43 +1657,30 @@ class ServiceItem extends Component {
                       <div className={"service-total-block"}>
                         <div className="text-right">
                           <h6>
-                            <span className={"title"}>
-                              Epa :&nbsp;
-                            </span>
+                            <span className={"title"}>Epa :&nbsp;</span>
                             <span className={"value"}>
                               <span className="dollar-price">
-                                +{" "}
-                                <i className="fa fa-dollar dollar-icon" />
-                                {!isNaN(epa)
-                                  ? parseFloat(epa).toFixed(2)
-                                  : 0}
+                                + <i className="fa fa-dollar dollar-icon" />
+                                {!isNaN(epa) ? parseFloat(epa).toFixed(2) : 0}
                               </span>
                             </span>
                           </h6>
                           <h6>
-                            <span className={"title"}>
-                              Taxes :&nbsp;
-                            </span>
+                            <span className={"title"}>Taxes :&nbsp;</span>
                             <span className={"value"}>
                               {" "}
                               <span className="dollar-price">
-                                +{" "}
-                                <i className="fa fa-dollar dollar-icon" />
-                                {!isNaN(tax)
-                                  ? parseFloat(tax).toFixed(2)
-                                  : 0}
+                                + <i className="fa fa-dollar dollar-icon" />
+                                {!isNaN(tax) ? parseFloat(tax).toFixed(2) : 0}
                               </span>
                             </span>
                           </h6>
                           <h6>
-                            <span className={"title"}>
-                              Discount :&nbsp;
-                            </span>
+                            <span className={"title"}>Discount :&nbsp;</span>
                             <span className={"value"}>
                               {" "}
                               <span className="dollar-price">
-                                -{" "}
-                                <i className="fa fa-dollar dollar-icon" />
+                                - <i className="fa fa-dollar dollar-icon" />
                                 {!isNaN(discount)
                                   ? parseFloat(discount).toFixed(
                                     2
@@ -1793,10 +1693,7 @@ class ServiceItem extends Component {
                         <h4 className={"mb-0 border-top pt-2"}>
                           Service Total:{" "}
                           <span className={"dollor-icon"}>
-                            $
-                            {!isNaN(serviceTotal)
-                              ? serviceTotal
-                              : 0.0}
+                            ${!isNaN(serviceTotal) ? serviceTotal : 0.0}
                           </span>
                         </h4>
                       </div>
@@ -1809,10 +1706,7 @@ class ServiceItem extends Component {
                           size={"sm"}
                           className={"mr-2 btn-link"}
                           onClick={() =>
-                            this.handleServiceModalOpenAdd(
-                              index,
-                              "part"
-                            )
+                            this.handleServiceModalOpenAdd(index, "part")
                           }
                         >
                           <i className="nav-icon icons icon-puzzle" />
@@ -1823,10 +1717,7 @@ class ServiceItem extends Component {
                           size={"sm"}
                           className={"mr-2 btn-link"}
                           onClick={() =>
-                            this.handleServiceModalOpenAdd(
-                              index,
-                              "tire"
-                            )
+                            this.handleServiceModalOpenAdd(index, "tire")
                           }
                         >
                           <i className="nav-icon icons icon-support" />
@@ -1837,10 +1728,7 @@ class ServiceItem extends Component {
                           size={"sm"}
                           className={"mr-2 btn-link"}
                           onClick={() =>
-                            this.handleServiceModalOpenAdd(
-                              index,
-                              "labor"
-                            )
+                            this.handleServiceModalOpenAdd(index, "labor")
                           }
                         >
                           <i className="nav-icon icons icon-user" />
@@ -1851,10 +1739,7 @@ class ServiceItem extends Component {
                         <Button
                           className={"mr-3 btn-dashed"}
                           onClick={() =>
-                            this.handleAddCannedService(
-                              item,
-                              index
-                            )
+                            this.handleAddCannedService(item, index)
                           }
                         >
                           Save as canned service
@@ -1862,19 +1747,14 @@ class ServiceItem extends Component {
                         <Button
                           className="btn btn-remove btn-outline-danger"
                           onClick={() =>
-                            this.handleRemoveService(
-                              index,
-                              item._id
-                            )
+                            this.handleRemoveService(index, item._id)
                           }
                           id={`remove-service-${index}`}
                         >
-                          <i className="fa fa-trash" />{" "}
+                          {/* <i className="fa fa-trash" />{" "} */}
                           &nbsp;Remove
                         </Button>
-                        <UncontrolledTooltip
-                          target={`remove-service-${index}`}
-                        >
+                        <UncontrolledTooltip target={`remove-service-${index}`}>
                           Click to remove this service
                         </UncontrolledTooltip>
                       </div>
