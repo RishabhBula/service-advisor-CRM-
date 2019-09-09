@@ -103,7 +103,9 @@ class CustomerView extends Component {
                            null
                      }
                   </span>{" "}
-                  {vehicleData[0] ? `${vehicleData[0].year}${" "}${vehicleData[0].make}${" "}${vehicleData[0].modal}` : null}
+                  <span className={"text-capitalize"}>
+                     {vehicleData[0] ? `${vehicleData[0].year}${" "}${vehicleData[0].make}${" "}${vehicleData[0].modal}` : null}
+                  </span>
                </h3>
                <span className={"pr-2"}>{vehicleData[0] ? <><i className={"fa fa-ticket"} />{" "}{vehicleData[0].vin || "No VIN"}</> : null}</span>
                {" "}

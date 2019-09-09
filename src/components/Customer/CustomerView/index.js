@@ -101,7 +101,7 @@ class CustomerView extends Component {
     return (
       <>
         <div className={"p-3"}>
-          <h3>{customerDetails[0] ? `${customerDetails[0].firstName} ${" "} ${customerDetails[0].lastName}` : null}</h3>
+          <h3 className={"text-capitalize"}>{customerDetails[0] ? `${customerDetails[0].firstName} ${" "} ${customerDetails[0].lastName}` : null}</h3>
           {
             customerDetails[0] ? customerDetails[0].phoneDetail.map((phone, index) => {
               return (
