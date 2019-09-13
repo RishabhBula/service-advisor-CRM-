@@ -476,7 +476,7 @@ export class CrmTyreModal extends Component {
       }
    }
    handleServiceItem = async () => {
-      const { tireId, tireId1 } = this.state
+      const { tireId1 } = this.state
       const { serviceIndex, services } = this.props; 
       if (tireId1) {
          let servicePartData = services[serviceIndex].serviceItems
