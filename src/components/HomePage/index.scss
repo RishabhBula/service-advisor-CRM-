@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
-
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,400i,500,500i,600,700&display=swap');
 @font-face {
   font-family: '../../assets/fonts/gilroyextrabold';
   src: url('../../assets/fonts/gilroy-extrabold.woff2') format("woff2"), url('../../assets/fonts/gilroy-extrabold.woff') format("woff");
@@ -14,11 +14,14 @@
   font-weight: 400;
   font-style: normal;
 }
-
+body {
+  font-family: 'Poppins', sans-serif;
+}
 
 .main-body {
   font-family: 'Open Sans', sans-serif;
   position: relative;
+  font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -39,8 +42,10 @@ p{
   width: 100%;
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 660px;
-  padding-top: 110px;
+  // min-height: 660px;
+  // padding-top: 110px;
+  padding: 165px 0px;
+
 }
 
 .btn-primary {
@@ -124,13 +129,15 @@ p{
 .banner-left-section h1 {
   font-weight: 700;
   color: #fff;
-  font-size: 40px;
+  font-size: 35px;
 }
 
 .banner-left-content p {
   margin: 0;
   color: #fff;
-  line-height: 18px;
+  line-height: normal;
+  font-weight: 400;
+  font-size: 17px;
 }
 
 .btn-primary:not(:disabled):not(.disabled) {
@@ -156,10 +163,12 @@ p{
   min-width: 180px;
   margin-top: 40px;
   position: relative;
+  padding: 12px 20px !important;
   &:after {
     position: absolute;
     content: "";
-    top: 26px;
+    // top: 26px;
+    top: 32px;
     left: 0;
     width: 100%;
     background: url('../../assets/home-img/button-after-img.png');
@@ -173,22 +182,27 @@ p{
   color: #f7a902;
 }
 
-.main-heading-wrap {
-  h2 {
-    font-weight: bold;
-    font-size: 30px;
-  }
-  p {
-    color: #8a8686;
-    margin: 0;
-    font-weight: 100 !important;
+.content-wrap
+{
+  .main-heading-wrap {
+    h2 {
+      font-weight: bold;
+      font-size: 30px;
+    }
+    p {
+      color: #a0a0a0;
+      margin: 0;
+      margin-bottom:5px;
+      font-weight: 100 !important;
+    }
   }
 }
 
 .content-wrap p {
   margin: 0;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 15px;
+  line-height: normal;
+  color: #23282c;
   /*   font-weight: 500;*/
 }
 
@@ -225,6 +239,7 @@ p{
     color: #fff;
     font-weight: 500 !important;
     margin-bottom: 20px;
+    font-size: 14px;
   }
   .our-features-note{
     margin-top:20px;
@@ -232,32 +247,42 @@ p{
       font-weight: bold;
     }
   }
+  p{
+    line-height: normal;
+    font-size: 15px;
+  }
 }
 
 .get-started{
   display: flex;
   border-radius: 10px;
-  box-shadow: 0px -9px 18px 0px #efecec;
+  //box-shadow: 0px -9px 18px 0px #efecec;
   max-width: 800px;
   margin: 0 auto;
   padding:30px;
   align-items: center;
   justify-content: space-between;
-  background: #fff url('../../assets/home-img/pattarn-2.png');
+  //background: #fff url('../../assets/home-img/pattarn-2.png');
   z-index: 5;
   position: relative;
+  background:#fff;
+  box-shadow:0px -1px 20px 0px rgba(85, 85, 85, 0.75);
   h3{
     font-weight: bold;
-    font-size: 33px;
+    font-size: 30px;
     margin:0;
   }
   p{
     margin:0;
-    font-weight: bold;
+    //font-weight: bold;
+  }
+  .btn-primary {
+    padding:12px 20px !important
   }
 }
 .why-choose-section{
   background: url('../../assets/home-img/pattarn-2.png');
+  padding:70px 0px ;
   h2{
     margin: 0;
   }
@@ -295,7 +320,7 @@ footer{
   }
   .footer-nav-listing {
     a{
-      padding:5px 30px;
+      padding:5px 25px;
       text-decoration: none;
       &:hover{
         color:#ffc955;
@@ -306,7 +331,7 @@ footer{
   .footer-wrap{
     border-top:1px solid #7d5cf4;
     border-bottom: 1px solid #7d5cf4;
-    padding: 6px 0;
+    padding: 10px 0;
   }
   .social-icon-listing{
     a {
@@ -316,9 +341,11 @@ footer{
     }
   }
   .copyright-wrap{
-    padding:6px 0;
+    padding: 15px 0;
+    color: #b3aad9;
     font-size: 14px;
-    color: #9883f6;
+    letter-spacing: 0.3px;
+    //color: #9883f6;
   }
 }
 @media (max-width:767px){
@@ -398,6 +425,11 @@ footer{
     p{
         font-size: 12px;
       line-height: 15px;
+          margin-bottom: 20px;
     }
+  }
+  iframe {
+    width: 100%;
+    height: auto;
   }
 }

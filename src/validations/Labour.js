@@ -10,7 +10,7 @@ export const CreateLabourValidations = {
 };
 export const CreateLabourValidMessaages = {
     discription: {
-        [ValidationTypes.REQUIRED]: "Please enter Labour Description.",
+        [ValidationTypes.REQUIRED]: "Please enter Labor Description.",
     },
     hours: {
         [ValidationTypes.NUMERIC]: "Please enter numeric value.",

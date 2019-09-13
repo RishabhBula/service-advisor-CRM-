@@ -88,6 +88,7 @@ export class CrmFleetEditModal extends Component {
       this.setState({
         percentageError: "Enter proper percentage value,less than 100"
       })
+      return ;
     } else {
       this.setState({
         percentageError: ""
@@ -535,7 +536,7 @@ export class CrmFleetEditModal extends Component {
                       />
                       <FormFeedback>
                         {errors && !companyName && errors.companyName
-                          ? "Company name is requiered"
+                          ? "Company name is required"
                           : null}
                       </FormFeedback>
                     </div>
@@ -619,7 +620,7 @@ export class CrmFleetEditModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                         {
-                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                         }
                                       </FormFeedback>
                                     </div>
@@ -640,7 +641,7 @@ export class CrmFleetEditModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                         {
-                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                         }
                                       </FormFeedback>
                                     </div>
@@ -698,7 +699,7 @@ export class CrmFleetEditModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                         {
-                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                         }
                                       </FormFeedback>
                                     </div>
@@ -719,7 +720,7 @@ export class CrmFleetEditModal extends Component {
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
                                           {
-                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                            this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                           }
                                         </FormFeedback>
                                       </div>

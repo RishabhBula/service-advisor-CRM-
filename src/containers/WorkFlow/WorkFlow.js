@@ -446,6 +446,12 @@ class WorkFlow extends Component {
                               Add a New Quote
                            </UncontrolledTooltip>
                         </div>
+                        {orderData && orderData.totalOrders ?
+                           <div className="font-weight-bold pt-2 pr-3">
+                              <span className="">Total Orders :</span>&nbsp;
+                              <span>{orderData && orderData.totalOrders ? orderData.totalOrders : 0}</span>
+                           </div>
+                           : null}
                         <div>
                            <div className="border workFlow-filter"><i className="fas fa-filter" /></div>
                         </div>

@@ -31,6 +31,7 @@ const {
   reportRoutes,
   homePageRoutes,
   siteSettingRoutes,
+  faqRoutes,
 } = require("./index");
 /**
  *
@@ -71,6 +72,7 @@ router.use("/dashboard", dashboardRoutes);
 router.use("/reports", reportRoutes);
 router.use("/home-page",homePageRoutes);
 router.use("/site-setting",siteSettingRoutes);
+router.use("/faq",faqRoutes);
 
 /**
  *

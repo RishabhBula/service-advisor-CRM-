@@ -31,7 +31,7 @@ class InvoiceTable extends Component {
           : "") ||
         (service.serviceType === "tire" &&
           service.tierPermission &&
-          service.tierPermission.showNoteOnQuotesInvoices &&
+          service.tierPermission.showNoteOnQuotesInvoices && service.tierSize.length &&
           service.tierSize[0].notes !== ""
           ? "Note : " + service.tierSize[0].notes
           : "");
@@ -49,7 +49,7 @@ class InvoiceTable extends Component {
       var hourlyRate = service.rate ? service.rate.hourlyRate : 0;
       var cost =
         service.retailPrice ||
-        (service.tierSize ? service.tierSize[0].retailPrice : null) ||
+        (service.tierSize && service.tierSize.length ? service.tierSize[0].retailPrice : null) ||
         0;
 
       calSubTotal = calculateSubTotal(

@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import HomePageComponent from "../../components/HomePage";
+import FaqPageComponent from "../../components/Faq";
 import {
-   getHomePageReq,
-   profileInfoRequest,
+   getFaqPageReq,
    getSiteSettingReq,
    logOutRequest,
+   profileInfoRequest,
    redirectTo
 } from "../../actions";
-class HomePage extends Component {
+class FaqPage extends Component {
    componentDidMount() {
-      this.props.getHomePage();
+      this.props.getFaqPage();
       this.props.getSiteSetting();
       if (localStorage.getItem("token")) {
          this.props.profileInfoAction();
@@ -18,30 +18,30 @@ class HomePage extends Component {
    }
    signOut() {
       this.props.logoutUser();
-    }
+   }
    render() {
-      const { homePageDetailsReducer, siteSettingDetailsReducer, profileInfoReducer } = this.props;
+      const { faqPageReducer, siteSettingDetailsReducer, profileInfoReducer } = this.props;
       return (
          <>
-            <HomePageComponent
-               pageData={homePageDetailsReducer}
+            <FaqPageComponent
+               faqData={faqPageReducer}
                settingData={siteSettingDetailsReducer}
-               onGoPage={this.props.onGoPage}
-               profileInfoReducer={profileInfoReducer} 
-               onLogout={e => this.signOut(e)}/>
+               profileInfoReducer={profileInfoReducer}
+               onLogout={e => this.signOut(e)}
+            />
          </>
       )
    }
 }
 const mapStateToProps = state => ({
-   homePageDetailsReducer: state.homePageDetailsReducer,
+   faqPageReducer: state.faqPageReducer,
    siteSettingDetailsReducer: state.siteSettingDetailsReducer,
    profileInfoReducer: state.profileInfoReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
-   getHomePage: data => {
-      dispatch(getHomePageReq(data));
+   getFaqPage: data => {
+      dispatch(getFaqPageReq(data));
    },
    getSiteSetting: data => {
       dispatch(getSiteSettingReq(data));
@@ -55,4 +55,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
    mapStateToProps,
    mapDispatchToProps
-)(HomePage);
+)(FaqPage);

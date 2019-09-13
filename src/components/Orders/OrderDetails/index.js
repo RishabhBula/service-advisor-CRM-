@@ -104,7 +104,6 @@ class OrderDetails extends Component {
   };
 
   handleType = (e, workflowStatus, orderId, groupedOptions) => {
-    console.log("groupedOptions",groupedOptions);
     const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
@@ -122,10 +121,10 @@ class OrderDetails extends Component {
       this.props.orderStatus("invoiceStatus", false)
     }
   };
-  handleType1 = (workflowStatus, orderId, groupedOptions,orderStatus) => {
+  handleType1 = (workflowStatus, orderId, groupedOptions, orderStatus) => {
     const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     let toStatus = ""
-    if(orderStatus === true){
+    if (orderStatus === true) {
       toStatus = groupedOptions.filter(item => item.label === "Invoices");
     } else {
       toStatus = groupedOptions.filter(item => item.label === "Estimate")
@@ -376,7 +375,7 @@ class OrderDetails extends Component {
                       className="btn-sm cancel-btn"
                       onClick={(e) => this.handleChange()}
                     >
-                      Cancle
+                      Cancel
                     </Button>
                   </div>
                 </FormGroup> :
@@ -417,8 +416,8 @@ class OrderDetails extends Component {
                 {orderReducer && !orderReducer.orderItems.status ? (
                   <span className={"bg-danger authoris-dot"} />
                 ) : (
-                  <span className={"bg-secondary authoris-dot"} />
-                )}{" "}
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
                 Not Authorised
               </Button>
               <Button
@@ -433,8 +432,8 @@ class OrderDetails extends Component {
                 {orderReducer && orderReducer.orderItems.status ? (
                   <span className={"bg-success authoris-dot"} />
                 ) : (
-                  <span className={"bg-secondary authoris-dot"} />
-                )}{" "}
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
                 Authorised
               </Button>
             </ButtonGroup>
@@ -503,70 +502,70 @@ class OrderDetails extends Component {
                   {item.serviceId &&
                     item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
-                      ? item.serviceId.serviceItems.map((service, sIndex) => {
-                          const calSubTotal = calculateSubTotal(
-                            service.retailPrice ||
-                              (service.tierSize
-                                ? service.tierSize[0].retailPrice
-                                : null) ||
-                              0,
-                            service.qty || 0,
-                            service.hours || 0,
-                            service.rate ? service.rate.hourlyRate : 0
-                          ).toFixed(2);
-                          const subDiscount = calculateValues(
-                            calSubTotal || 0,
-                            service.discount.value || 0,
-                            service.discount.type
-                          );
-                          const servicesSubTotal = (
-                            parseFloat(calSubTotal) - parseFloat(subDiscount)
-                          ).toFixed(2);
-                          mainserviceTotal.push(parseFloat(servicesSubTotal));
-                          serviceTotalArray = getSumOfArray(mainserviceTotal);
-                          epa = calculateValues(
-                            serviceTotalArray || 0,
-                            item.serviceId.epa.value || 0,
-                            item.serviceId.epa ? item.serviceId.epa.type : "$"
-                          );
-                          discount = calculateValues(
-                            serviceTotalArray || 0,
-                            item.serviceId.discount.value || 0,
-                            item.serviceId.discount
-                              ? item.serviceId.discount.type
-                              : "$"
-                          );
-                          tax = calculateValues(
-                            serviceTotalArray || 0,
-                            item.serviceId.taxes.value || 0,
-                            item.serviceId.taxes
-                              ? item.serviceId.taxes.type
-                              : "$"
-                          );
+                    ? item.serviceId.serviceItems.map((service, sIndex) => {
+                      const calSubTotal = calculateSubTotal(
+                        service.retailPrice ||
+                        (service.tierSize && service.tierSize.length
+                          ? service.tierSize[0].retailPrice
+                          : null) ||
+                        0,
+                        service.qty || 0,
+                        service.hours || 0,
+                        service.rate ? service.rate.hourlyRate : 0
+                      ).toFixed(2);
+                      const subDiscount = calculateValues(
+                        calSubTotal || 0,
+                        service.discount.value || 0,
+                        service.discount.type
+                      );
+                      const servicesSubTotal = (
+                        parseFloat(calSubTotal) - parseFloat(subDiscount)
+                      ).toFixed(2);
+                      mainserviceTotal.push(parseFloat(servicesSubTotal));
+                      serviceTotalArray = getSumOfArray(mainserviceTotal);
+                      epa = calculateValues(
+                        serviceTotalArray || 0,
+                        item.serviceId.epa.value || 0,
+                        item.serviceId.epa ? item.serviceId.epa.type : "$"
+                      );
+                      discount = calculateValues(
+                        serviceTotalArray || 0,
+                        item.serviceId.discount.value || 0,
+                        item.serviceId.discount
+                          ? item.serviceId.discount.type
+                          : "$"
+                      );
+                      tax = calculateValues(
+                        serviceTotalArray || 0,
+                        item.serviceId.taxes.value || 0,
+                        item.serviceId.taxes
+                          ? item.serviceId.taxes.type
+                          : "$"
+                      );
 
-                          serviceTotal = (
-                            parseFloat(serviceTotalArray) +
-                            parseFloat(epa) +
-                            parseFloat(tax) -
-                            parseFloat(discount)
-                          ).toFixed(2);
-                          if (service.serviceType === "part") {
-                            totalParts += parseFloat(servicesSubTotal);
-                          }
-                          if (service.serviceType === "tire") {
-                            totalTires += parseFloat(servicesSubTotal);
-                          }
-                          if (service.serviceType === "labor") {
-                            totalLabor += parseFloat(servicesSubTotal);
-                          }
-                          orderSubTotal += parseFloat(servicesSubTotal);
+                      serviceTotal = (
+                        parseFloat(serviceTotalArray) +
+                        parseFloat(epa) +
+                        parseFloat(tax) -
+                        parseFloat(discount)
+                      ).toFixed(2);
+                      if (service.serviceType === "part") {
+                        totalParts += parseFloat(servicesSubTotal);
+                      }
+                      if (service.serviceType === "tire") {
+                        totalTires += parseFloat(servicesSubTotal);
+                      }
+                      if (service.serviceType === "labor") {
+                        totalLabor += parseFloat(servicesSubTotal);
+                      }
+                      orderSubTotal += parseFloat(servicesSubTotal);
 
-                          return true;
-                        })
-                      : ""}
-                    <span className={"d-none"}>
-                      {
-                        ((orderGandTotal += parseFloat(serviceTotal) || 0),
+                      return true;
+                    })
+                    : ""}
+                  <span className={"d-none"}>
+                    {
+                      ((orderGandTotal += parseFloat(serviceTotal) || 0),
                         fleetStatus
                           ? (fleetDiscount = calculateValues(
                             orderGandTotal,
@@ -592,11 +591,11 @@ class OrderDetails extends Component {
             : ""}
           {paymentList && paymentList.length
             ? paymentList.map(paymentData => {
-                totalPaiedAmount +=
-                  paymentData.payedAmount[paymentData.payedAmount.length - 1]
-                    .amount;
-                return true;
-              })
+              totalPaiedAmount +=
+                paymentData.payedAmount[paymentData.payedAmount.length - 1]
+                  .amount;
+              return true;
+            })
             : null}
           {serviceData && serviceData.length ? (
             <>
@@ -690,7 +689,7 @@ class OrderDetails extends Component {
           </h6>
           <Button
             size={"sm"}
-            // onClick={this.handlePaymentModal}
+            onClick={this.handlePaymentModal}
             className={"btn btn-success btn-rounded"}
           >
             New Payment
@@ -710,7 +709,9 @@ class OrderDetails extends Component {
                     <div className={"pr-3 text-left"}>
                       <span>{`Paid $${paymentData.payedAmount[
                         paymentData.payedAmount.length - 1
-                      ].amount.toFixed(2)} viea ${
+                      ].amount ? paymentData.payedAmount[
+                        paymentData.payedAmount.length - 1
+                      ].amount.toFixed(2) : 0} viea ${
                         paymentData.paymentType
                         } on date`}</span>
                     </div>

@@ -24,7 +24,8 @@ const addNewPaymentRecord = async (req, res) => {
          {
             $push: {
                paymentId: payload
-            }
+            },
+            remainingAmount:body.remainingAmount
          }
       )
       return res.status(200).json({

@@ -2937,3 +2937,42 @@ display: inline-flex;
   background-color: #f6b42a !important;
   color: #fff !important;
 }
+.section {
+  background: #f1f1f1;
+    padding: 100px 0px;
+}
+.faq-section .main-header  {
+background:#6b45f4;
+}
+.card.faq-card {
+  border-color: transparent;
+  box-shadow: 0 0 8px #ddd;
+  margin-bottom: 10px;
+  border:0px;
+  padding: 0px;
+}
+.faq-card .card-body{
+  padding: 0px;
+  margin:0px;
+}
+
+.faq-card-header {
+  padding:15px;
+  color:#000;
+  font-size:18px;
+}
+
+.faq-card-body {
+  padding: 0px 15px 20px;
+  color: #9e9e9e;
+}
+.app{
+    min-height: 81vh !important;
+}
+.app1{
+  min-height: 100vh !important;
+}
+.faqOpen {
+  color: #6b45f4 !important;
+  font-weight: 800 !important;
+}

@@ -30,6 +30,7 @@ import { DashboardLogics } from "./Dashboard";
 import { ReportLogics } from "./Reports";
 import { PdfLogic } from "./Pdf";
 import { HomePageLogic } from "./HomePage";
+import { FaqPageLogic } from "./FaqPage";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -69,5 +70,6 @@ export default [
   ...ReportLogics,
   ...PdfLogic,
   ...HomePageLogic,
+  ...FaqPageLogic,
   redirectToLogic
 ];

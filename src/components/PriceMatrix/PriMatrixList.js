@@ -333,7 +333,7 @@ class PriMatrixList extends Component {
                 })
               ) : (
                 <tr>
-                  <td className={"text-center"} colSpan={12}>
+                  <td className={"text-center"} colSpan={7}>
                     {filterApplied ? (
                       <NoDataFound
                         message={
@@ -355,7 +355,7 @@ class PriMatrixList extends Component {
               )
             ) : (
               <tr>
-                <td className={"text-center"} colSpan={10}>
+                <td className={"text-center"} colSpan={7}>
                   <Loader />
                 </td>
               </tr>

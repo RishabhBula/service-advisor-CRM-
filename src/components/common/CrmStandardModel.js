@@ -118,7 +118,7 @@ export class CrmStandardModel extends Component {
                     onChange={this.handleChange}
                     id="name"
                   />
-                  {errors && !name && errors.name ? (
+                  {errors && !name.trim() && errors.name ? (
                     <p className="text-danger">Name is required</p>
                   ) : null}
                 </div>
@@ -146,7 +146,7 @@ export class CrmStandardModel extends Component {
                       maxLength="3"
                     />
                   </InputGroup>
-                  {errors && !hourRate && errors.hourRate ? (
+                  {errors && !hourRate.trim() && errors.hourRate ? (
                     <p className="text-danger">Hour rate is required</p>
                   ) : null}
                 </div>

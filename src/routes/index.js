@@ -34,6 +34,7 @@ const OrderSummary = React.lazy(() =>
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
 const HomePage = React.lazy(() => import("../containers/HomePage"));
+const FaqPage = React.lazy(() => import("../containers/Faq"));
 
 const Routes = [
   {
@@ -95,6 +96,12 @@ const Routes = [
     path: "/order-summary/",
     name: "OrderSummary",
     component: OrderSummary
+  },
+  {
+    exact: true,
+    path: "/faq",
+    name: "Faq",
+    component: FaqPage
   },
   {
     exact: false,

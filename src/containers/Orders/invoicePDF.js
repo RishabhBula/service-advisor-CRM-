@@ -138,7 +138,7 @@ export const invoicePDF = (
           : "") ||
         (service.serviceType === "tire" &&
         service.tierPermission &&
-        service.tierPermission.showNoteOnQuotesInvoices &&
+        service.tierPermission.showNoteOnQuotesInvoices && service.tierSize.length &&
         service.tierSize[0].notes !== ""
           ? "Note : " + service.tierSize[0].notes 
           : "");
@@ -156,7 +156,7 @@ export const invoicePDF = (
       var hourlyRate = service.rate ? service.rate.hourlyRate : 0;
       var cost =
         service.cost ||
-        (service.tierSize ? service.tierSize[0].cost : null) ||
+        (service.tierSize && service.tierSize.length ? service.tierSize[0].cost : null) ||
         0;
 
       calSubTotal = calculateSubTotal(
