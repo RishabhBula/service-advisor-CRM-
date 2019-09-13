@@ -312,7 +312,7 @@ class TimeLogList extends Component {
                 )
               }) :
                 <tr>
-                  <td className={"text-center"} colSpan={8}>
+                  <td className={"text-center"} colSpan={12}>
                     <NoDataFound showAddButton message={"Currently there are no time logs added."} noResult={false} onAddClick={handleTimeClockModal} />
                   </td>
                 </tr> :

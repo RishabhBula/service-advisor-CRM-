@@ -1,5 +1,6 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
+import Swal from "sweetalert2";
 import {
   addPaymentSuccess,
   PaymentActions,
@@ -35,7 +36,14 @@ const addPaymentLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      // toast.success(result.messages[0]);
+      Swal.fire({
+        position: 'center',
+        type: 'success',
+        title: 'Your payment has been saved',
+        showConfirmButton: false,
+        timer: 1800
+      })
       dispatch(
         addPaymentSuccess()
       );

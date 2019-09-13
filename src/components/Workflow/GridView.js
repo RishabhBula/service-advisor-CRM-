@@ -240,6 +240,8 @@ class WorkflowGridView extends React.Component {
       orders[status._id].map((task, index) => {
         if (task.serviceId && task.serviceId.length) {
           serviceCalculation.push(serviceTotalsCalculation(task.serviceId));
+        } else {
+          serviceCalculation.push({ 'orderGrandTotal': 0 })
         }
         return true;
       });
@@ -250,7 +252,7 @@ class WorkflowGridView extends React.Component {
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((task, index) => (
               <React.Fragment key={task._id}>
-                <Draggable  draggableId={task._id} index={index}>
+                <Draggable draggableId={task._id} index={index}>
                   {/* {task.serviceId ?
                     serviceCalculation = serviceTotalsCalculation(task.serviceId) : null
                   } */}

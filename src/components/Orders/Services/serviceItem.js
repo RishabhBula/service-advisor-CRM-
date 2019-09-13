@@ -947,7 +947,7 @@ class ServiceItem extends Component {
                                 (service, sIndex) => {
                                   const calSubTotal = calculateSubTotal(
                                     service.retailPrice ||
-                                    (service.tierSize
+                                    (service.tierSize && service.tierSize.length 
                                       ? service.tierSize[0]
                                         .retailPrice
                                       : null) ||
@@ -1013,7 +1013,7 @@ class ServiceItem extends Component {
                                       </td>
                                       <td>
                                         {(service.cost !== null ||
-                                          (service.tierSize
+                                          (service.tierSize && service.tierSize.length
                                             ? service.tierSize[0]
                                               .cost !== null
                                             : null)) &&
@@ -1032,7 +1032,7 @@ class ServiceItem extends Component {
                                               maxLength={"4"}
                                               value={
                                                 service.retailPrice ||
-                                                (service.tierSize
+                                                (service.tierSize && service.tierSize.length
                                                   ? service
                                                     .tierSize[0]
                                                     .retailPrice
@@ -1045,7 +1045,7 @@ class ServiceItem extends Component {
                                       <td>
                                         {(service.quantity !==
                                           null ||
-                                          (service.tierSize
+                                          (service.tierSize && service.tierSize.length
                                             ? service.tierSize[0]
                                               .quantity !== null
                                             : null)) &&

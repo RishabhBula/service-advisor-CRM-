@@ -738,7 +738,7 @@ class CannedServiceUpdate extends Component {
                           {
                             this.state.serviceData[index] && this.state.serviceData[index].serviceItems.length ?
                               this.state.serviceData[index].serviceItems.map((service, sIndex) => {
-                                const calSubTotal = calculateSubTotal(service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
+                                const calSubTotal = calculateSubTotal(service.cost || (service.tierSize && service.tierSize.length ? service.tierSize[0].cost : null) || 0, service.qty || 0, service.hours || 0, (service.rate ? service.rate.hourlyRate : 0))
                                 const subDiscount = calculateValues(calSubTotal || 0, service.discount.value || 0, service.discount.type);
                                 const servicesSubTotal = (parseFloat(calSubTotal) - parseFloat(subDiscount)).toFixed(2);
                                 mainserviceTotal.push(parseFloat(servicesSubTotal))
@@ -752,20 +752,20 @@ class CannedServiceUpdate extends Component {
                                     <td className={"text-capitalize pl-3"}><b>{service.serviceType || '-'}</b>: {service.description || service.brandName || service.discription || '-'}</td>
                                     <td>
                                       {
-                                        (service.cost !== null || (service.tierSize ? service.tierSize[0].cost !== null : null)) && service.serviceType !== 'labor' ?
+                                        (service.cost !== null || (service.tierSize && service.tierSize.length ? service.tierSize[0].cost !== null : null)) && service.serviceType !== 'labor' ?
                                           <Input
                                             onChange={(e) => this.handleCostChange(e, index, sIndex)}
                                             name={"cost"}
                                             type="text"
                                             maxLength={"4"}
-                                            value={service.cost || (service.tierSize ? service.tierSize[0].cost : null) || 0}
+                                            value={service.cost || (service.tierSize && service.tierSize.length ? service.tierSize[0].cost : null) || 0}
                                           /> :
                                           null
                                       }
                                     </td>
                                     <td>
                                       {
-                                        (service.quantity !== null || (service.tierSize ? service.tierSize[0].quantity !== null : null)) && service.serviceType !== 'labor' ?
+                                        (service.quantity !== null || (service.tierSize && service.tierSize.length ? service.tierSize[0].quantity !== null : null)) && service.serviceType !== 'labor' ?
                                           <Input
                                             type="text"
                                             onChange={(e) => this.handleQuantityChange(e, index, sIndex)}

@@ -388,7 +388,6 @@ class WorkFlow extends Component {
       } = this.props;
       const { orderData, orderStatus } = orderReducer;
       const { listView, selectedFilter } = this.state;
-      console.log("orderReducer#####", orderData);
       return (
          <>
             <Card className={"white-card position-relative"}>

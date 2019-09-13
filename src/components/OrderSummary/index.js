@@ -188,7 +188,7 @@ class OrderSummary extends Component {
                     ? item.serviceId.serviceItems.map((service, sIndex) => {
                         const calSubTotal = calculateSubTotal(
                           service.retailPrice ||
-                            (service.tierSize
+                            (service.tierSize && service.tierSize.length
                               ? service.tierSize[0].retailPrice
                               : null) ||
                             0,
@@ -274,7 +274,7 @@ class OrderSummary extends Component {
 
                               {service.serviceType === "tire" &&
                               service.tierPermission &&
-                              service.tierPermission.showNoteOnQuotesInvoices &&
+                              service.tierPermission.showNoteOnQuotesInvoices && service.tierSize.length &&
                               service.tierSize[0].notes !== "" ? (
                                 <div className={"part-note"}>
                                   {" "}
@@ -320,7 +320,7 @@ class OrderSummary extends Component {
                                       Price :{" "}
                                       <Dollor
                                         value={
-                                          (service.tierSize
+                                          (service.tierSize && service.tierSize.length
                                             ? service.tierSize[0].cost
                                             : null) || 0
                                         }

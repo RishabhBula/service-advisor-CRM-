@@ -116,11 +116,11 @@ class HomePageComponent extends Component {
          section2,
          section3,
       } = this.state;
-      const { settingData } = this.props;
+      const { settingData, profileInfoReducer } = this.props;
       return (
          <>
             <div className="main-body">
-               <HomeHeader />
+               <HomeHeader profileInfoReducer={profileInfoReducer} onLogout={e => this.props.onLogout(e)}/>
                <section className="banner">
                   <div className="container">
                      <div className="row align-items-center">
@@ -250,7 +250,7 @@ class HomePageComponent extends Component {
                      </div>
                   </div>
                </section>
-               <section className="main-content why-choose-section" style={{ padding: "30px" }}>
+               <section className="main-content why-choose-section" >
                   <div className="container">
                      {section3 && section3.length ? section3.map((data, index) => {
                         let title = (data.title).split(" ");

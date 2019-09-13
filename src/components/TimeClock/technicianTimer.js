@@ -449,6 +449,7 @@ class TechnicianTimer extends Component {
               );
             })
           ) : (
+            <Col lg="12">
               <div className={"text-center"}>
                 <NoDataFound
                   showAddButton
@@ -456,6 +457,7 @@ class TechnicianTimer extends Component {
                   onAddClick={this.props.onAddClick}
                 />
               </div>
+              </Col>
             )}
         </Row>
       </div>

@@ -11,10 +11,10 @@ export const CreateTierValidations = {
 
 export const CreateTierValidMessaages = {
     brandName: {
-        [ValidationTypes.REQUIRED]: "Please enter barnd name.",
+        [ValidationTypes.REQUIRED]: "Please enter brand name.",
     },
     modalName: {
-        [ValidationTypes.REQUIRED]: "Please enter modal name.",
+        [ValidationTypes.REQUIRED]: "Please enter model name.",
     }
 };
 

@@ -70,6 +70,7 @@ class LoginPage extends Component {
     }
   };
   render() {
+    const { settingData } = this.props;
     const { email, password, errors } = this.state;
     return (
       <>
@@ -88,7 +89,9 @@ class LoginPage extends Component {
                   </h4>
                 </Link>
               </Col> */}
+              <div className="faq-section">
               <HomeHeader />
+              </div>
               <CardGroup>
                 <Card className="p-4 pl-4 pr-4">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
@@ -183,7 +186,7 @@ class LoginPage extends Component {
             </Col>
           </Row>
         </div>
-        <HomeFooter />
+        <HomeFooter settingData={settingData} />
       </>
     );
   }

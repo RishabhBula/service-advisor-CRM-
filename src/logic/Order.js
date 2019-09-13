@@ -159,7 +159,6 @@ const updateOrderWorkflowStatusLogic = createLogic({
     if (!orders[to]) {
       orders[to] = [];
     }
-    console.log("action.payload", action.payload);
     orders[to].push(orders[from][sourceIndex]);
     orders[from].splice(sourceIndex, 1);
     dispatch(getOrderListSuccess({ data: orders, orderStatus }));
