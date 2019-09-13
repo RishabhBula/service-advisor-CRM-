@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from "react";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Card, CardBody} from "reactstrap";
 import GenralSettings from "../../components/Profile/GeneralSettings";
 import UpdatePassword from "../../components/Profile/UpdatePassword";
 import CompanySettings from "../../components/Profile/CompanySettings";

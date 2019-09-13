@@ -117,7 +117,7 @@ class TimeClocks extends Component {
           serviceData={serviceReducers.serviceDataList}
           timmerStartForTechnician={timmerStartForTechnician}
           timmerStopForTechnician={timmerStopForTechnician}
-          onAddClick={this.onAddClick}
+          onAddClick={this.handleUserModel}
         />
         <TimeLogList
           timeLogData={timelogReducer.allTimeData}

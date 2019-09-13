@@ -76,7 +76,7 @@ class SalesByCusomerAge extends Component {
     let totalUnPaid = 0;
     let totalThirty = 0;
     let totalSixty = 0;
-    let totalNinenty = 0;
+    //let totalNinenty = 0;
     let ninentyPlus = 0;
     return (
       <>
@@ -173,9 +173,9 @@ class SalesByCusomerAge extends Component {
                     totalSixty += parseFloat(
                       customer[CustomerAgeTypes.SIXTY_DAYS] || 0
                     );
-                    totalNinenty += parseFloat(
-                      customer[CustomerAgeTypes.NINETY_DAYS] || 0
-                    );
+                    // totalNinenty += parseFloat(
+                    //   customer[CustomerAgeTypes.NINETY_DAYS] || 0
+                    // );
                     ninentyPlus += parseFloat(
                       customer[CustomerAgeTypes.NINENTY_PLUS] || 0
                     );

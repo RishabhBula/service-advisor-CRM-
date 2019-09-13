@@ -39,6 +39,8 @@ const addTimeLogs = async (req, res) => {
       moment().startOf("day"),
       "seconds"
     );
+    console.log("#################",body.activity);
+    
     const timeLogsData = {
       type: body.type,
       technicianId: mongoose.Types.ObjectId(body.technicianId),
@@ -440,37 +442,7 @@ const getAllTimeLogs = async (req, res) => {
     /*
     /*  
     */
-    let sortBy = {};
-    switch (sort) {
-      case "today":
-        sortBy = {
-          startDateTime: {
-            $gte: startDate
-          }
-        }
-        break;
-      case "thisWeek":
-        sortBy = {
-          startDateTime: {
-            $gte: weekStartDate,
-            $lte: weekEndDate
-          }
-        };
-        break;
-      case "thisMonth":
-        sortBy = {
-          startDateTime: {
-            $gte: monthStartDate,
-            $lte: monthEndDate
-          }
-        };
-        break;
-      default:
-        sortBy = {
-          createdAt: -1
-        };
-        break;
-    }
+
     let condition = {};
     condition["$and"] = [
       {
@@ -503,12 +475,7 @@ const getAllTimeLogs = async (req, res) => {
       condition["$and"].push({
         $or: [
           {
-            "technicianId.firstName": {
-              $regex: new RegExp(searchValue.trim(), "i")
-            }
-          },
-          {
-            "technicianId.LastName": {
+            name: {
               $regex: new RegExp(searchValue.trim(), "i")
             }
           },
@@ -520,6 +487,42 @@ const getAllTimeLogs = async (req, res) => {
         ]
       });
     }
+    if (sort === "today") {
+      condition["$and"].push({
+        $or: [
+          {
+            startDateTime: {
+              $gte: startDate
+            }
+          }
+        ]
+      })
+    }
+    if (sort === "thisWeek") {
+      condition["$and"].push({
+        $or: [
+          {
+            startDateTime: {
+              $gte: weekStartDate,
+              $lte: weekEndDate
+            }
+          }
+        ]
+      })
+    }
+    if (sort === "thisMonth") {
+      condition["$and"].push({
+        $or: [
+          {
+            startDateTime: {
+              $gte: monthStartDate,
+              $lte: monthEndDate
+            }
+          }
+        ]
+      })
+    }
+
     const data = await TimeClock.aggregate([
       {
         $lookup:
@@ -558,13 +561,13 @@ const getAllTimeLogs = async (req, res) => {
         }
       },
       { $unwind: "$technicianId" },
+      { $addFields: { name: { $concat: ["$technicianId.firstName", " ", "$technicianId.lastName"] } } },
       {
         $match: { ...condition }
       }
     ])
       .skip(offset)
-      .limit(limit)
-      .sort(sortBy);
+      .limit(limit);
 
     const getAllTimeLogCount = await TimeClock.aggregate([
       {

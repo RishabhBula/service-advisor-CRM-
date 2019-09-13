@@ -26,9 +26,10 @@ import {
 import { isEqual } from "../../helpers/Object";
 import CrmImportExcel from "../../components/common/CrmImportExcel";
 import { logger } from "../../helpers/Logger";
-import  {
+import {
   DemoSupportedSheets
 } from "../../components/common/CrmExportSampleButton";
+import { ConfirmBox } from "../../helpers/SweetAlert";
 
 class Vehicles extends Component {
   constructor(props) {
@@ -126,7 +127,7 @@ class Vehicles extends Component {
     );
   };
 
-  onAddClick = () =>{
+  onAddClick = () => {
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
       vehicleModel: !modelDetails.vehicleModel,
@@ -137,9 +138,21 @@ class Vehicles extends Component {
   onImport = data => {
     this.props.importVehicles(data);
   };
-  exportVehicles = () => {
+  exportVehicles = async() => {
     const query = qs.parse(this.props.location.search);
-    this.props.exportVehicles({ ...query, page: 1 });
+    const { vehicleListReducer } = this.props;
+    const { vehicleList } = vehicleListReducer
+    if (vehicleList && vehicleList.length) {
+      this.props.exportVehicles({ ...query, page: 1 });
+    } else {
+      await ConfirmBox({
+        text: "",
+        title: "No vehicle details to export",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
   };
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
@@ -179,6 +192,7 @@ class Vehicles extends Component {
               <Button
                 color="primary"
                 id="export-vehicle"
+                // disabled={vehicleList && vehicleList.length ? false : true}
                 onClick={this.exportVehicles}
               >
                 <i className={"fa fa-upload"} />

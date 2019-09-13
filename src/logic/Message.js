@@ -5,9 +5,9 @@ import { ApiHelper } from "../helpers/ApiHelper";
 import {
   sendMessageSuccess,
   MessageAction,
-  showLoader,
+  //showLoader,
   hideLoader,
-  getOrderDetailsRequest,
+  //getOrderDetailsRequest,
   verifyLinkRequest,
   deleteNotesSuccess,
   addNewActivity

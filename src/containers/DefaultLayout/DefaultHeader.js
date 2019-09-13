@@ -16,7 +16,7 @@ import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
 import { logger } from "../../helpers";
 import AddAppointment from "../../components/Appointments/AddAppointment";
-import { LoginValidationsMessaages } from "../../validations";
+//import { LoginValidationsMessaages } from "../../validations";
 import Avtar from "../../components/common/Avtar"
 const propTypes = {
   children: PropTypes.node

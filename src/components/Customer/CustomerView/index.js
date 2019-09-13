@@ -90,6 +90,7 @@ class CustomerView extends Component {
       rateStandardListReducer,
       getMatrix,
       customerFleetReducer,
+      customerListReducer,
       profileInfoReducer,
       setLabourRateDefault,
       getCustomerFleetListActions,
@@ -156,6 +157,7 @@ class CustomerView extends Component {
                   customerFleetReducer={customerFleetReducer}
                   profileInfoReducer={profileInfoReducer}
                   getStdList={getStdList}
+                  customerListReducer={customerListReducer}
                   setLabourRateDefault={setLabourRateDefault}
                   getCustomerFleetListActions={getCustomerFleetListActions}
                   {...this.props}
