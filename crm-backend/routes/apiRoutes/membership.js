@@ -20,5 +20,5 @@ router.post(
 /*
 /* 
  */
-router.get("/list", authorisedUser, getPlansList);
+router.get("/list", getPlansList);
 module.exports = router;

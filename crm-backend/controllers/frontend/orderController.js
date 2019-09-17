@@ -186,7 +186,7 @@ const listOrders = async (req, res) => {
     }).sort({ orderIndex: "asc" });
     if (!orderStatus.length) {
       defaultOrderStatus.forEach(e => {
-        e.parentId = condition.parentId;
+        e.parentId = orderStatusCondition.parentId;
       });
       await OrderStatus.insertMany(defaultOrderStatus);
       orderStatus = await OrderStatus.find(orderStatusCondition, {
@@ -208,7 +208,7 @@ const listOrders = async (req, res) => {
       message: "Data fetched successfully",
       data: response,
       orderStatus,
-      totalOrders:getAllOrdersCount?getAllOrdersCount:0
+      totalOrders: getAllOrdersCount ? getAllOrdersCount : 0
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
@@ -218,7 +218,6 @@ const listOrders = async (req, res) => {
     });
   }
 };
-
 /**
  *
  */

@@ -14,7 +14,7 @@ import {
   InputGroupText,
   Row,
   FormFeedback,
-  FormGroup
+  FormGroup,
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
