@@ -166,8 +166,11 @@ class RegisterPage extends Component {
   };
   onBlur = () => {
     if (this.state.workspace === "") {
+      let errors = { ...this.state.errors }
+      errors.workspace = null;
       this.setState({
-        workspace: (this.state.companyName).replace(/\s/g, '').replace(/[^\w\s]/gi, '_').toLowerCase()
+        workspace: (this.state.companyName).replace(/\s/g, '').replace(/[^\w\s]/gi, '_').toLowerCase(),
+        errors
       })
     }
   }

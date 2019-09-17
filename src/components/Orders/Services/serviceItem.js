@@ -749,8 +749,8 @@ class ServiceItem extends Component {
                                 technicianData.value === "") &&
                                 (item.technician === null ||
                                   item.technician === "")) ||
-                              (item.technician === null ||
-                                item.technician === "")
+                                (item.technician === null ||
+                                  item.technician === "")
                                 ? "pr-1 pl-1 pb-1 mr-3 cursor_pointer notValue d-flex flex-row"
                                 : "pb-1 pr-1 pl-1 mr-3 cursor_pointer isValue d-flex flex-row"
                             }
@@ -947,7 +947,7 @@ class ServiceItem extends Component {
                                 (service, sIndex) => {
                                   const calSubTotal = calculateSubTotal(
                                     service.retailPrice ||
-                                    (service.tierSize && service.tierSize.length 
+                                    (service.tierSize && service.tierSize.length
                                       ? service.tierSize[0]
                                         .retailPrice
                                       : null) ||
@@ -1811,7 +1811,7 @@ class ServiceItem extends Component {
             <InvoiceTable
               services={services}
               orderReducer={orderReducer}
-              vehicleData={orderReducer.orderItems.vehicleId}
+              vehicleData={orderReducer && orderReducer.orderItems && orderReducer.orderItems.vehicleId ? orderReducer.orderItems.vehicleId : ""}
               profileReducer={profileInfoReducer}
             />
           </div>

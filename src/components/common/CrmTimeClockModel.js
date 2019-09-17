@@ -109,7 +109,10 @@ export class CrmTimeClockModal extends Component {
       }
     };
   }
-  componentDidUpdate = ({ timeLogEle }) => {
+  componentDidUpdate = ({ timeLogEle, openTimeClockModal }) => {
+    if (openTimeClockModal !== this.props.openTimeClockModal) {
+      this.removeAllState();
+    }
     if (timeLogEle !== this.props.timeLogEle) {
       const {
         date,
@@ -135,7 +138,29 @@ export class CrmTimeClockModal extends Component {
       })
     }
   }
-
+  async removeAllState() {
+    this.setState({
+      date: new Date(),
+      timetype: "AM",
+      timeIn: '00:00',
+      timeOut: '00:00',
+      duration: "0",
+      selectedTechnician: {
+        label: "Select technician",
+        value: ""
+      },
+      technicianData: "",
+      notes: "",
+      isError: false,
+      seconds: 0,
+      isEditTimeClock: false,
+      activityOptions: [],
+      selectedActivity: {
+        label: "Select one technician",
+        value: ""
+      }
+    });
+  }
   onTimeInChangeHandler = (value) => {
     this.setState({
       timeIn: value
@@ -228,8 +253,8 @@ export class CrmTimeClockModal extends Component {
                 `Order (#${orderReducer.orderItems ? orderReducer.orderItems.orderId : ""}) ${orderReducer.orderItems.orderName || 'N/A'}` :
                 "General" :
               selectedActivity.orderData &&
-              selectedActivity.orderData.orderId?
-              `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}`:"General",
+                selectedActivity.orderData.orderId ?
+                `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}` : "General",
         duration: duration,
         date: date,
         orderId: isEditTimeClock ? orderId : !isTimeClockData ? orderReducer.orderItems._id : selectedActivity.orderId,
@@ -527,6 +552,9 @@ export class CrmTimeClockModal extends Component {
                       id="Date" // PropTypes.string.isRequired,
                       focused={this.state.focused} // PropTypes.bool
                       onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                      isOutsideRange={() => false}
+                      numberOfMonths={1}
+                      hideKeyboardShortcutsPanel
                     />
                   </div>
                 </FormGroup>

@@ -6,6 +6,69 @@ import serviceUser from "../../../assets/service-user.png";
 import serviceTyre from "../../../assets/service-car.png";
 import { CrmCustomerModal } from "../../common/CrmCustomerModal";
 import { CrmVehicleModal } from "../../common/Vehicles/CrmVehicleModal";
+import chroma from 'chroma-js';
+
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = chroma("#8157ef45");
+    return {
+      ...styles,
+      backgroundColor: isDisabled
+        ? "#ccc"
+        : isSelected
+          ? "#8157ef"
+          : isFocused
+            ? color.alpha(0.1).css()
+            : null,
+      "font-size": "13px",
+      "padding-left": "17px",
+      "font-weight": "500",
+      color: isDisabled
+        ? ""
+        : isSelected
+          ? chroma.contrast(color, 'black') > 2
+            ? 'white'
+            : '#0e0e0ea6'
+          : data.color,
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+
+      ':active': {
+        ...styles[':active'],
+        backgroundColor: !isDisabled && (isSelected ? "white" : color.alpha(0.3).css()),
+      },
+    };
+  },
+  groupHeading: (styles) => {
+    return {
+      ...styles,
+      color: "#0e0e0e",
+      cursor: "not-allowed",
+      display: "block",
+      "font-size": "13px",
+      "font-weight": "500",
+      "margin-bottom": "0.25em",
+      "padding-left": "6px",
+      "padding-right": "12px",
+      "text-transform": "capitalize",
+      "box-sizing": "border-box",
+      "background": "#efefee",
+      padding: "5px 5px 6px 4px"
+    }
+  },
+  group: (styles) => {
+    return {
+      ...styles,
+      "padding-top": "0px",
+      "padding-bottom": "0px",
+    }
+  },
+  input: styles => ({ ...styles }),
+  placeholder: styles => ({ ...styles }),
+  singleValue: (styles, { data }) => ({ ...styles }),
+};
+
+
 class CutomerVehicle extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +85,14 @@ class CutomerVehicle extends Component {
       },
       customerInput: "",
       vehicleInput: "",
-      isCustomerVehicleUpdate: false
+      isCustomerVehicleUpdate: false,
+      isCustomerSelected: false,
+      defaultOptionsVehicle: [
+        {
+          label: "+ Add New Vehicle",
+          value: ""
+        }
+      ]
     };
   }
   /*
@@ -30,10 +100,13 @@ class CutomerVehicle extends Component {
   */
   componentDidMount = () => {
     if (
-      this.props.orderReducer.orderItems.customerId ||
-      this.props.orderReducer.orderItems.vehicleId
+      this.props.orderReducer.orderItems && (this.props.orderReducer.orderItems.customerId ||
+        this.props.orderReducer.orderItems.vehicleId)
     ) {
       const { customerId, vehicleId } = this.props.orderReducer.orderItems;
+      if (customerId && customerId._id) {
+        this.props.getCustomerDetailsRequest({ customerId: customerId._id });
+      }
       this.setState({
         customerId,
         vehicleId,
@@ -55,7 +128,7 @@ class CutomerVehicle extends Component {
   /*
   /*  
   */
-  componentDidUpdate = ({ orderReducer, customerInfoReducer, vehicleAddInfoReducer }) => {
+  componentDidUpdate = ({ orderReducer, customerInfoReducer, vehicleAddInfoReducer, customerListReducer }) => {
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
         this.props.orderReducer.orderItems.customerId ||
@@ -106,6 +179,19 @@ class CutomerVehicle extends Component {
       });
       this.props.customerVehicleData(this.state.customerId, vehicleId, true);
     }
+    if (this.state.isCustomerSelected && this.props.customerListReducer && this.props.customerListReducer.customers && this.props.customerListReducer.customers.length && this.props.customerListReducer.customers !== customerListReducer.customers) {
+      // let defaultOptionsVehicle = [...this.state.defaultOptionsVehicle];
+      if (this.props.customerListReducer.customers[0].vehicles && this.props.customerListReducer.customers[0].vehicles.length && this.state.defaultOptionsVehicle.length === 1) {
+        const options1 = [{ label: "Current Vehicles", value: "", isDisabled: true }]
+        let options = this.props.customerListReducer.customers[0].vehicles.map(vehicle => ({
+          label: `${vehicle.make} ${vehicle.modal}`,
+          value: vehicle._id,
+          data: vehicle
+        }));
+        options = options1.concat(options);
+        this.setState({ defaultOptionsVehicle: this.state.defaultOptionsVehicle.concat(options) });
+      }
+    }
   };
   /*
   /*  
@@ -155,7 +241,9 @@ class CutomerVehicle extends Component {
             label: "Type to select customer",
             value: ""
           },
-          isCustomerVehicleUpdate: false
+          isCustomerVehicleUpdate: false,
+          isCustomerSelected: false,
+          defaultOptionsVehicle: [this.state.defaultOptionsVehicle[0]]
         },
         () => {
           this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
@@ -167,7 +255,7 @@ class CutomerVehicle extends Component {
   /*  
   */
   handaleVehicleSelect = (e, name) => {
-    const { customerId, vehicleId, isCustomerVehicleUpdate } = this.state;
+    const { customerId, vehicleId, isCustomerVehicleUpdate, selectedCustomer } = this.state;
     if (e && e.label === "+ Add New Vehicle") {
       this.handleVehicleModel()
     }
@@ -193,10 +281,12 @@ class CutomerVehicle extends Component {
             label: "Type to select vehicle",
             value: ""
           },
-          isCustomerVehicleUpdate: false
+          isCustomerVehicleUpdate: false,
+          isCustomerSelected: this.state.selectedCustomer.value !== "" ? true : false
         },
         () => {
           this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
+          this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value });
         }
       );
     }
@@ -239,9 +329,20 @@ class CutomerVehicle extends Component {
   handleVehicleCreate = (data) => {
     const payload = {
       ...data,
-      workFlowVehicle: true
+      workFlowVehicle: true,
+      customerId: this.state.selectedCustomer.value ? this.state.selectedCustomer.value : null
     }
     this.props.addVehicle(payload)
+  }
+  /**
+   * 
+   */
+  onBlur = () => {
+    const { selectedCustomer, selectedVehicle } = this.state;
+    if (selectedCustomer.value !== "" && selectedVehicle.value === "") {
+      this.setState({ isCustomerSelected: true });
+      this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value });
+    }
   }
   /*
   /*  
@@ -252,6 +353,8 @@ class CutomerVehicle extends Component {
       selectedVehicle,
       customerId,
       vehicleId,
+      defaultOptionsVehicle,
+      isCustomerSelected
     } = this.state;
     const { isError, customerFleetReducer } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
@@ -301,6 +404,7 @@ class CutomerVehicle extends Component {
                       }
                     );
                   }}
+                  onBlur={this.onBlur}
                 />
                 {isError && !customerId ? (
                   <FormFeedback>Customer data is required.</FormFeedback>
@@ -327,6 +431,8 @@ class CutomerVehicle extends Component {
                 <Async
                   placeholder={"Type Vehicle name"}
                   loadOptions={this.loadVehicles}
+                  // menuIsOpen = {true}
+                  defaultOptions={isCustomerSelected ? defaultOptionsVehicle : null}
                   className={classnames("w-100 form-select", {
                     "is-invalid": isError && !vehicleId
                   })}
@@ -351,6 +457,8 @@ class CutomerVehicle extends Component {
                       }
                     );
                   }}
+                  onBlur={this.onBlur1}
+                  styles={colourStyles}
                 />
                 {isError && !vehicleId ? (
                   <FormFeedback>Vehicle data is required.</FormFeedback>

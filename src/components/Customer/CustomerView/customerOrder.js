@@ -41,7 +41,7 @@ export class CustomerOrders extends Component {
       <>
         <div className={"text-right new-Order-btn pb-2"}>
           <Button
-            onClick={() => this.handleCreateOrder(customerDetails._id)}
+            onClick={() => this.handleCreateOrder(customerDetails ? customerDetails._id : null)}
             color={""}
             className={"btn-theme"}
           >
@@ -92,15 +92,15 @@ export class CustomerOrders extends Component {
                           authorized
                         </td>
                       ) : (
-                        <td className={"text-capitalize text-danger"}>
-                          unauthorized
+                          <td className={"text-capitalize text-danger"}>
+                            unauthorized
                         </td>
-                      )}
+                        )}
                       {order.isInvoice ? (
                         <td className={"text-capitalize"}>invoiced</td>
                       ) : (
-                        <td className={"text-capitalize "}>estimate</td>
-                      )}
+                          <td className={"text-capitalize "}>estimate</td>
+                        )}
                       <td className={"text-primary"}>
                         {order.vehicleId ? (
                           <>
@@ -113,7 +113,7 @@ export class CustomerOrders extends Component {
                             >
                               {`${order.vehicleId.make}${" "}${
                                 order.vehicleId.modal
-                              }`}{" "}
+                                }`}{" "}
                             </div>
                             <UncontrolledTooltip
                               target={`vehicle-details-${order._id}`}
@@ -132,17 +132,17 @@ export class CustomerOrders extends Component {
                         />
                       </td>
                       {order.paymentId &&
-                      order.paymentId.length &&
-                      order.paymentId[order.paymentId.length - 1]
-                        .isFullyPaid ? (
-                        <td className={"text-capitalize text-success"}>
-                          Full Paid
+                        order.paymentId.length &&
+                        order.paymentId[order.paymentId.length - 1]
+                          .isFullyPaid ? (
+                          <td className={"text-capitalize text-success"}>
+                            Full Paid
                         </td>
-                      ) : (
-                        <td className={"text-capitalize text-warning"}>
-                          Payment Not Completed
+                        ) : (
+                          <td className={"text-capitalize text-warning"}>
+                            Payment Not Completed
                         </td>
-                      )}
+                        )}
                       <td className={"text-center"}>
                         <span className="mr-2">
                           <Button
@@ -166,25 +166,25 @@ export class CustomerOrders extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      <NoDataFound
+                        showAddButton
+                        message={"Currently there are no Orders created."}
+                        onAddClick={() =>
+                          this.handleCreateOrder(customerDetails._id)
+                        }
+                      />
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    <NoDataFound
-                      showAddButton
-                      message={"Currently there are no Orders created."}
-                      onAddClick={() =>
-                        this.handleCreateOrder(customerDetails._id)
-                      }
-                    />
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
       </>

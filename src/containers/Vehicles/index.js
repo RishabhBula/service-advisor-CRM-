@@ -94,8 +94,11 @@ class Vehicles extends Component {
   };
 
   submitUpdateVehicle = dataValue => {
+    const { location } = this.props;
+    const { search } = location;
+    const query = qs.parse(search);
     dataValue.vehicleId = this.state.vehicleId;
-    this.props.editVehicleAction(dataValue);
+    this.props.editVehicleAction({...dataValue,...query});
   };
 
   deleteVehicle = vehicleId => {

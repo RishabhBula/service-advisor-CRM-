@@ -233,12 +233,19 @@ const editCustomerLogic = createLogic({
           })
         );
       }
-      dispatch(customerEditSuccess());
+      dispatch(customerEditSuccess());      
       dispatch(
         customerGetRequest({
           ...action.payload.query
         })
       );
+      if(action.payload.data.isSingleCustomer){
+        dispatch(
+          customerGetRequest({
+            ...action.payload.query,customerId:action.payload.data.customerId
+          })
+        );
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: { customerModel: false, customerEditModel: false }

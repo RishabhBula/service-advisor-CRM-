@@ -116,7 +116,8 @@ class TimeLogList extends Component {
       isDeleted: true,
       orderId: orderId ? orderId : null,
       _id: timeLogId,
-      isTimerClock: true
+      isTimerClock: true,
+      page:this.state.page || 1
     }
     this.props.editTimeLogRequest(paylod)
   }

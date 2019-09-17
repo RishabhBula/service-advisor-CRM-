@@ -2976,3 +2976,84 @@ background:#6b45f4;
   color: #6b45f4 !important;
   font-weight: 800 !important;
 }
+
+/* Date picker css  */
+.CalendarDay__selected_span{
+  background: #8157ef99 !important;
+  border: 1px double #8157ef8f !important;
+  color: #fff !important;
+}
+
+.CalendarDay__selected_span:hover{
+  background: #df900cc2 !important;
+  border: 1px double #df900cb5 !important;
+  color: #fff !important;
+}
+
+.CalendarDay__default:hover {
+  background: #df900cc2 !important;
+  border: 1px double #df900cb5 !important;
+  color: #fff !important;
+}
+.CalendarDay__selected_span:active{
+  background: #8157ef !important;
+  border: 1px double #8157ef !important;
+  color: #fff !important;
+}
+
+.CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover {
+  background: #8157ef !important;
+  border: 1px double #8157ef !important;
+  color: #fff !important;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+  border-top: 26px solid transparent !important;
+  border-right: 33px solid #8157ef !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+.CalendarDay__hovered_span, .CalendarDay__hovered_span:hover{
+  background: #8157ef99 !important;
+  border: 1px double #8157ef8f !important;
+  color: #fff !important;
+}
+
+.CalendarDay__default {
+  height: 20px !important;
+}
+
+.DayPicker_transitionContainer__horizontal{
+  height: 250px !important ;
+  width: 280px !important ;
+}
+
+.CalendarMonth {
+  padding: 0px 0px !important;
+}
+
+.DayPicker_weekHeader {
+  padding: 0px 0px !important;
+}
+
+.DayPickerNavigation_leftButton__horizontalDefault {
+  left: 10px !important;
+}
+
+.DayPickerNavigation_rightButton__horizontalDefault {
+ right: 45px !important;
+}
+
+.DateInput_input__focused {
+  border-bottom: 2px solid #8157ef !important;
+}
+
+.CalendarMonthGrid__horizontal {
+  width: 270px !important;
+}
+
+.DayPicker__withBorder {
+  width: 288px !important;
+}
+/*************END*******************/

@@ -20,7 +20,8 @@ export class CustomerVehicles extends Component {
     const payload = {
       ...data,
       isCustomerDetails: true,
-      customerId: this.props.customerId
+      customerId: this.props.customerId,
+      isSingleCustomer:true
     }
     this.props.vehicleAddAction(payload);
   };

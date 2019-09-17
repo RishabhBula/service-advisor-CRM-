@@ -57,6 +57,7 @@ class CustomerView extends Component {
   }
   componentDidUpdate = ({ customerListReducer, location }) => {
     if (((customerListReducer.getCustomerDetails !== this.props.customerListReducer.getCustomerDetails) && this.props.customerListReducer.customers.length) || customerListReducer.customers !== this.props.customerListReducer.customers) {
+      // this.props.customerGetRequest({ customerId: this.props.match.params.id })
       this.setState({
         customerData: this.props.customerListReducer.customers
       })
