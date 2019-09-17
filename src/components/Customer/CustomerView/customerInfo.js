@@ -146,6 +146,7 @@ export class CustomerInfo extends Component {
   updateCustomerForm = data => {
     let customerId = this.state.customerId;
     data.customerId = customerId;
+    data.isSingleCustomer = true
     this.props.updateCustomer({ data: data });
   };
   onTypeHeadStdFun = data => {

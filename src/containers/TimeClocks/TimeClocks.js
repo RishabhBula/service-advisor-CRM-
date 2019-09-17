@@ -68,6 +68,24 @@ class TimeClocks extends Component {
       addUserModal: !this.props.modelInfoReducer.modelDetails.addUserModal
     });
   }
+  stopTimer = (data) => {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    this.props.stopTimer({ ...data, page: page || 1 });
+  }
+  updateTimeLogRequest = (data) => {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    this.props.updateTimeLogRequest({ ...data, page: page || 1 });
+  }
+  addTimeLogRequest = (data) => {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    this.props.addTimeLogRequest({ ...data, page: page || 1 });
+  }
   /* 
   */
   usersDetails = (userData) => {
@@ -80,13 +98,13 @@ class TimeClocks extends Component {
       modelInfoReducer,
       getUserData,
       orderReducer,
-      addTimeLogRequest,
+      // addTimeLogRequest,
       userReducer,
       startTimer,
-      stopTimer,
+      // stopTimer,
       serviceReducers,
       timelogReducer,
-      updateTimeLogRequest,
+      // updateTimeLogRequest,
       timmerStartForTechnician,
       timmerStopForTechnician,
       profileInfoReducer,
@@ -113,7 +131,7 @@ class TimeClocks extends Component {
           technicianMonthData={timelogReducer.technicianMonthData}
           startTimer={startTimer}
           usersDetails={this.usersDetails}
-          stopTimer={stopTimer}
+          stopTimer={this.stopTimer}
           serviceData={serviceReducers.serviceDataList}
           timmerStartForTechnician={timmerStartForTechnician}
           timmerStopForTechnician={timmerStopForTechnician}
@@ -128,7 +146,7 @@ class TimeClocks extends Component {
           orderReducer={orderReducer}
           modelInfoReducer={modelInfoReducer}
           isSuccess={timelogReducer.isSuccess}
-          editTimeLogRequest={updateTimeLogRequest}
+          editTimeLogRequest={this.updateTimeLogRequest}
           {...this.props}
         />
         <CrmTimeClockModal
@@ -138,7 +156,7 @@ class TimeClocks extends Component {
           userData={userData}
           serviceData={serviceReducers.serviceDataList}
           handleTimeClockModal={this.handleTimeClockModal}
-          addTimeLogRequest={addTimeLogRequest}
+          addTimeLogRequest={this.addTimeLogRequest}
           isTimeClockData={true}
         />
 

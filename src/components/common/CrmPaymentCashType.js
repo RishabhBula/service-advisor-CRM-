@@ -51,6 +51,8 @@ export class CrmPaymentCashType extends Component {
                       id="Date" // PropTypes.string.isRequired,
                       focused={this.state.focused} // PropTypes.bool
                       onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                      numberOfMonths={1}
+                      hideKeyboardShortcutsPanel
                     />
                   </div>
                 </FormGroup>

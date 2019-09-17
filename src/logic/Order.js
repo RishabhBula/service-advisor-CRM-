@@ -522,8 +522,8 @@ const getOrderDetails = createLogic({
         getOrderDetailsSuccess({
           order: result.data.data[0],
           orderId: result.data.data[0] ? result.data.data[0].orderId : null,
-          customerOrders: !action.payload.vehicleId ? result.data.data : [],
-          vehicleOrders: !action.payload.customerId ? result.data.data : []
+          customerOrders: !action.payload.vehicleId ? result.data.data : null,
+          vehicleOrders: !action.payload.customerId ? result.data.data : null
         })
       );
       dispatch(getCannedServiceList());

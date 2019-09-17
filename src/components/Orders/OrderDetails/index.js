@@ -39,7 +39,7 @@ class OrderDetails extends Component {
 
   componentDidMount = () => {
     const { activityReducer, orderReducer } = this.props;
-    const orderId = orderReducer.orderItems._id;
+    const orderId = orderReducer.orderItems ? orderReducer.orderItems._id : "";
     this.setState({
       activityLogs: activityReducer.activity,
       poNumber: this.props.orderReducer && this.props.orderReducer.orderItems && this.props.orderReducer.orderItems.poNumber !== null ? this.props.orderReducer.orderItems.poNumber : "",
@@ -289,6 +289,7 @@ class OrderDetails extends Component {
       orderReducer && orderReducer.orderItems && orderReducer.orderItems.customerId
         ? true
         : false;
+    const orderItems = orderReducer && orderReducer.orderItems ? orderReducer.orderItems : null;
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -402,14 +403,40 @@ class OrderDetails extends Component {
             }
           >
             <div className={"name-label"}>Authorization</div>
-
             <ButtonGroup className={"w-100"}>
-              <Button
+              {orderItems && !orderItems.status ?
+                <Button
+                  color={""}
+                  className="btn btn-sm active"
+                  onClick={e => this.props.orderStatus("authorizStatus", false)}
+                >
+                  {orderReducer && orderReducer.orderItems && !orderReducer.orderItems.status ? (
+                    <span className={"bg-danger authoris-dot"} />
+                  ) : (
+                      <span className={"bg-secondary authoris-dot"} />
+                    )}{" "}
+                  Not Authorised
+            </Button> :
+                <Button
+                  color={""}
+                  className="btn btn-sm"
+                  onClick={e => this.props.orderStatus("authorizStatus", false)}
+                >
+                  {orderReducer && orderReducer.orderItems && !orderReducer.orderItems.status ? (
+                    <span className={"bg-danger authoris-dot"} />
+                  ) : (
+                      <span className={"bg-secondary authoris-dot"} />
+                    )}{" "}
+                  Not Authorised
+            </Button>}
+
+
+              {/* <Button
                 color={""}
                 className={
-                  orderReducer && !orderReducer.orderItems.status
-                    ? "btn btn-sm active"
-                    : "btn btn-sm"
+                   orderItems 
+                    ?(orderItems.status === false)? "btn btn-sm active"
+                    : "btn btn-sm":"btn btn-sm"
                 }
                 onClick={e => this.props.orderStatus("authorizStatus", false)}
               >
@@ -419,23 +446,33 @@ class OrderDetails extends Component {
                     <span className={"bg-secondary authoris-dot"} />
                   )}{" "}
                 Not Authorised
+              </Button> */}
+              {orderItems && !orderItems.status ?
+                <Button
+                  color={""}
+                  className={"btn btn-sm"}
+                  onClick={e => this.props.orderStatus("authorizStatus", true)}
+                >
+                  {orderReducer && orderReducer.orderItems && orderReducer.orderItems.status ? (
+                    <span className={"bg-success authoris-dot"} />
+                  ) : (
+                      <span className={"bg-secondary authoris-dot"} />
+                    )}{" "}
+                  Authorised
               </Button>
-              <Button
-                color={""}
-                className={
-                  orderReducer && !orderReducer.orderItems.status
-                    ? "btn btn-sm"
-                    : "btn btn-sm active"
-                }
-                onClick={e => this.props.orderStatus("authorizStatus", true)}
-              >
-                {orderReducer && orderReducer.orderItems.status ? (
-                  <span className={"bg-success authoris-dot"} />
-                ) : (
-                    <span className={"bg-secondary authoris-dot"} />
-                  )}{" "}
-                Authorised
-              </Button>
+                :
+                <Button
+                  color={""}
+                  className={"btn btn-sm active"}
+                  onClick={e => this.props.orderStatus("authorizStatus", true)}
+                >
+                  {orderReducer && orderReducer.orderItems && orderReducer.orderItems.status ? (
+                    <span className={"bg-success authoris-dot"} />
+                  ) : (
+                      <span className={"bg-secondary authoris-dot"} />
+                    )}{" "}
+                  Authorised
+              </Button>}
             </ButtonGroup>
           </div>
           <div
@@ -470,10 +507,10 @@ class OrderDetails extends Component {
             <div className={"name-label"}>Workflow</div>
             <Select
               defaultValue={groupedOptions.filter(
-                item => item.id === orderReducer.orderItems.workflowStatus
+                item => item.id === orderReducer && orderReducer.orderItems ? orderReducer.orderItems.workflowStatus : ""
               )}
               value={groupedOptions.filter(
-                item => item.id === orderReducer.orderItems.workflowStatus
+                item => item.id === orderReducer && orderReducer.orderItems ? orderReducer.orderItems.workflowStatus : ""
               )}
               options={groupedOptions}
               className="form-select simple-select"

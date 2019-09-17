@@ -39,8 +39,8 @@ const addTimeLogs = async (req, res) => {
       moment().startOf("day"),
       "seconds"
     );
-    console.log("#################",body.activity);
-    
+    console.log("#################", body.activity);
+
     const timeLogsData = {
       type: body.type,
       technicianId: mongoose.Types.ObjectId(body.technicianId),
@@ -50,26 +50,28 @@ const addTimeLogs = async (req, res) => {
       duration: duration,
       date: body.date,
       total: body.total || 0,
-      orderId: mongoose.Types.ObjectId(body.orderId),
+      orderId: body.orderId ? mongoose.Types.ObjectId(body.orderId) : null,
       userId: mongoose.Types.ObjectId(currentUser.id),
       parentId: currentUser.parentId
         ? mongoose.Types.ObjectId(currentUser.parentId)
         : mongoose.Types.ObjectId(currentUser.id),
       isDeleted: false,
-      notes: body.notes
+      notes: body.notes,
+      isCompleted:true
     };
     const timeLogElements = new TimeClock(timeLogsData);
     await timeLogElements.save();
     const payload = [timeLogElements._id];
-
-    await OrderModal.update(
-      { _id: body.orderId },
-      {
-        $push: {
-          timeClockId: payload
+    if (body.orderId) {
+      await OrderModal.update(
+        { _id: body.orderId },
+        {
+          $push: {
+            timeClockId: payload
+          }
         }
-      }
-    );
+      );
+    }
     return res.status(200).json({
       message: "Time log added successfully!",
       success: true
@@ -428,11 +430,11 @@ const getAllTimeLogs = async (req, res) => {
     var nowDate = new Date();
     const today = (nowDate.getMonth() + 1) + '-' + nowDate.getDate() + '-' + nowDate.getFullYear();
     const startDate = new Date(new Date(today).setHours(0, 0, 0));
-    const currentMonthStart = moment(today).startOf('month').format('YYYY-MM-DD');
-    const currentMonthEnd = moment(today).endOf('month').format('YYYY-MM-DD');
+    const currentMonthStart = moment(today,"MM-DD-YYYY").startOf('month').format('YYYY-MM-DD');
+    const currentMonthEnd = moment(today,"MM-DD-YYYY").endOf('month').format('YYYY-MM-DD');
 
-    const currentWeekStart = moment(today).startOf('week').format('YYYY-MM-DD');
-    const currentWeekEnd = moment(today).endOf('week').format('YYYY-MM-DD');
+    const currentWeekStart = moment(today,"MM-DD-YYYY").startOf('week').format('YYYY-MM-DD');
+    const currentWeekEnd = moment(today,"MM-DD-YYYY").endOf('week').format('YYYY-MM-DD');
 
     const monthStartDate = new Date(new Date(currentMonthStart).setHours(0, 0, 0));
     const monthEndDate = new Date(new Date(currentMonthEnd).setHours(0, 0, 0));
@@ -568,7 +570,7 @@ const getAllTimeLogs = async (req, res) => {
     ])
       .skip(offset)
       .limit(limit);
-
+      
     const getAllTimeLogCount = await TimeClock.aggregate([
       {
         $match: { ...condition }

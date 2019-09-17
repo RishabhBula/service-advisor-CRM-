@@ -1,5 +1,6 @@
 const Orders = require("../../models/order");
 const OrderStatus = require("../../models/orderStatus");
+const customerModel = require("../../models/customer");
 const { defaultOrderStatus } = require("./../../data");
 const mongoose = require("mongoose");
 
@@ -355,8 +356,23 @@ const updateWorkflowStatusOrder = async (req, res) => {
  *
  */
 const updateOrderDetails = async (req, res) => {
-  const { body } = req;
+  const { body, currentUser } = req;
+  const { id, parentId } = currentUser;
   try {
+    if (body.customerId && body.vehicleId) {
+      let result = await customerModel.findOne({ _id: body.customerId, parentId: id || parentId }, { vehicles: 1 });
+      let result1 = result && result.vehicles ? (result.vehicles).filter(data => data == body.vehicleId) : "";
+      if (!result1.length) {
+        await customerModel.updateOne(
+          { _id: body.customerId },
+          {
+            $push: {
+              vehicles: mongoose.Types.ObjectId(body.vehicleId)
+            }
+          }
+        );
+      }
+    }
     await Orders.findByIdAndUpdate(body._id, {
       $set: body
     });
