@@ -143,7 +143,7 @@ class HomePageComponent extends Component {
                               <Link className="nav-link1" to={"/home"}><span>Features</span></Link>
                            </li>
                            <li className="nav-item">
-                              <Link className="nav-link1" to={"/home"}><span>Pricing</span></Link>
+                              <Link className="nav-link1" to={"/pricing"}><span>Pricing</span></Link>
                            </li>
                            <li className="nav-item">
                               <Link className="nav-link1" to={"/home"}><span>About Us</span></Link>

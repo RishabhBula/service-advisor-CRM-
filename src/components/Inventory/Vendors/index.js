@@ -175,7 +175,7 @@ class Vendors extends Component {
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"5"} md={"5"} className="mb-0">
-                <FormGroup className="mb-0">
+                <FormGroup className="mb-2">
                   <InputGroup>
                     <input
                       type="text"
@@ -190,7 +190,7 @@ class Vendors extends Component {
                 </FormGroup>
               </Col>
               <Col lg={"3"} md={"3"} className="mb-0">
-                <FormGroup className="mb-0">
+                <FormGroup className="mb-2">
                   <Input
                     type="select"
                     name="sort"

@@ -373,7 +373,7 @@ class GenralSettings extends Component {
     return (
       <div>
         <Row>
-          <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
+          <Col lg={"9"} md={"9"} className={"custom-form-modal "}>
             <Form onSubmit={this.handleSubmit}>
               <Row>
                 <Col lg={"6"} md={"6"}>
@@ -536,9 +536,7 @@ class GenralSettings extends Component {
                         defaultInputValue={""}
                         value={timeZone}
                         isSearchable={true}
-                        isClearable={
-                          timeZone && timeZone.value ? true : false
-                        }
+                        isClearable={timeZone && timeZone.value ? true : false}
                         options={options}
                         className="form-select simple-select"
                         onChange={value => this.handleonInputChange(value)}
@@ -581,28 +579,30 @@ class GenralSettings extends Component {
                   </FormGroup>
                 </Col>
               </Row>
+              <Row>
+                <Col lg={"12"} md={"12"}>
+                  <FormGroup>
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    />
+                    <div className="input-block">
+                      <div className={"d-flex justify-content-center"}>
+                        <Button
+                          color="primary"
+                          className="px-4 btn-theme w-50"
+                          type="submit"
+                          block
+                          onClick={this.handleSubmit}
+                        >
+                          Update
+                        </Button>
+                      </div>
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
             </Form>
-          </Col>
-        </Row>
-        <Row className={"m-0 d-flex justify-content-center"}>
-          <Col xs="4" className={""}>
-            <FormGroup>
-              <Label
-                htmlFor={"old password"}
-                className="customer-modal-text-style"
-              />
-              <div className="input-block">
-                <Button
-                  color="primary"
-                  className="px-4 btn-theme"
-                  type="submit"
-                  block
-                  onClick={this.handleSubmit}
-                >
-                  Update
-                </Button>
-              </div>
-            </FormGroup>
           </Col>
         </Row>
       </div>

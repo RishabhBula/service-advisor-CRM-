@@ -54,7 +54,6 @@ const addSubscriptionLogic = createLogic({
 const getSubscriptionPlanLogic = createLogic({
    type: subscriptionActions.GET_SUBSCRIPTION_PLAN_REQUEST,
    async process({ action }, dispatch, done) {
-      dispatch(showLoader());
       const result = await new ApiHelper().FetchFromServer(
          "/membership-plan",
          "/list",
@@ -65,7 +64,6 @@ const getSubscriptionPlanLogic = createLogic({
       );
       if (result.isError) {
          toast.error(result.messages[0] || DefaultErrorMessage);
-         dispatch(hideLoader());
          done();
          return;
       } else {
@@ -74,7 +72,6 @@ const getSubscriptionPlanLogic = createLogic({
                subscriptionPlan: result.data.data
             })
          );
-         dispatch(hideLoader());
          done();
       }
    }

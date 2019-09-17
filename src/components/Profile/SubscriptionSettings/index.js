@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col } from "reactstrap";
 import "../../../scss/subscription.scss";
-import {CrmSubscriptionModel} from "../../common/CrmSubscriptionModal"
+import { CrmSubscriptionModel } from "../../common/CrmSubscriptionModal";
 import moment from "moment";
-import Dollor from "../../common/Dollor"
+
 
 class SubscriptionSettings extends Component {
   constructor(props) {
@@ -12,17 +12,18 @@ class SubscriptionSettings extends Component {
       errors: "",
       firstName: "",
       lastName: "",
-      openSubscriptionUpdateModel:null
+      openSubscriptionUpdateModel: null
     };
   }
 
   componentDidMount = () => {
+    this.props.getSubscriptionPlanRequest("dfds");
     if (
       this.props.profileData.profileInfo &&
       this.props.openSubscriptionUpdateModel
-    ) {
+      ) {
       const { firstName, lastName } = this.props.profileData.profileInfo;
-      const {openSubscriptionUpdateModel} = this.props
+      const { openSubscriptionUpdateModel } = this.props;
       this.setState({
         firstName,
         lastName,
@@ -30,24 +31,25 @@ class SubscriptionSettings extends Component {
       });
     }
   };
+
   componentDidUpdate = ({ profileData }) => {
     if (profileData.profileInfo !== this.props.profileData.profileInfo) {
+       this.props.getSubscriptionPlanRequest();
       const { firstName, lastName } = this.props.profileData.profileInfo;
-
       this.setState({
         firstName,
         lastName
       });
+      
     }
   };
-  handleSubscriptionModel = ()=>{
+
+  handleSubscriptionModel = () => {
     const { openSubscriptionUpdateModel } = this.state;
     this.setState({
       openSubscriptionUpdateModel: !openSubscriptionUpdateModel
     });
-  }
-
-
+  };
 
   render() {
     const { openSubscriptionUpdateModel } = this.state;
@@ -60,69 +62,40 @@ class SubscriptionSettings extends Component {
       modelOperate,
       logOutRequest
     } = this.props;
+    const planId = profileData.profileInfo.planId
+      ? profileData.profileInfo.planId._id
+      : "" || "Trial Plan";
     const planName = profileData.profileInfo.planId
-      ? profileData.profileInfo.planId.planStripeDetails.nickname
+      ? profileData.profileInfo.planId.name
       : "" || "Trial Plan";
     const expirationDate = profileData.profileInfo.planExiprationDate;
-    const planUser = profileData.profileInfo.planId
-      ? profileData.profileInfo.planId.facilities.noOfLiscence
-      : 0 || "Limited";
-    const amount =
-      !profileData.profileInfo.isInTrialPeriod &&
-      profileData.profileInfo.planId
-        ? profileData.profileInfo.planId.amount
-        : '';
+    const isInTrialPeriod = profileData.profileInfo.isInTrialPeriod;
+    const isuserLogin = localStorage.getItem("token") ? true : false;
+    const profileId = profileData.profileInfo._id || null
+ 
     return (
       <div>
-        <Row className={"mb-5 "}>
-          <Col lg={"8"} md={"8"} className={"custom-form-modal"}>
-            <h3 className={"pb-3"}>Subscription Details</h3>
+        <Row className={"mb-4"}>
+          <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
+            <h3 className={"pb-3 text-center pt-3"}>Subscription Details</h3>
+
             <div
               className={
-                "p-3 d-flex subscription-plan justify-content-between align-items-center"
+                "d-flex subscription-plan align-items-center text-center"
               }
             >
-              <div className={"d-flex align-items-center"}>
-                <i className="icons cui-dollar mr-3 plan-icon" />
-                <div className={"d-flex flex-column"}>
-                  <h4>
-                    Currently <b className={"text-success"}>"{planName}"</b>{" "} plan
-                    has been activated{" "}
-                  </h4>
-                  <span className={"plan-detail mr-4 text-muted"}>
-                    Allowed:{" "}
-                    <span className={"pl-2 text-dark"}>
-                      {planUser} User(s)
-                    </span>
-                    {amount !== '' ? 
-                    <>
-                    <span className={"pl-2 pr-2"}>|</span>
-                    Amount Paid:{" "}
-                    <span>
-                      <Dollor value={amount} />
-                    </span>
-                    </>
-                    : null
-                    }
-                  </span>
-                  <div className={"pt-2"}>
-                    <Button
-                      className={"btn-theme w-50"}
-                      color={""}
-                      size={"sm"}
-                      onClick={this.handleSubscriptionModel}
-                    >
-                      Renew Subscription
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div className={"expire-block pr-3"}>
-                <span className={"text-muted"}>Expired On</span>
-                <div>
-                  <i className="fas fa-calendar" />{" "}
-                  {moment(expirationDate || "").format("MMM Do YYYY")}
-                </div>
+              <div className={"d-flex flex-column w-100"}>
+                <h4>
+                  Currently <b className={"text-success"}>"{planName}"</b> plan
+                  has been activated.
+                </h4>
+                <p className={"mb-1"}>
+                  {isInTrialPeriod ? "Your Subscription will be expire on " : "Your next Subscription payment will be on "}
+                  <b>{moment(expirationDate || "").format("MMM Do YYYY")}</b>.
+                </p>
+                <p className={"text-muted"}>
+                  You can upgrade your Subscription at any time.
+                </p>
               </div>
             </div>
           </Col>
@@ -137,7 +110,13 @@ class SubscriptionSettings extends Component {
           subscriptionReducer={subscriptionReducer}
           addSubscriptionRequest={addSubscriptionRequest}
           isProfile={true}
+          currentPlanId={planId}
           logOutRequest={logOutRequest}
+          renewSuscription={false}
+          isInTrialPeriod={isInTrialPeriod}
+          isuserLogin={isuserLogin}
+          profileId={profileId}
+          {...this.props}
         />
       </div>
     );

@@ -145,7 +145,6 @@ export class CrmCannedServiceModal extends Component {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex, input } = this.state
 
-      console.log(serviceData, "serviceData");
       return (
          <>
             <Modal

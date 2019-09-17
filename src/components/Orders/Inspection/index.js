@@ -17,6 +17,7 @@ import Templates from "./template";
 import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import InspectionTable from "./InspectionPdf";
+import { logger } from "../../../helpers";
 class Inspection extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +50,6 @@ class Inspection extends Component {
           ? propdata.inspectionData.data
           : []
     });
-    console.log(this.props.inspectionData, "this.props.inspectionData");
   };
 
   componentDidUpdate = ({ inspectionData, customerData, orderReducer }) => {
@@ -81,7 +81,7 @@ class Inspection extends Component {
         orderDetails: orderdata
       });
     }
-    console.log("indid mount");
+  
   };
   /**
    *
@@ -228,7 +228,6 @@ class Inspection extends Component {
       orderId: this.props.orderId
     };
     //this.state.inspection.push(0, 0, payloadData);
-    console.log(payloadData.inspection, "inspection of state");
     try {
       var inspectionArray = [...this.state.inspection];
       let i, ele;
@@ -348,8 +347,6 @@ class Inspection extends Component {
    */
   onDrop = async (files, inspIndex, itemIndex) => {
     const { inspection } = this.state;
-
-    console.log(files, "files");
     if (files.length && files[0].size > 10000000) {
       await ConfirmBox({
         text: "",
@@ -480,7 +477,7 @@ class Inspection extends Component {
   downloadPDF = check => {
     const { orderReducer, pdfReducer } = this.props;
     let filename;
-    if (pdfReducer && pdfReducer.inspectionUrl) {
+    if (pdfReducer && pdfReducer.inspectionUrl !== '') {
       filename =
         pdfReducer && pdfReducer.inspectionUrl ? pdfReducer.inspectionUrl : "";
     } else {
@@ -489,6 +486,7 @@ class Inspection extends Component {
           ? orderReducer.orderItems.inspectionURL
           : "";
     }
+    logger(filename, "filename");
     let pdfWindow = window.open("");
     pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =

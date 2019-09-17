@@ -335,7 +335,7 @@ class FleetList extends Component {
             </Row>
           </Form>
         </div>
-        <Table responsive>
+        <Table responsive >
           <thead>
             <tr>
               <th width="90px">

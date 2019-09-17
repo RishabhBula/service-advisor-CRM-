@@ -56,8 +56,14 @@
   font-style: normal;
 }
 /*=========Pre Defined classes=============*/
+.border-theme{
+  border: 1px solid #dad4ea;
+}
 .text-bold{
   font-family: "FrutigerNeueLTPro-Bold";
+}
+.text-purple{
+  color:  #5c43db;
 }
 .btn-secondary.btn-download {
   background: #e5efe7;
@@ -325,13 +331,31 @@
 .workflow-mode .mode-flow {
   padding: 6px 0;
   float: left;
-  margin: 0 2px;
+  margin: 0;
 }
-.mode-flow button {
-  width: 40px;
-  height: 35px;
+.mode-flow .nav-icon {
+  width: 35px;
+  height: 30px;
   padding: 0px;
-  font-size: 21px;
+  font-size: 16px;
+  border: 1px solid #677784;
+  background: #fff;
+}
+.mode-flow .nav-icon.active{
+  background: #677784 !important;
+  color: #fff;
+}
+
+.mode-inner .mode-flow:first-child .nav-icon{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.mode-inner .mode-flow:last-child .nav-icon{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.mode-flow .btn:focus,.mode-flow .btn.active:focus{
+  box-shadow: none !important;
 }
 /* end of workflow css */
 /* ============= Start Toster CSS Design ============= */
@@ -2850,37 +2874,37 @@ display: inline-flex;
      font-family: "FrutigerNeueLTPro-Regular";
 }
 .overlay{
-      display: flex;
-      width: 100%;
-      background: #7e7e7e;
-      position: absolute;
-      width: 100%;
-      height: 35px;
-      bottom: 0;
-      left: 0;
-      opacity: 0;
-      justify-content: center;
-      align-items: center;
-      font-size: 19px;
-      color: #fff;
-  }
+  display: flex;
+  width: 100%;
+  background: #7e7e7e;
+  position: absolute;
+  width: 100%;
+  height: 35px;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 19px;
+  color: #fff;
+}
 .overlay:hover .fa{
-        transform: translateX(20px);
-        transition:all ease 0.3s;
-      }
+  transform: translateX(20px);
+  transition:all ease 0.3s;
+}
 
 .vehicle-details:hover .overlay{
-      opacity: 1;
-      transition:opacity ease 0.3s;
+  opacity: 1;
+  transition:opacity ease 0.3s;
 }
 .card .add-vehicle{
-    border: 1px dashed #0000005e;
-    background: #f3f3f4;
-    font-family: "FrutigerNeueLTPro-Regular";
+  border: 1px dashed #0000005e;
+  background: #f3f3f4;
+  font-family: "FrutigerNeueLTPro-Regular";
 }
 .new-Order-btn{
   position: absolute;
-  top: 240px;
+  top: 220px;
   right: 19px;
 }
 .new-Order-btn button{
@@ -2922,12 +2946,8 @@ display: inline-flex;
 .invoiceTableCompnent,.inspectionTable{
   display: none;
 }
-.workFlow-filter{
-  width: 23px;
-  height: 33px;
-  text-align: center;
-  padding-top: 7px;
-}
+
+
 /*PO number edit*/
 .update-btn{
   background-color: #8358f0 !important;
@@ -2936,4 +2956,43 @@ display: inline-flex;
 .cancel-btn{
   background-color: #f6b42a !important;
   color: #fff !important;
+}
+
+/*=========Workflow section========*/
+.custom-scrollbar{
+  padding: 5px;
+  width: 100%;
+  height: 40px;
+  background: #ded5f7;
+}
+.scroller{
+  display: inline-block;
+  padding: 5px;
+  background: #ccc;
+  width: 50px;
+  border: 1px solid #666;
+  position: relative;
+}
+
+/*======Prciing page==========*/
+.swal2-icon.swal2-warning.pricing-alert-icon{
+  display: none !important;
+}
+.pricing-alert .btn{
+  padding: 10px 30px;
+  font-size: 16px;
+  color: #343539;
+  background-color: #fbfbfb;
+  border-color: rgba(104, 104, 104, 0.24);
+  border-radius: 4px;
+  font-family: 'FrutigerNeueLTPro-Bold';
+  min-width: 200px;
+}
+.pricing-alert-inner .swal2-title{
+  display: flex;
+  font-size: 16px;
+  padding-top: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  justify-content: center;
 }

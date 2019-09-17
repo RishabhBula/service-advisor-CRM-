@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from "react";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Card, CardBody } from "reactstrap";
 import GenralSettings from "../../components/Profile/GeneralSettings";
 import UpdatePassword from "../../components/Profile/UpdatePassword";
 import CompanySettings from "../../components/Profile/CompanySettings";
@@ -7,6 +7,7 @@ import SubscriptionSettings from "../../components/Profile/SubscriptionSettings"
 import { connect } from "react-redux";
 import { AppRoutes } from "../../config/AppRoutes";
 import qs from "query-string";
+import "../../scss/profile.scss"
 import {
   updatePasswordRequest,
   profileSettingUpdateRequest,
@@ -66,6 +67,7 @@ class Profile extends Component {
              )
            : 0
        });
+        this.props.getSubscriptionPlanRequest();
      }
   }
   /**

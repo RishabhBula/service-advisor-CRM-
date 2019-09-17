@@ -297,9 +297,7 @@ class RegisterPage extends Component {
                         <InputGroup>
                           <InputGroupAddon
                             addonType="prepend"
-                            className={
-                              errors.confirmPassword ? "invalid" : " "
-                            }
+                            className={errors.confirmPassword ? "invalid" : " "}
                           >
                             <InputGroupText>
                               <i className="icon-lock" />
@@ -362,9 +360,7 @@ class RegisterPage extends Component {
                           <PopoverBody>
                             <div className={"pb-2 technician-detail"}>
                               <div
-                                className={
-                                  "text-capitalize pb-1 border-bottom"
-                                }
+                                className={"text-capitalize pb-1 border-bottom"}
                               >
                                 Provide name of your company or Organization
                               </div>
@@ -412,22 +408,20 @@ class RegisterPage extends Component {
                           target={"workspace"}
                           trigger={"hover"}
                         >
-                          <PopoverHeader>Workspace ?</PopoverHeader>
+                          <PopoverHeader>Workspace </PopoverHeader>
                           <PopoverBody>
                             <div className={"pb-2 technician-detail"}>
                               <div
-                                className={
-                                  "text-capitalize pb-1 border-bottom"
-                                }
+                                className={"text-capitalize pb-1 border-bottom"}
                               >
-                                Name of dedicated space provide for your
-                                company.
+                                Your work space will be an area reserved and
+                                identified uniquely by your company name
+                                followed by our company domain.
                               </div>
                               <div className={"pt-2  text-note text-left"}>
-                                Will Assign a seprate subdomain
-                                <br />
-                                ex.&nbsp;
-                                http://comanyname.serviceadvisor.io
+                                EX: Your workspace name is "Peterbilt", so after
+                                signup, your URL will be
+                                http://peterbilt.serviceadvisor.io.
                               </div>
                             </div>
                           </PopoverBody>
@@ -437,9 +431,7 @@ class RegisterPage extends Component {
                         <InputGroup className="mb-4">
                           <InputGroupAddon
                             addonType="prepend"
-                            className={
-                              errors.companyWebsite ? "invalid" : " "
-                            }
+                            className={errors.companyWebsite ? "invalid" : " "}
                           >
                             <InputGroupText>
                               <i className="icons cui-globe" />
@@ -492,10 +484,10 @@ class RegisterPage extends Component {
                       </Row>
                     </Form>
                   ) : (
-                      <ResendInvitation
-                        resendConfimationLink={this.resendConfimationLink}
-                      />
-                    )}
+                    <ResendInvitation
+                      resendConfimationLink={this.resendConfimationLink}
+                    />
+                  )}
                 </CardBody>
               </Card>
             </CardGroup>
