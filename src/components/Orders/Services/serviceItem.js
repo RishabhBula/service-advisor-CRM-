@@ -24,7 +24,8 @@ import recommandUser from "../../../assets/recommand-user.png"
 import recommandTech from "../../../assets/recommand-tech.png"
 import Dollor from "../../common/Dollor"
 import InvoiceTable from "../../../containers/Orders/invoiceTable"
-
+import expertIcon from "../../../assets/img/expert.svg";
+import notesIcon from "../../../assets/img/writing.svg";
 
 class ServiceItem extends Component {
   constructor(props) {
@@ -674,7 +675,7 @@ class ServiceItem extends Component {
     return (
       <>
         <div className={"w-100"}>
-          <Row className={"comment-section ml-0 mb-4"}>
+          <Row className={"comment-section ml-0 mb-4 mt-3"}>
             <Col md={"6"} className={"d-flex pl-0 column"}>
               <span className={"icon"}>
                 <img src={recommandUser} alt={"recommandUser"} />
@@ -732,8 +733,8 @@ class ServiceItem extends Component {
                           />
                           <FormFeedback>
                             {item.isError &&
-                              isServiceSubmitted &&
-                              !item.serviceName
+                            isServiceSubmitted &&
+                            !item.serviceName
                               ? "Service name is required."
                               : null}
                           </FormFeedback>
@@ -758,7 +759,7 @@ class ServiceItem extends Component {
                           >
                             <img
                               className={""}
-                              src={"../../assets/img/expert.svg"}
+                              src={expertIcon}
                               width={"22"}
                               alt={"technician"}
                             />
@@ -768,52 +769,53 @@ class ServiceItem extends Component {
                             technicianData.value === "") &&
                             (item.technician === null ||
                               item.technician === "")) ||
-                            (item.technician === null ||
-                              item.technician === "") ? (
-                              <UncontrolledTooltip
-                                placement="top"
-                                target={`tech${index}`}
-                              >
-                                Assign a technician
+                          (item.technician === null ||
+                            item.technician === "") ? (
+                            <UncontrolledTooltip
+                              placement="top"
+                              target={`tech${index}`}
+                            >
+                              Assign a technician
                             </UncontrolledTooltip>
-                            ) : (
-                              <UncontrolledPopover
-                                className={"technician-popover"}
-                                placement="top"
-                                target={`tech${index}`}
-                                trigger={"hover"}
-                              >
-                                <PopoverHeader>
-                                  Technician Details
-                              </PopoverHeader>
-                                <PopoverBody>
+                          ) : (
+                            <UncontrolledPopover
+                              className={"technician-popover"}
+                              placement="top"
+                              target={`tech${index}`}
+                              trigger={"hover"}
+                            >
+                              <PopoverHeader>Technician Details</PopoverHeader>
+                              <PopoverBody>
+                                <div className={"technician-detail"}>
                                   <div
-                                    className={"technician-detail"}
+                                    className={
+                                      "text-capitalize pb-1 border-bottom"
+                                    }
                                   >
-                                    <div
-                                      className={
-                                        "text-capitalize pb-1 border-bottom"
-                                      }
-                                    >
-                                      {item.technician ? item.technician.firstName : ""}{" "}
-                                      {item.technician ? item.technician.lastName : ""}
-                                    </div>
-                                    <div className={"pt-1 pb-1"}>
-                                      Rate/hour:{" "}
-                                      <Dollor
-                                        value={item.technician ? item.technician.rate : ""}
-                                      />{" "}
-                                    </div>
-                                    <div
-                                      className={"pt-1 text-note"}
-                                    >
-                                      Click below to update
-                                    Technician{" "}
-                                    </div>
+                                    {item.technician
+                                      ? item.technician.firstName
+                                      : ""}{" "}
+                                    {item.technician
+                                      ? item.technician.lastName
+                                      : ""}
                                   </div>
-                                </PopoverBody>
-                              </UncontrolledPopover>
-                            )}
+                                  <div className={"pt-1 pb-1"}>
+                                    Rate/hour:{" "}
+                                    <Dollor
+                                      value={
+                                        item.technician
+                                          ? item.technician.rate
+                                          : ""
+                                      }
+                                    />{" "}
+                                  </div>
+                                  <div className={"pt-1 text-note"}>
+                                    Click below to update Technician{" "}
+                                  </div>
+                                </div>
+                              </PopoverBody>
+                            </UncontrolledPopover>
+                          )}
                           <div
                             className={
                               item.note
@@ -824,7 +826,7 @@ class ServiceItem extends Component {
                           >
                             <img
                               className={""}
-                              src={"../../assets/img/writing .svg"}
+                              src={notesIcon}
                               width={"22"}
                               alt={"Notes"}
                             />
@@ -854,13 +856,13 @@ class ServiceItem extends Component {
                               </PopoverBody>
                             </UncontrolledPopover>
                           ) : (
-                              <UncontrolledTooltip
-                                placement="top"
-                                target={`note${index}`}
-                              >
-                                Add note
+                            <UncontrolledTooltip
+                              placement="top"
+                              target={`note${index}`}
+                            >
+                              Add note
                             </UncontrolledTooltip>
-                            )}
+                          )}
 
                           <UncontrolledPopover
                             trigger="legacy"
@@ -938,409 +940,322 @@ class ServiceItem extends Component {
                         </thead>
                         <tbody>
                           {this.state.services[index] &&
-                            this.state.services[index].serviceItems &&
-                            this.state.services[index].serviceItems
-                              .length ? (
-                              this.state.services[
-                                index
-                              ].serviceItems.map(
-                                (service, sIndex) => {
-                                  const calSubTotal = calculateSubTotal(
-                                    service.retailPrice ||
-                                    (service.tierSize
-                                      ? service.tierSize[0]
-                                        .retailPrice
+                          this.state.services[index].serviceItems &&
+                          this.state.services[index].serviceItems.length ? (
+                            this.state.services[index].serviceItems.map(
+                              (service, sIndex) => {
+                                const calSubTotal = calculateSubTotal(
+                                  service.retailPrice ||
+                                    (service.tierSize && service.tierSize.length
+                                      ? service.tierSize[0].retailPrice
                                       : null) ||
                                     0,
-                                    service.qty || 0,
-                                    service.hours || 0,
-                                    service.rate
-                                      ? service.rate.hourlyRate
-                                      : 0
-                                  );
-                                  const subDiscount = calculateValues(
-                                    calSubTotal || 0,
-                                    service.discount.value || 0,
-                                    service.discount.type
-                                  );
-                                  const servicesSubTotal = (
-                                    parseFloat(calSubTotal) -
-                                    parseFloat(subDiscount)
-                                  ).toFixed(2);
-                                  mainserviceTotal.push(
-                                    parseFloat(servicesSubTotal)
-                                  );
-                                  const serviceTotalArray = getSumOfArray(
-                                    mainserviceTotal
-                                  );
-                                  epa = calculateValues(
-                                    serviceTotalArray || 0,
-                                    item.epa.value || 0,
-                                    item.epa.type
-                                  );
-                                  discount = calculateValues(
-                                    serviceTotalArray || 0,
-                                    item.discount.value || 0,
-                                    item.discount.type
-                                  );
-                                  tax = calculateValues(
-                                    serviceTotalArray || 0,
-                                    item.taxes.value || 0,
-                                    item.taxes.type
-                                  );
-                                  serviceTotal = (
-                                    parseFloat(serviceTotalArray) +
-                                    parseFloat(epa) +
-                                    parseFloat(tax) -
-                                    parseFloat(discount)
-                                  ).toFixed(2);
-                                  return (
-                                    <tr key={sIndex}>
-                                      <td
-                                        className={
-                                          "text-capitalize pl-3"
-                                        }
-                                      >
-                                        <b>
-                                          {service.serviceType ||
-                                            "-"}
-                                        </b>
-                                        :{" "}
-                                        {service.description ||
-                                          service.brandName ||
-                                          service.discription ||
-                                          "-"}
-                                      </td>
-                                      <td>
-                                        {(service.cost !== null ||
-                                          (service.tierSize
-                                            ? service.tierSize[0]
-                                              .cost !== null
-                                            : null)) &&
-                                          service.serviceType !==
-                                          "labor" ? (
-                                            <Input
-                                              onChange={e =>
-                                                this.handleCostChange(
-                                                  e,
-                                                  index,
-                                                  sIndex
-                                                )
-                                              }
-                                              name={"retailPrice"}
-                                              type="text"
-                                              maxLength={"4"}
-                                              value={
-                                                service.retailPrice ||
-                                                (service.tierSize
-                                                  ? service
-                                                    .tierSize[0]
-                                                    .retailPrice
-                                                  : null) ||
-                                                0
-                                              }
-                                            />
+                                  service.qty || 0,
+                                  service.hours || 0,
+                                  service.rate ? service.rate.hourlyRate : 0
+                                );
+                                const subDiscount = calculateValues(
+                                  calSubTotal || 0,
+                                  service.discount.value || 0,
+                                  service.discount.type
+                                );
+                                const servicesSubTotal = (
+                                  parseFloat(calSubTotal) -
+                                  parseFloat(subDiscount)
+                                ).toFixed(2);
+                                mainserviceTotal.push(
+                                  parseFloat(servicesSubTotal)
+                                );
+                                const serviceTotalArray = getSumOfArray(
+                                  mainserviceTotal
+                                );
+                                epa = calculateValues(
+                                  serviceTotalArray || 0,
+                                  item.epa.value || 0,
+                                  item.epa.type
+                                );
+                                discount = calculateValues(
+                                  serviceTotalArray || 0,
+                                  item.discount.value || 0,
+                                  item.discount.type
+                                );
+                                tax = calculateValues(
+                                  serviceTotalArray || 0,
+                                  item.taxes.value || 0,
+                                  item.taxes.type
+                                );
+                                serviceTotal = (
+                                  parseFloat(serviceTotalArray) +
+                                  parseFloat(epa) +
+                                  parseFloat(tax) -
+                                  parseFloat(discount)
+                                ).toFixed(2);
+                                return (
+                                  <tr key={sIndex}>
+                                    <td className={"text-capitalize pl-3"}>
+                                      <b>{service.serviceType || "-"}</b>:{" "}
+                                      {service.description ||
+                                        service.brandName ||
+                                        service.discription ||
+                                        "-"}
+                                    </td>
+                                    <td>
+                                      {(service.cost !== null ||
+                                        (service.tierSize &&
+                                        service.tierSize.length
+                                          ? service.tierSize[0].cost !== null
+                                          : null)) &&
+                                      service.serviceType !== "labor" ? (
+                                        <Input
+                                          onChange={e =>
+                                            this.handleCostChange(
+                                              e,
+                                              index,
+                                              sIndex
+                                            )
+                                          }
+                                          name={"retailPrice"}
+                                          type="text"
+                                          maxLength={"4"}
+                                          value={
+                                            service.retailPrice ||
+                                            (service.tierSize &&
+                                            service.tierSize.length
+                                              ? service.tierSize[0].retailPrice
+                                              : null) ||
+                                            0
+                                          }
+                                        />
+                                      ) : null}
+                                    </td>
+                                    <td>
+                                      {(service.quantity !== null ||
+                                        (service.tierSize &&
+                                        service.tierSize.length
+                                          ? service.tierSize[0].quantity !==
+                                            null
+                                          : null)) &&
+                                      service.serviceType !== "labor" ? (
+                                        <Input
+                                          type="text"
+                                          onChange={e =>
+                                            this.handleQuantityChange(
+                                              e,
+                                              index,
+                                              sIndex
+                                            )
+                                          }
+                                          name={"quantity"}
+                                          maxLength={"4"}
+                                          value={service.qty || 0}
+                                        />
+                                      ) : null}
+                                    </td>
+                                    <td className={"text-center"}>
+                                      <div className={"hours-block"}>
+                                        {service.hours !== "" &&
+                                        service.serviceType === "labor" ? (
+                                          <Input
+                                            type={"text"}
+                                            name={"hour"}
+                                            maxLength={"4"}
+                                            onChange={e =>
+                                              this.handleHourChange(
+                                                e,
+                                                index,
+                                                sIndex
+                                              )
+                                            }
+                                            value={service.hours || 0}
+                                          />
+                                        ) : (
+                                          <span className={"no-value"}>
+                                            --:--
+                                          </span>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div className={"labor-discount "}>
+                                        <div className={"labor-discount-input"}>
+                                          {service.discount.type === "$" ? (
+                                            <div className="input-icon dollar">
+                                              <i className={"fa fa-dollar"} />
+                                            </div>
                                           ) : null}
-                                      </td>
-                                      <td>
-                                        {(service.quantity !==
-                                          null ||
-                                          (service.tierSize
-                                            ? service.tierSize[0]
-                                              .quantity !== null
-                                            : null)) &&
-                                          service.serviceType !==
-                                          "labor" ? (
-                                            <Input
-                                              type="text"
-                                              onChange={e =>
-                                                this.handleQuantityChange(
-                                                  e,
-                                                  index,
-                                                  sIndex
-                                                )
-                                              }
-                                              name={"quantity"}
-                                              maxLength={"4"}
-                                              value={service.qty || 0}
-                                            />
+                                          <Input
+                                            id="discount"
+                                            name="discount"
+                                            type={"text"}
+                                            value={service.discount.value}
+                                            onChange={e => {
+                                              this.setDiscountValue(
+                                                e,
+                                                index,
+                                                sIndex
+                                              );
+                                            }}
+                                            maxLength="5"
+                                            placeholder={"0"}
+                                          />
+                                          {service.discount.type === "%" ? (
+                                            <div className="input-icon percent">
+                                              <i className={"fa fa-percent"} />
+                                            </div>
                                           ) : null}
-                                      </td>
-                                      <td className={"text-center"}>
+                                        </div>
                                         <div
-                                          className={"hours-block"}
+                                          className={
+                                            "service-customer-discount"
+                                          }
                                         >
-                                          {service.hours !== "" &&
-                                            service.serviceType ===
-                                            "labor" ? (
+                                          <CrmDiscountBtn
+                                            index={index + `${sIndex}`}
+                                            sIndex={sIndex}
+                                            discountType={service.discount.type}
+                                            handleClickDiscountType={data =>
+                                              this.handleClickDiscountType(
+                                                data,
+                                                sIndex,
+                                                index
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className={"text-center"}>
+                                      <span className="dollar-price">
+                                        <i className="fa fa-dollar dollar-icon" />
+                                        {!isNaN(servicesSubTotal)
+                                          ? servicesSubTotal
+                                          : 0}
+                                      </span>
+                                    </td>
+                                    <td className={"text-center"}>
+                                      {service.label && service.label.length
+                                        ? service.label.map((label, lIndex) => {
+                                            return (
+                                              <>
+                                                {label.isAddLabel ? (
+                                                  <div>
+                                                    <span
+                                                      className={"close-icon"}
+                                                      onClick={() =>
+                                                        this.handleRemoveLabel(
+                                                          index,
+                                                          sIndex,
+                                                          lIndex
+                                                        )
+                                                      }
+                                                    >
+                                                      <i className="fas fa-times" />
+                                                    </span>
+                                                  </div>
+                                                ) : null}
+                                              </>
+                                            );
+                                          })
+                                        : null}
+                                      <Button
+                                        id={`new${sIndex}${index}`}
+                                        className={"btn-sm"}
+                                        type="button"
+                                      >
+                                        New +
+                                      </Button>
+                                      <UncontrolledTooltip
+                                        target={`new${sIndex}${index}`}
+                                      >
+                                        Add Label For {`${service.serviceType}`}
+                                      </UncontrolledTooltip>
+                                      <UncontrolledPopover
+                                        trigger="legacy"
+                                        placement="bottom"
+                                        target={`new${sIndex}${index}`}
+                                      >
+                                        <PopoverHeader>
+                                          <div>
+                                            <FormGroup className={"mb-0"}>
                                               <Input
-                                                type={"text"}
-                                                name={"hour"}
-                                                maxLength={"4"}
+                                                value={
+                                                  service.label[
+                                                    service.label.length - 1
+                                                  ].name
+                                                }
                                                 onChange={e =>
-                                                  this.handleHourChange(
+                                                  this.handleLabelName(
                                                     e,
                                                     index,
                                                     sIndex
                                                   )
                                                 }
-                                                value={
-                                                  service.hours || 0
+                                                placeholder={
+                                                  "Enter a label name."
                                                 }
                                               />
-                                            ) : (
-                                              <span
-                                                className={"no-value"}
-                                              >
-                                                --:--
-                                          </span>
-                                            )}
-                                        </div>
-                                      </td>
-                                      <td>
-                                        <div
-                                          className={
-                                            "labor-discount "
-                                          }
-                                        >
-                                          <div
-                                            className={
-                                              "labor-discount-input"
-                                            }
-                                          >
-                                            {service.discount
-                                              .type === "$" ? (
-                                                <div className="input-icon dollar">
-                                                  <i
-                                                    className={
-                                                      "fa fa-dollar"
-                                                    }
-                                                  />
-                                                </div>
-                                              ) : null}
-                                            <Input
-                                              id="discount"
-                                              name="discount"
-                                              type={"text"}
-                                              value={
-                                                service.discount
-                                                  .value
-                                              }
-                                              onChange={e => {
-                                                this.setDiscountValue(
-                                                  e,
+                                              <ul className={"lable-color"}>
+                                                {this.labelColors(
                                                   index,
                                                   sIndex
-                                                );
-                                              }}
-                                              maxLength="5"
-                                              placeholder={"0"}
-                                            />
-                                            {service.discount
-                                              .type === "%" ? (
-                                                <div className="input-icon percent">
-                                                  <i
-                                                    className={
-                                                      "fa fa-percent"
-                                                    }
-                                                  />
-                                                </div>
-                                              ) : null}
-                                          </div>
-                                          <div
-                                            className={
-                                              "service-customer-discount"
-                                            }
-                                          >
-                                            <CrmDiscountBtn
-                                              index={
-                                                index + `${sIndex}`
+                                                )}
+                                              </ul>
+                                            </FormGroup>
+                                            <Button
+                                              disabled={
+                                                (service.label
+                                                  ? !service.label[
+                                                      service.label.length - 1
+                                                    ].name
+                                                  : null) &&
+                                                (service.label
+                                                  ? !service.label[
+                                                      service.label.length - 1
+                                                    ].isButtonValue
+                                                  : null)
                                               }
-                                              sIndex={sIndex}
-                                              discountType={
-                                                service.discount
-                                                  .type
-                                              }
-                                              handleClickDiscountType={data =>
-                                                this.handleClickDiscountType(
-                                                  data,
-                                                  sIndex,
-                                                  index
+                                              color="secondary"
+                                              className={"btn-block btn-round"}
+                                              onClick={() =>
+                                                this.handleLabelAdd(
+                                                  index,
+                                                  sIndex
                                                 )
                                               }
-                                            />
+                                            >
+                                              Add Label
+                                            </Button>
+                                            <Button
+                                              disabled={
+                                                (service.label
+                                                  ? !service.label[
+                                                      service.label.length - 1
+                                                    ].name
+                                                  : null) &&
+                                                (service.label
+                                                  ? !service.label[
+                                                      service.label.length - 1
+                                                    ].isButtonValue
+                                                  : null)
+                                              }
+                                              color="secondary"
+                                              className={"btn-block btn-round"}
+                                              onClick={() =>
+                                                this.handleSaveLabel(
+                                                  index,
+                                                  sIndex
+                                                )
+                                              }
+                                            >
+                                              Add To Saved Label
+                                            </Button>
                                           </div>
-                                        </div>
-                                      </td>
-                                      <td className={"text-center"}>
-                                        <span className="dollar-price">
-                                          <i className="fa fa-dollar dollar-icon" />
-                                          {!isNaN(servicesSubTotal)
-                                            ? servicesSubTotal
-                                            : 0}
-                                        </span>
-                                      </td>
-                                      <td className={"text-center"}>
-                                        {service.label &&
-                                          service.label.length
-                                          ? service.label.map(
-                                            (label, lIndex) => {
-                                              return (
-                                                <>
-                                                  {label.isAddLabel ? (
-                                                    <div>
-                                                      <span
-                                                        className={"close-icon"}
-                                                        onClick={() =>
-                                                          this.handleRemoveLabel(
-                                                            index,
-                                                            sIndex,
-                                                            lIndex
-                                                          )
-                                                        }
-                                                      >
-                                                        <i className="fas fa-times" />
-                                                      </span>
-                                                    </div>
-                                                  ) : null}
-                                                </>
-                                              );
-                                            }
-                                          )
-                                          : null}
-                                        <Button
-                                          id={`new${sIndex}${index}`}
-                                          className={"btn-sm"}
-                                          type="button"
-                                        >
-                                          New +
-                                      </Button>
-                                        <UncontrolledTooltip
-                                          target={`new${sIndex}${index}`}
-                                        >
-                                          Add Label For{" "}
-                                          {`${service.serviceType}`}
-                                        </UncontrolledTooltip>
-                                        <UncontrolledPopover
-                                          trigger="legacy"
-                                          placement="bottom"
-                                          target={`new${sIndex}${index}`}
-                                        >
-                                          <PopoverHeader>
-                                            <div>
-                                              <FormGroup
-                                                className={"mb-0"}
-                                              >
-                                                <Input
-                                                  value={
-                                                    service.label[
-                                                      service.label
-                                                        .length - 1
-                                                    ].name
-                                                  }
-                                                  onChange={e =>
-                                                    this.handleLabelName(
-                                                      e,
-                                                      index,
-                                                      sIndex
-                                                    )
-                                                  }
-                                                  placeholder={
-                                                    "Enter a label name."
-                                                  }
-                                                />
-                                                <ul
-                                                  className={
-                                                    "lable-color"
-                                                  }
-                                                >
-                                                  {this.labelColors(
-                                                    index,
-                                                    sIndex
-                                                  )}
-                                                </ul>
-                                              </FormGroup>
-                                              <Button
-                                                disabled={
-                                                  (service.label
-                                                    ? !service
-                                                      .label[
-                                                      service
-                                                        .label
-                                                        .length -
-                                                      1
-                                                    ].name
-                                                    : null) &&
-                                                  (service.label
-                                                    ? !service
-                                                      .label[
-                                                      service
-                                                        .label
-                                                        .length -
-                                                      1
-                                                    ]
-                                                      .isButtonValue
-                                                    : null)
-                                                }
-                                                color="secondary"
-                                                className={
-                                                  "btn-block btn-round"
-                                                }
-                                                onClick={() =>
-                                                  this.handleLabelAdd(
-                                                    index,
-                                                    sIndex
-                                                  )
-                                                }
-                                              >
-                                                Add Label
-                                            </Button>
-                                              <Button
-                                                disabled={
-                                                  (service.label
-                                                    ? !service
-                                                      .label[
-                                                      service
-                                                        .label
-                                                        .length -
-                                                      1
-                                                    ].name
-                                                    : null) &&
-                                                  (service.label
-                                                    ? !service
-                                                      .label[
-                                                      service
-                                                        .label
-                                                        .length -
-                                                      1
-                                                    ]
-                                                      .isButtonValue
-                                                    : null)
-                                                }
-                                                color="secondary"
-                                                className={
-                                                  "btn-block btn-round"
-                                                }
-                                                onClick={() =>
-                                                  this.handleSaveLabel(
-                                                    index,
-                                                    sIndex
-                                                  )
-                                                }
-                                              >
-                                                Add To Saved Label
-                                            </Button>
-                                            </div>
-                                          </PopoverHeader>
-                                          <PopoverBody>
-                                            {labelReducer.label &&
-                                              labelReducer.label
-                                                .length
-                                              ? labelReducer.label.map(
-                                                (
-                                                  data,
-                                                  Lindex
-                                                ) => {
+                                        </PopoverHeader>
+                                        <PopoverBody>
+                                          {labelReducer.label &&
+                                          labelReducer.label.length
+                                            ? labelReducer.label.map(
+                                                (data, Lindex) => {
                                                   return (
                                                     <div
                                                       className={"d-flex"}
@@ -1394,104 +1309,94 @@ class ServiceItem extends Component {
                                                   );
                                                 }
                                               )
-                                              : null}
-                                          </PopoverBody>
-                                        </UncontrolledPopover>
-                                      </td>
-                                      <td>
-                                        <Button
-                                          size={"sm"}
-                                          id={`Delete${index}${sIndex}`}
-                                          onClick={() => {
-                                            this.handleRemoveServiceItems(
-                                              index,
-                                              sIndex
-                                            );
-                                          }}
-                                          className={
-                                            "btn-theme-transparent"
-                                          }
-                                        >
-                                          <i
-                                            className={
-                                              "icons cui-trash"
-                                            }
-                                          />
-                                        </Button>
-                                        <UncontrolledTooltip
-                                          target={`Delete${index}${sIndex}`}
-                                        >
-                                          Remove{" "}
-                                          {`${service.serviceType}`}
-                                        </UncontrolledTooltip>
-                                      </td>
-                                    </tr>
-                                  );
-                                }
-                              )
-                            ) : (
-                              <tr>
-                                <td
-                                  className={"text-center"}
-                                  colSpan={12}
+                                            : null}
+                                        </PopoverBody>
+                                      </UncontrolledPopover>
+                                    </td>
+                                    <td>
+                                      <Button
+                                        size={"sm"}
+                                        id={`Delete${index}${sIndex}`}
+                                        onClick={() => {
+                                          this.handleRemoveServiceItems(
+                                            index,
+                                            sIndex
+                                          );
+                                        }}
+                                        className={"btn-theme-transparent"}
+                                      >
+                                        <i className={"icons cui-trash"} />
+                                      </Button>
+                                      <UncontrolledTooltip
+                                        target={`Delete${index}${sIndex}`}
+                                      >
+                                        Remove {`${service.serviceType}`}
+                                      </UncontrolledTooltip>
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                            )
+                          ) : (
+                            <tr>
+                              <td className={"text-center"} colSpan={12}>
+                                <NoDataFound
+                                  showAddButton={false}
+                                  message={
+                                    "Currently there are no Services created."
+                                  }
+                                />
+                                <div
+                                  className={
+                                    "service-utility-btn no-service-data"
+                                  }
                                 >
-                                  <NoDataFound
-                                    showAddButton={false}
-                                    message={
-                                      "Currently there are no Services created."
-                                    }
-                                  />
-                                  <div
-                                    className={
-                                      "service-utility-btn no-service-data"
+                                  <Button
+                                    color={""}
+                                    size={"sm"}
+                                    className={"mr-2 btn-link"}
+                                    onClick={() =>
+                                      this.handleServiceModalOpenAdd(
+                                        index,
+                                        "part"
+                                      )
                                     }
                                   >
-                                    <Button
-                                      color={""}
-                                      size={"sm"}
-                                      className={"mr-2 btn-link"}
-                                      onClick={() =>
-                                        this.handleServiceModalOpenAdd(
-                                          index,
-                                          "part"
-                                        )
-                                      }
-                                    >
-                                      <i className="nav-icon icons icon-puzzle" />
-                                      &nbsp; Add Part
+                                    <i className="nav-icon icons icon-puzzle" />
+                                    &nbsp; Add Part
                                   </Button>
-                                    <Button
-                                      color={""}
-                                      size={"sm"}
-                                      className={"mr-2 btn-link"}
-                                      onClick={() =>
-                                        this.handleServiceModalOpenAdd(
-                                          index,
-                                          "tire"
-                                        )
-                                      }
-                                    >
-                                      <i className="nav-icon icons icon-support" />
-                                      &nbsp; Add Tire
+                                  <Button
+                                    color={""}
+                                    size={"sm"}
+                                    className={"mr-2 btn-link"}
+                                    onClick={() =>
+                                      this.handleServiceModalOpenAdd(
+                                        index,
+                                        "tire"
+                                      )
+                                    }
+                                  >
+                                    <i className="nav-icon icons icon-support" />
+                                    &nbsp; Add Tire
                                   </Button>
-                                    <Button
-                                      color={""}
-                                      size={"sm"}
-                                      className={"mr-2 btn-link"}
-                                      onClick={() =>
-                                        this.handleServiceModalOpenAdd(
-                                          index,
-                                          "labor"
-                                        )
-                                      }
-                                    >
-                                      <i className="nav-icon icons icon-user" />
-                                      &nbsp; Add Labor
+                                  <Button
+                                    color={""}
+                                    size={"sm"}
+                                    className={"mr-2 btn-link"}
+                                    onClick={() =>
+                                      this.handleServiceModalOpenAdd(
+                                        index,
+                                        "labor"
+                                      )
+                                    }
+                                  >
+                                    <i className="nav-icon icons icon-user" />
+                                    &nbsp; Add Labor
                                   </Button>
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -1508,14 +1413,11 @@ class ServiceItem extends Component {
                             <span className={"title"}>EPA</span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
-                                {item.epa &&
-                                  item.epa.type === "$" ? (
-                                    <div className="dollor-icon icon">
-                                      <i
-                                        className={"fa fa-dollar"}
-                                      />
-                                    </div>
-                                  ) : null}
+                                {item.epa && item.epa.type === "$" ? (
+                                  <div className="dollor-icon icon">
+                                    <i className={"fa fa-dollar"} />
+                                  </div>
+                                ) : null}
                                 <Input
                                   id="EPA"
                                   name="epa"
@@ -1527,14 +1429,11 @@ class ServiceItem extends Component {
                                   maxLength="5"
                                   placeholder={"0"}
                                 />
-                                {item.epa &&
-                                  item.epa.type === "%" ? (
-                                    <div className="percent-icons icon">
-                                      <i
-                                        className={"fa fa-percent"}
-                                      />
-                                    </div>
-                                  ) : null}
+                                {item.epa && item.epa.type === "%" ? (
+                                  <div className="percent-icons icon">
+                                    <i className={"fa fa-percent"} />
+                                  </div>
+                                ) : null}
                                 <CrmDiscountBtn
                                   discountType={
                                     item.epa && item.epa.type
@@ -1553,19 +1452,16 @@ class ServiceItem extends Component {
                             <span className={"title"}>Discount</span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
-                                {item.discount &&
-                                  item.discount.type === "$" ? (
-                                    <div
-                                      className={"dollor-icon icon"}
-                                    >
-                                      <i
-                                        className={"fa fa-dollar"}
-                                      />
-                                    </div>
-                                  ) : null}
+                                {item.discount && item.discount.type === "$" ? (
+                                  <div className={"dollor-icon icon"}>
+                                    <i className={"fa fa-dollar"} />
+                                  </div>
+                                ) : null}
                                 <Input
                                   id="discount"
-                                  value={item.discount ? item.discount.value : ""}
+                                  value={
+                                    item.discount ? item.discount.value : ""
+                                  }
                                   name="discount"
                                   onChange={e => {
                                     this.handleTaxesAdd(e, index, "epa");
@@ -1574,18 +1470,11 @@ class ServiceItem extends Component {
                                   maxLength="5"
                                   placeholder={"0"}
                                 />
-                                {item.discount &&
-                                  item.discount.type === "%" ? (
-                                    <div
-                                      className={
-                                        "percent-icons icon"
-                                      }
-                                    >
-                                      <i
-                                        className={"fa fa-percent"}
-                                      />
-                                    </div>
-                                  ) : null}
+                                {item.discount && item.discount.type === "%" ? (
+                                  <div className={"percent-icons icon"}>
+                                    <i className={"fa fa-percent"} />
+                                  </div>
+                                ) : null}
                                 <CrmDiscountBtn
                                   discountType={
                                     item.discount ? item.discount.type : "%"
@@ -1606,16 +1495,11 @@ class ServiceItem extends Component {
                             <span className={"title"}>Tax</span>
                             <div className={"tax-input-block"}>
                               <div className={"input"}>
-                                {item.taxes &&
-                                  item.taxes.type === "$" ? (
-                                    <div
-                                      className={"dollor-icon icon"}
-                                    >
-                                      <i
-                                        className={"fa fa-dollar"}
-                                      />
-                                    </div>
-                                  ) : null}
+                                {item.taxes && item.taxes.type === "$" ? (
+                                  <div className={"dollor-icon icon"}>
+                                    <i className={"fa fa-dollar"} />
+                                  </div>
+                                ) : null}
                                 <Input
                                   name="taxes"
                                   value={item.taxes ? item.taxes.value : ""}
@@ -1626,20 +1510,15 @@ class ServiceItem extends Component {
                                   maxLength="5"
                                   placeholder={"0"}
                                 />
-                                {item.taxes &&
-                                  item.taxes.type === "%" ? (
-                                    <div
-                                      className={
-                                        "percent-icons icon"
-                                      }
-                                    >
-                                      <i
-                                        className={"fa fa-percent"}
-                                      />
-                                    </div>
-                                  ) : null}
+                                {item.taxes && item.taxes.type === "%" ? (
+                                  <div className={"percent-icons icon"}>
+                                    <i className={"fa fa-percent"} />
+                                  </div>
+                                ) : null}
                                 <CrmDiscountBtn
-                                  discountType={item.taxes ? item.taxes.type : "%"}
+                                  discountType={
+                                    item.taxes ? item.taxes.type : "%"
+                                  }
                                   handleClickDiscountType={data =>
                                     this.handleClickEpaType(
                                       data,
@@ -1682,9 +1561,7 @@ class ServiceItem extends Component {
                               <span className="dollar-price">
                                 - <i className="fa fa-dollar dollar-icon" />
                                 {!isNaN(discount)
-                                  ? parseFloat(discount).toFixed(
-                                    2
-                                  )
+                                  ? parseFloat(discount).toFixed(2)
                                   : 0}
                               </span>
                             </span>
@@ -1811,7 +1688,7 @@ class ServiceItem extends Component {
             <InvoiceTable
               services={services}
               orderReducer={orderReducer}
-              vehicleData={orderReducer.orderItems.vehicleId}
+              vehicleData={orderReducer && orderReducer.orderItems && orderReducer.orderItems.vehicleId ? orderReducer.orderItems.vehicleId : ""}
               profileReducer={profileInfoReducer}
             />
           </div>

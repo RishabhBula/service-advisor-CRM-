@@ -97,7 +97,7 @@ const stopTimerLogic = createLogic({
     }
     if (isMainTimeClock) {
       // dispatch(getUsersList({ page: 1 }))
-      dispatch(getAllTimeLogRequest({ page: 1 }))
+      dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
     }
     if (serviceId && !isMainTimeClock) {
       dispatch(getOrderDetailsRequest({ _id: orderId }))
@@ -171,7 +171,7 @@ const addTimeLogLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       if (action.payload.isTimeClockData) {
-        dispatch(getAllTimeLogRequest({ page: 1 }))
+        dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
         dispatch(
           modelOpenRequest({
             modelDetails: {
@@ -214,11 +214,11 @@ const updateTimeLogLogic = createLogic({
     } else {
       toast.success(result.messages[0]);
       if (action.payload.isTimerClock) {
-        dispatch(getAllTimeLogRequest({ page: 1 }))
+        dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
         done();
       } else {
         if (action.payload.isTimeClockData) {
-          dispatch(getAllTimeLogRequest({ page: 1 }))
+          dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
           dispatch(
             modelOpenRequest({
               modelDetails: {

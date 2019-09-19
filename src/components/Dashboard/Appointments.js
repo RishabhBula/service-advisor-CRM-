@@ -41,7 +41,7 @@ class DashboardAppointments extends Component {
       this.setState({
         start: null,
         end: null
-      })
+      });
     }
     this.setState(
       {
@@ -121,7 +121,7 @@ class DashboardAppointments extends Component {
     const { isLoading, data } = appointments;
     return (
       <div className={"dashboard-block-container chart-container"}>
-        <Row className={"mb-1 pb-2 border-bottom ml-0 mr-0"}>
+        <Row className={"mb-1 pb-2 border-bottom ml-0 mr-0 align-items-center"}>
           <Col sm={"3"} className="pr-0 pl-0  d-flex align-items-center">
             <h3 className={" d-flex align-items-center mb-0"}>Appointments</h3>
           </Col>

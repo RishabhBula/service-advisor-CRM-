@@ -75,7 +75,7 @@ class SalesByCusomerAge extends Component {
     let totalUnPaid = 0;
     let totalThirty = 0;
     let totalSixty = 0;
-    let totalNinenty = 0;
+    //let totalNinenty = 0;
     let ninentyPlus = 0;
     return (
       <>
@@ -155,7 +155,7 @@ class SalesByCusomerAge extends Component {
                 <i className={"fa fa-calendar"} /> 61-90 Days
               </th>
               <th width={"200"}>
-                <i className={"fa fa-calendar"} /> 91 days and above
+                <i className={"fa fa-calendar"} /> Above 91 Days
               </th>
               <th width={"150"}>
                 <i className={"fa fa-dollar"} /> Credit
@@ -178,9 +178,9 @@ class SalesByCusomerAge extends Component {
                     totalSixty += parseFloat(
                       customer[CustomerAgeTypes.SIXTY_DAYS] || 0
                     );
-                    totalNinenty += parseFloat(
-                      customer[CustomerAgeTypes.NINETY_DAYS] || 0
-                    );
+                    // totalNinenty += parseFloat(
+                    //   customer[CustomerAgeTypes.NINETY_DAYS] || 0
+                    // );
                     ninentyPlus += parseFloat(
                       customer[CustomerAgeTypes.NINENTY_PLUS] || 0
                     );

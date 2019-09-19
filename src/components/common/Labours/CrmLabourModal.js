@@ -66,8 +66,11 @@ export class CrmLabourModal extends Component {
   };
   handleChange = event => {
     const { name, value } = event.target;
+    let disc = this.state.discount;
     if (name === 'discount') {
       if (isNaN(value)) {
+        return
+      } else if (disc.type === "%" && (parseFloat(value) >= 100)) {
         return
       } else {
         this.setState({
@@ -450,7 +453,7 @@ export class CrmLabourModal extends Component {
                         <Label htmlFor="name" className="customer-modal-text-style">
                           Note
                     </Label>
-                        <Input className={"form-control"} id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} placeholder={"Note"} maxLength={"1000"}/>
+                        <Input className={"form-control"} id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} placeholder={"Note"} maxLength={"1000"} />
                       </FormGroup>
                     </Col>
 

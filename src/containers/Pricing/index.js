@@ -9,6 +9,8 @@ import {
   modelOpenRequest,
   addSubscriptionRequest
 } from "../../actions";
+import HomeHeader from "../../components/HomePage/homeHeader";
+import HomeFooter from "../../components/HomePage/homeFooter";
 
 class Pricing extends Component {
   constructor(props) {
@@ -50,38 +52,42 @@ class Pricing extends Component {
   
     return (
       <>
-        <Row className={"mb-4"}>
-          <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
-            <h3 className={"pb-3 text-center pt-3"}>Subscription Plans</h3>
+        <HomeHeader />
+        <div className={"price-page-container pt-4 pb-4"}>
+          <Row className={"mb-4"}>
+            <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
+              <h3 className={"pb-3 text-center pt-3"}>Subscription Plans</h3>
 
-            <div
-              className={
-                "d-flex subscription-plan align-items-center text-center"
-              }
-            >
-              <div className={"d-flex flex-column w-100"}>
-                <h4>Get a monthly Subscription for uninterupted access.</h4>
-                <p className={"text-muted"}>
-                  You can upgrade your Subscription at any time.
-                </p>
+              <div
+                className={
+                  "d-flex subscription-plan align-items-center text-center"
+                }
+              >
+                <div className={"d-flex flex-column w-100"}>
+                  <h4>Get a monthly Subscription for uninterupted access.</h4>
+                  <p className={"text-muted"}>
+                    You can upgrade your Subscription at any time.
+                  </p>
+                </div>
               </div>
-            </div>
-          </Col>
-        </Row>
-        <CrmSubscriptionModel
-          subscriptionReducer={this.props.subscriptionReducer}
-          openSubUpgradeModel={openSubUpgradeModel}
-          openSubscriptionUpdateModel={openSubscriptionUpdateModel}
-          renewSuscription={true}
-          isProfile={isuserLogin ? true : false}
-          isPlanExpiered={isPlanExpiered}
-          isInTrialPeriod={isInTrialPeriod}
-          currentPlanId={planId}
-          isuserLogin={isuserLogin}
-          addSubscriptionRequest={addSubscriptionRequest}
-          modelOperate={modelOperate}
-          {...this.props}
-        />
+            </Col>
+          </Row>
+          <CrmSubscriptionModel
+            subscriptionReducer={this.props.subscriptionReducer}
+            openSubUpgradeModel={openSubUpgradeModel}
+            openSubscriptionUpdateModel={openSubscriptionUpdateModel}
+            renewSuscription={true}
+            isProfile={isuserLogin ? true : false}
+            isPlanExpiered={isPlanExpiered}
+            isInTrialPeriod={isInTrialPeriod}
+            currentPlanId={planId}
+            isuserLogin={isuserLogin}
+            addSubscriptionRequest={addSubscriptionRequest}
+            modelOperate={modelOperate}
+            {...this.props}
+          />
+        </div>
+        <HomeFooter />
       </>
     );
   }

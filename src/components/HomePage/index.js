@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./index.scss"
-import logoImg from "../../assets/home-img/logo.png"
 import bannerImg from "../../assets/home-img/banner-right-img.png";
-import facebookIcon from "../../assets/home-img/facebook-icon.svg";
-import twitterIcon from "../../assets/home-img/twitter-icon.svg";
-import linkdinIcon from "../../assets/home-img/linkedin-icon.svg";
-import instagramIcon from "../../assets/home-img/instagram-icon.svg";
+import HomeHeader from "./homeHeader";
+import HomeFooter from "./homeFooter";
 class HomePageComponent extends Component {
    constructor(props) {
       super(props);
@@ -110,7 +107,7 @@ class HomePageComponent extends Component {
    };
    onGoPage = (pageUrl) => {
       //this.props.onGoPage(pageUrl);
-      window.open(pageUrl, "_blank");
+      window.open(pageUrl);
    };
    render() {
       const {
@@ -118,44 +115,12 @@ class HomePageComponent extends Component {
          section1,
          section2,
          section3,
-         backgroundClass,
-         mobClass,
-         facebook,
-         twitter,
-         instagram,
-         linkedin
       } = this.state;
+      const { settingData, profileInfoReducer } = this.props;
       return (
          <>
-            <div className="main-body">
-               <nav className={`navbar navbar-expand-md navbar-dark main-header fixed-top ${backgroundClass}`} id="banner">
-                  <div className="container">
-                     <Link className="navbar-brand" to={"/home"}><img src={logoImg} alt="" /></Link>
-                     <button onClick={this.handleMobileToggle} className={mobClass ? "navbar-toggler mob-nav" : "navbar-toggler"} type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                        <span className="navbar-toggler-icon"></span>
-                     </button>
-                     <div className="collapse navbar-collapse" id="collapsibleNavbar">
-                        <ul className="navbar-nav ml-auto">
-                           <li className="nav-item">
-                              <Link className="nav-link1 active" to={"/home"}><span>Home</span></Link>
-                           </li>
-                           <li className="nav-item">
-                              <Link className="nav-link1" to={"/home"}><span>Features</span></Link>
-                           </li>
-                           <li className="nav-item">
-                              <Link className="nav-link1" to={"/pricing"}><span>Pricing</span></Link>
-                           </li>
-                           <li className="nav-item">
-                              <Link className="nav-link1" to={"/home"}><span>About Us</span></Link>
-                           </li>
-                           <li className="nav-item">
-                              <Link className="nav-link1 cursor_pointer" to={""} onClick={() => this.onGoPage('/login')}><span>Sign In</span></Link>
-                           </li>
-                        </ul>
-                        <div onClick={() => this.onGoPage('/register')} className="btn btn-primary">Start Free Trial</div>
-                     </div>
-                  </div>
-               </nav>
+            <div className="main-body home-page">
+               <HomeHeader profileInfoReducer={profileInfoReducer} onLogout={e => this.props.onLogout(e)}/>
                <section className="banner">
                   <div className="container">
                      <div className="row align-items-center">
@@ -164,7 +129,7 @@ class HomePageComponent extends Component {
                               <div className="banner-left-content">
                                  <h1>The Smart & Simple way to Run Your Auto Shop.</h1>
                                  <p>With the easy to use and customizable CRM for your marketing, sales, and customer service teams.</p>
-                                 <div onClick={() => this.onGoPage('/register')} className="btn btn-primary">Start Free Trial</div>
+                                 <Link to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-primary">Start Free Trial</Link>
                               </div>
                            </div>
                         </div>
@@ -177,66 +142,108 @@ class HomePageComponent extends Component {
                   </div>
                </section>
                <section className="main-content main-info-section">
-                  <div className="container">
+                  <div className="">
                      {section1 && section1.length ? section1.map((data, index) => {
                         let title = (data.title).split(" ");
                         return (
-                           <React.Fragment key={index}>
-                              {index % 2 === 0 ?
-                                 <div className="row align-items-center pt-3 mob-row">
-                                    <div className="col-sm-7">
-                                       <div className="content-wrap text-right">
-                                          <div className="main-heading-wrap">
-                                             <p>{data.subTitle ? data.subTitle : ""}</p>
-                                             <h2>{title.map((value, index) => {
-                                                return (
-                                                   <React.Fragment key={index}>
-                                                      {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                                   </React.Fragment>
-                                                )
-                                             })} </h2>
-                                          </div>
-                                          <p className="padding-left">{data.description ? <div
-                                             dangerouslySetInnerHTML={{
-                                                __html: `${data.description}`
-                                             }} /> : ""}</p>
-                                       </div>
+                          <React.Fragment key={index}>
+                            {index % 2 === 0 ? (
+                              <div className="row align-items-center pt-3 mob-row">
+                                <div className="col-sm-7">
+                                  <div className="content-wrap text-right pr-5">
+                                    <div className="main-heading-wrap">
+                                      <p>
+                                        {data.subTitle ? data.subTitle : ""}
+                                      </p>
+                                      <h2>
+                                        {title.map((value, index) => {
+                                          return (
+                                            <React.Fragment key={index}>
+                                              {index < title.length - 1 ? (
+                                                <span>{value} </span>
+                                              ) : (
+                                                <span className="heading-highlighter">
+                                                  {value}
+                                                </span>
+                                              )}
+                                            </React.Fragment>
+                                          );
+                                        })}{" "}
+                                      </h2>
                                     </div>
-                                    <div className="col-sm-5">
-                                       <div className="content-img-wrap">
-                                          <img src={data.img} alt="" className="right-img" />
-                                       </div>
+                                    <p className="padding-left">
+                                      {data.description ? (
+                                        <div
+                                          dangerouslySetInnerHTML={{
+                                            __html: `${data.description}`
+                                          }}
+                                        />
+                                      ) : (
+                                        ""
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="col-sm-5">
+                                  <div className="content-img-wrap">
+                                    <img
+                                      src={data.img}
+                                      alt=""
+                                      className="right-img"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="row align-items-center pt-3">
+                                <div className="col-sm-5">
+                                  <div className="content-img-wrap d-flex justify-content-end">
+                                    <img
+                                      src={data.img}
+                                      alt=""
+                                      className="left-img"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-sm-7">
+                                  <div className="content-wrap text-left pl-5">
+                                    <div className="main-heading-wrap">
+                                      <p>
+                                        {data.subTitle ? data.subTitle : ""}
+                                      </p>
+                                      <h2>
+                                        {title.map((value, index) => {
+                                          return (
+                                            <React.Fragment key={index}>
+                                              {index < title.length - 1 ? (
+                                                <span>{value} </span>
+                                              ) : (
+                                                <span className="heading-highlighter">
+                                                  {value}
+                                                </span>
+                                              )}
+                                            </React.Fragment>
+                                          );
+                                        })}{" "}
+                                      </h2>
                                     </div>
-                                 </div>
-                                 :
-                                 <div className="row align-items-center pt-3">
-                                    <div className="col-sm-5">
-                                       <div className="content-img-wrap">
-                                          <img src={data.img} alt="" className="left-img" />
-                                       </div>
-                                    </div>
-                                    <div className="col-sm-7">
-                                       <div className="content-wrap text-left">
-                                          <div className="main-heading-wrap">
-                                             <p>{data.subTitle ? data.subTitle : ""}</p>
-                                             <h2>{title.map((value, index) => {
-                                                return (
-                                                   <React.Fragment key={index}>
-                                                      {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                                   </React.Fragment>
-                                                )
-                                             })} </h2>
-                                          </div>
-                                          <p className="padding-right">{data.description ? <div
-                                             dangerouslySetInnerHTML={{
-                                                __html: `${data.description}`
-                                             }} /> : ""}</p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              }
-                           </React.Fragment>
-                        )
+                                    <p className="padding-right">
+                                      {data.description ? (
+                                        <div
+                                          dangerouslySetInnerHTML={{
+                                            __html: `${data.description}`
+                                          }}
+                                        />
+                                      ) : (
+                                        ""
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </React.Fragment>
+                        );
                      }) : null}
                   </div>
                </section>
@@ -285,7 +292,7 @@ class HomePageComponent extends Component {
                      </div>
                   </div>
                </section>
-               <section className="main-content why-choose-section" style={{ padding: "30px" }}>
+               <section className="main-content why-choose-section" >
                   <div className="container">
                      {section3 && section3.length ? section3.map((data, index) => {
                         let title = (data.title).split(" ");
@@ -299,16 +306,16 @@ class HomePageComponent extends Component {
                                        </React.Fragment>
                                     )
                                  })} </h2>
-                                 <p>{data.description ? <div
+                                 {data.description ? <div
                                     dangerouslySetInnerHTML={{
                                        __html: `${data.description}`
-                                    }} /> : ""}</p>
+                                    }} /> : ""}
                               </div>
                               <div className="text-center pt-3">
                                  {data.video && data.video.length ?
-                                    <iframe width="560" title={index} height="315" src={data.video && data.video.length ? this.validateYouTubeUrl(data.video) : ""} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" >
+                                    <div className={"video-block"}><iframe width="800" title={index} height="415" src={data.video && data.video.length ? this.validateYouTubeUrl(data.video) : ""} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" >
                                        <p>Your browser does not support iframes.</p>
-                                    </iframe>
+                                    </iframe></div>
                                     : null}
                               </div>
                            </React.Fragment>
@@ -322,48 +329,17 @@ class HomePageComponent extends Component {
                         <div className="get-started">
                            <div className="get-started-left">
                               <h3>Get Started for <span className="heading-highlighter">Free</span></h3>
-                              <p>No Contracts. No hidden fees. Get started in minutes. </p>
+                              <p className={"mb-0"}>No Contracts. No hidden fees. Get started in minutes. </p>
                            </div>
                            <div className="get-started-right">
-                              <div onClick={() => this.onGoPage('/register')} className="btn btn-primary">Start Free Trial
-                              </div>
+                              <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-primary">Start Free Trial
+                              </Link>
                            </div>
                         </div>
                      </div>
                   </div>
                </section>
-               <footer>
-                  <div className="footer-wrap">
-                     <div className="container">
-                        <div className="row align-items-center">
-                           <div className="col-sm-3">
-                              <Link className="navbar-brand" to={"/home"}><img src={logoImg} alt="logoImg" /></Link>
-                           </div>
-                           <div className="col-sm-6">
-                              <ul>
-                                 <ul className="footer-nav-listing text-center">
-                                    <li><Link to={"/home"}>Home</Link></li>
-                                    <li><Link to={"/home"}>Features</Link></li>
-                                    <li><Link to={"/home"}>Pricing</Link></li>
-                                    <li><Link to={"/home"}>About Us</Link></li>
-                                 </ul>
-                              </ul>
-                           </div>
-                           <div className="col-sm-3">
-                              <ul className="social-icon-listing text-center">
-                                 <li><a href={facebook ? facebook : ""} target="_blank" rel="noopener noreferrer"><img src={facebookIcon} alt="facebookIcon" /></a></li>
-                                 <li><a href={twitter ? twitter : ""} target="_blank" rel="noopener noreferrer"><img src={twitterIcon} alt="twitterIcon" /></a></li>
-                                 <li><a href={linkedin ? linkedin : ""} target="_blank" rel="noopener noreferrer"><img src={linkdinIcon} alt="linkdinIcon" /></a></li>
-                                 <li><a href={instagram ? instagram : ""} target="_blank" rel="noopener noreferrer"><img src={instagramIcon} alt="instagramIcon" /></a></li>
-                              </ul>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div className="copyright-wrap text-center">
-                     All Copyrights Reserved by CRM 2019
-                     </div>
-               </footer>
+               <HomeFooter settingData={settingData} />
             </div>
          </>
       )

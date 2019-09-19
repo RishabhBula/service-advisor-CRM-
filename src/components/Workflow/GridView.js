@@ -80,9 +80,9 @@ class WorkflowGridView extends React.Component {
 
   getAppointmentDetails = (id, task) => {
     const reducerData = this.props.appointmentReducer;
-    const orders = reducerData ? reducerData.data.filter(order => order.orderId) : null;
+    const orders = reducerData && reducerData.data ? reducerData.data.filter(order => order.orderId) : null;
     let orderDetails = "";
-    const orderMain = orders.filter(orderName => orderName.orderId._id === id);
+    const orderMain = orders && orders.length ? orders.filter(orderName => orderName.orderId._id === id) : "";
 
     if (orderMain.length) {
       var day = orderMain.length;
@@ -240,6 +240,8 @@ class WorkflowGridView extends React.Component {
       orders[status._id].map((task, index) => {
         if (task.serviceId && task.serviceId.length) {
           serviceCalculation.push(serviceTotalsCalculation(task.serviceId));
+        } else {
+          serviceCalculation.push({ 'orderGrandTotal': 0 })
         }
         return true;
       });

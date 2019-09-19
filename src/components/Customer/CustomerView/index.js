@@ -57,6 +57,7 @@ class CustomerView extends Component {
   }
   componentDidUpdate = ({ customerListReducer, location }) => {
     if (((customerListReducer.getCustomerDetails !== this.props.customerListReducer.getCustomerDetails) && this.props.customerListReducer.customers.length) || customerListReducer.customers !== this.props.customerListReducer.customers) {
+      // this.props.customerGetRequest({ customerId: this.props.match.params.id })
       this.setState({
         customerData: this.props.customerListReducer.customers
       })
@@ -90,6 +91,7 @@ class CustomerView extends Component {
       rateStandardListReducer,
       getMatrix,
       customerFleetReducer,
+      customerListReducer,
       profileInfoReducer,
       setLabourRateDefault,
       getCustomerFleetListActions,
@@ -101,7 +103,7 @@ class CustomerView extends Component {
     return (
       <>
         <div className={"p-3"}>
-          <h3>{customerDetails[0] ? `${customerDetails[0].firstName} ${" "} ${customerDetails[0].lastName}` : null}</h3>
+          <h3 className={"text-capitalize"}>{customerDetails[0] ? `${customerDetails[0].firstName} ${" "} ${customerDetails[0].lastName}` : null}</h3>
           {
             customerDetails[0] ? customerDetails[0].phoneDetail.map((phone, index) => {
               return (
@@ -156,6 +158,7 @@ class CustomerView extends Component {
                   customerFleetReducer={customerFleetReducer}
                   profileInfoReducer={profileInfoReducer}
                   getStdList={getStdList}
+                  customerListReducer={customerListReducer}
                   setLabourRateDefault={setLabourRateDefault}
                   getCustomerFleetListActions={getCustomerFleetListActions}
                   {...this.props}

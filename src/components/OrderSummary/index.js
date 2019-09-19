@@ -98,47 +98,47 @@ class OrderSummary extends Component {
               </div>
             </div>
             <div className={"d-flex justify-content-center align-items-center"}>
+              <h4 className={"mb-0 text-capitalize"}>{companyName}</h4>
               {shopLogo ? (
-                <div className={"mr-2"}>
-                  <img src={shopLogo} alt={companyName} width={80} />
+                <div className={"ml-2"}>
+                  <img src={shopLogo} alt={companyName} width={60} />
                 </div>
               ) : null}
-              <h4 className={"mb-0 text-capitalize"}>{companyName}</h4>
             </div>
           </div>
         </div>
 
         <div className={"user-info d-flex justify-content-between border"}>
-          <div className={" w-50 d-flex align-items-center"}>
+          <div className={" w-50 d-flex align-items-center "}>
             <div className={"pl-3 pr-3 pt-2 pb-2 mr-2"}>
-              <img src={serviceUser} alt={serviceUser} width={40} />
+              <img src={serviceUser} alt={serviceUser} width={40} height={41} />
             </div>
             {customerInfo ? (
-              <div className={"pt-1 pb-2"}>
+              <div className={"pt-2 pb-2"}>
                 {/* <label className={"text-black-50 mb-1"}>
                   Customer Information
                 </label> */}
-                <h4 className={"text-capitalize mb-1"}>
+                <h5 className={"text-capitalize mb-1"}>
                   {customerInfo.firstName}
-                </h4>
+                </h5>
                 <div>{customerInfo ? customerInfo.email : ""}</div>
               </div>
             ) : (
               ""
             )}
           </div>
-          <div className={"w-50  d-flex align-items-center"}>
+          <div className={"w-50  d-flex align-items-center justify-content-end"}>
             <div className={"pl-3 pr-3 pt-2 pb-2 mr-2"}>
               <img src={serviceTyre} alt={serviceTyre} width={40} />
             </div>
             {vehicleInfo ? (
-              <div className={"pt-1 pb-2 pr-2 "}>
+              <div className={"pt-2 pb-2 pr-2 "}>
                 {/* <label className={"text-black-50 mb-1"}>
                   Vehicle Information
                 </label> */}
-                <h4 className={"mb-1"}>
+                <h5 className={"mb-1"}>
                   {vehicleInfo.year} {vehicleInfo.make} {vehicleInfo.modal}
-                </h4>
+                </h5>
                 <div>License Plate : {vehicleInfo.licensePlate}</div>
               </div>
             ) : (
@@ -180,15 +180,15 @@ class OrderSummary extends Component {
                 tax;
               return (
                 <div key={index} className={"mb-2 mt-2 border"}>
-                  <h4 className={"text-capitalize bg-light p-2 border-bottom"}>
+                  <h5 className={"text-capitalize bg-light p-2 border-bottom"}>
                     {item.serviceId.serviceName}
-                  </h4>
+                  </h5>
                   {item.serviceId.serviceItems &&
                   item.serviceId.serviceItems.length
                     ? item.serviceId.serviceItems.map((service, sIndex) => {
                         const calSubTotal = calculateSubTotal(
                           service.retailPrice ||
-                            (service.tierSize
+                            (service.tierSize && service.tierSize.length
                               ? service.tierSize[0].retailPrice
                               : null) ||
                             0,
@@ -274,7 +274,7 @@ class OrderSummary extends Component {
 
                               {service.serviceType === "tire" &&
                               service.tierPermission &&
-                              service.tierPermission.showNoteOnQuotesInvoices &&
+                              service.tierPermission.showNoteOnQuotesInvoices && service.tierSize.length &&
                               service.tierSize[0].notes !== "" ? (
                                 <div className={"part-note"}>
                                   {" "}
@@ -320,7 +320,7 @@ class OrderSummary extends Component {
                                       Price :{" "}
                                       <Dollor
                                         value={
-                                          (service.tierSize
+                                          (service.tierSize && service.tierSize.length
                                             ? service.tierSize[0].cost
                                             : null) || 0
                                         }

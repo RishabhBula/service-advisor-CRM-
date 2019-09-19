@@ -176,13 +176,13 @@ class WorkFlow extends Component {
     if (trackEle) {
       if (warpWidth !== workFlowWidth) {
         trackEle.style.width = elelWidth + "px";
-        trackEle.style.left = 50 + "px";
+        trackEle.style.left = 200 + "px";
         this.setState({
           trackWidth: widthToApply,
           scrollToWidth: widthToCheck
         });
       } else {
-        trackEle.style.left = 200 + "px";
+        trackEle.style.left = 50 + "px";
       }
     }
   };
@@ -625,24 +625,34 @@ class WorkFlow extends Component {
                     Add a New Quote
                   </UncontrolledTooltip>
                 </div>
-                  <div className="workFlow-filter">
-                    <i className="fas fa-filter" />
-
-                    <Input
-                      type={"select"}
-                      name="selectedFilter"
-                      className={"form-control"}
-                      value={selectedFilter}
-                      onChange={this.handleInputChange}
-                    >
-                      <option value={""}>All</option>
-                      <option value={"authorized"}>Authorized</option>
-                      <option value={"unauthorized"}>Unauthorized</option>
-                      <option value={"paid"}>Paid</option>
-                      <option value={"unpaid"}>Unpaid</option>
-                      {/* <option value={"Archive"}>Archive</option> */}
-                    </Input>
+                {orderData && orderData.totalOrders ? (
+                  <div className="font-weight-bold font-bold pt-2 pr-3">
+                    <b className="">Total Orders :</b>&nbsp;
+                    <b>
+                      {orderData && orderData.totalOrders
+                        ? orderData.totalOrders
+                        : 0}
+                    </b>
                   </div>
+                ) : null}
+                <div className="workFlow-filter">
+                  <i className="fas fa-filter" />
+
+                  <Input
+                    type={"select"}
+                    name="selectedFilter"
+                    className={"form-control"}
+                    value={selectedFilter}
+                    onChange={this.handleInputChange}
+                  >
+                    <option value={""}>All</option>
+                    <option value={"authorized"}>Authorized</option>
+                    <option value={"unauthorized"}>Unauthorized</option>
+                    <option value={"paid"}>Paid</option>
+                    <option value={"unpaid"}>Unpaid</option>
+                    {/* <option value={"Archive"}>Archive</option> */}
+                  </Input>
+                </div>
               </Col>
             </Row>
             <Row className={"m-0"}>

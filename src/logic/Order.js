@@ -159,7 +159,6 @@ const updateOrderWorkflowStatusLogic = createLogic({
     if (!orders[to]) {
       orders[to] = [];
     }
-    console.log("action.payload", action.payload);
     orders[to].push(orders[from][sourceIndex]);
     orders[from].splice(sourceIndex, 1);
     dispatch(getOrderListSuccess({ data: orders, orderStatus }));
@@ -523,8 +522,8 @@ const getOrderDetails = createLogic({
         getOrderDetailsSuccess({
           order: result.data.data[0],
           orderId: result.data.data[0] ? result.data.data[0].orderId : null,
-          customerOrders: !action.payload.vehicleId ? result.data.data : [],
-          vehicleOrders: !action.payload.customerId ? result.data.data : []
+          customerOrders: !action.payload.vehicleId ? result.data.data : null,
+          vehicleOrders: !action.payload.customerId ? result.data.data : null
         })
       );
       dispatch(getCannedServiceList());

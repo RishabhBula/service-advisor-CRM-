@@ -146,6 +146,7 @@ const getAllFleetList = async (req, res) => {
          .find({
             ...condition,
          })
+         .collation({'locale':'en'})
          .sort(sortBy)
          .skip(offset)
          .limit(limit);

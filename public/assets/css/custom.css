@@ -1102,10 +1102,20 @@ body .navbar-nav .nav-link.active {
   background-size: 12.5px;
   transition: 0.3s;
 }
-.custom-sidebar.sidebar .nav-link.active .nav-icon,
-.custom-sidebar.sidebar a.nav-link.active {
+.custom-sidebar.sidebar .sidebar-nav.ps--active-y .nav-link.active .nav-icon,
+.custom-sidebar.sidebar .sidebar-nav.ps--active-y a.nav-link.active {
   color: #5c43db;
   font-weight: bold;
+}
+.custom-sidebar.sidebar .nav-link.active .nav-icon{
+  color: #5c43db;
+}
+.custom-sidebar.sidebar a.nav-link.active {
+  color: #fff;
+  font-weight: bold;
+}
+.custom-sidebar.sidebar .nav-dropdown-items .nav-link.active {
+  color: #5c43db;
 }
 
 .sidebar-minimized .custom-sidebar.sidebar .sidebar-minimizer {
@@ -1134,6 +1144,9 @@ body .navbar-nav .nav-link.active {
 .app-header .custom-main-logo .navbar-brand,
 .brand-minimized .app-header .custom-main-logo .navbar-brand {
   width: auto;
+}
+.sidebar-minimized .sidebar .nav > .nav-dropdown:hover{
+  background: #5d43db;
 }
 .sidebar-minimized .custom-sidebar.sidebar .nav-item:hover > .nav-link {
   background: #5d43db;
@@ -1289,8 +1302,8 @@ span.customer-anchor-text.customer-click-btn:hover::before {
 }
 .inventory-nav li a {
   color: #161519;
-  font-size: 13px;
-  text-transform: uppercase;
+  font-size: 14px;
+  /* text-transform: uppercase; */
   min-width: 155px;
   text-align: center;
   background: #fff;
@@ -1299,6 +1312,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   cursor: pointer;
   padding: 0.28rem 0.7rem;
   font-weight: 600;
+  font-family: 'open sans';
 }
 .inventory-nav li a:hover {
   background-color: #dedede;
@@ -2533,6 +2547,7 @@ display: inline-flex;
 }
 .service-card-btn-block {
   background: #fff;
+  font-weight: 600;
 }
 .service-card-btn-block .isValue {
   border-bottom: 3px solid green;
@@ -2720,10 +2735,11 @@ display: inline-flex;
   opacity: 0.7;
 }
 .comment-section textarea {
-  min-height: 80px;
+  min-height: 86px !important;
   color: #000;
   font-size: 16px;
   border-radius: 0;
+  max-height: 86px;
 }
 .comment-section textarea::placeholder {
   color: #333;
@@ -2806,7 +2822,9 @@ display: inline-flex;
   z-index: 2;
 }
 .service-overlay h3 {
-  color: #4f4f4f;
+  color: #302c3a;
+  font-family: "FrutigerNeueLTPro-Bold";
+  font-size: 21px;
 }
 .service-overlay img {
   height: 75px;
@@ -2916,7 +2934,7 @@ display: inline-flex;
 }
 .new-vehicle-Order-btn{
   position: absolute;
-  top: 220px;
+  top: 205px;
   right: 19px;
 }
 .new-vehicle-Order-btn  button{
@@ -2996,3 +3014,123 @@ display: inline-flex;
   margin-bottom: 20px;
   justify-content: center;
 }
+.section {
+  background: #f1f1f1;
+    padding: 100px 0px;
+}
+.faq-section .main-header  {
+background:#6b45f4;
+}
+.card.faq-card {
+  border-color: transparent;
+  box-shadow: 0 0 8px #ddd;
+  margin-bottom: 10px;
+  border:0px;
+  padding: 0px;
+}
+.faq-card .card-body{
+  padding: 0px;
+  margin:0px;
+}
+
+.faq-card-header {
+  padding:15px;
+  color:#000;
+  font-size:18px;
+}
+
+.faq-card-body {
+  padding: 0px 15px 20px;
+  color: #9e9e9e;
+}
+/* .app{
+    min-height: 81vh !important;
+}
+.app1{
+  min-height: 100vh !important;
+} */
+.faqOpen {
+  color: #6b45f4 !important;
+  font-weight: 800 !important;
+}
+
+/* Date picker css  */
+.CalendarDay__selected_span{
+  background: #8157ef99 !important;
+  border: 1px double #8157ef8f !important;
+  color: #fff !important;
+}
+
+.CalendarDay__selected_span:hover{
+  background: #df900cc2 !important;
+  border: 1px double #df900cb5 !important;
+  color: #fff !important;
+}
+
+.CalendarDay__default:hover {
+  background: #df900cc2 !important;
+  border: 1px double #df900cb5 !important;
+  color: #fff !important;
+}
+.CalendarDay__selected_span:active{
+  background: #8157ef !important;
+  border: 1px double #8157ef !important;
+  color: #fff !important;
+}
+
+.CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover {
+  background: #8157ef !important;
+  border: 1px double #8157ef !important;
+  color: #fff !important;
+}
+
+.DayPickerKeyboardShortcuts_show__bottomRight::before {
+  border-top: 26px solid transparent !important;
+  border-right: 33px solid #8157ef !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+.CalendarDay__hovered_span, .CalendarDay__hovered_span:hover{
+  background: #8157ef99 !important;
+  border: 1px double #8157ef8f !important;
+  color: #fff !important;
+}
+
+.CalendarDay__default {
+  height: 20px !important;
+}
+
+.DayPicker_transitionContainer__horizontal{
+  height: 250px !important ;
+  width: 280px !important ;
+}
+
+.CalendarMonth {
+  padding: 0px 0px !important;
+}
+
+.DayPicker_weekHeader {
+  padding: 0px 0px !important;
+}
+
+.DayPickerNavigation_leftButton__horizontalDefault {
+  left: 10px !important;
+}
+
+.DayPickerNavigation_rightButton__horizontalDefault {
+ right: 45px !important;
+}
+
+.DateInput_input__focused {
+  border-bottom: 2px solid #8157ef !important;
+}
+
+.CalendarMonthGrid__horizontal {
+  width: 270px !important;
+}
+
+.DayPicker__withBorder {
+  width: 288px !important;
+}
+/*************END*******************/

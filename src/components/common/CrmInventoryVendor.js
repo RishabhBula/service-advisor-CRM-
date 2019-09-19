@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as classnames from "classnames";
 import {
   Button,
   Modal,
@@ -136,6 +137,10 @@ export class CrmInventoryVendor extends Component {
           ...this.state.contactPerson.phoneNumber,
           value: value
         }
+      },
+      errors: {
+        ...this.state.errors,
+        phoneNumber: null
       }
     })
   }
@@ -193,7 +198,14 @@ export class CrmInventoryVendor extends Component {
       address
     }
     try {
-      const { isValid, errors } = Validator(validData, VendorValidations, VendorValidationMessage);
+      let { isValid, errors } = Validator(validData, VendorValidations, VendorValidationMessage);
+      if (contactPerson.phoneNumber.value !== "") {
+        const phoneTrimed = (contactPerson.phoneNumber.value.replace(/[- )(_]/g, ""))
+        if (phoneTrimed.length <= 9) {
+          errors.phoneNumber = "Phone number should not be less than ten digit."
+          isValid = false;
+        }
+      }
       if (!isValid || (url && !isValidURL(url))) {
         this.setState({
           errors: errors,
@@ -225,6 +237,7 @@ export class CrmInventoryVendor extends Component {
       errors,
       urlError
     } = this.state;
+    console.log("errors", errors);
     const phoneOptions = PhoneOptions.map((item, index) => <option key={index} value={item.key}>{item.text}</option>);
     return (
       <>
@@ -269,7 +282,7 @@ export class CrmInventoryVendor extends Component {
                 <Col md='6'>
                   <FormGroup>
                     <Label htmlFor='name' className='customer-modal-text-style'>
-                     Vendor URL
+                      Vendor URL
                     </Label>
                     <div className={'input-block'}>
                       <Input
@@ -394,18 +407,21 @@ export class CrmInventoryVendor extends Component {
                     </Input>
                     <div className={'input-block'}>
                       <MaskedInput
-                        mask={contactPerson.phoneNumber.phone === "mobile" ? ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/] : ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+                        mask={contactPerson.phoneNumber.phone === "mobile" ? ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/] : ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                         // "(111) 111-111 ext 1111"
                         placeholder={contactPerson.phoneNumber.phone === "mobile" ? "(555) 055-0555" : "(555) 055-0555 ext 1234"}
                         name='value'
-                        maxLength={contactPerson.phoneNumber.phone === "mobile" ? 13 : 22}
+                        maxLength={contactPerson.phoneNumber.phone === "mobile" ? 14 : 22}
                         guide={false}
                         onChange={this.handlePhoneValueChange}
                         value={contactPerson.phoneNumber.value || null}
-                        className={"form-control"}
+                        className={classnames("form-control", {
+                          "is-invalid":
+                            (errors.phoneNumber !== null && contactPerson.phoneNumber.value !== "")
+                        })}
                         size='20'
                         id='phoneNumber'
-                      // invalid={errors.companyName}
+                      // invalid={errors.phoneNumber}
                       />
                       <FormFeedback>
                         {errors.phoneNumber ? errors.phoneNumber : null}

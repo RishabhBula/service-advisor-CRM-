@@ -116,7 +116,8 @@ class TimeLogList extends Component {
       isDeleted: true,
       orderId: orderId ? orderId : null,
       _id: timeLogId,
-      isTimerClock: true
+      isTimerClock: true,
+      page:this.state.page || 1
     }
     this.props.editTimeLogRequest(paylod)
   }
@@ -312,7 +313,7 @@ class TimeLogList extends Component {
                 )
               }) :
                 <tr>
-                  <td className={"text-center"} colSpan={8}>
+                  <td className={"text-center"} colSpan={12}>
                     <NoDataFound showAddButton message={"Currently there are no time logs added."} noResult={false} onAddClick={handleTimeClockModal} />
                   </td>
                 </tr> :

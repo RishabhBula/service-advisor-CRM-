@@ -291,7 +291,7 @@ class DefaultLayout extends Component {
           </Suspense>
         </AppHeader>
         <div className="app-body">
-          <AppSidebar className="custom-sidebar" fixed display="lg">
+          <AppSidebar className="custom-sidebar" fixed minimized display="lg">
             {shopLogo || parentId.shopLogo ? (
               <div className={"provider-logo"}>
                 {!isLogoLoading ? (

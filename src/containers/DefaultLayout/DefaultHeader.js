@@ -30,7 +30,8 @@ class DefaultHeader extends Component {
     this.state = {
       openCreate: false,
       selectedDate: new Date(),
-      dropdownOpen: false
+      dropdownOpen: false,
+      quickAddOpen: false
     };
   }
   /**
@@ -108,6 +109,12 @@ class DefaultHeader extends Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   };
+
+  toggleQuickAdd =()=>{
+    this.setState({
+      quickAddOpen: !this.state.quickAddOpen
+    });
+  }
   /**
    *
    */
@@ -123,9 +130,9 @@ class DefaultHeader extends Component {
       getOrders,
       addAppointment,
       getUserData,
-      getMatrix
+      getMatrix,
     } = this.props;
-    const { openCreate, selectedDate, dropdownOpen } = this.state;
+    const { openCreate, selectedDate, dropdownOpen, quickAddOpen } = this.state;
     // eslint-disable-next-line
     const profileName =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -163,7 +170,7 @@ class DefaultHeader extends Component {
             {permissions.isAllowedCalendar ? (
               <NavItem className="">
                 <NavLink to="/calender" className="nav-link px-3">
-                  <i className={"fas fa-calendar"} /> Calender
+                  <i className={"fas fa-calendar"} /> Appointments
                 </NavLink>
               </NavItem>
             ) : null}
@@ -175,7 +182,35 @@ class DefaultHeader extends Component {
               </NavItem>
             ) : null}
 
-            <AppHeaderDropdown direction="down" className="header-add-new ">
+            {/* Npotification Section */}
+            {/* <AppHeaderDropdown direction="down" className="header-add-new ">
+              <DropdownToggle className="nav-link px-3">
+                <span className="fa fa-bell" />
+              </DropdownToggle>
+              <DropdownMenu right style={{ right: "auto" }} className="notification-block">
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+              </DropdownMenu>
+            </AppHeaderDropdown> */}
+
+            <AppHeaderDropdown
+              direction="down"
+              className="header-add-new"
+              toggle={this.toggleQuickAdd}
+              isOpen={quickAddOpen}
+              onMouseEnter={this.toggleQuickAdd}
+              onMouseLeave={this.toggleQuickAdd}
+            >
               <DropdownToggle className="nav-link px-3">
                 <span className="fa fa-plus" /> Quick Add
               </DropdownToggle>
@@ -229,6 +264,8 @@ class DefaultHeader extends Component {
               className="user-Info-dropdown"
               toggle={this.toggle}
               isOpen={dropdownOpen}
+              onMouseEnter={this.toggle}
+              onMouseLeave={this.toggle}
             >
               <DropdownToggle
                 className="nav-link pl-2 pr-2 "

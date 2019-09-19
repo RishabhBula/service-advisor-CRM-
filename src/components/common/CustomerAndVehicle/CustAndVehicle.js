@@ -64,17 +64,25 @@ class CustAndVehicle extends Component {
   submitCreateVehicleFun = data => {
     const { customerInfoReducer } = this.props;
     const { customerAddInfo } = customerInfoReducer;
+    
     this.props.vehicleAddAction({
       ...data,
       customerId: customerAddInfo._id
     });
   };
+  hanleAddCustomer = (customerData) => {
+    const payload = {
+      ...customerData,
+      workFlowCustomer:true
+    }
+    this.props.addCustomer(payload);
+  }
   render() {
     const {
       matrixListReducer,
       rateStandardListReducer,
       customerFleetReducer,
-      addCustomer,
+      // addCustomer,
       profileInfoReducer,
       modelInfoReducer,
       customerInfoReducer,
@@ -106,7 +114,7 @@ class CustAndVehicle extends Component {
             <CrmCustomerModal
               customerModalOpen={custAndVehicleCustomer}
               handleCustomerModalFun={this.toggleModal}
-              addCustomerFun={addCustomer}
+              addCustomerFun={this.hanleAddCustomer}
               profileInfo={profileInfoReducer}
               matrixListReducerData={matrixListReducer}
               rateStandardListData={rateStandardListReducer}

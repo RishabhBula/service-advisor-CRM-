@@ -67,7 +67,7 @@ const fleetListLogic = createLogic({
         isLoading: true,
         fleetData: []
       }),
-      showLoader()
+      //showLoader()
     );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
@@ -83,7 +83,7 @@ const fleetListLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0] || DefaultErrorMessage);
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       done();
       return;
     } else {
@@ -93,7 +93,7 @@ const fleetListLogic = createLogic({
           fleetData: result.data,
           isLoading: false
         }),
-        hideLoader()
+        //hideLoader()
       );
       done();
     }

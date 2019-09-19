@@ -26,6 +26,11 @@
     &:hover{
       transform: scale(1.04);
       z-index: 1;
+      .btn{
+        background: linear-gradient(to bottom, #f6b42a, #df900c);
+        color: #fff;
+        border-color: #df900c;
+      }
     }
     .subscription-card-inner{
       border-top: 1px solid #ddd;

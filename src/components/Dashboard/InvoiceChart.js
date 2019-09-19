@@ -134,7 +134,7 @@ class InvoiceChart extends Component {
       this.setState({
         start: null,
         end: null
-      })
+      });
     }
     this.setState(
       {
@@ -215,7 +215,7 @@ class InvoiceChart extends Component {
     const { isLoading } = customerSales;
     return (
       <div className={"dashboard-block-container chart-container text-right"}>
-        <Row className={"mb-3 pb-2 border-bottom ml-0 mr-0"}>
+        <Row className={"mb-3 pb-2 border-bottom ml-0 mr-0 align-items-center"}>
           <Col sm={"3"} className="pr-0 pl-0 d-flex align-items-center">
             <h3 className={"mb-0 d-flex align-items-center"}>Sales Details</h3>
           </Col>

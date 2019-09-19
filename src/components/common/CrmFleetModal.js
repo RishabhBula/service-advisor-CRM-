@@ -83,10 +83,14 @@ export class CrmFleetModal extends Component {
 
   handlePercentageChange = e => {
     const { fleetDefaultPermissions } = this.state;
+    if(isNaN(e.target.value)){
+      return;
+    }
     if (parseFloat(e.target.value) >= 100) {
       this.setState({
         percentageError: "Enter proper percentage value,less than 100"
       });
+      return;
     } else {
       this.setState({
         percentageError: ""
@@ -318,7 +322,7 @@ export class CrmFleetModal extends Component {
         CreateFleetValidations,
         CreateFleetValidMessaages
       );
-      let IncorrectNumber = [...this.state.inCorrectNumber],checkPhoneLength=true
+      let IncorrectNumber = [...this.state.inCorrectNumber], checkPhoneLength = true
       if (phoneDetail && phoneDetail.length) {
         for (let i = 0; i < phoneDetail.length; i++) {
           const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
@@ -477,7 +481,7 @@ export class CrmFleetModal extends Component {
                       />
                       <FormFeedback>
                         {errors && !companyName && errors.companyName
-                          ? "Company name is requiered"
+                          ? "Company name is required"
                           : null}
                       </FormFeedback>
                     </div>
@@ -561,7 +565,7 @@ export class CrmFleetModal extends Component {
                                       />
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
-                                        {this.state.inCorrectNumber[index]
+                                        {this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index])
                                           ? "Phone number should not be less than ten digit."
                                           : null}
                                       </FormFeedback>
@@ -571,7 +575,11 @@ export class CrmFleetModal extends Component {
                                       <MaskedInput
                                         mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, ' ', 'ext', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
-                                        className="form-control"
+                                        className={classnames("form-control", {
+                                          "is-invalid":
+                                            (this.state.phoneErrors[index] !== "" &&
+                                              !item.value) || (this.state.inCorrectNumber[index])
+                                        })}
                                         placeholder="(555) 055-0555 ext 1234"
                                         size="20"
                                         value={item.value}
@@ -580,9 +588,12 @@ export class CrmFleetModal extends Component {
                                           this.handlePhoneValueChange(index, e)
                                         }
                                       />
-                                      <p className="text-danger">
-                                        {this.state.phoneErrors[index]}
-                                      </p>
+                                      <FormFeedback>
+                                          {this.state.phoneErrors[index]}
+                                          {
+                                            this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
+                                          }
+                                        </FormFeedback>
                                     </div>
                                   )}
                               </FormGroup>
@@ -638,7 +649,7 @@ export class CrmFleetModal extends Component {
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
                                           {
-                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                            this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                           }
                                         </FormFeedback>
                                         {/* <p className='text-danger'>
@@ -666,7 +677,7 @@ export class CrmFleetModal extends Component {
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
                                           {
-                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                            this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                           }
                                         </FormFeedback>
                                       </div>

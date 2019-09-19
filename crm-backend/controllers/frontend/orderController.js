@@ -1,5 +1,6 @@
 const Orders = require("../../models/order");
 const OrderStatus = require("../../models/orderStatus");
+const customerModel = require("../../models/customer");
 const { defaultOrderStatus } = require("./../../data");
 const mongoose = require("mongoose");
 
@@ -177,13 +178,16 @@ const listOrders = async (req, res) => {
     const result = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
     );
+    const getAllOrdersCount = await Orders.countDocuments({
+      ...condition
+    });
     let orderStatus = await OrderStatus.find(orderStatusCondition, {
       name: 1,
       isInvoice: 1
     }).sort({ orderIndex: "asc" });
     if (!orderStatus.length) {
       defaultOrderStatus.forEach(e => {
-        e.parentId = condition.parentId;
+        e.parentId = orderStatusCondition.parentId;
       });
       await OrderStatus.insertMany(defaultOrderStatus);
       orderStatus = await OrderStatus.find(orderStatusCondition, {
@@ -204,7 +208,8 @@ const listOrders = async (req, res) => {
     return res.status(200).json({
       message: "Data fetched successfully",
       data: response,
-      orderStatus
+      orderStatus,
+      totalOrders: getAllOrdersCount ? getAllOrdersCount : 0
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
@@ -214,7 +219,6 @@ const listOrders = async (req, res) => {
     });
   }
 };
-
 /**
  *
  */
@@ -352,8 +356,23 @@ const updateWorkflowStatusOrder = async (req, res) => {
  *
  */
 const updateOrderDetails = async (req, res) => {
-  const { body } = req;
+  const { body, currentUser } = req;
+  const { id, parentId } = currentUser;
   try {
+    if (body.customerId && body.vehicleId) {
+      let result = await customerModel.findOne({ _id: body.customerId, parentId: id || parentId }, { vehicles: 1 });
+      let result1 = result && result.vehicles ? (result.vehicles).filter(data => data == body.vehicleId) : "";
+      if (!result1.length) {
+        await customerModel.updateOne(
+          { _id: body.customerId },
+          {
+            $push: {
+              vehicles: mongoose.Types.ObjectId(body.vehicleId)
+            }
+          }
+        );
+      }
+    }
     await Orders.findByIdAndUpdate(body._id, {
       $set: body
     });
