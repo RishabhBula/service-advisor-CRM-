@@ -233,12 +233,19 @@ const editCustomerLogic = createLogic({
           })
         );
       }
-      dispatch(customerEditSuccess());
+      dispatch(customerEditSuccess());      
       dispatch(
         customerGetRequest({
           ...action.payload.query
         })
       );
+      if(action.payload.data.isSingleCustomer){
+        dispatch(
+          customerGetRequest({
+            ...action.payload.query,customerId:action.payload.data.customerId
+          })
+        );
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: { customerModel: false, customerEditModel: false }
@@ -329,7 +336,7 @@ const importCustomerLogic = createLogic({
         email: element["Email"],
         notes: element["Notes"],
         companyName: element["Company"],
-        referralSource: element["Refral Source"],
+        referralSource: element["Referral Source"],
         address1: element["Address"],
         city: element["City"],
         state: element["State"],

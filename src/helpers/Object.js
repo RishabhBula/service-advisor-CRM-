@@ -92,3 +92,16 @@ export const isValidObjectId = id => {
 export const isValidSubdomain = str => {
   return new RegExp("^[a-z0-9-]+$").test(str);
 };
+
+/**
+ *
+ */
+export const pageTitle = (val)=>{
+  let title = val.replace(/\//, "");
+  title = title.split("/");
+  return (
+    title[0].charAt(0).toUpperCase() +
+    title[0].substring(1) +
+    (title[1] ? " | " + title[1].charAt(0).toUpperCase() + title[1].substring(1) : "")
+  );
+}

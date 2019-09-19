@@ -9,66 +9,70 @@ class Notes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageData: '',
+      messageData: "",
       notes: [],
-      attachment:
-      {
+      attachment: {
         itemImagePreview: [],
-        itemImage: [],
+        itemImage: []
       },
       btnStatus: true
     };
     this.messageDataTextRef = React.createRef();
   }
 
-  componentDidMount = () => {
-  }
+  componentDidMount = () => {};
 
-  componentDidUpdate = ({ messageReducer, messagesList }) => {
-  }
-  
-  deleteNote=async(id)=>{
+  componentDidUpdate = ({ messageReducer, messagesList }) => {};
+
+  deleteNote = async (id, Index) => {
+    const { messages } = this.props;
+    let indexVal = messages.findIndex(value => value._id === id);
+    messages.splice(indexVal, 1);
     const { value } = await ConfirmBox({
       text: "You want to delete this note"
     });
     if (!value) {
       return;
     }
+
+    this.props.newMsgSend(messages);
     const payload = {
       messageId: id,
       isDeleted: true,
       orderId: this.props.orderId
-    }
+    };
     this.props.deleteNotes(payload)
-  }
+  };
   // To view file in new window
   viewFile = (filename, type) => {
-    let pdfWindow = window.open("")
-    pdfWindow.document.body.innerHTML = type === 'pdf' ? "<iframe width='100%' height='100%' src='" + filename + "'></iframe>" : "<img src=' " + filename + "' >";
-  }
+    let pdfWindow = window.open("");
+    pdfWindow.document.body.innerHTML =
+      type === "pdf"
+        ? "<iframe width='100%' height='100%' src='" + filename + "'></iframe>"
+        : "<img src=' " + filename + "' >";
+  };
 
   render() {
     const { messages } = this.props;
-    let notes = messages.filter(value => !value.isDeleted)
-    notes = notes.filter(value => value.isInternalNotes)
+    let notes =  messages.filter(value => value ? !value.isDeleted : '');
+    notes = notes.filter(value => value.isInternalNotes);
     return (
       <>
         <div className={"message-list mt-5"}>
-          { notes && notes.length ? notes.map((ele, Index) => {
-              return(
+          {notes && notes.length ? (
+            notes.map((ele, Index) => {
+              return (
                 <div
                   className={
                     ele.senderId === ele.userId && ele.isSender
-                      ? "message-tile d-flex flex-row-reverse send mb-3"
-                      : "message-tile d-flex flex-row  recive mb-4"
+                      ? "message-tile d-flex flex-row-reverse send "
+                      : "message-tile d-flex flex-row  recive "
                   }
                   key={Index}
                 >
                   <span
-                    className={
-                      "text-danger cursor_pointer ml-2 delete-icon"
-                    }
-                    onClick={e => this.deleteNote(ele._id)}
+                    className={"text-danger cursor_pointer ml-2 delete-icon"}
+                    onClick={e => this.deleteNote(ele._id, Index)}
                     id={`Id-${Index}`}
                   >
                     <i className="fa fa-trash" />
@@ -92,7 +96,7 @@ class Notes extends Component {
                           __html: ele ? ele.messageData : ""
                         }}
                       />
-                      {ele.messageAttachment &&
+                      {/* {ele.messageAttachment &&
                       ele.messageAttachment.itemImagePreview.length ? (
                         <ul className={"attachment-preview-group  p-1"}>
                           {ele.messageAttachment
@@ -144,18 +148,18 @@ class Notes extends Component {
                         </ul>
                       ) : (
                         ""
-                      )}
+                      )} */}
                       <div className="clearfix" />
                     </div>
                   </div>
                 </div>
-              )
-          }) : 
-          <div className={"text-center"}>
-            <NoDataFound message={"No any note added yet!"}/>
-          </div>
-          }
-          
+              );
+            })
+          ) : (
+            <div className={"text-center"}>
+              <NoDataFound message={"No any note added yet!"} />
+            </div>
+          )}
         </div>
       </>
     );

@@ -333,7 +333,7 @@ class WorkflowListView extends React.Component {
                 orders[activeTab].map(this.renderRow)
               ) : (
                     <tr>
-                      <td className={"text-center"} colSpan={6}>
+                      <td className={"text-center"} colSpan={8}>
                         <NoDataFound />
                       </td>
                     </tr>

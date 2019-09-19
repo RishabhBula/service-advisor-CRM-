@@ -88,6 +88,7 @@ export class CrmFleetEditModal extends Component {
       this.setState({
         percentageError: "Enter proper percentage value,less than 100"
       })
+      return;
     } else {
       this.setState({
         percentageError: ""
@@ -191,7 +192,7 @@ export class CrmFleetEditModal extends Component {
               }
             ],
         fleetId: fleetSingleData._id,
-        errors: {},
+        // errors: {},
         inCorrectNumber: []
       });
       if (
@@ -305,7 +306,11 @@ export class CrmFleetEditModal extends Component {
       return;
     } else {
       this.setState({
-        [name]: value
+        [name]: value,
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
       });
     }
   };
@@ -350,9 +355,9 @@ export class CrmFleetEditModal extends Component {
   }
 
   handleEditFleet = async (fleetData, fleetId) => {
-    this.setState({
-      errors: {}
-    });
+    // this.setState({
+    //   errors: {}
+    // });
     try {
       const { phoneDetail } = this.state;
       if (phoneDetail.length) {
@@ -372,11 +377,11 @@ export class CrmFleetEditModal extends Component {
       let validationData;
       if (!fleetData.email) {
         validationData = {
-          companyName: fleetData.companyName
+          companyName: fleetData.companyName.trim()
         };
       } else {
         validationData = {
-          companyName: fleetData.companyName,
+          companyName: fleetData.companyName.trim(),
           email: fleetData.email
         };
       }
@@ -401,7 +406,7 @@ export class CrmFleetEditModal extends Component {
       if (
         (!isValid && fleetData.email !== "") ||
         Object.keys(this.state.phoneErrors).length ||
-        fleetData.companyName === "" || this.state.percentageError || !checkPhoneLength
+        fleetData.companyName.trim() === "" || this.state.percentageError || !checkPhoneLength
       ) {
         this.setState({
           errors,
@@ -502,6 +507,7 @@ export class CrmFleetEditModal extends Component {
       fleetDefaultPermissions,
       percentageDiscount
     };
+    console.log("errors",errors);
     return (
       <>
         <Modal
@@ -534,8 +540,8 @@ export class CrmFleetEditModal extends Component {
                         invalid={errors.companyName}
                       />
                       <FormFeedback>
-                        {errors && !companyName && errors.companyName
-                          ? "Company name is requiered"
+                        {errors && !(companyName.trim()) && errors.companyName
+                          ? "Company name is required"
                           : null}
                       </FormFeedback>
                     </div>
@@ -619,7 +625,7 @@ export class CrmFleetEditModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                         {
-                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                         }
                                       </FormFeedback>
                                     </div>
@@ -640,7 +646,7 @@ export class CrmFleetEditModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                         {
-                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                         }
                                       </FormFeedback>
                                     </div>
@@ -698,7 +704,7 @@ export class CrmFleetEditModal extends Component {
                                       <FormFeedback>
                                         {this.state.phoneErrors[index]}
                                         {
-                                          this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                          this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                         }
                                       </FormFeedback>
                                     </div>
@@ -719,7 +725,7 @@ export class CrmFleetEditModal extends Component {
                                         <FormFeedback>
                                           {this.state.phoneErrors[index]}
                                           {
-                                            this.state.inCorrectNumber[index] ? "Phone number should not be less than ten digit." : null
+                                            this.state.inCorrectNumber[index] && !(this.state.phoneErrors[index]) ? "Phone number should not be less than ten digit." : null
                                           }
                                         </FormFeedback>
                                       </div>

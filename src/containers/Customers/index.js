@@ -34,6 +34,7 @@ import {
   DemoSupportedSheets
 } from "../../components/common/CrmExportSampleButton";
 import CrmImportExcel from "../../components/common/CrmImportExcel";
+import { ConfirmBox } from "../../helpers/SweetAlert";
 
 class Customers extends Component {
   constructor(props) {
@@ -164,9 +165,21 @@ class Customers extends Component {
   onImport = data => {
     this.props.importCustomer(data);
   };
-  exportCustomer = () => {
+  exportCustomer = async() => {
     const query = qs.parse(this.props.location.search);
-    this.props.exportCustomer({ ...query, page: 1 });
+    const { customerListReducer } = this.props
+    const { customers } = customerListReducer
+    if (customers && customers.length) {
+      this.props.exportCustomer({ ...query, page: 1 });
+    } else {
+      await ConfirmBox({
+        text: "",
+        title: "No customer details to export",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
   };
   render() {
     const { editMode, customer } = this.state;
@@ -187,7 +200,7 @@ class Customers extends Component {
               {/* <CrmExportSampleButton sheetType={DemoSupportedSheets.CUSTOMER} />{" "}
               &nbsp; */}
               <CrmImportExcel
-                modalHeaderText={"Import Customer data"}
+                modalHeaderText={"Import Customer Data"}
                 importSectionName={"customer"}
                 onImport={this.onImport}
                 buttonText={"Import Customers"}

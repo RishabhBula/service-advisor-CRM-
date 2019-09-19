@@ -5,7 +5,8 @@ import { withRouter } from "react-router-dom";
 import {
   verifyLinkRequest,
   sendMessage,
-  updateOrderDetailsRequest
+  updateOrderDetailsRequest,
+  newMsgSend
 } from "../../actions";
 import * as qs from "query-string";
 import OrderSummary from "../../components/OrderSummary";
@@ -71,47 +72,48 @@ class OrderSummaryView extends Component {
     const {
       summaryReducer,
       sendMessage,
-      updateOrderDetailsRequest
+      updateOrderDetailsRequest,
+      newMsgSend
     } = this.props;
     const { orderStatus } = this.state;
     const customerInfo = summaryReducer
       ? summaryReducer.orderData.customerId
       : "";
     return (
-      <>
-        <div className={"summary-warp mt-4 mb-2 border"}>
-          <div className={"pull-right"}>
+      <div className={"summary-warp-body pt-4 pb-2"}>
+        <div className={"btn-block"}>
+          <Button
+            color={"warning"}
+            className={"mr-1"}
+            size={""}
+            onClick={this.scrollTomessage}
+          >
+            Send Message
+          </Button>
+          {!orderStatus ? (
             <Button
-              color={"warning"}
+              color={"success"}
               className={"mr-1"}
-              size={"sm"}
-              onClick={this.scrollTomessage}
+              size={""}
+              onClick={e => this.authorizStatus(customerInfo._id)}
             >
-              Send Message
+              Authorize Work
             </Button>
-            {!orderStatus ? (
-              <Button
-                color={"success"}
-                className={"mr-1"}
-                size={"sm"}
-                onClick={e => this.authorizStatus(customerInfo._id)}
-              >
-                Authorize Work
-              </Button>
-            ) : (
-              <Button color={"success"} className={"mr-1"} size={"sm"}>
-                <i className={"fas fa-check"} /> Work is Authorize
-              </Button>
-            )}
-            <Button
-              color={"primary"}
-              className={"mr-1"}
-              size={"sm"}
-              onClick={this.getPdf}
-            >
-              Print
+          ) : (
+            <Button color={"success"} className={"mr-1"} size={""}>
+              <i className={"fas fa-check"} /> Work is Authorize
             </Button>
-          </div>
+          )}
+          <Button
+            color={"primary"}
+            className={"mr-1"}
+            size={""}
+            onClick={this.getPdf}
+          >
+            Print
+          </Button>
+        </div>
+        <div className={"summary-warp  border"}>
           <OrderSummary
             summaryReducer={summaryReducer}
             updateOrderDetailsRequest={updateOrderDetailsRequest}
@@ -126,9 +128,10 @@ class OrderSummaryView extends Component {
             isSummary={true}
             sendMessage={sendMessage}
             query={this.state.query}
+            newMsgSend={newMsgSend}
           />
         </div>
-      </>
+      </div>
     );
   }
 }
@@ -148,7 +151,8 @@ const mapDispatchToProps = dispatch => ({
   },
   updateOrderDetailsRequest: data => {
     dispatch(updateOrderDetailsRequest(data));
-  }
+  },
+  newMsgSend: data => dispatch(newMsgSend(data))
 });
 
 export default connect(

@@ -10,7 +10,6 @@ import {
   Input,
   UncontrolledTooltip,
   Button,
-  Label
 } from "reactstrap";
 import { AppConfig } from "../../../config/AppConfig";
 import Loader from "../../../containers/Loader/Loader";
@@ -76,7 +75,7 @@ class SalesByCusomerAge extends Component {
     let totalUnPaid = 0;
     let totalThirty = 0;
     let totalSixty = 0;
-    let totalNinenty = 0;
+    //let totalNinenty = 0;
     let ninentyPlus = 0;
     return (
       <>
@@ -85,7 +84,7 @@ class SalesByCusomerAge extends Component {
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
                 {
-                  <FormGroup className="mb-0">
+                  <FormGroup className="mb-2">
                     <InputGroup>
                       <Input
                         type={"text"}
@@ -99,9 +98,8 @@ class SalesByCusomerAge extends Component {
                   </FormGroup>
                 }
               </Col>
-              <Col lg={"6"} md={"6"} className="mb-0">
-                <div className="filter-btn-wrap">
-                  <Label className="height17 label" />
+              <Col lg={"8"} md={"8"} className="mb-0">
+                <div className="filter-btn-wrap justify-content-between">
                   <div className="form-group mb-0">
                     <span className="mr-2">
                       <Button
@@ -128,6 +126,11 @@ class SalesByCusomerAge extends Component {
                       </UncontrolledTooltip>
                     </span>
                   </div>
+                  <div>
+                    {data && data.length ? (
+                      <h6 className={"mb-0"}>Total Records : {data.length}</h6>
+                    ) : null}
+                  </div>
                 </div>
               </Col>
             </Row>
@@ -136,21 +139,23 @@ class SalesByCusomerAge extends Component {
         <Table responsive>
           <thead>
             <tr>
-              <th width="60px">S No.</th>
-              <th width={"150"}>
+              <th width="60px" className={"pl-2"}>
+                S No.
+              </th>
+              <th width={"250"}>
                 <i className={"fa fa-user"} /> Customer
               </th>
-              <th width={"90"}>
+              <th width={"150"}>
                 <i className={"fa fa-calendar"} /> 0-30 Days
               </th>
-              <th width={"120"}>
+              <th width={"150"}>
                 <i className={"fa fa-calendar"} /> 31-60 Days
               </th>
-              <th width={"120"}>
+              <th width={"150"}>
                 <i className={"fa fa-calendar"} /> 61-90 Days
               </th>
-              <th width={"120"}>
-                <i className={"fa fa-calendar"} /> 91 days and above
+              <th width={"200"}>
+                <i className={"fa fa-calendar"} /> Above 91 Days
               </th>
               <th width={"150"}>
                 <i className={"fa fa-dollar"} /> Credit
@@ -173,20 +178,16 @@ class SalesByCusomerAge extends Component {
                     totalSixty += parseFloat(
                       customer[CustomerAgeTypes.SIXTY_DAYS] || 0
                     );
-                    totalNinenty += parseFloat(
-                      customer[CustomerAgeTypes.NINETY_DAYS] || 0
-                    );
+                    // totalNinenty += parseFloat(
+                    //   customer[CustomerAgeTypes.NINETY_DAYS] || 0
+                    // );
                     ninentyPlus += parseFloat(
                       customer[CustomerAgeTypes.NINENTY_PLUS] || 0
                     );
                     return (
                       <tr key={index}>
-                        <td>
-                          {(1 - 1) *
-                            AppConfig.ITEMS_PER_PAGE +
-                            index +
-                            1}
-                          .
+                        <td className={"pl-2"}>
+                          {(1 - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td>
                           <div
@@ -200,14 +201,11 @@ class SalesByCusomerAge extends Component {
                                 ":id",
                                 customer.customerId._id
                               )}
-                              className={
-                                "text-body font-weight-semibold"
-                              }
+                              className={"text-body font-weight-semibold"}
                             >
                               {" "}
                               {[
-                                customer.customerId
-                                  .firstName,
+                                customer.customerId.firstName,
                                 customer.customerId.lastName
                               ]
                                 .join(" ")
@@ -217,79 +215,43 @@ class SalesByCusomerAge extends Component {
                           {customer.customerId.email ? (
                             <>
                               <a
-                                href={`mailto:${
-                                  customer.customerId.email
-                                }`}
+                                href={`mailto:${customer.customerId.email}`}
                                 target={"_blank"}
-                                className={"text-body"}
+                                className={"text-body modal-info"}
                               >
                                 {customer.customerId.email}
                               </a>
                               <br />
                             </>
                           ) : null}
-                          {customer.customerId
-                            .phoneDetail &&
-                          customer.customerId
-                            .phoneDetail[0] ? (
+                          {customer.customerId.phoneDetail &&
+                          customer.customerId.phoneDetail[0] ? (
                             <a
-                              href={`tel:${
-                                customer.customerId
-                                  .phoneDetail[0].value
-                              }`}
+                              href={`tel:${customer.customerId.phoneDetail[0].value}`}
                               target={"_blank"}
-                              className={"text-body"}
+                              className={"text-body modal-info"}
                             >
-                              {
-                                customer.customerId
-                                  .phoneDetail[0].value
-                              }
+                              {customer.customerId.phoneDetail[0].value}
                             </a>
                           ) : null}
                         </td>
                         <td>
-                          <Dollor
-                            value={
-                              customer["0-30 Days"] || 0
-                            }
-                          />
+                          <Dollor value={customer["0-30 Days"] || 0} />
                         </td>
                         <td>
-                          <Dollor
-                            value={
-                              customer["31-60 Days"] || 0
-                            }
-                          />
+                          <Dollor value={customer["31-60 Days"] || 0} />
                         </td>
                         <td>
-                          <Dollor
-                            value={
-                              customer["61-90 Days"] || 0
-                            }
-                          />
+                          <Dollor value={customer["61-90 Days"] || 0} />
                         </td>
                         <td>
-                          <Dollor
-                            value={
-                              customer[
-                                "91 Days and above"
-                              ] || 0
-                            }
-                          />
+                          <Dollor value={customer["91 Days and above"] || 0} />
                         </td>
-                        <td
-                          className={"font-weight-semibold"}
-                        >
-                          <Dollor
-                            value={customer["due"] || 0}
-                          />
+                        <td className={"font-weight-semibold"}>
+                          <Dollor value={customer["due"] || 0} />
                         </td>
-                        <td
-                          className={"font-weight-semibold"}
-                        >
-                          <Dollor
-                            value={customer["paid"] || 0}
-                          />
+                        <td className={"font-weight-semibold"}>
+                          <Dollor value={customer["paid"] || 0} />
                         </td>
                       </tr>
                     );
@@ -309,9 +271,14 @@ class SalesByCusomerAge extends Component {
                 </td>
               </tr>
             )}
-            <tr>
-              <td className={"text-left font-weight-semibold"} colSpan={2}>
-                Total
+            <tr className={"bg-light"}>
+              <td
+                className={"text-right font-weight-semibold pr-3"}
+                colSpan={2}
+              >
+                <h6 className={"mb-0"}>
+                  <b>Total</b>
+                </h6>
               </td>
               <td>
                 <b>

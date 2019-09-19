@@ -56,7 +56,7 @@ const createNewTier = async (req, res) => {
 
     return res.status(200).json({
       responsecode: 200,
-      message: "Tier added successfully!",
+      message: "Tire added successfully!",
       tierData,
       success: true
     });
@@ -116,7 +116,7 @@ const updateTierdetails = async (req, res) => {
     });
     return res.status(200).json({
       responsecode: 200,
-      message: "Tier details updated successfully!",
+      message: "Tire details updated successfully!",
       success: true
     });
   } catch (error) {
@@ -287,7 +287,7 @@ const deleteTier = async ({ body }, res) => {
       }
     );
     return res.status(200).json({
-      message: "Tier deleted successfully!",
+      message: "Tire deleted successfully!",
       data
     });
   } catch (error) {

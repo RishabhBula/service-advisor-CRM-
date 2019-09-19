@@ -109,7 +109,7 @@ export default class AddAppointment extends Component {
               value: orderId._id
             }
             : null,
-          email: customerId.email ? customerId.email : null,
+          email: customerId.email ? customerId.email : "",
           isEmail: customerId.email ? true : false,
           isSms: customerId.phoneDetail && customerId.phoneDetail.length ? true : false,
           phone: customerId.phoneDetail && customerId.phoneDetail.length ? customerId.phoneDetail[0].value : null
@@ -390,7 +390,7 @@ export default class AddAppointment extends Component {
         isEmail,
         isSms
       };
-
+      
       const { errors, isValid } = Validator(
         data,
         AddAppointmentValidations,
@@ -582,7 +582,7 @@ export default class AddAppointment extends Component {
                           onChange={this.handleInputChange}
                           value={appointmentTitle}
                           maxLength="30"
-                          invalid={errors.appointmentTitle}
+                          invalid={errors.appointmentTitle ? true : false}
                         />
                         {errors.appointmentTitle ? (
                           <FormFeedback>

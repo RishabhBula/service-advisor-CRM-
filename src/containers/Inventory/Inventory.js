@@ -305,7 +305,7 @@ class Inventory extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Card className="white-card">
+        <Card className="white-card ">
           <CardBody className={"custom-card-body inventory-card"}>
             <div className={"position-relative"}>
               <Suspense fallback={"Loading.."}>

@@ -24,14 +24,15 @@ export class CrmPaymentModel extends Component {
       this.state = {
          remainingAmmount: 0,
          payableAmount: 0,
-         paymentType: "",
+         paymentType: "Cash",
          showRemainingAmt: false,
          date: new Date(),
          lastFourDigit: "",
          cardType: "",
          notes: "",
          isDebitCard: false,
-         chequeNumber: ""
+         chequeNumber: "",
+         errors: {}
       };
    }
    componentDidUpdate = ({ openPaymentModel }) => {
@@ -39,7 +40,7 @@ export class CrmPaymentModel extends Component {
       if ((openPaymentModel !== this.props.openPaymentModel)) {
          this.setState({
             payableAmount: parseFloat(payableAmmount - totalPaiedAmount).toFixed(2),
-            paymentType: "",
+            paymentType: "Cash",
             showRemainingAmt: false
          })
       }
@@ -75,6 +76,18 @@ export class CrmPaymentModel extends Component {
          this.setState({
             cardType: cardValue
          })
+      } else if (name === "payableAmount") {
+         if (isNaN(value)) {
+            return;
+         } else {
+            this.setState({
+               [name]: value,
+               errors: {
+                  ...this.state.errors,
+                  [name]: null
+               }
+            })
+         }
       } else {
          this.setState({
             [name]: value
@@ -97,7 +110,7 @@ export class CrmPaymentModel extends Component {
          notes,
          isDebitCard,
          chequeNumber } = this.state
-      const { payableAmmount, orderReducer } = this.props
+      const { payableAmmount, orderReducer, totalPaiedAmount } = this.props
       let paymentDetials = {}
       if (paymentType === 'Card') {
          paymentDetials = {
@@ -120,7 +133,15 @@ export class CrmPaymentModel extends Component {
             notes: notes
          }
       }
-      const remainingAmount = parseFloat(payableAmmount) - parseFloat(payableAmount)
+
+      if (!payableAmount || payableAmount <= 0) {
+         const errors = { ...this.state.errors }
+         errors.payableAmount = "Please enter payable Amount."
+         this.setState({ errors });
+         return;
+      }
+
+      const remainingAmount = parseFloat(payableAmmount - totalPaiedAmount).toFixed(2) - parseFloat(payableAmount).toFixed(2)
       let payedAmount = [{ amount: payableAmount, date: new Date() }]
       const payload = {
          orderId: orderReducer.orderItems ? orderReducer.orderItems._id : "",
@@ -148,7 +169,8 @@ export class CrmPaymentModel extends Component {
          cardType,
          isDebitCard,
          notes,
-         chequeNumber } = this.state;
+         chequeNumber,
+         errors } = this.state;
       return (
          <>
             <Modal
@@ -215,9 +237,11 @@ export class CrmPaymentModel extends Component {
                            payableAmmount={payableAmmount}
                            date={date}
                            notes={notes}
+                           errors={errors}
                            totalPaiedAmount={totalPaiedAmount}
                            handleDateChange={this.handleDateChange}
                            handleChange={this.handleChange}
+                           payableAmount={payableAmount}
                            handlePaymentChange={this.handlePaymentChange}
                         /> : null
                   }
@@ -239,7 +263,7 @@ export class CrmPaymentModel extends Component {
                   paymentType !== "" ?
                      <ModalFooter>
                         <Button color="primary" onClick={() => this.hnadleSubmitPayment()}>
-                           Record ${parseFloat(payableAmmount).toFixed(2)}
+                           Record ${parseFloat(payableAmount).toFixed(2) && (parseFloat(payableAmount).toFixed(2)) >= 0 ? parseFloat(payableAmount).toFixed(2) : 0}
                         </Button>{" "}
                         <Button color="secondary" onClick={handlePaymentModal}>
                            Cancel

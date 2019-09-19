@@ -456,12 +456,12 @@ class CompanySettings extends Component {
     } = this.state;
 
     return (
-      <div>
+      <div className={"company-profile"}>
         <h3 className={"pb-3"}>Company Profile</h3>
         <Row>
           <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
             <Row>
-              <Col lg={7} md={"7"}>
+              <Col lg={"8"} md={"8"}>
                 <Row>
                   <Col lg={"6"} md={"6"}>
                     <FormGroup>
@@ -561,7 +561,7 @@ class CompanySettings extends Component {
                   </Col>
                 </Row>
               </Col>
-              <Col lg={5} md={"5"}>
+              <Col lg={"4"} md={"4"}>
                 {shopLogo === "" ? (
                   <Dropzone onDrop={file => this.onSelectFile(file)}>
                     {({ getRootProps, getInputProps, isDragActive }) => {
@@ -820,7 +820,7 @@ class CompanySettings extends Component {
           </Col>
         </Row>
         <Row className={"m-0"}>
-          <Col xs="2" className={""}>
+          <Col xs="3" className={""}>
             <FormGroup>
               <Label
                 htmlFor={"old password"}

@@ -20,7 +20,8 @@ export class CustomerVehicles extends Component {
     const payload = {
       ...data,
       isCustomerDetails: true,
-      customerId: this.props.customerId
+      customerId: this.props.customerId,
+      isSingleCustomer:true
     }
     this.props.vehicleAddAction(payload);
   };
@@ -56,7 +57,7 @@ export class CustomerVehicles extends Component {
                         </div>
                       </div>
                       <div className={"overlay"} onClick={() => { this.handleVehicleDetails(vehicle._id) }}>
-                          <span>View Details <i class="fa fa-angle-right"></i></span>
+                          <span>View Details <i className="fa fa-angle-right"></i></span>
                         </div>
                     </CardBody>
                   </Card>

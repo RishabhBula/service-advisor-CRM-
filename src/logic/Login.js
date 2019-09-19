@@ -184,7 +184,8 @@ const verifyAccountAccessLogic = createLogic({
     if (result.isError) {
       dispatch(logOutRequest());
     }
-
+    localStorage.setItem("token", user);
+    
     dispatch(
       redirectTo({
         path: AppRoutes.DASHBOARD.url

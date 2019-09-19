@@ -1,13 +1,13 @@
 import { handleActions } from "redux-actions";
-import { SummaryActions } from "../actions";
+import { SummaryActions, MessageAction } from "../actions";
 
 const initialState = {
   isSuccess: false,
   orderData: [],
   companyData: [],
-  messageData:[],
-  isLoading: true,
-}
+  messageData: [],
+  isLoading: true
+};
 
 export const summaryReducer = handleActions(
   {
@@ -16,9 +16,13 @@ export const summaryReducer = handleActions(
       companyData: action.payload.user,
       messageData: action.payload.message,
       isSuccess: true,
-      isLoading:false
+      isLoading: false
     }),
-    
+    [MessageAction.NEW_MSG_SEND]: (state, { payload }) => ({
+      ...state,
+      messageData: payload,
+      isSuccess: true
+    })
   },
   initialState
 );

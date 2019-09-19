@@ -26,5 +26,6 @@ module.exports = {
   dashboardRoutes: require("./dashboard"),
   reportRoutes: require("./reports"),
   homePageRoutes: require("./homePage"),
-  siteSettingRoutes: require("./siteSettingsRoutes")
+  siteSettingRoutes: require("./siteSettingsRoutes"),
+  faqRoutes: require("./faqRoutes")
 };

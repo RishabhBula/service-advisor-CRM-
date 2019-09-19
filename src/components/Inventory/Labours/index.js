@@ -364,32 +364,32 @@ class Labours extends Component {
                           </div>
                         </td>
                       ) : (
-                        <td className={"pr-4"}>
-                          <div className={"word-break"}>
-                            {data.notes
-                              ? data.notes.substring(0, 70)
-                              : notExist}{" "}
-                            <span
-                              className={"read-more-text"}
-                              onClick={() =>
-                                this.setState({
-                                  expandText: true,
-                                  isReadMore:
-                                    this.state.isReadMore === index
-                                      ? -1
-                                      : index
-                                })
-                              }
-                            >
-                              <Badge color={"warning"}>
-                                {data.notes && data.notes.length >= 70
-                                  ? "read more...."
-                                  : null}
-                              </Badge>
-                            </span>
-                          </div>
-                        </td>
-                      )}
+                          <td className={"pr-4"}>
+                            <div className={"word-break"}>
+                              {data.notes
+                                ? data.notes.substring(0, 70)
+                                : notExist}{" "}
+                              <span
+                                className={"read-more-text"}
+                                onClick={() =>
+                                  this.setState({
+                                    expandText: true,
+                                    isReadMore:
+                                      this.state.isReadMore === index
+                                        ? -1
+                                        : index
+                                  })
+                                }
+                              >
+                                <Badge color={"warning"}>
+                                  {data.notes && data.notes.length >= 70
+                                    ? "read more...."
+                                    : null}
+                                </Badge>
+                              </span>
+                            </div>
+                          </td>
+                        )}
                       <td>
                         <div className="">
                           {data.rate ? (
@@ -405,30 +405,35 @@ class Labours extends Component {
                                   {data.rate.hourlyRate}
                                 </span>
                               ) : (
-                                notExist
-                              )}
+                                  notExist
+                                )}
                             </>
                           ) : (
-                            notExist
-                          )}
+                              notExist
+                            )}
                         </div>
                       </td>
                       <td>{data.hours ? data.hours + " Hrs" : notExist}</td>
                       {/* <td>{(data.rate && data.rate.hourlyRate) ? '$' + data.rate.hourlyRate : "-"}</td> */}
                       <td>
                         {data.discount &&
-                        data.discount.value &&
-                        data.discount.type === "%" ? (
-                          <>
-                            {data.discount.value || notExist}&nbsp;
+                          data.discount.value &&
+                          data.discount.type === "%" ? (
+                            <>
+                              {data.discount.value || notExist}&nbsp;
                             {data.discount.type}
-                          </>
-                        ) : (
-                          <>
-                            <i class="fa fa-dollar dollar-icon" />
-                            {`${data.discount.value} Flat` || notExist}
-                          </>
-                        )}
+                            </>
+                          ) : (
+                            data.discount &&
+                              data.discount.value &&
+                              data.discount.type === "$" ?
+                              <>
+                                <span>Flat</span>&nbsp;
+                                <i class="fa fa-dollar dollar-icon" />
+                                {data.discount.value || notExist}
+                              </>
+                              : notExist
+                          )}
                       </td>
                       <td className={"text-center"}>
                         <span className="mr-2">
@@ -471,33 +476,33 @@ class Labours extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={8}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Labor details found related to your search"
+                          }
+                          noResult={true}
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={"Currently there are no Labors added."}
+                            onAddClick={onAddClick}
+                            noResult={false}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={8}>
-                    {filterApplied ? (
-                      <NoDataFound
-                        message={
-                          "No Labor details found related to your search"
-                        }
-                        noResult={true}
-                      />
-                    ) : (
-                      <NoDataFound
-                        showAddButton
-                        message={"Currently there are no Labors added."}
-                        onAddClick={onAddClick}
-                        noResult={false}
-                      />
-                    )}
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={8}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
 

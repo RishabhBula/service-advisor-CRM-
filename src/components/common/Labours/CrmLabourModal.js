@@ -66,8 +66,11 @@ export class CrmLabourModal extends Component {
   };
   handleChange = event => {
     const { name, value } = event.target;
+    let disc = this.state.discount;
     if (name === 'discount') {
       if (isNaN(value)) {
+        return
+      } else if (disc.type === "%" && (parseFloat(value) >= 100)) {
         return
       } else {
         this.setState({
@@ -294,7 +297,7 @@ export class CrmLabourModal extends Component {
       this.props.handleLabourModal()
     } else {
       this.setState({
-        servicePartError: "Part is required."
+        serviceLaborError: "Labor selectuion is required."
       })
     }
   }
@@ -332,7 +335,7 @@ export class CrmLabourModal extends Component {
                   <Col md={"12"}>
                     <FormGroup className={"fleet-block"}>
                       <Label htmlFor="name" className="customer-modal-text-style">
-                        Search Labor
+                        Search Labor <span className={"asteric"}>*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Async
@@ -354,7 +357,7 @@ export class CrmLabourModal extends Component {
                           }
                         />
                         {serviceLaborError ? (
-                          <FormFeedback>{serviceLaborError}</FormFeedback>
+                          <FormFeedback className="text-left">{serviceLaborError}</FormFeedback>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -450,7 +453,7 @@ export class CrmLabourModal extends Component {
                         <Label htmlFor="name" className="customer-modal-text-style">
                           Note
                     </Label>
-                        <Input className={"form-control"} id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} placeholder={"Note"} maxLength={"1000"}/>
+                        <Input className={"form-control"} id="note" name="note" type={"textarea"} onChange={this.handleChange} value={note} placeholder={"Note"} maxLength={"1000"} />
                       </FormGroup>
                     </Col>
 
@@ -499,7 +502,7 @@ export class CrmLabourModal extends Component {
 
             <div className="required-fields">*Fields are Required.</div>
 
-            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add New Labor'}
+            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add Labor'}
 
             </Button>{" "}
             <Button color="secondary" onClick={handleLabourModal}>

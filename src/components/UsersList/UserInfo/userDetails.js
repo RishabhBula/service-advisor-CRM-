@@ -132,7 +132,7 @@ export class UserDetails extends Component {
                     id="type"
                     disabled
                     // onChange={this.handleInputChange}
-                    value={technicianData.roleType === "5ca3473d70537232f13ff1fa" ? "Technican" : "Admin"}
+                    value={technicianData.roleType === "5ca3473d70537232f13ff1fa" ? "Technician" : "Admin"}
                     name="roleType"
                   >
                   </Input>

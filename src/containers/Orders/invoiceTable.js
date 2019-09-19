@@ -31,7 +31,7 @@ class InvoiceTable extends Component {
           : "") ||
         (service.serviceType === "tire" &&
           service.tierPermission &&
-          service.tierPermission.showNoteOnQuotesInvoices &&
+          service.tierPermission.showNoteOnQuotesInvoices && service.tierSize.length &&
           service.tierSize[0].notes !== ""
           ? "Note : " + service.tierSize[0].notes
           : "");
@@ -49,7 +49,7 @@ class InvoiceTable extends Component {
       var hourlyRate = service.rate ? service.rate.hourlyRate : 0;
       var cost =
         service.retailPrice ||
-        (service.tierSize ? service.tierSize[0].retailPrice : null) ||
+        (service.tierSize && service.tierSize.length ? service.tierSize[0].retailPrice : null) ||
         0;
 
       calSubTotal = calculateSubTotal(
@@ -143,7 +143,7 @@ class InvoiceTable extends Component {
       };
     const { profileReducer } = this.props;
     const orderData = this.props.orderReducer.orderItems;
-    const customerData = orderData.customerId ? orderData.customerId : '';
+    const customerData = orderData && orderData.customerId ? orderData.customerId : '';
     const comapnyInfo = profileReducer ? profileReducer.profileInfo : "";
     const address =
       profileReducer && profileReducer.profileInfo
@@ -154,17 +154,17 @@ class InvoiceTable extends Component {
     //   orderReducer && orderReducer.orderItems
     //     ? orderReducer.orderItems.orderName
     //     : "";
-    const orderId = orderData.orderId || "";
-    const orderDate = moment(orderData.createdAt || "").format("MMM Do YYYY");
+    const orderId = orderData ? orderData.orderId : "";
+    const orderDate = orderData ? moment(orderData.createdAt || "").format("MMM Do YYYY") : "";
     const companyName = comapnyInfo.companyName;
-    const vehilceInfo = orderData.vehicleId ? (
+    const vehilceInfo = orderData && orderData.vehicleId ? (
       orderData.vehicleId.year +
       " " +
       orderData.vehicleId.make +
       " " +
       orderData.vehicleId.modal
     ) : '';
-    const licensePlate = orderData.vehicleId ? orderData.vehicleId.licensePlate : ''
+    const licensePlate = orderData && orderData.vehicleId ? orderData.vehicleId.licensePlate : ''
 
     const serviceTableInnner = [];
     const servieArray = [];

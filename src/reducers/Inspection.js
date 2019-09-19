@@ -11,8 +11,9 @@ const initialState = {
   messageTemplateData: {
     isSuccess: false,
     data: {}
-  }
-}
+  },
+  isInspectionLoading: false
+};
 
 export const inspectionReducer = handleActions(
   {
@@ -26,10 +27,10 @@ export const inspectionReducer = handleActions(
     [InspectionActions.ADD_INSPCETION_SUCCESS]: (state, action) => ({
       ...state,
       inspectionData: {
-        isSuccess: true,
-        ...state.userData,
-        data: action.payload.inspection,
-      }
+        ...state.inspectionData,
+        data: action.payload.inspectionData
+      },
+      isInspectionLoading: action.payload.isInspectionLoading
     }),
     [InspectionActions.ADD_INSPCETION_TEMPLATE]: (state, action) => ({
       ...state,
@@ -75,10 +76,13 @@ export const inspectionReducer = handleActions(
       ...state,
       messageTemplateData: {
         isSuccess: true,
-        ...state.data,
+        ...state.data
       }
     }),
-    [InspectionActions.GET_MESSAGE_TEMPLATE_LIST_SUCCESS]: (state, { payload }) => ({
+    [InspectionActions.GET_MESSAGE_TEMPLATE_LIST_SUCCESS]: (
+      state,
+      { payload }
+    ) => ({
       ...state,
       isLoading: false,
       messageTemplateData: payload.messageTemplateData
@@ -94,14 +98,14 @@ export const inspectionReducer = handleActions(
       ...state,
       messageTemplateData: {
         isSuccess: true,
-        ...state.data,
+        ...state.data
       }
     }),
     [InspectionActions.DELETE_MESSAGE_TEMPLATE_SUCCESS]: (state, action) => ({
       ...state,
       messageTemplateData: {
         isSuccess: true,
-        ...state.data,
+        ...state.data
       }
     }),
     [InspectionActions.SEND_MESSAGE_TEMPLATE]: (state, action) => ({
@@ -116,9 +120,16 @@ export const inspectionReducer = handleActions(
       messageTemplateData: {
         isSuccess: true,
         ...state.data,
-        data: action.payload,
+        data: action.payload
       }
     }),
+    [InspectionActions.ADD_INSPCETION_TO_REDUCER]: (state, { payload }) => ({
+      ...state,
+      inspectionData: {
+        data: payload,
+        isSuccess: true
+      }
+    })
   },
   initialState
 );

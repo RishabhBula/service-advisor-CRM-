@@ -95,7 +95,7 @@ class UpdatePassword extends Component {
     return (
       <div>
         <Row>
-          <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
+          <Col lg={"7"} md={"7"} className={"custom-form-modal"}>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
                 <Label htmlFor={"old password"} className="customer-modal-text-style">

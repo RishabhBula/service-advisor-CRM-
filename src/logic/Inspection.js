@@ -24,7 +24,12 @@ import {
 const addInspectionLogic = createLogic({
   type: InspectionActions.ADD_INSPCETION,
   async process({ action }, dispatch, done) {
-    dispatch(showLoader());
+    //dispatch(showLoader());
+      dispatch(
+        addInspectionSuccess({
+          isInspectionLoading: true
+        })
+      );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/inspection",
@@ -47,7 +52,10 @@ const addInspectionLogic = createLogic({
         return true
       })
        
-      dispatch(addInspectionSuccess(result.data.data))
+      dispatch(addInspectionSuccess({
+        inspectionData:result.data.data,
+        isInspectionLoading:false
+      }))
       dispatch(
         genrateInvoice({
           html: action.payload.html,
@@ -77,8 +85,9 @@ const addInspectionLogic = createLogic({
           })
         );
         dispatch(updateOrderDetailsRequest(payload))
+        done();
       }
-      dispatch(hideLoader());
+      //dispatch(hideLoader());
       done();
     }
   }

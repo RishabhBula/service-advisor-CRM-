@@ -203,7 +203,7 @@ class TimeLogList extends Component {
                 )
               }) :
                 <tr>
-                  <td className={"text-center"} colSpan={8}>
+                  <td className={"text-center"} colSpan={9}>
                     <NoDataFound showAddButton message={"Currently there are no time logs added."} noResult={false} onAddClick={handleTimeClockModal} />
                   </td>
                 </tr>
@@ -216,6 +216,8 @@ class TimeLogList extends Component {
           timeLogEle={timeLogEle}
           handleTimeClockModal={this.handleEditTimeClockModal}
           orderReducer={orderReducer}
+          isWholeTimeClock={false}
+          isTimeClockData={true}
           editTimeLogRequest={editTimeLogRequest}
         />
       </div>

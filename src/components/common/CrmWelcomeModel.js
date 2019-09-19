@@ -343,7 +343,9 @@ export class CrmWelcomeModel extends Component {
             this.props.className
           }
         >
-          <ModalHeader>Hi {userName}, You're almost Done!</ModalHeader>
+          <ModalHeader>
+            Hi <span className={"text-capitalize"}>{userName}</span>, You're almost Done!
+          </ModalHeader>
           <Form onSubmit={this.addCompanyDetails}>
             <ModalBody>
               <div className="pb-5">

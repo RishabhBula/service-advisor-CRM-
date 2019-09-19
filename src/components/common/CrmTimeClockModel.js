@@ -109,7 +109,10 @@ export class CrmTimeClockModal extends Component {
       }
     };
   }
-  componentDidUpdate = ({ timeLogEle }) => {
+  componentDidUpdate = ({ timeLogEle, openTimeClockModal }) => {
+    if (openTimeClockModal !== this.props.openTimeClockModal) {
+      this.removeAllState();
+    }
     if (timeLogEle !== this.props.timeLogEle) {
       const {
         date,
@@ -121,6 +124,7 @@ export class CrmTimeClockModal extends Component {
       const startDateTime1 = moment.utc(startDateTime).format("HH:mm")
       const endDateTime1 = moment.utc(endDateTime).format("HH:mm")
       const calDuration = calculateDurationFromSeconds(duration)
+      
       this.setState({
         date,
         timeIn: startDateTime1,
@@ -135,7 +139,29 @@ export class CrmTimeClockModal extends Component {
       })
     }
   }
-
+  async removeAllState() {
+    this.setState({
+      date: new Date(),
+      timetype: "AM",
+      timeIn: '00:00',
+      timeOut: '00:00',
+      duration: "0",
+      selectedTechnician: {
+        label: "Select technician",
+        value: ""
+      },
+      technicianData: "",
+      notes: "",
+      isError: false,
+      seconds: 0,
+      isEditTimeClock: false,
+      activityOptions: [],
+      selectedActivity: {
+        label: "Select one technician",
+        value: ""
+      }
+    });
+  }
   onTimeInChangeHandler = (value) => {
     this.setState({
       timeIn: value
@@ -228,8 +254,8 @@ export class CrmTimeClockModal extends Component {
                 `Order (#${orderReducer.orderItems ? orderReducer.orderItems.orderId : ""}) ${orderReducer.orderItems.orderName || 'N/A'}` :
                 "General" :
               selectedActivity.orderData &&
-              selectedActivity.orderData.orderId?
-              `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}`:"General",
+                selectedActivity.orderData.orderId ?
+                `Order (#${selectedActivity.orderData.orderId}) ${selectedActivity.orderData.orderName || 'Unanamed Order'}` : "General",
         duration: duration,
         date: date,
         orderId: isEditTimeClock ? orderId : !isTimeClockData ? orderReducer.orderItems._id : selectedActivity.orderId,
@@ -335,7 +361,7 @@ export class CrmTimeClockModal extends Component {
   /*  
   */
   render() {
-    const { openTimeClockModal, handleTimeClockModal, orderReducer, isTimeClockData, userData, isWholeTimeClock, activity } = this.props;
+    const { openTimeClockModal, handleTimeClockModal, orderReducer, isTimeClockData, userData, isWholeTimeClock, /*activity,*/timeLogEle } = this.props;
     const { timeIn, timeOut, selectedTechnician, duration, isError, isEditTimeClock, notes, activityOptions, selectedActivity } = this.state
     let technicianData = []
     if (orderReducer.orderItems && orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length && !isTimeClockData) {
@@ -360,6 +386,8 @@ export class CrmTimeClockModal extends Component {
         return true
       })
     }
+    
+    
     return (
       <>
         <Modal
@@ -483,14 +511,16 @@ export class CrmTimeClockModal extends Component {
                   <div className={"input-block"}>
                     {
                       (isTimeClockData && isEditTimeClock) || (!isTimeClockData && !isEditTimeClock) ?
+                      
                         <Input
                           value={
                             !isWholeTimeClock ?
                               orderReducer.orderItems ? `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}` : "" :
-                              activity
+                              timeLogEle.activity
                           }
                           disabled
                         /> :
+                        
                         <Select
                           options={activityOptions}
                           placeholder={activityOptions && !activityOptions.length ? "Select one technician" : "Select service for technician"}
@@ -527,6 +557,9 @@ export class CrmTimeClockModal extends Component {
                       id="Date" // PropTypes.string.isRequired,
                       focused={this.state.focused} // PropTypes.bool
                       onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                      isOutsideRange={() => false}
+                      numberOfMonths={1}
+                      hideKeyboardShortcutsPanel
                     />
                   </div>
                 </FormGroup>

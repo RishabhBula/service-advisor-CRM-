@@ -80,9 +80,9 @@ class WorkflowGridView extends React.Component {
 
   getAppointmentDetails = (id, task) => {
     const reducerData = this.props.appointmentReducer;
-    const orders = reducerData ? reducerData.data.filter(order => order.orderId) : null;
+    const orders = reducerData && reducerData.data ? reducerData.data.filter(order => order.orderId) : null;
     let orderDetails = "";
-    const orderMain = orders.filter(orderName => orderName.orderId._id === id);
+    const orderMain = orders && orders.length ? orders.filter(orderName => orderName.orderId._id === id) : "";
 
     if (orderMain.length) {
       var day = orderMain.length;
@@ -240,6 +240,8 @@ class WorkflowGridView extends React.Component {
       orders[status._id].map((task, index) => {
         if (task.serviceId && task.serviceId.length) {
           serviceCalculation.push(serviceTotalsCalculation(task.serviceId));
+        } else {
+          serviceCalculation.push({ 'orderGrandTotal': 0 })
         }
         return true;
       });
@@ -250,7 +252,7 @@ class WorkflowGridView extends React.Component {
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((task, index) => (
               <React.Fragment key={task._id}>
-                <Draggable  draggableId={task._id} index={index}>
+                <Draggable draggableId={task._id} index={index}>
                   {/* {task.serviceId ?
                     serviceCalculation = serviceTotalsCalculation(task.serviceId) : null
                   } */}
@@ -261,113 +263,122 @@ class WorkflowGridView extends React.Component {
                       ref={providedNew.innerRef}
                       className={"content"}
                     >
-                      <div
-                        onClick={() => {
-                          this.props.redirectTo(
-                            `${AppRoutes.WORKFLOW_ORDER.url.replace(
-                              ":id",
-                              task._id
-                            )}`
-                          );
-                        }}
-                      >
-                        <h5 className={"mb-0 "}>
-                          <span>
-                            {task.orderId ? `(#${task.orderId})` : null}
-                          </span>
-                          {"  "}
-                          <span>{task.orderName || "Unnamed order"}</span>
-                        </h5>
-
-                        <div className={"content-title"}>
-                          <span>
-                            <img
-                              src={serviceUser}
-                              alt={"serviceUser"}
-                              width={"18"}
-                              height={"18"}
-                            />
-                          </span>
-                          <span className={"text"}>
-                            {"  "}
-                            {task.customerId
-                              ? `${task.customerId.firstName} ${" "} ${
-                              task.customerId.lastName
-                              }`
-                              : "No Customer"}
-                          </span>{" "}
-                        </div>
-                        <div className={"content-title"}>
-                          <span>
-                            <img
-                              src={serviceTyre}
-                              alt={"serviceUser"}
-                              width={"18"}
-                              height={"18"}
-                            />
-                          </span>
-                          <span className={"text"}>
-                            {"  "}
-                            {task.vehicleId
-                              ? `${task.vehicleId.make} ${" "} ${
-                              task.vehicleId.modal
-                              }`
-                              : "No Vehicle"}
-                          </span>
-                        </div>
-                      </div>
-                      <span className={"delete-icon"} id={`delete-${task._id}`}>
-                        <i
-                          className={"fa fa-trash pull-right"}
+                      <div className={"content-inner"}>
+                        <div
                           onClick={() => {
-                            this.props.deleteOrder({
-                              statusId: status._id,
-                              index,
-                              id: task._id
-                            });
+                            this.props.redirectTo(
+                              `${AppRoutes.WORKFLOW_ORDER.url.replace(
+                                ":id",
+                                task._id
+                              )}`
+                            );
                           }}
-                        />
-                      </span>
-                      <UncontrolledTooltip target={`delete-${task._id}`}>
-                        Delete Order
-                      </UncontrolledTooltip>
-                      <div className={"pt-2 position-relative cursor_pointer"}>
-                        <div className={"service-total"}>
-                          <span className={"text-black-50"}>Total:</span>
-                          <Dollor
-                            value={
-                              serviceCalculation[index]
-                                ? serviceCalculation[index].orderGrandTotal
-                                : 0
-                            }
-                          />
+                        >
+                          <h5 className={"mb-0 "}>
+                            <span>
+                              {task.orderId ? `(#${task.orderId})` : null}
+                            </span>
+                            {"  "}
+                            <span>{task.orderName || "Unnamed order"}</span>
+                          </h5>
+
+                          <div className={"content-title"}>
+                            <span>
+                              <img
+                                src={serviceUser}
+                                alt={"serviceUser"}
+                                width={"18"}
+                                height={"18"}
+                              />
+                            </span>
+                            <span className={"text"}>
+                              {"  "}
+                              {task.customerId
+                                ? `${task.customerId.firstName} ${" "} ${
+                                    task.customerId.lastName
+                                  }`
+                                : "No Customer"}
+                            </span>{" "}
+                          </div>
+                          <div className={"content-title"}>
+                            <span>
+                              <img
+                                src={serviceTyre}
+                                alt={"serviceUser"}
+                                width={"18"}
+                                height={"18"}
+                              />
+                            </span>
+                            <span className={"text"}>
+                              {"  "}
+                              {task.vehicleId
+                                ? `${task.vehicleId.make} ${" "} ${
+                                    task.vehicleId.modal
+                                  }`
+                                : "No Vehicle"}
+                            </span>
+                          </div>
                         </div>
                         <span
-                          className={"pr-3"}
-                          id={`authorised-status-${task._id}`}
+                          className={"delete-icon"}
+                          id={`delete-${task._id}`}
                         >
                           <i
-                            className={
-                              task.status
-                                ? "fas fa-check text-success"
-                                : "fas fa-check text-muted"
-                            }
+                            className={"fa fa-trash pull-right"}
+                            onClick={() => {
+                              this.props.deleteOrder({
+                                statusId: status._id,
+                                index,
+                                id: task._id
+                              });
+                            }}
                           />
                         </span>
-                        <UncontrolledTooltip
-                          target={`authorised-status-${task._id}`}
-                        >
-                          {task.status ? "Authorised" : "Not Authorised"}
+                        <UncontrolledTooltip target={`delete-${task._id}`}>
+                          Delete Order
                         </UncontrolledTooltip>
-
-                        {this.getAppointmentDetails(task._id, task)}
-                        {task.serviceId && task.serviceId.length ?
-                          <span className={""}>
-                            {task.isFullyPaid ? <span className="pl-3 text-success">Fully Paid</span> :
-                              null
-                            }
+                        <div
+                          className={"pt-2 position-relative cursor_pointer"}
+                        >
+                          <div className={"service-total"}>
+                            <span className={"pr-1"}>Total:</span>
+                            <Dollor
+                              value={
+                                serviceCalculation[index]
+                                  ? serviceCalculation[index].orderGrandTotal
+                                  : 0
+                              }
+                            />
+                          </div>
+                          <span
+                            className={"pr-3"}
+                            id={`authorised-status-${task._id}`}
+                          >
+                            <i
+                              className={
+                                task.status
+                                  ? "fas fa-check text-success"
+                                  : "fas fa-check text-muted"
+                              }
+                            />
                           </span>
-                          : null}
+                          <UncontrolledTooltip
+                            target={`authorised-status-${task._id}`}
+                          >
+                            {task.status ? "Authorised" : "Not Authorised"}
+                          </UncontrolledTooltip>
+
+                          {this.getAppointmentDetails(task._id, task)}
+                          {task.serviceId && task.serviceId.length ? (
+                            <span className={""}>
+                              {task.isFullyPaid ? (
+                                <span className="pl-3 text-success">
+                                  Fully Paid
+                                </span>
+                              ) : null}
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -400,18 +411,19 @@ class WorkflowGridView extends React.Component {
             droppableId={`dropableId`}
             type="droppableItem"
             direction={"horizontal"}
+            internalScroll
           >
             {provided => (
               <div
                 ref={provided.innerRef}
                 style={{
-                  width: `${300 * orderStatus.length}px`
+                  width: `${320 * orderStatus.length}px`
                 }}
                 className={"workflow-grid-card-warp"}
               >
                 {orderStatus.map((status, index) => (
                   <React.Fragment key={status._id}>
-                    <Draggable draggableId={status._id} index={index} >
+                    <Draggable draggableId={status._id} index={index}>
                       {provided => (
                         <>
                           <div

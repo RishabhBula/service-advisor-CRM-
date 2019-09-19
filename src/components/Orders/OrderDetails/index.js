@@ -39,7 +39,7 @@ class OrderDetails extends Component {
 
   componentDidMount = () => {
     const { activityReducer, orderReducer } = this.props;
-    const orderId = orderReducer.orderItems._id;
+    const orderId = orderReducer.orderItems ? orderReducer.orderItems._id : "";
     this.setState({
       activityLogs: activityReducer.activity,
       poNumber: this.props.orderReducer && this.props.orderReducer.orderItems && this.props.orderReducer.orderItems.poNumber !== null ? this.props.orderReducer.orderItems.poNumber : "",
@@ -104,7 +104,7 @@ class OrderDetails extends Component {
   };
 
   handleType = (e, workflowStatus, orderId, groupedOptions) => {
-    console.log("groupedOptions",groupedOptions);
+    const { orderReducer } = this.props;
     const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
@@ -115,17 +115,22 @@ class OrderDetails extends Component {
       toStatusName: e.label,
       fromStatusName: fromStatus[0].label
     });
+
     if (e.label === "Invoices") {
-      this.props.orderStatus("invoiceStatus", true);
+      if (orderReducer && orderReducer.orderItems && orderReducer.orderItems.isInvoice === false ? true : false) {
+        this.props.orderStatus("invoiceStatus", true);
+      }
     }
     else {
-      this.props.orderStatus("invoiceStatus", false)
+      if (orderReducer && orderReducer.orderItems && orderReducer.orderItems.isInvoice ? true : false) {
+        this.props.orderStatus("invoiceStatus", false);
+      }
     }
   };
-  handleType1 = (workflowStatus, orderId, groupedOptions,orderStatus) => {
+  handleType1 = (workflowStatus, orderId, groupedOptions, orderStatus) => {
     const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     let toStatus = ""
-    if(orderStatus === true){
+    if (orderStatus === true) {
       toStatus = groupedOptions.filter(item => item.label === "Invoices");
     } else {
       toStatus = groupedOptions.filter(item => item.label === "Estimate")
@@ -290,39 +295,59 @@ class OrderDetails extends Component {
       orderReducer && orderReducer.orderItems && orderReducer.orderItems.customerId
         ? true
         : false;
+    const orderItems = orderReducer && orderReducer.orderItems ? orderReducer.orderItems : null;
+    let workflowSelected = groupedOptions.filter(
+      item => item.id === (orderReducer && orderReducer.orderItems && orderReducer.orderItems.workflowStatus ? orderReducer.orderItems.workflowStatus : "")
+    )
     return (
       <div className={"workflow-right"}>
         <div className={""}>
-          <div className={"d-flex justify-content-between pb-2 pl-2"}>
+          <div
+            className={
+              "d-flex justify-content-between pb-2 pl-2 border-bottom order-detail-head"
+            }
+          >
+            <h5 className={"mb-0"}>Order Details</h5>
             <span>
-              <h4>Order Details</h4>
-            </span>
-            <span>
-              <h4>
+              <h5 className={"mb-0"}>
                 {typeof this.props.orderReducer.orderId !== "object"
                   ? `(#${this.props.orderReducer.orderId})`
                   : null}
-              </h4>
+              </h5>
             </span>
           </div>
-          <div className={"d-flex justify-content-between pb-2 pl-2 pt-2"}>
+          <div
+            className={
+              "d-flex justify-content-between align-items-center pb-3 pl-2 pt-3"
+            }
+          >
             <span className={"name-label"}>Service Writer</span>
-            <span className={"text-capitalize"}>{serviceWriter}</span>
+            <span className={"text-capitalize service-writer"}>
+              {serviceWriter}
+            </span>
           </div>
-          <div className={"d-flex justify-content-between pb-2 pl-2"}>
+          <div
+            className={
+              "d-flex justify-content-between align-items-center pb-3 pl-2"
+            }
+          >
             <span className={"name-label"}>Created At</span>
-            <span>{createdDate}</span>
+            <span className={"create-date"}>{createdDate}</span>
           </div>
-          <div className={"d-flex justify-content-between pb-2 pl-2"}>
+          <div
+            className={
+              "d-flex justify-content-between align-items-center pb-3 pl-2"
+            }
+          >
             <span className={"name-label"}>Appointment</span>
-            <span>
+            <span className={"create-date"}>
               {this.getScheduleDate() || null}{" "}
               {scheduleStatus ? (
                 <>
                   <Button
                     onClick={this.toggleAddAppointModal}
-                    color={"secondary"}
-                    className={"btn btn-sm"}
+                    color={""}
+                    className={"btn btn-sm btn-outline-secondary"}
                     id={"scheduleDate"}
                   >
                     {this.getScheduleDate ? "+ New" : "Schedule"}
@@ -332,178 +357,225 @@ class OrderDetails extends Component {
                   </UncontrolledTooltip>
                 </>
               ) : (
-                  <>
-                    <Button
-                      color={"secondary"}
-                      className={"btn btn-sm"}
-                      id={"ScheduleStatus"}
-                    >
-                      Schedule
+                <>
+                  <Button
+                    color={""}
+                    className={"btn btn-sm btn-outline-secondary"}
+                    id={"ScheduleStatus"}
+                  >
+                    Schedule
                   </Button>
-                    <UncontrolledTooltip target={"ScheduleStatus"}>
-                      Please update user and vehicle details
+                  <UncontrolledTooltip target={"ScheduleStatus"}>
+                    Please update user and vehicle details
                   </UncontrolledTooltip>
-                  </>
-                )}
+                </>
+              )}
             </span>
           </div>
-          <div className={"d-flex justify-content-between pb-2 pl-2"}>
+          <div
+            className={
+              "d-flex justify-content-between align-items-center pb-3 pl-2"
+            }
+          >
             <span className={"name-label"}>PO Number</span>
-            <span>
-              {poNumber !== "" || isTextField ? (isTextField === true ?
-                <FormGroup>
-                  <Input
-                    type="text"
-                    name="poNumber"
-                    value={poNumber ? poNumber : ""}
-                    onChange={this.onInputChange}
-                    placeholder="Enter PO number"
-                  />
-                  <div className="d-flex pt-1 ">
-                    <Button
-                      type="button"
-                      className="btn-sm mr-2 update-btn"
-                      onClick={
-                        () => {
+            <span className={"create-date"}>
+              {poNumber !== "" || isTextField ? (
+                isTextField === true ? (
+                  <FormGroup>
+                    <Input
+                      type="text"
+                      name="poNumber"
+                      value={poNumber ? poNumber : ""}
+                      onChange={this.onInputChange}
+                      placeholder="Enter PO number"
+                    />
+                    <div className="d-flex pt-1 ">
+                      <Button
+                        type="button"
+                        className="btn-sm mr-2 update-btn"
+                        onClick={() => {
                           this.props.onUpdate("poNumber", poNumber);
                           this.handleChange();
                         }}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      type="button"
-                      className="btn-sm cancel-btn"
-                      onClick={(e) => this.handleChange()}
-                    >
-                      Cancle
-                    </Button>
-                  </div>
-                </FormGroup> :
-                <span>
-                  <div>{poNumber}</div>
-                  <div><Button
-                    type="button"
-                    color={"secondary"} className={"btn btn-sm"}
-                    onClick={(e) => this.handleChange()}
-                  >
-                    Edit
-                    </Button></div>
-                </span>
+                      >
+                        Update
+                      </Button>
+                      <Button
+                        type="button"
+                        className="btn-sm cancel-btn"
+                        onClick={e => this.handleChange()}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </FormGroup>
+                ) : (
+                  <span>
+                    <span className={"pr-2 create-date"}>{poNumber}</span>
+                    <span>
+                      <Button
+                        type="button"
+                        color={""}
+                        className={"btn btn-sm btn-outline-secondary"}
+                        onClick={e => this.handleChange()}
+                      >
+                        Edit
+                      </Button>
+                    </span>
+                  </span>
+                )
               ) : (
-                  <Button color={"secondary"} className={"btn btn-sm"} onClick={(e) => this.handleChange()}>
-                    + Add
-                  </Button>
-                )}
+                <Button
+                  color={""}
+                  className={"btn btn-sm btn-outline-secondary"}
+                  onClick={e => this.handleChange()}
+                >
+                  + Add
+                </Button>
+              )}
             </span>
           </div>
           <div
             className={
-              "d-flex justify-content-between pb-3 pl-2 pt-3 border-top authoris-block "
+              "justify-content-between pb-3 pl-2 pt-3 border-top authoris-block align-items-center"
             }
           >
-            <span className={"name-label"}>Authorization</span>
-            <span>
-              <ButtonGroup>
+            <div className={"name-label mb-1"}>Authorization</div>
+            <ButtonGroup className={"w-100"}>
+              {orderItems && !orderItems.status ? (
                 <Button
                   color={""}
-                  className={
-                    orderReducer && !orderReducer.orderItems.status
-                      ? "btn btn-sm active"
-                      : "btn btn-sm"
-                  }
-                  onClick={e =>
-                    this.props.orderStatus("authorizStatus", false)
-                  }
+                  className="btn btn-sm active"
+                  onClick={e => this.props.orderStatus("authorizStatus", false)}
                 >
-                  {orderReducer && !orderReducer.orderItems.status ? (
+                  {orderReducer &&
+                  orderReducer.orderItems &&
+                  !orderReducer.orderItems.status ? (
                     <span className={"bg-danger authoris-dot"} />
                   ) : (
-                      ""
-                    )}{" "}
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
                   Not Authorised
                 </Button>
+              ) : (
                 <Button
                   color={""}
-                  className={
-                    orderReducer && !orderReducer.orderItems.status
-                      ? "btn btn-sm"
-                      : "btn btn-sm active"
-                  }
-                  onClick={e =>
-                    this.props.orderStatus("authorizStatus", true)
-                  }
+                  className="btn btn-sm"
+                  onClick={e => this.props.orderStatus("authorizStatus", false)}
                 >
-                  {orderReducer && orderReducer.orderItems.status ? (
+                  {orderReducer &&
+                  orderReducer.orderItems &&
+                  !orderReducer.orderItems.status ? (
+                    <span className={"bg-danger authoris-dot"} />
+                  ) : (
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
+                  Not Authorised
+                </Button>
+              )}
+
+              {/* <Button
+                color={""}
+                className={
+                   orderItems 
+                    ?(orderItems.status === false)? "btn btn-sm active"
+                    : "btn btn-sm":"btn btn-sm"
+                }
+                onClick={e => this.props.orderStatus("authorizStatus", false)}
+              >
+                {orderReducer && !orderReducer.orderItems.status ? (
+                  <span className={"bg-danger authoris-dot"} />
+                ) : (
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
+                Not Authorised
+              </Button> */}
+              {orderItems && !orderItems.status ? (
+                <Button
+                  color={""}
+                  className={"btn btn-sm"}
+                  onClick={e => this.props.orderStatus("authorizStatus", true)}
+                >
+                  {orderReducer &&
+                  orderReducer.orderItems &&
+                  orderReducer.orderItems.status ? (
                     <span className={"bg-success authoris-dot"} />
                   ) : (
-                      ""
-                    )}{" "}
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
                   Authorised
                 </Button>
-              </ButtonGroup>
-            </span>
+              ) : (
+                <Button
+                  color={""}
+                  className={"btn btn-sm active"}
+                  onClick={e => this.props.orderStatus("authorizStatus", true)}
+                >
+                  {orderReducer &&
+                  orderReducer.orderItems &&
+                  orderReducer.orderItems.status ? (
+                    <span className={"bg-success authoris-dot"} />
+                  ) : (
+                    <span className={"bg-secondary authoris-dot"} />
+                  )}{" "}
+                  Authorised
+                </Button>
+              )}
+            </ButtonGroup>
           </div>
           <div
             className={
-              "d-flex justify-content-between pb-2 pl-2 authoris-block"
+              "justify-content-between pb-3 pl-2 authoris-block align-items-center"
             }
           >
-            <span className={"name-label"}>Order Status</span>
-            <span>
-              <ButtonGroup>
-                <Button
-                  color={""}
-                  className={
-                    !isInvoice ? "btn btn-sm active" : "btn btn-sm"
-                  }
-                  onClick={e => {
-                    this.props.orderStatus("invoiceStatus", false);
-                    this.handleType1(
-                      orderReducer.orderItems.workflowStatus,
-                      orderReducer.orderItems._id,
-                      groupedOptions,
-                      false
-                    )
-                  }
-                  }
-                >
-                  Estimate
-                </Button>
-                <Button
-                  color={""}
-                  className={isInvoice ? "btn btn-sm active" : "btn btn-sm"}
-                  onClick={e =>{
-                    this.props.orderStatus("invoiceStatus", true);
-                    this.handleType1(
-                      orderReducer.orderItems.workflowStatus,
-                      orderReducer.orderItems._id,
-                      groupedOptions,
-                      true
-                    )
-                  }
-                  }
-                >
-                  Invoice
-                </Button>
-              </ButtonGroup>
-            </span>
+            <span className={"name-label mb-1"}>Order Status</span>
+
+            <ButtonGroup className={"w-100"}>
+              <Button
+                color={""}
+                className={!isInvoice ? "btn btn-sm active" : "btn btn-sm"}
+                onClick={e => {
+                  this.props.orderStatus("invoiceStatus", false);
+                  this.handleType1(
+                    orderReducer.orderItems.workflowStatus,
+                    orderReducer.orderItems._id,
+                    groupedOptions,
+                    false
+                  )
+                }
+                }
+              >
+                Estimate
+              </Button>
+              <Button
+                color={""}
+                className={isInvoice ? "btn btn-sm active" : "btn btn-sm"}
+                onClick={e => {
+                  this.props.orderStatus("invoiceStatus", true);
+                  this.handleType1(
+                    orderReducer.orderItems.workflowStatus,
+                    orderReducer.orderItems._id,
+                    groupedOptions,
+                    true
+                  )
+                }
+                }
+              >
+                Invoice
+              </Button>
+            </ButtonGroup>
           </div>
           <div
             className={
-              "d-flex justify-content-between pb-2 pl-2 pt-2 fleet-block"
+              "justify-content-between pb-3 pl-2 fleet-block align-items-center"
             }
           >
-            <span className={"name-label"}>Workflow</span>
+            <div className={"name-label mb-1"}>Workflow</div>
             <Select
-              defaultValue={groupedOptions.filter(
-                item => item.id === orderReducer.orderItems.workflowStatus
-              )}
-              value={groupedOptions.filter(
-                item => item.id === orderReducer.orderItems.workflowStatus
-              )}
+              defaultValue={workflowSelected ? workflowSelected : ""}
+              value={workflowSelected ? workflowSelected : ""}
               options={groupedOptions}
-              className="form-select w-50 simple-select"
+              className="form-select simple-select"
               onChange={e =>
                 this.handleType(
                   e,
@@ -515,156 +587,142 @@ class OrderDetails extends Component {
               classNamePrefix={"form-select-theme"}
             />
           </div>
-          <hr />
         </div>
-        <div className={"service-warp"}>
+        <div className={"service-warp border-top pt-2 mt-1"}>
           {serviceData && serviceData.length
             ? serviceData.map((item, index) => {
-              let mainserviceTotal = [],
-                serviceTotal,
-                epa,
-                discount,
-                tax;
-              return (
-                <div key={index} className={""}>
-                  {item.serviceId &&
+                let mainserviceTotal = [],
+                  serviceTotal,
+                  epa,
+                  discount,
+                  tax;
+                return (
+                  <div key={index} className={""}>
+                    {item.serviceId &&
                     item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
-                    ? item.serviceId.serviceItems.map(
-                      (service, sIndex) => {
-                        const calSubTotal = calculateSubTotal(
-                          service.retailPrice ||
-                          (service.tierSize
-                            ? service.tierSize[0].retailPrice
-                            : null) ||
-                          0,
-                          service.qty || 0,
-                          service.hours || 0,
-                          service.rate ? service.rate.hourlyRate : 0
-                        ).toFixed(2);
-                        const subDiscount = calculateValues(
-                          calSubTotal || 0,
-                          service.discount.value || 0,
-                          service.discount.type
-                        );
-                        const servicesSubTotal = (
-                          parseFloat(calSubTotal) -
-                          parseFloat(subDiscount)
-                        ).toFixed(2);
-                        mainserviceTotal.push(
-                          parseFloat(servicesSubTotal)
-                        );
-                        serviceTotalArray = getSumOfArray(
-                          mainserviceTotal
-                        );
-                        epa = calculateValues(
-                          serviceTotalArray || 0,
-                          item.serviceId.epa.value || 0,
-                          item.serviceId.epa
-                            ? item.serviceId.epa.type
-                            : "$"
-                        );
-                        discount = calculateValues(
-                          serviceTotalArray || 0,
-                          item.serviceId.discount.value || 0,
-                          item.serviceId.discount
-                            ? item.serviceId.discount.type
-                            : "$"
-                        );
-                        tax = calculateValues(
-                          serviceTotalArray || 0,
-                          item.serviceId.taxes.value || 0,
-                          item.serviceId.taxes
-                            ? item.serviceId.taxes.type
-                            : "$"
-                        );
+                      ? item.serviceId.serviceItems.map((service, sIndex) => {
+                          const calSubTotal = calculateSubTotal(
+                            service.retailPrice ||
+                              (service.tierSize && service.tierSize.length
+                                ? service.tierSize[0].retailPrice
+                                : null) ||
+                              0,
+                            service.qty || 0,
+                            service.hours || 0,
+                            service.rate ? service.rate.hourlyRate : 0
+                          ).toFixed(2);
+                          const subDiscount = calculateValues(
+                            calSubTotal || 0,
+                            service.discount.value || 0,
+                            service.discount.type
+                          );
+                          const servicesSubTotal = (
+                            parseFloat(calSubTotal) - parseFloat(subDiscount)
+                          ).toFixed(2);
+                          mainserviceTotal.push(parseFloat(servicesSubTotal));
+                          serviceTotalArray = getSumOfArray(mainserviceTotal);
+                          epa = calculateValues(
+                            serviceTotalArray || 0,
+                            item.serviceId.epa.value || 0,
+                            item.serviceId.epa ? item.serviceId.epa.type : "$"
+                          );
+                          discount = calculateValues(
+                            serviceTotalArray || 0,
+                            item.serviceId.discount.value || 0,
+                            item.serviceId.discount
+                              ? item.serviceId.discount.type
+                              : "$"
+                          );
+                          tax = calculateValues(
+                            serviceTotalArray || 0,
+                            item.serviceId.taxes.value || 0,
+                            item.serviceId.taxes
+                              ? item.serviceId.taxes.type
+                              : "$"
+                          );
 
-                        serviceTotal = (
-                          parseFloat(serviceTotalArray) +
-                          parseFloat(epa) +
-                          parseFloat(tax) -
-                          parseFloat(discount)
-                        ).toFixed(2);
-                        if (service.serviceType === "part") {
-                          totalParts += parseFloat(servicesSubTotal);
-                        }
-                        if (service.serviceType === "tire") {
-                          totalTires += parseFloat(servicesSubTotal);
-                        }
-                        if (service.serviceType === "labor") {
-                          totalLabor += parseFloat(servicesSubTotal);
-                        }
-                        orderSubTotal += parseFloat(servicesSubTotal);
+                          serviceTotal = (
+                            parseFloat(serviceTotalArray) +
+                            parseFloat(epa) +
+                            parseFloat(tax) -
+                            parseFloat(discount)
+                          ).toFixed(2);
+                          if (service.serviceType === "part") {
+                            totalParts += parseFloat(servicesSubTotal);
+                          }
+                          if (service.serviceType === "tire") {
+                            totalTires += parseFloat(servicesSubTotal);
+                          }
+                          if (service.serviceType === "labor") {
+                            totalLabor += parseFloat(servicesSubTotal);
+                          }
+                          orderSubTotal += parseFloat(servicesSubTotal);
 
-                        return true;
-                      }
-                    )
-                    : ""}
-                  <span className={"d-none"}>
-                    {
-                      ((orderGandTotal += parseFloat(serviceTotal) || 0),
+                          return true;
+                        })
+                      : ""}
+                    <span className={"d-none"}>
+                      {
+                        ((orderGandTotal += parseFloat(serviceTotal) || 0),
                         fleetStatus
                           ? (fleetDiscount = calculateValues(
-                            orderGandTotal,
-                            fleetDiscount,
-                            "%"
-                          ))
+                              orderGandTotal,
+                              fleetDiscount,
+                              "%"
+                            ))
                           : 0,
                         fleetStatus
-                          ? (orderGandTotal =
-                            orderGandTotal - fleetDiscount)
+                          ? (orderGandTotal = orderGandTotal - fleetDiscount)
                           : 0)
-                    }
-                  </span>
+                      }
+                    </span>
 
-                  <span className={"d-none"}>
-                    {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
-                  </span>
-                  <span className={"d-none"}>
-                    {(totalDiscount += parseFloat(discount) || 0)}
-                  </span>
-                </div>
-              );
-            })
+                    <span className={"d-none"}>
+                      {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
+                    </span>
+                    <span className={"d-none"}>
+                      {(totalDiscount += parseFloat(discount) || 0)}
+                    </span>
+                  </div>
+                );
+              })
             : ""}
           {paymentList && paymentList.length
             ? paymentList.map(paymentData => {
-              totalPaiedAmount +=
-                paymentData.payedAmount[
-                  paymentData.payedAmount.length - 1
-                ].amount;
-              return true;
-            })
+                totalPaiedAmount +=
+                  paymentData.payedAmount[paymentData.payedAmount.length - 1]
+                    .amount;
+                return true;
+              })
             : null}
           {serviceData && serviceData.length ? (
             <>
               <div
-                className={
-                  "w-100 text-right pull-right pr-2 order-total-block"
-                }
+                className={"w-100 text-right pull-right pr-2 order-total-block"}
               >
                 <div>
                   <span className={"title"}>Total Parts </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={totalParts.toFixed(2)} />
+                    <Dollor value={totalParts.toFixed(2) >= 0 ? totalParts.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div>
                   <span className={"title"}>Total Tires </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={totalTires.toFixed(2)} />
+                    <Dollor value={totalTires.toFixed(2) >= 0 ? totalTires.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div>
                   <span className={"title"}>Total Labor </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={totalLabor.toFixed(2)} />
+                    <Dollor value={totalLabor.toFixed(2) >= 0 ? totalLabor.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div className={"pt-2 border-top mt-2"}>
                   <span className={"title"}>Sub Total </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={orderSubTotal.toFixed(2)} />
+                    <Dollor value={orderSubTotal.toFixed(2) >= 0 ? orderSubTotal.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div>
@@ -682,9 +740,7 @@ class OrderDetails extends Component {
                     -{" "}
                     <Dollor
                       value={
-                        !isNaN(totalDiscount)
-                          ? totalDiscount.toFixed(2)
-                          : 0.0
+                        !isNaN(totalDiscount) ? totalDiscount.toFixed(2) : 0.0
                       }
                     />
                   </span>
@@ -701,9 +757,7 @@ class OrderDetails extends Component {
                   Grand Total :{" "}
                   <Dollor
                     value={
-                      !isNaN(orderGandTotal)
-                        ? orderGandTotal.toFixed(2)
-                        : 0.0
+                      !isNaN(orderGandTotal) ? orderGandTotal.toFixed(2) : 0.0
                     }
                   />
                 </div>
@@ -715,8 +769,8 @@ class OrderDetails extends Component {
               <div className={"clearfix"} />
             </>
           ) : (
-              ""
-            )}
+            ""
+          )}
         </div>
         <hr />
         <div className={"text-center payment-section"}>
@@ -724,57 +778,59 @@ class OrderDetails extends Component {
             className={
               orderGandTotal - totalPaiedAmount === 0
                 ? "text-success"
-                : "text-warning"
+                : "text-dark"
             }
-          >
+          > 
             Remaining Balance{" "}
             <Dollor
-              value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(
-                2
-              )}
+              value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)}
             />
           </h6>
           <Button
             size={"sm"}
-            // onClick={this.handlePaymentModal}
-            className={"btn btn-success btn-rounded"}
+            onClick={this.handlePaymentModal}
+            className={"btn btn-theme"}
           >
             New Payment
           </Button>
         </div>
         <div className={"activity-logs"}>
-          {activityLogs && activityLogs.length ? (
+          {paymentList && paymentList.length ? (
             <h5 className={"mb-2 p-2 text-left"}>Payments</h5>
           ) : null}
           {paymentList && paymentList.length
             ? paymentList
-              .slice(0)
-              .reverse()
-              .map((paymentData, pIndex) => {
-                return (
-                  <div key={pIndex} className={"activity-block p-3"}>
-                    <div className={"pr-3 text-left"}>
-                      <span>{`Paid $${paymentData.payedAmount[
-                        paymentData.payedAmount.length - 1
-                      ].amount.toFixed(2)} viea ${
-                        paymentData.paymentType
-                        } on date`}</span>
-                    </div>
-                    <div className={"text-left activity-date"}>
-                      <span>
-                        {moment(
+                .slice(0)
+                .reverse()
+                .map((paymentData, pIndex) => {
+                  return (
+                    <div key={pIndex} className={"activity-block p-3"}>
+                      <div className={"pr-3 text-left"}>
+                        <span>{`Paid $${
                           paymentData.payedAmount[
                             paymentData.payedAmount.length - 1
-                          ].date
-                        ).format("MMM Do YYYY, h:mm A")}
+                          ].amount
+                            ? paymentData.payedAmount[
+                                paymentData.payedAmount.length - 1
+                              ].amount.toFixed(2)
+                            : 0
+                        } viea ${paymentData.paymentType} on date`}</span>
+                      </div>
+                      <div className={"text-left activity-date"}>
+                        <span>
+                          {moment(
+                            paymentData.payedAmount[
+                              paymentData.payedAmount.length - 1
+                            ].date
+                          ).format("MMM Do YYYY, h:mm A")}
+                        </span>
+                      </div>
+                      <span className={"activity-icon payment-set"}>
+                        <i className={"fa fa-dollar-sign"} />
                       </span>
                     </div>
-                    <span className={"activity-icon payment-set"}>
-                      <i className={"fa fa-dollar-sign"} />
-                    </span>
-                  </div>
-                );
-              })
+                  );
+                })
             : null}
         </div>
         <hr />
@@ -784,56 +840,62 @@ class OrderDetails extends Component {
           ) : null}
           {activityLogs && activityLogs.length
             ? activityLogs
-              .slice(0)
-              .reverse()
-              .map((activity, index) => {
-                let dateA = moment(activity.createdAt).format("L");
-                let dateB = moment().format('L');
-                let dayDiff = moment(dateB).diff(moment(dateA), 'days');
-                return (
-                  <div key={index} className={"activity-block p-3"}>
-                    <div className={"pr-3 text-left"}>
-                      <span className="text-capitalize">
-                        {activity.activityPerson.firstName}{" "}
-                        {activity.activityPerson.lastName}{" "}
-                        {activity.type !== "NEW_ORDER" &&
+                .slice(0)
+                .reverse()
+                .map((activity, index) => {
+                  let dateA = moment(activity.createdAt).format("L");
+                  let dateB = moment().format("L");
+                  let dayDiff = moment(dateB).diff(moment(dateA), "days");
+                  return (
+                    <div key={index} className={"activity-block p-3"}>
+                      <div className={"pr-3 text-left"}>
+                        <span className="text-capitalize">
+                          {activity.activityPerson.firstName}{" "}
+                          {activity.activityPerson.lastName}{" "}
+                          {activity.type !== "NEW_ORDER" &&
                           activity.type !== "ADD_PAYMENT" &&
                           activity.type !== "NEW_MESSAGE" &&
                           activity.type !== "UPDATE_STATUS"
-                          ? "changed"
-                          : null}{" "}
-                        {activity.name}
-                      </span>
-                    </div>
-                    <div className={"text-left activity-date"}>
-                      <span>
-                        {dayDiff >= 1 ? moment(activity.createdAt).format("MMM Do YYYY, h:mm A") : moment(activity.createdAt).startOf('seconds').fromNow()}
-                      </span>
-                    </div>
-                    <span
-                      className={
-                        activity.type === "NEW_MESSAGE"
-                          ? "activity-icon activity-message"
-                          : "activity-icon activity-set"
-                      }
-                    >
-                      {activity.type !== "NEW_ORDER" &&
+                            ? "changed"
+                            : null}{" "}
+                          {activity.name}
+                        </span>
+                      </div>
+                      <div className={"text-left activity-date"}>
+                        <span>
+                          {dayDiff >= 1
+                            ? moment(activity.createdAt).format(
+                                "MMM Do YYYY, h:mm A"
+                              )
+                            : moment(activity.createdAt)
+                                .startOf("seconds")
+                                .fromNow()}
+                        </span>
+                      </div>
+                      <span
+                        className={
+                          activity.type === "NEW_MESSAGE"
+                            ? "activity-icon activity-message"
+                            : "activity-icon activity-set"
+                        }
+                      >
+                        {activity.type !== "NEW_ORDER" &&
                         activity.type !== "ADD_PAYMENT" &&
                         activity.type !== "INVOICE_ORDER" &&
                         activity.type !== "UPDATE_STATUS" &&
                         activity.type !== "NEW_MESSAGE" ? (
                           <i className={"fa fa-check"} />
                         ) : null}
-                      {activity.type === "ADD_PAYMENT" ? (
-                        <i className={"fa fa-dollar-sign"} />
-                      ) : null}
-                      {activity.type === "NEW_MESSAGE" ? (
-                        <i className="fas fa-bars mt-1" />
-                      ) : null}
-                    </span>
-                  </div>
-                );
-              })
+                        {activity.type === "ADD_PAYMENT" ? (
+                          <i className={"fa fa-dollar-sign"} />
+                        ) : null}
+                        {activity.type === "NEW_MESSAGE" ? (
+                          <i className="fas fa-bars mt-1" />
+                        ) : null}
+                      </span>
+                    </div>
+                  );
+                })
             : ""}
         </div>
 

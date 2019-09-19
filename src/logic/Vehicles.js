@@ -75,6 +75,9 @@ const vehicleAddLogic = createLogic({
       if (data.isCustomerDetails) {
         dispatch(customerGetRequest())
       }
+      if (action.payload.isSingleCustomer){
+        dispatch(customerGetRequest({customerId:action.payload.customerId}))
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -136,6 +139,13 @@ const getVehiclesLogic = createLogic({
         value: vehicle._id,
         data: vehicle
       }));
+      if (options.length) {
+        defaultOptions = defaultOptions.concat([{
+          label: "All Vehicles",
+          value: "",
+          isDisabled: true
+        }])
+      }
       logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
       dispatch(hideLoader());
       dispatch(

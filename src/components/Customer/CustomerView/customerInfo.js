@@ -116,16 +116,6 @@ export class CustomerInfo extends Component {
           }
         })
       }
-
-      if (
-        customerDetails.permission &&
-        customerDetails.permission.shouldLaborRateOverride.laborRate !== null &&
-        customerDetails.permission.shouldLaborRateOverride.laborRate !== "objectId"
-      ) {
-        this.handleGetRateData(
-          customerDetails.permission.shouldLaborRateOverride.laborRate
-        );
-      }
       if (customerDetails.fleet && customerDetails.fleet._id) {
         this.setState({
           selectedOption: {
@@ -156,7 +146,7 @@ export class CustomerInfo extends Component {
   updateCustomerForm = data => {
     let customerId = this.state.customerId;
     data.customerId = customerId;
-    console.log("##################", data);
+    data.isSingleCustomer = true
     this.props.updateCustomer({ data: data });
   };
   onTypeHeadStdFun = data => {
@@ -407,7 +397,7 @@ export class CustomerInfo extends Component {
                   disabled
                   value={selectedOption.label}
                   className={"w-100 form-select"}
-                  classNamePrefix={"form-select-theme"}
+                  //classNamePrefix={"form-select-theme"}
                 />
               </FormGroup>
             </Col>

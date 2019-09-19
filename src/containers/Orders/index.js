@@ -60,8 +60,9 @@ import {
   addAppointmentRequest,
   getAppointments,
   newMsgSend,
+  addInspcetionToReducer,
   submitServiceDataSuccess,
-  updateOrderServiceData
+  updateOrderServiceData,
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -170,10 +171,10 @@ class Order extends Component {
     //   this.props.getOrderDetailsRequest({ _id: this.props.match.params.id });
     // }
     if (
-      orderReducer.orderItems !== this.props.orderReducer.orderItems ||
+      orderReducer.orderItems && (orderReducer.orderItems !== this.props.orderReducer.orderItems ||
       orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
       messageReducer.messageData.isSuccess !==
-      this.props.messageReducer.messageData.isSuccess
+      this.props.messageReducer.messageData.isSuccess)
     ) {
       const {
         orderName,
@@ -426,8 +427,11 @@ class Order extends Component {
       addAppointment,
       getAppointments,
       newMsgSend,
+      addInspcetionToReducer,
+      pdfReducer,
       submitServiceDataSuccess,
-      updateOrderServiceData
+      updateOrderServiceData,
+      customerListReducer
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -483,6 +487,8 @@ class Order extends Component {
                       customerInfoReducer={customerInfoReducer}
                       addVehicle={vehicleAddRequest}
                       vehicleAddInfoReducer={vehicleAddInfoReducer}
+                      getCustomerDetailsRequest={getCustomerData}
+                      customerListReducer={customerListReducer}
                     />
                   </div>
                   <div className={"position-relative"}>
@@ -611,6 +617,8 @@ class Order extends Component {
                             updateOrderDetails={updateOrderDetails}
                             orderReducer={orderReducer}
                             genrateInvoiceSuccess={genrateInvoice}
+                            addInspcetionToReducer={addInspcetionToReducer}
+                            pdfReducer={pdfReducer}
                           />
                         ) : null}
                         {activeTab === 2 ? (
@@ -736,7 +744,8 @@ const mapStateToProps = state => ({
   customerFleetReducer: state.fleetReducer,
   customerInfoReducer: state.customerInfoReducer,
   vehicleAddInfoReducer: state.vehicleAddInfoReducer,
-  appointmentReducer: state.appointmentReducer
+  appointmentReducer: state.appointmentReducer,
+  customerListReducer: state.customerListReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -881,8 +890,9 @@ const mapDispatchToProps = dispatch => ({
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   getAppointments: data => dispatch(getAppointments(data)),
   newMsgSend: data => dispatch(newMsgSend(data)),
+  addInspcetionToReducer: data => dispatch(addInspcetionToReducer(data)),
   submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data)),
-  updateOrderServiceData: data => dispatch(updateOrderServiceData(data))
+  updateOrderServiceData: data => dispatch(updateOrderServiceData(data)),
 });
 export default connect(
   mapStateToProps,

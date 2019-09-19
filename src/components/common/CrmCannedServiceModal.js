@@ -126,7 +126,7 @@ export class CrmCannedServiceModal extends Component {
       var bool_value = value === "true" ? false : true;
       ServiceData[index].serviceItems[sIndex].isItemChecked = bool_value;
 
-      console.log(value, "value");
+      // console.log(value, "value");
       this.setState({
          serviceData: ServiceData
       });
@@ -145,7 +145,7 @@ export class CrmCannedServiceModal extends Component {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex, input } = this.state
 
-      console.log(serviceData, "serviceData");
+      // console.log(serviceData, "serviceData");
       return (
          <>
             <Modal

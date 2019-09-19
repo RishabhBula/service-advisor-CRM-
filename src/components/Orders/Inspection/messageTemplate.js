@@ -323,7 +323,7 @@ class MessageTemplate extends Component {
                             type="text"
                             name="templateName"
                             onChange={e => this.handleChange(e)}
-                            placeholder="ex.Invoice Default"
+                            placeholder="Ex: Invoice Default"
                             value={singleTemplateData.templateName}
                             maxLength="55"
                             id="recipients"

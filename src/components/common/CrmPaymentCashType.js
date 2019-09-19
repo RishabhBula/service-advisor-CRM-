@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Row, Col, FormGroup, Input, Label } from "reactstrap";
+import { Form, Row, Col, FormGroup, Input, Label, FormFeedback } from "reactstrap";
 import "react-dates/initialize";
 import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
@@ -11,22 +11,36 @@ export class CrmPaymentCashType extends Component {
     };
   }
   render() {
-    const { 
-      payableAmmount, 
-      addPayment, 
-      date, 
-      notes, 
+    const {
+      payableAmmount,
+      addPayment,
+      date,
+      notes,
       handleChange,
-      totalPaiedAmount, 
-      handleDateChange } = this.props
+      payableAmount,
+      totalPaiedAmount,
+      handleDateChange,
+      errors } = this.props
+    let remain = (parseFloat(payableAmmount - totalPaiedAmount).toFixed(2)) - (parseFloat(payableAmount).toFixed(2) && parseFloat(payableAmount).toFixed(2) >= 0 ? parseFloat(payableAmount).toFixed(2) : 0);
     return (
       <>
-        <div>
+        {/* <div>
           <span className={"text-center text-primary cursor_pointer"} onClick={() => this.props.handlePaymentChange()}>Change Payment Type</span>
-        </div>
+        </div> */}
         <Form onSubmit={addPayment}>
           <Row>
             <Col md={"8"}>
+              <Col md={"12"}>
+                <FormGroup>
+                  <Label>Payable Amount</Label>
+                  <div className={"input-block"}>
+                    <Input className={"text-success"} name={"payableAmount"} onChange={handleChange} value={payableAmount} invalid={errors.payableAmount?true:false} />
+                    <FormFeedback>
+                      {errors.payableAmount ? errors.payableAmount : null}
+                    </FormFeedback>
+                  </div>
+                </FormGroup>
+              </Col>
               <Col md={"12"}>
                 <FormGroup>
                   <Label>Date</Label>
@@ -37,6 +51,8 @@ export class CrmPaymentCashType extends Component {
                       id="Date" // PropTypes.string.isRequired,
                       focused={this.state.focused} // PropTypes.bool
                       onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                      numberOfMonths={1}
+                      hideKeyboardShortcutsPanel
                     />
                   </div>
                 </FormGroup>
@@ -45,7 +61,7 @@ export class CrmPaymentCashType extends Component {
                 <FormGroup>
                   <Label>Notes</Label>
                   <div className={"input-block"}>
-                    <Input value={notes} onChange={handleChange} name={"notes"} type={"textarea"} cols={"3"} rows={"4"} maxLength={"1000"}/>
+                    <Input value={notes} onChange={handleChange} name={"notes"} type={"textarea"} cols={"3"} rows={"4"} maxLength={"1000"} />
                   </div>
                 </FormGroup>
               </Col>
@@ -56,8 +72,8 @@ export class CrmPaymentCashType extends Component {
                   <div>Total Due : {parseFloat(payableAmmount).toFixed(2)}</div>
                   <hr />
                   <div>Paid To Date : {parseFloat(totalPaiedAmount).toFixed(2)}</div>
-                  <div>Payment Amount : {parseFloat(payableAmmount).toFixed(2)}</div>
-                  <div className={"pt-2 border-top mt-2 text-success"}>Remaining Amount: {parseFloat(payableAmmount - totalPaiedAmount).toFixed(2)}</div>
+                  <div>Payment Amount : {parseFloat(payableAmount).toFixed(2) && (parseFloat(payableAmount).toFixed(2)) >= 0 ? parseFloat(payableAmount).toFixed(2) : 0}</div>
+                  <div className={"pt-2 border-top mt-2 text-success"}>Remaining Amount: {isNaN(remain) ? 0.00 : remain.toFixed(2)}</div>
                 </div>
                 <div className={"clearfix"}></div>
               </div>

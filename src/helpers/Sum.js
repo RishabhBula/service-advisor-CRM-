@@ -63,7 +63,7 @@ export const serviceTotalsCalculation = (
       item.serviceId.serviceItems.map(service => {
         const calSubTotal = calculateSubTotal(
           service.retailPrice ||
-          (service.tierSize ? service.tierSize[0].retailPrice : null) ||
+          (service.tierSize && service.tierSize.length ? service.tierSize[0].retailPrice : null) ||
           0,
           service.qty || 0,
           service.hours || 0,
