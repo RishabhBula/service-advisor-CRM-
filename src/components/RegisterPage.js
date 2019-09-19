@@ -174,7 +174,7 @@ class RegisterPage extends Component {
     }
   }
   render() {
-    const { settingData } = this.props
+    // const { settingData } = this.props
     const {
       errors,
       email,

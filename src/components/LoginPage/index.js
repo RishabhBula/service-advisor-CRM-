@@ -69,7 +69,7 @@ class LoginPage extends Component {
     }
   };
   render() {
-    const { settingData } = this.props;
+    // const { settingData } = this.props;
     const { email, password, errors } = this.state;
     return (
       <>

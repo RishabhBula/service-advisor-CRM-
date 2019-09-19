@@ -137,7 +137,7 @@ class WorkFlow extends Component {
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
     let workflow = document.getElementById("simplebar-content");
-    let workflowTop;
+    let  workflowTop;
     if (workflow && ele) {
       workflowTop = workflow.getBoundingClientRect().top;
     }
