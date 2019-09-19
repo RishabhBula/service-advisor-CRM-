@@ -200,7 +200,7 @@ class Customers extends Component {
               {/* <CrmExportSampleButton sheetType={DemoSupportedSheets.CUSTOMER} />{" "}
               &nbsp; */}
               <CrmImportExcel
-                modalHeaderText={"Import Customer data"}
+                modalHeaderText={"Import Customer Data"}
                 importSectionName={"customer"}
                 onImport={this.onImport}
                 buttonText={"Import Customers"}

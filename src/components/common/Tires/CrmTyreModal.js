@@ -572,7 +572,7 @@ export class CrmTyreModal extends Component {
                               <Col md={"12"}>
                                  <FormGroup className={"fleet-block"}>
                                     <Label htmlFor="name" className="customer-modal-text-style">
-                                       Search Tire
+                                       Search Tire <span className={"asteric"}>*</span>
                                     </Label>
                                     <div className={"input-block"}>
                                        <Async
@@ -1005,7 +1005,7 @@ export class CrmTyreModal extends Component {
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleAddTire()}>
-                     {!isEditMode ? serviceTireModal && !newServiceTire ? "Add to Service" : "Add New Tire" : `Update Tire`}
+                     {!isEditMode ? serviceTireModal && !newServiceTire ? "Add Tire" : "Add Tire" : `Update Tire`}
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel
