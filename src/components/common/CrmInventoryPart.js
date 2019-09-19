@@ -168,7 +168,7 @@ class CrmInventoryPart extends Component {
           partOptions
         } = this.state;
         let data = {
-          partDescription,
+          partDescription: partDescription.trim(),
           note,
           partNumber,
           vendorId,
@@ -507,7 +507,7 @@ class CrmInventoryPart extends Component {
               <Col md={"12"}>
                 <FormGroup className={"fleet-block"}>
                   <Label htmlFor="name" className="customer-modal-text-style">
-                    Search Part
+                    Search Part <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
                     <Async
@@ -527,9 +527,9 @@ class CrmInventoryPart extends Component {
                       isClearable={true}
                       noOptionsMessage={() => "Type Part name"}
                     />
-                    {servicePartError ? (
-                      <FormFeedback>{servicePartError}</FormFeedback>
-                    ) : null}
+                    <FormFeedback className="text-left">
+                      {servicePartError ? servicePartError : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
@@ -746,7 +746,7 @@ class CrmInventoryPart extends Component {
                             const { value } = event.target;
                             if (isNaN(value) || value < 0) {
                               return;
-                            }                            
+                            }
                             this.handleChange(event);
                           }}
                           maxLength="10"

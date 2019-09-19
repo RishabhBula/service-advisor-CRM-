@@ -297,7 +297,7 @@ export class CrmLabourModal extends Component {
       this.props.handleLabourModal()
     } else {
       this.setState({
-        servicePartError: "Part is required."
+        serviceLaborError: "Labor selectuion is required."
       })
     }
   }
@@ -335,7 +335,7 @@ export class CrmLabourModal extends Component {
                   <Col md={"12"}>
                     <FormGroup className={"fleet-block"}>
                       <Label htmlFor="name" className="customer-modal-text-style">
-                        Search Labor
+                        Search Labor <span className={"asteric"}>*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Async
@@ -357,7 +357,7 @@ export class CrmLabourModal extends Component {
                           }
                         />
                         {serviceLaborError ? (
-                          <FormFeedback>{serviceLaborError}</FormFeedback>
+                          <FormFeedback className="text-left">{serviceLaborError}</FormFeedback>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -502,7 +502,7 @@ export class CrmLabourModal extends Component {
 
             <div className="required-fields">*Fields are Required.</div>
 
-            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add New Labor'}
+            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add Labor'}
 
             </Button>{" "}
             <Button color="secondary" onClick={handleLabourModal}>

@@ -253,18 +253,27 @@ class ServiceItem extends Component {
   handleCostChange = (e, Mindex, index) => {
     const serviceData = [...this.state.services]
     const { value } = e.target
-    serviceData[Mindex].serviceItems[index].retailPrice = value
-    this.setState({
-      services: serviceData
-    })
+    if (isNaN(value) || parseFloat(value) < 0 || value === "-0") {
+      return;
+    } else {
+      serviceData[Mindex].serviceItems[index].retailPrice = value
+      this.setState({
+        services: serviceData
+      })
+    }
   }
   handleQuantityChange = (e, Mindex, index) => {
     const serviceData = [...this.state.services]
     const { value } = e.target
-    serviceData[Mindex].serviceItems[index].qty = value
-    this.setState({
-      services: serviceData
-    })
+    if (isNaN(value) || parseFloat(value) < 0 || value === "-0") {
+      return;
+    }
+    else {
+      serviceData[Mindex].serviceItems[index].qty = value
+      this.setState({
+        services: serviceData
+      })
+    }
   }
 
   handleHourChange = (e, Mindex, index) => {

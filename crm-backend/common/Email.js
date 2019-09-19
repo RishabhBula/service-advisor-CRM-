@@ -18,7 +18,8 @@ const AvailiableTemplates = {
   REFUND_ORDER_ADMIN: "refundOrderAdminEmail",
   NEWSLETTER_EMAIL: "newsletterEmail",
   UNSUBSCRIBE_EMAIL: "unSubscribeEmail",
-  INSPECTION_TEMPLATE: "inspectionTemplate"
+  INSPECTION_TEMPLATE: "inspectionTemplate",
+  SUBSCRIPTION_TEMPLATE: "subscriptionPlan"
 };
 class Email {
   constructor(req) {
@@ -82,6 +83,9 @@ class Email {
       case AvailiableTemplates.INSPECTION_TEMPLATE:
          // this.subject = "[Service Advisor] Unsubscription";
         break;
+      case AvailiableTemplates.SUBSCRIPTION_TEMPLATE:
+        this.subject = "[Service Advisor] Plan Purchase Successfully";
+        break;  
       default:
         throw new Error("Invalid template name", 400);
     }

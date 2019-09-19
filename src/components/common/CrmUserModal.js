@@ -85,6 +85,7 @@ export class CrmUserModal extends Component {
         rate,
         permissions
       } = this.props.userData;
+      
       this.setState({
         isEditMode: true,
         firstName,
@@ -92,7 +93,7 @@ export class CrmUserModal extends Component {
         email,
         companyName,
         phone: phone || "",
-        roleType: this.props.userData.roleType ? this.props.userData.roleType._id : "5ca3473d70537232f13ff1fa",
+        roleType: this.props.userData.roleType ? this.props.userData.roleType : "5ca3473d70537232f13ff1fa",
         rate: rate || "",
         permissions
       });
@@ -341,7 +342,7 @@ export class CrmUserModal extends Component {
                         id="type"
                         disabled
                         // onChange={this.handleInputChange}
-                        value={roleType === "5ca3473d70537232f13ff1fa" ? "Technican" : "Admin"}
+                        value={roleType === "5ca3473d70537232f13ff1fa" ? "Technician" : "Admin"}
                         name="roleType"
                         invalid={errors.roleType}
                       >

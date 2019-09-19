@@ -461,13 +461,15 @@ export class CrmEditCustomerModal extends Component {
       let IncorrectNumber = [...this.state.inCorrectNumber]
       if (phoneDetail && phoneDetail.length) {
         for (let i = 0; i < phoneDetail.length; i++) {
-          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
-          if (phoneTrimed.length <= 9) {
-            IncorrectNumber[i] = true
-            this.setState({
-              inCorrectNumber: IncorrectNumber
-            });
-            isValid = false;
+          if (!this.state.phoneErrors[i]) {
+            const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+            if (phoneTrimed.length <= 9) {
+              IncorrectNumber[i] = true
+              this.setState({
+                inCorrectNumber: IncorrectNumber
+              });
+              isValid = false;
+            }
           }
         }
       }
@@ -506,7 +508,7 @@ export class CrmEditCustomerModal extends Component {
       errors: {},
       phoneErrors: [""],
       customerDefaultPermissions: CustomerDefaultPermissions,
-      inCorrectNumber:[]
+      inCorrectNumber: []
     });
   }
 
@@ -799,7 +801,7 @@ export class CrmEditCustomerModal extends Component {
                                   {phoneDetail[index].phone === "mobile" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {

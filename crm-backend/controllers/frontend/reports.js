@@ -94,7 +94,7 @@ const getReportsByCustomerdays = async (req, res) => {
         cusomer: customer,
         customerId: result[i].customerId
       };
-      console.log(customer);
+      // console.log(customer);
       for (const key in dates) {
         if (dates.hasOwnProperty(key)) {
           const date = dates[key];

@@ -104,6 +104,7 @@ class OrderDetails extends Component {
   };
 
   handleType = (e, workflowStatus, orderId, groupedOptions) => {
+    const { orderReducer } = this.props;
     const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
@@ -114,11 +115,16 @@ class OrderDetails extends Component {
       toStatusName: e.label,
       fromStatusName: fromStatus[0].label
     });
+
     if (e.label === "Invoices") {
-      this.props.orderStatus("invoiceStatus", true);
+      if (orderReducer && orderReducer.orderItems && orderReducer.orderItems.isInvoice === false ? true : false) {
+        this.props.orderStatus("invoiceStatus", true);
+      }
     }
     else {
-      this.props.orderStatus("invoiceStatus", false)
+      if (orderReducer && orderReducer.orderItems && orderReducer.orderItems.isInvoice ? true : false) {
+        this.props.orderStatus("invoiceStatus", false);
+      }
     }
   };
   handleType1 = (workflowStatus, orderId, groupedOptions, orderStatus) => {
@@ -290,6 +296,9 @@ class OrderDetails extends Component {
         ? true
         : false;
     const orderItems = orderReducer && orderReducer.orderItems ? orderReducer.orderItems : null;
+    let workflowSelected = groupedOptions.filter(
+      item => item.id === (orderReducer && orderReducer.orderItems && orderReducer.orderItems.workflowStatus ? orderReducer.orderItems.workflowStatus : "")
+    )
     return (
       <div className={"workflow-right"}>
         <div className={""}>
@@ -486,14 +495,32 @@ class OrderDetails extends Component {
               <Button
                 color={""}
                 className={!isInvoice ? "btn btn-sm active" : "btn btn-sm"}
-                onClick={e => this.props.orderStatus("invoiceStatus", false)}
+                onClick={e => {
+                  this.props.orderStatus("invoiceStatus", false);
+                  this.handleType1(
+                    orderReducer.orderItems.workflowStatus,
+                    orderReducer.orderItems._id,
+                    groupedOptions,
+                    false
+                  )
+                }
+                }
               >
                 Estimate
               </Button>
               <Button
                 color={""}
                 className={isInvoice ? "btn btn-sm active" : "btn btn-sm"}
-                onClick={e => this.props.orderStatus("invoiceStatus", true)}
+                onClick={e => {
+                  this.props.orderStatus("invoiceStatus", true);
+                  this.handleType1(
+                    orderReducer.orderItems.workflowStatus,
+                    orderReducer.orderItems._id,
+                    groupedOptions,
+                    true
+                  )
+                }
+                }
               >
                 Invoice
               </Button>
@@ -506,12 +533,8 @@ class OrderDetails extends Component {
           >
             <div className={"name-label"}>Workflow</div>
             <Select
-              defaultValue={groupedOptions.filter(
-                item => item.id === orderReducer && orderReducer.orderItems ? orderReducer.orderItems.workflowStatus : ""
-              )}
-              value={groupedOptions.filter(
-                item => item.id === orderReducer && orderReducer.orderItems ? orderReducer.orderItems.workflowStatus : ""
-              )}
+              defaultValue={workflowSelected ? workflowSelected : ""}
+              value={workflowSelected ? workflowSelected : ""}
               options={groupedOptions}
               className="form-select simple-select"
               onChange={e =>
@@ -642,25 +665,25 @@ class OrderDetails extends Component {
                 <div>
                   <span className={"title"}>Total Parts </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={totalParts.toFixed(2)} />
+                    <Dollor value={totalParts.toFixed(2) >= 0 ? totalParts.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div>
                   <span className={"title"}>Total Tires </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={totalTires.toFixed(2)} />
+                    <Dollor value={totalTires.toFixed(2) >= 0 ? totalTires.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div>
                   <span className={"title"}>Total Labor </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={totalLabor.toFixed(2)} />
+                    <Dollor value={totalLabor.toFixed(2) >= 0 ? totalLabor.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div className={"pt-2 border-top mt-2"}>
                   <span className={"title"}>Sub Total </span>:{" "}
                   <span className={"price-block"}>
-                    <Dollor value={orderSubTotal.toFixed(2)} />
+                    <Dollor value={orderSubTotal.toFixed(2) >= 0 ? orderSubTotal.toFixed(2) : 0} />
                   </span>
                 </div>
                 <div>
@@ -718,7 +741,7 @@ class OrderDetails extends Component {
                 ? "text-success"
                 : "text-warning"
             }
-          >
+          > 
             Remaining Balance{" "}
             <Dollor
               value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)}

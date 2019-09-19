@@ -336,7 +336,7 @@ const importCustomerLogic = createLogic({
         email: element["Email"],
         notes: element["Notes"],
         companyName: element["Company"],
-        referralSource: element["Refral Source"],
+        referralSource: element["Referral Source"],
         address1: element["Address"],
         city: element["City"],
         state: element["State"],

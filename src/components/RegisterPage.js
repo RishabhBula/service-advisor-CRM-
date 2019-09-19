@@ -138,10 +138,10 @@ class RegisterPage extends Component {
         isValid = false;
       }
       if (d.password && !errors.password) {
-        let res = (d.password).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+        let res = (d.password).match(/^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/);        
         if (!res) {
           isValid = false;
-          errors.password = "Password should have both alpha & numeric characters."
+          errors.password = "Password must have alphanumeric characters with optional (special characters)."
         }
       }
       if (!isValid) {
@@ -232,7 +232,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={firstName}
                               name="firstName"
-                              invalid={errors.firstName}
+                              invalid={errors.firstName ? true : false}
                             />
                             <FormFeedback>
                               {errors.firstName ? errors.firstName : null}
@@ -256,7 +256,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={lastName}
                               name="lastName"
-                              invalid={errors.lastName}
+                              invalid={errors.lastName ? true : false}
                             />
                             <FormFeedback>
                               {errors.lastName ? errors.lastName : null}
@@ -278,7 +278,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={email}
                               name="email"
-                              invalid={errors.email}
+                              invalid={errors.email ? true : false}
                             />
                             <FormFeedback>
                               {errors.email ? errors.email : null}
@@ -302,7 +302,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={password}
                               name="password"
-                              invalid={errors.password}
+                              invalid={errors.password ? true : false}
                             />
                             <FormFeedback>
                               {errors.password ? errors.password : null}
@@ -328,7 +328,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               name="confirmPassword"
                               value={confirmPassword}
-                              invalid={errors.confirmPassword}
+                              invalid={errors.confirmPassword ? true : false}
                             />
                             <FormFeedback>
                               {errors.confirmPassword
@@ -357,7 +357,7 @@ class RegisterPage extends Component {
                               name="companyName"
                               value={companyName}
                               onBlur={this.onBlur}
-                              invalid={errors.companyName}
+                              invalid={errors.companyName ? true : false}
                             />
                             <FormFeedback>
                               {errors.companyName ? errors.companyName : null}
@@ -411,7 +411,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               name="workspace"
                               value={workspace}
-                              invalid={errors.workspace}
+                              invalid={errors.workspace ? true : false}
                             />
                             <FormFeedback>
                               {errors.workspace ? errors.workspace : null}
@@ -469,7 +469,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               name="companyWebsite"
                               value={companyWebsite}
-                              invalid={errors.companyWebsite}
+                              invalid={errors.companyWebsite ? true : false}
                             />
                             <FormFeedback>
                               {errors.companyWebsite
