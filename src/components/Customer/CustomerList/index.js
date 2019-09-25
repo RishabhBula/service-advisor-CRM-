@@ -38,7 +38,8 @@ class CustomerList extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
+    window.addEventListener("scroll", this.windowScroll);
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status } = qs.parse(lSearch);
@@ -51,6 +52,24 @@ class CustomerList extends Component {
     });
   }
 
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`customer10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
@@ -400,9 +419,9 @@ class CustomerList extends Component {
               <th width={"130"}>
                 <i className={"fa fa-cab"} /> Vehicle
               </th>
-              <th width={"130"}>
+              {/* <th width={"130"}>
                 <i className={"fa fa-list-ol"} /> Orders
-              </th>
+              </th> */}
               <th width={"130"}>
                 <i className={"fa fa-exclamation-circle"} /> Status
               </th>
@@ -418,8 +437,9 @@ class CustomerList extends Component {
             {!isLoading ? (
               customers && customers.length ? (
                 customers.map((user, index) => {
+                  console.log("user",user);
                   return (
-                    <tr key={index}>
+                    <tr key={index} id={`customer${index}`}>
                       <td>
                         <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
@@ -437,8 +457,9 @@ class CustomerList extends Component {
                       <td>
                         <div
                           className={
-                            "font-weight-semibold text-capitalize pb-1"
+                            "font-weight-semibold text-capitalize pb-1 cursor_pointer text-primary"
                           }
+                          onClick={() => this.handleCustomerView(user._id)}
                         >
                           {user.firstName + " " + user.lastName || notExist}
                         </div>
@@ -500,9 +521,9 @@ class CustomerList extends Component {
                           Click to add vehicle
                         </UncontrolledTooltip>
                       </td>
-                      <td className={"pl-4"}>
+                      {/* <td className={"pl-4"}>
                         <span className={"qty-value"}>0</span>
-                      </td>
+                      </td> */}
                       <td>
                         {user.status ? (
                           <Badge
@@ -637,6 +658,17 @@ class CustomerList extends Component {
               )}
           </tbody>
         </Table>
+        {customers && customers.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalCustomers && !isLoading ? (
           <PaginationHelper
             totalRecords={totalCustomers}

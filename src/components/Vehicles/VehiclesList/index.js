@@ -40,6 +40,7 @@ class VehiclesList extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status } = qs.parse(lSearch);
@@ -54,9 +55,26 @@ class VehiclesList extends Component {
       search: search || "",
       filterApplied
     });
-    
-  }
 
+  }
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`vehicle10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
@@ -364,7 +382,7 @@ class VehiclesList extends Component {
               vehicleList && vehicleList.length ? (
                 vehicleList.map((vehicle, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} id={`vehicle${index}`}>
                       <td>
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
@@ -459,36 +477,47 @@ class VehiclesList extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Vehicle details found related to your search"
+                          }
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={
+                              "Currently there are no Vehicle details added."
+                            }
+                            onAddClick={this.props.onAddClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    {filterApplied ? (
-                      <NoDataFound
-                        message={
-                          "No Vehicle details found related to your search"
-                        }
-                        noResult
-                      />
-                    ) : (
-                      <NoDataFound
-                        showAddButton
-                        message={
-                          "Currently there are no Vehicle details added."
-                        }
-                        onAddClick={this.props.onAddClick}
-                      />
-                    )}
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
+        {vehicleList && vehicleList.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalVehicles && !isLoading ? (
           <PaginationHelper
             totalRecords={totalVehicles}

@@ -44,6 +44,7 @@ class UserList extends Component {
     };
   }
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status, type, invitaionStatus } = qs.parse(
@@ -59,6 +60,24 @@ class UserList extends Component {
       filterApplied: status || search || type || invitaionStatus || false
     });
   }
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`user10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -448,7 +467,7 @@ class UserList extends Component {
               users.length ? (
                 users.map((user, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} id={`user${index}`}>
                       <td>
                         <div className="checkbox-custom checkbox-default coloum-checkbox">
                           <Input
@@ -476,7 +495,10 @@ class UserList extends Component {
                       <td>
                         <div
                           className={
-                            "text-capitalize font-weight-semibold"
+                            "text-capitalize font-weight-semibold cursor_pointer text-primary"
+                          }
+                          onClick={() =>
+                            this.handleUserView(user._id)
                           }
                         >
                           {[user.firstName, user.lastName]
@@ -492,8 +514,8 @@ class UserList extends Component {
                               {user.email}
                             </a>
                           ) : (
-                            "-"
-                          )}{" "}
+                              "-"
+                            )}{" "}
                         </div>
                       </td>
                       <td>
@@ -503,8 +525,8 @@ class UserList extends Component {
                             {[user.rate.toFixed(2)]}
                           </span>
                         ) : (
-                          "-"
-                        )}
+                            "-"
+                          )}
                       </td>
                       <td className={"text-capitalize"}>
                         {"Technician"}
@@ -518,10 +540,10 @@ class UserList extends Component {
                             Accepted
                           </Badge>
                         ) : (
-                          <Badge color="warning">
-                            Pending
+                            <Badge color="warning">
+                              Pending
                           </Badge>
-                        )}
+                          )}
                       </td>
                       <td className={"text-center"}>
                         {user.status ? (
@@ -542,23 +564,23 @@ class UserList extends Component {
                             Active
                           </Badge>
                         ) : (
-                          <Badge
-                            className={"badge-button"}
-                            color="danger"
-                            onClick={() => {
-                              this.setState(
-                                {
-                                  selectedUsers: [user._id]
-                                },
-                                () => {
-                                  this.activateUsers();
-                                }
-                              );
-                            }}
-                          >
-                            Inactive
+                            <Badge
+                              className={"badge-button"}
+                              color="danger"
+                              onClick={() => {
+                                this.setState(
+                                  {
+                                    selectedUsers: [user._id]
+                                  },
+                                  () => {
+                                    this.activateUsers();
+                                  }
+                                );
+                              }}
+                            >
+                              Inactive
                           </Badge>
-                        )}
+                          )}
                       </td>
                       <td>
                         <div id={`create${index}`}>
@@ -675,6 +697,17 @@ class UserList extends Component {
               )}
           </tbody>
         </Table>
+        {users && users.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalUsers && !isLoading ? (
           <PaginationHelper
             totalRecords={totalUsers}

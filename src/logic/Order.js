@@ -33,6 +33,7 @@ import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
 import { reorderArray } from "../helpers/Array";
 
+let toastId = null;
 /**
  *
  */
@@ -49,7 +50,11 @@ const getOrderId = createLogic({
     );
     logger(result);
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(
         getOrderIdFailed({
           orderId: {},
@@ -306,7 +311,11 @@ const addOrderLogic = createLogic({
       }
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -351,13 +360,21 @@ const updateOrderDetailsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       done();
       return;
     } else {
       if (!action.payload.isPdfGenerated) {
         if (!action.payload.isChangedOrderStatus) {
-          toast.success(result.messages[0]);
+          if (!toast.isActive(toastId)) {
+            toastId = toast.success(
+               result.messages[0]
+            );
+         }
         }
         if (action.payload.status === true) {
           const data = {
@@ -482,7 +499,11 @@ const getOrderDetails = createLogic({
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       // dispatch(hideLoader());
       done();
       return;

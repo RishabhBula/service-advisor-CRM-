@@ -57,7 +57,7 @@ class PriceMatrixComponent extends Component {
                 {!isEditMatrix
                   ? "Add New Pricing Matrix"
                   : "Update Pricing Matrix"}
-                {isEditMatrix ? <LastUpdated updatedAt={updateDate} /> : null}
+                {isEditMatrix && updateDate ? <LastUpdated updatedAt={updateDate} /> : null}
               </ModalHeader>
               <ModalBody>
                 <Row>
@@ -74,10 +74,10 @@ class PriceMatrixComponent extends Component {
                             onChange={e => handleChange(0, e)}
                             maxLength={"40"}
                             placeholder={"Example Matrix A"}
-                            invalid={errors.matrixName && !matrixName}
+                            invalid={errors.matrixName && !(matrixName.trim())}
                           />
                           <FormFeedback>
-                            {errors && errors.matrixName && !matrixName
+                            {errors && errors.matrixName && !(matrixName.trim())
                               ? errors.matrixName
                               : null}
                           </FormFeedback>

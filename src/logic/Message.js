@@ -13,6 +13,7 @@ import {
   addNewActivity
 } from "../actions"
 
+let toastId = null ;
 
 const sentMessageLogic = createLogic({
   type: MessageAction.SEND_MESSAGE,
@@ -28,12 +29,20 @@ const sentMessageLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(sendMessageSuccess(result.data.data));
       // const data = {
       //   "_id": action.payload.orderId
@@ -68,12 +77,20 @@ const deleteNotesLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
      // dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(deleteNotesSuccess(result.data.data));
       // const data = {
       //   "_id": action.payload.orderId

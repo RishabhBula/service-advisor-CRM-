@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppConfig } from "../config/AppConfig";
 
+let toastId = null;
 let lastReq;
 const getInventoryPartsVendorLogic = createLogic({
   type: inventoryPartsActions.GET_VENDORS_LIST,
@@ -61,12 +62,20 @@ const addPartToInventoryLogic = createLogic({
     );
     logger(result);
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     }
-    toast.success(result.messages[0]);
+    if (!toast.isActive(toastId)) {
+      toastId = toast.success(
+         result.messages[0]
+      );
+   }
     if (data.serviceModal) {
       logger(data.services, data.services[data.serviceIndex], "!###########221233")
       let servicePartData = data.services[data.serviceIndex].serviceItems
@@ -208,7 +217,11 @@ const deletePartFromInventoryLogic = createLogic({
       partsToDelete
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(getInventoryPartsListSuccess({ parts, totalParts }));
       done();
       return;
@@ -235,12 +248,20 @@ const updatePartToInventoryLogic = createLogic({
     );
     logger(result);
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     }
-    toast.success(result.messages[0]);
+    if (!toast.isActive(toastId)) {
+      toastId = toast.success(
+         result.messages[0]
+      );
+   }
     dispatch(
       modelOpenRequest({
         modelDetails: {

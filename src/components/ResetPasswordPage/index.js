@@ -48,11 +48,18 @@ class ResetPasswordPage extends Component {
       errors: {}
     });
     try {
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         this.state,
         ResetPasswordValidations,
         ResetPasswordValidationsMessaages
       );
+      if (this.state.password !== "" & !errors.password) {
+        let res = (this.state.password).match(/^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/);
+        if (!res) {
+          isValid = false;
+          errors.password = "Password must have alphanumeric characters with optional (special characters)."
+        }
+      }
       if (!isValid) {
         this.setState({
           errors
@@ -79,13 +86,15 @@ class ResetPasswordPage extends Component {
         <Row className="justify-content-center m-0">
           <Col md="12" lg="12" xl="12">
             <Col className="text-center">
-              <h4 className="logo-title">
-                <img
-                  src={ServiceAdvisorLogo}
-                  alt={"logo"}
-                  style={{ width: 120 }}
-                />
-              </h4>
+              <Link to="/home">
+                <h4 className="logo-title">
+                  <img
+                    src={ServiceAdvisorLogo}
+                    alt={"logo"}
+                    style={{ width: 120 }}
+                  />
+                </h4>
+              </Link>
             </Col>
             <CardGroup>
               <Card className="p-4 pl-4 pr-4">

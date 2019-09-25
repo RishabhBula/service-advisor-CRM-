@@ -3,7 +3,7 @@ import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helpers/ApiHelper";
 //import { logger } from "../helpers/Logger";
 import { PdfActions, updateOrderDetailsRequest } from "../actions";
-
+let toastId = null ;
 const genrateInvoiceLogic = createLogic({
   type: PdfActions.GENRATE_INVOICE,
   async process({ action }, dispatch, done) {
@@ -27,7 +27,11 @@ const genrateInvoiceLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       done();
       return;
     } else {

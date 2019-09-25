@@ -13,6 +13,7 @@ import {
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
+let toastId = null;
 
 const addPaymentLogic = createLogic({
   type: PaymentActions.ADD_PAYMENT_REQUEST,
@@ -32,7 +33,11 @@ const addPaymentLogic = createLogic({
     logger(result);
     dispatch(hideLoader());
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       done();
       return;
     } else {

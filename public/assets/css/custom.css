@@ -3134,3 +3134,22 @@ background:#6b45f4;
   width: 288px !important;
 }
 /*************END*******************/
+.btn-scroll-top{
+  position: fixed;
+  bottom: 15px;
+  right:15px;
+  display: none;
+}
+/******************** inValdi feild ********/
+.was-validated .form-control:invalid, .form-control.is-invalid{
+  background-image: none !important;
+}
+/*************/
+.listView-Delete{
+  border: none !important;
+  background: none !important;
+  text-align: right !important;
+}
+.listView {
+min-width: 45px !important;
+}

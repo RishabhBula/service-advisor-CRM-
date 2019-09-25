@@ -11,6 +11,7 @@ import {
    getLabelList,
 } from "./../actions";
 
+let toastId = null ;
 /* add new label */
 const addLabelLogic = createLogic({
    type: labelAction.ADD_LABEL,
@@ -27,13 +28,21 @@ const addLabelLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(getLabelList());
          dispatch(hideLoader());
          done();
          return;
       } else {
-         toast.success(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.success(
+               result.messages[0]
+            );
+         }
          dispatch(addLabelSuccess());
          dispatch(getLabelList());
          dispatch(hideLoader());
@@ -100,13 +109,21 @@ const deleteLabelLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(getLabelList());
          dispatch(hideLoader());
          done();
          return;
       } else {
-         toast.success(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.success(
+               result.messages[0]
+            );
+         }
          dispatch(getLabelList());
          dispatch(hideLoader());
          done();

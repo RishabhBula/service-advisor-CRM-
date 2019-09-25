@@ -16,6 +16,8 @@ import {
 } from "../actions";
 import { logger } from "../helpers/Logger";
 
+let toastId = null ;
+
 const getVendorLogic = createLogic({
   type: vendorActions.GET_VENDOR_LIST,
   async process({ action }, dispatch, done) {
@@ -75,12 +77,20 @@ const addVendorsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -110,12 +120,20 @@ const editVendorsLogic = createLogic({
     );
     if (result.isError) {
       logger(result, "result");
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -149,7 +167,11 @@ const deleteVendorLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;

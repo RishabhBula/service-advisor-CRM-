@@ -67,7 +67,7 @@ class WorkFlow extends Component {
       scrollToWidth: 0,
       scrollPos: 0,
       scrollToFixed: false,
-      warpWidth: 0
+      warpWidth: 0,
     };
   }
   /**
@@ -95,7 +95,7 @@ class WorkFlow extends Component {
       workflowTop = workflow.getBoundingClientRect().top;
       this.dragElement(ele, workflow);
     }
-    window.addEventListener("scroll", (e)=>this.handleScroll(workflowTop));
+    window.addEventListener("scroll", (e) => this.handleScroll(workflowTop));
     new ResizeObserver(this.handleResize).observe(workflow);
   }
 
@@ -137,7 +137,7 @@ class WorkFlow extends Component {
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
     let workflow = document.getElementById("simplebar-content");
-    let  workflowTop;
+    let workflowTop;
     if (workflow && ele) {
       workflowTop = workflow.getBoundingClientRect().top;
     }
@@ -160,7 +160,7 @@ class WorkFlow extends Component {
   };
 
   handleResize = element => {
-    const {warpWidth } = this.state;
+    const { warpWidth } = this.state;
     const elelWidth = element[0].contentRect.width;
     let workflowGridCard;
     const trackEle = document.getElementById("simplebar-scroll-track");
@@ -264,7 +264,11 @@ class WorkFlow extends Component {
     const { name, value } = e.target;
     this.setState(
       {
-        [name]: value
+        [name]: value,
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
       },
       () => this.props.getOrders({ filter: value })
     );
@@ -446,11 +450,21 @@ class WorkFlow extends Component {
   addOrderStatus = e => {
     e.preventDefault();
     const { orderStatusName } = this.state;
-    const { isValid, errors } = Validator(
+    const { orderReducer } = this.props;
+    const { orderStatus } = orderReducer;
+    let { isValid, errors } = Validator(
       { orderStatusName },
       AddOrderStatusValidation,
       AddOrderStatusMessages
     );
+    if (orderStatusName) {
+      let data = orderStatus.filter(item => item.name === orderStatusName.toUpperCase());
+      let data1 = orderStatus.filter(item => item.name === orderStatusName);
+      if (data.length || data1.length) {
+        errors.orderStatusName = "This order status name already exist.";
+        isValid = false
+      }
+    }
     logger(isValid, errors);
     if (!isValid) {
       this.setState({
@@ -478,15 +492,15 @@ class WorkFlow extends Component {
       },
       footerButtons: [
         {
-          text: "Close",
-          onClick: this.toggleAddNewOrderStatus,
-          type: "button"
-        },
-        {
           color: "primary",
           text: "Add",
           onClick: this.addOrderStatus,
           type: "submit"
+        },
+        {
+          text: "Close",
+          onClick: this.toggleAddNewOrderStatus,
+          type: "button"
         }
       ]
     };
@@ -516,7 +530,7 @@ class WorkFlow extends Component {
                     onChange={this.handleInputChange}
                     value={orderStatusName}
                     name="orderStatusName"
-                    invalid={errors.orderStatusName}
+                    invalid={errors.orderStatusName ? true : false}
                   />
                   <FormFeedback>
                     {errors.orderStatusName ? errors.orderStatusName : null}
@@ -571,7 +585,7 @@ class WorkFlow extends Component {
       modelInfoReducer,
       getAppointments,
       addAppointment,
-      appointmentReducer
+      appointmentReducer,
     } = this.props;
     const { orderData, orderStatus } = orderReducer;
     const { listView, selectedFilter, trackWidth, scrollPos } = this.state;
@@ -673,28 +687,28 @@ class WorkFlow extends Component {
                     appointmentReducer={appointmentReducer}
                   />
                 ) : (
-                  <div
-                    style={{ overflowX: "auto" }}
-                    className={"simplebar-content "}
-                    id={"simplebar-content"}
-                    onScroll={e => this.myFunction(e)}
-                  >
-                    <WorkflowGridView
-                      orderData={orderData}
-                      orderStatus={orderStatus}
-                      orderStatus1={this.orderStatus}
-                      updateOrderStatus={updateOrderStatus}
-                      deleteOrderStatus={this.deleteOrderStatus}
-                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                      deleteOrder={this.deleteOrder}
-                      redirectTo={redirectTo}
-                      modelInfoReducer={modelInfoReducer}
-                      addAppointment={addAppointment}
-                      getAppointments={getAppointments}
-                      appointmentReducer={appointmentReducer}
-                    />
-                  </div>
-                )}
+                    <div
+                      style={{ overflowX: "auto" }}
+                      className={"simplebar-content "}
+                      id={"simplebar-content"}
+                      onScroll={e => this.myFunction(e)}
+                    >
+                      <WorkflowGridView
+                        orderData={orderData}
+                        orderStatus={orderStatus}
+                        orderStatus1={this.orderStatus}
+                        updateOrderStatus={updateOrderStatus}
+                        deleteOrderStatus={this.deleteOrderStatus}
+                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                        deleteOrder={this.deleteOrder}
+                        redirectTo={redirectTo}
+                        modelInfoReducer={modelInfoReducer}
+                        addAppointment={addAppointment}
+                        getAppointments={getAppointments}
+                        appointmentReducer={appointmentReducer}
+                      />
+                    </div>
+                  )}
                 {!listView && trackWidth > 0 ? (
                   <div
                     className={"simplebar-scroll-track"}

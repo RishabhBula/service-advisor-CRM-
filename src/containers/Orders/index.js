@@ -536,7 +536,7 @@ class Order extends Component {
                             >
                               <i className="icon-printer icons " />
                               &nbsp;{" "}
-                              {orderReducer.isPdfLoading ? "Printing" : "Print"}
+                              {orderReducer.isPdfLoading ? "Printing..." : "Print"}
                             </span>
                             <UncontrolledTooltip target={"add-Appointment"}>
                               Click to Print Invoice
