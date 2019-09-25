@@ -45,6 +45,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import * as classNames from "classnames";
 import WorkflowListView from "../../components/Workflow/ListView";
 import { ConfirmBox } from "../../helpers/SweetAlert";
+import ResizeObserver from "react-resize-observer";
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -96,7 +97,7 @@ class WorkFlow extends Component {
       this.dragElement(ele, workflow);
     }
     window.addEventListener("scroll", (e)=>this.handleScroll(workflowTop));
-    new ResizeObserver(this.handleResize).observe(workflow);
+    //new ResizeObserver(this.handleResize).observe(workflow);
   }
 
   componentDidUpdate = ({ orderReducer }) => {
@@ -159,9 +160,10 @@ class WorkFlow extends Component {
     }
   };
 
-  handleResize = element => {
+  handleResize = (width) => {
+    console.log(width, "width");
     const {warpWidth } = this.state;
-    const elelWidth = element[0].contentRect.width;
+    const elelWidth = width;
     let workflowGridCard;
     const trackEle = document.getElementById("simplebar-scroll-track");
     const workflowGridCardEle = document.querySelector(
@@ -174,7 +176,8 @@ class WorkFlow extends Component {
     const widthToCheck = workflowGridCard - workFlowWidth;
     const widthToApply = workFlowWidth - widthToCheck;
     if (trackEle) {
-      if (warpWidth !== workFlowWidth) {
+      console.log(warpWidth, workFlowWidth, "workFlowWidth ");
+      if (Math.round(warpWidth) !== workFlowWidth) {
         trackEle.style.width = elelWidth + "px";
         trackEle.style.left = 200 + "px";
         this.setState({
@@ -349,6 +352,7 @@ class WorkFlow extends Component {
     }
     logger(data);
   };
+
   toggleAddNewOptions = () => {
     this.setState({
       showAddNewOptions: !this.state.showAddNewOptions
@@ -679,6 +683,9 @@ class WorkFlow extends Component {
                     id={"simplebar-content"}
                     onScroll={e => this.myFunction(e)}
                   >
+                    <ResizeObserver
+                      onResize={rect => this.handleResize(rect.width,rect.height)}
+                    />
                     <WorkflowGridView
                       orderData={orderData}
                       orderStatus={orderStatus}

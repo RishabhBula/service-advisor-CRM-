@@ -486,9 +486,8 @@ class Inspection extends Component {
           ? orderReducer.orderItems.inspectionURL
           : "";
     }
-    logger(filename, "filename");
     let pdfWindow = window.open("");
-    pdfWindow.document.body.style.margin = "0px";
+    // pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
       "<html><title>Inspection</title><body style='margin:0px;'><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
       filename +
@@ -990,7 +989,7 @@ class Inspection extends Component {
                             >
                               {" "}
                               {/* <i className={"fa fa-trash"} /> */}
-                              &nbsp; Remove
+                              Remove
                             </Button>
                             <UncontrolledTooltip target={`delete-${inspIndex}`}>
                               Delete this Inspection

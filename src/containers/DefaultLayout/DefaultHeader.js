@@ -309,6 +309,9 @@ class DefaultHeader extends Component {
                   >
                     <i className={"fa fa-user"} /> My Profile
                   </NavLink>
+                  <NavLink to="/home" className="nav-link">
+                    <i className={"fas fa-home"} /> Home
+                  </NavLink>
                   <NavLink
                     to="#"
                     className="nav-link logout-link"

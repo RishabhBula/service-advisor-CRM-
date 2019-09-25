@@ -129,7 +129,12 @@ class HomePageComponent extends Component {
                               <div className="banner-left-content">
                                  <h1>The Smart & Simple way to Run Your Auto Shop.</h1>
                                  <p>With the easy to use and customizable CRM for your marketing, sales, and customer service teams.</p>
-                                 <Link to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-primary">Start Free Trial</Link>
+                                 <Link 
+                                 to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/ 
+                                 className="btn btn-trail"
+                                 >
+                                 Start Free Trial
+                                 </Link>
                               </div>
                            </div>
                         </div>
@@ -332,7 +337,7 @@ class HomePageComponent extends Component {
                               <p className={"mb-0"}>No Contracts. No hidden fees. Get started in minutes. </p>
                            </div>
                            <div className="get-started-right">
-                              <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-primary">Start Free Trial
+                              <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-theme">Start Free Trial
                               </Link>
                            </div>
                         </div>

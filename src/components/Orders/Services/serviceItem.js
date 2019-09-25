@@ -684,7 +684,7 @@ class ServiceItem extends Component {
     return (
       <>
         <div className={"w-100"}>
-          <Row className={"comment-section ml-0 mb-4 mt-3"}>
+          <Row className={"comment-section ml-0 mb-3 mt-2"}>
             <Col md={"6"} className={"d-flex pl-0 column"}>
               <span className={"icon"}>
                 <img src={recommandUser} alt={"recommandUser"} />
@@ -702,7 +702,7 @@ class ServiceItem extends Component {
               </FormGroup>
             </Col>
           </Row>
-          <div className={"pb-2"}>
+          <div className={"pb-3"}>
             {
               services && services.length ?
                 <Button color={""} onClick={() => this.handleCannedServiceModal()} className={"browse-btn"}>
@@ -1149,16 +1149,28 @@ class ServiceItem extends Component {
                                                 {label.isAddLabel ? (
                                                   <div>
                                                     <span
-                                                      className={"close-icon"}
-                                                      onClick={() =>
-                                                        this.handleRemoveLabel(
-                                                          index,
-                                                          sIndex,
-                                                          lIndex
-                                                        )
+                                                      key={lIndex}
+                                                      style={{
+                                                        background: label.color
+                                                      }}
+                                                      className={
+                                                        "status-label-btn"
                                                       }
                                                     >
-                                                      <i className="fas fa-times" />
+                                                      {label.name}
+
+                                                      <span
+                                                        className={"close-icon"}
+                                                        onClick={() =>
+                                                          this.handleRemoveLabel(
+                                                            index,
+                                                            sIndex,
+                                                            lIndex
+                                                          )
+                                                        }
+                                                      >
+                                                        <i className="fas fa-times" />
+                                                      </span>
                                                     </span>
                                                   </div>
                                                 ) : null}
@@ -1324,7 +1336,7 @@ class ServiceItem extends Component {
                                     </td>
                                     <td>
                                       <Button
-                                        size={"sm"}
+                                        size={""}
                                         id={`Delete${index}${sIndex}`}
                                         onClick={() => {
                                           this.handleRemoveServiceItems(
@@ -1333,8 +1345,9 @@ class ServiceItem extends Component {
                                           );
                                         }}
                                         className={"btn-theme-transparent"}
+                                        color={""}
                                       >
-                                        <i className={"icons cui-trash"} />
+                                        <i className={"fas fa-close"} />
                                       </Button>
                                       <UncontrolledTooltip
                                         target={`Delete${index}${sIndex}`}

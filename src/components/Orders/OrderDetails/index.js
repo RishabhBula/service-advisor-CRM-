@@ -374,7 +374,7 @@ class OrderDetails extends Component {
           </div>
           <div
             className={
-              "d-flex justify-content-between align-items-center pb-3 pl-2"
+              "d-flex justify-content-between align-items -center pb-3 pl-2"
             }
           >
             <span className={"name-label"}>PO Number</span>

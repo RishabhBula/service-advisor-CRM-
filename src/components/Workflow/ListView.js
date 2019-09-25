@@ -176,7 +176,7 @@ class WorkflowListView extends React.Component {
           >
             <div className={"order-id"}>
               <span className={"pr-2"}>
-                <strong>{order.isInvoice ? "Invoice" : "Estimate"}</strong>
+                {order.isInvoice ? "Invoice" : "Estimate"}
               </span>
               #{order.orderId || "---"}
             </div>
@@ -222,7 +222,13 @@ class WorkflowListView extends React.Component {
             options={groupedOptions}
             className="w-100 form-select simple-select"
             onChange={e =>
-              this.handleType(e, order.workflowStatus, order._id, index, groupedOptions)
+              this.handleType(
+                e,
+                order.workflowStatus,
+                order._id,
+                index,
+                groupedOptions
+              )
             }
             classNamePrefix={"form-select-theme"}
           />
@@ -246,8 +252,10 @@ class WorkflowListView extends React.Component {
             {order.status ? "Authorised" : "Not Authorised"}
           </span>
         </td>
-        <td width={80}>{this.getAppointmentDetails(order._id, order)}</td>
-        <td className={"delete-icon"}>
+        <td width={80} className={"text-center"}>
+          {this.getAppointmentDetails(order._id, order)}
+        </td>
+        <td className={"delete-icon text-center"}>
           <i
             className={"fa fa-trash"}
             onClick={() =>
@@ -318,8 +326,8 @@ class WorkflowListView extends React.Component {
                 <th>Order Total</th>
                 <th>Status</th>
                 <th width={""}>Invoice</th>
-                <th>&nbsp;</th>
-                <th>Action</th>
+                <th>Appointments</th>
+                <th className={"text-center"}>Action</th>
               </tr>
             </thead>
             <tbody>
