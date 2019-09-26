@@ -170,7 +170,7 @@ class DefaultHeader extends Component {
             {permissions.isAllowedCalendar ? (
               <NavItem className="">
                 <NavLink to="/calender" className="nav-link px-3">
-                  <i className={"fas fa-calendar"} /> Appointments
+                  <i className={"fas fa-calendar"} /> Calendar
                 </NavLink>
               </NavItem>
             ) : null}
@@ -308,6 +308,9 @@ class DefaultHeader extends Component {
                     onClick={this.toggle}
                   >
                     <i className={"fa fa-user"} /> My Profile
+                  </NavLink>
+                  <NavLink to="/home" className="nav-link">
+                    <i className={"fas fa-home"} /> Home
                   </NavLink>
                   <NavLink
                     to="#"

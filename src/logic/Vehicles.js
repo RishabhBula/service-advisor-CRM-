@@ -1,4 +1,4 @@
-import { push } from "react-router-redux";
+// import { push } from "react-router-redux";
 import { createLogic } from "redux-logic";
 import { toast } from "react-toastify";
 import { ApiHelper } from "../helpers/ApiHelper";
@@ -8,7 +8,7 @@ import {
   hideLoader,
   vehicleActions,
   vehicleAddSuccess,
-  vehicleAddFailed,
+  // vehicleAddFailed,
   modelOpenRequest,
   vehicleGetStarted,
   vehicleGetSuccess,
@@ -24,6 +24,8 @@ import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
 import { AppConfig } from "../config/AppConfig";
+
+let toastId = null ;
 
 const vehicleAddLogic = createLogic({
   type: vehicleActions.VEHICLES_ADD_REQUEST,
@@ -52,18 +54,28 @@ const vehicleAddLogic = createLogic({
       action.payload
     );
     if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || result.messages
+        );
+      }
       dispatch(
-        vehicleAddFailed({
-          vehicleAddInfo: [],
+        vehicleAddSuccess({
+          vehicleAddInfo: {},
           isLoading: false
         })
       );
-      localStorage.removeItem("token");
-      dispatch(push("/login"));
+      dispatch(hideLoader());
+      // localStorage.removeItem("token");
+      // dispatch(push("/login"));
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       if (action.payload.workFlowVehicle) {
         dispatch(
           vehicleAddSuccess({
@@ -179,12 +191,20 @@ const editCustomerLogic = createLogic({
       data
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(vehicleEditSuccess());
       dispatch(
         vehicleGetRequest({
@@ -213,7 +233,11 @@ const deleteVehicleLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -246,7 +270,11 @@ const updateVehicleStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;

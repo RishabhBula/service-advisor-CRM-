@@ -174,7 +174,7 @@ class OrderDetails extends Component {
     }
     return (
       <>
-        <span id={"dateId"} className={"cursor_pointer"}>
+        <span id={"dateId"} className={"cursor_pointer pr-1"}>
           {scheduleDate}
         </span>
         <UncontrolledPopover
@@ -374,7 +374,7 @@ class OrderDetails extends Component {
           </div>
           <div
             className={
-              "d-flex justify-content-between align-items-center pb-3 pl-2"
+              "d-flex justify-content-between align-items -center pb-3 pl-2"
             }
           >
             <span className={"name-label"}>PO Number</span>

@@ -48,6 +48,7 @@ class Parts extends Component {
     };
   }
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     const { limit } = this.state;
     let query = {
       limit
@@ -72,6 +73,25 @@ class Parts extends Component {
     this.props.getParts({ ...queryParams, ...query });
     this.props.getPriceMatrix();
   }
+
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`part10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   componentDidUpdate({ location }) {
     const { location: currentLocation } = this.props;
     const { search } = location;
@@ -374,7 +394,7 @@ class Parts extends Component {
             ) : parts && parts.length ? (
               parts.map((part, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={index} id={`part${index}`}>
                     <td>
                       {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}
                     </td>
@@ -547,6 +567,17 @@ class Parts extends Component {
             )}
           </tbody>
         </Table>
+        {parts && parts.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalParts && !isLoading ? (
           <PaginationHelper
             totalRecords={totalParts}

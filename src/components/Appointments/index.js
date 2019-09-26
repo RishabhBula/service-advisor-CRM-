@@ -17,8 +17,8 @@ export default class Appointments extends Component {
    */
   onDateClick = ({ date, ...props }) => {
     logger(props);
-    console.log("$$$$$$$$$$$$$$$$$",moment(date).diff(moment(), "days"));
-    
+    console.log("$$$$$$$$$$$$$$$$$", moment(date).diff(moment(), "days"));
+
     if (moment(date).diff(moment(), "days") >= 0) {
       this.props.addAppointment(null, date);
     }
@@ -63,7 +63,7 @@ export default class Appointments extends Component {
           center: "prev,next today",
           right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
         }}
-         defaultView={filter && filter !== {} && filter.search ? (filter.search !== "today" && filter.search !== "week" ? "dayGridMonth" : (filter.search === "today" ? "timeGridDay" : "timeGridWeek")) : "dayGridMonth"}
+        defaultView={filter && filter !== {} && filter.search ? (filter.search !== "today" && filter.search !== "week" ? "dayGridMonth" : (filter.search === "today" ? "timeGridDay" : "timeGridWeek")) : "dayGridMonth"}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         weekends={true}
         events={events}
@@ -74,7 +74,7 @@ export default class Appointments extends Component {
         eventLimit={4}
         showNonCurrentDates={false}
         fixedWeekCount={false}
-
+        
       />
     );
   }

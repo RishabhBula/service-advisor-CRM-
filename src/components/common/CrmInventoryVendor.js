@@ -170,14 +170,14 @@ export class CrmInventoryVendor extends Component {
     let validData
     if (contactPerson.email !== '') {
       validData = {
-        name: name,
-        accountNumber: accountNumber,
-        email: contactPerson.email
+        name: name.trim(),
+        accountNumber: accountNumber.trim(),
+        email: contactPerson.email.trim()
       }
     } else {
       validData = {
-        name: name,
-        accountNumber: accountNumber,
+        name: name.trim(),
+        accountNumber: accountNumber.trim(),
       }
     }
     if (url && !isValidURL(url)) {
@@ -237,7 +237,7 @@ export class CrmInventoryVendor extends Component {
       errors,
       urlError
     } = this.state;
-    console.log("errors", errors);
+
     const phoneOptions = PhoneOptions.map((item, index) => <option key={index} value={item.key}>{item.text}</option>);
     return (
       <>
@@ -249,7 +249,11 @@ export class CrmInventoryVendor extends Component {
         >
           <ModalHeader toggle={this.props.handleVendorAddModal}>
             {!isEditMode ? 'Create New Vendor' : `Update Vendor Details`}
-            {isEditMode ? <LastUpdated updatedAt={vendorData.updatedAt} /> : null}
+            {isEditMode ? <>
+              {vendorData && vendorData.updatedAt ?
+                <LastUpdated updatedAt={vendorData.updatedAt} />
+                : null}
+            </> : null}
           </ModalHeader>
           <ModalBody>
             <div className=''>
@@ -271,10 +275,10 @@ export class CrmInventoryVendor extends Component {
                         value={name}
                         maxLength='50'
                         id='name'
-                        invalid={errors.name && !name}
+                        invalid={errors.name && !(name.trim())}
                       />
                       <FormFeedback>
-                        {errors.name && !name ? errors.name : null}
+                        {errors.name && !(name.trim()) ? errors.name : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>
@@ -316,10 +320,10 @@ export class CrmInventoryVendor extends Component {
                         value={accountNumber}
                         maxLength='20'
                         id='accountNumber'
-                        invalid={errors.accountNumber && !accountNumber}
+                        invalid={errors.accountNumber && !(accountNumber.trim())}
                       />
                       <FormFeedback>
-                        {errors.accountNumber && !accountNumber ? errors.accountNumber : null}
+                        {errors.accountNumber && !(accountNumber.trim()) ? errors.accountNumber : null}
                       </FormFeedback>
                     </div>
                   </FormGroup>

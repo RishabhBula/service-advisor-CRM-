@@ -1,5 +1,10 @@
 import React from "react";
-import { Table, Nav, NavItem, NavLink, UncontrolledTooltip } from "reactstrap";
+import {
+  Table, Nav, NavItem, NavLink, UncontrolledTooltip, DropdownItem,
+  DropdownToggle,
+  DropdownMenu,
+  Dropdown,
+} from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
 import { AppRoutes } from "../../config/AppRoutes";
@@ -22,7 +27,8 @@ class WorkflowListView extends React.Component {
       orderUserData: {},
       orderAppointment: [],
       showAppointmentDetailModal: false,
-      appointmentDetail: ""
+      appointmentDetail: "",
+      openAction: []
     };
   }
 
@@ -130,7 +136,7 @@ class WorkflowListView extends React.Component {
     return orderDetails;
   };
 
-  handleType = (e, workflowStatus, orderId, index,groupedOptions ) => {
+  handleType = (e, workflowStatus, orderId, index, groupedOptions) => {
     const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
     this.props.updateOrderStatus({
       from: workflowStatus,
@@ -139,7 +145,7 @@ class WorkflowListView extends React.Component {
       destinationIndex: 0,
       sourceIndex: index,
       toStatusName: e.label,
-      fromStatusName:fromStatus[0].label
+      fromStatusName: fromStatus[0].label
     });
     if (e.label === "Invoices") {
       this.props.orderStatus1("invoiceStatus", true);
@@ -147,6 +153,17 @@ class WorkflowListView extends React.Component {
     else {
       this.props.orderStatus1("invoiceStatus", false)
     }
+  };
+  /**
+   * 
+   */
+  handleCustomerView = customerId => {
+
+    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
+  };
+  handleVehicleView = vehicleId => {
+    const vehicleDetailsUrl = "/vehicles/details/:id";
+    window.open(vehicleDetailsUrl.replace(":id", `${vehicleId}`));
   };
   /**
    *
@@ -176,7 +193,7 @@ class WorkflowListView extends React.Component {
           >
             <div className={"order-id"}>
               <span className={"pr-2"}>
-                <strong>{order.isInvoice ? "Invoice" : "Estimate"}</strong>
+                {order.isInvoice ? "Invoice" : "Estimate"}
               </span>
               #{order.orderId || "---"}
             </div>
@@ -186,7 +203,7 @@ class WorkflowListView extends React.Component {
         </td>
 
         <td width={220}>
-          <div className={"d-flex"}>
+          <div className={"d-flex"} >
             <img
               src={serviceUser}
               alt={"serviceUser"}
@@ -195,7 +212,12 @@ class WorkflowListView extends React.Component {
               className={"mr-1"}
             />
             {order && order.customerId
-              ? order.customerId.firstName + " " + order.customerId.lastName
+              ? <div className={
+                "cursor_pointer text-primary text-capitalize"
+              }
+                onClick={() => this.handleCustomerView(order.customerId._id)}>
+                {order.customerId.firstName + " " + order.customerId.lastName}
+              </div>
               : "No Customer"}
           </div>
         </td>
@@ -209,7 +231,12 @@ class WorkflowListView extends React.Component {
               className={"mr-1"}
             />
             {order && order.vehicleId
-              ? order.vehicleId.make + " " + order.vehicleId.modal
+              ? <div className={
+                "cursor_pointer text-primary text-capitalize"
+              }
+                onClick={() => this.handleVehicleView(order.vehicleId._id)}>
+                {order.vehicleId.make + " " + order.vehicleId.modal}
+              </div>
               : "No Vehicle"}
           </div>
         </td>
@@ -222,7 +249,13 @@ class WorkflowListView extends React.Component {
             options={groupedOptions}
             className="w-100 form-select simple-select"
             onChange={e =>
-              this.handleType(e, order.workflowStatus, order._id, index, groupedOptions)
+              this.handleType(
+                e,
+                order.workflowStatus,
+                order._id,
+                index,
+                groupedOptions
+              )
             }
             classNamePrefix={"form-select-theme"}
           />
@@ -246,8 +279,10 @@ class WorkflowListView extends React.Component {
             {order.status ? "Authorised" : "Not Authorised"}
           </span>
         </td>
-        <td width={80}>{this.getAppointmentDetails(order._id, order)}</td>
-        <td className={"delete-icon"}>
+        <td width={80} className={"text-center"}>
+          {this.getAppointmentDetails(order._id, order)}
+        </td>
+        <td className={"delete-icon text-center"}>
           <i
             className={"fa fa-trash"}
             onClick={() =>
@@ -264,6 +299,44 @@ class WorkflowListView extends React.Component {
           </UncontrolledTooltip>
         </td>
       </tr>
+    );
+  };
+  toggleOpenAction = ind => {
+    const { openAction } = this.state;
+    openAction.forEach(d => (d = false));
+    openAction[ind] = !openAction[ind];
+    this.setState({
+      openAction
+    });
+  };
+  /**
+   * 
+   */
+  renderActions = (status, ind) => {
+    return (
+      <Dropdown
+        direction="down"
+        isOpen={this.state.openAction[ind]}
+        toggle={() => {
+          this.toggleOpenAction(ind);
+        }}
+      >
+        <DropdownToggle nav className="listView-Delete listView">
+          <i className="fas fa-ellipsis-h icon" />
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem
+            onClick={() =>
+              this.props.deleteOrderStatus({
+                orderStatusId: status._id,
+                index: ind
+              })
+            }
+          >
+            Delete
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
     );
   };
   /**
@@ -301,7 +374,12 @@ class WorkflowListView extends React.Component {
                       });
                     }}
                   >
-                    {tab.name}
+                    <div className="d-flex align-items-center m-0 justify-content-between">
+                      <div>{tab.name}</div>
+                      <div>
+                        {this.renderActions(tab, index)}
+                      </div>
+                    </div>
                   </NavLink>
                 </NavItem>
               );
@@ -318,8 +396,8 @@ class WorkflowListView extends React.Component {
                 <th>Order Total</th>
                 <th>Status</th>
                 <th width={""}>Invoice</th>
-                <th>&nbsp;</th>
-                <th>Action</th>
+                <th>Appointments</th>
+                <th className={"text-center"}>Action</th>
               </tr>
             </thead>
             <tbody>

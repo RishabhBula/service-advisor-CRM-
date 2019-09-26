@@ -181,10 +181,12 @@ const listOrders = async (req, res) => {
     const getAllOrdersCount = await Orders.countDocuments({
       ...condition
     });
-    let orderStatus = await OrderStatus.find(orderStatusCondition, {
-      name: 1,
-      isInvoice: 1
-    }).sort({ orderIndex: "asc" });
+    let orderStatus = await OrderStatus.find(orderStatusCondition,
+      {
+        name: 1,
+        isInvoice: 1
+      }
+    ).sort({ orderIndex: "asc" });
     if (!orderStatus.length) {
       defaultOrderStatus.forEach(e => {
         e.parentId = orderStatusCondition.parentId;
@@ -257,12 +259,31 @@ const updateOrderWorkflowStatus = async (req, res) => {
  */
 const addOrderStatus = async (req, res) => {
   try {
-    const { body, currentUser } = req;
+    const { currentUser, body } = req;
     const { id, parentId } = currentUser;
     const { name } = body;
+    let orderInd = 0;
+    const orderStatusCondition = {
+      $or: [
+        {
+          isDeleted: false
+        },
+        {
+          isDeleted: {
+            $exists: false
+          }
+        }
+      ],
+      parentId: parentId ? parentId : id
+    };
+
+    let order = await OrderStatus.countDocuments(orderStatusCondition);
+    orderInd = order + 1;
+
     const orderStatus = new OrderStatus({
       name,
-      parentId: id || parentId
+      parentId: parentId ? parentId : id,
+      orderIndex: parseInt(orderInd)
     });
     const newOrderStatus = await orderStatus.save();
 

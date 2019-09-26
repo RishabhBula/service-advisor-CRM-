@@ -85,7 +85,7 @@ export class CrmUserModal extends Component {
         rate,
         permissions
       } = this.props.userData;
-      
+
       this.setState({
         isEditMode: true,
         firstName,
@@ -93,7 +93,7 @@ export class CrmUserModal extends Component {
         email,
         companyName,
         phone: phone || "",
-        roleType: this.props.userData.roleType ? this.props.userData.roleType : "5ca3473d70537232f13ff1fa",
+        roleType: this.props.userData.roleType ? this.props.userData.roleType._id || this.props.userData.roleType : "5ca3473d70537232f13ff1fa",
         rate: rate || "",
         permissions
       });
@@ -157,9 +157,9 @@ export class CrmUserModal extends Component {
       } = this.state;
       // const companyName = this.props.companyName
       const payload = {
-        firstName,
-        lastName,
-        email,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
         phone,
         roleType: "5ca3473d70537232f13ff1fa",
         companyName,
@@ -226,7 +226,11 @@ export class CrmUserModal extends Component {
           >
             <ModalHeader toggle={handleUserModal}>
               {!isEditMode ? `Add New ${AppRoutes.STAFF_MEMBERS.name}` : `Update ${AppRoutes.STAFF_MEMBERS.name} details`}
-              {isEditMode ? <LastUpdated updatedAt={userData.updatedAt} /> : null}
+              {isEditMode ? <>
+                {userData && userData.updatedAt ?
+                  <LastUpdated updatedAt={userData.updatedAt} />
+                  : null}
+              </> : null}
             </ModalHeader>
             <ModalBody>
               <Row className="justify-content-center">

@@ -25,17 +25,17 @@ class HomeFooter extends Component {
   componentDidMount = () => {
     window.addEventListener("scroll", this.windowScroll);
   };
-  windowScroll =()=>{
-   let featureDiv = document.getElementById("our-features");
-   if(featureDiv){
+  windowScroll = () => {
+    let featureDiv = document.getElementById("our-features");
+    if (featureDiv) {
       let scrollY = featureDiv.getBoundingClientRect().top;
       let scrollEle = document.getElementById("btn-scroll-top");
       if (scrollY <= window.scrollY) {
-      scrollEle.style.display = "block";
+        scrollEle.style.display = "block";
       } else {
-      scrollEle.style.display = "none";
+        scrollEle.style.display = "none";
       }
-   }
+    }
   }
   scrollToTop = () => {
     window.scroll({

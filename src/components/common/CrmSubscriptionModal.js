@@ -85,7 +85,6 @@ export class CrmSubscriptionModel extends Component {
              isProfile,
              currentPlanId,
              renewSuscription,
-             isPlanExpiered,
              isInTrialPeriod,
              isuserLogin
            } = this.props;
@@ -223,7 +222,7 @@ export class CrmSubscriptionModel extends Component {
                      : null}
                  </div>
                </Row>
-               {isPlanExpiered && isuserLogin ? (
+               {/* {isPlanExpiered && isuserLogin ? (
                  <div className={"font-weight-bold text-center pt-3"}>
                    Click here to{" "}
                    <span
@@ -235,7 +234,7 @@ export class CrmSubscriptionModel extends Component {
                      <i className="icons icon-logout mr-2" /> Logout
                    </span>
                  </div>
-               ) : null}
+               ) : null} */}
                {/* <br />
           </ModalBody> */}
 

@@ -44,6 +44,7 @@ class FleetList extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort, status, type } = qs.parse(lSearch);
@@ -60,7 +61,24 @@ class FleetList extends Component {
       filterApplied
     });
   }
-
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`data10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   componentDidUpdate({ openEdit }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
@@ -421,7 +439,7 @@ class FleetList extends Component {
                 fleetData.data.map((data, index) => {
                   return (
                     <React.Fragment key={index}>
-                      <tr key={index}>
+                      <tr key={index} id={`data${index}`}>
                         <td>
                           <div className="checkbox-custom checkbox-default coloum-checkbox">
                             <Input
@@ -619,6 +637,17 @@ class FleetList extends Component {
               )}
           </tbody>
         </Table>
+        {fleetData && fleetData.data && fleetData.data.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {fleetData.totalfleet && !isLoading ? (
           <PaginationHelper
             totalRecords={fleetData.totalfleet}

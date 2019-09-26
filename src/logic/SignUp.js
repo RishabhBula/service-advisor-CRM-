@@ -8,7 +8,7 @@ import {
   redirectTo
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
-
+let toastId = null;
 const signUpLogic = createLogic({
   type: signUpActions.SIGNUP_REQUEST,
   cancelType: signUpActions.SIGNUP_FAILED,
@@ -25,7 +25,11 @@ const signUpLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -52,7 +56,11 @@ const verifyAccountLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       dispatch(
         redirectTo({
@@ -62,7 +70,11 @@ const verifyAccountLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/login" }));
       done();
@@ -112,7 +124,11 @@ const generatePasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       dispatch(
         redirectTo({
@@ -122,7 +138,11 @@ const generatePasswordLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/login" }));
       done();
@@ -143,12 +163,20 @@ const resendConfiramtionLinkLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
     }

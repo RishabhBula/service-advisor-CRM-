@@ -633,7 +633,7 @@ export class CustomerInfo extends Component {
             : null}
         </Row> */}
         <div className={"text-center"}>
-          <Button onClick={this.toggleEditModal} color={""} className={"btn-theme"}>Update Customer Details</Button>
+          <Button onClick={this.toggleEditModal} color={""} className={"btn-theme"}>Edit Customer Details</Button>
         </div>
         {
           customerDetails && Object.entries(customerDetails) ?

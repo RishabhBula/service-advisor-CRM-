@@ -149,6 +149,7 @@ class GenralSettings extends Component {
             : []
         }
       });
+     
     }
   };
 
@@ -165,7 +166,6 @@ class GenralSettings extends Component {
   };
 
   handleonInputChange = e => {
-    // console.log(e.value, "event");
     if (e && e.value) {
       this.setState({
         timeZone: e
@@ -285,7 +285,7 @@ class GenralSettings extends Component {
         hasErrors = true;
       }
 
-      if (Object.keys(phone).length < 13) {
+      if (phone && Object.keys(phone).length < 13) {
         this.setState({
           phoneError: true
         });
@@ -326,7 +326,7 @@ class GenralSettings extends Component {
         servicesOffer: servicesOfferTemp,
         peopleWork: selected
       };
-      console.log(payload, "payload");
+    
     
       const { isValid, errors } = Validator(
         payload,
@@ -369,6 +369,7 @@ class GenralSettings extends Component {
     timeZoneOptions[0].timezones.map((item, index) => {
       return options.push({ value: item, label: item });
     });
+
 
     return (
       <div>

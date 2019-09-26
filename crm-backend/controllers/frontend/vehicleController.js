@@ -24,6 +24,20 @@ const addNewVehicle = async (req, res) => {
       parentId: body.parentId,
       userId: body.userId
     };
+    const data = await vehicleModal.find({ isDeleted: false, licensePlate: body.licensePlate });
+    if (data.length) {
+      return res.status(400).json({
+        message: "License Plate number already exit.",
+      })
+    }
+    if(body.vin){
+      const result = await vehicleModal.find({ isDeleted: false, vin: body.vin });
+      if(result.length){
+        return res.status(400).json({
+          message: "Vin number already exit.",
+        })
+      }
+    }
     const addVehicleData = new vehicleModal(vehicleData);
     const vehicles = await addVehicleData.save();
     if (body.customerId) {
@@ -193,6 +207,20 @@ const updateVehicleDetails = async (req, res) => {
         success: false
       });
     } else {
+      const data = await vehicleModal.find({ _id:{$ne:body.data.vehicleId},isDeleted: false, licensePlate: body.data.licensePlate });
+      if (data.length) {
+        return res.status(400).json({
+          message: "License Plate number already exit.",
+        })
+      }
+      if(body.data.vin && body.data.vin !== ""){
+        const result = await vehicleModal.find({ _id:{$ne:body.data.vehicleId},isDeleted: false, vin: body.data.vin });
+        if(result.length){
+          return res.status(400).json({
+            message: "Vin number already exit.",
+          })
+        }
+      }
       const today = new Date();
       const updateVehicleDetails = await vehicleModal.findByIdAndUpdate(
         body.data.vehicleId,

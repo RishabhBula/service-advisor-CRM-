@@ -11,7 +11,7 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 
-import { logger } from "../../helpers/Logger";
+// import { logger } from "../../helpers/Logger";
 import Loader from "../../containers/Loader/Loader";
 import { AppRoutes } from "../../config/AppRoutes";
 import serviceUser from "../../assets/service-user.png";
@@ -126,7 +126,6 @@ class WorkflowGridView extends React.Component {
   };
 
   onDragEnd = result => {
-    logger(result);
     const { destination, source, draggableId: orderId } = result;
 
     if (!destination) {
@@ -140,7 +139,6 @@ class WorkflowGridView extends React.Component {
       return;
     }
     if (result.type === "droppableItem") {
-      logger(source.droppableId, destination.droppableId);
       this.props.updateOrderOfOrderStatus({
         from: {
           index: parseInt(source.index),
@@ -169,10 +167,10 @@ class WorkflowGridView extends React.Component {
       fromStatusName: fromStatus[0].name
     });
     if (toStatus[0].name === "Invoices") {
-      this.props.orderStatus1("invoiceStatus", true);
+      this.props.orderStatus1("invoiceStatus", true,orderId);
     }
     else {
-      this.props.orderStatus1("invoiceStatus", false)
+      this.props.orderStatus1("invoiceStatus", false,orderId)
     }
   };
   /**
@@ -406,7 +404,9 @@ class WorkflowGridView extends React.Component {
 
     return (
       <>
-        <DragDropContext onDragEnd={this.onDragEnd}>
+        <DragDropContext
+          onDragEnd={this.onDragEnd}
+        >
           <Droppable
             droppableId={`dropableId`}
             type="droppableItem"
@@ -421,6 +421,7 @@ class WorkflowGridView extends React.Component {
                 }}
                 className={"workflow-grid-card-warp"}
               >
+              
                 {orderStatus.map((status, index) => (
                   <React.Fragment key={status._id}>
                     <Draggable draggableId={status._id} index={index}>

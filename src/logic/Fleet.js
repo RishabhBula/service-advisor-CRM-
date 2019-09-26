@@ -22,6 +22,8 @@ import { logger } from "../helpers/Logger";
 import { AppConfig } from "../config/AppConfig";
 import { DefaultErrorMessage } from "../config/Constants";
 
+let toastId = null ;
+
 const fleetAddLogic = createLogic({
   type: fleetAddActions.FLEET_ADD_REQUEST,
   cancelType: fleetAddActions.FLEET_ADD_FAILED,
@@ -42,12 +44,20 @@ const fleetAddLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(fleetAddSuccess());
       dispatch(
@@ -82,12 +92,20 @@ const fleetListLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       //dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(
         fleetListSuccess({
           fleetData: result.data,
@@ -115,12 +133,20 @@ const editFleetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(
         fleetEditSuccess({
@@ -150,7 +176,11 @@ const deleteFleetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -183,7 +213,11 @@ const updateFleetStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -224,12 +258,20 @@ const customerFleetListLogic = createLogic({
     );
 
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
 
       dispatch(
         getCustomerfleetListStarted({

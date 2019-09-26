@@ -21,9 +21,9 @@ import {
   ForgetPasswordValidations,
   ForgetPasswordValidationsMessaages
 } from "../../validations";
-// import ServiceAdvisorLogo from "../../assets/logo-white.svg";
-import HomeHeader from "../HomePage/homeHeader";
-import HomeFooter from "../HomePage/homeFooter";
+import ServiceAdvisorLogo from "../../assets/logo-white.svg";
+// import HomeHeader from "../HomePage/homeHeader";
+// import HomeFooter from "../HomePage/homeFooter";
 class ForgotpasswordPage extends Component {
   constructor(props) {
     super(props);
@@ -65,16 +65,17 @@ class ForgotpasswordPage extends Component {
           <div className="auth-bg" />
           <Row className="justify-content-center">
             <Col md="12" lg="12" xl="12">
-              {/* <Col className="text-center">
-              <h4 className="logo-title">
-                <img
-                  src={ServiceAdvisorLogo}
-                  alt={"logo"}
-                  style={{ width: 120 }}
-                />
-              </h4>
-            </Col> */}
-              <HomeHeader />
+              <Col className="text-center">
+                <Link to="/home">
+                  <h4 className="logo-title">
+                    <img
+                      src={ServiceAdvisorLogo}
+                      alt={"logo"}
+                      style={{ width: 120 }}
+                    />
+                  </h4>
+                </Link>
+              </Col>
               <CardGroup>
                 <Card className="p-4">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
@@ -144,7 +145,7 @@ class ForgotpasswordPage extends Component {
             </Col>
           </Row>
         </div>
-        <HomeFooter />
+
       </>
     );
   }

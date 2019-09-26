@@ -48,6 +48,7 @@ class Labours extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     this.props.getStdList();
     const query = qs.parse(this.props.location.search);
     const { location } = this.props;
@@ -70,7 +71,24 @@ class Labours extends Component {
       });
     }
   }
-
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`data10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   componentDidUpdate({ labourReducer, location }) {
     if (
       this.props.labourReducer.labourData.isSuccess !==
@@ -327,7 +345,7 @@ class Labours extends Component {
               labourData && labourData.data && labourData.data.length ? (
                 labourData.data.map((data, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} id={`data${index}`}>
                       <td>
                         <label htmlFor={data._id}>
                           {(page - 1) * AppConfig.ITEMS_PER_PAGE +
@@ -401,7 +419,7 @@ class Labours extends Component {
                               &nbsp;
                               {data.rate && data.rate.hourlyRate ? (
                                 <span className={"dollar-price"}>
-                                  <i class="fa fa-dollar dollar-icon" />
+                                  <i className="fa fa-dollar dollar-icon" />
                                   {data.rate.hourlyRate}
                                 </span>
                               ) : (
@@ -429,7 +447,7 @@ class Labours extends Component {
                               data.discount.type === "$" ?
                               <>
                                 <span>Flat</span>&nbsp;
-                                <i class="fa fa-dollar dollar-icon" />
+                                <i className="fa fa-dollar dollar-icon" />
                                 {data.discount.value || notExist}
                               </>
                               : notExist
@@ -505,7 +523,17 @@ class Labours extends Component {
               )}
           </tbody>
         </Table>
-
+        {labourData && labourData.data && labourData.data.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {labourData.totalLabour && !isLoading ? (
           <PaginationHelper
             totalRecords={labourData.totalLabour}

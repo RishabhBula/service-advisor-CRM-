@@ -15,6 +15,7 @@ import {
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 
+let toastId = null ;
 const rateAddLogic = createLogic({
   type: rateStandardListActions.RATE_ADD_REQUEST,
   async process({ action }, dispatch, done) {
@@ -34,12 +35,20 @@ const rateAddLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(modelOpenRequest({ modelDetails: { rateAddModalOpen: false } }));
       logger(result.data.data)

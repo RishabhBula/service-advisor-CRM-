@@ -297,7 +297,11 @@ export class CrmEditCustomerModal extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
   stdModelFun = () => {
@@ -413,11 +417,11 @@ export class CrmEditCustomerModal extends Component {
     let validationdata;
     if (!email) {
       validationdata = {
-        firstName: firstName
+        firstName: firstName.trim()
       };
     } else {
       validationdata = {
-        firstName: firstName,
+        firstName: firstName.trim(),
         email: email
       };
     }
@@ -476,7 +480,7 @@ export class CrmEditCustomerModal extends Component {
       if (
         !isValid ||
         Object.keys(this.state.phoneErrors).length > 0 ||
-        customerData.firstName === "" || this.state.percentageError
+        customerData.firstName.trim() === "" || this.state.percentageError
       ) {
         this.setState({
           errors: errors,
@@ -627,10 +631,10 @@ export class CrmEditCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
-                        invalid={!firstName && errors.firstName}
+                        invalid={!(firstName.trim()) && errors.firstName ? true :false}
                       />
                       <FormFeedback>
-                        {!firstName && errors.firstName
+                        {!(firstName.trim()) && errors.firstName
                           ? errors.firstName
                           : null}
                       </FormFeedback>
