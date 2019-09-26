@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   Form,
   Row,
@@ -63,6 +63,9 @@ class SalesByCusomerAge extends Component {
       selectedFilter: ""
     });
     this.props.onReset();
+  };
+  handleCustomerView = customerId => {
+    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
   };
   /**
    *
@@ -192,17 +195,18 @@ class SalesByCusomerAge extends Component {
                         <td>
                           <div
                             className={
-                              "font-weight-semibold text-capitalize pb-1"
+                              "font-weight-semibold text-capitalize pb-1 cursor_pointer text-primary"
                             }
                             id={`type${index}`}
+                            onClick={() => this.handleCustomerView(customer.customerId._id)}
                           >
-                            <Link
+                            {/* <Link
                               to={AppRoutes.CUSTOMER_DETAILS.url.replace(
                                 ":id",
                                 customer.customerId._id
                               )}
                               className={"text-body font-weight-semibold"}
-                            >
+                            > */}
                               {" "}
                               {[
                                 customer.customerId.firstName,
@@ -210,7 +214,7 @@ class SalesByCusomerAge extends Component {
                               ]
                                 .join(" ")
                                 .trim()}
-                            </Link>
+                            {/* </Link> */}
                           </div>
                           {customer.customerId.email ? (
                             <>

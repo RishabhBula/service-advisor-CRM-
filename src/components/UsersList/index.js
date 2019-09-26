@@ -248,7 +248,11 @@ class UserList extends Component {
     });
   }
   handleUserView = userId => {
-    this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
+     this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
+  };
+  handleUserView1 = userId => {
+    // this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
+    window.open(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`),"_blank");
   };
   render() {
     const { userData, openEdit } = this.props;
@@ -498,7 +502,7 @@ class UserList extends Component {
                             "text-capitalize font-weight-semibold cursor_pointer text-primary"
                           }
                           onClick={() =>
-                            this.handleUserView(user._id)
+                            this.handleUserView1(user._id)
                           }
                         >
                           {[user.firstName, user.lastName]
