@@ -122,14 +122,14 @@ export class CrmVehicleModal extends Component {
     };
 
     let validationData = {
-      year: this.state.year,
-      make: this.state.make,
-      modal: this.state.modal,
-      licensePlate: this.state.licensePlate,
+      year: this.state.year.trim(),
+      make: this.state.make.trim(),
+      modal: this.state.modal.trim(),
+      licensePlate: this.state.licensePlate.trim(),
     };
 
-    if (this.state.miles !== "") {
-      validationData.miles = this.state.miles;
+    if (this.state.miles.trim() !== "") {
+      validationData.miles = this.state.miles.trim();
     }
 
     const { isValid, errors } = Validator(
@@ -349,7 +349,7 @@ export class CrmVehicleModal extends Component {
                       invalid={errors.year}
                     />
                     <FormFeedback>
-                      {(!year && errors.year) ||
+                      {(!(year.trim()) && errors.year) ||
                       errors.hasOwnProperty("year")
                         ? errors.year
                         : null}
@@ -375,13 +375,13 @@ export class CrmVehicleModal extends Component {
                       name="make"
                       onChange={this._onInputChange}
                       maxLength="25"
-                      invalid={errors.make && !this.state.make}
+                      invalid={errors.make && !(this.state.make.trim())}
                     />
                     {/* {!make && errors.make ? (
                       <p className="text-danger">{errors.make}</p>
                     ) : null} */}
                     <FormFeedback>
-                      {errors.make && !this.state.make ? errors.make : null}
+                      {errors.make && !(this.state.make.trim()) ? errors.make : null}
                     </FormFeedback>
                   </div>
                 </FormGroup>
@@ -405,13 +405,13 @@ export class CrmVehicleModal extends Component {
                       name="modal"
                       onChange={this._onInputChange}
                       maxLength="25"
-                      invalid={errors.modal && !this.state.modal}
+                      invalid={errors.modal && !(this.state.modal.trim())}
                     />
                     {/* {!modal && errors.modal ? (
                       <p className="text-danger">{errors.modal}</p>
                     ) : null} */}
                     <FormFeedback>
-                      {errors.modal && !this.state.modal
+                      {errors.modal && !(this.state.modal.trim())
                         ? errors.modal
                         : null}
                     </FormFeedback>
@@ -461,7 +461,7 @@ export class CrmVehicleModal extends Component {
                       onChange={this._onInputChange}
                       maxLength={15}
                     />
-                    {!miles && errors.miles ? (
+                    {!(miles.trim()) && errors.miles ? (
                       <p className="text-danger">{errors.miles}</p>
                     ) : null}
                   </div>
@@ -507,11 +507,11 @@ export class CrmVehicleModal extends Component {
                       onChange={this._onInputChange}
                       maxLength={15}
                       invalid={
-                        errors.licensePlate && !this.state.licensePlate
+                        errors.licensePlate && !(this.state.licensePlate.trim())
                       }
                     />
                     <FormFeedback>
-                      {errors.licensePlate && !this.state.licensePlate
+                      {errors.licensePlate && !(this.state.licensePlate.trim())
                         ? errors.licensePlate
                         : null}
                     </FormFeedback>

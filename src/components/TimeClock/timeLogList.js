@@ -34,6 +34,7 @@ class TimeLogList extends Component {
     };
   }
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
@@ -48,6 +49,25 @@ class TimeLogList extends Component {
       filterApplied
     })
   }
+
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`timeLog10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   handleEditTimeClockModal = (timeLogs) => {
     const { modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -117,7 +137,7 @@ class TimeLogList extends Component {
       orderId: orderId ? orderId : null,
       _id: timeLogId,
       isTimerClock: true,
-      page:this.state.page || 1
+      page: this.state.page || 1
     }
     this.props.editTimeLogRequest(paylod)
   }
@@ -266,7 +286,7 @@ class TimeLogList extends Component {
                 activity = timeLog.activity
                 orderId = timeLog.orderId && timeLog.orderId.length ? timeLog.orderId[0]._id : null
                 return (
-                  <tr key={index}>
+                  <tr key={index} id={`timeLog${index}`}>
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td className={"text-capitalize"}>{timeLog.type}</td>
                     <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
@@ -327,6 +347,17 @@ class TimeLogList extends Component {
             }
           </tbody>
         </Table>
+        {timeLogData && timeLogData.length && isSuccess ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalTimeLogs && isSuccess ? (
           <PaginationHelper
             totalRecords={totalTimeLogs}

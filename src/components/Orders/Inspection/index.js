@@ -17,7 +17,6 @@ import Templates from "./template";
 import SendInspection from "./sentInspect";
 import MessageTemplate from "./messageTemplate";
 import InspectionTable from "./InspectionPdf";
-import { logger } from "../../../helpers";
 class Inspection extends Component {
   constructor(props) {
     super(props);

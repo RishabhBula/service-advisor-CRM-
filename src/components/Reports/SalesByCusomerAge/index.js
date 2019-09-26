@@ -128,7 +128,7 @@ class SalesByCusomerAge extends Component {
                   </div>
                   <div>
                     {data && data.length ? (
-                      <h6 className={"mb-0"}>Total Records : {data.length}</h6>
+                      <div className={"mb-0 total-block"}>Total Records : {data.length}</div>
                     ) : null}
                   </div>
                 </div>

@@ -23,6 +23,7 @@ import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
 import { AppConfig } from "../config/AppConfig";
 
+let toastId = null ;
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
   cancelType: customersAddActions.CUSTOMER_ADD_FAILED,
@@ -59,13 +60,21 @@ const addCustomerLogic = createLogic({
         })
       );
 
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!data.showAddVehicle) {
-        toast.success(result.messages[0]);
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(
+             result.messages[0]
+          );
+       }
       } else {
         dispatch(
           modelOpenRequest({
@@ -183,7 +192,11 @@ const deleteCustomerLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -216,13 +229,21 @@ const editCustomerLogic = createLogic({
       { data: action.payload.data }
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!action.payload.showAddVehicle) {
-        toast.success(result.messages[0]);
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(
+             result.messages[0]
+          );
+       }
       } else {
         dispatch(
           modelOpenRequest({
@@ -272,7 +293,11 @@ const updateCustomerStatusLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -398,9 +423,17 @@ const importCustomerLogic = createLogic({
           path: `${AppRoutes.CUSTOMERS.url}?page=1&reset=${Date.now()}`
         })
       );
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
     } else {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
     }
     setTimeout(
       () =>

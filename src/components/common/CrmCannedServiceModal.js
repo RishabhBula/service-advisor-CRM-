@@ -227,7 +227,7 @@ export class CrmCannedServiceModal extends Component {
                                                )
                                              }
                                            >
-                                             +
+                                             <i className={"fa fa-plus mr-2"} />
                                              {item.isCannedAdded ? (
                                                <>
                                                  Service Added{" "}
@@ -247,11 +247,10 @@ export class CrmCannedServiceModal extends Component {
                                                  item._id
                                                )
                                              }
-                                             className={"btn-theme-transparent"}
+                                             className={""}
+                                             color={""}
                                            >
-                                             <i
-                                               className={"icon-trash icons"}
-                                             />
+                                             <i className={"fas fa-close"} />
                                            </Button>
                                            <UncontrolledTooltip
                                              target={`delete-${item._id}`}

@@ -507,7 +507,7 @@ export class CrmFleetEditModal extends Component {
       fleetDefaultPermissions,
       percentageDiscount
     };
-    console.log("errors",errors);
+    
     return (
       <>
         <Modal
@@ -518,7 +518,9 @@ export class CrmFleetEditModal extends Component {
         >
           <ModalHeader toggle={handleFleetModal}>
             Update Fleet Details
+            {fleetSingleData && fleetSingleData.updatedAt?
             <LastUpdated updatedAt={fleetSingleData.updatedAt} />
+            :null}
           </ModalHeader>
           <ModalBody>
             <div className="">
@@ -540,7 +542,7 @@ export class CrmFleetEditModal extends Component {
                         invalid={errors.companyName}
                       />
                       <FormFeedback>
-                        {errors && !(companyName.trim()) && errors.companyName
+                        {errors && errors.companyName 
                           ? "Company name is required"
                           : null}
                       </FormFeedback>

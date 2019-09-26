@@ -209,7 +209,11 @@ export class CrmCustomerModal extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -359,7 +363,7 @@ export class CrmCustomerModal extends Component {
         await this.setStateAsync({ phoneErrors: t });
       }
       let validationData = {
-        firstName: firstName
+        firstName: firstName.trim()
       };
       if (email !== "") {
         validationData.email = email;
@@ -544,10 +548,10 @@ export class CrmCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
-                        invalid={!firstName && errors.firstName ? true : false}
+                        invalid={!(firstName.trim()) && errors.firstName ? true : false}
                       />
                       <FormFeedback>
-                        {!firstName && errors.firstName
+                        {!(firstName.trim()) && errors.firstName
                           ? errors.firstName
                           : null}
                       </FormFeedback>

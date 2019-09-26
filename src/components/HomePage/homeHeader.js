@@ -104,7 +104,6 @@ class HomeHeader extends Component {
               <li className="nav-item">
                 <span
                   className="nav-link cursor"
-                  onClick={this.handleScrollToFeature}
                 >
                   <span>Features</span>
                 </span>
@@ -171,14 +170,17 @@ class HomeHeader extends Component {
                         </div>
                       </div>
                       <NavLink to="/profile" className="nav-link">
-                        <i className={"fa fa-user"} /> My Profile
+                        <i className={"fa fa-institution"} /> Company Profile
                       </NavLink>
 
-                      <NavLink to="/faq" className="nav-link">
-                        <i className={"fa fa-question-circle"} /> FAQ's
+                      <NavLink
+                        to="/profile?tab=Subscription"
+                        className="nav-link"
+                      >
+                        <i className={"fa fa-dollar"} /> Subscription
                       </NavLink>
                       <NavLink to="/profile" className="nav-link">
-                        <i className={"fa fa-phone"} /> Support
+                        <i className={"fa fa-user"} /> My Profile
                       </NavLink>
                       <NavLink to="/home" className="nav-link">
                         <i className={"fas fa-home"} /> Home

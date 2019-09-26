@@ -18,6 +18,7 @@ import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 
+let toastId = null ;
 const profileInfoLogic = createLogic({
   type: profileInfoActions.PROFILE_INFO_REQUEST,
   cancelType: profileInfoActions.PROFILE_INFO_FAILED,
@@ -70,7 +71,11 @@ const updateCompanyLogoLogic = createLogic({
     logger(result);
     //dispatch(hideLoader());
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       done();
       return;
     } else {
@@ -103,12 +108,20 @@ const updateCompanyDetailsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(profileInfoRequest());
       dispatch(
         profileInfoSuccess({
@@ -140,13 +153,21 @@ const updatePasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       dispatch(updatePasswordFailed());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(updatePasswordSuccess());
       done();
@@ -169,13 +190,21 @@ const profileSettingUpdate = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       dispatch(profileSettingUpdateFailed());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       
       dispatch(hideLoader());
       dispatch(

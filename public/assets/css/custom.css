@@ -59,6 +59,9 @@
 .border-theme{
   border: 1px solid #dad4ea;
 }
+.row.w-auto{
+  width: auto;
+}
 .text-bold{
   font-family: "FrutigerNeueLTPro-Bold";
 }
@@ -1150,6 +1153,7 @@ body .navbar-nav .nav-link.active {
 }
 .sidebar-minimized .custom-sidebar.sidebar .nav-item:hover > .nav-link {
   background: #5d43db;
+  color: #fff;
 }
 .sidebar-minimized .custom-sidebar.sidebar .nav-link:hover {
   background: #5d43db;
@@ -2851,7 +2855,7 @@ display: inline-flex;
 }
 .canned-service-header {
   background: #f1f1f1;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   font-family: "open sans";
 }
@@ -3151,3 +3155,22 @@ background:#6b45f4;
   width: 288px !important;
 }
 /*************END*******************/
+.btn-scroll-top{
+  position: fixed;
+  bottom: 15px;
+  right:15px;
+  display: none;
+}
+/******************** inValdi feild ********/
+.was-validated .form-control:invalid, .form-control.is-invalid{
+  background-image: none !important;
+}
+/*************/
+.listView-Delete{
+  border: none !important;
+  background: none !important;
+  text-align: right !important;
+}
+.listView {
+min-width: 45px !important;
+}

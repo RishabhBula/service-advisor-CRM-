@@ -85,7 +85,6 @@ export class CrmSubscriptionModel extends Component {
              isProfile,
              currentPlanId,
              renewSuscription,
-             isPlanExpiered,
              isInTrialPeriod,
              isuserLogin
            } = this.props;

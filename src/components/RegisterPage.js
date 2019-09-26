@@ -113,15 +113,15 @@ class RegisterPage extends Component {
         confirmPassword
       } = this.state;
       const d = {
-        firstName,
-        lastName,
-        email,
-        password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        password: password.trim(),
         companyLogo,
-        companyName,
-        companyWebsite,
-        workspace,
-        confirmPassword
+        companyName: companyName.trim(),
+        companyWebsite: companyWebsite.trim(),
+        workspace: workspace.trim(),
+        confirmPassword: confirmPassword.trim()
       };
       let { isValid, errors } = Validator(
         d,
@@ -137,7 +137,7 @@ class RegisterPage extends Component {
         isValid = false;
       }
       if (d.password && !errors.password) {
-        let res = (d.password).match(/^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/);        
+        let res = (d.password).match(/^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/);
         if (!res) {
           isValid = false;
           errors.password = "Password must have alphanumeric characters with optional (special characters)."
@@ -189,20 +189,22 @@ class RegisterPage extends Component {
     } = this.state;
     return (
       <>
-        
+
         <div className="app app1 flex-row align-items-center auth-page pt-3 pb-3">
           <div className="auth-bg" />
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
               <Col className="text-center">
-              <h4 className="logo-title">
-                <img
-                  src={ServiceAdvisorLogo}
-                  alt={"logo"}
-                  style={{ width: 120 }}
-                />
-              </h4>
-            </Col>
+                <Link to="/home">
+                  <h4 className="logo-title">
+                    <img
+                      src={ServiceAdvisorLogo}
+                      alt={"logo"}
+                      style={{ width: 120 }}
+                    />
+                  </h4>
+                </Link>
+              </Col>
               <CardGroup>
                 <Card className="p-4 pl-4 pr-4 card">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
@@ -428,20 +430,20 @@ class RegisterPage extends Component {
                           >
                             <PopoverHeader>Workspace ?</PopoverHeader>
                             <PopoverBody>
-                             <div className={"pb-2 technician-detail"}>
-                              <div
-                                className={"text-capitalize pb-1 border-bottom"}
-                              >
-                                Your work space will be an area reserved and
-                                identified uniquely by your company name
-                                followed by our company domain.
+                              <div className={"pb-2 technician-detail"}>
+                                <div
+                                  className={"text-capitalize pb-1 border-bottom"}
+                                >
+                                  Your work space will be an area reserved and
+                                  identified uniquely by your company name
+                                  followed by our company domain.
                               </div>
-                              <div className={"pt-2  text-note text-left"}>
-                                EX: Your workspace name is "Peterbilt", so after
-                                signup, your URL will be
-                                http://peterbilt.serviceadvisor.io.
+                                <div className={"pt-2  text-note text-left"}>
+                                  EX: Your workspace name is "Peterbilt", so after
+                                  signup, your URL will be
+                                  http://peterbilt.serviceadvisor.io.
                               </div>
-                            </div>
+                              </div>
                             </PopoverBody>
                           </UncontrolledPopover>
                         </FormGroup>
@@ -514,7 +516,7 @@ class RegisterPage extends Component {
             </Col>
           </Row>
         </div>
-       
+
       </>
     );
   }

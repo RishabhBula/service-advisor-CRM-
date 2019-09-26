@@ -174,7 +174,7 @@ class OrderDetails extends Component {
     }
     return (
       <>
-        <span id={"dateId"} className={"cursor_pointer"}>
+        <span id={"dateId"} className={"cursor_pointer pr-1"}>
           {scheduleDate}
         </span>
         <UncontrolledPopover

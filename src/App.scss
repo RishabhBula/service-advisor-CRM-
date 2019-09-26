@@ -410,6 +410,13 @@ body {
       border: 1px solid #a6a7a7;
     }
   }
+  .total-block{
+    display: inline-block;
+    padding: 4px 15px;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+  }
   .badge {
     text-transform: capitalize;
   }
@@ -1026,6 +1033,8 @@ body {
     .create-date{
       font-size: 13px;
       letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
     }
     .service-warp {
       font-size: 14px;

@@ -15,6 +15,8 @@ import {
    getServiceDataSuccess
 } from "./../actions";
 
+let toastId = null ;
+
 const addServiceLogic = createLogic({
    type: serviceActions.ADD_SERVICE,
    async process({ action }, dispatch, done) {
@@ -35,13 +37,21 @@ const addServiceLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          //dispatch(hideLoader());
          done();
          return;
       } else {
          if (result.messages[0] !== '') {
-            toast.success(result.messages[0]);
+            if (!toast.isActive(toastId)) {
+               toastId = toast.success(
+                  result.messages[0]
+               );
+            }
          }
          let serviceIds = []
          result.data.serviceResultData.map((service, index) => {
@@ -103,7 +113,11 @@ const getCannedServiceLogic = createLogic({
          }
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(getCannedServiceListSuccess(
             {
                cannedServiceList: [],
@@ -143,13 +157,21 @@ const addCannedServiceLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
       } else {
          if (result.messages[0] !== '') {
-            toast.success(result.messages[0]);
+            if (!toast.isActive(toastId)) {
+               toastId = toast.success(
+                  result.messages[0]
+               );
+            }
          }
          dispatch(getCannedServiceList())
          dispatch(hideLoader());
@@ -173,7 +195,11 @@ const deleteCannedServiceLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
@@ -200,7 +226,11 @@ const deleteServiceLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          done();
          return;
       } else {
@@ -225,7 +255,11 @@ const getAllServiceLogic = createLogic({
          }
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          done();
          return;
       } else {

@@ -8,7 +8,7 @@ import {
    getActivityListSuccess,
    getActivityList,
 } from "./../actions";
-
+ let toastId = null ;
 /* add new Activity */
 const addActivityLogic = createLogic({
    type: activityAction.ADD_ACTIVITY,
@@ -24,7 +24,11 @@ const addActivityLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(getActivityList());
          done();
          return;

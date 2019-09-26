@@ -208,10 +208,10 @@ class SendInspection extends Component {
       var messageTextValue = document.getElementById("messageTextSent"),
         messageTextSent = messageTextValue.innerHTML;
       const validData = {
-        subject: subject,
-        email: customerEmail
+        subject: subject.trim(),
+        email: customerEmail.trim()
       };
-      if (messageTextSent === "") {
+      if (messageTextSent.trim() === "") {
         this.setState({
           messageTextSentError: "Please enter message "
         });
@@ -449,7 +449,7 @@ class SendInspection extends Component {
                               htmlFor="name"
                               className="customer-modal-text-style"
                             >
-                              Phone dsf
+                              Phone
                               {/* <span className={"asteric"}>*</span> */}
                             </Label>
                             <div className={"input-block"}>
