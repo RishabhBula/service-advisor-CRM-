@@ -526,7 +526,7 @@ class WorkFlow extends Component {
                 <div className={"input-block"}>
                   <Input
                     type={"text"}
-                    placeholder={"Invoice"}
+                    placeholder={"Ex:-Invoice"}
                     onChange={this.handleInputChange}
                     value={orderStatusName}
                     name="orderStatusName"
@@ -546,7 +546,7 @@ class WorkFlow extends Component {
   /**
    *
    */
-  orderStatus = (type, value) => {
+  orderStatus = (type, value, orderId) => {
     const { profileInfoReducer } = this.props;
     const comapnyId = profileInfoReducer.profileInfo._id;
     const { orderReducer } = this.props;
@@ -563,7 +563,7 @@ class WorkFlow extends Component {
     } else {
       payload = {
         isInvoice: value,
-        _id: orderReducer.orderItems._id,
+        _id: orderId ? orderId : orderReducer.orderItems._id,
         authorizerId: comapnyId,
         isChangedOrderStatus: true,
         isInvoiceStatus: true,

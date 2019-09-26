@@ -161,6 +161,10 @@ class WorkflowListView extends React.Component {
 
     window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
   };
+  handleVehicleView = vehicleId => {
+    const vehicleDetailsUrl = "/vehicles/details/:id";
+    window.open(vehicleDetailsUrl.replace(":id", `${vehicleId}`));
+  };
   /**
    *
    */
@@ -227,7 +231,12 @@ class WorkflowListView extends React.Component {
               className={"mr-1"}
             />
             {order && order.vehicleId
-              ? order.vehicleId.make + " " + order.vehicleId.modal
+              ? <div className={
+                "cursor_pointer text-primary text-capitalize"
+              }
+                onClick={() => this.handleVehicleView(order.vehicleId._id)}>
+                {order.vehicleId.make + " " + order.vehicleId.modal}
+              </div>
               : "No Vehicle"}
           </div>
         </td>

@@ -169,10 +169,10 @@ class WorkflowGridView extends React.Component {
       fromStatusName: fromStatus[0].name
     });
     if (toStatus[0].name === "Invoices") {
-      this.props.orderStatus1("invoiceStatus", true);
+      this.props.orderStatus1("invoiceStatus", true,orderId);
     }
     else {
-      this.props.orderStatus1("invoiceStatus", false)
+      this.props.orderStatus1("invoiceStatus", false,orderId)
     }
   };
   /**

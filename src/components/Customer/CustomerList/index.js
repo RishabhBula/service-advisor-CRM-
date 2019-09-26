@@ -251,6 +251,9 @@ class CustomerList extends Component {
     );
     this.props.getCustomerDetailsRequest();
   };
+  handleCustomerView1 = customerId => {
+    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
+  };
   handleCustomerVehicleView = customerId => {
     this.props.redirectTo(
       AppRoutes.CUSTOMER_DETAILS.url.replace(
@@ -437,7 +440,6 @@ class CustomerList extends Component {
             {!isLoading ? (
               customers && customers.length ? (
                 customers.map((user, index) => {
-                  console.log("user",user);
                   return (
                     <tr key={index} id={`customer${index}`}>
                       <td>
@@ -459,7 +461,7 @@ class CustomerList extends Component {
                           className={
                             "font-weight-semibold text-capitalize pb-1 cursor_pointer text-primary"
                           }
-                          onClick={() => this.handleCustomerView(user._id)}
+                          onClick={() => this.handleCustomerView1(user._id)}
                         >
                           {user.firstName + " " + user.lastName || notExist}
                         </div>
