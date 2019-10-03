@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Form,
   Row,
@@ -64,9 +64,7 @@ class SalesByCusomerAge extends Component {
     });
     this.props.onReset();
   };
-  handleCustomerView = customerId => {
-    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
-  };
+
   /**
    *
    */
@@ -193,29 +191,20 @@ class SalesByCusomerAge extends Component {
                           {(1 - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td>
-                          <div
-                            className={
-                              "font-weight-semibold text-capitalize pb-1 cursor_pointer text-primary"
-                            }
-                            id={`type${index}`}
-                            onClick={() => this.handleCustomerView(customer.customerId._id)}
+                          <Link to={AppRoutes.CUSTOMER_DETAILS.url.replace(
+                            ":id",
+                            customer.customerId._id
+                          )} target="_blank"
+                            className={"cursor_pointer text-primary text-capitalize"}
                           >
-                            {/* <Link
-                              to={AppRoutes.CUSTOMER_DETAILS.url.replace(
-                                ":id",
-                                customer.customerId._id
-                              )}
-                              className={"text-body font-weight-semibold"}
-                            > */}
-                              {" "}
-                              {[
-                                customer.customerId.firstName,
-                                customer.customerId.lastName
-                              ]
-                                .join(" ")
-                                .trim()}
-                            {/* </Link> */}
-                          </div>
+                            {" "}
+                            {[
+                              customer.customerId.firstName,
+                              customer.customerId.lastName
+                            ]
+                              .join(" ")
+                              .trim()}
+                          </Link><br/>
                           {customer.customerId.email ? (
                             <>
                               <a
@@ -229,15 +218,15 @@ class SalesByCusomerAge extends Component {
                             </>
                           ) : null}
                           {customer.customerId.phoneDetail &&
-                          customer.customerId.phoneDetail[0] ? (
-                            <a
-                              href={`tel:${customer.customerId.phoneDetail[0].value}`}
-                              target={"_blank"}
-                              className={"text-body modal-info"}
-                            >
-                              {customer.customerId.phoneDetail[0].value}
-                            </a>
-                          ) : null}
+                            customer.customerId.phoneDetail[0] ? (
+                              <a
+                                href={`tel:${customer.customerId.phoneDetail[0].value}`}
+                                target={"_blank"}
+                                className={"text-body modal-info"}
+                              >
+                                {customer.customerId.phoneDetail[0].value}
+                              </a>
+                            ) : null}
                         </td>
                         <td>
                           <Dollor value={customer["0-30 Days"] || 0} />
@@ -262,19 +251,19 @@ class SalesByCusomerAge extends Component {
                   })}
                 </>
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={12}>
+                      <NoDataFound noResult />
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={12}>
-                    <NoDataFound noResult />
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={12}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
             <tr className={"bg-light"}>
               <td
                 className={"text-right font-weight-semibold pr-3"}

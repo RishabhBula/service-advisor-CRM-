@@ -40,18 +40,14 @@ export default class Appointments extends Component {
     const events = data.map(event => {
       const startHours = moment.utc(event.startTime).format("HH");
       const endHours = moment.utc(event.endTime).format("HH");
-      const startMin = moment.utc(event.startTime).format("HH");
-      const endMin = moment.utc(event.endTime).format("HH");
-
+      const startMin = moment.utc(event.startTime).format("mm");
+      const endMin = moment.utc(event.endTime).format("mm");
+      let appointmentDate = new Date(event.appointmentDate);
       return {
         id: event._id,
         title: event.appointmentTitle,
-        start: new Date(
-          new Date(event.appointmentDate).setUTCHours(startHours)
-        ).setUTCMinutes(startMin),
-        end: new Date(
-          new Date(event.appointmentDate).setUTCHours(endHours)
-        ).setUTCMinutes(endMin),
+        start: new Date(appointmentDate).setUTCHours(startHours, startMin),
+        end: startHours < endHours || (startHours === endHours && startMin <= endMin) ? new Date(appointmentDate).setUTCHours(endHours, endMin) : new Date(appointmentDate.setDate(appointmentDate.getDate() + 1)).setUTCHours(endHours, endMin),
         color: event.appointmentColor,
         customRender: true
       };
@@ -66,6 +62,7 @@ export default class Appointments extends Component {
         defaultView={filter && filter !== {} && filter.search ? (filter.search !== "today" && filter.search !== "week" ? "dayGridMonth" : (filter.search === "today" ? "timeGridDay" : "timeGridWeek")) : "dayGridMonth"}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         weekends={true}
+        timeZone='UTC'
         events={events}
         displayEventTime={true}
         displayEventEnd={true}
@@ -74,7 +71,18 @@ export default class Appointments extends Component {
         eventLimit={4}
         showNonCurrentDates={false}
         fixedWeekCount={false}
-        
+        slotLabelFormat={[
+          {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          }
+        ]}
+        eventTimeFormat={{
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }}
       />
     );
   }
