@@ -347,9 +347,10 @@ class Order extends Component {
     let pdfWindow = window.open("");
     pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
-      "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
+      "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf'  type='application/pdf' src='" +
       filename +
-      "'></embed></body></html>";
+      "' content-type='application/pdf'  content-disposition='inline'></embed></html>";
+      console.log(filename, "filename");
   };
 
   render() {

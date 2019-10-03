@@ -5,6 +5,8 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import moment from "moment";
 import { logger } from "../../helpers";
+import "./index.scss"
+
 export default class Appointments extends Component {
   constructor(props) {
     super(props);
@@ -57,25 +59,34 @@ export default class Appointments extends Component {
       };
     });
     return (
-      <FullCalendar
-        header={{
-          left: "title",
-          center: "prev,next today",
-          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
-        }}
-        defaultView={filter && filter !== {} && filter.search ? (filter.search !== "today" && filter.search !== "week" ? "dayGridMonth" : (filter.search === "today" ? "timeGridDay" : "timeGridWeek")) : "dayGridMonth"}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        weekends={true}
-        events={events}
-        displayEventTime={true}
-        displayEventEnd={true}
-        eventClick={this.onEventClick}
-        dateClick={this.onDateClick}
-        eventLimit={4}
-        showNonCurrentDates={false}
-        fixedWeekCount={false}
-        
-      />
+      <div>
+        <FullCalendar
+          header={{
+            left: "title",
+            center: "prev,next today",
+            right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
+          }}
+          defaultView={
+            filter && filter !== {} && filter.search
+              ? filter.search !== "today" && filter.search !== "week"
+                ? "dayGridMonth"
+                : filter.search === "today"
+                ? "timeGridDay"
+                : "timeGridWeek"
+              : "dayGridMonth"
+          }
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          weekends={true}
+          events={events}
+          displayEventTime={true}
+          displayEventEnd={true}
+          eventClick={this.onEventClick}
+          dateClick={this.onDateClick}
+          eventLimit={4}
+          showNonCurrentDates={false}
+          fixedWeekCount={false}
+        />
+      </div>
     );
   }
 }

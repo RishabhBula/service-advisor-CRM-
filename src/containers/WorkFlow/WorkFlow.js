@@ -31,7 +31,7 @@ import {
   addAppointmentRequest,
   updateOrderDetailsRequest
 } from "../../actions";
-import { logger } from "../../helpers/Logger";
+// import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
 import { toast } from "react-toastify";
 import Validator from "js-object-validation";
@@ -70,6 +70,7 @@ class WorkFlow extends Component {
       scrollToFixed: false
     };
   }
+
   /**
    *
    */
@@ -124,6 +125,8 @@ class WorkFlow extends Component {
           });
         }
       }
+      // function to hnadle scrollbar movment if header fixed onscroll
+      this.scrollObserve();
     }
   };
   /**
@@ -132,18 +135,18 @@ class WorkFlow extends Component {
   handleScroll = top => {
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
-    let workflow = document.getElementById("simplebar-content");
-    let workflowTop;
-    if (workflow && ele) {
-      workflowTop = workflow.getBoundingClientRect().top;
-    }
-    logger(workflowTop);
+    // let workflow = document.getElementById("simplebar-content");
+    // let workflowTop;
+    // if (workflow && ele) {
+    //   workflowTop = workflow.getBoundingClientRect().top;
+    // }
+    console.log(scrollY, "scrollY");
     for (let i = 0; i < ele.length; i++) {
-      if (scrollY >= 150) {
-        ele[i].classList.add("fixed"); // WITH space added
+      if (scrollY > 150) {
         this.setState({
           scrollToFixed: true
         });
+        ele[i].classList.add("fixed"); // WITH space added
       } else {
         ele[i].classList.remove("fixed"); // WITH space added
         if (ele[i].childNodes[0].style) {
@@ -156,12 +159,52 @@ class WorkFlow extends Component {
     }
   };
 
+  // Observer called in didupdate
+  scrollObserve = () => {
+    const { scrollToFixed } = this.state;
+    const workflowGridEle = document.getElementsByClassName(
+      "workflow-grid-card"
+    );
+    const trackEle = document.getElementById("simplebar-scroll-track");
+    if (trackEle) {
+      let observer = new MutationObserver(mutationRecords => {
+        if (scrollToFixed) {
+          let leftVal = mutationRecords[0].target.style.left;
+          for (let i = 0; i < workflowGridEle.length; i++) {
+            workflowGridEle[
+              i
+            ].childNodes[0].style.transform = `translateX(-${leftVal})`;
+          }
+        }else{
+          for (let i = 0; i < workflowGridEle.length; i++) {
+            workflowGridEle[
+              i
+            ].childNodes[0].style.transform = `none`;
+          }
+        }
+      });
+      observer.observe(trackEle, {
+        attributes: true,
+        attributeOldValue: true,
+        characterData: true,
+        characterDataOldValue: true,
+        childList: true,
+        subtree: true
+      });
+    }
+  };
+
+  /**
+   *
+   */
+  // called on time of left side panel width changed
   handleResize = width => {
     let workflowGridCard;
     const trackEle = document.getElementById("simplebar-scroll-track");
     const workflowGridCardEle = document.querySelector(
       ".workflow-grid-card-warp"
     );
+
     const classVal = document.body.classList.contains("sidebar-minimized");
     if (workflowGridCardEle) {
       workflowGridCard = workflowGridCardEle.getBoundingClientRect().width;
@@ -172,54 +215,53 @@ class WorkFlow extends Component {
       if (classVal) {
         trackEle.style.width = width + "px";
         trackEle.style.left = 50 + "px";
-        this.setState({
-          trackWidth: widthToApply,
-          scrollToWidth: widthToCheck
-        });
       } else {
         trackEle.style.left = 200 + "px";
       }
+      this.setState({
+        trackWidth: widthToApply,
+        scrollToWidth: widthToCheck
+      });
     }
   };
-
   /**
    *
    */
   dragElement = (ele, workflow) => {
     if (ele) {
       ele.onmousedown = e => this.dragMouseDown(e, ele, workflow);
-    } else {
-      ele.onmousedown = e => this.dragMouseDown(e, ele, workflow);
     }
   };
 
   dragMouseDown = (e, ele, workflow) => {
-    let pos3 = 0,
-      pos4 = 0;
+   
+    let pos3 = 0;
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
     pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = e => this.closeDragElement(e, pos3, pos4);
+    document.onmouseup = e => this.closeDragElement(e, pos3);
     // call a  whenever the cursor moves:
-    document.onmousemove = e => this.elementDrag(e, pos3, pos4, ele, workflow);
+    document.onmousemove = e => this.elementDrag(e, pos3, ele, workflow);
   };
 
-  elementDrag = (e, pos3, pos4, ele, workflow) => {
+  elementDrag = (e, pos3, ele, workflow) => {
+
     const { scrollToWidth, scrollToFixed } = this.state;
     var workflowGridEle = document.getElementsByClassName("workflow-grid-card");
     let pos1 = 0,
       finalPos = 0;
     e = e || window.event;
     e.preventDefault();
-    pos1 = pos3 - e.clientX;
+    pos1 = e.clientX - pos3 ;
+    console.log(e.clientX, pos3, "e.clientX");
     pos3 = e.clientX;
-    pos4 = e.clientY;
-    finalPos = -pos1;
-
+    console.log(ele.offsetLeft, "ele");
+    finalPos = pos1;
+   
     if (finalPos < -1) {
-      finalPos = 0;
+       finalPos = 0;
+      console.log(finalPos, "finalPos");
     } else if (finalPos >= scrollToWidth) {
       finalPos = scrollToWidth;
     }
@@ -229,7 +271,6 @@ class WorkFlow extends Component {
       });
       workflow.scrollLeft = finalPos;
       if (scrollToFixed) {
-
         for (let i = 0; i < workflowGridEle.length; i++) {
           workflowGridEle[i].childNodes[0].style.transform =
             "translateX(" + -finalPos + "px)";
@@ -241,9 +282,10 @@ class WorkFlow extends Component {
   closeDragElement = () => {
     document.onmouseup = null;
     document.onmousemove = null;
+    console.log(document.onmouseup);
   };
 
-  myFunction = e => {
+  handleScrollLeft = e => {
     const workFlowEle = document.getElementById("simplebar-content");
     this.setState({
       scrollPos: workFlowEle.scrollLeft
@@ -687,7 +729,7 @@ class WorkFlow extends Component {
                     style={{ overflowX: "auto" }}
                     className={"simplebar-content "}
                     id={"simplebar-content"}
-                    onScroll={e => this.myFunction(e)}
+                    onScroll={e => this.handleScrollLeft(e)}
                   >
                     <ResizeObserver
                       onResize={rect =>
@@ -710,7 +752,7 @@ class WorkFlow extends Component {
                     />
                   </div>
                 )}
-                {!listView && trackWidth > 0 ? (
+                {!listView  ? (
                   <div
                     className={"simplebar-scroll-track"}
                     id={"simplebar-scroll-track"}
@@ -723,9 +765,7 @@ class WorkFlow extends Component {
                         left: `${scrollPos}px`,
                         position: "absolute"
                       }}
-                    >
-                      
-                    </div>
+                    ></div>
                   </div>
                 ) : null}
               </Col>

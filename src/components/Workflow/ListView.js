@@ -17,6 +17,7 @@ import moment from "moment";
 import { ConfirmBox } from "../../helpers/SweetAlert";
 import AddAppointment from "../Appointments/AddAppointment";
 import AppointmentDetails from "../Appointments/AppointmentDetails";
+import "./index.scss"
 
 class WorkflowListView extends React.Component {
   constructor(props) {

@@ -172,7 +172,7 @@ class Calender extends Component {
               Create New Appointment
             </UncontrolledTooltip>
           </div>
-          <CardBody className={"custom-card-body inventory-card"}>
+          <CardBody className={"custom-card-body inventory-card position-relative"}>
             {isLoading ? (
               <Loader />
             ) : (

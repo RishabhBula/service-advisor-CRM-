@@ -1499,6 +1499,7 @@ body {
     background: #ccc;
     left: 50px;
     z-index: 1;
+    pointer-events: none;
     &::after{
       content: "";
       display: block;
@@ -1516,7 +1517,9 @@ body {
       background: #7249dc;
       position: absolute;
       bottom: 3px !important;
-      border-radius:20px; 
+      border-radius:20px;
+      cursor: e-resize;
+      pointer-events: all
     }
   }
   .price-page-container{
