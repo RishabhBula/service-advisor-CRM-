@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import Loader from "../../../containers/Loader/Loader";
 import PaginationHelper from "../../../helpers/Pagination";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../../config/AppConfig";
 import { ConfirmBox } from "../../../helpers/SweetAlert";
@@ -251,9 +251,6 @@ class CustomerList extends Component {
     );
     this.props.getCustomerDetailsRequest();
   };
-  handleCustomerView1 = customerId => {
-    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
-  };
   handleCustomerVehicleView = customerId => {
     this.props.redirectTo(
       AppRoutes.CUSTOMER_DETAILS.url.replace(
@@ -457,14 +454,15 @@ class CustomerList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div
-                          className={
-                            "font-weight-semibold text-capitalize pb-1 cursor_pointer text-primary"
-                          }
-                          onClick={() => this.handleCustomerView1(user._id)}
-                        >
-                          {user.firstName + " " + user.lastName || notExist}
-                        </div>
+                        <Link to={`${AppRoutes.CUSTOMER_DETAILS.url.replace(":id", user._id)}`} target="_blank">
+                          <div
+                            className={
+                              "font-weight-semibold text-capitalize pb-1 cursor_pointer text-primary"
+                            }
+                          >
+                            {user.firstName + " " + user.lastName || notExist}
+                          </div>
+                        </Link>
                         <div>
                           {user.email ? (
                             <a

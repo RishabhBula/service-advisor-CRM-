@@ -52,9 +52,9 @@ const getOrderId = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(
         getOrderIdFailed({
           orderId: {},
@@ -160,7 +160,7 @@ const updateOrderWorkflowStatusLogic = createLogic({
     const { orderReducer } = getState();
     const { orderData, orderStatus } = orderReducer;
     let { orders } = orderData;
-    const { orderId, from, to, destinationIndex, sourceIndex, toStatusName, fromStatusName } = action.payload;
+    let { orderId, from, to, destinationIndex, sourceIndex, toStatusName, fromStatusName } = action.payload;
     if (!orders[to]) {
       orders[to] = [];
     }
@@ -179,12 +179,20 @@ const updateOrderWorkflowStatusLogic = createLogic({
         orderIndex: destinationIndex
       }
     );
-    dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
+    // dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
     const data = {
       name: `updated the workflow status from ${fromStatusName} to ${toStatusName}`,
       type: "UPDATE_STATUS",
       orderId: action.payload.orderId
     };
+    let { orderItems, customerOrders, vehicleOrders } = getState().orderReducer
+    let orderItems1 = { ...orderItems, workflowStatus: to }
+    dispatch(getOrderDetailsSuccess({
+      order: orderItems1,
+      orderId: action.payload.orderId,
+      customerOrders: customerOrders,
+      vehicleOrders: vehicleOrders
+    }))
     dispatch(addNewActivity(data));
     done();
   }
@@ -313,9 +321,9 @@ const addOrderLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -362,9 +370,9 @@ const updateOrderDetailsLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       done();
       return;
     } else {
@@ -372,9 +380,9 @@ const updateOrderDetailsLogic = createLogic({
         if (!action.payload.isChangedOrderStatus) {
           if (!toast.isActive(toastId)) {
             toastId = toast.success(
-               result.messages[0]
+              result.messages[0]
             );
-         }
+          }
         }
         if (action.payload.status === true) {
           const data = {
@@ -501,9 +509,9 @@ const getOrderDetails = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       // dispatch(hideLoader());
       done();
       return;
