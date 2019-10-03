@@ -329,7 +329,7 @@ class PriceMatrixComponent extends Component {
                       : null}
                     <tr>
                       <td colSpan="5">
-                        <Row>
+                        <Row className={"m-0"}>
                           <Col md="6" className={"mt-2"}>
                             <span
                               onClick={handleAddMatrixRange}

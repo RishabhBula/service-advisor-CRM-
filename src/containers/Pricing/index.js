@@ -7,7 +7,8 @@ import {
   getSubscriptionPlanRequest,
   profileInfoRequest,
   modelOpenRequest,
-  addSubscriptionRequest
+  addSubscriptionRequest,
+  logOutRequest
 } from "../../actions";
 import HomeHeader from "../../components/HomePage/homeHeader";
 import HomeFooter from "../../components/HomePage/homeFooter";
@@ -20,12 +21,16 @@ class Pricing extends Component {
     };
   }
 
-  componentDidMount = ()=>{
-   this.props.getSubscriptionPlanRequest();
-   if (localStorage.getItem("token")) {
-     this.props.profileInfoAction();
-   } 
-   //this.props.profileInfoAction();
+  componentDidMount = () => {
+    this.props.getSubscriptionPlanRequest();
+    if (localStorage.getItem("token")) {
+      this.props.profileInfoAction();
+    }
+    //this.props.profileInfoAction();
+  };
+
+  signOut() {
+    this.props.logoutUser();
   }
 
   render() {
@@ -36,23 +41,26 @@ class Pricing extends Component {
       modelInfoReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-     const { openSubUpgradeModel, openSubscriptionUpdateModel } = modelDetails;
+    const { openSubUpgradeModel, openSubscriptionUpdateModel } = modelDetails;
     const planExiprationDate = profileInfoReducer
       ? profileInfoReducer.profileInfo.planExiprationDate
       : null;
     const planId = profileInfoReducer.profileInfo.planId
-       ? profileInfoReducer.profileInfo.planId._id
-       : "" || "Trial Plan";
+      ? profileInfoReducer.profileInfo.planId._id
+      : "" || "Trial Plan";
     const isInTrialPeriod = profileInfoReducer.profileInfo.isInTrialPeriod;
     const isPlanExpiered = moment(planExiprationDate).isSameOrBefore(
-       new Date(),
-       "day"
-     );
+      new Date(),
+      "day"
+    );
     const isuserLogin = localStorage.getItem("token") ? true : false;
-  
+
     return (
       <>
-        <HomeHeader />
+        <HomeHeader
+          profileInfoReducer={profileInfoReducer}
+          onLogout={e => this.signOut(e)}
+        />
         <div className={"price-page-container pt-4 pb-4"}>
           <Row className={"mb-4"}>
             <Col lg={"12"} md={"12"} className={"custom-form-modal"}>
@@ -103,7 +111,8 @@ const mapDispatchToProps = dispatch => ({
   getSubscriptionPlanRequest: () => dispatch(getSubscriptionPlanRequest()),
   profileInfoAction: () => dispatch(profileInfoRequest()),
   modelOperate: data => dispatch(modelOpenRequest({ modelDetails: data })),
-  addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data))
+  addSubscriptionRequest: data => dispatch(addSubscriptionRequest(data)),
+  logoutUser: () => dispatch(logOutRequest())
 });
 
 export default connect(

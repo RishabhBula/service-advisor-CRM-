@@ -37,6 +37,9 @@ body {
   .text-warning {
     color: #ff6c00 !important;
   }
+  .btn-outline-secondary{
+    color: #93999e;
+  }
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
       monospace;
@@ -109,6 +112,9 @@ body {
         border-right: 1px solid #4f23bf;
         &:hover{
           background: #fff;
+          button{
+            color: #000;
+          }
         }
         &:focus{
           background: #fff;
@@ -404,6 +410,13 @@ body {
       border: 1px solid #a6a7a7;
     }
   }
+  .total-block{
+    display: inline-block;
+    padding: 4px 15px;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+  }
   .badge {
     text-transform: capitalize;
   }
@@ -660,7 +673,7 @@ body {
     height: 29px;
   }
   .form-select-theme__indicators {
-    height: 29px;
+    height: 36px;
   }
   .form-select-theme__dropdown-indicator {
     padding: 4px;
@@ -1020,6 +1033,8 @@ body {
     .create-date{
       font-size: 13px;
       letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
     }
     .service-warp {
       font-size: 14px;
@@ -1098,7 +1113,7 @@ body {
     }
 
     &::-webkit-scrollbar-thumb{
-      background-color: #c1c1c1;
+      background-color: #7249dc;
       border-radius: 7px;
     }
   }
@@ -1472,7 +1487,8 @@ body {
   .simplebar-content{
     position: relative;
     overflow: -moz-scrollbars-none; 
-    -ms-overflow-style: none; 
+    -ms-overflow-style: none;
+    background: #e0deea;
     &::-webkit-scrollbar { width: 0 !important }
   }
   .simplebar-scroll-track{
@@ -1481,8 +1497,9 @@ body {
     bottom: 0px;
     height: 20px;
     background: #ccc;
-    left: 200px;
+    left: 50px;
     z-index: 1;
+    pointer-events: none;
     &::after{
       content: "";
       display: block;
@@ -1500,7 +1517,9 @@ body {
       background: #7249dc;
       position: absolute;
       bottom: 3px !important;
-      border-radius:20px; 
+      border-radius:20px;
+      cursor: e-resize;
+      pointer-events: all
     }
   }
   .price-page-container{

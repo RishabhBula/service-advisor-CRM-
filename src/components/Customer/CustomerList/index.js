@@ -275,7 +275,7 @@ class CustomerList extends Component {
       <>
         <div className={"filter-block"}>
           <Form onSubmit={this.onSearch}>
-            <Row>
+            <Row className={"w-auto"}>
               <Col lg={"4"} md={"4"} className="mb-0">
                 <FormGroup className="mb-0">
                   {/* <Label className="label">Search</Label> */}
@@ -367,8 +367,8 @@ class CustomerList extends Component {
               </Col>
               {totalCustomers ?
                 <Col lg={"2"} md={"2"} className="mb-0 text-right">
-                  <div className="font-weight-bold pt-2">
-                    <span className="">Total Customers :</span>&nbsp;
+                  <div className="total-block mt-1">
+                  <span className="">Total Customers :</span>&nbsp;
                   <span>{totalCustomers ? totalCustomers : 0}</span>
                   </div>
                 </Col>

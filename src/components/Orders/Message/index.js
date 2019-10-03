@@ -309,7 +309,7 @@ class Message extends Component {
       : "";
 
     return (
-      <div className={"message-warp"} id={"message-warp"}>
+      <div className={"message-warp mt-3"} id={"message-warp"}>
         {isSummary ? <h4 className={"mb-4 ml-3 pt-3"}>Messages</h4> : ""}
         {!isSummary ? (
           <Nav tabs>

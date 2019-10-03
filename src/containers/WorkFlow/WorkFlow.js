@@ -31,7 +31,7 @@ import {
   addAppointmentRequest,
   updateOrderDetailsRequest
 } from "../../actions";
-import { logger } from "../../helpers/Logger";
+// import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
 import { toast } from "react-toastify";
 import Validator from "js-object-validation";
@@ -45,6 +45,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import * as classNames from "classnames";
 import WorkflowListView from "../../components/Workflow/ListView";
 import { ConfirmBox } from "../../helpers/SweetAlert";
+import ResizeObserver from "react-resize-observer";
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -65,11 +66,11 @@ class WorkFlow extends Component {
       divY: 0,
       trackWidth: 0,
       scrollToWidth: 0,
-      scrollPos: 0,
-      scrollToFixed: false,
-      warpWidth: 0,
+      scrollPos: 50,
+      scrollToFixed: false
     };
   }
+
   /**
    *
    */
@@ -95,8 +96,7 @@ class WorkFlow extends Component {
       workflowTop = workflow.getBoundingClientRect().top;
       this.dragElement(ele, workflow);
     }
-    window.addEventListener("scroll", (e) => this.handleScroll(workflowTop));
-    new ResizeObserver(this.handleResize).observe(workflow);
+    window.addEventListener("scroll", e => this.handleScroll(workflowTop));
   }
 
   componentDidUpdate = ({ orderReducer }) => {
@@ -124,29 +124,29 @@ class WorkFlow extends Component {
             scrollToWidth: 0
           });
         }
-        this.setState({
-          warpWidth: workFlowWidth
-        });
       }
+      // function to hnadle scrollbar movment if header fixed onscroll
+      this.scrollObserve();
     }
   };
   /**
    *
    */
-  handleScroll = (top) => {
+  handleScroll = top => {
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
-    let workflow = document.getElementById("simplebar-content");
-    let workflowTop;
-    if (workflow && ele) {
-      workflowTop = workflow.getBoundingClientRect().top;
-    }
+    // let workflow = document.getElementById("simplebar-content");
+    // let workflowTop;
+    // if (workflow && ele) {
+    //   workflowTop = workflow.getBoundingClientRect().top;
+    // }
+    
     for (let i = 0; i < ele.length; i++) {
-      if (scrollY >= 150) {
-        ele[i].classList.add("fixed"); // WITH space added
+      if (scrollY > 150) {
         this.setState({
           scrollToFixed: true
         });
+        ele[i].classList.add("fixed"); // WITH space added
       } else {
         ele[i].classList.remove("fixed"); // WITH space added
         if (ele[i].childNodes[0].style) {
@@ -159,75 +159,109 @@ class WorkFlow extends Component {
     }
   };
 
-  handleResize = element => {
-    const { warpWidth } = this.state;
-    const elelWidth = element[0].contentRect.width;
-    let workflowGridCard;
-    const trackEle = document.getElementById("simplebar-scroll-track");
-    const workflowGridCardEle = document.querySelector(
-      ".workflow-grid-card-warp"
+  // Observer called in didupdate
+  scrollObserve = () => {
+    const { scrollToFixed } = this.state;
+    const workflowGridEle = document.getElementsByClassName(
+      "workflow-grid-card"
     );
-    if (workflowGridCardEle) {
-      workflowGridCard = workflowGridCardEle.getBoundingClientRect().width;
-    }
-    const workFlowWidth = elelWidth;
-    const widthToCheck = workflowGridCard - workFlowWidth;
-    const widthToApply = workFlowWidth - widthToCheck;
+    const trackEle = document.getElementById("simplebar-scroll-track");
     if (trackEle) {
-      if (warpWidth !== workFlowWidth) {
-        trackEle.style.width = elelWidth + "px";
-        trackEle.style.left = 200 + "px";
-        this.setState({
-          trackWidth: widthToApply,
-          scrollToWidth: widthToCheck
-        });
-      } else {
-        trackEle.style.left = 50 + "px";
-      }
+      let observer = new MutationObserver(mutationRecords => {
+        if (scrollToFixed) {
+          let leftVal = mutationRecords[0].target.style.left;
+          for (let i = 0; i < workflowGridEle.length; i++) {
+            workflowGridEle[
+              i
+            ].childNodes[0].style.transform = `translateX(-${leftVal})`;
+          }
+        }else{
+          for (let i = 0; i < workflowGridEle.length; i++) {
+            workflowGridEle[
+              i
+            ].childNodes[0].style.transform = `none`;
+          }
+        }
+      });
+      observer.observe(trackEle, {
+        attributes: true,
+        attributeOldValue: true,
+        characterData: true,
+        characterDataOldValue: true,
+        childList: true,
+        subtree: true
+      });
     }
   };
 
   /**
    *
    */
+  // called on time of left side panel width changed
+  handleResize = width => {
+    let workflowGridCard;
+    const trackEle = document.getElementById("simplebar-scroll-track");
+    const workflowGridCardEle = document.querySelector(
+      ".workflow-grid-card-warp"
+    );
 
-
+    const classVal = document.body.classList.contains("sidebar-minimized");
+    if (workflowGridCardEle) {
+      workflowGridCard = workflowGridCardEle.getBoundingClientRect().width;
+    }
+    const widthToCheck = workflowGridCard - width;
+    const widthToApply = width - widthToCheck;
+    if (trackEle) {
+      if (classVal) {
+        trackEle.style.width = width + "px";
+        trackEle.style.left = 50 + "px";
+      } else {
+        trackEle.style.left = 200 + "px";
+      }
+      this.setState({
+        trackWidth: widthToApply,
+        scrollToWidth: widthToCheck
+      });
+    }
+  };
+  /**
+   *
+   */
   dragElement = (ele, workflow) => {
     if (ele) {
-      ele.onmousedown = e => this.dragMouseDown(e, ele, workflow);
-    } else {
       ele.onmousedown = e => this.dragMouseDown(e, ele, workflow);
     }
   };
 
   dragMouseDown = (e, ele, workflow) => {
-    let pos3 = 0,
-      pos4 = 0;
+   
+    let pos3 = 0;
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
     pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = e => this.closeDragElement(e, pos3, pos4);
+    document.onmouseup = e => this.closeDragElement(e, pos3);
     // call a  whenever the cursor moves:
-    document.onmousemove = e => this.elementDrag(e, pos3, pos4, ele, workflow);
+    document.onmousemove = e => this.elementDrag(e, pos3, ele, workflow);
   };
 
-  elementDrag = (e, pos3, pos4, ele, workflow) => {
+  elementDrag = (e, pos3, ele, workflow) => {
+
     const { scrollToWidth, scrollToFixed } = this.state;
-    var ele = document.getElementsByClassName("workflow-grid-card");
+    var workflowGridEle = document.getElementsByClassName("workflow-grid-card");
     let pos1 = 0,
       finalPos = 0;
     e = e || window.event;
     e.preventDefault();
-    pos1 = pos3 - e.clientX;
-
+    pos1 = e.clientX - pos3 ;
+    console.log(e.clientX, pos3, "e.clientX");
     pos3 = e.clientX;
-    pos4 = e.clientY;
-    finalPos = -pos1;
-
+    console.log(ele.offsetLeft, "ele");
+    finalPos = pos1;
+   
     if (finalPos < -1) {
-      finalPos = 0;
+       finalPos = 0;
+      console.log(finalPos, "finalPos");
     } else if (finalPos >= scrollToWidth) {
       finalPos = scrollToWidth;
     }
@@ -237,8 +271,8 @@ class WorkFlow extends Component {
       });
       workflow.scrollLeft = finalPos;
       if (scrollToFixed) {
-        for (let i = 0; i < ele.length; i++) {
-          ele[i].childNodes[0].style.transform =
+        for (let i = 0; i < workflowGridEle.length; i++) {
+          workflowGridEle[i].childNodes[0].style.transform =
             "translateX(" + -finalPos + "px)";
         }
       }
@@ -248,9 +282,10 @@ class WorkFlow extends Component {
   closeDragElement = () => {
     document.onmouseup = null;
     document.onmousemove = null;
+    console.log(document.onmouseup);
   };
 
-  myFunction = e => {
+  handleScrollLeft = e => {
     const workFlowEle = document.getElementById("simplebar-content");
     this.setState({
       scrollPos: workFlowEle.scrollLeft
@@ -351,8 +386,8 @@ class WorkFlow extends Component {
         statusId: abc
       });
     }
-    logger(data);
   };
+
   toggleAddNewOptions = () => {
     this.setState({
       showAddNewOptions: !this.state.showAddNewOptions
@@ -458,14 +493,16 @@ class WorkFlow extends Component {
       AddOrderStatusMessages
     );
     if (orderStatusName) {
-      let data = orderStatus.filter(item => item.name === orderStatusName.toUpperCase());
+      let data = orderStatus.filter(
+        item => item.name === orderStatusName.toUpperCase()
+      );
       let data1 = orderStatus.filter(item => item.name === orderStatusName);
       if (data.length || data1.length) {
         errors.orderStatusName = "This order status name already exist.";
-        isValid = false
+        isValid = false;
       }
     }
-    logger(isValid, errors);
+
     if (!isValid) {
       this.setState({
         errors
@@ -585,10 +622,11 @@ class WorkFlow extends Component {
       modelInfoReducer,
       getAppointments,
       addAppointment,
-      appointmentReducer,
+      appointmentReducer
     } = this.props;
     const { orderData, orderStatus } = orderReducer;
     const { listView, selectedFilter, trackWidth, scrollPos } = this.state;
+
     return (
       <>
         <Card className={"white-card position-relative pt-0 mb-0"}>
@@ -687,29 +725,34 @@ class WorkFlow extends Component {
                     appointmentReducer={appointmentReducer}
                   />
                 ) : (
-                    <div
-                      style={{ overflowX: "auto" }}
-                      className={"simplebar-content "}
-                      id={"simplebar-content"}
-                      onScroll={e => this.myFunction(e)}
-                    >
-                      <WorkflowGridView
-                        orderData={orderData}
-                        orderStatus={orderStatus}
-                        orderStatus1={this.orderStatus}
-                        updateOrderStatus={updateOrderStatus}
-                        deleteOrderStatus={this.deleteOrderStatus}
-                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                        deleteOrder={this.deleteOrder}
-                        redirectTo={redirectTo}
-                        modelInfoReducer={modelInfoReducer}
-                        addAppointment={addAppointment}
-                        getAppointments={getAppointments}
-                        appointmentReducer={appointmentReducer}
-                      />
-                    </div>
-                  )}
-                {!listView && trackWidth > 0 ? (
+                  <div
+                    style={{ overflowX: "auto" }}
+                    className={"simplebar-content "}
+                    id={"simplebar-content"}
+                    onScroll={e => this.handleScrollLeft(e)}
+                  >
+                    <ResizeObserver
+                      onResize={rect =>
+                        this.handleResize(rect.width, rect.height)
+                      }
+                    />
+                    <WorkflowGridView
+                      orderData={orderData}
+                      orderStatus={orderStatus}
+                      orderStatus1={this.orderStatus}
+                      updateOrderStatus={updateOrderStatus}
+                      deleteOrderStatus={this.deleteOrderStatus}
+                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                      deleteOrder={this.deleteOrder}
+                      redirectTo={redirectTo}
+                      modelInfoReducer={modelInfoReducer}
+                      addAppointment={addAppointment}
+                      getAppointments={getAppointments}
+                      appointmentReducer={appointmentReducer}
+                    />
+                  </div>
+                )}
+                {!listView  ? (
                   <div
                     className={"simplebar-scroll-track"}
                     id={"simplebar-scroll-track"}
@@ -719,7 +762,8 @@ class WorkFlow extends Component {
                       id={"simplebar-track"}
                       style={{
                         width: `${trackWidth}px`,
-                        left: `${scrollPos}px`
+                        left: `${scrollPos}px`,
+                        position: "absolute"
                       }}
                     ></div>
                   </div>
