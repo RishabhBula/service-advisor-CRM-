@@ -73,10 +73,12 @@ const creteNewInspection = async (req, res) => {
             await resizeImage(originalImagePath, thumbnailImagePath, 300);
             inspectionImageThumb = await imagePath(
               thumbnailImagePath,
+              "Imspection-image-thumb",
               "inpection-thumbnail"
             );
             inspectionImageOriginal = await imagePath(
               originalImagePath,
+              "Imspection-image",
               "inpection"
             );
             S3ImapectionImgThumb.push(inspectionImageThumb);
@@ -267,11 +269,20 @@ const generatePdfDoc = async (req, res) => {
   const { body } = req;
   try {
     const fileName = ["file.pdf"].join("");
+
     const config = {
       // Papersize Options: http://phantomjs.org/api/webpage/property/paper-size.html
       format: "A4", // allowed units: A3, A4, A5, Legal, Letter, Tabloid
       orientation: "portrait", // portrait or landscape
 
+      httpHeaders: {
+        // e.g.
+        ContentType: "application/pdf",
+        ContentDisposition: "inline",
+        fileName: "invoice.pdf"
+      },
+      contentType: "application/pdf",
+      contentDisposition: "inline",
       // Page options
       border: {
         top: "15px", // default is 0, units: mm, cm, in, px
@@ -518,14 +529,14 @@ const generatePdfDoc = async (req, res) => {
     fs.writeFileSync(originalPdfPath);
     pdf
       .create(htmlBody, config)
-      .toFile(originalPdfPath, async function(err, file) {
+      .toFile(originalPdfPath, async function (err, file) {
         if (err) {
           return res.status(400).json({
             err,
             success: false
           });
         }
-        const pdfURL = await imagePath(file.filename, "pdf-file");
+        const pdfURL = await imagePath(file.filename, "invoice-pdf", "pdf-file");
         if (pdfURL) {
           fs.unlinkSync(originalPdfPath);
         }

@@ -27,12 +27,14 @@ const resizeImage = async (sourcePath, destinationPath, width) => {
   });
 };
 
-const imagePath = async (imageRoute,folderPath) => {
+const imagePath = async (imageRoute,fileName, folderPath) => {
   let imageUrl
   var params = {
     Bucket: bucketName,
     Body: fs.createReadStream(imageRoute),
-    Key: `${folderPath}/` + Date.now() + "_" + path.basename(imageRoute),
+    Key: `${folderPath}/` + Date.now() + "_" + path.basename(fileName),
+    ContentType: folderPath === "pdf-file" || folderPath === "message-pdf"? 'application/pdf' : 'image/jpeg',
+    ContentDisposition: `inline; filename=${fileName}`,
     ACL: "public-read"
   };
 
