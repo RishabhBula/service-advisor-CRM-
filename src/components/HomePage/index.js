@@ -119,7 +119,7 @@ class HomePageComponent extends Component {
       const { settingData, profileInfoReducer } = this.props;
       return (
          <>
-            <div className="main-body">
+            <div className="main-body home-page">
                <HomeHeader profileInfoReducer={profileInfoReducer} onLogout={e => this.props.onLogout(e)}/>
                <section className="banner">
                   <div className="container">
@@ -129,7 +129,12 @@ class HomePageComponent extends Component {
                               <div className="banner-left-content">
                                  <h1>The Smart & Simple way to Run Your Auto Shop.</h1>
                                  <p>With the easy to use and customizable CRM for your marketing, sales, and customer service teams.</p>
-                                 <Link to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-primary">Start Free Trial</Link>
+                                 <Link 
+                                 to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/ 
+                                 className="btn btn-trail"
+                                 >
+                                 Start Free Trial
+                                 </Link>
                               </div>
                            </div>
                         </div>
@@ -142,66 +147,108 @@ class HomePageComponent extends Component {
                   </div>
                </section>
                <section className="main-content main-info-section">
-                  <div className="container">
+                  <div className="">
                      {section1 && section1.length ? section1.map((data, index) => {
                         let title = (data.title).split(" ");
                         return (
-                           <React.Fragment key={index}>
-                              {index % 2 === 0 ?
-                                 <div className="row align-items-center pt-3 mob-row">
-                                    <div className="col-sm-7">
-                                       <div className="content-wrap text-right">
-                                          <div className="main-heading-wrap">
-                                             <p>{data.subTitle ? data.subTitle : ""}</p>
-                                             <h2>{title.map((value, index) => {
-                                                return (
-                                                   <React.Fragment key={index}>
-                                                      {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                                   </React.Fragment>
-                                                )
-                                             })} </h2>
-                                          </div>
-                                          <p className="padding-left">{data.description ? <div
-                                             dangerouslySetInnerHTML={{
-                                                __html: `${data.description}`
-                                             }} /> : ""}</p>
-                                       </div>
+                          <React.Fragment key={index}>
+                            {index % 2 === 0 ? (
+                              <div className="row align-items-center pt-3 mob-row">
+                                <div className="col-sm-7">
+                                  <div className="content-wrap text-right pr-5">
+                                    <div className="main-heading-wrap">
+                                      <p>
+                                        {data.subTitle ? data.subTitle : ""}
+                                      </p>
+                                      <h2>
+                                        {title.map((value, index) => {
+                                          return (
+                                            <React.Fragment key={index}>
+                                              {index < title.length - 1 ? (
+                                                <span>{value} </span>
+                                              ) : (
+                                                <span className="heading-highlighter">
+                                                  {value}
+                                                </span>
+                                              )}
+                                            </React.Fragment>
+                                          );
+                                        })}{" "}
+                                      </h2>
                                     </div>
-                                    <div className="col-sm-5">
-                                       <div className="content-img-wrap">
-                                          <img src={data.img} alt="" className="right-img" />
-                                       </div>
+                                    <p className="padding-left">
+                                      {data.description ? (
+                                        <div
+                                          dangerouslySetInnerHTML={{
+                                            __html: `${data.description}`
+                                          }}
+                                        />
+                                      ) : (
+                                        ""
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="col-sm-5">
+                                  <div className="content-img-wrap">
+                                    <img
+                                      src={data.img}
+                                      alt=""
+                                      className="right-img"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="row align-items-center pt-3">
+                                <div className="col-sm-5">
+                                  <div className="content-img-wrap d-flex justify-content-end">
+                                    <img
+                                      src={data.img}
+                                      alt=""
+                                      className="left-img"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-sm-7">
+                                  <div className="content-wrap text-left pl-5">
+                                    <div className="main-heading-wrap">
+                                      <p>
+                                        {data.subTitle ? data.subTitle : ""}
+                                      </p>
+                                      <h2>
+                                        {title.map((value, index) => {
+                                          return (
+                                            <React.Fragment key={index}>
+                                              {index < title.length - 1 ? (
+                                                <span>{value} </span>
+                                              ) : (
+                                                <span className="heading-highlighter">
+                                                  {value}
+                                                </span>
+                                              )}
+                                            </React.Fragment>
+                                          );
+                                        })}{" "}
+                                      </h2>
                                     </div>
-                                 </div>
-                                 :
-                                 <div className="row align-items-center pt-3">
-                                    <div className="col-sm-5">
-                                       <div className="content-img-wrap">
-                                          <img src={data.img} alt="" className="left-img" />
-                                       </div>
-                                    </div>
-                                    <div className="col-sm-7">
-                                       <div className="content-wrap text-left">
-                                          <div className="main-heading-wrap">
-                                             <p>{data.subTitle ? data.subTitle : ""}</p>
-                                             <h2>{title.map((value, index) => {
-                                                return (
-                                                   <React.Fragment key={index}>
-                                                      {index < (title.length - 1) ? <span>{value} </span> : <span className="heading-highlighter">{value}</span>}
-                                                   </React.Fragment>
-                                                )
-                                             })} </h2>
-                                          </div>
-                                          <p className="padding-right">{data.description ? <div
-                                             dangerouslySetInnerHTML={{
-                                                __html: `${data.description}`
-                                             }} /> : ""}</p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              }
-                           </React.Fragment>
-                        )
+                                    <p className="padding-right">
+                                      {data.description ? (
+                                        <div
+                                          dangerouslySetInnerHTML={{
+                                            __html: `${data.description}`
+                                          }}
+                                        />
+                                      ) : (
+                                        ""
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </React.Fragment>
+                        );
                      }) : null}
                   </div>
                </section>
@@ -264,16 +311,16 @@ class HomePageComponent extends Component {
                                        </React.Fragment>
                                     )
                                  })} </h2>
-                                 <p>{data.description ? <div
+                                 {data.description ? <div
                                     dangerouslySetInnerHTML={{
                                        __html: `${data.description}`
-                                    }} /> : ""}</p>
+                                    }} /> : ""}
                               </div>
                               <div className="text-center pt-3">
                                  {data.video && data.video.length ?
-                                    <iframe width="560" title={index} height="315" src={data.video && data.video.length ? this.validateYouTubeUrl(data.video) : ""} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" >
+                                    <div className={"video-block"}><iframe width="800" title={index} height="415" src={data.video && data.video.length ? this.validateYouTubeUrl(data.video) : ""} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" >
                                        <p>Your browser does not support iframes.</p>
-                                    </iframe>
+                                    </iframe></div>
                                     : null}
                               </div>
                            </React.Fragment>
@@ -287,10 +334,10 @@ class HomePageComponent extends Component {
                         <div className="get-started">
                            <div className="get-started-left">
                               <h3>Get Started for <span className="heading-highlighter">Free</span></h3>
-                              <p>No Contracts. No hidden fees. Get started in minutes. </p>
+                              <p className={"mb-0"}>No Contracts. No hidden fees. Get started in minutes. </p>
                            </div>
                            <div className="get-started-right">
-                              <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-primary">Start Free Trial
+                              <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-theme">Start Free Trial
                               </Link>
                            </div>
                         </div>

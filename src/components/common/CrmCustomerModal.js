@@ -149,7 +149,7 @@ export class CrmCustomerModal extends Component {
             }
           });
           this.props.onStdAdd();
-          this.props.setDefaultRate({value: result.data.data._id, label: result.data.data.name});
+          this.props.setDefaultRate({ value: result.data.data._id, label: result.data.data.name });
         }
       }
     } catch (error) {
@@ -209,7 +209,11 @@ export class CrmCustomerModal extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -359,7 +363,7 @@ export class CrmCustomerModal extends Component {
         await this.setStateAsync({ phoneErrors: t });
       }
       let validationData = {
-        firstName: firstName
+        firstName: firstName.trim()
       };
       if (email !== "") {
         validationData.email = email;
@@ -373,13 +377,15 @@ export class CrmCustomerModal extends Component {
       let IncorrectNumber = [...this.state.inCorrectNumber]
       if (phoneDetail && phoneDetail.length) {
         for (let i = 0; i < phoneDetail.length; i++) {
-          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
-          if (phoneTrimed.length <= 9) {
-            IncorrectNumber[i] = true
-            this.setState({
-              inCorrectNumber: IncorrectNumber
-            });
-            isValid = false;
+          if (!this.state.phoneErrors[i]) {
+            const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+            if (phoneTrimed.length <= 9) {
+              IncorrectNumber[i] = true
+              this.setState({
+                inCorrectNumber: IncorrectNumber
+              });
+              isValid = false;
+            }
           }
         }
       }
@@ -482,6 +488,7 @@ export class CrmCustomerModal extends Component {
       firstName,
       lastName,
       email,
+      referralSource
       //selectedLabourRate,
       //selectedPriceMatrix,
       //percentageError
@@ -541,10 +548,10 @@ export class CrmCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
-                        invalid={!firstName && errors.firstName ? true : false}
+                        invalid={!(firstName.trim()) && errors.firstName ? true : false}
                       />
                       <FormFeedback>
-                        {!firstName && errors.firstName
+                        {!(firstName.trim()) && errors.firstName
                           ? errors.firstName
                           : null}
                       </FormFeedback>
@@ -707,7 +714,7 @@ export class CrmCustomerModal extends Component {
                                   {phoneDetail[index].phone === "mobile" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {
@@ -903,11 +910,12 @@ export class CrmCustomerModal extends Component {
                     className="customer-modal-text-style"
                   >
                     Referral Source
-                      </Label>
+                  </Label>
                   <Input
                     type="text"
                     placeholder="Referral"
-                    name="Refferal Source"
+                    name="referralSource"
+                    value={referralSource}
                     onChange={this.handleInputChange}
                     maxLength="100"
                   />

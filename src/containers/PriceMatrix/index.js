@@ -453,14 +453,14 @@ class PriceMatrix extends Component {
     const { isEditMatrix } = this.state;
     const paylod = {
       matrixRange: this.state.matrixRange,
-      matrixName: this.state.matrixName
+      matrixName: this.state.matrixName.trim()
     };
     const { isValid, errors } = Validator(
       paylod,
       CreatePriceMatrixValidations,
       CreatePriceMatrixValidMessaages
     );
-    if (!isValid) {
+    if (!isValid && this.state.matrixName.trim() === "") {
       this.setState({
         errors,
         isLoading: false

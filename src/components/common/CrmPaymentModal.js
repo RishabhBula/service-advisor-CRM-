@@ -134,12 +134,13 @@ export class CrmPaymentModel extends Component {
          }
       }
 
-      if (!payableAmount) {
+      if (!payableAmount || payableAmount <= 0) {
          const errors = { ...this.state.errors }
          errors.payableAmount = "Please enter payable Amount."
          this.setState({ errors });
          return;
       }
+
       const remainingAmount = parseFloat(payableAmmount - totalPaiedAmount).toFixed(2) - parseFloat(payableAmount).toFixed(2)
       let payedAmount = [{ amount: payableAmount, date: new Date() }]
       const payload = {

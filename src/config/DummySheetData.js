@@ -10,7 +10,7 @@ export const CustomerSheetData = {
     "City",
     "State",
     "Zip Code",
-    "Refral Source"
+    "Referral Source"
   ],
   data: [
     {
@@ -24,7 +24,7 @@ export const CustomerSheetData = {
       City: "Indore",
       State: "MP",
       "Zip Code": "452001",
-      "Refral Source": "Google"
+      "Referral Source": "Google"
     }
   ]
 };

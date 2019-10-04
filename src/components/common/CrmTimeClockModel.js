@@ -124,6 +124,7 @@ export class CrmTimeClockModal extends Component {
       const startDateTime1 = moment.utc(startDateTime).format("HH:mm")
       const endDateTime1 = moment.utc(endDateTime).format("HH:mm")
       const calDuration = calculateDurationFromSeconds(duration)
+      
       this.setState({
         date,
         timeIn: startDateTime1,
@@ -360,7 +361,7 @@ export class CrmTimeClockModal extends Component {
   /*  
   */
   render() {
-    const { openTimeClockModal, handleTimeClockModal, orderReducer, isTimeClockData, userData, isWholeTimeClock, activity } = this.props;
+    const { openTimeClockModal, handleTimeClockModal, orderReducer, isTimeClockData, userData, isWholeTimeClock, /*activity,*/timeLogEle } = this.props;
     const { timeIn, timeOut, selectedTechnician, duration, isError, isEditTimeClock, notes, activityOptions, selectedActivity } = this.state
     let technicianData = []
     if (orderReducer.orderItems && orderReducer.orderItems.serviceId && orderReducer.orderItems.serviceId.length && !isTimeClockData) {
@@ -385,6 +386,8 @@ export class CrmTimeClockModal extends Component {
         return true
       })
     }
+    
+    
     return (
       <>
         <Modal
@@ -508,14 +511,16 @@ export class CrmTimeClockModal extends Component {
                   <div className={"input-block"}>
                     {
                       (isTimeClockData && isEditTimeClock) || (!isTimeClockData && !isEditTimeClock) ?
+                      
                         <Input
                           value={
                             !isWholeTimeClock ?
                               orderReducer.orderItems ? `Order (#${orderReducer.orderItems.orderId}) ${orderReducer.orderItems.orderName || 'N/A'}` : "" :
-                              activity
+                              timeLogEle.activity
                           }
                           disabled
                         /> :
+                        
                         <Select
                           options={activityOptions}
                           placeholder={activityOptions && !activityOptions.length ? "Select one technician" : "Select service for technician"}

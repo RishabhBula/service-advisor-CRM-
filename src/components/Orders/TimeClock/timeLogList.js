@@ -216,6 +216,8 @@ class TimeLogList extends Component {
           timeLogEle={timeLogEle}
           handleTimeClockModal={this.handleEditTimeClockModal}
           orderReducer={orderReducer}
+          isWholeTimeClock={false}
+          isTimeClockData={true}
           editTimeLogRequest={editTimeLogRequest}
         />
       </div>

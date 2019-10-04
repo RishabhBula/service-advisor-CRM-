@@ -16,7 +16,7 @@ import CrmDragDrop from "./CrmDragDrop";
 import { logger } from "../../helpers/Logger";
 import XLSX from "xlsx";
 import { connect } from "react-redux";
-import { modelOpenRequest, showLoader, hideLoader } from "../../actions";
+import { modelOpenRequest, showLoader, hideLoader,updateImportCustomersReq } from "../../actions";
 import CrmExportSampleButton from "./CrmExportSampleButton";
 class CrmImportExcel extends Component {
   constructor(props) {
@@ -38,6 +38,7 @@ class CrmImportExcel extends Component {
       activeSheet: 0
     });
     this.props.toggleModal(!this.props.isOpen);
+    this.props.updateImportCustomersReq({importError:undefined})
   };
   onImport = () => {
     const { file, sheets } = this.state;
@@ -214,7 +215,7 @@ class CrmImportExcel extends Component {
       sheetType,
       importSectionName
     } = this.props;
-
+    
     const { isLoading, fileError, sheets } = this.state;
     logger(isLoading);
     return (
@@ -240,29 +241,29 @@ class CrmImportExcel extends Component {
               </h4>
               <ul className={"list-inline import-instruction-list"}>
                 <li>
-                  <i class="icon-arrow-right icons" />
+                  <i className="icon-arrow-right icons" />
                   Click Here to{" "}
                   <span className={""}>
                     <CrmExportSampleButton sheetType={sheetType} />
                   </span>
                 </li>
                 <li>
-                  <i class="icon-arrow-right icons" />
+                  <i className="icon-arrow-right icons" />
                   Attach/Upload only csv or excel file to insert bulk
                   records in the system.
                 </li>
                 <li>
-                  <i class="icon-arrow-right icons" /> Kindly Insert 250
+                  <i className="icon-arrow-right icons" /> Kindly Insert 250
                   records at a time, for adding more records again create
                   new file.
                 </li>
                 <li>
-                  <i class="icon-arrow-right icons" />
+                  <i className="icon-arrow-right icons" />
                   Kindly make sure before inserting the data filed entity
                   should be correct and formatted.
                 </li>
                 <li>
-                  <i class="icon-arrow-right icons" />
+                  <i className="icon-arrow-right icons" />
                   Kindly follow the sample_data.csv to Import Bulk Data.
                 </li>
               </ul>
@@ -318,6 +319,9 @@ const mapDispatchToProps = dispatch => ({
   },
   hideLoader: () => {
     dispatch(hideLoader());
+  },
+  updateImportCustomersReq:(data) => {
+    dispatch(updateImportCustomersReq(data));
   }
 });
 

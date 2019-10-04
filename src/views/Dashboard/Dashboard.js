@@ -277,8 +277,8 @@ class Dashboard extends Component {
     });
     return (
       <div className="animated fadeIn dashboard-container dashboard-warp">
-        <Row className={"m-0"}>
-          <Col xs="12" sm="12" lg="12">
+        <Row className={"dashboard-container-row"}>
+          <Col xs="12" sm="12" lg="12" className={"p-0"}>
             <Card className={"white-card"}>
               <CardBody className={"custom-card-body position-relative"}>
                 <Row className={"m-0"}>

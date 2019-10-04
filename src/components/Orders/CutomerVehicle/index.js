@@ -432,14 +432,14 @@ class CutomerVehicle extends Component {
                   placeholder={"Type Vehicle name"}
                   loadOptions={this.loadVehicles}
                   // menuIsOpen = {true}
-                  defaultOptions={isCustomerSelected ? defaultOptionsVehicle : null}
+                  defaultOptions={
+                    isCustomerSelected ? defaultOptionsVehicle : null
+                  }
                   className={classnames("w-100 form-select", {
                     "is-invalid": isError && !vehicleId
                   })}
                   value={
-                    selectedVehicle.value !== ""
-                      ? selectedVehicle
-                      : vehicleId
+                    selectedVehicle.value !== "" ? selectedVehicle : vehicleId
                   }
                   isClearable={true}
                   noOptionsMessage={() =>
@@ -472,8 +472,9 @@ class CutomerVehicle extends Component {
                 color={""}
                 size={""}
                 onClick={this.props.handleEditOrder}
-                className={"btn-theme"}
+                className={"browse-btn"}
               >
+                <i className={"fa fa-repeat mr-2"}></i>
                 Update Order
               </Button>
             </div>

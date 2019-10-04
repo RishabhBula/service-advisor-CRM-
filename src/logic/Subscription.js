@@ -10,6 +10,8 @@ import {
 } from "../actions";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
+
+let toastId = null;
 /**
  *
  */
@@ -26,12 +28,20 @@ const addSubscriptionLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0] || DefaultErrorMessage);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0] || DefaultErrorMessage
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
       } else {
-         toast.success(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.success(
+               result.messages[0]
+            );
+         }
          dispatch(
            modelOpenRequest({
              modelDetails: {
@@ -54,7 +64,6 @@ const addSubscriptionLogic = createLogic({
 const getSubscriptionPlanLogic = createLogic({
    type: subscriptionActions.GET_SUBSCRIPTION_PLAN_REQUEST,
    async process({ action }, dispatch, done) {
-      dispatch(showLoader());
       const result = await new ApiHelper().FetchFromServer(
          "/membership-plan",
          "/list",
@@ -64,8 +73,11 @@ const getSubscriptionPlanLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0] || DefaultErrorMessage);
-         dispatch(hideLoader());
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0] || DefaultErrorMessage
+            );
+         }
          done();
          return;
       } else {
@@ -74,7 +86,6 @@ const getSubscriptionPlanLogic = createLogic({
                subscriptionPlan: result.data.data
             })
          );
-         dispatch(hideLoader());
          done();
       }
    }

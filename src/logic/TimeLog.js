@@ -15,6 +15,8 @@ import {
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppConfig } from "../config/AppConfig";
+
+let toastId = null;
 /**
  *
  */
@@ -164,12 +166,20 @@ const addTimeLogLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       if (action.payload.isTimeClockData) {
         dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
         dispatch(
@@ -208,11 +218,19 @@ const updateTimeLogLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       if (action.payload.isTimerClock) {
         dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
         done();
@@ -257,7 +275,11 @@ const getTechnicianTimeLogLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -287,7 +309,11 @@ const getAllTimeLogLogic = createLogic({
       }
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;

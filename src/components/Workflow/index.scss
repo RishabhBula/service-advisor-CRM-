@@ -1,0 +1,8 @@
+.app-body{
+  overflow: initial;
+  .inventory-nav{
+    position: sticky;
+    -webkit-position: sticky;
+    top: 46px;
+  }
+}

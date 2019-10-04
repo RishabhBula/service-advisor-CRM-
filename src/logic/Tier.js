@@ -14,6 +14,7 @@ import {
    addTireToService
 } from "./../actions";
 
+let toastId = null;
 const addTireLogic = createLogic({
    type: tiersActions.ADD_TIER,
    async process({ action }, dispatch, done) {
@@ -29,7 +30,11 @@ const addTireLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
@@ -68,7 +73,11 @@ const addTireLogic = createLogic({
             dispatch(hideLoader());
             done();
          } else {
-            toast.success(result.messages[0]);
+            if (!toast.isActive(toastId)) {
+               toastId = toast.success(
+                  result.messages[0]
+               );
+            }
             dispatch(
                modelOpenRequest({
                   modelDetails: {
@@ -176,7 +185,11 @@ const updateUserStatusLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
@@ -211,7 +224,11 @@ const deleteTireLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
@@ -244,12 +261,20 @@ const editTiresLogic = createLogic({
          action.payload
       );
       if (result.isError) {
-         toast.error(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.error(
+               result.messages[0]
+            );
+         }
          dispatch(hideLoader());
          done();
          return;
       } else {
-         toast.success(result.messages[0]);
+         if (!toast.isActive(toastId)) {
+            toastId = toast.success(
+               result.messages[0]
+            );
+         }
          dispatch(
             getTiersList({
                ...action.payload

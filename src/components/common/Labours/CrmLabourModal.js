@@ -39,7 +39,7 @@ export class CrmLabourModal extends Component {
       discription: "",
       note: "",
       rate: "",
-      hours: "",
+      hours: 1,
       labourId: '',
       errors: {},
       isEditMode: 0,
@@ -80,7 +80,12 @@ export class CrmLabourModal extends Component {
           }
         });
       }
-    } else {
+    } else if (name === 'hours') {
+      this.setState({
+        [name]: value !== "" ? value : 1
+      })
+    }
+    else {
       this.setState({
         [name]: value
       })
@@ -108,7 +113,7 @@ export class CrmLabourModal extends Component {
         discription: this.props.dataLabour.discription,
         note: this.props.dataLabour.notes,
         rate: this.props.dataLabour.rate,
-        hours: this.props.dataLabour.hours,
+        hours: this.props.dataLabour.hours ? this.props.dataLabour.hours : 1,
         isEditMode: 1,
         errors: {},
         updatedAt: this.props.dataLabour.updatedAt,
@@ -125,7 +130,7 @@ export class CrmLabourModal extends Component {
       discription: "",
       note: "",
       rate: "",
-      hours: "",
+      hours: 1,
       labourId: '',
       errors: {},
       isEditMode: 0,
@@ -235,7 +240,7 @@ export class CrmLabourModal extends Component {
     } else {
       const { selectedRateOptions } = this.state;
       let data = {
-        discription: this.state.discription,
+        discription: this.state.discription.trim(),
         notes: this.state.note,
         hours: this.state.hours,
         permission: this.state.permission,
@@ -297,7 +302,7 @@ export class CrmLabourModal extends Component {
       this.props.handleLabourModal()
     } else {
       this.setState({
-        servicePartError: "Part is required."
+        serviceLaborError: "Labor selectuion is required."
       })
     }
   }
@@ -326,7 +331,11 @@ export class CrmLabourModal extends Component {
         >
           <ModalHeader toggle={handleLabourModal}>
             {isEditMode ? `Update Labor Details` : 'Create New Labor'}
-            {isEditMode ? <LastUpdated updatedAt={updatedAt} /> : null}
+            {isEditMode ? <>
+              {updatedAt ?
+                <LastUpdated updatedAt={updatedAt} />
+                : null}
+            </> : null}
           </ModalHeader>
           <ModalBody>
             {
@@ -335,7 +344,7 @@ export class CrmLabourModal extends Component {
                   <Col md={"12"}>
                     <FormGroup className={"fleet-block"}>
                       <Label htmlFor="name" className="customer-modal-text-style">
-                        Search Labor
+                        Search Labor <span className={"asteric"}>*</span>
                       </Label>
                       <div className={"input-block"}>
                         <Async
@@ -357,7 +366,7 @@ export class CrmLabourModal extends Component {
                           }
                         />
                         {serviceLaborError ? (
-                          <FormFeedback>{serviceLaborError}</FormFeedback>
+                          <FormFeedback className="text-left">{serviceLaborError}</FormFeedback>
                         ) : null}
                       </div>
                     </FormGroup>
@@ -372,9 +381,9 @@ export class CrmLabourModal extends Component {
                         </Label>
                         <div className="input-block">
                           <Input className={"form-control"} type={"text"} id="discription" name=
-                            "discription" maxLength="100" onChange={this.handleChange} value={discription} invalid={errors.discription && !discription} placeholder={"Labor Description"} />
+                            "discription" maxLength="100" onChange={this.handleChange} value={discription} invalid={errors.discription && !(discription.trim())} placeholder={"Labor Description"} />
                           <FormFeedback>
-                            {errors && !discription && errors.discription
+                            {errors && !(discription.trim()) && errors.discription
                               ? errors.discription
                               : null}
                           </FormFeedback>
@@ -502,7 +511,7 @@ export class CrmLabourModal extends Component {
 
             <div className="required-fields">*Fields are Required.</div>
 
-            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add New Labor'}
+            <Button color="primary" onClick={() => this.handleLabourAdd()}>{isEditMode ? `Update Labor Detail` : 'Add Labor'}
 
             </Button>{" "}
             <Button color="secondary" onClick={handleLabourModal}>

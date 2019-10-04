@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { logger } from "../helpers/Logger";
 import { AppConfig } from "../config/AppConfig";
 
+let toastId = null ;
 const labourAddLogic = createLogic({
   type: labourActions.LABOUR_ADD_REQUEST,
   async process({ action }, dispatch, done) {
@@ -35,7 +36,11 @@ const labourAddLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -74,7 +79,11 @@ const labourAddLogic = createLogic({
         dispatch(hideLoader());
         done();
       } else {
-        toast.success(result.messages[0]);
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(
+             result.messages[0]
+          );
+       }
         dispatch(hideLoader());
         dispatch(modelOpenRequest({ modelDetails: { tireAddModalOpen: false } }));
         dispatch(labourListRequest({
@@ -112,7 +121,11 @@ const labourListLogic = createLogic({
       undefined,
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -172,12 +185,20 @@ const editLabourLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(
         modelOpenRequest({ modelDetails: { tireEditModalOpen: false } })
@@ -205,7 +226,11 @@ const deleteLabourLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;

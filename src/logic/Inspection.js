@@ -20,6 +20,7 @@ import {
   hideLoader,
 } from "../actions"
 
+let toastId = null;
 
 const addInspectionLogic = createLogic({
   type: InspectionActions.ADD_INSPCETION,
@@ -40,7 +41,11 @@ const addInspectionLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -107,12 +112,20 @@ const addInspectionTemplateLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       //dispatch(addInspectionTemplateSuccess(result.data.data));
       dispatch(
         getTemplateList()
@@ -183,13 +196,21 @@ const addMessageTemplateLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(getMessageTemplate());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(addMessageTemplateSuccess());
       dispatch(getMessageTemplate());
       dispatch(hideLoader());
@@ -256,12 +277,20 @@ const updateMessageTemplateLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(updateMessageTemplateSuccess());
       dispatch(getMessageTemplate());
       dispatch(hideLoader());
@@ -286,7 +315,11 @@ const deleteMessageTemplateLogic = createLogic({
       }
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -356,12 +389,20 @@ const sentmessageTemplateLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(sendMessageTemplateSuccess());
       dispatch(hideLoader());
       done();

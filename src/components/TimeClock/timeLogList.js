@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   Col,
   Input,
@@ -22,6 +23,7 @@ import Dollor from "../common/Dollor"
 import Loader from "../../containers/Loader/Loader";
 import PaginationHelper from "../../helpers/Pagination";
 import * as qs from "query-string";
+import { AppRoutes } from "../../config/AppRoutes";
 
 class TimeLogList extends Component {
   constructor(props) {
@@ -34,6 +36,7 @@ class TimeLogList extends Component {
     };
   }
   componentDidMount() {
+    window.addEventListener("scroll", this.windowScroll);
     const { location } = this.props;
     const lSearch = location.search;
     const { page, search, sort } = qs.parse(lSearch);
@@ -48,6 +51,25 @@ class TimeLogList extends Component {
       filterApplied
     })
   }
+
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`timeLog10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   handleEditTimeClockModal = (timeLogs) => {
     const { modelInfoReducer, modelOperate } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -117,7 +139,7 @@ class TimeLogList extends Component {
       orderId: orderId ? orderId : null,
       _id: timeLogId,
       isTimerClock: true,
-      page:this.state.page || 1
+      page: this.state.page || 1
     }
     this.props.editTimeLogRequest(paylod)
   }
@@ -266,16 +288,44 @@ class TimeLogList extends Component {
                 activity = timeLog.activity
                 orderId = timeLog.orderId && timeLog.orderId.length ? timeLog.orderId[0]._id : null
                 return (
-                  <tr key={index}>
+                  <tr key={index} id={`timeLog${index}`}>
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td className={"text-capitalize"}>{timeLog.type}</td>
-                    <td className={"text-capitalize"}>{`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}</td>
-                    <td className={"text-capitalize"}>{timeLog.customerId && timeLog.customerId.length ? `${timeLog.customerId[0].firstName} ${timeLog.customerId[0].lastName}` : "-"}</td>
-                    <td>{timeLog.vehicleId && timeLog.vehicleId.length ? `${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}` : "-"}</td>
+                    <td className={"text-capitalize"}>{timeLog.technicianId ?
+                      <Link to={AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", timeLog.technicianId._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
+                        {`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}
+                      </Link>
+                      : "-"}
+                    </td>
+                    <td className={"text-capitalize"}>{timeLog.customerId && timeLog.customerId.length ?
+                      <Link to={AppRoutes.CUSTOMER_DETAILS.url.replace(":id", timeLog.customerId[0]._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
+                        {`${timeLog.customerId[0].firstName} ${timeLog.customerId[0].lastName}`}
+                      </Link>
+                      : "-"}</td>
+                    <td>{timeLog.vehicleId && timeLog.vehicleId.length ?
+                      <Link to={AppRoutes.VEHICLES_DETAILS.url.replace(":id", timeLog.vehicleId[0]._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
+                        {`${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}`}
+                      </Link>
+                      : "-"}</td>
                     <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm")}</td>
                     <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
-                    <td>{timeLog.activity}</td>
+                    <td>{timeLog.activity !== "General" ?
+                      <Link to={AppRoutes.WORKFLOW_ORDER.url.replace(":id", timeLog.orderId[0]._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
+                        {timeLog.activity}
+                      </Link> : timeLog.activity}</td>
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
                     <td><Dollor value={!isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
                     <td className={"text-center"}>
@@ -327,6 +377,17 @@ class TimeLogList extends Component {
             }
           </tbody>
         </Table>
+        {timeLogData && timeLogData.length && isSuccess ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalTimeLogs && isSuccess ? (
           <PaginationHelper
             totalRecords={totalTimeLogs}

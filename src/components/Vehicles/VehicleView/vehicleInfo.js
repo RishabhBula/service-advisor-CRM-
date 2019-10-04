@@ -352,7 +352,7 @@ export class VehicleInfo extends Component {
             color={""}
             className={"btn-theme"}
           >
-            Update Vehicle Details
+            Edit Vehicle Details
           </Button>
         </div>
         {vehicleData ? (

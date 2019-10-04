@@ -95,15 +95,26 @@ class Reports extends Component {
         <Card className={"white-card position-relative"}>
           <CardBody className={"custom-card-body"}>
             <Row className={"mb-2 ml-0"}>
-              <Col className={"title-left-section"}>
-                <h4 className={"card-title"}>Sales Summary</h4>
-                <div className={"workflow-mode"}>
-                  <div className={"mode-inner"} />
+              <Col
+                className={
+                  "p-2 bg-white border-theme d-flex align-items-center"
+                }
+              >
+                <h1 className={"pl-2 pr-3 mb-0 text-purple"}>
+                  <i class="icons cui-pie-chart"></i>
+                </h1>
+                <div>
+                  <h4 className={"card-title mb-0"}>Sales Summary</h4>
+                  <p className={"mb-0 text-muted"}>
+                    This daily sales report sample is useful to track on a
+                    weekly basis since tracking it daily is just too short of a
+                    time span to evaluate your strongest and weakest points.
+                  </p>
                 </div>
               </Col>
             </Row>
-            <Row>
-              <Col sm={"12"}>
+            <Row className={"m-0"}>
+              <Col sm={"12"} className={"p-0"}>
                 <SalesByCusomerAge
                   searchKey={customerSearch}
                   customerReport={customerReport}

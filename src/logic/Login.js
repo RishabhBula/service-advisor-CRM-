@@ -15,6 +15,8 @@ import {
 import { DefaultErrorMessage } from "../config/Constants";
 import { APP_URL } from "../config/AppConfig";
 import { AppRoutes } from "../config/AppRoutes";
+
+let toastId = null;
 /**
  *
  */
@@ -33,7 +35,11 @@ const loginLogic = createLogic({
       action.payload
     );
     if (result.isError || !result.data.data || !result.data.data.subdomain) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
@@ -97,7 +103,11 @@ const forgetPasswordLogic = createLogic({
       return;
     } else {
       logger(result);
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/login" }));
       done();
@@ -155,7 +165,11 @@ const resetPasswordLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+           result.messages[0]
+        );
+     }
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
@@ -184,7 +198,8 @@ const verifyAccountAccessLogic = createLogic({
     if (result.isError) {
       dispatch(logOutRequest());
     }
-
+    localStorage.setItem("token", user);
+    
     dispatch(
       redirectTo({
         path: AppRoutes.DASHBOARD.url

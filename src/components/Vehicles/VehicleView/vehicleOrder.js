@@ -39,7 +39,7 @@ export class VehicleOrder extends Component {
     return (
       <>
         <div className={"text-right new-vehicle-Order-btn pb-2"}>
-          <Button onClick={() => this.handleCreateOrder(vehicleData._id)} color={"primary"}>Create New Order</Button>
+          <Button onClick={() => this.handleCreateOrder(vehicleData._id)} color={""} className={"btn-theme"}>Create New Order</Button>
         </div>
         <Table responsive>
           <thead>

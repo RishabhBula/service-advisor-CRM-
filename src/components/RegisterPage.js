@@ -25,9 +25,8 @@ import { SingupValidations, SingupValidationsMessaages } from "../validations";
 import MailIcon from "./../assets/img/mail-icon.svg";
 import { Link } from "react-router-dom";
 import { validUrlCheck, isValidSubdomain } from "../helpers/Object";
-// import ServiceAdvisorLogo from "../assets/logo-white.svg";
-import HomeHeader from "./HomePage/homeHeader";
-import HomeFooter from "./HomePage/homeFooter";
+import ServiceAdvisorLogo from "../assets/logo-white.svg";
+
 const ResendInvitation = props => {
   return (
     <div className={"confirm-block"}>
@@ -114,15 +113,15 @@ class RegisterPage extends Component {
         confirmPassword
       } = this.state;
       const d = {
-        firstName,
-        lastName,
-        email,
-        password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        password: password.trim(),
         companyLogo,
-        companyName,
-        companyWebsite,
-        workspace,
-        confirmPassword
+        companyName: companyName.trim(),
+        companyWebsite: companyWebsite.trim(),
+        workspace: workspace.trim(),
+        confirmPassword: confirmPassword.trim()
       };
       let { isValid, errors } = Validator(
         d,
@@ -138,10 +137,10 @@ class RegisterPage extends Component {
         isValid = false;
       }
       if (d.password && !errors.password) {
-        let res = (d.password).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+        let res = (d.password).match(/^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/);
         if (!res) {
           isValid = false;
-          errors.password = "Password should have both alpha & numeric characters."
+          errors.password = "Password must have alphanumeric characters with optional (special characters)."
         }
       }
       if (!isValid) {
@@ -175,7 +174,7 @@ class RegisterPage extends Component {
     }
   }
   render() {
-    const { settingData } = this.props
+    // const { settingData } = this.props
     const {
       errors,
       email,
@@ -190,22 +189,22 @@ class RegisterPage extends Component {
     } = this.state;
     return (
       <>
-        <div className="faq-section">
-          <HomeHeader />
-        </div>
+
         <div className="app app1 flex-row align-items-center auth-page pt-3 pb-3">
           <div className="auth-bg" />
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
-              {/* <Col className="text-center">
-              <h4 className="logo-title">
-                <img
-                  src={ServiceAdvisorLogo}
-                  alt={"logo"}
-                  style={{ width: 120 }}
-                />
-              </h4>
-            </Col> */}
+              <Col className="text-center">
+                <Link to="/home">
+                  <h4 className="logo-title">
+                    <img
+                      src={ServiceAdvisorLogo}
+                      alt={"logo"}
+                      style={{ width: 120 }}
+                    />
+                  </h4>
+                </Link>
+              </Col>
               <CardGroup>
                 <Card className="p-4 pl-4 pr-4 card">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
@@ -232,7 +231,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={firstName}
                               name="firstName"
-                              invalid={errors.firstName}
+                              invalid={errors.firstName ? true : false}
                             />
                             <FormFeedback>
                               {errors.firstName ? errors.firstName : null}
@@ -256,7 +255,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={lastName}
                               name="lastName"
-                              invalid={errors.lastName}
+                              invalid={errors.lastName ? true : false}
                             />
                             <FormFeedback>
                               {errors.lastName ? errors.lastName : null}
@@ -278,7 +277,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={email}
                               name="email"
-                              invalid={errors.email}
+                              invalid={errors.email ? true : false}
                             />
                             <FormFeedback>
                               {errors.email ? errors.email : null}
@@ -302,7 +301,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               value={password}
                               name="password"
-                              invalid={errors.password}
+                              invalid={errors.password ? true : false}
                             />
                             <FormFeedback>
                               {errors.password ? errors.password : null}
@@ -328,7 +327,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               name="confirmPassword"
                               value={confirmPassword}
-                              invalid={errors.confirmPassword}
+                              invalid={errors.confirmPassword ? true : false}
                             />
                             <FormFeedback>
                               {errors.confirmPassword
@@ -357,7 +356,7 @@ class RegisterPage extends Component {
                               name="companyName"
                               value={companyName}
                               onBlur={this.onBlur}
-                              invalid={errors.companyName}
+                              invalid={errors.companyName ? true : false}
                             />
                             <FormFeedback>
                               {errors.companyName ? errors.companyName : null}
@@ -411,7 +410,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               name="workspace"
                               value={workspace}
-                              invalid={errors.workspace}
+                              invalid={errors.workspace ? true : false}
                             />
                             <FormFeedback>
                               {errors.workspace ? errors.workspace : null}
@@ -433,18 +432,16 @@ class RegisterPage extends Component {
                             <PopoverBody>
                               <div className={"pb-2 technician-detail"}>
                                 <div
-                                  className={
-                                    "text-capitalize pb-1 border-bottom"
-                                  }
+                                  className={"text-capitalize pb-1 border-bottom"}
                                 >
-                                  Name of dedicated space provide for your
-                                  company.
+                                  Your work space will be an area reserved and
+                                  identified uniquely by your company name
+                                  followed by our company domain.
                               </div>
                                 <div className={"pt-2  text-note text-left"}>
-                                  Will Assign a seprate subdomain
-                                <br />
-                                  ex.&nbsp;
-                                  http://comanyname.serviceadvisor.io
+                                  EX: Your workspace name is "Peterbilt", so after
+                                  signup, your URL will be
+                                  http://peterbilt.serviceadvisor.io.
                               </div>
                               </div>
                             </PopoverBody>
@@ -469,7 +466,7 @@ class RegisterPage extends Component {
                               onChange={this.eventHandler}
                               name="companyWebsite"
                               value={companyWebsite}
-                              invalid={errors.companyWebsite}
+                              invalid={errors.companyWebsite ? true : false}
                             />
                             <FormFeedback>
                               {errors.companyWebsite
@@ -519,9 +516,7 @@ class RegisterPage extends Component {
             </Col>
           </Row>
         </div>
-        <div>
-          <HomeFooter settingData={settingData} />
-        </div>
+
       </>
     );
   }

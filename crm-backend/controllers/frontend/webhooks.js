@@ -17,12 +17,12 @@ const paymentSuccess = async (req, data) => {
     stripeCustomerId: customer,
     email: customer_email,
     isDeleted: false
-  });
+  }).populate("planId");
 
   if (!userData) {
     throw new Error("Unkown user details.");
   }
-
+  
   await UserModel.updateOne(
     {
       _id: userData.id
@@ -36,14 +36,19 @@ const paymentSuccess = async (req, data) => {
   );
   try {
     const email = new Email(req);
-    email.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION);
+    email.setTemplate(AvailiableTemplates.SUBSCRIPTION_TEMPLATE, {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      status: "created",
+      plan_name: userData.planId && userData.planId.name ? userData.planId.name : "Unnamed Plan"
+    });
     email.setAttachements([
       {
         filename: `Invoice for ${moment
           .unix(period_start)
           .format("YYYY-MM-DD")} - ${moment
-          .unix(period_end)
-          .format("YYYY-MM-DD")}.pdf`,
+            .unix(period_end)
+            .format("YYYY-MM-DD")}.pdf`,
         path: invoice_pdf
       }
     ]);

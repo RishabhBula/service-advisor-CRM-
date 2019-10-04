@@ -1,5 +1,6 @@
 import Validator from "js-object-validation";
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   Row,
   Col,
@@ -73,9 +74,11 @@ class GeneratePasswordPage extends Component {
         <Row className="justify-content-center">
           <Col md="6">
             <Col className="text-center">
-              <h4 className="logo-title">
-                <img src={ServiceAdvisorLogo} alt={"logo"} />
-              </h4>
+              <Link to="/home">
+                <h4 className="logo-title">
+                  <img src={ServiceAdvisorLogo} alt={"logo"} />
+                </h4>
+              </Link>
             </Col>
             <CardGroup>
               <Card className="p-4">

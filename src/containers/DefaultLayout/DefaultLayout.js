@@ -46,7 +46,7 @@ import CustAndVehicle from "../../components/common/CustomerAndVehicle/CustAndVe
 import { logger } from "../../helpers/Logger";
 import { AppRoutes } from "../../config/AppRoutes";
 import NoAccess from "../NoAccess";
-import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
+// import { CrmSubscriptionModel } from "../../components/common/CrmSubscriptionModal";
 import { WildCardRoutes } from "../../config/Constants";
 import { isValidObjectId } from "../../helpers";
 import moment from "moment";
@@ -168,32 +168,34 @@ class DefaultLayout extends Component {
   };
   renderSubscriptionModal = profileInfo => {
     const { isInTrialPeriod, planId, planExiprationDate } = profileInfo;
-    const {
-      getSubscriptionPlanRequest,
-      subscriptionReducer,
-      addSubscriptionRequest,
-      modelOperate,
-      modelInfoReducer,
-      logoutUser
-    } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    const { openSubPayementModel } = modelDetails;
+    // const {
+    //   getSubscriptionPlanRequest,
+    //   subscriptionReducer,
+    //   addSubscriptionRequest,
+    //   modelOperate,
+    //   modelInfoReducer,
+    //   logoutUser
+    // } = this.props;
+    // const { modelDetails } = modelInfoReducer;
+    // const { openSubPayementModel } = modelDetails;
     // const d1 = moment(new Date()).toDate();
     // const d2 = new Date(planExiprationDate);
     // const diffTime = Math.abs(d1.getTime() - d2.getTime());
     const isPlanExpiered = moment(planExiprationDate).isSameOrBefore(new Date(), 'day');
     if (!isInTrialPeriod && (isPlanExpiered || !planId)) {
-      return (
-        <CrmSubscriptionModel
-          openSubscriptionModel={true}
-          modelOperate={modelOperate}
-          openSubPayementModel={openSubPayementModel}
-          getSubscriptionPlanRequest={getSubscriptionPlanRequest}
-          subscriptionReducer={subscriptionReducer}
-          addSubscriptionRequest={addSubscriptionRequest}
-          logOutRequest={logoutUser}
-        />
-      );
+       this.props.redirectTo("/pricing");
+      // return (
+      //   <CrmSubscriptionModel
+      //     openSubscriptionModel={true}
+      //     modelOperate={modelOperate}
+      //     openSubPayementModel={openSubPayementModel}
+      //     getSubscriptionPlanRequest={getSubscriptionPlanRequest}
+      //     subscriptionReducer={subscriptionReducer}
+      //     addSubscriptionRequest={addSubscriptionRequest}
+      //     logOutRequest={logoutUser}
+      //   />
+      //   );
+       
     } else {
       return null;
     }

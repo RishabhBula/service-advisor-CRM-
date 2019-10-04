@@ -364,8 +364,8 @@ export class CrmTyreModal extends Component {
          } = this.state
 
          const payload = {
-            brandName,
-            modalName,
+            brandName: brandName.trim(),
+            modalName: modalName.trim(),
             vendorId: vendorId ? vendorId.value : null,
             seasonality,
             tierSize,
@@ -477,11 +477,11 @@ export class CrmTyreModal extends Component {
    }
    handleServiceItem = async () => {
       const { tireId1 } = this.state
-      const { serviceIndex, services } = this.props; 
+      const { serviceIndex, services } = this.props;
       if (tireId1) {
          let servicePartData = services[serviceIndex].serviceItems
          if (this.state.selectedTireSize) {
-            servicePartData.push(tireId1.tireData);            
+            servicePartData.push(tireId1.tireData);
             await this.props.addTireToService(
                {
                   services,
@@ -491,7 +491,7 @@ export class CrmTyreModal extends Component {
             this.props.handleTierModal()
          }
          else if (!(tireId1.tireData.tierSize.length)) {
-            servicePartData.push(tireId1.tireData)           
+            servicePartData.push(tireId1.tireData)
             await this.props.addTireToService(
                {
                   services,
@@ -563,7 +563,11 @@ export class CrmTyreModal extends Component {
                backdrop={"static"}
                className="customer-modal custom-form-modal custom-modal-lg"
             >
-               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update Tire Details`}{" "}{isEditMode ? <LastUpdated updatedAt={tireData.updatedAt} /> : null}</ModalHeader>
+               <ModalHeader toggle={handleTierModal}>{!isEditMode ? "Create New Tire" : `Update Tire Details`}{" "}{isEditMode ? <>
+                  {tireData && tireData.updatedAt ?
+                     <LastUpdated updatedAt={tireData.updatedAt} />
+                     : null}</>
+                  : null}</ModalHeader>
                <ModalBody>
                   {
                      serviceTireModal && !newServiceTire ?
@@ -572,7 +576,7 @@ export class CrmTyreModal extends Component {
                               <Col md={"12"}>
                                  <FormGroup className={"fleet-block"}>
                                     <Label htmlFor="name" className="customer-modal-text-style">
-                                       Search Tire
+                                       Search Tire <span className={"asteric"}>*</span>
                                     </Label>
                                     <div className={"input-block"}>
                                        <Async
@@ -656,10 +660,10 @@ export class CrmTyreModal extends Component {
                                           maxLength="20"
                                           placeholder={"MRF"}
                                           type={"text"}
-                                          invalid={errors.brandName && !brandName}
+                                          invalid={errors.brandName && !(brandName.trim())}
                                        />
                                        <FormFeedback>
-                                          {errors && !brandName && errors.brandName
+                                          {errors && !(brandName.trim()) && errors.brandName
                                              ? errors.brandName
                                              : null}
                                        </FormFeedback>
@@ -680,9 +684,9 @@ export class CrmTyreModal extends Component {
                                           maxLength="20"
                                           className={"form-control"}
                                           type={"text"}
-                                          invalid={errors.modalName && !modalName} />
+                                          invalid={errors.modalName && !(modalName.trim())} />
                                        <FormFeedback>
-                                          {errors && !modalName && errors.modalName
+                                          {errors && !(modalName.trim()) && errors.modalName
                                              ? errors.modalName
                                              : null}
                                        </FormFeedback>
@@ -1005,7 +1009,7 @@ export class CrmTyreModal extends Component {
                <ModalFooter>
                   <div className="required-fields">*Fields are Required.</div>
                   <Button color="primary" onClick={() => this.handleAddTire()}>
-                     {!isEditMode ? serviceTireModal && !newServiceTire ? "Add to Service" : "Add New Tire" : `Update Tire`}
+                     {!isEditMode ? serviceTireModal && !newServiceTire ? "Add Tire" : "Add Tire" : `Update Tire`}
                   </Button>{" "}
                   <Button color="secondary" onClick={handleTierModal}>
                      Cancel

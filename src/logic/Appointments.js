@@ -14,6 +14,7 @@ import { ApiHelper } from "../helpers";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 
+let toastId = null ;
 /**
  *
  */
@@ -30,7 +31,11 @@ const getAppointmentLogic = createLogic({
       payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(
         getAppointmentsSuccess({
           data: []
@@ -76,12 +81,20 @@ const addAppointmentLogic = createLogic({
       payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     }
-    toast.success(result.messages[0]);
+    if (!toast.isActive(toastId)) {
+      toastId = toast.success(
+         result.messages[0]
+      );
+   }
     dispatch(getAppointments({ technicianId: null, vehicleId: null }));
     dispatch(
       modelOpenRequest({
@@ -115,12 +128,20 @@ const udpateAppointmentLogic = createLogic({
       payload.data
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+           result.messages[0] || DefaultErrorMessage
+        );
+     }
       dispatch(hideLoader());
       done();
       return;
     }
-    toast.success(result.messages[0]);
+    if (!toast.isActive(toastId)) {
+      toastId = toast.success(
+         result.messages[0]
+      );
+   }
     dispatch(getAppointments({ technicianId: null, vehicleId: null }));
     dispatch(
       modelOpenRequest({

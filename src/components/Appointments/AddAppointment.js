@@ -1,4 +1,5 @@
 import TimeInput from "react-time-input";
+import MaskedInput from "react-text-mask";
 import {
   Row,
   Col,
@@ -109,7 +110,7 @@ export default class AddAppointment extends Component {
               value: orderId._id
             }
             : null,
-          email: customerId.email ? customerId.email : null,
+          email: customerId.email ? customerId.email : "",
           isEmail: customerId.email ? true : false,
           isSms: customerId.phoneDetail && customerId.phoneDetail.length ? true : false,
           phone: customerId.phoneDetail && customerId.phoneDetail.length ? customerId.phoneDetail[0].value : null
@@ -219,6 +220,7 @@ export default class AddAppointment extends Component {
       })
     }
     if (e.target.name === "phone" && e.target.value) {
+
       if (isNaN(e.target.value)) {
         return
       }
@@ -238,6 +240,30 @@ export default class AddAppointment extends Component {
         [e.target.name]: null
       }
     });
+  };
+  /**
+   * 
+   */
+  handlePhoneValueChange = (event) => {
+    const { value } = event.target;
+    let phoneTrimed = (value.replace(/[- )(_]/g, ""))
+    
+    this.setState({
+      phone: value,
+      errors: {
+        ...this.state.errors,
+        phone: null
+      }
+    });
+    if (value !== "" && phoneTrimed.length >= 10) {
+      this.setState({
+        isSms: true
+      })
+    } else {
+      this.setState({
+        isSms: false
+      })
+    }
   };
   /**
    *
@@ -582,7 +608,7 @@ export default class AddAppointment extends Component {
                           onChange={this.handleInputChange}
                           value={appointmentTitle}
                           maxLength="30"
-                          invalid={errors.appointmentTitle}
+                          invalid={errors.appointmentTitle ? true : false}
                         />
                         {errors.appointmentTitle ? (
                           <FormFeedback>
@@ -791,7 +817,7 @@ export default class AddAppointment extends Component {
                         Phone Number
                     </Label>
                       <div className={"input-block"}>
-                        <Input
+                        {/* <Input
                           type="text"
                           className={classnames("form-control", {
                             "is-invalid": errors.phone
@@ -800,6 +826,18 @@ export default class AddAppointment extends Component {
                           value={phone}
                           placeholder={"Phone"}
                           onChange={this.handleInputChange}
+                        /> */}
+                        <MaskedInput
+                          mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                          name="phone"
+                          className="form-control"
+                          placeholder="(555) 055-0555"
+                          maxLength="20"
+                          value={phone}
+                          guide={false}
+                          onChange={e =>
+                            this.handlePhoneValueChange(e)
+                          }
                         />
                         {errors.phone ? (
                           <FormFeedback>{errors.phone}</FormFeedback>

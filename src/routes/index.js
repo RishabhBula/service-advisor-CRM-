@@ -4,6 +4,8 @@ import { Route, Switch, withRouter } from "react-router-dom";
 import { hideLoader, showLoader, redirectTo } from "../actions";
 import "../App.scss";
 import FullPageLoader from "../containers/Loader/FullPageLoader";
+import Helmet from "react-helmet";
+import {pageTitle} from "../helpers/Object"
 // Containers
 const DefaultLayout = React.lazy(() => import("../containers/DefaultLayout"));
 
@@ -27,14 +29,14 @@ const VerifyLoginForWildcard = React.lazy(() =>
   import("../containers/Auth/VerifyLoginForWildcard")
 );
 
-const OrderSummary = React.lazy(() =>
-  import("../containers/OrderSummary")
-);
+const OrderSummary = React.lazy(() => import("../containers/OrderSummary"));
 
 const Page404 = React.lazy(() => import("../views/Pages/Page404"));
 
 const HomePage = React.lazy(() => import("../containers/HomePage"));
 const FaqPage = React.lazy(() => import("../containers/Faq"));
+
+const Pricing = React.lazy(() => import("../containers/Pricing"));
 
 const Routes = [
   {
@@ -42,6 +44,12 @@ const Routes = [
     path: "/home",
     name: "Home Page",
     component: HomePage
+  },
+  {
+    exact: true,
+    path: "/pricing",
+    name: "Pricing Page",
+    component: Pricing
   },
   {
     exact: true,
@@ -112,12 +120,17 @@ const Routes = [
 ];
 
 class AppRoutes extends Component {
-  componentDidMount() { }
+  componentDidMount() {}
   render() {
     const { appState } = this.props;
     const { showLoader } = appState;
+    const pathname = this.props.location.pathname;
+    let titleName = pageTitle(pathname);
     return (
       <>
+        <Helmet>
+          <title>{titleName}</title>
+        </Helmet>
         {showLoader ? <FullPageLoader /> : null}
         <Switch>
           {Routes.map((route, index) => {

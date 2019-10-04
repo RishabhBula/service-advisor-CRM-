@@ -126,7 +126,7 @@ export class CrmCannedServiceModal extends Component {
       var bool_value = value === "true" ? false : true;
       ServiceData[index].serviceItems[sIndex].isItemChecked = bool_value;
 
-      console.log(value, "value");
+      // console.log(value, "value");
       this.setState({
          serviceData: ServiceData
       });
@@ -145,7 +145,7 @@ export class CrmCannedServiceModal extends Component {
       const { openCannedService, handleCannedServiceModal } = this.props
       const { serviceId, serviceData, serviceIndex, isToggelOpen, activeIndex, input } = this.state
 
-      console.log(serviceData, "serviceData");
+      // console.log(serviceData, "serviceData");
       return (
          <>
             <Modal
@@ -227,7 +227,7 @@ export class CrmCannedServiceModal extends Component {
                                                )
                                              }
                                            >
-                                             +
+                                             <i className={"fa fa-plus mr-2"} />
                                              {item.isCannedAdded ? (
                                                <>
                                                  Service Added{" "}
@@ -247,11 +247,10 @@ export class CrmCannedServiceModal extends Component {
                                                  item._id
                                                )
                                              }
-                                             className={"btn-theme-transparent"}
+                                             className={""}
+                                             color={""}
                                            >
-                                             <i
-                                               className={"icon-trash icons"}
-                                             />
+                                             <i className={"fas fa-close"} />
                                            </Button>
                                            <UncontrolledTooltip
                                              target={`delete-${item._id}`}

@@ -14,11 +14,9 @@
 @import "ie-fix";
 
 body {
-  .DayPicker {
-    // position: absolute;
-    // right: 15px;
-    // top: 40px;
-    // z-index: 1;
+
+  .row.dashboard-container-row{
+    width: auto;
   }
   .dashboard-container {
     &.dashboard-warp{
@@ -41,7 +39,7 @@ body {
       }
     }
     .chart-container {
-      min-height: 400px;
+      min-height: 440px;
       .chart-datepicker-container {
         position: relative;
 

@@ -37,6 +37,7 @@ class Vendors extends Component {
   }
 
   componentDidMount = () => {
+    window.addEventListener("scroll", this.windowScroll);
     const query = qs.parse(this.props.location.search);
     const { location } = this.props;
     const lSearch = location.search;
@@ -58,6 +59,24 @@ class Vendors extends Component {
     }
   };
 
+  windowScroll = () => {
+    let featureDiv = document.getElementById(`vendor10`);
+    if (featureDiv) {
+      let scrollY = featureDiv.getBoundingClientRect().top;
+      let scrollEle = document.getElementById("btn-scroll-top");
+      if (scrollY <= window.scrollY) {
+        scrollEle.style.display = "block";
+      } else {
+        scrollEle.style.display = "none";
+      }
+    }
+  }
+  scrollToTop = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   componentDidUpdate({ vendorReducer, location }) {
     if (
       this.props.vendorReducer.vendorData.isSuccess !==
@@ -175,7 +194,7 @@ class Vendors extends Component {
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"5"} md={"5"} className="mb-0">
-                <FormGroup className="mb-0">
+                <FormGroup className="mb-2">
                   <InputGroup>
                     <input
                       type="text"
@@ -190,7 +209,7 @@ class Vendors extends Component {
                 </FormGroup>
               </Col>
               <Col lg={"3"} md={"3"} className="mb-0">
-                <FormGroup className="mb-0">
+                <FormGroup className="mb-2">
                   <Input
                     type="select"
                     name="sort"
@@ -271,7 +290,7 @@ class Vendors extends Component {
               vendors.length ? (
                 vendors.map((vendor, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} id={`vendor${index}`}>
                       <td className={"text-center"}>
                         {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                       </td>
@@ -455,7 +474,17 @@ class Vendors extends Component {
             )}
           </tbody>
         </Table>
-
+        {vendors && vendors.length && !isLoading ?
+          <Button
+            color={""}
+            size={"sm"}
+            className={"text-white btn-theme btn-scroll-top"}
+            onClick={this.scrollToTop}
+            id={"btn-scroll-top"}
+            style={{ display: "none" }}
+          >
+            <i className={"fa fa-chevron-up"}></i>
+          </Button> : null}
         {totalVendors && !isLoading ? (
           <PaginationHelper
             totalRecords={totalVendors}

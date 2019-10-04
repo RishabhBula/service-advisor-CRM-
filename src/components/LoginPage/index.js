@@ -18,9 +18,8 @@ import {
 } from "reactstrap";
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
-// import ServiceAdvisorLogo from "../../assets/logo-white.svg";
-import HomeHeader from "../HomePage/homeHeader";
-import HomeFooter from "../HomePage/homeFooter";
+import ServiceAdvisorLogo from "../../assets/logo-white.svg";
+
 class LoginPage extends Component {
   constructor(props) {
     super(props);
@@ -70,7 +69,7 @@ class LoginPage extends Component {
     }
   };
   render() {
-    const { settingData } = this.props;
+    // const { settingData } = this.props;
     const { email, password, errors } = this.state;
     return (
       <>
@@ -78,7 +77,7 @@ class LoginPage extends Component {
           <div className="auth-bg" />
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
-              {/* <Col className="text-center">
+              <Col className="text-center">
                 <Link to="/home">
                   <h4 className="logo-title">
                     <img
@@ -88,10 +87,8 @@ class LoginPage extends Component {
                     />
                   </h4>
                 </Link>
-              </Col> */}
-              <div className="faq-section">
-              <HomeHeader />
-              </div>
+              </Col>
+             
               <CardGroup>
                 <Card className="p-4 pl-4 pr-4">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
@@ -186,7 +183,7 @@ class LoginPage extends Component {
             </Col>
           </Row>
         </div>
-        <HomeFooter settingData={settingData} />
+        
       </>
     );
   }

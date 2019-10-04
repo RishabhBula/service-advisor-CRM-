@@ -57,7 +57,7 @@ const addTimeLogs = async (req, res) => {
         : mongoose.Types.ObjectId(currentUser.id),
       isDeleted: false,
       notes: body.notes,
-      isCompleted:true
+      isCompleted: true
     };
     const timeLogElements = new TimeClock(timeLogsData);
     await timeLogElements.save();
@@ -430,11 +430,11 @@ const getAllTimeLogs = async (req, res) => {
     var nowDate = new Date();
     const today = (nowDate.getMonth() + 1) + '-' + nowDate.getDate() + '-' + nowDate.getFullYear();
     const startDate = new Date(new Date(today).setHours(0, 0, 0));
-    const currentMonthStart = moment(today,"MM-DD-YYYY").startOf('month').format('YYYY-MM-DD');
-    const currentMonthEnd = moment(today,"MM-DD-YYYY").endOf('month').format('YYYY-MM-DD');
+    const currentMonthStart = moment(today, "MM-DD-YYYY").startOf('month').format('YYYY-MM-DD');
+    const currentMonthEnd = moment(today, "MM-DD-YYYY").endOf('month').format('YYYY-MM-DD');
 
-    const currentWeekStart = moment(today,"MM-DD-YYYY").startOf('week').format('YYYY-MM-DD');
-    const currentWeekEnd = moment(today,"MM-DD-YYYY").endOf('week').format('YYYY-MM-DD');
+    const currentWeekStart = moment(today, "MM-DD-YYYY").startOf('week').format('YYYY-MM-DD');
+    const currentWeekEnd = moment(today, "MM-DD-YYYY").endOf('week').format('YYYY-MM-DD');
 
     const monthStartDate = new Date(new Date(currentMonthStart).setHours(0, 0, 0));
     const monthEndDate = new Date(new Date(currentMonthEnd).setHours(0, 0, 0));
@@ -568,9 +568,10 @@ const getAllTimeLogs = async (req, res) => {
         $match: { ...condition }
       }
     ])
+      .sort({ createdAt: -1 })
       .skip(offset)
       .limit(limit);
-      
+
     const getAllTimeLogCount = await TimeClock.aggregate([
       {
         $match: { ...condition }

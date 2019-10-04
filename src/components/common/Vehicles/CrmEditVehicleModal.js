@@ -264,14 +264,14 @@ export class CrmEditVehicleModal extends Component {
     };
 
     let validationData = {
-      year: this.state.year,
-      make: this.state.make,
-      modal: this.state.modal,
-      licensePlate: this.state.licensePlate
+      year: this.state.year.trim(),
+      make: this.state.make.trim(),
+      modal: this.state.modal.trim(),
+      licensePlate: this.state.licensePlate.trim()
     };
 
-    if (this.state.miles !== "") {
-      validationData.miles = this.state.miles;
+    if (this.state.miles.trim() !== "") {
+      validationData.miles = this.state.miles.trim();
     }
 
     const { isValid, errors } = Validator(
@@ -327,7 +327,9 @@ export class CrmEditVehicleModal extends Component {
         >
           <ModalHeader toggle={handleEditVehicleModal}>
             Update Vehicle
-            <LastUpdated updatedAt={vehicleData.updatedAt} />
+            {vehicleData && vehicleData.updatedAt ?
+              <LastUpdated updatedAt={vehicleData.updatedAt} />
+              : null}
           </ModalHeader>
           <ModalBody>
             <Row className="justify-content-center">
@@ -371,13 +373,13 @@ export class CrmEditVehicleModal extends Component {
                       onChange={this._onInputChange}
                       value={this.state.make}
                       maxLength="25"
-                      invalid={errors.make && !this.state.make}
+                      invalid={errors.make && !(this.state.make.trim())}
                     />
                     {/* {!make && errors.make ? (
                     <p className="text-danger">{errors.make}</p>
                   ) : null} */}
                     <FormFeedback>
-                      {errors.make && !this.state.make ? errors.make : null}
+                      {errors.make && !(this.state.make.trim()) ? errors.make : null}
                     </FormFeedback>
                   </div>
                 </FormGroup>
@@ -402,13 +404,13 @@ export class CrmEditVehicleModal extends Component {
                       onChange={this._onInputChange}
                       value={this.state.modal}
                       maxLength="25"
-                      invalid={errors.modal && !this.state.modal}
+                      invalid={errors.modal && !(this.state.modal.trim())}
                     />
                     {/* {!modal && errors.modal ? (
                     <p className="text-danger">{errors.modal}</p>
                   ) : null} */}
                     <FormFeedback>
-                      {errors.modal && !this.state.modal
+                      {errors.modal && !(this.state.modal.trim())
                         ? errors.modal
                         : null}
                     </FormFeedback>
@@ -457,7 +459,7 @@ export class CrmEditVehicleModal extends Component {
                       value={this.state.miles}
                       maxLength={15}
                     />
-                    {!miles && errors.miles ? (
+                    {errors.miles && !(miles.trim()) ? (
                       <p className="text-danger">{errors.miles}</p>
                     ) : null}
                   </div>
@@ -502,11 +504,11 @@ export class CrmEditVehicleModal extends Component {
                       value={this.state.licensePlate}
                       maxLength={15}
                       invalid={
-                        errors.licensePlate && !this.state.licensePlate
+                        errors.licensePlate && !(this.state.licensePlate.trim())
                       }
                     />
                     <FormFeedback>
-                      {errors.licensePlate && !this.state.licensePlate
+                      {errors.licensePlate && !(this.state.licensePlate.trim())
                         ? errors.licensePlate
                         : null}
                     </FormFeedback>
@@ -577,8 +579,8 @@ export class CrmEditVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                ""
-              )}
+                  ""
+                )}
             </Row>
             {/* <Row className="justify-content-center">
               <Col md="12 text-center">
@@ -670,16 +672,16 @@ export class CrmEditVehicleModal extends Component {
                     <option value={""}>Select</option>
                     {Transmission.length
                       ? Transmission.map((item, index) => {
-                          return (
-                            <option
-                              selected={item.key === transmissionSelected}
-                              value={item.key}
-                              key={index}
-                            >
-                              {item.text}
-                            </option>
-                          );
-                        })
+                        return (
+                          <option
+                            selected={item.key === transmissionSelected}
+                            value={item.key}
+                            key={index}
+                          >
+                            {item.text}
+                          </option>
+                        );
+                      })
                       : null}
                   </Input>
                   {!transmissionSelected && errors.transmission ? (
@@ -705,16 +707,16 @@ export class CrmEditVehicleModal extends Component {
                     <option value={""}>Select</option>
                     {Drivetrain.length
                       ? Drivetrain.map((item, index) => {
-                          return (
-                            <option
-                              selected={item.key === drivetrainSelected}
-                              value={item.key}
-                              key={index}
-                            >
-                              {item.text}
-                            </option>
-                          );
-                        })
+                        return (
+                          <option
+                            selected={item.key === drivetrainSelected}
+                            value={item.key}
+                            key={index}
+                          >
+                            {item.text}
+                          </option>
+                        );
+                      })
                       : null}
                   </Input>
                   {!drivetrainSelected && errors.drivetrain ? (

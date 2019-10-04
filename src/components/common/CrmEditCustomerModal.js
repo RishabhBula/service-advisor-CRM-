@@ -297,7 +297,11 @@ export class CrmEditCustomerModal extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
   stdModelFun = () => {
@@ -413,11 +417,11 @@ export class CrmEditCustomerModal extends Component {
     let validationdata;
     if (!email) {
       validationdata = {
-        firstName: firstName
+        firstName: firstName.trim()
       };
     } else {
       validationdata = {
-        firstName: firstName,
+        firstName: firstName.trim(),
         email: email
       };
     }
@@ -461,20 +465,22 @@ export class CrmEditCustomerModal extends Component {
       let IncorrectNumber = [...this.state.inCorrectNumber]
       if (phoneDetail && phoneDetail.length) {
         for (let i = 0; i < phoneDetail.length; i++) {
-          const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
-          if (phoneTrimed.length <= 9) {
-            IncorrectNumber[i] = true
-            this.setState({
-              inCorrectNumber: IncorrectNumber
-            });
-            isValid = false;
+          if (!this.state.phoneErrors[i]) {
+            const phoneTrimed = (phoneDetail[i].value.replace(/[- )(_]/g, ""))
+            if (phoneTrimed.length <= 9) {
+              IncorrectNumber[i] = true
+              this.setState({
+                inCorrectNumber: IncorrectNumber
+              });
+              isValid = false;
+            }
           }
         }
       }
       if (
         !isValid ||
         Object.keys(this.state.phoneErrors).length > 0 ||
-        customerData.firstName === "" || this.state.percentageError
+        customerData.firstName.trim() === "" || this.state.percentageError
       ) {
         this.setState({
           errors: errors,
@@ -506,7 +512,7 @@ export class CrmEditCustomerModal extends Component {
       errors: {},
       phoneErrors: [""],
       customerDefaultPermissions: CustomerDefaultPermissions,
-      inCorrectNumber:[]
+      inCorrectNumber: []
     });
   }
 
@@ -625,10 +631,10 @@ export class CrmEditCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
-                        invalid={!firstName && errors.firstName}
+                        invalid={!(firstName.trim()) && errors.firstName ? true :false}
                       />
                       <FormFeedback>
-                        {!firstName && errors.firstName
+                        {!(firstName.trim()) && errors.firstName
                           ? errors.firstName
                           : null}
                       </FormFeedback>
@@ -799,7 +805,7 @@ export class CrmEditCustomerModal extends Component {
                                   {phoneDetail[index].phone === "mobile" ? (
                                     <div className="input-block select-number-tile">
                                       <MaskedInput
-                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                        mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                                         name="phoneDetail"
                                         placeholder="(555) 055-0555"
                                         className={classnames("form-control", {

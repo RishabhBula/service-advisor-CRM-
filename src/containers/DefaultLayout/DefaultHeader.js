@@ -16,8 +16,8 @@ import { CrmFleetModal } from "../../components/common/CrmFleetModal";
 import { AppHeaderDropdown, AppSidebarToggler } from "@coreui/react";
 import { logger } from "../../helpers";
 import AddAppointment from "../../components/Appointments/AddAppointment";
-//import { LoginValidationsMessaages } from "../../validations";
-import Avtar from "../../components/common/Avtar"
+// import { LoginValidationsMessaages } from "../../validations";
+import Avtar from "../../components/common/Avtar";
 const propTypes = {
   children: PropTypes.node
 };
@@ -29,24 +29,41 @@ class DefaultHeader extends Component {
     super(props);
     this.state = {
       openCreate: false,
-      selectedDate: new Date()
+      selectedDate: new Date(),
+      dropdownOpen: false,
+      quickAddOpen: false
     };
   }
+  /**
+   *
+   */
   toggleCustAndVehicle = () => {
     this.props.toggleCustAndVehicle();
   };
+  /**
+   *
+   */
   handleNewOrder = () => {
     this.props.addOrderRequest();
   };
+  /**
+   *
+   */
   handleInventrySection = () => {
     this.props.redirectTo(AppRoutes.INVENTORY_STATATICS.url);
   };
+  /**
+   *
+   */
   toggleCreateModal = e => {
     e.preventDefault();
     this.setState({
       openCreate: !this.state.openCreate
     });
   };
+  /**
+   *
+   */
   handleAddFleet = data => {
     try {
       this.props.addFleet(data);
@@ -57,12 +74,21 @@ class DefaultHeader extends Component {
       logger(error);
     }
   };
+  /**
+   *
+   */
   onTypeHeadStdFun = data => {
     this.props.getStdList(data);
   };
+  /**
+   *
+   */
   setDefaultRate = value => {
     this.props.setLabourRateDefault(value);
   };
+  /**
+   *
+   */
   toggleAddAppointModal = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -75,6 +101,23 @@ class DefaultHeader extends Component {
       selectedDate: new Date()
     });
   };
+  /**
+   *
+   */
+  toggle = () => {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
+  };
+
+  toggleQuickAdd =()=>{
+    this.setState({
+      quickAddOpen: !this.state.quickAddOpen
+    });
+  }
+  /**
+   *
+   */
   render() {
     const {
       permissions,
@@ -87,13 +130,14 @@ class DefaultHeader extends Component {
       getOrders,
       addAppointment,
       getUserData,
-      getMatrix
+      getMatrix,
     } = this.props;
-    const { openCreate, selectedDate } = this.state;
+    const { openCreate, selectedDate, dropdownOpen, quickAddOpen } = this.state;
     // eslint-disable-next-line
     const profileName =
       profileInfoReducer && profileInfoReducer.profileInfo
-        ? profileInfoReducer.profileInfo.firstName + " " +
+        ? profileInfoReducer.profileInfo.firstName +
+          " " +
           profileInfoReducer.profileInfo.lastName
         : "Loading...";
     const profileEmail =
@@ -126,7 +170,7 @@ class DefaultHeader extends Component {
             {permissions.isAllowedCalendar ? (
               <NavItem className="">
                 <NavLink to="/calender" className="nav-link px-3">
-                  <i className={"fas fa-calendar"} /> Appointments
+                  <i className={"fas fa-calendar"} /> Calendar
                 </NavLink>
               </NavItem>
             ) : null}
@@ -138,7 +182,35 @@ class DefaultHeader extends Component {
               </NavItem>
             ) : null}
 
-            <AppHeaderDropdown direction="down" className="header-add-new ">
+            {/* Npotification Section */}
+            {/* <AppHeaderDropdown direction="down" className="header-add-new ">
+              <DropdownToggle className="nav-link px-3">
+                <span className="fa fa-bell" />
+              </DropdownToggle>
+              <DropdownMenu right style={{ right: "auto" }} className="notification-block">
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+                <div className={"notify-block p-2  border-bottom"}>
+                  User has sent you message
+                </div>
+              </DropdownMenu>
+            </AppHeaderDropdown> */}
+
+            <AppHeaderDropdown
+              direction="down"
+              className="header-add-new"
+              toggle={this.toggleQuickAdd}
+              isOpen={quickAddOpen}
+              onMouseEnter={this.toggleQuickAdd}
+              onMouseLeave={this.toggleQuickAdd}
+            >
               <DropdownToggle className="nav-link px-3">
                 <span className="fa fa-plus" /> Quick Add
               </DropdownToggle>
@@ -187,8 +259,18 @@ class DefaultHeader extends Component {
               </DropdownMenu>
             </AppHeaderDropdown>
 
-            <AppHeaderDropdown direction="down" className="user-Info-dropdown">
-              <DropdownToggle className="nav-link pl-2 pr-2 ">
+            <AppHeaderDropdown
+              direction="down"
+              className="user-Info-dropdown"
+              toggle={this.toggle}
+              isOpen={dropdownOpen}
+              onMouseEnter={this.toggle}
+              onMouseLeave={this.toggle}
+            >
+              <DropdownToggle
+                className="nav-link pl-2 pr-2 "
+                onClick={this.toggle}
+              >
                 <span className={"fa-user-icon"}>
                   <span className="fas fa-user" />
                 </span>
@@ -206,19 +288,35 @@ class DefaultHeader extends Component {
                       <div className={"email"}>{profileEmail}</div>
                     </div>
                   </div>
-                  <NavLink to="/profile" className="nav-link">
+                  <NavLink
+                    to="/profile"
+                    className="nav-link"
+                    onClick={this.toggle}
+                  >
+                    <i className={"fa fa-institution"} /> Company Profile
+                  </NavLink>
+                  <NavLink
+                    to="/profile?tab=Subscription"
+                    className="nav-link"
+                    onClick={this.toggle}
+                  >
+                    <i className={"fa fa-dollar"} /> Subscription
+                  </NavLink>
+                  <NavLink
+                    to="/profile"
+                    className="nav-link"
+                    onClick={this.toggle}
+                  >
                     <i className={"fa fa-user"} /> My Profile
                   </NavLink>
                   <NavLink to="/home" className="nav-link">
                     <i className={"fas fa-home"} /> Home
                   </NavLink>
-                  <NavLink to="/faq" className="nav-link">
-                    <i className={"fa fa-question-circle"} /> FAQ's
-                  </NavLink>
-                  <NavLink to="/profile" className="nav-link">
-                    <i className={"fa fa-phone"} /> Support
-                  </NavLink>
-                  <NavLink to="#" className="nav-link logout-link">
+                  <NavLink
+                    to="#"
+                    className="nav-link logout-link"
+                    onClick={this.toggle}
+                  >
                     <span
                       className={"logout-btn"}
                       onClick={e => this.props.onLogout(e)}
