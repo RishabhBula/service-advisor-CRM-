@@ -115,7 +115,6 @@ const Routes = [
     exact: false,
     path: "/",
     name: "Home",
-    //component: !localStorage.getItem("token") ? HomePage : DefaultLayout
     component: DefaultLayout
   }
 ];
