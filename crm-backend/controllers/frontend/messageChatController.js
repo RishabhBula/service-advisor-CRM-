@@ -75,10 +75,12 @@ const sendMessageChat = async (req, res) => {
             await resizeImage(originalImagePath, thumbnailImagePath, 300);
             messageImageThumb = await imagePath(
               thumbnailImagePath,
+              "message-image-thumb",
               "message-thumbnail"
             );
             messageImageOriginal = await imagePath(
               originalImagePath,
+              "message-image",
               "message"
             );
             S3MessageImgThumb.push(messageImageThumb);
@@ -114,6 +116,7 @@ const sendMessageChat = async (req, res) => {
           const fileData = fs.writeFileSync(ordeiginalPdfPath, buf);
           const messagePdfOriginal = await imagePath(
             ordeiginalPdfPath,
+            "message-pdf",
             "message-pdf"
           );
           S3MessageImg.push({
