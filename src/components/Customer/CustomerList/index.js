@@ -34,7 +34,8 @@ class CustomerList extends Component {
       sort: "",
       selectedCustomers: [],
       filterApplied: false,
-      selectedAction: ""
+      selectedAction: "",
+      phoneToggle: -1
     };
   }
 
@@ -50,7 +51,7 @@ class CustomerList extends Component {
       search: search || "",
       filterApplied: status || search || false
     });
-  }
+  };
 
   windowScroll = () => {
     let featureDiv = document.getElementById(`customer10`);
@@ -63,7 +64,7 @@ class CustomerList extends Component {
         scrollEle.style.display = "none";
       }
     }
-  }
+  };
   scrollToTop = () => {
     window.scroll({
       top: 0,
@@ -252,7 +253,10 @@ class CustomerList extends Component {
     this.props.getCustomerDetailsRequest();
   };
   handleCustomerView1 = customerId => {
-    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
+    window.open(
+      AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`),
+      "_blank"
+    );
   };
   handleCustomerVehicleView = customerId => {
     this.props.redirectTo(
@@ -262,6 +266,13 @@ class CustomerList extends Component {
       )
     );
   };
+
+  handlePhoneToggle = index => {
+    this.setState({
+      phoneToggle: this.state.phoneToggle === index ? -1 : index
+    });
+  };
+
   render() {
     const { customerData } = this.props;
     const { customers, isLoading, totalCustomers } = customerData;
@@ -272,7 +283,8 @@ class CustomerList extends Component {
       status,
       selectedCustomers,
       filterApplied,
-      selectedAction
+      selectedAction,
+      phoneToggle
     } = this.state;
     return (
       <>
@@ -368,14 +380,14 @@ class CustomerList extends Component {
                   </div>
                 </div>
               </Col>
-              {totalCustomers ?
+              {totalCustomers ? (
                 <Col lg={"2"} md={"2"} className="mb-0 text-right">
                   <div className="total-block mt-1">
-                  <span className="">Total Customers :</span>&nbsp;
-                  <span>{totalCustomers ? totalCustomers : 0}</span>
+                    <span className="">Total Customers :</span>&nbsp;
+                    <span>{totalCustomers ? totalCustomers : 0}</span>
                   </div>
                 </Col>
-                : null}
+              ) : null}
             </Row>
           </Form>
         </div>
@@ -409,8 +421,8 @@ class CustomerList extends Component {
                     </Input>
                   </div>
                 ) : (
-                    "S No."
-                  )}
+                  "S No."
+                )}
               </th>
               <th width={"300"}>
                 <i className={"fa fa-user"} /> Cutomer Details
@@ -478,27 +490,62 @@ class CustomerList extends Component {
                         {/* {user.email || null} */}
                       </td>
                       <td>
-                        {user.phoneDetail
-                          ? user.phoneDetail.map((data, ind) => {
-                            return (
-                              <div className="text-capitalize" key={ind}>
-                                {data.phone || notExist}
-                                {" |"}
-                                {"  "}
-                                {data.value ? (
-                                  <a
-                                    href={`tel:${data.value}`}
-                                    className={"text-body"}
-                                  >
-                                    {data.value}
-                                  </a>
-                                ) : (
-                                    notExist
-                                  )}
-                              </div>
-                            );
-                          })
-                          : notExist}
+                        {user.phoneDetail ? (
+                          <div className="text-capitalize">
+                            {user.phoneDetail[0].phone || notExist}
+                            {" |"}
+                            {"  "}
+                            {user.phoneDetail[0].value ? (
+                              <a
+                                href={`tel:${user.phoneDetail[0].value}`}
+                                className={"text-body"}
+                              >
+                                {user.phoneDetail[0].value}
+                              </a>
+                            ) : (
+                              notExist
+                            )}
+                          </div>
+                        ) : null}
+                        <div
+                          className={
+                            phoneToggle === index ? "d-block" : "d-none"
+                          }
+                        >
+                          {user.phoneDetail
+                            ? user.phoneDetail.map((data, ind) => {
+                                return ind === 0 ? null : (
+                                  <div className="text-capitalize" key={ind}>
+                                    {data.phone || notExist}
+                                    {" |"}
+                                    {"  "}
+                                    {data.value ? (
+                                      <a
+                                        href={`tel:${data.value}`}
+                                        className={"text-body"}
+                                      >
+                                        {data.value}
+                                      </a>
+                                    ) : (
+                                      notExist
+                                    )}
+                                  </div>
+                                );
+                              })
+                            : notExist}
+                        </div>
+                        {user.phoneDetail.length > 1 ? (
+                          <span className={"m-1 d-block"}>
+                            <Badge
+                              onClick={() => this.handlePhoneToggle(index)}
+                              className={"cursor_pointer"}
+                            >
+                              {phoneToggle === index
+                                ? "View Less"
+                                : "View More"}
+                            </Badge>
+                          </span>
+                        ) : null}
                       </td>
                       {/* <td>
                         {user.address1 || ""} {user.city || ""}{" "}
@@ -514,8 +561,8 @@ class CustomerList extends Component {
                               {user.vehicles.length}
                             </span>
                           ) : (
-                              <span className={"qty-no-value"}>Not Added</span>
-                            )}
+                            <span className={"qty-no-value"}>Not Added</span>
+                          )}
                         </div>
                         <UncontrolledTooltip
                           target={`customer-vehicle-${user._id}`}
@@ -545,23 +592,23 @@ class CustomerList extends Component {
                             Active
                           </Badge>
                         ) : (
-                            <Badge
-                              className={"badge-button"}
-                              color="danger"
-                              onClick={() => {
-                                this.setState(
-                                  {
-                                    selectedCustomers: [user._id]
-                                  },
-                                  () => {
-                                    this.activateCustomers();
-                                  }
-                                );
-                              }}
-                            >
-                              Inactive
+                          <Badge
+                            className={"badge-button"}
+                            color="danger"
+                            onClick={() => {
+                              this.setState(
+                                {
+                                  selectedCustomers: [user._id]
+                                },
+                                () => {
+                                  this.activateCustomers();
+                                }
+                              );
+                            }}
+                          >
+                            Inactive
                           </Badge>
-                          )}
+                        )}
                       </td>
                       <td>
                         {/* {user.createdAt ? formateDate(user.createdAt) : "-"} */}
@@ -571,7 +618,7 @@ class CustomerList extends Component {
                         <div>{moment(user.createdAt).format("h:mm a")}</div>
                       </td>
                       <td className={"text-center"} width={150}>
-                        <div className={"d-flex"}>
+                        <div className={"d-flex justify-content-center"}>
                           <span className="mr-2">
                             <Button
                               className={"btn-theme-transparent"}
@@ -582,9 +629,7 @@ class CustomerList extends Component {
                               <i className="fas fa-eye" />
                             </Button>
                             <UncontrolledTooltip target={`view-${user._id}`}>
-                              View{" "}
-                              {user.firstName || notExist}{" "}'s
-                              Details
+                              View {user.firstName || notExist} 's Details
                             </UncontrolledTooltip>
                           </span>
                           <span className={"mr-2"}>
@@ -597,9 +642,7 @@ class CustomerList extends Component {
                               <i className={"icons cui-pencil"} />
                             </Button>
                             <UncontrolledTooltip target={`edit-${user._id}`}>
-                              Edit{" "}
-                              {user.firstName || notExist}{" "}'s
-                              Details
+                              Edit {user.firstName || notExist} 's Details
                             </UncontrolledTooltip>
                           </span>
                           <span className={"mr-2"}>
@@ -630,37 +673,37 @@ class CustomerList extends Component {
                   );
                 })
               ) : (
-                  <tr>
-                    <td className={"text-center"} colSpan={10}>
-                      {filterApplied ? (
-                        <NoDataFound
-                          message={
-                            "No Customer details found related to your search"
-                          }
-                          noResult
-                        />
-                      ) : (
-                          <NoDataFound
-                            showAddButton
-                            message={
-                              "Currently there are no Customer details added."
-                            }
-                            onAddClick={this.props.onAddClick}
-                          />
-                        )}
-                    </td>
-                  </tr>
-                )
-            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={10}>
-                    <Loader />
+                    {filterApplied ? (
+                      <NoDataFound
+                        message={
+                          "No Customer details found related to your search"
+                        }
+                        noResult
+                      />
+                    ) : (
+                      <NoDataFound
+                        showAddButton
+                        message={
+                          "Currently there are no Customer details added."
+                        }
+                        onAddClick={this.props.onAddClick}
+                      />
+                    )}
                   </td>
                 </tr>
-              )}
+              )
+            ) : (
+              <tr>
+                <td className={"text-center"} colSpan={10}>
+                  <Loader />
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
-        {customers && customers.length && !isLoading ?
+        {customers && customers.length && !isLoading ? (
           <Button
             color={""}
             size={"sm"}
@@ -670,7 +713,8 @@ class CustomerList extends Component {
             style={{ display: "none" }}
           >
             <i className={"fa fa-chevron-up"}></i>
-          </Button> : null}
+          </Button>
+        ) : null}
         {totalCustomers && !isLoading ? (
           <PaginationHelper
             totalRecords={totalCustomers}

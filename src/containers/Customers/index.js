@@ -239,9 +239,9 @@ class Customers extends Component {
                 <i className={"fa fa-plus"} />
                 &nbsp; Add New Customer
               </Button>
-              <UncontrolledTooltip target={"add-user"}>
+              {/* <UncontrolledTooltip target={"add-user"}>
                 Add New Customer
-              </UncontrolledTooltip>
+              </UncontrolledTooltip> */}
             </div>
 
             <CustomerList

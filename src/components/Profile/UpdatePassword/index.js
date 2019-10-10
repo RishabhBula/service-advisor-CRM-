@@ -7,7 +7,10 @@ import {
   FormGroup,
   FormFeedback,
   Button,
-  Label
+  Label,
+  UncontrolledPopover,
+  PopoverHeader,
+  PopoverBody
 } from "reactstrap";
 import { logger } from "../../../helpers/Logger";
 import Validator from "js-object-validation";
@@ -17,7 +20,7 @@ class UpdatePassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errors: "",
+      errors: {},
       oldPassword: "",
       newPassword: "",
       confirmPassword: ""
@@ -63,11 +66,21 @@ class UpdatePassword extends Component {
         oldPassword,
         newPassword,
       };
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         validData,
         ProfileValidations,
         ProfileValidationsMessaages
       );
+      if (validData.newPassword && !errors.newPassword) {
+        let res = validData.newPassword.match(
+          /^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/
+        );
+        if (!res) {
+          isValid = false;
+          errors.newPassword =
+            "Password must have alphanumeric characters with optional (special characters).";
+        }
+      }
       if (!isValid) {
         this.setState({
           errors
@@ -98,7 +111,10 @@ class UpdatePassword extends Component {
           <Col lg={"7"} md={"7"} className={"custom-form-modal"}>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
-                <Label htmlFor={"old password"} className="customer-modal-text-style">
+                <Label
+                  htmlFor={"old password"}
+                  className="customer-modal-text-style"
+                >
                   Old Password <span className="asteric">*</span>
                 </Label>
                 <div className="input-block">
@@ -115,8 +131,11 @@ class UpdatePassword extends Component {
                   </FormFeedback>
                 </div>
               </FormGroup>
-              <FormGroup>
-                <Label htmlFor={"old password"} className="customer-modal-text-style">
+              <FormGroup className={"auth-input-group position-relative "}>
+                <Label
+                  htmlFor={"old password"}
+                  className="customer-modal-text-style"
+                >
                   New Password <span className="asteric">*</span>
                 </Label>
                 <div className="input-block">
@@ -132,9 +151,34 @@ class UpdatePassword extends Component {
                     {errors.newPassword ? errors.newPassword : null}
                   </FormFeedback>
                 </div>
+                <Button id={"password"} className={"help-btn rounded-circle"}>
+                  <i className={"fa fa-question"} />
+                </Button>
+                <UncontrolledPopover
+                  className={"technician-popover"}
+                  placement="top"
+                  target={"password"}
+                  trigger={"hover"}
+                >
+                  <PopoverHeader>Password</PopoverHeader>
+                  <PopoverBody>
+                    <div className={"pb-2 technician-detail"}>
+                      <div className={"text-capitalize pb-1"}>
+                        Password should be Alphanumericals&nbsp;
+                        <small>
+                          (combination of alphabetical and numerical characters)
+                        </small>
+                        .
+                      </div>
+                    </div>
+                  </PopoverBody>
+                </UncontrolledPopover>
               </FormGroup>
               <FormGroup>
-                <Label htmlFor={"old password"} className="customer-modal-text-style">
+                <Label
+                  htmlFor={"old password"}
+                  className="customer-modal-text-style"
+                >
                   Confirm Password <span className="asteric">*</span>
                 </Label>
                 <div className="input-block">
@@ -155,8 +199,10 @@ class UpdatePassword extends Component {
               <Row className={"m-0"}>
                 <Col xs="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
                   <FormGroup>
-                    <Label htmlFor={"old password"} className="customer-modal-text-style">
-                    </Label>
+                    <Label
+                      htmlFor={"old password"}
+                      className="customer-modal-text-style"
+                    ></Label>
                     <div className="input-block">
                       <Button
                         color="primary"
@@ -166,18 +212,16 @@ class UpdatePassword extends Component {
                         onClick={this.handleSubmit}
                       >
                         Update
-                    </Button>
+                      </Button>
                     </div>
                   </FormGroup>
-
                 </Col>
               </Row>
-
             </Form>
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

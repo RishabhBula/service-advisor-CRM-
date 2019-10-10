@@ -10,10 +10,12 @@ import {
   Col,
   FormGroup,
   FormFeedback,
-  Label
+  Label,
+  UncontrolledTooltip
 } from "reactstrap";
 import moment from "moment";
 import { Async } from "react-select";
+import Select from "react-select";
 import Validator from "js-object-validation";
 import {
   inspectValidations,
@@ -42,6 +44,8 @@ class SendInspection extends Component {
       isEmail: false,
       isSms: false,
       phone: "",
+      addonNumber: "",
+      showAddonNumber: false,
       incorrectNumber: false
     };
   }
@@ -86,10 +90,10 @@ class SendInspection extends Component {
         subject: e.target.value,
         errors
       });
-    } else if (name === "phone") {
+    } else if (name === "addonNumber") {
       const { value } = e.target;
       this.setState({
-        phone: value,
+        addonNumber: value,
         isSms: value ? true : false,
         incorrectNumber: false
       });
@@ -165,6 +169,19 @@ class SendInspection extends Component {
       });
     }
   };
+
+  handlePhoneChange = e => {
+    this.setState({
+      phone: e.value
+    });
+  };
+
+  handleShowNumber = () => {
+    const { showAddonNumber } = this.state;
+    this.setState({
+      showAddonNumber: !showAddonNumber
+    });
+  };
   /** */
   loadOptions = (search, callback) => {
     this.setState({ search: search.length > 1 ? search : null });
@@ -172,28 +189,45 @@ class SendInspection extends Component {
   };
   /** */
   handleSentInspection = async () => {
-    const { customerData, subject, isEmail, isSms, phone } = this.state;
-    const { orderReducer, profileReducer, isOrder } = this.props;
+    const {
+      customerData,
+      subject,
+      isEmail,
+      isSms,
+      phone,
+      addonNumber
+    } = this.state;
+    const { orderReducer, profileReducer, isOrder, pdfReducer } = this.props;
     const customerId = customerData._id;
     const customerEmail = customerData.email;
 
     const orderTitle =
       orderReducer && orderReducer.orderItems
-        ? orderReducer.orderItems.orderName
+        ? orderReducer.orderItems.orderId
         : "Untitled order";
 
     const orderCreated =
       orderReducer && orderReducer.orderItems
         ? moment(orderReducer.orderItems.createdAt || "").format("MMM Do YYYY")
         : "";
-    const invoiceURL =
-      orderReducer && orderReducer.orderItems
-        ? orderReducer.orderItems.invoiceURL
-        : "";
-    const inspectionURL =
-      orderReducer && orderReducer.orderItems
-        ? orderReducer.orderItems.inspectionURL
-        : "";
+    let invoiceURL, inspectionURL;
+    if (pdfReducer && pdfReducer.invoiceUrl !== "") {
+      invoiceURL = pdfReducer.invoiceUrl;
+    } else {
+      invoiceURL =
+        orderReducer && orderReducer.orderItems
+          ? orderReducer.orderItems.invoiceURL
+          : "";
+    }
+    if (pdfReducer && pdfReducer.inspectionUrl !== "") {
+      inspectionURL = pdfReducer.inspectionUrl;
+    } else {
+      inspectionURL =
+        orderReducer && orderReducer.orderItems
+          ? orderReducer.orderItems.inspectionURL
+          : "";
+    }
+
     const companyName = profileReducer.profileInfo.companyName || "";
 
     const receiverId = customerId;
@@ -220,7 +254,7 @@ class SendInspection extends Component {
           messageTextSentError: ""
         });
       }
-      if (phone !== "" && phone.length < 13) {
+      if (addonNumber !== "" && addonNumber.length < 13) {
         this.setState({
           incorrectNumber: true
         });
@@ -243,9 +277,9 @@ class SendInspection extends Component {
         subject: subject,
         customerId,
         email: customerEmail,
-        phone,
+        phone: addonNumber !== "" ? addonNumber : phone,
         pdf: isOrder ? invoiceURL : inspectionURL,
-        orderTitle: orderTitle,
+        orderTitle: `OrderId (#${orderTitle})`,
         companyName: companyName,
         orderCreated: orderCreated,
         isInvoice: isOrder ? true : false,
@@ -275,7 +309,9 @@ class SendInspection extends Component {
       this.setState({
         subject: "",
         search: "",
-        templateData: [{ messageText: "" }]
+        templateData: [{ messageText: "" }],
+        addonNumber: "",
+        showAddonNumber: false
       });
     } catch (error) {}
   };
@@ -303,7 +339,8 @@ class SendInspection extends Component {
       messageTextSentError: "",
       search: "",
       subject: "",
-      templateData: ""
+      templateData: "",
+      showAddonNumber: false
     });
   };
   /** */
@@ -322,8 +359,6 @@ class SendInspection extends Component {
    */
   handleReminder = e => {
     const { name, checked } = e.target;
-    console.log("%%%%%%%%%%%%%%%%%", name, checked);
-
     this.setState({
       [name]: checked
     });
@@ -342,13 +377,23 @@ class SendInspection extends Component {
       isEmail,
       isSms,
       incorrectNumber,
-      phone
+      phone,
+      addonNumber,
+      showAddonNumber
     } = this.state;
     const { isMessage, isOrder } = this.props;
 
     const email = customerData && customerData.email ? customerData.email : "";
     const phoneNumber = phone;
-
+    const phoneArray =
+      customerData && customerData.phoneDetail ? customerData.phoneDetail : "";
+    const phoneOptions = [];
+    for (let i = 0; i < phoneArray.length; i++) {
+      phoneOptions.push({
+        value: phoneArray[i].value,
+        label: phoneArray[i].value
+      });
+    }
     return (
       <>
         <Modal
@@ -368,12 +413,6 @@ class SendInspection extends Component {
               : "Sent Invoice"}
           </ModalHeader>
           <ModalBody>
-            <span
-              className={"btn btn-secondary btn-dashed ml-5 mb-4"}
-              onClick={this.props.toggleMessageTemplate}
-            >
-              Manage Template
-            </span>
             <div className="">
               <Row className="justify-content-center">
                 <Col md="8">
@@ -386,8 +425,7 @@ class SendInspection extends Component {
                               htmlFor="name"
                               className="customer-modal-text-style"
                             >
-                              Recipients{" "}
-                              <span className={"asteric"}>*</span>
+                              Recipients <span className={"asteric"}>*</span>
                             </Label>
                             <div className={"input-block"}>
                               <Input
@@ -402,6 +440,7 @@ class SendInspection extends Component {
                                 id="recipients"
                                 invalid={errors.recipients && !recipients}
                                 disabled
+                                className={"text-capitalize"}
                               />
                               <FormFeedback>
                                 {errors.recipients && !recipients
@@ -443,8 +482,8 @@ class SendInspection extends Component {
                             </div>
                           </FormGroup>
                         </Col>
-                        <Col md="12">
-                          <FormGroup>
+                        <Col md="10">
+                          <FormGroup className={"fleet-block"}>
                             <Label
                               htmlFor="name"
                               className="customer-modal-text-style"
@@ -453,47 +492,88 @@ class SendInspection extends Component {
                               {/* <span className={"asteric"}>*</span> */}
                             </Label>
                             <div className={"input-block"}>
-                              <MaskedInput
-                                mask={[
-                                  "(",
-                                  /[1-9]/,
-                                  /\d/,
-                                  /\d/,
-                                  ")",
-                                  " ",
-                                  /\d/,
-                                  /\d/,
-                                  /\d/,
-                                  "-",
-                                  /\d/,
-                                  /\d/,
-                                  /\d/,
-                                  /\d/
-                                ]}
-                                name="phone"
-                                className={
-                                  !incorrectNumber
-                                    ? "form-control"
-                                    : "form-control is-invalid"
-                                }
-                                placeholder="(555) 055-0555"
-                                size="20"
-                                value={phone}
-                                maxLength={14}
-                                guide={false}
-                                onChange={e =>
-                                  this.handleChangeInput(e, "phone")
-                                }
-                              />
+                              {!showAddonNumber ? (
+                                <Select
+                                  className="basic-single"
+                                  classNamePrefix="select"
+                                  defaultValue={phoneOptions[0]}
+                                  isSearchable={true}
+                                  name="phone"
+                                  options={phoneOptions}
+                                  onChange={e => this.handlePhoneChange(e)}
+                                />
+                              ) : (
+                                <div>
+                                  <MaskedInput
+                                    mask={[
+                                      "(",
+                                      /[1-9]/,
+                                      /\d/,
+                                      /\d/,
+                                      ")",
+                                      " ",
+                                      /\d/,
+                                      /\d/,
+                                      /\d/,
+                                      "-",
+                                      /\d/,
+                                      /\d/,
+                                      /\d/,
+                                      /\d/
+                                    ]}
+                                    name="addonNumber"
+                                    className={
+                                      !incorrectNumber
+                                        ? "form-control"
+                                        : "form-control is-invalid"
+                                    }
+                                    placeholder="(555) 055-0555"
+                                    size="20"
+                                    value={addonNumber}
+                                    maxLength={14}
+                                    guide={false}
+                                    onChange={e =>
+                                      this.handleChangeInput(e, "addonNumber")
+                                    }
+                                  />
 
-                              {incorrectNumber ? (
-                                <FormFeedback>
-                                  Phone number should not be less than ten
-                                  digit.
-                                </FormFeedback>
-                              ) : null}
+                                  {incorrectNumber ? (
+                                    <FormFeedback>
+                                      Phone number should not be ten or less
+                                      than ten digits.
+                                    </FormFeedback>
+                                  ) : null}
+                                </div>
+                              )}
                             </div>
                           </FormGroup>
+                        </Col>
+                        <Col md="2">
+                          <Button
+                            color={""}
+                            className={"browse-btn btn-block pl-2 pr-2"}
+                            size={"sm"}
+                            onClick={this.handleShowNumber}
+                            id={"showNumber"}
+                          >
+                            {!showAddonNumber ? (
+                              <span>
+                                <i className={"fa fa-plus mr-2 ml-1"}></i> New
+                              </span>
+                            ) : (
+                              <span>
+                                <i className={"fa fa-redo"}></i> Remove
+                              </span>
+                            )}
+                          </Button>
+                          <UncontrolledTooltip
+                            placement="top"
+                            target="showNumber"
+                          >
+                            {!showAddonNumber
+                              ? "Add New Number"
+                              : "Remove Number"}
+                          </UncontrolledTooltip>
                         </Col>
                       </>
                     ) : null}
@@ -518,8 +598,11 @@ class SendInspection extends Component {
                               ) : (
                                 <span
                                   onClick={this.props.toggleMessageTemplate}
+                                  className={
+                                    "text-dark font-bold cursor_pointer"
+                                  }
                                 >
-                                  Add template
+                                  + Add template
                                 </span>
                               )
                             }
@@ -584,9 +667,7 @@ class SendInspection extends Component {
                                   ? { __html: templateData.messageText }
                                   : null
                               }
-                              onClick={e =>
-                                this.handleFocus("messageTextSent")
-                              }
+                              onClick={e => this.handleFocus("messageTextSent")}
                             />
                           </div>
                           {messageTextSentError &&
@@ -614,6 +695,14 @@ class SendInspection extends Component {
                 </Col>
               </Row>
             </div>
+            <div>
+              <span
+                className={"btn btn-secondary btn-dashed ml-5 mb-4"}
+                onClick={this.props.toggleMessageTemplate}
+              >
+                Manage Template
+              </span>
+            </div>
           </ModalBody>
           <ModalFooter>
             <div className={"flex-1"}>
@@ -621,7 +710,7 @@ class SendInspection extends Component {
             </div>
             {!isMessage ? (
               <Button color="primary" onClick={this.handleSentInspection}>
-                {isOrder ? "Sent Invoice" : "Sent Inspection"}
+                {isOrder ? "Sent Invoice" : "Send Inspection"}
               </Button>
             ) : (
               <Button color="primary" onClick={this.handleAddtoMessage}>

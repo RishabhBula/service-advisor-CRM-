@@ -40,7 +40,6 @@
 }
 /*=======Messages Section======*/
 .message-list{
-  max-width: 700px;
   .sent-date{
     font-size: 12px;
     color: #80909e;
@@ -62,7 +61,7 @@
   }
 }
 .message-tile{
-  max-width: 700px;
+  // max-width: 700px;
   margin-bottom: 35px;
 }
 .message-sent-block .user-name {
@@ -100,7 +99,7 @@
   left: 10px;
 }
 .message-tile.recive .user-name{
-  right: -5px;
+  right: 55px;
   background: #7c6aab;
 }
 .message-tile .message-input:after{
@@ -114,16 +113,18 @@
 .message-input-block{
   background: #fff;
 }
-.message-tile.recive .message-input-block{
-  background: #eee;
-  border-radius:4px;
-  position: relative;
-  max-width: 100%;
-  margin-left: auto;
-  background: #fff;
+.message-tile.recive {
+  padding-right: 120px;
+  .message-input-block{
+    background: #f6ffe4;
+    border-radius:4px;
+    position: relative;
+    max-width: 60%;
+    margin-left: auto;
+  }
 }
 .message-tile.recive .message-input{
-  background: #fff;
+  background: transparent;
 }
 .message-tile.recive .message-input-block:after{
   content: "";
@@ -153,7 +154,7 @@
 .message-tile.send .message-input-block {
   border-radius: 4px;
   position: relative;
-  max-width: 100%;
+  max-width: 60%;
   margin-right: auto;
   background: #fff;
 }

@@ -360,7 +360,7 @@ class WorkflowListView extends React.Component {
 
     return (
       <div>
-        <Nav pills className={"inventory-nav"}>
+        <Nav pills className={"inventory-nav workflow-list-tab"}>
           {orderStatus
             ? orderStatus.map((tab, index) => {
               return (

@@ -189,7 +189,12 @@ class CutomerVehicle extends Component {
           data: vehicle
         }));
         options = options1.concat(options);
-        this.setState({ defaultOptionsVehicle: this.state.defaultOptionsVehicle.concat(options) });
+        this.setState({
+          defaultOptionsVehicle: options.concat({
+            label: "+ Add New Vehicle",
+            value: ""
+          })
+        });
       }
     }
   };
