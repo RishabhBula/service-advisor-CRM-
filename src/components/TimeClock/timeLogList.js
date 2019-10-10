@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   Col,
   Input,
@@ -152,22 +153,7 @@ class TimeLogList extends Component {
       [pathname, qs.stringify({ ...query, page })].join('?')
     );
   };
-  /**
-   * 
-   */
-  handleCustomerView = customerId => {
-    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
-  };
-  handleVehicleView = vehicleId => {
-    const vehicleDetailsUrl = "/vehicles/details/:id";
-    window.open(vehicleDetailsUrl.replace(":id", `${vehicleId}`), "_blank");
-  };
-  handleTechnicianView = technicianId => {
-    window.open(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${technicianId}`), "_blank");
-  }
-  handleOrderView = orderId => {
-    window.open(AppRoutes.WORKFLOW_ORDER.url.replace(":id", `${orderId}`), "_blank");
-  }
+
   render() {
     const {
       timeLogData,
@@ -306,41 +292,40 @@ class TimeLogList extends Component {
                     <td>{(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}</td>
                     <td className={"text-capitalize"}>{timeLog.type}</td>
                     <td className={"text-capitalize"}>{timeLog.technicianId ?
-                      <div className={
-                        "cursor_pointer text-primary text-capitalize"
-                      }
-                        onClick={() => this.handleTechnicianView(timeLog.technicianId._id)}>
+                      <Link to={AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", timeLog.technicianId._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
                         {`${timeLog.technicianId.firstName} ${timeLog.technicianId.lastName}`}
-                      </div>
+                      </Link>
                       : "-"}
                     </td>
                     <td className={"text-capitalize"}>{timeLog.customerId && timeLog.customerId.length ?
-                      <div className={
-                        "cursor_pointer text-primary text-capitalize"
-                      }
-                        onClick={() => this.handleCustomerView(timeLog.customerId[0]._id)}>
+                      <Link to={AppRoutes.CUSTOMER_DETAILS.url.replace(":id", timeLog.customerId[0]._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
                         {`${timeLog.customerId[0].firstName} ${timeLog.customerId[0].lastName}`}
-                      </div>
+                      </Link>
                       : "-"}</td>
                     <td>{timeLog.vehicleId && timeLog.vehicleId.length ?
-                      <div className={
-                        "cursor_pointer text-primary text-capitalize"
-                      }
-                        onClick={() => this.handleVehicleView(timeLog.vehicleId[0]._id)}>
+                      <Link to={AppRoutes.VEHICLES_DETAILS.url.replace(":id", timeLog.vehicleId[0]._id)} target="_blank"
+                        className={
+                          "cursor_pointer text-primary text-capitalize"
+                        }>
                         {`${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}`}
-                      </div>
+                      </Link>
                       : "-"}</td>
                     <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm")}</td>
                     <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
                     <td>{timeLog.activity !== "General" ?
-                      <div
+                      <Link to={AppRoutes.WORKFLOW_ORDER.url.replace(":id", timeLog.orderId[0]._id)} target="_blank"
                         className={
                           "cursor_pointer text-primary text-capitalize"
-                        }
-                        onClick={() => this.handleOrderView(timeLog.orderId[0]._id)}>
+                        }>
                         {timeLog.activity}
-                      </div> : timeLog.activity}</td>
+                      </Link> : timeLog.activity}</td>
                     <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
                     <td><Dollor value={!isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
                     <td className={"text-center"}>

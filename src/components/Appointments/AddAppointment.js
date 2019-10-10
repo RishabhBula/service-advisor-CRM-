@@ -220,7 +220,7 @@ export default class AddAppointment extends Component {
       })
     }
     if (e.target.name === "phone" && e.target.value) {
-      console.log("hello", e.target.value);
+
       if (isNaN(e.target.value)) {
         return
       }
@@ -247,7 +247,7 @@ export default class AddAppointment extends Component {
   handlePhoneValueChange = (event) => {
     const { value } = event.target;
     let phoneTrimed = (value.replace(/[- )(_]/g, ""))
-    console.log("phoneTrimed", phoneTrimed);
+    
     this.setState({
       phone: value,
       errors: {

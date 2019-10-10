@@ -126,7 +126,6 @@ export class CrmLabourModal extends Component {
     }
   }
   async removeAllState() {
-    console.log("hello");
     this.setState({
       discription: "",
       note: "",

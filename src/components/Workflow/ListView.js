@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Table, Nav, NavItem, NavLink, UncontrolledTooltip, DropdownItem,
   DropdownToggle,
@@ -156,17 +157,6 @@ class WorkflowListView extends React.Component {
     }
   };
   /**
-   * 
-   */
-  handleCustomerView = customerId => {
-
-    window.open(AppRoutes.CUSTOMER_DETAILS.url.replace(":id", `${customerId}`), "_blank")
-  };
-  handleVehicleView = vehicleId => {
-    const vehicleDetailsUrl = "/vehicles/details/:id";
-    window.open(vehicleDetailsUrl.replace(":id", `${vehicleId}`));
-  };
-  /**
    *
    */
   renderRow = (order, index) => {
@@ -213,12 +203,12 @@ class WorkflowListView extends React.Component {
               className={"mr-1"}
             />
             {order && order.customerId
-              ? <div className={
-                "cursor_pointer text-primary text-capitalize"
-              }
-                onClick={() => this.handleCustomerView(order.customerId._id)}>
+              ? <Link to={AppRoutes.CUSTOMER_DETAILS.url.replace(":id", order.customerId._id)} target="_blank"
+                className={
+                  "cursor_pointer text-primary text-capitalize"
+                }>
                 {order.customerId.firstName + " " + order.customerId.lastName}
-              </div>
+              </Link>
               : "No Customer"}
           </div>
         </td>
@@ -232,12 +222,12 @@ class WorkflowListView extends React.Component {
               className={"mr-1"}
             />
             {order && order.vehicleId
-              ? <div className={
-                "cursor_pointer text-primary text-capitalize"
-              }
-                onClick={() => this.handleVehicleView(order.vehicleId._id)}>
+              ? <Link to={AppRoutes.VEHICLES_DETAILS.url.replace(":id", order.vehicleId._id)} taget="_blank"
+                className={
+                  "cursor_pointer text-primary text-capitalize"
+                }>
                 {order.vehicleId.make + " " + order.vehicleId.modal}
-              </div>
+              </Link>
               : "No Vehicle"}
           </div>
         </td>

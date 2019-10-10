@@ -139,7 +139,12 @@ class WorkFlow extends Component {
     const {scrollPos} = this.state
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
-    console.log(scrollY, top, window.pageYOffset,"scrollY");
+    // let workflow = document.getElementById("simplebar-content");
+    // let workflowTop;
+    // if (workflow && ele) {
+    //   workflowTop = workflow.getBoundingClientRect().top;
+    // }
+    
     for (let i = 0; i < ele.length; i++) {
       if (scrollY > top) {
         this.setState({

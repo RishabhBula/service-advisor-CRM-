@@ -15,7 +15,7 @@ import {
 import Loader from "../../containers/Loader/Loader";
 import { formateDate } from "../../helpers/Date";
 import PaginationHelper from "../../helpers/Pagination";
-import { withRouter } from "react-router-dom";
+import { withRouter,Link } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../config/AppConfig";
 import { ConfirmBox } from "../../helpers/SweetAlert";
@@ -248,12 +248,9 @@ class UserList extends Component {
     });
   }
   handleUserView = userId => {
-     this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
+    this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
   };
-  handleUserView1 = userId => {
-    // this.props.redirectTo(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`));
-    window.open(AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", `${userId}`),"_blank");
-  };
+
   render() {
     const { userData, openEdit } = this.props;
     const { users, isLoading, totalUsers } = userData;
@@ -497,18 +494,15 @@ class UserList extends Component {
                         </div>
                       </td>
                       <td>
-                        <div
+                        <Link to={AppRoutes.STAFF_MEMBERS_DETAILS.url.replace(":id", user._id)} target="_blank"
                           className={
                             "text-capitalize font-weight-semibold cursor_pointer text-primary"
-                          }
-                          onClick={() =>
-                            this.handleUserView1(user._id)
                           }
                         >
                           {[user.firstName, user.lastName]
                             .join(" ")
                             .trim()}
-                        </div>
+                        </Link>
                         <div>
                           {user.email ? (
                             <a
