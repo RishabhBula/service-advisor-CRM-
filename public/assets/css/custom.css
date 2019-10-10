@@ -55,6 +55,9 @@
   font-weight: normal;
   font-style: normal;
 }
+html,body{
+   scroll-behavior: smooth;
+}
 /*=========Pre Defined classes=============*/
 .border-theme{
   border: 1px solid #dad4ea;
@@ -162,6 +165,9 @@
   background: #fff;
   text-transform: capitalize;
   box-shadow: 0px 1px 1px #c4c1c1;
+}
+.btn.browse-btn.btn-sm {
+  font-size: 14px;
 }
 .btn.browse-btn .icons {
   font-size: 21px;
@@ -1115,7 +1121,7 @@ body .navbar-nav .nav-link.active {
   color: #5c43db;
 }
 .custom-sidebar.sidebar a.nav-link.active {
-  color: #fff;
+  color: #5c43db;
   font-weight: bold;
 }
 .custom-sidebar.sidebar .nav-dropdown-items .nav-link.active {
@@ -1218,7 +1224,7 @@ span.customer-anchor-text.customer-click-btn:hover::before {
   border-top-left-radius: 0px;
 }
 .custom-form-modal .form-group.phone-number-feild select {
-  max-width: 70px;
+  max-width: 80px;
   padding: 0px;
   border-right: none;
   border-bottom-right-radius: 0px;
@@ -2944,7 +2950,7 @@ display: inline-flex;
 }
 .new-Order-btn{
   position: absolute;
-  top: 220px;
+  top: 0px;
   right: 19px;
 }
 .new-Order-btn button{

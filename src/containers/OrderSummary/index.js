@@ -100,7 +100,7 @@ class OrderSummaryView extends Component {
               Authorize Work
             </Button>
           ) : (
-            <Button color={"success"} className={"mr-1"} size={""}>
+            <Button color={"success"} className={"mr-1 disabled"} size={""}>
               <i className={"fas fa-check"} /> Work is Authorize
             </Button>
           )}

@@ -1,4 +1,4 @@
-import { Card, UncontrolledTooltip, CardBody, Button } from "reactstrap";
+import { Card, CardBody, Button } from "reactstrap";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { withRouter } from "react-router-dom";
@@ -286,13 +286,13 @@ class Inventory extends Component {
               InventoryTabs[activeTab].name.length
             )}
           </Button>
-          <UncontrolledTooltip target={"add-user"}>
+          {/* <UncontrolledTooltip target={"add-user"}>
             Add New{" "}
             {InventoryTabs[activeTab].name.slice(
               0,
               InventoryTabs[activeTab].name.length
             )}
-          </UncontrolledTooltip>
+          </UncontrolledTooltip> */}
         </>
       );
     }

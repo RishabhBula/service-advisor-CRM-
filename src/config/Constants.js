@@ -159,12 +159,12 @@ export const CustomerDefaultPermissions = {
 };
 
 export const PhoneOptions = [
-  { key: "mobile", text: "Mobile" },
-  { key: "work", text: "Work" },
-  { key: "home", text: "Home" },
-  { key: "office", text: "Office" },
-  { key: "fax", text: "Fax" },
-  { key: "other", text: "Other" }
+  { key: "personal", text: "Personal" },
+  { key: "work", text: "Work" }
+  // { key: "home", text: "Home" },
+  // { key: "office", text: "Office" },
+  // { key: "fax", text: "Fax" },
+  // { key: "other", text: "Other" }
 ];
 
 export const RoleOptions = [

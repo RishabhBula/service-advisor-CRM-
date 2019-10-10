@@ -72,7 +72,7 @@ class InspectionTable extends Component {
     for (let k = 0; k < imgArray.length; k++) {
       imageArray.push(
         <span style={style}>
-          <img src={imgArray[k]} alt={"inspect"} width={50} />
+          {/* <img src={imgArray[k]} alt={"inspect"} width={50} /> */}
         </span>
       );
     }

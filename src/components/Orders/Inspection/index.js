@@ -346,10 +346,10 @@ class Inspection extends Component {
    */
   onDrop = async (files, inspIndex, itemIndex) => {
     const { inspection } = this.state;
-    if (files.length && files[0].size > 10000000) {
+    if (files.length && files[0].size > 30000000) {
       await ConfirmBox({
         text: "",
-        title: "Maximum allowed size for image is 10mb",
+        title: "Maximum allowed size for image is 30mb",
         showCancelButton: false,
         confirmButtonText: "Ok"
       });
@@ -486,7 +486,7 @@ class Inspection extends Component {
           : "";
     }
     let pdfWindow = window.open("");
-    // pdfWindow.document.body.style.margin = "0px";
+    pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
       "<html><title>Inspection</title><body style='margin:0px;'><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src='" +
       filename +
@@ -1010,7 +1010,7 @@ class Inspection extends Component {
                   className={"mr-3 pull-right btn-blue"}
                   size={"lg"}
                 >
-                  Loading..
+                  Submiting..
                 </Button>
               ) : (
                 <Button

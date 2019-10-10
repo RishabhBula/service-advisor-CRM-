@@ -410,7 +410,7 @@ class OrderDetails extends Component {
                     </div>
                   </FormGroup>
                 ) : (
-                  <span>
+                  <span className={"d-flex"}>
                     <span className={"pr-2 create-date"}>{poNumber}</span>
                     <span>
                       <Button

@@ -247,7 +247,7 @@ export class CrmCustomerModal extends Component {
   };
   handleAddPhoneDetails = () => {
     const { phoneDetail } = this.state;
-    if (phoneDetail.length < 3) {
+    if (phoneDetail.length < 10) {
       this.setState((state, props) => {
         return {
           phoneDetail: state.phoneDetail.concat([
@@ -767,7 +767,7 @@ export class CrmCustomerModal extends Component {
                   })
                   : null}
 
-                {phoneDetail.length < 3 ? (
+                {phoneDetail.length < 10 ? (
                   <Col md="12">
                     <FormGroup className={"mb-0"}>
                       <Label className={"customer-modal-text-style"} />

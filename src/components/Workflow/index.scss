@@ -3,6 +3,10 @@
   .inventory-nav{
     position: sticky;
     -webkit-position: sticky;
-    top: 46px;
+    top: 45px;
+  }
+  .workflow-list-tab{
+    background: #fff;
+    z-index: 1;
   }
 }

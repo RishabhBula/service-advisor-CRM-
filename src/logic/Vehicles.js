@@ -25,7 +25,7 @@ import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
 import { AppConfig } from "../config/AppConfig";
 
-let toastId = null ;
+let toastId = null;
 
 const vehicleAddLogic = createLogic({
   type: vehicleActions.VEHICLES_ADD_REQUEST,
@@ -55,9 +55,7 @@ const vehicleAddLogic = createLogic({
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
-        toastId = toast.error(
-           result.messages[0] || result.messages
-        );
+        toastId = toast.error(result.messages[0] || result.messages);
       }
       dispatch(
         vehicleAddSuccess({
@@ -72,10 +70,8 @@ const vehicleAddLogic = createLogic({
       return;
     } else {
       if (!toast.isActive(toastId)) {
-        toastId = toast.success(
-           result.messages[0]
-        );
-     }
+        toastId = toast.success(result.messages[0]);
+      }
       if (action.payload.workFlowVehicle) {
         dispatch(
           vehicleAddSuccess({
@@ -85,10 +81,10 @@ const vehicleAddLogic = createLogic({
       }
       dispatch(hideLoader());
       if (data.isCustomerDetails) {
-        dispatch(customerGetRequest())
+        dispatch(customerGetRequest());
       }
-      if (action.payload.isSingleCustomer){
-        dispatch(customerGetRequest({customerId:action.payload.customerId}))
+      if (action.payload.isSingleCustomer) {
+        dispatch(customerGetRequest({ customerId: action.payload.customerId }));
       }
       dispatch(
         modelOpenRequest({
@@ -122,10 +118,21 @@ const getVehiclesLogic = createLogic({
       "GET",
       true,
       {
-        search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null,
-        sort: action.payload && action.payload.sort ? action.payload.sort : null,
+        search:
+          action.payload && action.payload.input
+            ? action.payload.input
+            : action.payload && action.payload.search
+            ? action.payload.search
+            : null,
+        sort:
+          action.payload && action.payload.sort ? action.payload.sort : null,
         limit: AppConfig.ITEMS_PER_PAGE,
-        vehicleId: action.payload && action.payload.vehicleId && action.payload.isGetVehicle ? action.payload.vehicleId : null,
+        vehicleId:
+          action.payload &&
+          action.payload.vehicleId &&
+          action.payload.isGetVehicle
+            ? action.payload.vehicleId
+            : null,
         page: action.payload && action.payload.page ? action.payload.page : null
       }
     );
@@ -143,7 +150,7 @@ const getVehiclesLogic = createLogic({
       var defaultOptions = [
         {
           label: "+ Add New Vehicle",
-          value: "",
+          value: ""
         }
       ];
       const options = result.data.data.map(vehicle => ({
@@ -151,14 +158,23 @@ const getVehiclesLogic = createLogic({
         value: vehicle._id,
         data: vehicle
       }));
-      if (options.length) {
-        defaultOptions = defaultOptions.concat([{
+      let allVehicle;
+      allVehicle = [
+        {
           label: "All Vehicles",
           value: "",
           isDisabled: true
-        }])
-      }
-      logger(action.payload && action.payload.callback ? action.payload.callback(defaultOptions.concat(options)) : null)
+        }
+      ];
+      logger(
+        action.payload && action.payload.callback
+          ? action.payload.callback(
+              options.length
+                ? allVehicle.concat(options.concat(defaultOptions))
+                : defaultOptions
+            )
+          : null
+      );
       dispatch(hideLoader());
       dispatch(
         vehicleGetSuccess({
@@ -192,19 +208,15 @@ const editCustomerLogic = createLogic({
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
-        toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
-        );
-     }
+        toastId = toast.error(result.messages[0] || DefaultErrorMessage);
+      }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!toast.isActive(toastId)) {
-        toastId = toast.success(
-           result.messages[0]
-        );
-     }
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(vehicleEditSuccess());
       dispatch(
         vehicleGetRequest({
@@ -234,10 +246,8 @@ const deleteVehicleLogic = createLogic({
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
-        toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
-        );
-     }
+        toastId = toast.error(result.messages[0] || DefaultErrorMessage);
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -271,10 +281,8 @@ const updateVehicleStatusLogic = createLogic({
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
-        toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
-        );
-     }
+        toastId = toast.error(result.messages[0] || DefaultErrorMessage);
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -316,9 +324,7 @@ const importVehicleLogic = createLogic({
       if (!element["Year"]) {
         hasError = true;
         errroredRows.push(
-          `Year not found on row <b>${element.rowNumber}</b> of <b>${
-          element.sheetName
-          }</b> sheet.`
+          `Year not found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
       } else if (
         isNaN(parseInt(element["Year"])) ||
@@ -326,33 +332,25 @@ const importVehicleLogic = createLogic({
       ) {
         hasError = true;
         errroredRows.push(
-          `Invalid year value found on row <b>${element.rowNumber}</b> of <b>${
-          element.sheetName
-          }</b> sheet.`
+          `Invalid year value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
       }
       if (!element["Make"]) {
         hasError = true;
         errroredRows.push(
-          `Make not found on row <b>${element.rowNumber}</b> of <b>${
-          element.sheetName
-          }</b> sheet.`
+          `Make not found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
       }
       if (!element["Model"]) {
         hasError = true;
         errroredRows.push(
-          `Model number not found on row <b>${element.rowNumber}</b> of <b>${
-          element.sheetName
-          }</b> sheet.`
+          `Model number not found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
       }
       if (!element["Licence Plate"]) {
         hasError = true;
         errroredRows.push(
-          `Licence number not found on row <b>${element.rowNumber}</b> of <b>${
-          element.sheetName
-          }</b> sheet.`
+          `Licence number not found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
       }
       return {
