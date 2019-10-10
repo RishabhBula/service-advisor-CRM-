@@ -168,7 +168,7 @@ export default class AddAppointment extends Component {
           appointmentTitle,
           note,
           email,
-          phone,
+          phone: phone ? phone : null,
           selectedColor: appointmentColor,
           appointmentDate: new Date(appointmentDate),
           endTime: moment.utc(endTime).format("HH:mm"),
@@ -200,7 +200,7 @@ export default class AddAppointment extends Component {
             };
           }),
           isEmail: customerId.email ? true : false,
-          isSms: customerId.phoneDetail && customerId.phoneDetail.length ? true : false,
+          isSms: phone ? true : false,
         });
       }
     }
@@ -247,7 +247,7 @@ export default class AddAppointment extends Component {
   handlePhoneValueChange = (event) => {
     const { value } = event.target;
     let phoneTrimed = (value.replace(/[- )(_]/g, ""))
-    
+
     this.setState({
       phone: value,
       errors: {
@@ -719,7 +719,6 @@ export default class AddAppointment extends Component {
                             if (e && e.label === "+ Add New Customer") {
                               this.handleCustomerModel()
                             } else {
-
                               const customer = e.data;
                               const { phoneDetail } = customer;
                               let phone = "";

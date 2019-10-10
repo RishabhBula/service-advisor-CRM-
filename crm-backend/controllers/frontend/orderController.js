@@ -605,6 +605,34 @@ const deleteOrder = async (req, res) => {
     });
   }
 };
+/**
+ * 
+ */
+const updateOrderStatusNameLogic = async (req, res) => {
+  try {
+    const { body, currentUser } = req;
+    const { parentId } = currentUser;
+    const { name, id } = body;
+    const result = await OrderStatus.find({ _id: { $ne: mongoose.Types.ObjectId(id) }, isDeleted: false, parentId: parentId, name: name.trim() }).collation({ locale: 'en', strength: 2 });
+    if(result && result.length){
+      return res.status(400).json({
+        message:"This oder status name already exist."
+      })
+    }
+    const data = await OrderStatus.findByIdAndUpdate(id, {
+      $set: { name: name }
+    })
+    return res.status(200).json({
+      message:"Successfully update order status name."
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+
+}
 
 module.exports = {
   countOrderNumber,
@@ -616,5 +644,6 @@ module.exports = {
   updateWorkflowStatusOrder,
   updateOrderDetails,
   getOrderDetails,
-  deleteOrder
+  deleteOrder,
+  updateOrderStatusNameLogic
 };

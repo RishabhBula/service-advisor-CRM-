@@ -11,7 +11,8 @@ class Reports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      customerSearch: ""
+      customerSearch: "",
+      page: 1,
     };
   }
   /**
@@ -19,10 +20,11 @@ class Reports extends Component {
    */
   componentDidMount = () => {
     const { search } = this.props.location;
-    const { customerSearch } = qs.parse(search.replace("?", ""));
+    const { customerSearch, page } = qs.parse(search.replace("?", ""));
     this.setState(
       {
-        customerSearch
+        customerSearch,
+        page: page ? page : 1
       },
       () => {
         this.getCustomerSales();
@@ -35,14 +37,15 @@ class Reports extends Component {
   componentDidUpdate({ location }) {
     const { search: oldSearch } = location;
     const { search } = this.props.location;
-    const { customerSearch } = qs.parse(search.replace("?", ""));
-    const { customerSearch: oldCustomerSearch } = qs.parse(
+    const { customerSearch, page } = qs.parse(search.replace("?", ""));
+    const { customerSearch: oldCustomerSearch, page: oldPage } = qs.parse(
       oldSearch.replace("?", "")
     );
-    if (customerSearch !== oldCustomerSearch) {
+    if (customerSearch !== oldCustomerSearch || page !== oldPage) {
       this.setState(
         {
-          customerSearch
+          customerSearch,
+          page: page ? page : 1
         },
         () => {
           this.getCustomerSales();
@@ -56,19 +59,21 @@ class Reports extends Component {
   getCustomerSales = () => {
     const { location } = this.props.history;
     const { search } = location;
-    let { customerSearch } = qs.parse(search.replace("?", ""));
+    let { customerSearch, page } = qs.parse(search.replace("?", ""));
     logger(customerSearch);
     this.props.getCustomerSales({
-      search: customerSearch
+      search: customerSearch,
+      page: page ? page : 1
     });
   };
   /**
    *
    */
-  onCustomerSearch = value => {
+  onCustomerSearch = (value, page) => {
     this.props.redirectTo(
       `${AppRoutes.REPORTS.url}?${qs.stringify({
-        customerSearch: value
+        customerSearch: value,
+        page: page
       })}`
     );
   };
@@ -82,14 +87,29 @@ class Reports extends Component {
     if (data.customerSearch) {
       delete data.customerSearch;
     }
+    if (data.page) {
+      delete data.page;
+    }
     this.props.redirectTo(`${AppRoutes.REPORTS.url}?${qs.stringify(data)}`);
+  };
+  /**
+   * 
+   */
+  onPageChange = page => {
+    const { location } = this.props.history;
+    const { search } = location;
+    const query = qs.parse(search.replace("?", ""));
+    if (query.page) {
+      delete query.page;
+    }
+    this.props.redirectTo(`${AppRoutes.REPORTS.url}?${qs.stringify({ page: page, ...query })}`);
   };
   /**
    *
    */
   render() {
     const { customerReport } = this.props;
-    const { customerSearch } = this.state;
+    const { customerSearch, page } = this.state;
     return (
       <div className="animated fadeIn">
         <Card className={"white-card position-relative"}>
@@ -117,10 +137,13 @@ class Reports extends Component {
               <Col sm={"12"} className={"p-0"}>
                 <SalesByCusomerAge
                   searchKey={customerSearch}
+                  searchPage={page}
                   customerReport={customerReport}
                   onFilterChange={this.onCustomerSaleRangeChange}
                   onSearch={this.onCustomerSearch}
                   onReset={this.onCustomerSearchReset}
+                  onPageChange={this.onPageChange}
+                  {...this.props}
                 />
               </Col>
             </Row>

@@ -5,6 +5,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   Dropdown,
+  Input,
+  FormFeedback
 } from "reactstrap";
 import Loader from "../../containers/Loader/Loader";
 import NoDataFound from "../common/NoFound";
@@ -30,7 +32,11 @@ class WorkflowListView extends React.Component {
       orderAppointment: [],
       showAppointmentDetailModal: false,
       appointmentDetail: "",
-      openAction: []
+      openAction: [],
+      isEdit: false,
+      index: -1,
+      orderStatusName: "",
+      errors: {}
     };
   }
 
@@ -326,10 +332,56 @@ class WorkflowListView extends React.Component {
           >
             Delete
           </DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              this.setState({
+                isEdit: true,
+                index: ind,
+                orderStatusName: status.name
+              })
+            }}>
+            Edit
+          </DropdownItem>
         </DropdownMenu>
       </Dropdown>
     );
   };
+  /**
+   * 
+   */
+  onBlur = (orderStatusName, index, id) => {
+    if(orderStatusName.trim().length < 1){
+      this.setState({
+        errors:{
+          ...this.state.errors,
+          orderStatusName:"Please enter workflow status name."
+        }
+      })
+      return ;
+    }
+    this.props.updateOrderStatusName(orderStatusName.trim(), index,id)
+    this.setState({
+      isEdit: false,
+      index: -1
+    })
+  }
+  /**
+   * 
+   */
+  handleInputChange = e => {
+    const { target } = e;
+    const { name, value } = target;
+    this.setState({
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
+    });
+  };
+  /**
+   *
+   */
   /**
    *
    */
@@ -342,7 +394,10 @@ class WorkflowListView extends React.Component {
       appointModalOpen,
       orderUserData,
       showAppointmentDetailModal,
-      appointmentDetail
+      appointmentDetail,
+      isEdit,
+      orderStatusName,
+      errors
     } = this.state;
     if (!activeTab && orderStatus[0]) {
       activeTab = orderStatus[0]._id;
@@ -366,7 +421,21 @@ class WorkflowListView extends React.Component {
                     }}
                   >
                     <div className="d-flex align-items-center m-0 justify-content-between">
-                      <div>{tab.name}</div>
+                      {isEdit === true && this.state.index === index ?
+                      <div className={"input-block"}>
+                        <Input
+                          type="text"
+                          name="orderStatusName"
+                          value={orderStatusName}
+                          onChange={this.handleInputChange}
+                          onBlur={() => this.onBlur(orderStatusName, index, tab._id)} 
+                          invalid={errors.orderStatusName ? true : false}
+                          /> 
+                          <FormFeedback>
+                            {errors.orderStatusName ? errors.orderStatusName : null}
+                          </FormFeedback>
+                          </div>
+                          : <div>{tab.name}</div>}
                       <div>
                         {this.renderActions(tab, index)}
                       </div>

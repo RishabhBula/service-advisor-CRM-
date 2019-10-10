@@ -23,7 +23,7 @@ import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
 import { AppConfig } from "../config/AppConfig";
 
-let toastId = null ;
+let toastId = null;
 const addCustomerLogic = createLogic({
   type: customersAddActions.CUSTOMER_ADD_REQUEST,
   cancelType: customersAddActions.CUSTOMER_ADD_FAILED,
@@ -62,9 +62,9 @@ const addCustomerLogic = createLogic({
 
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -72,9 +72,9 @@ const addCustomerLogic = createLogic({
       if (!data.showAddVehicle) {
         if (!toast.isActive(toastId)) {
           toastId = toast.success(
-             result.messages[0]
+            result.messages[0]
           );
-       }
+        }
       } else {
         dispatch(
           modelOpenRequest({
@@ -194,9 +194,9 @@ const deleteCustomerLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -231,9 +231,9 @@ const editCustomerLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -241,9 +241,9 @@ const editCustomerLogic = createLogic({
       if (!action.payload.showAddVehicle) {
         if (!toast.isActive(toastId)) {
           toastId = toast.success(
-             result.messages[0]
+            result.messages[0]
           );
-       }
+        }
       } else {
         dispatch(
           modelOpenRequest({
@@ -254,16 +254,17 @@ const editCustomerLogic = createLogic({
           })
         );
       }
-      dispatch(customerEditSuccess());      
-      dispatch(
-        customerGetRequest({
-          ...action.payload.query
-        })
-      );
-      if(action.payload.data.isSingleCustomer){
+      dispatch(customerEditSuccess());
+      if (action.payload.data.isSingleCustomer) {
         dispatch(
           customerGetRequest({
-            ...action.payload.query,customerId:action.payload.data.customerId
+            ...action.payload.query, customerId: action.payload.data.customerId
+          })
+        );
+      } else {
+        dispatch(
+          customerGetRequest({
+            ...action.payload.query
           })
         );
       }
@@ -295,9 +296,9 @@ const updateCustomerStatusLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -425,15 +426,15 @@ const importCustomerLogic = createLogic({
       );
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
     }
     setTimeout(
       () =>

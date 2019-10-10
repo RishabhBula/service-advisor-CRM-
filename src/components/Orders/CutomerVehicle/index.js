@@ -179,7 +179,7 @@ class CutomerVehicle extends Component {
       });
       this.props.customerVehicleData(this.state.customerId, vehicleId, true);
     }
-    if (this.state.isCustomerSelected && this.props.customerListReducer && this.props.customerListReducer.customers && this.props.customerListReducer.customers.length && this.props.customerListReducer.customers !== customerListReducer.customers) {
+    if (this.props.customerListReducer && this.props.customerListReducer.customers && this.props.customerListReducer.customers.length && this.props.customerListReducer.customers !== customerListReducer.customers) {
       // let defaultOptionsVehicle = [...this.state.defaultOptionsVehicle];
       if (this.props.customerListReducer.customers[0].vehicles && this.props.customerListReducer.customers[0].vehicles.length && this.state.defaultOptionsVehicle.length === 1) {
         const options1 = [{ label: "Current Vehicles", value: "", isDisabled: true }]
@@ -189,7 +189,7 @@ class CutomerVehicle extends Component {
           data: vehicle
         }));
         options = options1.concat(options);
-        this.setState({ defaultOptionsVehicle: this.state.defaultOptionsVehicle.concat(options) });
+        this.setState({ defaultOptionsVehicle: this.state.defaultOptionsVehicle.concat(options) ,isCustomerSelected:true });
       }
     }
   };
@@ -457,7 +457,7 @@ class CutomerVehicle extends Component {
                       }
                     );
                   }}
-                  onBlur={this.onBlur1}
+                  // onBlur={this.onBlur1}
                   styles={colourStyles}
                 />
                 {isError && !vehicleId ? (

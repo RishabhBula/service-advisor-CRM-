@@ -24,7 +24,7 @@ export const usersReducer = handleActions(
       ...state,
       ...payload,
       isStartTimer: [],
-      isLoading: false
+      
     }),
     [usersActions.ADD_USER]: (state, action) => ({
       ...state,

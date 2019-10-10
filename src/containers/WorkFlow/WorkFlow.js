@@ -29,7 +29,8 @@ import {
   deleteOrderRequest,
   getAppointments,
   addAppointmentRequest,
-  updateOrderDetailsRequest
+  updateOrderDetailsRequest,
+  updateOrderStatusNameReq
 } from "../../actions";
 // import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -140,7 +141,7 @@ class WorkFlow extends Component {
     // if (workflow && ele) {
     //   workflowTop = workflow.getBoundingClientRect().top;
     // }
-    
+
     for (let i = 0; i < ele.length; i++) {
       if (scrollY > 150) {
         this.setState({
@@ -175,7 +176,7 @@ class WorkFlow extends Component {
               i
             ].childNodes[0].style.transform = `translateX(-${leftVal})`;
           }
-        }else{
+        } else {
           for (let i = 0; i < workflowGridEle.length; i++) {
             workflowGridEle[
               i
@@ -234,7 +235,7 @@ class WorkFlow extends Component {
   };
 
   dragMouseDown = (e, ele, workflow) => {
-   
+
     let pos3 = 0;
     e = e || window.event;
     e.preventDefault();
@@ -253,14 +254,14 @@ class WorkFlow extends Component {
       finalPos = 0;
     e = e || window.event;
     e.preventDefault();
-    pos1 = e.clientX - pos3 ;
+    pos1 = e.clientX - pos3;
     console.log(e.clientX, pos3, "e.clientX");
     pos3 = e.clientX;
     console.log(ele.offsetLeft, "ele");
     finalPos = pos1;
-   
+
     if (finalPos < -1) {
-       finalPos = 0;
+      finalPos = 0;
       console.log(finalPos, "finalPos");
     } else if (finalPos >= scrollToWidth) {
       finalPos = scrollToWidth;
@@ -404,7 +405,11 @@ class WorkFlow extends Component {
       addOrderStatusModalOpen: !addOrderStatusModalOpen
     });
     this.setState({
-      orderStatusName: ""
+      orderStatusName: "",
+      errors:{
+        ...this.state.errors,
+        orderStatusName:null
+      }
     });
   };
   /**
@@ -611,6 +616,18 @@ class WorkFlow extends Component {
     this.props.updateOrderDetails(payload);
   };
   /**
+   * 
+   */
+  updateOrderStatusName = (name, index,id) => {
+    const {orderReducer} = this.props;
+    const { orderStatus } = orderReducer;
+    let data = [...orderStatus];
+    data[index]={
+      ...data[index],name:name
+    }
+    this.props.updateOrderStatusNameReq({data,name,index,id});
+  }
+  /**
    *
    */
   render() {
@@ -723,36 +740,38 @@ class WorkFlow extends Component {
                     addAppointment={addAppointment}
                     getAppointments={getAppointments}
                     appointmentReducer={appointmentReducer}
+                    updateOrderStatusName={this.updateOrderStatusName}
                   />
                 ) : (
-                  <div
-                    style={{ overflowX: "auto" }}
-                    className={"simplebar-content "}
-                    id={"simplebar-content"}
-                    onScroll={e => this.handleScrollLeft(e)}
-                  >
-                    <ResizeObserver
-                      onResize={rect =>
-                        this.handleResize(rect.width, rect.height)
-                      }
-                    />
-                    <WorkflowGridView
-                      orderData={orderData}
-                      orderStatus={orderStatus}
-                      orderStatus1={this.orderStatus}
-                      updateOrderStatus={updateOrderStatus}
-                      deleteOrderStatus={this.deleteOrderStatus}
-                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                      deleteOrder={this.deleteOrder}
-                      redirectTo={redirectTo}
-                      modelInfoReducer={modelInfoReducer}
-                      addAppointment={addAppointment}
-                      getAppointments={getAppointments}
-                      appointmentReducer={appointmentReducer}
-                    />
-                  </div>
-                )}
-                {!listView  ? (
+                    <div
+                      style={{ overflowX: "auto" }}
+                      className={"simplebar-content "}
+                      id={"simplebar-content"}
+                      onScroll={e => this.handleScrollLeft(e)}
+                    >
+                      <ResizeObserver
+                        onResize={rect =>
+                          this.handleResize(rect.width, rect.height)
+                        }
+                      />
+                      <WorkflowGridView
+                        orderData={orderData}
+                        orderStatus={orderStatus}
+                        orderStatus1={this.orderStatus}
+                        updateOrderStatus={updateOrderStatus}
+                        deleteOrderStatus={this.deleteOrderStatus}
+                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                        deleteOrder={this.deleteOrder}
+                        redirectTo={redirectTo}
+                        modelInfoReducer={modelInfoReducer}
+                        addAppointment={addAppointment}
+                        getAppointments={getAppointments}
+                        appointmentReducer={appointmentReducer}
+                        updateOrderStatusName={this.updateOrderStatusName}
+                      />
+                    </div>
+                  )}
+                {!listView ? (
                   <div
                     className={"simplebar-scroll-track"}
                     id={"simplebar-scroll-track"}
@@ -795,6 +814,9 @@ const mapDispatchToProps = dispatch => ({
   getAppointments: data => dispatch(getAppointments(data)),
   updateOrderDetails: data => {
     dispatch(updateOrderDetailsRequest(data));
+  },
+  updateOrderStatusNameReq: data =>{
+    dispatch(updateOrderStatusNameReq(data));
   }
 });
 export default connect(

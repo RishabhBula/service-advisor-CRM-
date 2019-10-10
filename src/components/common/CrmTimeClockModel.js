@@ -120,6 +120,7 @@ export class CrmTimeClockModal extends Component {
         endDateTime,
         duration,
         technicianId,
+        notes
       } = this.props.timeLogEle
       const startDateTime1 = moment.utc(startDateTime).format("HH:mm")
       const endDateTime1 = moment.utc(endDateTime).format("HH:mm")
@@ -135,6 +136,7 @@ export class CrmTimeClockModal extends Component {
           label: technicianId ? `${technicianId.firstName} ${technicianId.lastName}` : "Select technician",
           value: technicianId ? technicianId._id : ""
         },
+        notes,
         isEditTimeClock: true
       })
     }
