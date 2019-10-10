@@ -87,7 +87,7 @@ const getAllMsgTemplateList = async (req, res) => {
             _id: mongoose.Types.ObjectId(messageId),
          });
       }
-      const result1 = await MessageTemplate.find(condition)
+      const result1 = await MessageTemplate.find(condition).sort({createdAt:-1});
       const result = result1
       return res.status(200).json({
          data: result,

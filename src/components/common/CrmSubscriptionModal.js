@@ -142,9 +142,9 @@ export class CrmSubscriptionModel extends Component {
                        <div className={"text-center pt-4 pb-4 user-count"}>
                          1 User License
                        </div>
-                       <div className={"notes"}>
+                       {/* <div className={"notes"}>
                          Pay $10/user and add more users
-                       </div>
+                       </div> */}
                      </div>
                      <div className={"text-center"}>
                        {isuserLogin ? (
@@ -189,9 +189,9 @@ export class CrmSubscriptionModel extends Component {
                                >
                                  {plan.facilities.noOfLiscence} User License
                                </div>
-                               <div className={"notes"}>
+                               {/* <div className={"notes"}>
                                  Pay $10/user and add more users
-                               </div>
+                               </div> */}
                              </div>
                              <div className={"text-center"}>
                                {isuserLogin ? (

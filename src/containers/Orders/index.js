@@ -344,13 +344,12 @@ class Order extends Component {
           ? orderReducer.orderItems.invoiceURL
           : "";
     }
+    console.log(filename, "filename");
     let pdfWindow = window.open("");
     pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
-      "<html><title>Invoice</title><embed width='100%' height='100%' name='plugin' data='pdf'  type='application/pdf' src='" +
-      filename +
-      "' content-type='application/pdf'  content-disposition='inline'></embed></html>";
-      console.log(filename, "filename");
+      `<html><head><title>Order Invoice</title></head><body><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src=${filename}></embed></body></html>`;
+      
   };
 
   render() {
@@ -696,6 +695,7 @@ class Order extends Component {
                       searchMessageTemplateList={
                         this.props.searchMessageTemplateList
                       }
+                      pdfReducer={pdfReducer}
                       toggleMessageTemplate={this.toggleMessageTemplate}
                       sendMessageTemplate={this.props.sendMessageTemplate}
                       isOrder

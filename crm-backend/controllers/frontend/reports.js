@@ -8,8 +8,10 @@ const ObjectId = mongoose.Types.ObjectId;
 const getReportsByCustomerdays = async (req, res) => {
   try {
     const { currentUser, query } = req;
-    const { search } = query;
+    const { search, page, limit } = query;
     const { id, parentId } = currentUser;
+    const pageNumber = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber = parseInt(limit) || 10;
     const orderStatusCondition = {
       $and: [
         {
@@ -82,8 +84,51 @@ const getReportsByCustomerdays = async (req, res) => {
           customerId: { $first: "$customerId" },
           name: { $first: "$name" }
         }
+      },
+      {
+        $skip: (pageNumber)
+      },
+      {
+        $limit: (limitNumber)
+      },
+    ]);
+    // get count for the conditions
+    const reportCount = await OrderModel.aggregate([
+      {
+        $lookup: {
+          from: "customers",
+          localField: "customerId",
+          foreignField: "_id",
+          as: "customerId"
+        }
+      },
+      {
+        $unwind: "$customerId"
+      },
+      {
+        $addFields: {
+          name: {
+            $concat: ["$customerId.firstName", " ", "$customerId.lastName"]
+          },
+          email: "$customerId.email"
+        }
+      },
+      {
+        $match: orderStatusCondition
+      },
+      {
+        $group: {
+          _id: "$customerId._id",
+          customerId: { $first: "$customerId" },
+          name: { $first: "$name" }
+        }
+      },
+      {
+        $count: "count"
       }
     ]);
+    console.log("reportCount", reportCount);
+    console.log("result", result);
     const resp = [];
     const dates = getDateRanges();
     for (let i = 0; i < result.length; i++) {
@@ -147,6 +192,7 @@ const getReportsByCustomerdays = async (req, res) => {
     }
     return res.status(200).json({
       data: resp,
+      totalReports: reportCount[0] ? reportCount[0].count : 0,
       message: "Data fetched successfully."
     });
   } catch (error) {

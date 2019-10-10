@@ -4,6 +4,7 @@ import { ReportActions } from "../actions";
 const initialState = {
   customerReport: {
     data: [],
+    totalReports:0,
     isLoading: true
   }
 };

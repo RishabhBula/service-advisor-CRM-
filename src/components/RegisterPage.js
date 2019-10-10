@@ -189,7 +189,6 @@ class RegisterPage extends Component {
     } = this.state;
     return (
       <>
-
         <div className="app app1 flex-row align-items-center auth-page pt-3 pb-3">
           <div className="auth-bg" />
           <Row className="justify-content-center m-0">
@@ -213,7 +212,7 @@ class RegisterPage extends Component {
                         <h1 className="auth-title">Sign Up</h1>
                         <p className="text-muted text-center text-info-line">
                           To Create Your Workspace
-                      </p>
+                        </p>
                         <FormGroup className={"auth-input-group"}>
                           <InputGroup className="mb-3">
                             <InputGroupAddon
@@ -284,7 +283,9 @@ class RegisterPage extends Component {
                             </FormFeedback>
                           </InputGroup>
                         </FormGroup>
-                        <FormGroup className={"auth-input-group"}>
+                        <FormGroup
+                          className={"auth-input-group position-relative "}
+                        >
                           <InputGroup className="mb-3">
                             <InputGroupAddon
                               addonType="prepend"
@@ -307,6 +308,32 @@ class RegisterPage extends Component {
                               {errors.password ? errors.password : null}
                             </FormFeedback>
                           </InputGroup>
+                          <Button
+                            id={"password"}
+                            className={"help-btn rounded-circle"}
+                          >
+                            <i className={"fa fa-question"} />
+                          </Button>
+                          <UncontrolledPopover
+                            className={"technician-popover"}
+                            placement="top"
+                            target={"password"}
+                            trigger={"hover"}
+                          >
+                            <PopoverHeader>Password</PopoverHeader>
+                            <PopoverBody>
+                              <div className={"pb-2 technician-detail"}>
+                                <div className={"text-capitalize pb-1"}>
+                                  Password should be Alphanumericals 
+                                  <small>
+                                    (combination of alphabetical and numerical
+                                    characters)
+                                  </small>
+                                  .
+                                </div>
+                              </div>
+                            </PopoverBody>
+                          </UncontrolledPopover>
                         </FormGroup>
                         <FormGroup className={"auth-input-group"}>
                           <InputGroup>
@@ -383,10 +410,10 @@ class RegisterPage extends Component {
                                   }
                                 >
                                   Provide name of your company or Organization
-                              </div>
+                                </div>
                                 <div className={"pt-2  text-note text-left"}>
                                   ex.&nbsp;serviceadvisor
-                              </div>
+                                </div>
                               </div>
                             </PopoverBody>
                           </UncontrolledPopover>
@@ -432,17 +459,19 @@ class RegisterPage extends Component {
                             <PopoverBody>
                               <div className={"pb-2 technician-detail"}>
                                 <div
-                                  className={"text-capitalize pb-1 border-bottom"}
+                                  className={
+                                    "text-capitalize pb-1 border-bottom"
+                                  }
                                 >
                                   Your work space will be an area reserved and
                                   identified uniquely by your company name
                                   followed by our company domain.
-                              </div>
+                                </div>
                                 <div className={"pt-2  text-note text-left"}>
-                                  EX: Your workspace name is "Peterbilt", so after
-                                  signup, your URL will be
+                                  EX: Your workspace name is "Peterbilt", so
+                                  after signup, your URL will be
                                   http://peterbilt.serviceadvisor.io.
-                              </div>
+                                </div>
                               </div>
                             </PopoverBody>
                           </UncontrolledPopover>
@@ -485,7 +514,7 @@ class RegisterPage extends Component {
                               onClick={this.handleSubmit}
                             >
                               Signup
-                          </Button>
+                            </Button>
                           </Col>
                         </Row>
                         <Row className="d-block mt-3 m-0">
@@ -500,23 +529,22 @@ class RegisterPage extends Component {
                           <Col xs="12">
                             <p className="text-center">
                               Already have an account?
-                            <Link to="/login"> Sign In </Link>
+                              <Link to="/login"> Sign In </Link>
                             </p>
                           </Col>
                         </Row>
                       </Form>
                     ) : (
-                        <ResendInvitation
-                          resendConfimationLink={this.resendConfimationLink}
-                        />
-                      )}
+                      <ResendInvitation
+                        resendConfimationLink={this.resendConfimationLink}
+                      />
+                    )}
                   </CardBody>
                 </Card>
               </CardGroup>
             </Col>
           </Row>
         </div>
-
       </>
     );
   }

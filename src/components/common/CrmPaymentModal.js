@@ -41,7 +41,8 @@ export class CrmPaymentModel extends Component {
          this.setState({
             payableAmount: parseFloat(payableAmmount - totalPaiedAmount).toFixed(2),
             paymentType: "Cash",
-            showRemainingAmt: false
+            showRemainingAmt: false,
+            errors: {}
          })
       }
    }

@@ -405,6 +405,11 @@ body {
       height: 35px;
       display: flex;
       align-items: center;
+      .btn-secondary.btn-theme-transparent{
+        font-size: 18px;
+        padding: 7px 8px;
+        font-weight: 700;
+      }
     }
     .form-control{
       border: 1px solid #a6a7a7;
@@ -1122,6 +1127,10 @@ body {
     background: #f0f3f5;
     .btn{
       font-family: $ft-regular;
+      &.disabled{
+        cursor: not-allowed;
+        opacity: 1;
+      }
     }
     .btn-block{
       max-width: 700px;
@@ -1142,6 +1151,7 @@ body {
     .user-info{
       h5{
         font-family: $ft-bold;
+        font-size: 15px;
       }
     }
     .service-warp {
@@ -1196,6 +1206,7 @@ body {
         font-size: 12px;
         margin-bottom: 5px;
         color: #888;
+        word-break: break-word;
       }
     }
   }
@@ -1322,6 +1333,9 @@ body {
         }
       }
     }
+    .btn-theme{
+      width: 250px;
+    }
   }
   /*========Inspection css===========*/
   .status-warp{
@@ -1419,8 +1433,12 @@ body {
   .fc-content{
     cursor: pointer;
   }
+  .fc-event{
+    border-radius: 24px;
+    margin-top: 5px;
+  }
   .fc-day-grid-event{
-    padding:2px;
+    padding:2px 8px;
     color: #fff;
     .fc-time{
       color: #fff;
@@ -1463,6 +1481,7 @@ body {
     .fc-body{
       .fc-event{
         background: #464646;
+        border-radius: 24px;
       }
     }
   }

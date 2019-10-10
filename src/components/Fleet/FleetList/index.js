@@ -39,7 +39,8 @@ class FleetList extends Component {
       type: "",
       page: 1,
       selectedFleets: [],
-      filterApplied: false
+      filterApplied: false,
+      bulkAction: ""
     };
   }
 
@@ -141,6 +142,9 @@ class FleetList extends Component {
       toast.error('Please select at least one customer.');
       return;
     }
+    this.setState({
+      bulkAction: value
+    });
     if (value === 'active') {
       this.activateUsers(true);
     } else if (value === 'inactive') {
@@ -148,6 +152,7 @@ class FleetList extends Component {
     } else if (value === 'delete') {
       this.onDelete(true);
     }
+
   };
   activateUsers = async (isMultiple = false) => {
     const { value } = await ConfirmBox({
@@ -158,11 +163,12 @@ class FleetList extends Component {
     if (!value) {
       this.setState({
         selectedFleets: [],
+        bulkAction: ""
       });
       return;
     }
     this.props.onStatusUpdate({ status: true, fleetId: this.state.selectedFleets });
-    this.setState({ selectedFleets: [] });
+    this.setState({ selectedFleets: [], bulkAction: "" });
   };
 
   deactivateUsers = async (isMultiple = false) => {
@@ -174,11 +180,12 @@ class FleetList extends Component {
     if (!value) {
       this.setState({
         selectedFleets: [],
+        bulkAction: ""
       });
       return;
     }
     this.props.onStatusUpdate({ status: false, fleetId: this.state.selectedFleets });
-    this.setState({ selectedFleets: [] });
+    this.setState({ selectedFleets: [], bulkAction: "" });
 
   };
 
@@ -237,12 +244,13 @@ class FleetList extends Component {
     });
     if (!value) {
       this.setState({
-        selectedFleets: []
+        selectedFleets: [],
+        bulkAction: ""
       });
       return;
     }
     this.props.onDelete(this.state.selectedFleets);
-    this.setState({ selectedFleets: [] });
+    this.setState({ selectedFleets: [], bulkAction: "" });
   };
 
   render() {
@@ -252,7 +260,8 @@ class FleetList extends Component {
       sort,
       page,
       selectedFleets,
-      filterApplied
+      filterApplied,
+      bulkAction
     } = this.state
     const { fleetListData } = this.props;
     const { isLoading, fleetData } = fleetListData;
@@ -386,6 +395,7 @@ class FleetList extends Component {
                       type="select"
                       id="exampleSelect"
                       onChange={this.handleActionChange}
+                      value={bulkAction}
                     >
                       <option value={""}>Select</option>
                       <option value={"active"}>Active</option>
@@ -399,6 +409,7 @@ class FleetList extends Component {
                         id="exampleSelect"
                         disabled
                         onChange={this.handleActionChange}
+                        value={bulkAction}
                       >
                         <option value={""}>Select</option>
                         <option value={"active"}>Active</option>
@@ -478,20 +489,20 @@ class FleetList extends Component {
                               ? data.phoneDetail.map((data, index) => {
                                 return (
                                   <React.Fragment key={index}>
-                                  <div className="text-capitalize">
-                                    {data.phone ? data.phone : "mobile"}
-                                    {"  "}
-                                    <b>|</b>
-                                    {"  "}
-                                    {data.value ? (
-                                      <a
-                                        href={`tel:${data.value}`}
-                                        className={"text-body"}
-                                      >
-                                        {data.value}
-                                      </a>
-                                    ) : null}
-                                  </div>
+                                    <div className="text-capitalize">
+                                      {data.phone ? data.phone : "mobile"}
+                                      {"  "}
+                                      <b>|</b>
+                                      {"  "}
+                                      {data.value ? (
+                                        <a
+                                          href={`tel:${data.value}`}
+                                          className={"text-body"}
+                                        >
+                                          {data.value}
+                                        </a>
+                                      ) : null}
+                                    </div>
                                   </React.Fragment>
                                 );
                               })

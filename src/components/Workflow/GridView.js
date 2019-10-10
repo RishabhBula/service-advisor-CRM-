@@ -8,7 +8,9 @@ import {
   Dropdown,
   Row,
   Col,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  Input,
+  FormFeedback
 } from "reactstrap";
 
 // import { logger } from "../../helpers/Logger";
@@ -32,7 +34,11 @@ class WorkflowGridView extends React.Component {
       orderUserData: {},
       orderAppointment: [],
       showAppointmentDetailModal: false,
-      appointmentDetail: ""
+      appointmentDetail: "",
+      isEdit: false,
+      index: -1,
+      orderStatusName: "",
+      errors: {}
     };
   }
 
@@ -167,10 +173,10 @@ class WorkflowGridView extends React.Component {
       fromStatusName: fromStatus[0].name
     });
     if (toStatus[0].name === "Invoices") {
-      this.props.orderStatus1("invoiceStatus", true,orderId);
+      this.props.orderStatus1("invoiceStatus", true, orderId);
     }
     else {
-      this.props.orderStatus1("invoiceStatus", false,orderId)
+      this.props.orderStatus1("invoiceStatus", false, orderId)
     }
   };
   /**
@@ -226,6 +232,16 @@ class WorkflowGridView extends React.Component {
             }
           >
             Delete
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              this.setState({
+                isEdit: true,
+                index: ind,
+                orderStatusName: status.name
+              })
+            }}>
+            Edit
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -293,8 +309,8 @@ class WorkflowGridView extends React.Component {
                               {"  "}
                               {task.customerId
                                 ? `${task.customerId.firstName} ${" "} ${
-                                    task.customerId.lastName
-                                  }`
+                                task.customerId.lastName
+                                }`
                                 : "No Customer"}
                             </span>{" "}
                           </div>
@@ -311,8 +327,8 @@ class WorkflowGridView extends React.Component {
                               {"  "}
                               {task.vehicleId
                                 ? `${task.vehicleId.make} ${" "} ${
-                                    task.vehicleId.modal
-                                  }`
+                                task.vehicleId.modal
+                                }`
                                 : "No Vehicle"}
                             </span>
                           </div>
@@ -390,6 +406,39 @@ class WorkflowGridView extends React.Component {
     );
   };
   /**
+   * 
+   */
+  onBlur = (orderStatusName, index, id) => {
+    if(orderStatusName.trim().length < 1){
+      this.setState({
+        errors:{
+          ...this.state.errors,
+          orderStatusName:"Please enter workflow status name."
+        }
+      })
+      return ;
+    }
+    this.props.updateOrderStatusName(orderStatusName.trim(), index,id)
+    this.setState({
+      isEdit: false,
+      index: -1
+    })
+  }
+  /**
+   * 
+   */
+  handleInputChange = e => {
+    const { target } = e;
+    const { name, value } = target;
+    this.setState({
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
+    });
+  };
+  /**
    *
    */
   render() {
@@ -399,7 +448,10 @@ class WorkflowGridView extends React.Component {
       appointModalOpen,
       orderUserData,
       showAppointmentDetailModal,
-      appointmentDetail
+      appointmentDetail,
+      isEdit,
+      orderStatusName,
+      errors
     } = this.state;
 
     return (
@@ -421,7 +473,7 @@ class WorkflowGridView extends React.Component {
                 }}
                 className={"workflow-grid-card-warp"}
               >
-              
+
                 {orderStatus.map((status, index) => (
                   <React.Fragment key={status._id}>
                     <Draggable draggableId={status._id} index={index}>
@@ -439,7 +491,21 @@ class WorkflowGridView extends React.Component {
                               <Row className={"m-0"}>
                                 <Col sm={"12"}>
                                   <div className={"workflow-heads"}>
-                                    <h5>{status.name}</h5>
+                                    {isEdit === true && this.state.index === index ?
+                                    <div className={"input-block"}>
+                                      <Input
+                                        type="text"
+                                        name="orderStatusName"
+                                        value={orderStatusName}
+                                        onChange={this.handleInputChange}
+                                        onBlur={() => this.onBlur(orderStatusName, index, status._id)} 
+                                        invalid={errors.orderStatusName ? true : false}
+                                        />
+                                        <FormFeedback>
+                                       {errors.orderStatusName ? errors.orderStatusName : null}
+                                       </FormFeedback> 
+                                    </div>
+                                    : <h5>{status.name}</h5>}
                                     <span>
                                       {this.renderActions(status, index)}
                                     </span>

@@ -29,7 +29,8 @@ import {
   deleteOrderRequest,
   getAppointments,
   addAppointmentRequest,
-  updateOrderDetailsRequest
+  updateOrderDetailsRequest,
+  updateOrderStatusNameReq
 } from "../../actions";
 // import { logger } from "../../helpers/Logger";
 import CRMModal from "../../components/common/Modal";
@@ -46,6 +47,8 @@ import * as classNames from "classnames";
 import WorkflowListView from "../../components/Workflow/ListView";
 import { ConfirmBox } from "../../helpers/SweetAlert";
 import ResizeObserver from "react-resize-observer";
+
+let pos3 = 0,pos1 = 0;
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -96,7 +99,7 @@ class WorkFlow extends Component {
       workflowTop = workflow.getBoundingClientRect().top;
       this.dragElement(ele, workflow);
     }
-    window.addEventListener("scroll", e => this.handleScroll(workflowTop));
+    window.addEventListener("scroll", e => this.handleScroll(e,workflowTop));
   }
 
   componentDidUpdate = ({ orderReducer }) => {
@@ -132,7 +135,9 @@ class WorkFlow extends Component {
   /**
    *
    */
-  handleScroll = top => {
+  handleScroll = (e,top) => {
+    console.log(e,e.target.childNodes[1].scrollTop, "dfdsfds");
+    const {scrollPos} = this.state
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
     // let workflow = document.getElementById("simplebar-content");
@@ -140,13 +145,14 @@ class WorkFlow extends Component {
     // if (workflow && ele) {
     //   workflowTop = workflow.getBoundingClientRect().top;
     // }
-    
+
     for (let i = 0; i < ele.length; i++) {
-      if (scrollY > 150) {
+      if (scrollY > top) {
         this.setState({
           scrollToFixed: true
         });
         ele[i].classList.add("fixed"); // WITH space added
+        ele[i].childNodes[0].style.transform = `translateX(-${scrollPos}px)`;
       } else {
         ele[i].classList.remove("fixed"); // WITH space added
         if (ele[i].childNodes[0].style) {
@@ -171,15 +177,11 @@ class WorkFlow extends Component {
         if (scrollToFixed) {
           let leftVal = mutationRecords[0].target.style.left;
           for (let i = 0; i < workflowGridEle.length; i++) {
-            workflowGridEle[
-              i
-            ].childNodes[0].style.transform = `translateX(-${leftVal})`;
+            workflowGridEle[i].childNodes[0].style.transform = `translateX(-${leftVal})`;
           }
-        }else{
+        } else {
           for (let i = 0; i < workflowGridEle.length; i++) {
-            workflowGridEle[
-              i
-            ].childNodes[0].style.transform = `none`;
+            workflowGridEle[i].childNodes[0].style.transform = `none`;
           }
         }
       });
@@ -234,34 +236,26 @@ class WorkFlow extends Component {
   };
 
   dragMouseDown = (e, ele, workflow) => {
-   
-    let pos3 = 0;
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
-    pos3 = e.clientX;
+    pos3 =  e.clientX;
     document.onmouseup = e => this.closeDragElement(e, pos3);
     // call a  whenever the cursor moves:
-    document.onmousemove = e => this.elementDrag(e, pos3, ele, workflow);
+    document.onmousemove = e => this.elementDrag(e,ele, workflow);
   };
 
-  elementDrag = (e, pos3, ele, workflow) => {
-
+  elementDrag = (e, ele, workflow) => {
     const { scrollToWidth, scrollToFixed } = this.state;
     var workflowGridEle = document.getElementsByClassName("workflow-grid-card");
-    let pos1 = 0,
-      finalPos = 0;
+    let finalPos = 0;
     e = e || window.event;
     e.preventDefault();
-    pos1 = e.clientX - pos3 ;
-    console.log(e.clientX, pos3, "e.clientX");
+    pos1 = pos3 - e.clientX;
     pos3 = e.clientX;
-    console.log(ele.offsetLeft, "ele");
-    finalPos = pos1;
-   
+    finalPos = ele.offsetLeft - pos1;
     if (finalPos < -1) {
-       finalPos = 0;
-      console.log(finalPos, "finalPos");
+      finalPos = 0;
     } else if (finalPos >= scrollToWidth) {
       finalPos = scrollToWidth;
     }
@@ -282,7 +276,6 @@ class WorkFlow extends Component {
   closeDragElement = () => {
     document.onmouseup = null;
     document.onmousemove = null;
-    console.log(document.onmouseup);
   };
 
   handleScrollLeft = e => {
@@ -404,7 +397,11 @@ class WorkFlow extends Component {
       addOrderStatusModalOpen: !addOrderStatusModalOpen
     });
     this.setState({
-      orderStatusName: ""
+      orderStatusName: "",
+      errors:{
+        ...this.state.errors,
+        orderStatusName:null
+      }
     });
   };
   /**
@@ -611,6 +608,18 @@ class WorkFlow extends Component {
     this.props.updateOrderDetails(payload);
   };
   /**
+   * 
+   */
+  updateOrderStatusName = (name, index,id) => {
+    const {orderReducer} = this.props;
+    const { orderStatus } = orderReducer;
+    let data = [...orderStatus];
+    data[index]={
+      ...data[index],name:name
+    }
+    this.props.updateOrderStatusNameReq({data,name,index,id});
+  }
+  /**
    *
    */
   render() {
@@ -723,6 +732,7 @@ class WorkFlow extends Component {
                     addAppointment={addAppointment}
                     getAppointments={getAppointments}
                     appointmentReducer={appointmentReducer}
+                    updateOrderStatusName={this.updateOrderStatusName}
                   />
                 ) : (
                   <div
@@ -749,10 +759,11 @@ class WorkFlow extends Component {
                       addAppointment={addAppointment}
                       getAppointments={getAppointments}
                       appointmentReducer={appointmentReducer}
+                      updateOrderStatusName={this.updateOrderStatusName}
                     />
                   </div>
                 )}
-                {!listView  ? (
+                {!listView ? (
                   <div
                     className={"simplebar-scroll-track"}
                     id={"simplebar-scroll-track"}
@@ -795,6 +806,9 @@ const mapDispatchToProps = dispatch => ({
   getAppointments: data => dispatch(getAppointments(data)),
   updateOrderDetails: data => {
     dispatch(updateOrderDetailsRequest(data));
+  },
+  updateOrderStatusNameReq: data =>{
+    dispatch(updateOrderStatusNameReq(data));
   }
 });
 export default connect(

@@ -15,29 +15,51 @@ import { AppConfig } from "../../../config/AppConfig";
 import Loader from "../../../containers/Loader/Loader";
 import { CustomerAgeTypes } from "../../../config/Constants";
 import { AppRoutes } from "../../../config/AppRoutes";
-import { logger } from "../../../helpers";
+// import { logger } from "../../../helpers";
 import NoDataFound from "../../common/NoFound";
-import Dollor from "../../common/Dollor"
+import Dollor from "../../common/Dollor";
+import PaginationHelper from "../../../helpers/Pagination";
+import * as qs from "query-string";
 
 class SalesByCusomerAge extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFilter: ""
+      selectedFilter: "",
+      page: 1,
+      filterApplied: false
     };
+  }
+  /**
+   * 
+   */
+  componentDidMount() {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page, customerSearch } = qs.parse(lSearch);
+    let filterApplied = false
+    if (customerSearch) {
+      filterApplied = true
+    }
+    this.setState({
+      page: parseInt(page) || 1,
+      selectedFilter: customerSearch || "",
+      filterApplied
+    });
   }
   /**
    *
    */
-  componentDidUpdate({ searchKey: oldSearchKey }) {
-    const { searchKey } = this.props;
-    logger(searchKey, oldSearchKey);
-    if (searchKey !== oldSearchKey) {
-      this.setState({
-        selectedFilter: searchKey
-      });
-    }
-  }
+  // componentDidUpdate({ searchKey: oldSearchKey, searchPage: oldSearchPage }) {
+  //   const { searchKey, searchPage } = this.props;
+  //   logger(searchKey, oldSearchKey);
+  //   if (searchKey !== oldSearchKey || searchPage !== oldSearchPage) {
+  //     this.setState({
+  //       selectedFilter: searchKey,
+  //       page: searchPage
+  //     });
+  //   }
+  // }
   /**
    *
    */
@@ -52,7 +74,9 @@ class SalesByCusomerAge extends Component {
    */
   onSearch = e => {
     e.preventDefault();
-    this.props.onSearch(this.state.selectedFilter);
+    this.setState({ page: 1, filterApplied: true });
+    let page = 1;
+    this.props.onSearch(this.state.selectedFilter, page);
   };
   /**
    *
@@ -60,7 +84,9 @@ class SalesByCusomerAge extends Component {
   onReset = e => {
     e.preventDefault();
     this.setState({
-      selectedFilter: ""
+      selectedFilter: "",
+      page: 1,
+      filterApplied: false
     });
     this.props.onReset();
   };
@@ -70,8 +96,8 @@ class SalesByCusomerAge extends Component {
    */
   render() {
     const { customerReport } = this.props;
-    const { isLoading, data } = customerReport;
-    const { selectedFilter } = this.state;
+    const { isLoading, data, totalReports } = customerReport;
+    const { selectedFilter, page, filterApplied } = this.state;
     let totalPaid = 0;
     let totalUnPaid = 0;
     let totalThirty = 0;
@@ -129,7 +155,7 @@ class SalesByCusomerAge extends Component {
                   </div>
                   <div>
                     {data && data.length ? (
-                      <div className={"mb-0 total-block"}>Total Records : {data.length}</div>
+                      <div className={"mb-0 total-block"}>Total Records : {totalReports}</div>
                     ) : null}
                   </div>
                 </div>
@@ -188,7 +214,7 @@ class SalesByCusomerAge extends Component {
                     return (
                       <tr key={index}>
                         <td className={"pl-2"}>
-                          {(1 - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
+                          {(page - 1) * AppConfig.ITEMS_PER_PAGE + index + 1}.
                         </td>
                         <td>
                           <Link to={AppRoutes.CUSTOMER_DETAILS.url.replace(
@@ -204,7 +230,7 @@ class SalesByCusomerAge extends Component {
                             ]
                               .join(" ")
                               .trim()}
-                          </Link><br/>
+                          </Link><br />
                           {customer.customerId.email ? (
                             <>
                               <a
@@ -253,7 +279,9 @@ class SalesByCusomerAge extends Component {
               ) : (
                   <tr>
                     <td className={"text-center"} colSpan={12}>
-                      <NoDataFound noResult />
+                      {filterApplied ? <NoDataFound noResult /> :
+                        <NoDataFound message={"Currently there are no Sales Summary."} />
+                      }
                     </td>
                   </tr>
                 )
@@ -306,6 +334,17 @@ class SalesByCusomerAge extends Component {
             </tr>
           </tbody>
         </Table>
+        {totalReports && !isLoading ? (
+          <PaginationHelper
+            totalRecords={totalReports}
+            currentPage={page}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.props.onPageChange(page);
+            }}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
       </>
     );
   }

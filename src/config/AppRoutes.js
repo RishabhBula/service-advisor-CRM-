@@ -40,8 +40,8 @@ export const AppRoutes = {
     exact: true
   },
   CALENDER: {
-    url: "/calender",
-    name: "Appointments",
+    url: "/calendar",
+    name: "Calendar",
     exact: true
   },
   INVENTORY: {
