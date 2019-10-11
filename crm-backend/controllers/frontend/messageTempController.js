@@ -207,7 +207,11 @@ const sendMailToCustomer = async (req, res) => {
    try {
       if (body.isEmail) {
          const emailVar = new Email(body);
-         await emailVar.setSubject("[Service Advisor]" + body.subject + ` - ${body.isInvoice ? "Order Invoice details" : "Inspection Details"}`);
+         await emailVar.setSubject(
+           `[Service Advisor] - ${body.subject} - ${
+             body.isInvoice ? "Order Invoice details" : "Inspection Details"
+           }`
+         );
          await emailVar.setAttachements([
             {
                fileName: `Inspection for ${body.orderTitle || 'Unnamed Order'}`,
@@ -230,7 +234,7 @@ const sendMailToCustomer = async (req, res) => {
             encrypteUserId: body.isInvoice ? encrypteUserId : "",
             url: webURL,
             subDomain: body.subdomain,
-            titleMessage: body.isInvoice ? "You got an invoice for" : "You got an inspection for",
+            titleMessage: body.isInvoice ? "You got an invoice for" : "You got an inspection for ",
             displayStyle: body.isInvoice ? `style="text-align:center; display: block";` : `style="text-align:center; display: none";`
          });
          await emailVar.sendEmail(body.email);
