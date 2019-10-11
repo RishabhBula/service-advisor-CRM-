@@ -536,7 +536,7 @@ const generatePdfDoc = async (req, res) => {
             success: false
           });
         }
-        const pdfURL = await imagePath(file.filename, "invoice-pdf", "pdf-file");
+        const pdfURL = await imagePath(file.filename, "invoice-pdf.pdf", "pdf-file");
         if (pdfURL) {
           fs.unlinkSync(originalPdfPath);
         }
