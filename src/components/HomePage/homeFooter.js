@@ -92,19 +92,19 @@ class HomeFooter extends Component {
                 <ul>
                   <ul className="footer-nav-listing text-center">
                     <li>
-                      <Link to={"/home"}>Home</Link>
+                      <Link to={"/home"} onClick={this.scrollToTop}>Home</Link>
                     </li>
                     <li>
-                      <Link to={"/home"}>Features</Link>
+                      <Link to={"/home"} >Features</Link>
                     </li>
                     <li>
-                      <Link to={"/pricing"}>Pricing</Link>
+                      <Link to={"/pricing"} onClick={this.scrollToTop}>Pricing</Link>
                     </li>
                     <li>
-                      <Link to={"/home"}>About Us</Link>
+                      <Link to={"/home"} >About Us</Link>
                     </li>
                     <li>
-                      <Link to={"/faq"}>Faq</Link>
+                      <Link to={"/faq"} onClick={this.scrollToTop}>FAQ's</Link>
                     </li>
                   </ul>
                 </ul>
@@ -153,7 +153,7 @@ class HomeFooter extends Component {
           </div>
         </div>
         <div className="copyright-wrap text-center">
-          All Copyrights Reserved by CRM 2019
+          All Copyrights Reserved by Service Advisor 2019
         </div>
         <Button
           color={""}
