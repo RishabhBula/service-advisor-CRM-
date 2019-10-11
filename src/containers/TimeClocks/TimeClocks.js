@@ -45,6 +45,26 @@ class TimeClocks extends Component {
         this.props.getOrderDetailsRequest({ _id: orderId })
       }
     }
+    if (
+      userReducer.userData &&
+      this.props.userReducer.userData &&
+      this.props.userReducer.userData.isSuccess !==
+      userReducer.userData.isSuccess
+    ) {
+      if (this.props.userReducer.userData.isSuccess) {
+        this.props.getUserData({ page: 1 });
+      }
+    }
+    if (
+      userReducer.userData &&
+      this.props.userReducer.userData &&
+      userReducer.userData.isEditSuccess !==
+      this.props.userReducer.userData.isEditSuccess
+    ) {
+      if (this.props.userReducer.userData.isEditSuccess) {
+        this.props.getUserData({ page: 1 });
+      }
+    }
     if (location) {
       const prevQuery = qs.parse(location.search);
       const currQuery = qs.parse(this.props.location.search);

@@ -542,8 +542,12 @@ class Message extends Component {
                                           ? imgele.dataURL
                                               .split(";")[0]
                                               .split("/")[1]
-                                          : imgele.fileUrl.split(".").pop();
-
+                                          : imgele.name.split(".").pop();
+                                        console.log(
+                                          type,
+                                          imgele.fileUrl,
+                                          "type of file"
+                                        );
                                         return (
                                           <li key={index}>
                                             {type === "pdf" ? (

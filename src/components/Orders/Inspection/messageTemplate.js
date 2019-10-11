@@ -282,8 +282,8 @@ class MessageTemplate extends Component {
                         );
                       })
                     ) : (
-                        <p>No Message Template has been added yet!</p>
-                      )}
+                      <p>No Message Template has been added yet!</p>
+                    )}
                   </div>
                 </Col>
                 <Col md={"7"} sm={"7"}>

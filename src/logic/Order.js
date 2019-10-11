@@ -25,7 +25,8 @@ import {
   getPaymentSuccess,
   getCannedServiceList,
   genrateInvoiceSuccess,
-  genrateInspectionSuccess
+  genrateInspectionSuccess,
+  updateOrderStatusNameSucc
 } from "./../actions";
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
@@ -561,6 +562,38 @@ const getOrderDetails = createLogic({
     }
   }
 });
+/**
+ * 
+ */
+const updateOrderStatusName = createLogic({
+  type:orderActions.UPDATE_ORDER_STATUS_NAME_REQ,
+  cancelType:orderActions.UPDATE_ORDER_STATUS_NAME_FAIL,
+  async process({ action }, dispatch, done) {
+    console.log("action.payload",action.payload);
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/order",
+      "/update-order-status-name",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+          result.messages[0] || DefaultErrorMessage
+        );
+      }
+      done();
+      return;
+    } else {
+      dispatch(updateOrderStatusNameSucc({
+        orderStatus:action.payload.data
+      }))
+    }
+  }
+})
 
 export const OrderLogic = [
   getOrderId,
@@ -573,5 +606,6 @@ export const OrderLogic = [
   updateOrderDetailsLogic,
   getOrderDetails,
   deleteOrderLogic,
-  getOrdersForSelectLogic
+  getOrdersForSelectLogic,
+  updateOrderStatusName
 ];

@@ -7,6 +7,7 @@ import moment from "moment";
 import { SecondsToHHMMSS, calculateDurationFromSeconds } from "../../helpers";
 import NoDataFound from "../common/NoFound"
 import chroma from 'chroma-js';
+import Loader from "../../containers/Loader/Loader";
 
 const colourStyles = {
   control: styles => ({ ...styles, backgroundColor: 'white' }),
@@ -301,162 +302,171 @@ class TechnicianTimer extends Component {
 
   render() {
     const { userReducer } = this.props;
+    const { isLoading } = userReducer;
     const { duration, userData } = this.state;
     const timer = userReducer.isStartTimer;
     return (
       <div>
         <Row>
-          {userData && userData.length ? (
-            userData.map((users, index) => {
-              const timeData = this.getTechnicianTimeData(users)
-              const isWorking =
-                users &&
-                users.currentlyWorking &&
-                (users.currentlyWorking.orderId ||
-                  users.currentlyWorking.generalService ||
-                  (timer && timer.length ? timer[index] : false));
-
-              const startTime =
-                users &&
+          {!isLoading ? (
+            userData && userData.length ? (
+              userData.map((users, index) => {
+                const timeData = this.getTechnicianTimeData(users)
+                const isWorking =
+                  users &&
                   users.currentlyWorking &&
-                  users.currentlyWorking.startTime
-                  ? users.currentlyWorking.startTime
-                  : false;
+                  (users.currentlyWorking.orderId ||
+                    users.currentlyWorking.generalService ||
+                    (timer && timer.length ? timer[index] : false));
 
-              const options = this.getAllServiceOptions(users)
-              const defaultOrderSelect = {
-                label: "General",
-                value: ""
-              };
-              return (
-                <Col key={index} md={"3"}>
-                  <Card className={"text-center timer-display"}>
-                    <div className={isWorking ? "isWorking" : ""}>
-                      <CardBody>
-                        <div className={"pb-2"}>
-                          <Avtar
-                            value={users.firstName}
-                            class={"avtar-component"}
-                          />
-                        </div>
-                        <h5 className={"technician-name"}>
-                          {users.firstName} {users.lastName}
-                        </h5>
-                        <h6>
-                          {
-                            isWorking ?
-                              `Clocked in at ${moment(users.currentlyWorking.startTime).format("hh:mm a")}` :
-                              `Clocked out at ${moment(users.currentlyWorking.startTime).startOf('seconds').fromNow()}`
-                          }
-                        </h6>
-                        <div className={"pb-2"}>
-                          {isWorking ? (
-                            <div className={"timer-running-manually"}>
-                              {this.startTempTimer(index, startTime)}
-                              {SecondsToHHMMSS(
-                                duration[index] ||
-                                moment().diff(moment(startTime), "seconds")
-                              )}
-                            </div>
-                          ) : (
-                              <span className={"timer-running-manually"}>
-                                --:--:--
-                            </span>
-                            )}
-                        </div>
-                        <Card className={"pb-2"}>
-                          <Row className={"m-0"}>
-                            <div className={"task-area"}>
-                              <span className={"text-day"}>Today</span>
-                              <div>
-                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianTodayTime) ? timeData.technicianTodayTime : "0.00")}</span>
-                              </div>
-                            </div>
-                            <div className={"task-area"}>
-                              <span className={"text-day"}>This Week</span>
-                              <div>
-                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianWeekTime) ? timeData.technicianWeekTime : "0.00")}</span>
-                              </div>
-                            </div>
-                            <div className={"task-area"}>
-                              <span className={"text-day"}>This Month</span>
-                              <div>
-                                <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianMonthTime) ? timeData.technicianMonthTime : "0.00")}</span>
-                              </div>
-                            </div>
-                          </Row>
-                        </Card>
-                        <FormGroup className={"d-flex align-items-center"}>
-                          <Label className={"mr-2 mb-0"}>Activity</Label>
-                          <div className={"text-left w-100 form-select"}>
-                            <Select
-                              className={"w-100 form-select"}
-                              options={options}
-                              //menuIsOpen={true}
-                              value={
-                                isWorking
-                                  ? users.currentlyWorking.generalService
-                                    ? defaultOrderSelect
-                                    : {
-                                      value: users.currentlyWorking.serviceId,
-                                      label: users.currentlyWorking.serviceId ? `${users.currentlyWorking.serviceId.serviceName}` : ""
-                                    }
-                                  : users.selectedOrder.value !== "" ? users.selectedOrder : defaultOrderSelect
-                              }
-                              onChange={e => this.handleOrderSelect(e, index)}
-                              type="select"
-                              styles={colourStyles}
+                const startTime =
+                  users &&
+                    users.currentlyWorking &&
+                    users.currentlyWorking.startTime
+                    ? users.currentlyWorking.startTime
+                    : false;
+
+                const options = this.getAllServiceOptions(users)
+                const defaultOrderSelect = {
+                  label: "General",
+                  value: ""
+                };
+                return (
+                  <Col key={index} md={"3"}>
+                    <Card className={"text-center timer-display"}>
+                      <div className={isWorking ? "isWorking" : ""}>
+                        <CardBody>
+                          <div className={"pb-2"}>
+                            <Avtar
+                              value={users.firstName}
+                              class={"avtar-component"}
                             />
                           </div>
-                        </FormGroup>
-                        {!isWorking ? (
-                          <Button
-                            onClick={
-                              users.selectedOrder.value !== ""
-                                ? () =>
-                                  this.startTimer(
-                                    users._id,
-                                    users.selectedOrder.value,
-                                    index,
-                                    users.selectedOrder.orderId,
-                                    users.selectedOrder.orderData,
-                                    users.selectedOrder.serviceData
-                                  )
-                                : () => this.startTimer(users._id, null, index, null, null, null)
+                          <h5 className={"technician-name"}>
+                            {users.firstName} {users.lastName}
+                          </h5>
+                          <h6>
+                            {
+                              isWorking ?
+                                `Clocked in at ${moment(users.currentlyWorking.startTime).format("hh:mm a")}` :
+                                `Clocked out at ${moment(users.currentlyWorking.startTime).startOf('seconds').fromNow()}`
                             }
-                          >
-                            Clock In
-                          </Button>
-                        ) : (
+                          </h6>
+                          <div className={"pb-2"}>
+                            {isWorking ? (
+                              <div className={"timer-running-manually"}>
+                                {this.startTempTimer(index, startTime)}
+                                {SecondsToHHMMSS(
+                                  duration[index] ||
+                                  moment().diff(moment(startTime), "seconds")
+                                )}
+                              </div>
+                            ) : (
+                                <span className={"timer-running-manually"}>
+                                  --:--:--
+                            </span>
+                              )}
+                          </div>
+                          <Card className={"pb-2"}>
+                            <Row className={"m-0"}>
+                              <div className={"task-area"}>
+                                <span className={"text-day"}>Today</span>
+                                <div>
+                                  <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianTodayTime) ? timeData.technicianTodayTime : "0.00")}</span>
+                                </div>
+                              </div>
+                              <div className={"task-area"}>
+                                <span className={"text-day"}>This Week</span>
+                                <div>
+                                  <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianWeekTime) ? timeData.technicianWeekTime : "0.00")}</span>
+                                </div>
+                              </div>
+                              <div className={"task-area"}>
+                                <span className={"text-day"}>This Month</span>
+                                <div>
+                                  <span>{calculateDurationFromSeconds(!isNaN(timeData.technicianMonthTime) ? timeData.technicianMonthTime : "0.00")}</span>
+                                </div>
+                              </div>
+                            </Row>
+                          </Card>
+                          <FormGroup className={"d-flex align-items-center"}>
+                            <Label className={"mr-2 mb-0"}>Activity</Label>
+                            <div className={"text-left w-100 form-select"}>
+                              <Select
+                                className={"w-100 form-select"}
+                                options={options}
+                                //menuIsOpen={true}
+                                value={
+                                  isWorking
+                                    ? users.currentlyWorking.generalService
+                                      ? defaultOrderSelect
+                                      : {
+                                        value: users.currentlyWorking.serviceId,
+                                        label: users.currentlyWorking.serviceId ? `${users.currentlyWorking.serviceId.serviceName}` : ""
+                                      }
+                                    : users.selectedOrder.value !== "" ? users.selectedOrder : defaultOrderSelect
+                                }
+                                onChange={e => this.handleOrderSelect(e, index)}
+                                type="select"
+                                styles={colourStyles}
+                              />
+                            </div>
+                          </FormGroup>
+                          {!isWorking ? (
                             <Button
-                              color={"danger"}
-                              onClick={() =>
-                                this.stopTimer(
-                                  users._id,
-                                  users.currentlyWorking.orderId,
-                                  users.currentlyWorking.serviceId,
-                                  index
-                                )
+                              onClick={
+                                users.selectedOrder.value !== ""
+                                  ? () =>
+                                    this.startTimer(
+                                      users._id,
+                                      users.selectedOrder.value,
+                                      index,
+                                      users.selectedOrder.orderId,
+                                      users.selectedOrder.orderData,
+                                      users.selectedOrder.serviceData
+                                    )
+                                  : () => this.startTimer(users._id, null, index, null, null, null)
                               }
                             >
-                              Clock Out
+                              Clock In
                           </Button>
-                          )}
-                      </CardBody>
-                    </div>
-                  </Card>
+                          ) : (
+                              <Button
+                                color={"danger"}
+                                onClick={() =>
+                                  this.stopTimer(
+                                    users._id,
+                                    users.currentlyWorking.orderId,
+                                    users.currentlyWorking.serviceId,
+                                    index
+                                  )
+                                }
+                              >
+                                Clock Out
+                          </Button>
+                            )}
+                        </CardBody>
+                      </div>
+                    </Card>
+                  </Col>
+                );
+              })
+            ) : (
+                <Col lg="12">
+                  <div className={"text-center"}>
+                    <NoDataFound
+                      showAddButton
+                      message={"Currently there are no technician added"}
+                      onAddClick={this.props.onAddClick}
+                    />
+                  </div>
                 </Col>
-              );
-            })
+              )
           ) : (
-            <Col lg="12">
-              <div className={"text-center"}>
-                <NoDataFound
-                  showAddButton
-                  message={"Currently there are no technician added"}
-                  onAddClick={this.props.onAddClick}
-                />
-              </div>
+              <Col lg="12">
+                <div className={"text-center"} >
+                  <Loader />
+                </div>
               </Col>
             )}
         </Row>

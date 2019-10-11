@@ -319,7 +319,7 @@ class TimeLogList extends Component {
                     <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm")}</td>
                     <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
-                    <td>{timeLog.activity !== "General" ?
+                    <td>{timeLog.activity !== "General" && timeLog.orderId && timeLog.orderId.length && timeLog.orderId[0]._id ?
                       <Link to={AppRoutes.WORKFLOW_ORDER.url.replace(":id", timeLog.orderId[0]._id)} target="_blank"
                         className={
                           "cursor_pointer text-primary text-capitalize"

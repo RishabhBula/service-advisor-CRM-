@@ -683,8 +683,6 @@ export class CrmEditCustomerModal extends Component {
                                 >
                                   Phone <span className={"asteric"}>*</span>
                                 </Label>
-                                {/* <div></div> */}
-
                                 <Input
                                   onChange={e =>
                                     this.handlePhoneNameChange(index, e)

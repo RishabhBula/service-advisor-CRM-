@@ -22,7 +22,10 @@ export const orderActions = {
   DELTE_ORDER_STATUS: "Request for delete existing order status!",
   UPDATE_ORDER_OF_ORDER_STATUS: "Request for order update of order status!",
   GET_ORDER_DETAILS_REQUEST: "Get order details request",
-  GET_ORDER_DETAILS_SUCCESS: "Get order details success"
+  GET_ORDER_DETAILS_SUCCESS: "Get order details success",
+  UPDATE_ORDER_STATUS_NAME_REQ: "Update order status name request!",
+  UPDATE_ORDER_STATUS_NAME_FAIL: "Update order status name failed!",
+  UPDATE_ORDER_STATUS_NAME_SUCC: "Update order status name success!",
 };
 
 export const getOrderList = createAction(orderActions.GET_ORDER_LIST_REQUEST);
@@ -81,4 +84,14 @@ export const getOrderDetailsRequest = createAction(
 );
 export const getOrderDetailsSuccess = createAction(
   orderActions.GET_ORDER_DETAILS_SUCCESS
+);
+
+export const updateOrderStatusNameReq = createAction(
+  orderActions.UPDATE_ORDER_STATUS_NAME_REQ
+);
+export const updateOrderStatusNameFail = createAction(
+  orderActions.UPDATE_ORDER_STATUS_NAME_FAIL
+);
+export const updateOrderStatusNameSucc = createAction(
+  orderActions.UPDATE_ORDER_STATUS_NAME_SUCC
 );

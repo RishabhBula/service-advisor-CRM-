@@ -591,7 +591,7 @@ class GenralSettings extends Component {
                       <div className={"d-flex justify-content-center"}>
                         <Button
                           color="primary"
-                          className="px-4 btn-theme w-50"
+                          className="px-4 btn-theme"
                           type="submit"
                           block
                           onClick={this.handleSubmit}

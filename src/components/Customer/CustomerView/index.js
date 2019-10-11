@@ -12,13 +12,13 @@ import {
   customerEditRequest,
   getCustomerFleetListRequest,
   addOrderRequest
-} from "../../../actions"
+} from "../../../actions";
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
 import Loader from "../../../containers/Loader/Loader";
-import { CustomerOrders } from "./customerOrder"
-import { CustomerVehicles } from "./customerVehicles"
-import { CustomerInfo } from "./customerInfo"
+import { CustomerOrders } from "./customerOrder";
+import { CustomerVehicles } from "./customerVehicles";
+import { CustomerInfo } from "./customerInfo";
 
 const CustomerTab = React.lazy(() => import("./customerTab"));
 
@@ -39,40 +39,48 @@ class CustomerView extends Component {
     this.state = {
       customerData: [],
       customerId: "",
-      activeTab: 0
+      activeTab: 0,
+      phoneToggle: false
     };
   }
   componentDidMount = () => {
     this.props.getCustomerDetailsSuccess();
-    this.props.customerGetRequest({ customerId: this.props.match.params.id })
+    this.props.customerGetRequest({ customerId: this.props.match.params.id });
     const query = qs.parse(this.props.location.search);
-    const customerId = this.props.match.params.id
-    this.props.getOrderDetailsRequest({ customerId: customerId })
+    const customerId = this.props.match.params.id;
+    this.props.getOrderDetailsRequest({ customerId: customerId });
     this.setState({
       customerId: this.props.match.params.id,
       activeTab: query.tab
         ? CustomerTabs.findIndex(d => d.name === decodeURIComponent(query.tab))
         : 0
     });
-  }
+  };
   componentDidUpdate = ({ customerListReducer, location }) => {
-    if (((customerListReducer.getCustomerDetails !== this.props.customerListReducer.getCustomerDetails) && this.props.customerListReducer.customers.length) || customerListReducer.customers !== this.props.customerListReducer.customers) {
+    if (
+      (customerListReducer.getCustomerDetails !==
+        this.props.customerListReducer.getCustomerDetails &&
+        this.props.customerListReducer.customers.length) ||
+      customerListReducer.customers !== this.props.customerListReducer.customers
+    ) {
       // this.props.customerGetRequest({ customerId: this.props.match.params.id })
       this.setState({
         customerData: this.props.customerListReducer.customers
-      })
+      });
     }
     if (this.props.location.search !== location.search) {
       const query = qs.parse(this.props.location.search);
       this.setState({
         activeTab: query.tab
-          ? CustomerTabs.findIndex(d => d.name === decodeURIComponent(query.tab))
+          ? CustomerTabs.findIndex(
+              d => d.name === decodeURIComponent(query.tab)
+            )
           : 0
       });
     }
-  }
+  };
   onTabChange = activeTab => {
-    const customerDetailsUrl = "/customers/details/:id"
+    const customerDetailsUrl = "/customers/details/:id";
     this.props.redirectTo(
       `${customerDetailsUrl.replace(
         ":id",
@@ -80,8 +88,15 @@ class CustomerView extends Component {
       )}?tab=${encodeURIComponent(CustomerTabs[activeTab].name)}`
     );
   };
+
+  handlePhoneToggle = () => {
+    this.setState({
+      phoneToggle: !this.state.phoneToggle
+    });
+  };
+
   render() {
-    const { customerData, activeTab } = this.state;
+    const { customerData, activeTab, phoneToggle } = this.state;
     const {
       modelOperate,
       modelInfoReducer,
@@ -97,26 +112,62 @@ class CustomerView extends Component {
       getCustomerFleetListActions,
       updateCustomer,
       getStdList,
-      addOrderRequest } = this.props
+      addOrderRequest,
+    } = this.props;
     const { customerOrders } = orderReducer;
-    let customerDetails = customerData
+    let customerDetails = customerData;
     return (
       <>
         <div className={"p-3"}>
-          <h3 className={"text-capitalize"}>{customerDetails[0] ? `${customerDetails[0].firstName} ${" "} ${customerDetails[0].lastName}` : null}</h3>
-          {
-            customerDetails[0] ? customerDetails[0].phoneDetail.map((phone, index) => {
-              return (
-                <div key={index}>
-                  <i className={"fa fa-phone"} /> {phone.value}
+          <h3 className={"text-capitalize"}>
+            {customerDetails[0]
+              ? `${customerDetails[0].firstName} ${" "} ${
+                  customerDetails[0].lastName
+                }`
+              : null}
+          </h3>
+          <div className={"d-flex"}>
+            <div className={"pr-3"}>
+              {customerDetails[0] ? (
+                <div>
+                  <span>
+                    <i className={"fa fa-phone"} />{" "}
+                  </span>
+                  {customerDetails[0].phoneDetail[0].value}
                 </div>
-              )
-            }) : null
-          }
-          {" "}
-          <div><i className={"fa fa-envelope"} /> {customerDetails[0] && customerDetails[0].email ? customerDetails[0].email : <span className={"text-muted"}>Email is not updated</span>}</div>
+              ) : null}
+              {phoneToggle ? (
+                <div>
+                  {customerDetails[0]
+                    ? customerDetails[0].phoneDetail.map((phone, index) => {
+                        return (
+                          <div key={index}>
+                            <i className={"fa fa-phone"} /> {phone.value}
+                          </div>
+                        );
+                      })
+                    : null}
+                </div>
+              ) : null}
+              <span
+                className={"btn btn-link"}
+                id={"customerAllPhoneNo"}
+                onClick={this.handlePhoneToggle}
+              >
+                {phoneToggle ? "View Less" : "View More"}
+              </span>
+            </div>
+            <div>
+              <i className={"fa fa-envelope"} />{" "}
+              {customerDetails[0] && customerDetails[0].email ? (
+                customerDetails[0].email
+              ) : (
+                <span className={"text-muted"}>Email is not updated</span>
+              )}
+            </div>
+          </div>
         </div>
-        <div className={"p-3"}>
+        <div className={"p-3 position-relative"}>
           <div className={"position-relative"}>
             <Suspense fallback={"Loading.."}>
               <CustomerTab
@@ -132,22 +183,36 @@ class CustomerView extends Component {
                 <CustomerOrders
                   customerOrders={customerOrders}
                   orderReducer={orderReducer}
-                  customerDetails={customerDetails && customerDetails[0] ? customerDetails[0] : null}
+                  customerDetails={
+                    customerDetails && customerDetails[0]
+                      ? customerDetails[0]
+                      : null
+                  }
                   addOrderRequest={addOrderRequest}
                   {...this.props}
-                />) : null}
-              {activeTab === 1 ?
-                (<CustomerVehicles
-                  customerVehicles={customerDetails[0] ? customerDetails[0].vehicles : []}
+                />
+              ) : null}
+              {activeTab === 1 ? (
+                <CustomerVehicles
+                  customerVehicles={
+                    customerDetails[0] ? customerDetails[0].vehicles : []
+                  }
                   modelOperate={modelOperate}
                   modelInfoReducer={modelInfoReducer}
                   vehicleAddAction={vehicleAddAction}
-                  customerId={customerDetails[0] ? customerDetails[0]._id : null}
+                  customerId={
+                    customerDetails[0] ? customerDetails[0]._id : null
+                  }
                   {...this.props}
-                />) : null}
+                />
+              ) : null}
               {activeTab === 2 ? (
                 <CustomerInfo
-                  customerDetails={customerDetails && customerDetails[0] ? customerDetails[0] : null}
+                  customerDetails={
+                    customerDetails && customerDetails[0]
+                      ? customerDetails[0]
+                      : null
+                  }
                   customerGetRequest={this.props.customerGetRequest}
                   modelOperate={modelOperate}
                   modelInfoReducer={modelInfoReducer}
@@ -182,10 +247,10 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   getCustomerDetailsSuccess: () => {
-    dispatch(getCustomerDetailsSuccess())
+    dispatch(getCustomerDetailsSuccess());
   },
-  customerGetRequest: (data) => {
-    dispatch(customerGetRequest(data))
+  customerGetRequest: data => {
+    dispatch(customerGetRequest(data));
   },
   modelOperate: data => {
     dispatch(modelOpenRequest({ modelDetails: data }));
@@ -194,7 +259,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(vehicleAddRequest(data));
   },
   getOrderDetailsRequest: data => {
-    dispatch(getOrderDetailsRequest(data))
+    dispatch(getOrderDetailsRequest(data));
   },
   getMatrix: data => {
     dispatch(getMatrixList(data));
@@ -211,10 +276,10 @@ const mapDispatchToProps = dispatch => ({
   getCustomerFleetListActions: () => {
     dispatch(getCustomerFleetListRequest());
   },
-  addOrderRequest: (data) => {
+  addOrderRequest: data => {
     dispatch(addOrderRequest(data));
   }
-})
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps

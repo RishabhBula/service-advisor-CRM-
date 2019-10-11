@@ -67,4 +67,12 @@ router.get(
   token.authorisedUser,
   orderController.getOrderDetails
 );
+/**
+ * 
+ */
+router.put(
+  "/update-order-status-name",
+  token.authorisedUser,
+  orderController.updateOrderStatusNameLogic
+)
 module.exports = router;

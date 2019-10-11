@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   Button,
-  UncontrolledTooltip,
   UncontrolledAlert,
   Row,
   Col
@@ -211,9 +210,9 @@ class Vehicles extends Component {
                   <i className={"fa fa-plus"} />
                   &nbsp; Add New Vehicle
                 </Button>
-                <UncontrolledTooltip target={"add-user"}>
+                {/* <UncontrolledTooltip target={"add-user"}>
                   Add New Vehicle
-                </UncontrolledTooltip>
+                </UncontrolledTooltip> */}
               </span>
             </div>
             <VehicleList
