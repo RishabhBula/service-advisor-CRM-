@@ -11,7 +11,9 @@ import {
   setRateStandardListStart,
   customerEditRequest,
   getCustomerFleetListRequest,
-  addOrderRequest
+  addOrderRequest,
+  getVehicleMakeModalReq,
+  getVehicleModalReq,
 } from "../../../actions";
 import { withRouter } from "react-router-dom";
 import qs from "query-string";
@@ -73,8 +75,8 @@ class CustomerView extends Component {
       this.setState({
         activeTab: query.tab
           ? CustomerTabs.findIndex(
-              d => d.name === decodeURIComponent(query.tab)
-            )
+            d => d.name === decodeURIComponent(query.tab)
+          )
           : 0
       });
     }
@@ -113,6 +115,8 @@ class CustomerView extends Component {
       updateCustomer,
       getStdList,
       addOrderRequest,
+      getVehicleMakeModalReq,
+      getVehicleModalReq,
     } = this.props;
     const { customerOrders } = orderReducer;
     let customerDetails = customerData;
@@ -122,8 +126,8 @@ class CustomerView extends Component {
           <h3 className={"text-capitalize"}>
             {customerDetails[0]
               ? `${customerDetails[0].firstName} ${" "} ${
-                  customerDetails[0].lastName
-                }`
+              customerDetails[0].lastName
+              }`
               : null}
           </h3>
           <div className={"d-flex"}>
@@ -140,12 +144,12 @@ class CustomerView extends Component {
                 <div>
                   {customerDetails[0]
                     ? customerDetails[0].phoneDetail.map((phone, index) => {
-                        return (
-                          <div key={index}>
-                            <i className={"fa fa-phone"} /> {phone.value}
-                          </div>
-                        );
-                      })
+                      return (
+                        <div key={index}>
+                          <i className={"fa fa-phone"} /> {phone.value}
+                        </div>
+                      );
+                    })
                     : null}
                 </div>
               ) : null}
@@ -162,8 +166,8 @@ class CustomerView extends Component {
               {customerDetails[0] && customerDetails[0].email ? (
                 customerDetails[0].email
               ) : (
-                <span className={"text-muted"}>Email is not updated</span>
-              )}
+                  <span className={"text-muted"}>Email is not updated</span>
+                )}
             </div>
           </div>
         </div>
@@ -203,6 +207,8 @@ class CustomerView extends Component {
                   customerId={
                     customerDetails[0] ? customerDetails[0]._id : null
                   }
+                  getVehicleMakeModalReq={getVehicleMakeModalReq}
+                  getVehicleModalReq={getVehicleModalReq}
                   {...this.props}
                 />
               ) : null}
@@ -278,6 +284,12 @@ const mapDispatchToProps = dispatch => ({
   },
   addOrderRequest: data => {
     dispatch(addOrderRequest(data));
+  },
+  getVehicleMakeModalReq: data => {
+    dispatch(getVehicleMakeModalReq(data));
+  },
+  getVehicleModalReq: data => {
+    dispatch(getVehicleModalReq(data));
   }
 });
 export default connect(

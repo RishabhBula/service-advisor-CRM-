@@ -27,9 +27,9 @@ const signUpLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -58,13 +58,13 @@ const verifyAccountLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       dispatch(
         redirectTo({
-          path: "/404"
+          path: result.messages[0] === "User already exist." ? "/login" : "/404"
         })
       );
       done();
@@ -72,9 +72,9 @@ const verifyAccountLogic = createLogic({
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/login" }));
       done();
@@ -126,9 +126,9 @@ const generatePasswordLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       dispatch(
         redirectTo({
@@ -140,9 +140,9 @@ const generatePasswordLogic = createLogic({
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/login" }));
       done();
@@ -165,18 +165,18 @@ const resendConfiramtionLinkLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(hideLoader());
       done();
     }

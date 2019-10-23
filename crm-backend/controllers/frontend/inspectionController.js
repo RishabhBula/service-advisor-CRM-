@@ -15,6 +15,64 @@ const types = {
   t: "jpeg",
   f: "pdf"
 };
+/**
+*
+*/
+const imageUpload = async (req, res) => {
+  try {
+    const { body } = req;
+    const { imgData } = body;
+    /* Section1-img upload on aws s3 */
+    let imageData = [];
+    let images = "";
+    for (let x = 0; x < imgData.length; x++) {
+      if (imgData[x].img && imgData[x].img !== "") {
+        let isNotBase64 = imgData[x].img.split("https");
+        if (
+          (imgData[x].img !== undefined || imgData[x].img !== "") &&
+          !isNotBase64[1]
+        ) {
+          let base64Image = imgData[x].img.replace(
+            /^data:image\/\w+;base64,/,
+            ""
+          );
+          var buf = Buffer.from(base64Image, "base64");
+          let type = types[base64Image.charAt(0)];
+          let randomConst = Math.floor(Math.random() * 10000);
+          let fileName = [
+            "abcd1234",
+            randomConst,
+            "_inspection_img.",
+            type || "png"
+          ].join("");
+          var originalImagePath = path.join(__basedir, "inspection-img", fileName);
+          fs.writeFileSync(originalImagePath, buf)
+          let inspectionImg = await imagePath(originalImagePath, "inspection-img");
+          images = inspectionImg;
+          if (images) {
+            fs.unlinkSync(originalImagePath);
+          }
+        } else if (isNotBase64[1]) {
+          images = imgData[x].img;
+        }
+        imageData[x] = images;
+        images = "";
+      } else {
+        imageData[x] = imgData[x].img
+      }
+    }
+    return res.status(200).json({
+      images: imageData,
+      message:"Successfully uploaded image."
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 /* get order number */
 const creteNewInspection = async (req, res) => {
   const { body, currentUser } = req;
@@ -536,7 +594,7 @@ const generatePdfDoc = async (req, res) => {
             success: false
           });
         }
-        const pdfURL = await imagePath(file.filename, "invoice-pdf", "pdf-file");
+        const pdfURL = await imagePath(file.filename, "invoice-pdf.pdf", "pdf-file");
         if (pdfURL) {
           fs.unlinkSync(originalPdfPath);
         }
@@ -556,5 +614,6 @@ module.exports = {
   creteNewInspection,
   getInspectionData,
   inspectionTemplate,
-  generatePdfDoc
+  generatePdfDoc,
+  imageUpload
 };

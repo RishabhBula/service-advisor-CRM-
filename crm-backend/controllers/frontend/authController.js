@@ -21,7 +21,7 @@ const signUp = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({
-        message: commonValidation.formatValidationErr(errors.mapped(), true),
+        message: commonValidation.formatValidationErr(errors.mapped(), true).replace("<br>"," "),
         success: false
       });
     }
@@ -77,9 +77,11 @@ const resendConfirmationLink = async (req, res) => {
       lastName,
       email,
       _id,
-      userSideActivationValue
+      userSideActivationValue,
+      userSideActivation
     } = await userModel.findById(req.body.id);
-    const emailVar = new Email(req);
+    if (userSideActivation === false && userSideActivationValue !== ""){
+      const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRMATION, {
       userId: _id,
       firstName,
@@ -93,6 +95,13 @@ const resendConfirmationLink = async (req, res) => {
       user: _id,
       success: true
     });
+  }else{
+    return res.status(200).json({
+      message: "You have already confirmed your account.",
+      user: _id,
+      success: true
+    });
+  }
   } catch (error) { }
 };
 /*  */
@@ -533,7 +542,7 @@ const imageUpload = async (req, res) => {
           originalImage: ["", "images", fileName].join("/"),
           thumbnailImage: ["", "images-thumbnail", fileName].join("/")
         }; */
-        const shopLogo = await imagePath(originalImagePath,"profile-image","profile-thumb");
+        const shopLogo = await imagePath(originalImagePath, "profile-image", "profile-thumb");
         const companyLogo = await userModel.findByIdAndUpdate(currentUser.id, {
           shopLogo: shopLogo
         });
@@ -889,11 +898,12 @@ const updateUserData = async (req, res) => {
     let currentUser = req.currentUser;
     let inserList = {
       ...$data,
-      parentId: currentUser.id
+      parentId: currentUser.id,
+      updatedAt: Date.now()
     };
     let result = await userModel.findByIdAndUpdate(currentUser.id, inserList);
     return res.status(200).json({
-      message: otherMessage.updateUserDataMessage,
+      message: $data.isCompanyProfile?"Company details updated successfully.":otherMessage.updateUserDataMessage,
       data: result,
       success: true
     });

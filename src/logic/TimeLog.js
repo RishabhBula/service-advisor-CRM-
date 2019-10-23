@@ -168,18 +168,18 @@ const addTimeLogLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       if (action.payload.isTimeClockData) {
         dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
         dispatch(
@@ -220,17 +220,17 @@ const updateTimeLogLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       done();
       return;
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       if (action.payload.isTimerClock) {
         dispatch(getAllTimeLogRequest({ page: action.payload.page || 1 }))
         done();
@@ -244,6 +244,9 @@ const updateTimeLogLogic = createLogic({
               }
             })
           );
+          if (action.payload.orderId) {
+            dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
+          }
           done();
         } else {
           dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
@@ -277,9 +280,9 @@ const getTechnicianTimeLogLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -311,9 +314,9 @@ const getAllTimeLogLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;

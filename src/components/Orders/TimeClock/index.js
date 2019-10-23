@@ -36,7 +36,7 @@ class TimeClock extends Component {
       timelogReducer,
       startTimer,
       stopTimer,
-      switchTimer} = this.props;
+      switchTimer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { timeClockModalOpen } = modelDetails;
     return (
@@ -55,6 +55,7 @@ class TimeClock extends Component {
           <i className={"fa fa-plus"}></i> Add Time Manually
         </span>
         <TimeLogList
+          orderId={orderId}
           timeLogData={timelogReducer.timeLogData}
           handleTimeClockModal={this.handleTimeClockModal}
           getUserData={getUserData}

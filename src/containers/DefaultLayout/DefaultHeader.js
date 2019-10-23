@@ -110,7 +110,7 @@ class DefaultHeader extends Component {
     });
   };
 
-  toggleQuickAdd =()=>{
+  toggleQuickAdd = () => {
     this.setState({
       quickAddOpen: !this.state.quickAddOpen
     });
@@ -137,8 +137,8 @@ class DefaultHeader extends Component {
     const profileName =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo.firstName +
-          " " +
-          profileInfoReducer.profileInfo.lastName
+        " " +
+        profileInfoReducer.profileInfo.lastName
         : "Loading...";
     const profileEmail =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -169,14 +169,14 @@ class DefaultHeader extends Component {
             ) : null} */}
             {permissions.isAllowedCalendar ? (
               <NavItem className="">
-                <NavLink to="/calender" className="nav-link px-3">
+                <NavLink to={AppRoutes.CALENDER.url} className="nav-link px-3">
                   <i className={"fas fa-calendar"} /> Calendar
                 </NavLink>
               </NavItem>
             ) : null}
             {permissions.isAllowedCompanySettings ? (
               <NavItem className="">
-                <NavLink to="/settings/staff-members" className="nav-link px-3">
+                <NavLink to={AppRoutes.STAFF_MEMBERS.url} className="nav-link px-3">
                   <i className={"fas fa-users"} /> Technician
                 </NavLink>
               </NavItem>

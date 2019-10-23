@@ -21,7 +21,13 @@ export const vehicleActions = {
   EDIT_VEHICLE_SUCCESS: "Edit VEHICLE Success!",
   IMPORT_VEHICLE_REQUEST: "Request to import VEHICLE!",
   IMPORT_VEHICLE_REQ_UPDATE: "Update request to import VEHICLE!",
-  EXPORT_VEHICLES: "Export Vehicles!"
+  EXPORT_VEHICLES: "Export Vehicles!",
+
+  GET_VEHICLE_MAKE_MODAL_REQ:"Get vehicle make modal req.",
+  GET_VEHICLE_MAKE_MODAL_SUCC:"Get vehicle make modal succ.",
+
+  GET_VEHICLE_MODAL_REQ:"Get vehicle modal req.",
+  GET_VEHICLE_MODAL_SUCC:"Get vehicle modal succ.",
 };
 
 export const vehicleAddRequest = createAction(
@@ -73,4 +79,10 @@ export const updateImportVehicleReq = createAction(
 export const exportVehicles = createAction(vehicleActions.EXPORT_VEHICLES);
 
 export const customerVehicleReq = createAction(vehicleActions.GET_CUSTOMER_VEHICLE_REQUEST);
-export const customerVehicleSuccess = createAction(vehicleActions.GET_CUSTOMER_VEHICLE_SUCCESS)
+export const customerVehicleSuccess = createAction(vehicleActions.GET_CUSTOMER_VEHICLE_SUCCESS);
+
+export const getVehicleMakeModalReq =  createAction(vehicleActions.GET_VEHICLE_MAKE_MODAL_REQ);
+export const getVehicleMakeModalSucc =  createAction(vehicleActions.GET_VEHICLE_MAKE_MODAL_SUCC);
+
+export const getVehicleModalReq = createAction(vehicleActions.GET_VEHICLE_MODAL_REQ);
+export const getVehicleModalSucc = createAction(vehicleActions.GET_VEHICLE_MODAL_SUCC);

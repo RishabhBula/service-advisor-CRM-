@@ -165,8 +165,18 @@ const updateOrderWorkflowStatusLogic = createLogic({
     if (!orders[to]) {
       orders[to] = [];
     }
-    orders[to].push(orders[from][sourceIndex]);
-    orders[from].splice(sourceIndex, 1);
+    // orders[to].push({ ...orders[from][sourceIndex], orderIndex: destinationIndex });
+    if (to === from && destinationIndex < sourceIndex) {
+      orders[to].splice(destinationIndex, 0, { ...orders[from][sourceIndex], workflowStatus: to })
+      orders[from].splice(sourceIndex + 1, 1);
+    } else if (to === from && sourceIndex < destinationIndex) {
+      orders[to].splice(destinationIndex + 1, 0, { ...orders[from][sourceIndex], workflowStatus: to })
+      orders[from].splice(sourceIndex, 1);
+    }
+    else {
+      orders[to].splice(destinationIndex, 0, { ...orders[from][sourceIndex], workflowStatus: to })
+      orders[from].splice(sourceIndex, 1);
+    }
     dispatch(getOrderListSuccess({ data: orders, orderStatus }));
     new ApiHelper().FetchFromServer(
       "/order",
@@ -177,7 +187,10 @@ const updateOrderWorkflowStatusLogic = createLogic({
       {
         orderId,
         orderStatus: to,
-        orderIndex: destinationIndex
+        orderIndex: destinationIndex,
+        orders: orders[to],
+        ordersFrom: orders[from],
+        orderStatusFrom: from
       }
     );
     // dispatch(getOrderDetailsRequest({ _id: action.payload.orderId }));
@@ -566,10 +579,10 @@ const getOrderDetails = createLogic({
  * 
  */
 const updateOrderStatusName = createLogic({
-  type:orderActions.UPDATE_ORDER_STATUS_NAME_REQ,
-  cancelType:orderActions.UPDATE_ORDER_STATUS_NAME_FAIL,
+  type: orderActions.UPDATE_ORDER_STATUS_NAME_REQ,
+  cancelType: orderActions.UPDATE_ORDER_STATUS_NAME_FAIL,
   async process({ action }, dispatch, done) {
-    console.log("action.payload",action.payload);
+    console.log("action.payload", action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/order",
@@ -589,7 +602,7 @@ const updateOrderStatusName = createLogic({
       return;
     } else {
       dispatch(updateOrderStatusNameSucc({
-        orderStatus:action.payload.data
+        orderStatus: action.payload.data
       }))
     }
   }

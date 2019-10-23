@@ -105,13 +105,16 @@ class OrderDetails extends Component {
 
   handleType = (e, workflowStatus, orderId, groupedOptions) => {
     const { orderReducer } = this.props;
-    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
+    const { orderData } = orderReducer;
+    const { orders } = orderData;
+    const sourceIndex = orders[workflowStatus].filter(item => item._id === orderId);
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus);
     this.props.updateOrderStatus({
       from: workflowStatus,
       to: e.id,
       orderId,
       destinationIndex: 0,
-      sourceIndex: 0,
+      sourceIndex: sourceIndex[0].orderIndex,
       toStatusName: e.label,
       fromStatusName: fromStatus[0].label
     });
@@ -128,7 +131,11 @@ class OrderDetails extends Component {
     }
   };
   handleType1 = (workflowStatus, orderId, groupedOptions, orderStatus) => {
-    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus)
+    const { orderReducer } = this.props;
+    const { orderData } = orderReducer;
+    const { orders } = orderData;
+    const sourceIndex = orders[workflowStatus].filter(item => item._id === orderId);
+    const fromStatus = groupedOptions.filter(item => item.id === workflowStatus);
     let toStatus = ""
     if (orderStatus === true) {
       toStatus = groupedOptions.filter(item => item.label === "Invoices");
@@ -140,7 +147,7 @@ class OrderDetails extends Component {
       to: toStatus[0].id,
       orderId,
       destinationIndex: 0,
-      sourceIndex: 0,
+      sourceIndex: sourceIndex[0].orderIndex,
       toStatusName: toStatus[0].label,
       fromStatusName: fromStatus[0].label
     });
@@ -357,19 +364,19 @@ class OrderDetails extends Component {
                   </UncontrolledTooltip>
                 </>
               ) : (
-                <>
-                  <Button
-                    color={""}
-                    className={"btn btn-sm btn-outline-secondary"}
-                    id={"ScheduleStatus"}
-                  >
-                    Schedule
+                  <>
+                    <Button
+                      color={""}
+                      className={"btn btn-sm btn-outline-secondary"}
+                      id={"ScheduleStatus"}
+                    >
+                      Schedule
                   </Button>
-                  <UncontrolledTooltip target={"ScheduleStatus"}>
-                    Please update user and vehicle details
+                    <UncontrolledTooltip target={"ScheduleStatus"}>
+                      Please update user and vehicle details
                   </UncontrolledTooltip>
-                </>
-              )}
+                  </>
+                )}
             </span>
           </div>
           <div
@@ -410,29 +417,29 @@ class OrderDetails extends Component {
                     </div>
                   </FormGroup>
                 ) : (
-                  <span className={"d-flex"}>
-                    <span className={"pr-2 create-date"}>{poNumber}</span>
-                    <span>
-                      <Button
-                        type="button"
-                        color={""}
-                        className={"btn btn-sm btn-outline-secondary"}
-                        onClick={e => this.handleChange()}
-                      >
-                        Edit
+                    <span className={"d-flex"}>
+                      <span className={"pr-2 create-date"}>{poNumber}</span>
+                      <span>
+                        <Button
+                          type="button"
+                          color={""}
+                          className={"btn btn-sm btn-outline-secondary"}
+                          onClick={e => this.handleChange()}
+                        >
+                          Edit
                       </Button>
+                      </span>
                     </span>
-                  </span>
-                )
+                  )
               ) : (
-                <Button
-                  color={""}
-                  className={"btn btn-sm btn-outline-secondary"}
-                  onClick={e => this.handleChange()}
-                >
-                  + Add
+                  <Button
+                    color={""}
+                    className={"btn btn-sm btn-outline-secondary"}
+                    onClick={e => this.handleChange()}
+                  >
+                    + Add
                 </Button>
-              )}
+                )}
             </span>
           </div>
           <div
@@ -449,30 +456,30 @@ class OrderDetails extends Component {
                   onClick={e => this.props.orderStatus("authorizStatus", false)}
                 >
                   {orderReducer &&
-                  orderReducer.orderItems &&
-                  !orderReducer.orderItems.status ? (
-                    <span className={"bg-danger authoris-dot"} />
-                  ) : (
-                    <span className={"bg-secondary authoris-dot"} />
-                  )}{" "}
+                    orderReducer.orderItems &&
+                    !orderReducer.orderItems.status ? (
+                      <span className={"bg-danger authoris-dot"} />
+                    ) : (
+                      <span className={"bg-secondary authoris-dot"} />
+                    )}{" "}
                   Not Authorised
                 </Button>
               ) : (
-                <Button
-                  color={""}
-                  className="btn btn-sm"
-                  onClick={e => this.props.orderStatus("authorizStatus", false)}
-                >
-                  {orderReducer &&
-                  orderReducer.orderItems &&
-                  !orderReducer.orderItems.status ? (
-                    <span className={"bg-danger authoris-dot"} />
-                  ) : (
-                    <span className={"bg-secondary authoris-dot"} />
-                  )}{" "}
-                  Not Authorised
+                  <Button
+                    color={""}
+                    className="btn btn-sm"
+                    onClick={e => this.props.orderStatus("authorizStatus", false)}
+                  >
+                    {orderReducer &&
+                      orderReducer.orderItems &&
+                      !orderReducer.orderItems.status ? (
+                        <span className={"bg-danger authoris-dot"} />
+                      ) : (
+                        <span className={"bg-secondary authoris-dot"} />
+                      )}{" "}
+                    Not Authorised
                 </Button>
-              )}
+                )}
 
               {/* <Button
                 color={""}
@@ -497,30 +504,30 @@ class OrderDetails extends Component {
                   onClick={e => this.props.orderStatus("authorizStatus", true)}
                 >
                   {orderReducer &&
-                  orderReducer.orderItems &&
-                  orderReducer.orderItems.status ? (
-                    <span className={"bg-success authoris-dot"} />
-                  ) : (
-                    <span className={"bg-secondary authoris-dot"} />
-                  )}{" "}
+                    orderReducer.orderItems &&
+                    orderReducer.orderItems.status ? (
+                      <span className={"bg-success authoris-dot"} />
+                    ) : (
+                      <span className={"bg-secondary authoris-dot"} />
+                    )}{" "}
                   Authorised
                 </Button>
               ) : (
-                <Button
-                  color={""}
-                  className={"btn btn-sm active"}
-                  onClick={e => this.props.orderStatus("authorizStatus", true)}
-                >
-                  {orderReducer &&
-                  orderReducer.orderItems &&
-                  orderReducer.orderItems.status ? (
-                    <span className={"bg-success authoris-dot"} />
-                  ) : (
-                    <span className={"bg-secondary authoris-dot"} />
-                  )}{" "}
-                  Authorised
+                  <Button
+                    color={""}
+                    className={"btn btn-sm active"}
+                    onClick={e => this.props.orderStatus("authorizStatus", true)}
+                  >
+                    {orderReducer &&
+                      orderReducer.orderItems &&
+                      orderReducer.orderItems.status ? (
+                        <span className={"bg-success authoris-dot"} />
+                      ) : (
+                        <span className={"bg-secondary authoris-dot"} />
+                      )}{" "}
+                    Authorised
                 </Button>
-              )}
+                )}
             </ButtonGroup>
           </div>
           <div
@@ -591,110 +598,110 @@ class OrderDetails extends Component {
         <div className={"service-warp border-top pt-2 mt-1"}>
           {serviceData && serviceData.length
             ? serviceData.map((item, index) => {
-                let mainserviceTotal = [],
-                  serviceTotal,
-                  epa,
-                  discount,
-                  tax;
-                return (
-                  <div key={index} className={""}>
-                    {item.serviceId &&
+              let mainserviceTotal = [],
+                serviceTotal,
+                epa,
+                discount,
+                tax;
+              return (
+                <div key={index} className={""}>
+                  {item.serviceId &&
                     item.serviceId.serviceItems &&
                     item.serviceId.serviceItems.length
-                      ? item.serviceId.serviceItems.map((service, sIndex) => {
-                          const calSubTotal = calculateSubTotal(
-                            service.retailPrice ||
-                              (service.tierSize && service.tierSize.length
-                                ? service.tierSize[0].retailPrice
-                                : null) ||
-                              0,
-                            service.qty || 0,
-                            service.hours || 0,
-                            service.rate ? service.rate.hourlyRate : 0
-                          ).toFixed(2);
-                          const subDiscount = calculateValues(
-                            calSubTotal || 0,
-                            service.discount.value || 0,
-                            service.discount.type
-                          );
-                          const servicesSubTotal = (
-                            parseFloat(calSubTotal) - parseFloat(subDiscount)
-                          ).toFixed(2);
-                          mainserviceTotal.push(parseFloat(servicesSubTotal));
-                          serviceTotalArray = getSumOfArray(mainserviceTotal);
-                          epa = calculateValues(
-                            serviceTotalArray || 0,
-                            item.serviceId.epa.value || 0,
-                            item.serviceId.epa ? item.serviceId.epa.type : "$"
-                          );
-                          discount = calculateValues(
-                            serviceTotalArray || 0,
-                            item.serviceId.discount.value || 0,
-                            item.serviceId.discount
-                              ? item.serviceId.discount.type
-                              : "$"
-                          );
-                          tax = calculateValues(
-                            serviceTotalArray || 0,
-                            item.serviceId.taxes.value || 0,
-                            item.serviceId.taxes
-                              ? item.serviceId.taxes.type
-                              : "$"
-                          );
+                    ? item.serviceId.serviceItems.map((service, sIndex) => {
+                      const calSubTotal = calculateSubTotal(
+                        service.retailPrice ||
+                        (service.tierSize && service.tierSize.length
+                          ? service.tierSize[0].retailPrice
+                          : null) ||
+                        0,
+                        service.qty || 0,
+                        service.hours || 0,
+                        service.rate ? service.rate.hourlyRate : 0
+                      ).toFixed(2);
+                      const subDiscount = calculateValues(
+                        calSubTotal || 0,
+                        service.discount.value || 0,
+                        service.discount.type
+                      );
+                      const servicesSubTotal = (
+                        parseFloat(calSubTotal) - parseFloat(subDiscount)
+                      ).toFixed(2);
+                      mainserviceTotal.push(parseFloat(servicesSubTotal));
+                      serviceTotalArray = getSumOfArray(mainserviceTotal);
+                      epa = calculateValues(
+                        serviceTotalArray || 0,
+                        item.serviceId.epa.value || 0,
+                        item.serviceId.epa ? item.serviceId.epa.type : "$"
+                      );
+                      discount = calculateValues(
+                        serviceTotalArray || 0,
+                        item.serviceId.discount.value || 0,
+                        item.serviceId.discount
+                          ? item.serviceId.discount.type
+                          : "$"
+                      );
+                      tax = calculateValues(
+                        serviceTotalArray || 0,
+                        item.serviceId.taxes.value || 0,
+                        item.serviceId.taxes
+                          ? item.serviceId.taxes.type
+                          : "$"
+                      );
 
-                          serviceTotal = (
-                            parseFloat(serviceTotalArray) +
-                            parseFloat(epa) +
-                            parseFloat(tax) -
-                            parseFloat(discount)
-                          ).toFixed(2);
-                          if (service.serviceType === "part") {
-                            totalParts += parseFloat(servicesSubTotal);
-                          }
-                          if (service.serviceType === "tire") {
-                            totalTires += parseFloat(servicesSubTotal);
-                          }
-                          if (service.serviceType === "labor") {
-                            totalLabor += parseFloat(servicesSubTotal);
-                          }
-                          orderSubTotal += parseFloat(servicesSubTotal);
+                      serviceTotal = (
+                        parseFloat(serviceTotalArray) +
+                        parseFloat(epa) +
+                        parseFloat(tax) -
+                        parseFloat(discount)
+                      ).toFixed(2);
+                      if (service.serviceType === "part") {
+                        totalParts += parseFloat(servicesSubTotal);
+                      }
+                      if (service.serviceType === "tire") {
+                        totalTires += parseFloat(servicesSubTotal);
+                      }
+                      if (service.serviceType === "labor") {
+                        totalLabor += parseFloat(servicesSubTotal);
+                      }
+                      orderSubTotal += parseFloat(servicesSubTotal);
 
-                          return true;
-                        })
-                      : ""}
-                    <span className={"d-none"}>
-                      {
-                        ((orderGandTotal += parseFloat(serviceTotal) || 0),
+                      return true;
+                    })
+                    : ""}
+                  <span className={"d-none"}>
+                    {
+                      ((orderGandTotal += parseFloat(serviceTotal) || 0),
                         fleetStatus
                           ? (fleetDiscount = calculateValues(
-                              orderGandTotal,
-                              fleetDiscount,
-                              "%"
-                            ))
+                            orderGandTotal,
+                            fleetDiscount,
+                            "%"
+                          ))
                           : 0,
                         fleetStatus
                           ? (orderGandTotal = orderGandTotal - fleetDiscount)
                           : 0)
-                      }
-                    </span>
+                    }
+                  </span>
 
-                    <span className={"d-none"}>
-                      {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
-                    </span>
-                    <span className={"d-none"}>
-                      {(totalDiscount += parseFloat(discount) || 0)}
-                    </span>
-                  </div>
-                );
-              })
+                  <span className={"d-none"}>
+                    {(totalTax += parseFloat(epa) + parseFloat(tax) || 0)}
+                  </span>
+                  <span className={"d-none"}>
+                    {(totalDiscount += parseFloat(discount) || 0)}
+                  </span>
+                </div>
+              );
+            })
             : ""}
           {paymentList && paymentList.length
             ? paymentList.map(paymentData => {
-                totalPaiedAmount +=
-                  paymentData.payedAmount[paymentData.payedAmount.length - 1]
-                    .amount;
-                return true;
-              })
+              totalPaiedAmount +=
+                paymentData.payedAmount[paymentData.payedAmount.length - 1]
+                  .amount;
+              return true;
+            })
             : null}
           {serviceData && serviceData.length ? (
             <>
@@ -769,8 +776,8 @@ class OrderDetails extends Component {
               <div className={"clearfix"} />
             </>
           ) : (
-            ""
-          )}
+              ""
+            )}
         </div>
         <hr />
         <div className={"text-center payment-section"}>
@@ -780,7 +787,7 @@ class OrderDetails extends Component {
                 ? "text-success"
                 : "text-dark"
             }
-          > 
+          >
             Remaining Balance{" "}
             <Dollor
               value={parseFloat(orderGandTotal - totalPaiedAmount).toFixed(2)}
@@ -800,37 +807,37 @@ class OrderDetails extends Component {
           ) : null}
           {paymentList && paymentList.length
             ? paymentList
-                .slice(0)
-                .reverse()
-                .map((paymentData, pIndex) => {
-                  return (
-                    <div key={pIndex} className={"activity-block p-3"}>
-                      <div className={"pr-3 text-left"}>
-                        <span>{`Paid $${
+              .slice(0)
+              .reverse()
+              .map((paymentData, pIndex) => {
+                return (
+                  <div key={pIndex} className={"activity-block p-3"}>
+                    <div className={"pr-3 text-left"}>
+                      <span>{`Paid $${
+                        paymentData.payedAmount[
+                          paymentData.payedAmount.length - 1
+                        ].amount
+                          ? paymentData.payedAmount[
+                            paymentData.payedAmount.length - 1
+                          ].amount.toFixed(2)
+                          : 0
+                        } viea ${paymentData.paymentType} on date`}</span>
+                    </div>
+                    <div className={"text-left activity-date"}>
+                      <span>
+                        {moment(
                           paymentData.payedAmount[
                             paymentData.payedAmount.length - 1
-                          ].amount
-                            ? paymentData.payedAmount[
-                                paymentData.payedAmount.length - 1
-                              ].amount.toFixed(2)
-                            : 0
-                        } viea ${paymentData.paymentType} on date`}</span>
-                      </div>
-                      <div className={"text-left activity-date"}>
-                        <span>
-                          {moment(
-                            paymentData.payedAmount[
-                              paymentData.payedAmount.length - 1
-                            ].date
-                          ).format("MMM Do YYYY, h:mm A")}
-                        </span>
-                      </div>
-                      <span className={"activity-icon payment-set"}>
-                        <i className={"fa fa-dollar-sign"} />
+                          ].date
+                        ).format("MMM Do YYYY, h:mm A")}
                       </span>
                     </div>
-                  );
-                })
+                    <span className={"activity-icon payment-set"}>
+                      <i className={"fa fa-dollar-sign"} />
+                    </span>
+                  </div>
+                );
+              })
             : null}
         </div>
         <hr />
@@ -840,62 +847,62 @@ class OrderDetails extends Component {
           ) : null}
           {activityLogs && activityLogs.length
             ? activityLogs
-                .slice(0)
-                .reverse()
-                .map((activity, index) => {
-                  let dateA = moment(activity.createdAt).format("L");
-                  let dateB = moment().format("L");
-                  let dayDiff = moment(dateB).diff(moment(dateA), "days");
-                  return (
-                    <div key={index} className={"activity-block p-3"}>
-                      <div className={"pr-3 text-left"}>
-                        <span className="text-capitalize">
-                          {activity.activityPerson.firstName}{" "}
-                          {activity.activityPerson.lastName}{" "}
-                          {activity.type !== "NEW_ORDER" &&
+              .slice(0)
+              .reverse()
+              .map((activity, index) => {
+                let dateA = moment(activity.createdAt).format("L");
+                let dateB = moment().format("L");
+                let dayDiff = moment(dateB).diff(moment(dateA), "days");
+                return (
+                  <div key={index} className={"activity-block p-3"}>
+                    <div className={"pr-3 text-left"}>
+                      <span className="text-capitalize">
+                        {activity.activityPerson.firstName}{" "}
+                        {activity.activityPerson.lastName}{" "}
+                        {activity.type !== "NEW_ORDER" &&
                           activity.type !== "ADD_PAYMENT" &&
                           activity.type !== "NEW_MESSAGE" &&
                           activity.type !== "UPDATE_STATUS"
-                            ? "changed"
-                            : null}{" "}
-                          {activity.name}
-                        </span>
-                      </div>
-                      <div className={"text-left activity-date"}>
-                        <span>
-                          {dayDiff >= 1
-                            ? moment(activity.createdAt).format(
-                                "MMM Do YYYY, h:mm A"
-                              )
-                            : moment(activity.createdAt)
-                                .startOf("seconds")
-                                .fromNow()}
-                        </span>
-                      </div>
-                      <span
-                        className={
-                          activity.type === "NEW_MESSAGE"
-                            ? "activity-icon activity-message"
-                            : "activity-icon activity-set"
-                        }
-                      >
-                        {activity.type !== "NEW_ORDER" &&
+                          ? "changed"
+                          : null}{" "}
+                        {activity.name}
+                      </span>
+                    </div>
+                    <div className={"text-left activity-date"}>
+                      <span>
+                        {dayDiff >= 1
+                          ? moment(activity.createdAt).format(
+                            "MMM Do YYYY, h:mm A"
+                          )
+                          : moment(activity.createdAt)
+                            .startOf("seconds")
+                            .fromNow()}
+                      </span>
+                    </div>
+                    <span
+                      className={
+                        activity.type === "NEW_MESSAGE"
+                          ? "activity-icon activity-message"
+                          : "activity-icon activity-set"
+                      }
+                    >
+                      {activity.type !== "NEW_ORDER" &&
                         activity.type !== "ADD_PAYMENT" &&
                         activity.type !== "INVOICE_ORDER" &&
                         activity.type !== "UPDATE_STATUS" &&
                         activity.type !== "NEW_MESSAGE" ? (
                           <i className={"fa fa-check"} />
                         ) : null}
-                        {activity.type === "ADD_PAYMENT" ? (
-                          <i className={"fa fa-dollar-sign"} />
-                        ) : null}
-                        {activity.type === "NEW_MESSAGE" ? (
-                          <i className="fas fa-bars mt-1" />
-                        ) : null}
-                      </span>
-                    </div>
-                  );
-                })
+                      {activity.type === "ADD_PAYMENT" ? (
+                        <i className={"fa fa-dollar-sign"} />
+                      ) : null}
+                      {activity.type === "NEW_MESSAGE" ? (
+                        <i className="fas fa-bars mt-1" />
+                      ) : null}
+                    </span>
+                  </div>
+                );
+              })
             : ""}
         </div>
 

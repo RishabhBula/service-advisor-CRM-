@@ -77,8 +77,25 @@ const createNewOrder = async (req, res) => {
       userId: currentUser.id,
       parentId: currentUser.parrentId ? currentUser.parrentId : currentUser.id,
       workflowStatus,
-      isDeleted: false
+      isDeleted: false,
+      orderIndex: 0
     };
+
+    let result1 = await Orders.find({ parentId: id || parentId, workflowStatus: mongoose.Types.ObjectId(orderStatus[0]._id), isDeleted: false, orderIndex: { $gte: 0 } }).sort({ orderIndex: 1 });
+    let num = 0;
+    if (result1 && result1.length) {
+      for (let i = 0; i < result1.length; i++) {
+        await Orders.updateOne(
+          {
+            parentId: id || parentId,
+            _id: result1[i]._id,
+            isDeleted: false
+          }, {
+            orderIndex: ++num
+          }
+        )
+      }
+    }
     const orderData = new Orders(orderConst);
     await orderData.save();
     return res.status(200).json({
@@ -177,7 +194,7 @@ const listOrders = async (req, res) => {
     }
     const result = await Orders.find(condition).populate(
       "customerId vehicleId serviceId.serviceId inspectionId.inspectionId messageId.messageId customerCommentId"
-    );
+    ).sort({ orderIndex: 1 });
     const getAllOrdersCount = await Orders.countDocuments({
       ...condition
     });
@@ -186,7 +203,7 @@ const listOrders = async (req, res) => {
         name: 1,
         isInvoice: 1
       }
-    ).sort({ orderIndex: "asc" });
+    ).sort({ orderIndex: 1 });
     if (!orderStatus.length) {
       defaultOrderStatus.forEach(e => {
         e.parentId = orderStatusCondition.parentId;
@@ -228,22 +245,60 @@ const updateOrderWorkflowStatus = async (req, res) => {
   try {
     const { body, currentUser } = req;
     const { id, parentId } = currentUser;
-    const { orderId, orderStatus, orderIndex } = body;
-    await Orders.updateOne(
-      {
-        parentId: id || parentId,
-        _id: orderId
-      },
-      {
-        $set: {
-          workflowStatus: mongoose.Types.ObjectId(orderStatus),
-          orderIndex
+    const { orderId, orderStatus, orderIndex, orders, ordersFrom, orderStatusFrom } = body;
+    if (orders && orders.length) {
+      for (let i = 0; i < orders.length; i++) {
+        const element = orders[i];
+        if (element) {
+          await Orders.updateOne(
+            {
+              parentId: id || parentId,
+              _id: mongoose.Types.ObjectId(element._id)
+            },
+            {
+              $set: {
+                workflowStatus: mongoose.Types.ObjectId(orderStatus),
+                orderIndex: i
+              }
+            }
+          );
         }
       }
-    );
-
+    } else {
+      await Orders.updateOne(
+        {
+          parentId: id || parentId,
+          _id: orderId
+        },
+        {
+          $set: {
+            workflowStatus: mongoose.Types.ObjectId(orderStatus),
+            orderIndex
+          }
+        }
+      );
+    }
+    if (ordersFrom && ordersFrom.length) {
+      for (let j = 0; j < ordersFrom.length; j++) {
+        const element = ordersFrom[j];
+        if (element) {
+          await Orders.updateOne(
+            {
+              parentId: id || parentId,
+              _id: mongoose.Types.ObjectId(element._id)
+            },
+            {
+              $set: {
+                workflowStatus: mongoose.Types.ObjectId(orderStatusFrom),
+                orderIndex: j
+              }
+            }
+          );
+        }
+      }
+    }
     return res.status(200).json({
-      message: "Order status updated successfully!"
+      message: "Order status updated successfully!",
     });
   } catch (error) {
     console.log("Error while fetching list of orders", error);
@@ -614,16 +669,16 @@ const updateOrderStatusNameLogic = async (req, res) => {
     const { parentId } = currentUser;
     const { name, id } = body;
     const result = await OrderStatus.find({ _id: { $ne: mongoose.Types.ObjectId(id) }, isDeleted: false, parentId: parentId, name: name.trim() }).collation({ locale: 'en', strength: 2 });
-    if(result && result.length){
+    if (result && result.length) {
       return res.status(400).json({
-        message:"This oder status name already exist."
+        message: "This oder status name already exist."
       })
     }
     const data = await OrderStatus.findByIdAndUpdate(id, {
       $set: { name: name }
     })
     return res.status(200).json({
-      message:"Successfully update order status name."
+      message: "Successfully update order status name."
     })
   } catch (error) {
     return res.status(500).json({

@@ -183,7 +183,7 @@ class CompanySettings extends Component {
     });
   };
 
-  onSelectFile = async (file,e) => {
+  onSelectFile = async (file, e) => {
     if (file[0].size > 10000000) {
       await ConfirmBox({
         text: "",
@@ -200,30 +200,30 @@ class CompanySettings extends Component {
       var imageWidth = 0;
       var message = ''
       image.src = as.target.result;
-       image.onload = async function() {
-         imageWidth = this.width;
-          if (imageWidth <= 300 || imageWidth >= 2000) {
-            message = imageWidth <= 300 ? 'Allowed image width is minimum 300px.': 'Allowed image width is maximum 2000px.'
-            await ConfirmBox({
-              text: "",
-              title: message,
-              showCancelButton: false,
-              confirmButtonText: "Ok"
-            });
-           
-            return;
-          } else {
-            scope.setState({
-              shopLogo: reader.result,
-              logoDetails: file,
-              maxZoom: 2
-            });
-          } 
-       
-       };
-     
+      image.onload = async function () {
+        imageWidth = this.width;
+        if (imageWidth <= 300 || imageWidth >= 2000) {
+          message = imageWidth <= 300 ? 'Allowed image width is minimum 300px.' : 'Allowed image width is maximum 2000px.'
+          await ConfirmBox({
+            text: "",
+            title: message,
+            showCancelButton: false,
+            confirmButtonText: "Ok"
+          });
+
+          return;
+        } else {
+          scope.setState({
+            shopLogo: reader.result,
+            logoDetails: file,
+            maxZoom: 2
+          });
+        }
+
+      };
+
     });
-      
+
     // reader.onloadend = function(as) {
     //   var image = new Image();
     //   image.src = as.target.result;
@@ -364,14 +364,15 @@ class CompanySettings extends Component {
       }
 
       const payload = {
-        companyName,
+        companyName: companyName.trim(),
         companyNumber,
         shopLogo,
         vatNumber,
         website,
         vehicleService: vehicleServicesOfferTemp,
         serviceOffer: servicesOfferTemp,
-        peopleWork: selected
+        peopleWork: selected,
+        isCompanyProfile: true
       };
       const { isValid, errors } = Validator(
         payload,
@@ -680,25 +681,25 @@ class CompanySettings extends Component {
                     <div className="d-flex box-space">
                       {peopleWork.allPeopleArray
                         ? peopleWork.allPeopleArray.map((item, index) => {
-                            return (
-                              <div
-                                key={index}
-                                className={
-                                  peopleWork.selected === item
-                                    ? "box-contain active"
-                                    : "box-contain"
-                                }
-                                onClick={() => this.peopleWorkAction(item)}
-                              >
-                                <div className="welcome-service-text">
-                                  {item}
-                                </div>
-                                <span className="check-icon">
-                                  <i className="fa fa-check-circle" />
-                                </span>
+                          return (
+                            <div
+                              key={index}
+                              className={
+                                peopleWork.selected === item
+                                  ? "box-contain active"
+                                  : "box-contain"
+                              }
+                              onClick={() => this.peopleWorkAction(item)}
+                            >
+                              <div className="welcome-service-text">
+                                {item}
                               </div>
-                            );
-                          })
+                              <span className="check-icon">
+                                <i className="fa fa-check-circle" />
+                              </span>
+                            </div>
+                          );
+                        })
                         : null}
                     </div>
                     <p className={"text-danger error-msg"}>
@@ -721,18 +722,18 @@ class CompanySettings extends Component {
                         let selectedValue = [];
                         selectedValue =
                           servicesOffer.selectedServices &&
-                          servicesOffer.selectedServices.length
+                            servicesOffer.selectedServices.length
                             ? servicesOffer.selectedServices.filter(
-                                value => item.key === value
-                              )
+                              value => item.key === value
+                            )
                             : null;
                         return (
                           <div
                             key={index}
                             className={
                               selectedValue &&
-                              selectedValue.length &&
-                              selectedValue[0]
+                                selectedValue.length &&
+                                selectedValue[0]
                                 ? "box-contain active"
                                 : "box-contain"
                             }
@@ -778,18 +779,18 @@ class CompanySettings extends Component {
                         let selectedValue = [];
                         selectedValue =
                           vehicleService.selectedVehicleServices &&
-                          vehicleService.selectedVehicleServices.length
+                            vehicleService.selectedVehicleServices.length
                             ? vehicleService.selectedVehicleServices.filter(
-                                value => item.key === value
-                              )
+                              value => item.key === value
+                            )
                             : null;
                         return (
                           <div
                             key={index}
                             className={
                               selectedValue &&
-                              selectedValue.length &&
-                              selectedValue[0]
+                                selectedValue.length &&
+                                selectedValue[0]
                                 ? "box-contain active"
                                 : "box-contain"
                             }

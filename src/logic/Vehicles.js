@@ -18,13 +18,13 @@ import {
   customerAddStarted,
   redirectTo,
   updateImportVehicleReq,
-  customerGetRequest
+  customerGetRequest,
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
 import { AppConfig } from "../config/AppConfig";
-
+import { VehiclesData } from "../config/Constants";
 let toastId = null;
 
 const vehicleAddLogic = createLogic({
@@ -122,15 +122,15 @@ const getVehiclesLogic = createLogic({
           action.payload && action.payload.input
             ? action.payload.input
             : action.payload && action.payload.search
-            ? action.payload.search
-            : null,
+              ? action.payload.search
+              : null,
         sort:
           action.payload && action.payload.sort ? action.payload.sort : null,
-        limit: AppConfig.ITEMS_PER_PAGE,
+        limit: action.payload && action.payload.limit ? action.payload.limit : AppConfig.ITEMS_PER_PAGE,
         vehicleId:
           action.payload &&
-          action.payload.vehicleId &&
-          action.payload.isGetVehicle
+            action.payload.vehicleId &&
+            action.payload.isGetVehicle
             ? action.payload.vehicleId
             : null,
         page: action.payload && action.payload.page ? action.payload.page : null
@@ -169,10 +169,10 @@ const getVehiclesLogic = createLogic({
       logger(
         action.payload && action.payload.callback
           ? action.payload.callback(
-              options.length
-                ? allVehicle.concat(options.concat(defaultOptions))
-                : defaultOptions
-            )
+            options.length
+              ? allVehicle.concat(options.concat(defaultOptions))
+              : defaultOptions
+          )
           : null
       );
       dispatch(hideLoader());
@@ -506,6 +506,79 @@ const exportVechicleLogic = createLogic({
     done();
   }
 });
+/**
+ * 
+ */
+const getVehicleMakeModalReq = createLogic({
+  type: vehicleActions.GET_VEHICLE_MAKE_MODAL_REQ,
+  async process({ action }, dispatch, done) {
+    if (action.payload.input && action.payload.isVehicleMake) {
+      const regex = RegExp(action.payload.input, 'i');
+      let VehicleMake = [];
+      let vehicle = [];
+      if (!(action.payload.modal)) {
+        vehicle = VehiclesData.filter((item) => {
+          return item.make.match(regex)
+        });
+      } else {
+        vehicle = VehiclesData.filter((item) => {
+          return item.model === action.payload.modal && item.make.match(regex)
+        });
+      }
+      function getUniqueListBy(arr, key) {
+        return [...new Map(arr.map(item => [item[key], item])).values()]
+      }
+      vehicle = getUniqueListBy(vehicle, 'make');
+      vehicle.map((data) => {
+        VehicleMake.push({
+          label: data.make,
+          value: data.make
+        })
+        return true
+      })
+      if (action.payload && action.payload.callback) {
+        action.payload.callback(VehicleMake);
+      }
+    }
+    done();
+  }
+});
+/**
+ * 
+ */
+const getVehicleModalLogic = createLogic({
+  type: vehicleActions.GET_VEHICLE_MODAL_REQ,
+  async process({ action }, dispatch, done) {
+    if (action.payload.input) {
+      let vehicleModal = [];
+      const regex = RegExp(action.payload.input, 'i');
+      let vehicle = [];
+      if (!(action.payload.make)) {
+        vehicle = VehiclesData.filter((item) => {
+          return item.model.match(regex)
+        });
+      } else {
+        vehicle = VehiclesData.filter((item) => {
+          return item.make === action.payload.make && item.model.match(regex)
+        });
+      }
+      // assign things.thing to myData for brevity
+      var myData = vehicle;
+      vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.map((data) => {
+        vehicleModal.push({
+          label: data.model,
+          value: data.model
+        })
+        return true
+      })
+      if (action.payload && action.payload.callback) {
+        action.payload.callback(vehicleModal);
+      }
+    }
+    done();
+  }
+})
 export const VehicleLogic = [
   vehicleAddLogic,
   getVehiclesLogic,
@@ -513,5 +586,7 @@ export const VehicleLogic = [
   deleteVehicleLogic,
   updateVehicleStatusLogic,
   importVehicleLogic,
-  exportVechicleLogic
+  exportVechicleLogic,
+  getVehicleMakeModalReq,
+  getVehicleModalLogic
 ];

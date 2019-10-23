@@ -10,7 +10,9 @@ import {
   getCustomerFleetListRequest,
   customerEditRequest,
   vehicleAddRequest,
-  customerAddSuccess
+  customerAddSuccess,
+  getVehicleMakeModalReq,
+  getVehicleModalReq
 } from "../../../actions";
 import { CrmVehicleModal } from "../Vehicles/CrmVehicleModal";
 import { CrmEditCustomerModal } from "../CrmEditCustomerModal";
@@ -64,7 +66,7 @@ class CustAndVehicle extends Component {
   submitCreateVehicleFun = data => {
     const { customerInfoReducer } = this.props;
     const { customerAddInfo } = customerInfoReducer;
-    
+
     this.props.vehicleAddAction({
       ...data,
       customerId: customerAddInfo._id
@@ -73,7 +75,7 @@ class CustAndVehicle extends Component {
   hanleAddCustomer = (customerData) => {
     const payload = {
       ...customerData,
-      workFlowCustomer:true
+      workFlowCustomer: true
     }
     this.props.addCustomer(payload);
   }
@@ -86,7 +88,9 @@ class CustAndVehicle extends Component {
       profileInfoReducer,
       modelInfoReducer,
       customerInfoReducer,
-      isCustVehiclemodal
+      isCustVehiclemodal,
+      getVehicleMakeModalReq,
+      getVehicleModalReq
     } = this.props;
     const { customerAddInfo } = customerInfoReducer;
     const { modelDetails } = modelInfoReducer;
@@ -131,6 +135,8 @@ class CustAndVehicle extends Component {
           handleVehicleModal={this.openCustomerForm}
           isCustVehiclemodal={isCustVehiclemodal}
           submitCreateVehicleFun={this.submitCreateVehicleFun}
+          getVehicleMakeModalReq={getVehicleMakeModalReq}
+          getVehicleModalReq={getVehicleModalReq}
         />
       </>
     );
@@ -176,6 +182,12 @@ const mapDispatchToProps = dispatch => ({
         customerAddInfo: {}
       })
     );
+  },
+  getVehicleMakeModalReq: data => {
+    dispatch(getVehicleMakeModalReq(data));
+  },
+  getVehicleModalReq: data => {
+    dispatch(getVehicleModalReq(data));
   }
 });
 

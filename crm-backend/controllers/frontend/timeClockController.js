@@ -185,10 +185,10 @@ const stopTimer = async (req, res) => {
   const convertedDuration = result.duration / 3600;
   await TimeClock.findByIdAndUpdate(result._id, {
     $set: {
-      endDateTime: new Date(),
-      total:
-        parseFloat(convertedDuration) * parseFloat(result.technicianId.rate) ||
-        0,
+      endDateTime: Date.now(),
+      total: !isNaN(convertedDuration) ? (
+        parseFloat(convertedDuration) * parseFloat(result.technicianId.rate)) ||
+        0.00 : 0.00,
       activity: result.orderId ? `Order (#${result.orderId.orderId}) ${result.orderId
         .orderName || "N/A"}` : "General",
       isCompleted: true

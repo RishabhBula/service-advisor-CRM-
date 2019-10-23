@@ -7,8 +7,8 @@ import {
    siteSettingActions,
    getHomePageSucc,
    getSiteSettingSucc,
-   showLoader,
-   hideLoader,
+   // showLoader,
+   // hideLoader,
 } from "./../actions";
 
 let toastId = null;
@@ -17,7 +17,9 @@ const getHomePageLogic = createLogic({
    type: homePageActions.GET_HOME_PAGE_REQUEST,
    cancelType: homePageActions.GET_HOME_PAGE_FAILED,
    async process({ action }, dispatch, done) {
-      dispatch(showLoader());
+      dispatch(getHomePageSucc({
+            isLoading: true
+         }))
       let api = new ApiHelper();
       let result = await api.FetchFromServer(
          "/home-page",
@@ -31,11 +33,12 @@ const getHomePageLogic = createLogic({
          if (!toast.isActive(toastId)) {
             toastId = toast.error(result.messages[0] || DefaultErrorMessage);
          }
-         dispatch(hideLoader());
+         dispatch(getHomePageSucc({
+            isLoading: false
+         }))
          done();
          return;
       } else {
-         dispatch(hideLoader());
          dispatch(getHomePageSucc({
             homePageDetails: result.data.data,
             isLoading: false
@@ -49,7 +52,6 @@ const getSiteSettingLogic = createLogic({
    type:siteSettingActions.GET_SITE_SETTING_REQUEST,
    cancelType:siteSettingActions.GET_SITE_SETTING_FAILED,
    async process({ action }, dispatch, done) {
-      dispatch(showLoader());
       let api = new ApiHelper();
       let result = await api.FetchFromServer(
          "/site-setting",
@@ -63,14 +65,12 @@ const getSiteSettingLogic = createLogic({
          if (!toast.isActive(toastId)) {
             toastId = toast.error(result.messages[0] || DefaultErrorMessage);
          }
-         dispatch(hideLoader());
          dispatch(getSiteSettingSucc({
             isLoading: false
          }))
          done();
          return;
       } else {
-         dispatch(hideLoader());
          dispatch(getSiteSettingSucc({
             settingDetails: result.data.data,
             isLoading: false
