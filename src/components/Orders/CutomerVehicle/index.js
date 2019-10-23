@@ -92,6 +92,12 @@ class CutomerVehicle extends Component {
           label: "+ Add New Vehicle",
           value: ""
         }
+      ],
+      defaultOptionsCustomers: [
+        {
+          label: "+ Add New Customer",
+          value: ""
+        }
       ]
     };
   }
@@ -99,6 +105,8 @@ class CutomerVehicle extends Component {
   /*  
   */
   componentDidMount = () => {
+    this.props.getCustomerDetailsRequest({ limit: 50 });
+    this.props.getVehicleData({ limit: 50 });
     if (
       this.props.orderReducer.orderItems && (this.props.orderReducer.orderItems.customerId ||
         this.props.orderReducer.orderItems.vehicleId)
@@ -128,7 +136,29 @@ class CutomerVehicle extends Component {
   /*
   /*  
   */
-  componentDidUpdate = ({ orderReducer, customerInfoReducer, vehicleAddInfoReducer, customerListReducer }) => {
+  componentDidUpdate = ({ orderReducer, customerInfoReducer, vehicleAddInfoReducer, customerListReducer, vehicleListReducer }) => {
+    if (this.props.vehicleListReducer && this.props.vehicleListReducer.vehicleList && this.props.vehicleListReducer.vehicleList.length && vehicleListReducer && vehicleListReducer.vehicleList && this.props.vehicleListReducer.vehicleList !== vehicleListReducer.vehicleList) {
+      let vehicleData = [{
+        label: "All Vehicles",
+        value: "",
+        isDisabled: true
+      }];
+      const options = this.props.vehicleListReducer.vehicleList.map(vehicle => ({
+        label: `${vehicle.make} ${vehicle.modal}`,
+        value: vehicle._id,
+        data: vehicle
+      }));
+      this.setState({
+        defaultOptionsVehicle: options.length ? vehicleData.concat(options).concat({
+          label: "+ Add New Vehicle",
+          value: ""
+        }) : [{
+          label: "Type to select vehicle",
+          value: "",
+          isDisabled: true
+        },]
+      })
+    }
     if (orderReducer.orderItems !== this.props.orderReducer.orderItems) {
       if (
         this.props.orderReducer.orderItems.customerId ||
@@ -153,7 +183,7 @@ class CutomerVehicle extends Component {
         });
       }
     }
-    if (customerInfoReducer.customerAddInfo !== this.props.customerInfoReducer.customerAddInfo) {
+    if (customerInfoReducer.customerAddInfo !== this.props.customerInfoReducer.customerAddInfo && this.props.customerInfoReducer.customerAddInfo.firstName) {
       const customerId = this.props.customerInfoReducer.customerAddInfo
       this.setState({
         customerId,
@@ -165,8 +195,9 @@ class CutomerVehicle extends Component {
         }
       });
       this.props.customerVehicleData(customerId, this.state.vehicleId, true);
+      this.props.getCustomerDetailsRequest({ customerId: customerId._id });
     }
-    if (vehicleAddInfoReducer.vehicleAddInfo !== this.props.vehicleAddInfoReducer.vehicleAddInfo) {
+    if (vehicleAddInfoReducer.vehicleAddInfo !== this.props.vehicleAddInfoReducer.vehicleAddInfo && this.props.vehicleAddInfoReducer.vehicleAddInfo.make) {
       const vehicleId = this.props.vehicleAddInfoReducer.vehicleAddInfo
       this.setState({
         vehicleId,
@@ -178,27 +209,63 @@ class CutomerVehicle extends Component {
         }
       });
       this.props.customerVehicleData(this.state.customerId, vehicleId, true);
+      const { selectedCustomer } = this.state;
+      if (selectedCustomer && selectedCustomer.value && selectedCustomer.value !== "") {
+        this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value });
+      }
     }
     if (this.props.customerListReducer && this.props.customerListReducer.customers && this.props.customerListReducer.customers.length && this.props.customerListReducer.customers !== customerListReducer.customers) {
+      this.handleDefaultOptionCustomers();
       // let defaultOptionsVehicle = [...this.state.defaultOptionsVehicle];
-      if (this.props.customerListReducer.customers[0].vehicles && this.props.customerListReducer.customers[0].vehicles.length && this.state.defaultOptionsVehicle.length === 1) {
-        const options1 = [{ label: "Current Vehicles", value: "", isDisabled: true }]
-        let options = this.props.customerListReducer.customers[0].vehicles.map(vehicle => ({
-          label: `${vehicle.make} ${vehicle.modal}`,
-          value: vehicle._id,
-          data: vehicle
-        }));
-        options = options1.concat(options);
+      if (this.props.customerListReducer.customers[0].vehicles && this.props.customerListReducer.customers[0].vehicles.length) {
+        const { selectedCustomer } = this.state;
+        if (selectedCustomer && selectedCustomer.value && selectedCustomer.value !== "") {
+          const options1 = [{ label: "Current Vehicles", value: "", isDisabled: true }]
+          let options = this.props.customerListReducer.customers[0].vehicles.map(vehicle => ({
+            label: `${vehicle.make} ${vehicle.modal}`,
+            value: vehicle._id,
+            data: vehicle
+          }));
+          options = options1.concat(options);
+          this.setState({
+            defaultOptionsVehicle: options.concat({
+              label: "+ Add New Vehicle",
+              value: ""
+            }),
+            isCustomerSelected: true
+          });
+        }
+      } else {
         this.setState({
-          defaultOptionsVehicle: options.concat({
-            label: "+ Add New Vehicle",
-            value: ""
-          }),
-          isCustomerSelected:true
-        });
+          defaultOptionsVehicle: [
+            {
+              label: "Type to select vehicle",
+              value: "",
+              isDisabled: true
+            },
+          ]
+        })
       }
     }
   };
+  /**
+   * 
+   */
+  handleDefaultOptionCustomers = () => {
+    if (this.props.customerListReducer && this.props.customerListReducer.customers && this.props.customerListReducer.customers.length) {
+      let customerData = [{ label: "All Customers", value: "", isDisabled: true }]
+      this.props.customerListReducer.customers.map((data) => {
+        customerData.push({ label: `${data.firstName} ${data.lastName}`, value: data._id, data: data });
+        return true;
+      });
+      this.setState({
+        defaultOptionsCustomers: customerData.concat({
+          label: "+ Add New Customer",
+          value: ""
+        })
+      });
+    }
+  }
   /*
   /*  
   */
@@ -206,7 +273,7 @@ class CutomerVehicle extends Component {
     this.setState({
       customerInput: input.length > 1 ? input : null
     })
-    this.props.getCustomerData({ input, callback });
+    this.props.getCustomerData({ input, callback, limit: 50 });
   };
   /*
   /*  
@@ -215,7 +282,7 @@ class CutomerVehicle extends Component {
     this.setState({
       vehicleInput: input.length > 1 ? input : null
     })
-    this.props.getVehicleData({ input, callback });
+    this.props.getVehicleData({ input, callback, limit: 50 });
   };
   /*
   /*  
@@ -253,6 +320,8 @@ class CutomerVehicle extends Component {
         },
         () => {
           this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
+          this.props.getCustomerDetailsRequest({ limit: 50 });
+          this.props.getVehicleData({ limit: 50 });
         }
       );
     }
@@ -292,7 +361,8 @@ class CutomerVehicle extends Component {
         },
         () => {
           this.props.customerVehicleData(customerId, vehicleId, isCustomerVehicleUpdate);
-          this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value });
+          this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value, limit: 50 });
+          // this.props.getVehicleData();
         }
       );
     }
@@ -344,10 +414,25 @@ class CutomerVehicle extends Component {
    * 
    */
   onBlur = () => {
-    const { selectedCustomer, selectedVehicle } = this.state;
-    if (selectedCustomer.value !== "" && selectedVehicle.value === "") {
+    const { selectedCustomer } = this.state;
+    if (selectedCustomer.value !== "") {
       this.setState({ isCustomerSelected: true });
-      this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value });
+      this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value, limit: 50 });
+    } else {
+      this.props.getCustomerDetailsRequest({ limit: 50 });
+      this.props.getVehicleData({ limit: 50 });
+    }
+  }
+  /**
+   * 
+   */
+  onBlur1 = () => {
+    const { selectedVehicle, selectedCustomer } = this.state;
+    if (selectedVehicle && selectedVehicle.value === "" && selectedCustomer && selectedCustomer.value === "") {
+      this.props.getVehicleData({ limit: 50 });
+    } else {
+      this.setState({ isCustomerSelected: true });
+      this.props.getCustomerDetailsRequest({ customerId: selectedCustomer.value, limit: 50 });
     }
   }
   /*
@@ -360,9 +445,10 @@ class CutomerVehicle extends Component {
       customerId,
       vehicleId,
       defaultOptionsVehicle,
-      isCustomerSelected
+      // isCustomerSelected,
+      defaultOptionsCustomers
     } = this.state;
-    const { isError, customerFleetReducer } = this.props;
+    const { isError, customerFleetReducer, getVehicleMakeModalReq, getVehicleModalReq } = this.props;
     const { modelDetails } = this.props.modelInfoReducer;
     return (
       <>
@@ -386,6 +472,7 @@ class CutomerVehicle extends Component {
                 <Async
                   placeholder={"Type Customer name"}
                   loadOptions={this.loadCustomers}
+                  defaultOptions={selectedCustomer.value === "" ? defaultOptionsCustomers : null}
                   value={
                     selectedCustomer.value !== ""
                       ? selectedCustomer
@@ -396,7 +483,7 @@ class CutomerVehicle extends Component {
                     "is-invalid": isError && !customerId
                   })}
                   noOptionsMessage={() =>
-                    this.state.customerInput
+                    this.state.customerInput && selectedCustomer.value === ""
                       ? "No customer found"
                       : "Type customer name"
                   }
@@ -411,6 +498,7 @@ class CutomerVehicle extends Component {
                     );
                   }}
                   onBlur={this.onBlur}
+                  styles={colourStyles}
                 />
                 {isError && !customerId ? (
                   <FormFeedback>Customer data is required.</FormFeedback>
@@ -439,7 +527,7 @@ class CutomerVehicle extends Component {
                   loadOptions={this.loadVehicles}
                   // menuIsOpen = {true}
                   defaultOptions={
-                    isCustomerSelected ? defaultOptionsVehicle : null
+                    defaultOptionsVehicle ? defaultOptionsVehicle : null
                   }
                   className={classnames("w-100 form-select", {
                     "is-invalid": isError && !vehicleId
@@ -463,7 +551,7 @@ class CutomerVehicle extends Component {
                       }
                     );
                   }}
-                  // onBlur={this.onBlur1}
+                  onBlur={this.onBlur1}
                   styles={colourStyles}
                 />
                 {isError && !vehicleId ? (
@@ -499,6 +587,8 @@ class CutomerVehicle extends Component {
           vehicleModalOpen={modelDetails.vehicleModel}
           handleVehicleModal={this.handleVehicleModel}
           submitCreateVehicleFun={this.handleVehicleCreate}
+          getVehicleMakeModalReq={getVehicleMakeModalReq}
+          getVehicleModalReq={getVehicleModalReq}
         />
       </>
     );

@@ -97,7 +97,7 @@ const subscribe = async (req, res) => {
           });
           customerId = customer.id;
           console.log("Customer Created successfully!");
-          const planExpDate = moment(new Date(), "DD-MM-YYYY").add(30, 'days');
+          const planExpDate = new Date(moment(new Date(), "DD-MM-YYYY").add(30, 'days'));
           await UserModel.updateOne(
             {
               _id: userId

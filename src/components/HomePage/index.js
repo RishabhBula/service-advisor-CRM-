@@ -181,7 +181,7 @@ class HomePageComponent extends Component {
                                              </div>
                                              <p className="padding-left">
                                                 {data.description ? (
-                                                   <div
+                                                   <div className="d-inline-block"
                                                       dangerouslySetInnerHTML={{
                                                          __html: `${data.description}`
                                                       }}
@@ -237,7 +237,7 @@ class HomePageComponent extends Component {
                                                 </div>
                                                 <p className="padding-right">
                                                    {data.description ? (
-                                                      <div
+                                                      <div className="d-inline-block"
                                                          dangerouslySetInnerHTML={{
                                                             __html: `${data.description}`
                                                          }}
@@ -268,7 +268,7 @@ class HomePageComponent extends Component {
                                     <div className="row align-items-center p-3 text-right mob-row">
                                        <div className="col-sm-6">
                                           <h3>{data.title ? data.title : ""}</h3>
-                                          <p>{data.description ? <div
+                                          <p>{data.description ? <div className="d-inline-block"
                                              dangerouslySetInnerHTML={{
                                                 __html: `${data.description}`
                                              }} /> : ""}</p>
@@ -284,7 +284,7 @@ class HomePageComponent extends Component {
                                        </div>
                                        <div className="col-sm-6">
                                           <h3>{data.title ? data.title : ""}</h3>
-                                          <p>{data.description ? <div
+                                          <p>{data.description ? <div className="d-inline-block"
                                              dangerouslySetInnerHTML={{
                                                 __html: `${data.description}`
                                              }} /> : ""}</p>
@@ -314,7 +314,7 @@ class HomePageComponent extends Component {
                                           </React.Fragment>
                                        )
                                     })} </h2>
-                                    {data.description ? <div
+                                    {data.description ? <div className="d-inline-block"
                                        dangerouslySetInnerHTML={{
                                           __html: `${data.description}`
                                        }} /> : ""}

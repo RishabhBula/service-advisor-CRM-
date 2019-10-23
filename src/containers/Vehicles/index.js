@@ -20,7 +20,9 @@ import {
   deleteVehicle,
   updateVehicleStatus,
   importVehicle,
-  exportVehicles
+  exportVehicles,
+  getVehicleMakeModalReq,
+  getVehicleModalReq,
 } from "../../actions";
 import { isEqual } from "../../helpers/Object";
 import CrmImportExcel from "../../components/common/CrmImportExcel";
@@ -158,7 +160,7 @@ class Vehicles extends Component {
   };
   render() {
     const { modelDetails } = this.props.modelInfoReducer;
-    const { vehicleListReducer } = this.props;
+    const { vehicleListReducer,getVehicleMakeModalReq,getVehicleModalReq } = this.props;
     const { vehicleData } = this.state;
     return (
       <>
@@ -230,12 +232,16 @@ class Vehicles extends Component {
           vehicleModalOpen={modelDetails.vehicleModel}
           handleVehicleModal={this.toggleCreateVehicle}
           submitCreateVehicleFun={this.submitCreateVehicle}
+          getVehicleMakeModalReq={getVehicleMakeModalReq}
+          getVehicleModalReq={getVehicleModalReq}
         />
         <CrmEditVehicleModal
           vehicleEditModalOpen={modelDetails.vehicleEditModel}
           handleEditVehicleModal={this.toggleEditVehicle}
           submitUpdateVehicleFun={this.submitUpdateVehicle}
           vehicleData={vehicleData}
+          getVehicleMakeModalReq={getVehicleMakeModalReq}
+          getVehicleModalReq={getVehicleModalReq}
         />
       </>
     );
@@ -271,6 +277,12 @@ const mapDispatchToProps = dispatch => ({
   },
   exportVehicles: data => {
     dispatch(exportVehicles(data));
+  },
+  getVehicleMakeModalReq: data =>{
+    dispatch(getVehicleMakeModalReq(data));
+  },
+  getVehicleModalReq: data => {
+    dispatch(getVehicleModalReq(data));
   }
 });
 

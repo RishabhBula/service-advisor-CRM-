@@ -21,7 +21,7 @@ export class CustomerVehicles extends Component {
       ...data,
       isCustomerDetails: true,
       customerId: this.props.customerId,
-      isSingleCustomer:true
+      isSingleCustomer: true
     }
     this.props.vehicleAddAction(payload);
   };
@@ -36,7 +36,7 @@ export class CustomerVehicles extends Component {
   }
 
   render() {
-    const { customerVehicles, modelInfoReducer } = this.props
+    const { customerVehicles, modelInfoReducer, getVehicleMakeModalReq, getVehicleModalReq } = this.props
     const { modelDetails } = modelInfoReducer;
     return (
       <>
@@ -57,8 +57,8 @@ export class CustomerVehicles extends Component {
                         </div>
                       </div>
                       <div className={"overlay"} onClick={() => { this.handleVehicleDetails(vehicle._id) }}>
-                          <span>View Details <i className="fa fa-angle-right"></i></span>
-                        </div>
+                        <span>View Details <i className="fa fa-angle-right"></i></span>
+                      </div>
                     </CardBody>
                   </Card>
                 </Col>
@@ -86,6 +86,8 @@ export class CustomerVehicles extends Component {
           vehicleModalOpen={modelDetails.vehicleModel}
           handleVehicleModal={this.handleVehicleModal}
           submitCreateVehicleFun={this.submitCreateVehicle}
+          getVehicleMakeModalReq={getVehicleMakeModalReq}
+          getVehicleModalReq={getVehicleModalReq}
         />
       </>
     );

@@ -125,7 +125,7 @@ export class CrmTimeClockModal extends Component {
       const startDateTime1 = moment.utc(startDateTime).format("HH:mm")
       const endDateTime1 = moment.utc(endDateTime).format("HH:mm")
       const calDuration = calculateDurationFromSeconds(duration)
-      
+
       this.setState({
         date,
         timeIn: startDateTime1,
@@ -137,7 +137,8 @@ export class CrmTimeClockModal extends Component {
           value: technicianId ? technicianId._id : ""
         },
         notes,
-        isEditTimeClock: true
+        isEditTimeClock: true,
+        seconds: duration
       })
     }
   }
@@ -239,9 +240,9 @@ export class CrmTimeClockModal extends Component {
       })
       return
     } else {
-      const { orderReducer, timeLogEle, isTimeClockData, activity, orderId } = this.props
+      const { orderReducer, timeLogEle, isTimeClockData, activity, orderId } = this.props;
       const calDuration = parseFloat(seconds) / 3600
-      const totalValue = parseFloat(calDuration) * parseFloat(technicianData.rate)
+      const totalValue = parseFloat(calDuration) * parseFloat(technicianData.rate);
       const payload = {
         type: "Manual",
         technicianId: selectedTechnician.value,
@@ -388,8 +389,8 @@ export class CrmTimeClockModal extends Component {
         return true
       })
     }
-    
-    
+
+
     return (
       <>
         <Modal
@@ -513,7 +514,7 @@ export class CrmTimeClockModal extends Component {
                   <div className={"input-block"}>
                     {
                       (isTimeClockData && isEditTimeClock) || (!isTimeClockData && !isEditTimeClock) ?
-                      
+
                         <Input
                           value={
                             !isWholeTimeClock ?
@@ -522,7 +523,7 @@ export class CrmTimeClockModal extends Component {
                           }
                           disabled
                         /> :
-                        
+
                         <Select
                           options={activityOptions}
                           placeholder={activityOptions && !activityOptions.length ? "Select one technician" : "Select service for technician"}

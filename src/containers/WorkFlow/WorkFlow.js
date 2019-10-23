@@ -136,7 +136,6 @@ class WorkFlow extends Component {
    *
    */
   handleScroll = (e,top) => {
-    console.log(e,e.target.childNodes[1].scrollTop, "dfdsfds");
     const {scrollPos} = this.state
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");

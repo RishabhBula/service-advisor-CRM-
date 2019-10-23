@@ -91,7 +91,8 @@ class RegisterPage extends Component {
       [e.target.name]:
         e.target.name === "workspace"
           ? e.target.value.toLowerCase()
-          : e.target.value,
+          : e.target.name === "firstName" || e.target.name === "lastName" ? e.target.value.charAt(0).toUpperCase() +
+            e.target.value.substring(1) : e.target.value,
       errors: { ...this.state.errors, [e.target.name]: null }
     });
   };
@@ -168,7 +169,7 @@ class RegisterPage extends Component {
       let errors = { ...this.state.errors }
       errors.workspace = null;
       this.setState({
-        workspace: (this.state.companyName).replace(/\s/g, '').replace(/[^\w\s]/gi, '_').toLowerCase(),
+        workspace: (this.state.companyName).replace(/\s/g, '').replace(/[^\w\s]/gi, '-').toLowerCase(),
         errors
       })
     }
@@ -194,7 +195,7 @@ class RegisterPage extends Component {
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
               <Col className="text-center">
-                <Link to="/home">
+                <Link to="/home" target="_blank">
                   <h4 className="logo-title">
                     <img
                       src={ServiceAdvisorLogo}
@@ -324,7 +325,7 @@ class RegisterPage extends Component {
                             <PopoverBody>
                               <div className={"pb-2 technician-detail"}>
                                 <div className={"text-capitalize pb-1"}>
-                                  Password should be Alphanumericals 
+                                  Password should be Alphanumericals
                                   <small>
                                     (combination of alphabetical and numerical
                                     characters)
@@ -513,7 +514,7 @@ class RegisterPage extends Component {
                               block
                               onClick={this.handleSubmit}
                             >
-                              Signup
+                              Sign Up
                             </Button>
                           </Col>
                         </Row>
@@ -535,10 +536,10 @@ class RegisterPage extends Component {
                         </Row>
                       </Form>
                     ) : (
-                      <ResendInvitation
-                        resendConfimationLink={this.resendConfimationLink}
-                      />
-                    )}
+                        <ResendInvitation
+                          resendConfimationLink={this.resendConfimationLink}
+                        />
+                      )}
                   </CardBody>
                 </Card>
               </CardGroup>

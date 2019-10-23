@@ -33,4 +33,7 @@ router.post("/sendInspectionDetails", token.authorisedUser, msgTempController.se
 
 /* generate PDF Document */
 router.post("/generatePdfDoc", token.authorisedUser, inspectionController.generatePdfDoc)
+
+/* inspection Image Upload on s3 */
+router.post("/imgUpload", token.authorisedUser, inspectionController.imageUpload)
 module.exports = router;

@@ -157,7 +157,8 @@ class GenralSettings extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value,
+      [name]: name === "firstName" || name === "lastName" ? value.charAt(0).toUpperCase() +
+      value.substring(1) : value,
       errors: {
         ...this.state.errors,
         [name]: null
@@ -312,12 +313,12 @@ class GenralSettings extends Component {
       }
 
       const payload = {
-        firstName,
-        lastName,
+        firstName:firstName.trim(),
+        lastName:lastName.trim(),
         phone,
         address,
         currency,
-        companyName,
+        companyName:companyName.trim(),
         companyNumber,
         vatNumber,
         website,

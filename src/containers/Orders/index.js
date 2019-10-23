@@ -63,6 +63,8 @@ import {
   addInspcetionToReducer,
   submitServiceDataSuccess,
   updateOrderServiceData,
+  getVehicleMakeModalReq,
+  getVehicleModalReq
 } from "../../actions";
 import Services from "../../components/Orders/Services";
 import Inspection from "../../components/Orders/Inspection";
@@ -172,9 +174,9 @@ class Order extends Component {
     // }
     if (
       orderReducer.orderItems && (orderReducer.orderItems !== this.props.orderReducer.orderItems ||
-      orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
-      messageReducer.messageData.isSuccess !==
-      this.props.messageReducer.messageData.isSuccess)
+        orderReducer.isOrderLoading !== this.props.orderReducer.isOrderLoading ||
+        messageReducer.messageData.isSuccess !==
+        this.props.messageReducer.messageData.isSuccess)
     ) {
       const {
         orderName,
@@ -349,7 +351,7 @@ class Order extends Component {
     pdfWindow.document.body.style.margin = "0px";
     pdfWindow.document.body.innerHTML =
       `<html><head><title>Order Invoice</title></head><body><embed width='100%' height='100%' name='plugin' data='pdf' type='application/pdf' src=${filename}></embed></body></html>`;
-      
+
   };
 
   render() {
@@ -431,7 +433,10 @@ class Order extends Component {
       pdfReducer,
       submitServiceDataSuccess,
       updateOrderServiceData,
-      customerListReducer
+      customerListReducer,
+      getVehicleMakeModalReq,
+      getVehicleModalReq,
+      vehicleListReducer,
     } = this.props;
     // const { orderIDurl, customerIDurl, companyIDurl } = orderReducer
     return (
@@ -489,6 +494,9 @@ class Order extends Component {
                       vehicleAddInfoReducer={vehicleAddInfoReducer}
                       getCustomerDetailsRequest={getCustomerData}
                       customerListReducer={customerListReducer}
+                      getVehicleMakeModalReq={getVehicleMakeModalReq}
+                      getVehicleModalReq={getVehicleModalReq}
+                      vehicleListReducer={vehicleListReducer}
                     />
                   </div>
                   <div className={"position-relative"}>
@@ -746,7 +754,8 @@ const mapStateToProps = state => ({
   customerInfoReducer: state.customerInfoReducer,
   vehicleAddInfoReducer: state.vehicleAddInfoReducer,
   appointmentReducer: state.appointmentReducer,
-  customerListReducer: state.customerListReducer
+  customerListReducer: state.customerListReducer,
+  vehicleListReducer: state.vehicleListReducer
 });
 const mapDispatchToProps = dispatch => ({
   getOrderId: () => {
@@ -894,6 +903,12 @@ const mapDispatchToProps = dispatch => ({
   addInspcetionToReducer: data => dispatch(addInspcetionToReducer(data)),
   submitServiceDataSuccess: data => dispatch(submitServiceDataSuccess(data)),
   updateOrderServiceData: data => dispatch(updateOrderServiceData(data)),
+  getVehicleMakeModalReq: data => {
+    dispatch(getVehicleMakeModalReq(data));
+  },
+  getVehicleModalReq: data => {
+    dispatch(getVehicleModalReq(data));
+  }
 });
 export default connect(
   mapStateToProps,

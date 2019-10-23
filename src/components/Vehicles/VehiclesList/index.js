@@ -23,6 +23,7 @@ import NoDataFound from "../../common/NoFound";
 import { logger } from "../../../helpers/Logger";
 import VehicleIcons from "../../../containers/Icons/Vehicles";
 import { notExist } from "../../../config/Constants";
+// import { Data} from "../../../config/Constants";
 
 class VehiclesList extends Component {
   constructor(props) {
@@ -55,7 +56,15 @@ class VehiclesList extends Component {
       search: search || "",
       filterApplied
     });
-
+    // let abc = [];
+    // let data = Data.map((data)=>{
+    //   let obj = {}
+    //   obj["make"]=data.make;
+    //   obj["model"] =data.model;
+    //   abc.push(obj);
+    //   return true;
+    // })
+    // console.log("abc",abc);
   }
   windowScroll = () => {
     let featureDiv = document.getElementById(`vehicle10`);
@@ -279,7 +288,7 @@ class VehiclesList extends Component {
                       className="form-control"
                       value={search}
                       aria-describedby="searchUser"
-                      placeholder="Search by make, model"
+                      placeholder="Search by make, model, license plate and vin number"
                     />
                   </InputGroup>
                 </FormGroup>

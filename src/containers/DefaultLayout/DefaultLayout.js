@@ -417,7 +417,7 @@ class DefaultLayout extends Component {
                   width={25}
                   className={"mr-1"}
                 />
-                <b>Service Adviser</b>
+                <b>Service Advisor</b>
               </a>
               | All Rights Reserved.
             </div>
