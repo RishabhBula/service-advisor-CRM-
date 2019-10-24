@@ -95,42 +95,42 @@ class HomeHeader extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <NavLink className="nav-link" to={"/home"}>
-                  <span>Home</span>
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <span
-                  className="nav-link cursor"
-                >
-                  <span>Features</span>
-                </span>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/pricing"}>
-                  <span>Pricing</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <span className="nav-link">
-                  <span>About Us</span>
-                </span>
-              </li>
-              {!isLogin ? (
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link"
-                    to={
-                      "/login"
-                    } /*onClick={() => this.onGoPage('/dev/login')}*/
-                  >
-                    <span>Sign In</span>
-                  </NavLink>
-                </li>
-              ) : null}
-            </ul>
+//             <ul className="navbar-nav ml-auto">
+//               <li className="nav-item">
+//                 <NavLink className="nav-link" to={"/home"}>
+//                   <span>Home</span>
+//                 </NavLink>
+//               </li>
+//               <li className="nav-item">
+//                 <span
+//                   className="nav-link cursor"
+//                 >
+//                   <span>Features</span>
+//                 </span>
+//               </li>
+//               <li className="nav-item">
+//                 <Link className="nav-link" to={"/pricing"}>
+//                   <span>Pricing</span>
+//                 </Link>
+//               </li>
+//               <li className="nav-item">
+//                 <span className="nav-link">
+//                   <span>About Us</span>
+//                 </span>
+//               </li>
+//               {!isLogin ? (
+//                 <li className="nav-item">
+//                   <NavLink
+//                     className="nav-link"
+//                     to={
+//                       "/login"
+//                     } /*onClick={() => this.onGoPage('/dev/login')}*/
+//                   >
+//                     <span>Sign In</span>
+//                   </NavLink>
+//                 </li>
+//               ) : null}
+//             </ul>
             {!isLogin ? (
               <Link
                 to={"/register"}
