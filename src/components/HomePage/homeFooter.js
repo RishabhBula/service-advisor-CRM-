@@ -89,25 +89,25 @@ class HomeFooter extends Component {
                 </Link>
               </div>
               <div className="col-sm-6">
-                <ul>
-//                   <ul className="footer-nav-listing text-center">
-//                     <li>
-//                       <Link to={"/home"} onClick={this.scrollToTop}>Home</Link>
-//                     </li>
-//                     <li>
-//                       <Link to={"/home"} >Features</Link>
-//                     </li>
-//                     <li>
-//                       <Link to={"/pricing"} onClick={this.scrollToTop}>Pricing</Link>
-//                     </li>
-//                     <li>
-//                       <Link to={"/home"} >About Us</Link>
-//                     </li>
-//                     <li>
-//                       <Link to={"/faq"} onClick={this.scrollToTop}>FAQ's</Link>
-//                     </li>
-//                   </ul>
-                </ul>
+                {/* <ul>
+                  <ul className="footer-nav-listing text-center">
+                    <li>
+                      <Link to={"/home"} onClick={this.scrollToTop}>Home</Link>
+                    </li>
+                    <li>
+                      <Link to={"/home"} >Features</Link>
+                    </li>
+                    <li>
+                      <Link to={"/pricing"} onClick={this.scrollToTop}>Pricing</Link>
+                    </li>
+                    <li>
+                      <Link to={"/home"} >About Us</Link>
+                    </li>
+                    <li>
+                      <Link to={"/faq"} onClick={this.scrollToTop}>FAQ's</Link>
+                    </li>
+                  </ul>
+                </ul> */}
               </div>
               <div className="col-sm-3">
                 <ul className="social-icon-listing text-center">
