@@ -3,6 +3,11 @@ const router = express.Router();
 const inspectionController = require("../../controllers/frontend/inspectionController");
 const msgTempController = require("../../controllers/frontend/messageTempController");
 const token = require("../../common/token");
+var multer = require('multer')
+const path = require("path");
+const { storageFile } = require("../../common/images");
+
+const upload = multer({ storage: storageFile });
 
 /* ----------Add new inspection------------ */
 router.post("/addInspection", token.authorisedUser, inspectionController.creteNewInspection);
@@ -35,5 +40,5 @@ router.post("/sendInspectionDetails", token.authorisedUser, msgTempController.se
 router.post("/generatePdfDoc", token.authorisedUser, inspectionController.generatePdfDoc)
 
 /* inspection Image Upload on s3 */
-router.post("/imgUpload", token.authorisedUser, inspectionController.imageUpload)
+router.post("/imgUpload", token.authorisedUser, upload.array('file', 12), inspectionController.imageUpload)
 module.exports = router;
