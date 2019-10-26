@@ -14,6 +14,7 @@ import {
   Input
 } from "reactstrap";
 import Select from "react-select";
+import Async from "react-select/lib/Async";
 import {
   VehicleValidations,
   VehicleValidationMessage
@@ -22,6 +23,7 @@ import Validator from "js-object-validation";
 import { ColorOptions, groupedOptions } from "../../../config/Color";
 import { Transmission, Drivetrain } from "../../../config/Constants";
 import MaskedInput from "react-maskedinput";
+import { VehiclesData } from "../../../config/Constants";
 
 class CustomOption extends Component {
   render() {
@@ -74,8 +76,18 @@ export class CrmVehicleModal extends Component {
       colorOptions: ColorOptions,
       selectedOption: null,
       year: "",
-      make: "",
-      modal: "",
+      make: {
+        label: "Honda",
+        value: ""
+      },
+      makeInput: "",
+      defaultOptionsMake: [],
+      modal: {
+        label: "Accord Or Q3 Or WRV...",
+        value: ""
+      },
+      modalInput: "",
+      defaultOptionsModal: [],
       typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
@@ -103,10 +115,12 @@ export class CrmVehicleModal extends Component {
 
   createVehicleFun = async () => {
     let yeardata = this.state.year === "" ? "" : this.state.year;
+    const make = this.state.make;
+    const modal = this.state.modal;
     let data = {
       year: yeardata,
-      make: this.state.make,
-      modal: this.state.modal,
+      make: make.value,
+      modal: modal.value,
       type: this.state.typeSelected ? this.state.typeSelected : { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       color: this.state.colorSelected,
       miles: this.state.miles,
@@ -123,8 +137,8 @@ export class CrmVehicleModal extends Component {
 
     let validationData = {
       year: this.state.year.trim(),
-      make: this.state.make.trim(),
-      modal: this.state.modal.trim(),
+      make: make.value.trim(),
+      modal: modal.value.trim(),
       licensePlate: this.state.licensePlate.trim(),
     };
 
@@ -228,8 +242,24 @@ export class CrmVehicleModal extends Component {
       colorOptions: ColorOptions,
       selectedOption: null,
       year: "",
-      make: "",
-      modal: "",
+      make: {
+        label: "Honda",
+        value: ""
+      },
+      makeInput: "",
+      defaultOptionsMake: [{
+        label: "Type vehicle make name",
+        value: ""
+      }],
+      modal: {
+        label: "Accord Or Q3 Or WRV...",
+        value: ""
+      },
+      modalInput: "",
+      defaultOptionsModal: [{
+        label: "Type vehicle model name",
+        value: ""
+      }],
       typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
@@ -287,7 +317,125 @@ export class CrmVehicleModal extends Component {
       return false;
     }
   };
-
+  /**
+   * 
+   */
+  handleMake = (selectedMake) => {
+    this.setState({
+      make: {
+        label: selectedMake && selectedMake.label ? selectedMake.label : "Honda",
+        value: selectedMake && selectedMake.value ? selectedMake.value : ""
+      },
+      errors: {
+        ...this.state.errors,
+        make: null
+      }
+    })
+    if (!selectedMake) {
+      this.setState({
+        makeInput: null
+      })
+    }
+  }
+  /**
+   * 
+   */
+  handleModal = (selectedModal) => {
+    this.setState({
+      modal: {
+        label: selectedModal && selectedModal.label ? selectedModal.label : "Accord Or Q3 Or WRV...",
+        value: selectedModal && selectedModal.value ? selectedModal.value : ""
+      },
+      errors: {
+        ...this.state.errors,
+        modal: null
+      }
+    })
+    if (!selectedModal) {
+      this.setState({
+        modalInput: null
+      })
+    }
+  }
+  /**
+   * 
+   */
+  onBlurMake = () => {
+    let make = this.state.make;
+    if (make.value && make.value !== "") {
+      let vehicleModal = [];
+      const regex = RegExp(`^${make.value}$`, 'i');
+      let vehicle = VehiclesData.filter((item) => {
+        return item.make.match(regex)
+      });
+      var myData = vehicle;
+      vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.map((data) => {
+        vehicleModal.push({
+          label: data.model,
+          value: data.model
+        })
+        return true
+      })
+      this.setState({
+        defaultOptionsModal: vehicleModal
+      })
+    }
+    this.setState({
+      makeInput: null
+    })
+  }
+  /**
+   * 
+   */
+  onBlurModal = () => {
+    let modal = this.state.modal;
+    if (modal.value && modal.value !== "") {
+      let vehicleMake = [];
+      const regex = RegExp(`^${modal.value}$`, 'i');
+      let vehicle = VehiclesData.filter((item) => {
+        return item.model.match(regex)
+      });
+      var myData = vehicle;
+      vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.map((data) => {
+        vehicleMake.push({
+          label: data.make,
+          value: data.make
+        })
+        return true
+      })
+      this.setState({
+        defaultOptionsMake: vehicleMake
+      })
+    }
+    this.setState({
+      modalInput: null
+    })
+  }
+  /**
+   * 
+   */
+  handleVehicleMake = (input, callback) => {
+    const modal = this.state.modal;
+    this.setState({
+      makeInput: input.length > 1 ? input : null
+    })
+    this.props.getVehicleMakeModalReq({ input: input, callback: callback, isVehicleMake: true, modal: modal.value });
+  }
+  /**
+   * 
+   */
+  handleVehicleModal = (input, callback) => {
+    const make = this.state.make;
+    this.setState({
+      modalInput: input.length > 1 ? input : null
+    })
+    this.props.getVehicleModalReq({ input: input, callback: callback, make: make.value });
+  }
+  /**
+   * 
+   */
   render() {
     const {
       year,
@@ -301,7 +449,11 @@ export class CrmVehicleModal extends Component {
       drivetrain,
       notes,
       prodMonthError,
-      prodYearError
+      prodYearError,
+      make,
+      modal,
+      defaultOptionsMake,
+      defaultOptionsModal
     } = this.state;
     const { vehicleModalOpen, handleVehicleModal, isCustVehiclemodal } = this.props;
     const {
@@ -346,11 +498,11 @@ export class CrmVehicleModal extends Component {
                       onKeyPress={this.yearValidation} */
                       onChange={this._onInputChange}
                       value={year}
-                      invalid={errors.year}
+                      invalid={errors.year ? true : false}
                     />
                     <FormFeedback>
                       {(!(year.trim()) && errors.year) ||
-                      errors.hasOwnProperty("year")
+                        errors.hasOwnProperty("year")
                         ? errors.year
                         : null}
                     </FormFeedback>
@@ -369,19 +521,25 @@ export class CrmVehicleModal extends Component {
                     Make <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
-                    <Input
-                      type="text"
+                    <Async
                       placeholder="Honda"
-                      name="make"
-                      onChange={this._onInputChange}
-                      maxLength="25"
-                      invalid={errors.make && !(this.state.make.trim())}
+                      value={make}
+                      loadOptions={this.handleVehicleMake}
+                      defaultOptions={modal.value ? defaultOptionsMake : null}
+                      onChange={(e) => this.handleMake(e)}
+                      noOptionsMessage={() =>
+                        this.state.makeInput
+                          ? "No vehicle make found"
+                          : "Type vehicle make name"
+                      }
+                      isClearable={make.value ? true : false}
+                      onBlur={this.onBlurMake}
+                      className={classnames("w-100 form-select", {
+                        "is-invalid": errors.make
+                      })}
                     />
-                    {/* {!make && errors.make ? (
-                      <p className="text-danger">{errors.make}</p>
-                    ) : null} */}
                     <FormFeedback>
-                      {errors.make && !(this.state.make.trim()) ? errors.make : null}
+                      {errors.make ? errors.make : null}
                     </FormFeedback>
                   </div>
                 </FormGroup>
@@ -397,21 +555,28 @@ export class CrmVehicleModal extends Component {
                     Model <span className={"asteric"}>*</span>
                   </Label>
                   <div className={"input-block"}>
-                    <Input
-                      type="text"
-                      className="customer-modal-text-style"
+                    <Async
+                      className={classnames("w-100 form-select", {
+                        "is-invalid": errors.modal
+                      })}
                       id="type"
+                      value={modal}
                       placeholder="Accord Or Q3 Or WRV..."
-                      name="modal"
-                      onChange={this._onInputChange}
-                      maxLength="25"
-                      invalid={errors.modal && !(this.state.modal.trim())}
+                      loadOptions={this.handleVehicleModal}
+                      defaultOptions={make.value ? defaultOptionsModal : null}
+                      onChange={(e) => this.handleModal(e)}
+                      noOptionsMessage={() =>
+                        this.state.modalInput
+                          ? "No vehicle model found"
+                          : "Type vehicle model name"
+                      }
+                      isClearable={modal.value ? true : false}
+                      onBlur={this.onBlurModal}
+                      invalid={errors.modal}
                     />
-                    {/* {!modal && errors.modal ? (
-                      <p className="text-danger">{errors.modal}</p>
-                    ) : null} */}
+
                     <FormFeedback>
-                      {errors.modal && !(this.state.modal.trim())
+                      {errors.modal
                         ? errors.modal
                         : null}
                     </FormFeedback>
@@ -550,7 +715,7 @@ export class CrmVehicleModal extends Component {
                     placeholder="19UAYF3158T0000"
                     name="vin"
                     onChange={this._onInputChange}
-                    maxLength="50"
+                    maxLength={17}
                   />
                 </FormGroup>
               </Col>
@@ -579,8 +744,8 @@ export class CrmVehicleModal extends Component {
                   </Col>
                 </>
               ) : (
-                ""
-              )}
+                  ""
+                )}
             </Row>
             {/* <Row className="justify-content-center">
               <Col md="12 text-center">
@@ -671,16 +836,16 @@ export class CrmVehicleModal extends Component {
                       <option value={""}>Select</option>
                       {Transmission.length
                         ? Transmission.map((item, index) => {
-                            return (
-                              <option
-                                selected={item.key === transmissionSelected}
-                                value={item.key}
-                                key={index}
-                              >
-                                {item.text}
-                              </option>
-                            );
-                          })
+                          return (
+                            <option
+                              selected={item.key === transmissionSelected}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
                         : null}
                     </Input>
                     {!transmission && errors.transmission ? (
@@ -708,16 +873,16 @@ export class CrmVehicleModal extends Component {
                       <option value={""}>Select</option>
                       {Drivetrain.length
                         ? Drivetrain.map((item, index) => {
-                            return (
-                              <option
-                                selected={item.key === drivetrainSelected}
-                                value={item.key}
-                                key={index}
-                              >
-                                {item.text}
-                              </option>
-                            );
-                          })
+                          return (
+                            <option
+                              selected={item.key === drivetrainSelected}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
                         : null}
                     </Input>
                     {!drivetrain && errors.drivetrain ? (
@@ -762,8 +927,8 @@ export class CrmVehicleModal extends Component {
                     Show Less
                   </span>
                 ) : (
-                  ""
-                )}
+                    ""
+                  )}
               </Col>
             </Row>
             {/* </>

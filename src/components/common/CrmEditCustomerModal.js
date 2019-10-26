@@ -297,7 +297,8 @@ export class CrmEditCustomerModal extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value,
+      [name]: name === "firstName" || name === "lastName" ? value.charAt(0).toUpperCase() +
+        value.substring(1) : value,
       errors: {
         ...this.state.errors,
         [name]: null
@@ -631,7 +632,7 @@ export class CrmEditCustomerModal extends Component {
                         onChange={this.handleInputChange}
                         value={firstName}
                         maxLength="30"
-                        invalid={!(firstName.trim()) && errors.firstName ? true :false}
+                        invalid={!(firstName.trim()) && errors.firstName ? true : false}
                       />
                       <FormFeedback>
                         {!(firstName.trim()) && errors.firstName

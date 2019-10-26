@@ -129,7 +129,7 @@ const getCustomersLogic = createLogic({
           action.payload && action.payload.status
             ? action.payload.status
             : null,
-        limit: AppConfig.ITEMS_PER_PAGE,
+        limit: action.payload && action.payload.limit ? action.payload.limit : AppConfig.ITEMS_PER_PAGE,
         customerId:
           action.payload && action.payload.customerId
             ? action.payload.customerId
@@ -149,10 +149,7 @@ const getCustomersLogic = createLogic({
       return;
     } else {
       var defaultOptions = [
-        {
-          label: "+ Add New Customer",
-          value: "",
-        }
+        { label: "All Customers", value: "", isDisabled: true }
       ];
       const options = result.data.data.map(customer => ({
         label: `${customer.firstName} ${customer.lastName}`,
@@ -161,7 +158,13 @@ const getCustomersLogic = createLogic({
       }));
       logger(
         action.payload && action.payload.callback
-          ? action.payload.callback(defaultOptions.concat(options))
+          ? options && options.length ? action.payload.callback(defaultOptions.concat(options).concat({
+            label: "+ Add New Customer",
+            value: "",
+          })) : action.payload.callback(options.concat({
+            label: "+ Add New Customer",
+            value: "",
+          }))
           : null
       );
       dispatch(hideLoader());

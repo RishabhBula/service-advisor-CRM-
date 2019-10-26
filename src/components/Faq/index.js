@@ -34,7 +34,7 @@ class FaqPageComponent extends Component {
                <div >
                   <div className="section">
                      <div className="container" style={{ minHeight: "454px" }}>
-                        <h2 className="pb-3">FAQ</h2>
+                        <h2 className="pb-3 text-center">FAQ's</h2>
                         {!isLoading ? (
                            faqPageDetails && faqPageDetails.length ? (
                               faqPageDetails.map((faq, index) => {

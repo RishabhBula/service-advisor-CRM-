@@ -4,6 +4,7 @@ import { CrmSubPaymentModalModel } from "../../components/common/CrmSubPaymentMo
 import "../../scss/subscription.scss";
 import * as classnames from "classnames";
 import Dollor from "../common/Dollor";
+import { ConfirmBox } from "../../helpers/SweetAlert";
 // import { redirectTo } from "../../actions";
 // import { ConfirmBox } from "../../helpers/SweetAlert";
 export class CrmSubscriptionModel extends Component {
@@ -54,6 +55,12 @@ export class CrmSubscriptionModel extends Component {
           console.log("handleRedirect2");
          }
          handleRedirect = async () => {
+          const { value } = await ConfirmBox({
+            text: "Please Sign In to purchase Subscription Plan."
+         });
+         if (!value) {
+            return;
+         }
           //  await ConfirmBox({
           //    text: "",
           //    title: "To continue, log in to Service Advisor.",

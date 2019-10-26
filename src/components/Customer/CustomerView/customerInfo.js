@@ -283,6 +283,7 @@ export class CustomerInfo extends Component {
                                     placeholder="(555) 055-0555 ext 1234"
                                     maxLength={"10"}
                                     value={item.value}
+                                    disabled
                                   />
                                 </div>
                               )}

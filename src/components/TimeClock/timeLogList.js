@@ -316,18 +316,18 @@ class TimeLogList extends Component {
                         {`${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}`}
                       </Link>
                       : "-"}</td>
-                    <td>{moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm")}</td>
-                    <td>{moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm")}</td>
+                    <td>{moment(timeLog.startDateTime).isValid() ? moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm") : moment().format("MM/DD/YYYY  HH:mm")}</td>
+                    <td>{moment(timeLog.endDateTime).isValid() ? moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm") : moment().format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
-                    <td>{timeLog.activity !== "General" && timeLog.orderId && timeLog.orderId.length && timeLog.orderId[0]._id ?
+                    <td>{timeLog.activity && timeLog.activity !== "General" && timeLog.orderId && timeLog.orderId.length && timeLog.orderId[0]._id ?
                       <Link to={AppRoutes.WORKFLOW_ORDER.url.replace(":id", timeLog.orderId[0]._id)} target="_blank"
                         className={
                           "cursor_pointer text-primary text-capitalize"
                         }>
                         {timeLog.activity}
-                      </Link> : timeLog.activity}</td>
-                    <td><Dollor value={`${(timeLog.technicianId.rate).toFixed(2)}`} /></td>
-                    <td><Dollor value={!isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
+                      </Link> : timeLog.activity ? timeLog.activity : "General"}</td>
+                    <td><Dollor value={timeLog.technicianId && timeLog.technicianId.rate ? `${(timeLog.technicianId.rate).toFixed(2)}` : 0.00} /></td>
+                    <td><Dollor value={timeLog.total && !isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
                     <td className={"text-center"}>
                       {
                         timeLog.type !== "timeclock" ?

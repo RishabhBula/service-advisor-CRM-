@@ -153,6 +153,16 @@ const getAllVehicleList = async (req, res) => {
             modal: {
               $regex: new RegExp(searchValue.trim(), "i")
             }
+          },
+          {
+            licensePlate: {
+              $regex: new RegExp(searchValue.trim(), "i")
+            }
+          },
+          {
+            vin: {
+              $regex: new RegExp(`${searchValue.trim()}`, "i")
+            }
           }
         ]
       });

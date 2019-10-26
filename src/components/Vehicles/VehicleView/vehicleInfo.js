@@ -86,14 +86,14 @@ export class VehicleInfo extends Component {
       licensePlate,
       unit,
       vin,
-      subModal,
+      //subModal,
       engineSize,
       productionDate,
       notes,
       transmissionSelected,
       drivetrainSelected
     } = this.state;
-    const { vehicleData, modelInfoReducer } = this.props
+    const { vehicleData, modelInfoReducer, getVehicleMakeModalReq, getVehicleModalReq } = this.props
     const { modelDetails } = modelInfoReducer
     return (
       <div className={"custom-form-modal p-4"}>
@@ -241,12 +241,12 @@ export class VehicleInfo extends Component {
                 name="vin"
                 disabled
                 value={vin}
-                maxLength={100}
+                maxLength={17}
               />
             </FormGroup>
           </Col>
           <Col md="6">
-            <FormGroup>
+            {/* <FormGroup>
               <Label htmlFor="name" className="customer-modal-text-style">
                 Sub Model
               </Label>
@@ -257,6 +257,21 @@ export class VehicleInfo extends Component {
                   name="subModal"
                   disabled
                   value={subModal}
+                />
+              </div>
+            </FormGroup> */}
+            <FormGroup>
+              <Label htmlFor="name" className="customer-modal-text-style">
+                Production Date
+              </Label>
+              <div className={"input-block"}>
+                <MaskedInput
+                  name="productionDate"
+                  mask="11/1111"
+                  disabled
+                  placeholder="MM/YYYY"
+                  value={productionDate}
+                  className={"form-control"}
                 />
               </div>
             </FormGroup>
@@ -281,20 +296,17 @@ export class VehicleInfo extends Component {
             </FormGroup>
           </Col>
           <Col md="6">
-            <FormGroup>
+          <FormGroup>
               <Label htmlFor="name" className="customer-modal-text-style">
-                Production Date
+                Drivetrain
               </Label>
-              <div className={"input-block"}>
-                <MaskedInput
-                  name="productionDate"
-                  mask="11/1111"
-                  disabled
-                  placeholder="MM/YYYY"
-                  value={productionDate}
-                  className={"form-control"}
-                />
-              </div>
+              <Input
+                type="text"
+                disabled
+                name="drivetrainSelected"
+                value={drivetrainSelected}
+                id="matrixId"
+              />
             </FormGroup>
           </Col>
         </Row>
@@ -314,18 +326,7 @@ export class VehicleInfo extends Component {
             </FormGroup>
           </Col>
           <Col md="6">
-            <FormGroup>
-              <Label htmlFor="name" className="customer-modal-text-style">
-                Drivetrain
-              </Label>
-              <Input
-                type="text"
-                disabled
-                name="drivetrainSelected"
-                value={drivetrainSelected}
-                id="matrixId"
-              />
-            </FormGroup>
+
           </Col>
         </Row>
         <Row className="justify-content-center">
@@ -361,6 +362,8 @@ export class VehicleInfo extends Component {
             handleEditVehicleModal={this.toggleEditVehicle}
             submitUpdateVehicleFun={this.submitUpdateVehicle}
             vehicleData={vehicleData}
+            getVehicleMakeModalReq={getVehicleMakeModalReq}
+            getVehicleModalReq={getVehicleModalReq}
           />
         ) : null}
       </div>

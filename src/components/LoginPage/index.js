@@ -78,7 +78,7 @@ class LoginPage extends Component {
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
               <Col className="text-center">
-                <Link to="/home">
+                <Link to="/home" target="_blank">
                   <h4 className="logo-title">
                     <img
                       src={ServiceAdvisorLogo}
@@ -88,12 +88,12 @@ class LoginPage extends Component {
                   </h4>
                 </Link>
               </Col>
-             
+
               <CardGroup>
                 <Card className="p-4 pl-4 pr-4">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     <Form onSubmit={this.login}>
-                      <h1 className="auth-title text-center">Login</h1>
+                      <h1 className="auth-title text-center">Sign In</h1>
                       <p className="text-muted text-center text-info-line">
                         To Your Workspace
                     </p>
@@ -148,7 +148,7 @@ class LoginPage extends Component {
                       <Row className={"m-0"}>
                         <Col xs="8" className={"mt-0 mb-0 ml-auto mr-auto"}>
                           <Button className="px-4 btn-theme" block>
-                            Login
+                            Sign In
                         </Button>
                         </Col>
                         <Col xs="12" className="text-center">
@@ -183,7 +183,7 @@ class LoginPage extends Component {
             </Col>
           </Row>
         </div>
-        
+
       </>
     );
   }

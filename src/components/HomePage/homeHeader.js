@@ -5,8 +5,8 @@ import logoImg from "../../assets/home-img/logo.png"
 import { AppHeaderDropdown } from "@coreui/react";
 import Avtar from "../common/Avtar"
 import {
-   DropdownMenu,
-   DropdownToggle,
+  DropdownMenu,
+  DropdownToggle,
 } from "reactstrap";
 import "../../App.scss";
 class HomeHeader extends Component {
@@ -63,14 +63,14 @@ class HomeHeader extends Component {
   };
 
   render() {
-    const {dropdownOpen} = this.state
+    const { dropdownOpen } = this.state
     const { profileInfoReducer } = this.props;
     const { backgroundClass, mobClass, isLogin } = this.state;
     const profileName =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo.firstName +
-          " " +
-          profileInfoReducer.profileInfo.lastName
+        " " +
+        profileInfoReducer.profileInfo.lastName
         : "Loading...";
     const profileEmail =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -94,43 +94,43 @@ class HomeHeader extends Component {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <NavLink className="nav-link" to={"/home"}>
-                  <span>Home</span>
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <span
-                  className="nav-link cursor"
-                >
-                  <span>Features</span>
-                </span>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/pricing"}>
-                  <span>Pricing</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <span className="nav-link">
-                  <span>About Us</span>
-                </span>
-              </li>
-              {!isLogin ? (
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link"
-                    to={
-                      "/login"
-                    } /*onClick={() => this.onGoPage('/dev/login')}*/
-                  >
-                    <span>Sign In</span>
-                  </NavLink>
-                </li>
-              ) : null}
-            </ul>
+          <div className="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+            {/* <ul className="navbar-nav ml-auto">
+               <li className="nav-item">
+                 <NavLink className="nav-link" to={"/home"}>
+                   <span>Home</span>
+                 </NavLink>
+               </li>
+               <li className="nav-item">
+                 <span
+                   className="nav-link cursor"
+                 >
+                   <span>Features</span>
+                 </span>
+               </li>
+               <li className="nav-item">
+                 <Link className="nav-link" to={"/pricing"}>
+                   <span>Pricing</span>
+                 </Link>
+               </li>
+               <li className="nav-item">
+                 <span className="nav-link">
+                   <span>About Us</span>
+                 </span>
+               </li>
+               {!isLogin ? (
+                 <li className="nav-item">
+                   <NavLink
+                     className="nav-link"
+                     to={
+                       "/login"
+                     }
+                   >
+                     <span>Sign In</span>
+                   </NavLink>
+                 </li>
+               ) : null}
+             </ul> */}
             {!isLogin ? (
               <Link
                 to={"/register"}
@@ -139,65 +139,65 @@ class HomeHeader extends Component {
                 Start Free Trial
               </Link>
             ) : (
-              <ul className="app-header position-relative home-header">
-                <AppHeaderDropdown
-                  direction="down"
-                  className="user-Info-dropdown"
-                  isOpen={dropdownOpen}
-                  onMouseEnter={this.toggle}
-                  onMouseLeave={this.toggle}
-                >
-                  <DropdownToggle className="nav-link pl-2 pr-2 ">
-                    <span className={"fa-user-icon"}>
-                      <span className="fas fa-user" />
-                    </span>
-                  </DropdownToggle>
-                  <DropdownMenu
-                    right
-                    style={{ right: "auto" }}
-                    className="home-header"
+                <ul className="app-header position-relative home-header">
+                  <AppHeaderDropdown
+                    direction="down"
+                    className="user-Info-dropdown"
+                    isOpen={dropdownOpen}
+                    onMouseEnter={this.toggle}
+                    onMouseLeave={this.toggle}
                   >
-                    <div>
-                      <div className={"top-block d-flex"}>
-                        <span className={"avtar-icon"}>
-                          <Avtar value={profileName} class={"name"} />
-                        </span>
-                        <div>
-                          <div className={"text-capitalize name-block"}>
-                            {profileName}
+                    <DropdownToggle className="nav-link pl-2 pr-2 ">
+                      <span className={"fa-user-icon"}>
+                        <span className="fas fa-user" />
+                      </span>
+                    </DropdownToggle>
+                    <DropdownMenu
+                      right
+                      style={{ right: "auto" }}
+                      className="home-header"
+                    >
+                      <div>
+                        <div className={"top-block d-flex"}>
+                          <span className={"avtar-icon"}>
+                            <Avtar value={profileName} class={"name"} />
+                          </span>
+                          <div>
+                            <div className={"text-capitalize name-block"}>
+                              {profileName}
+                            </div>
+                            <div className={"email"}>{profileEmail}</div>
                           </div>
-                          <div className={"email"}>{profileEmail}</div>
                         </div>
-                      </div>
-                      <NavLink to="/profile" className="nav-link">
-                        <i className={"fa fa-institution"} /> Company Profile
+                        <NavLink to="/profile" className="nav-link">
+                          <i className={"fa fa-institution"} /> Company Profile
                       </NavLink>
 
-                      <NavLink
-                        to="/profile?tab=Subscription"
-                        className="nav-link"
-                      >
-                        <i className={"fa fa-dollar"} /> Subscription
-                      </NavLink>
-                      <NavLink to="/profile" className="nav-link">
-                        <i className={"fa fa-user"} /> My Profile
-                      </NavLink>
-                      <NavLink to="/home" className="nav-link">
-                        <i className={"fas fa-home"} /> Home
-                      </NavLink>
-                      <NavLink to="#" className="nav-link logout-link">
-                        <span
-                          className={"logout-btn"}
-                          onClick={e => this.props.onLogout(e)}
+                        <NavLink
+                          to="/profile?tab=Subscription"
+                          className="nav-link"
                         >
-                          <i className={"fa fa-sign-out"} /> Logout
-                        </span>
+                          <i className={"fa fa-dollar"} /> Subscription
                       </NavLink>
-                    </div>
-                  </DropdownMenu>
-                </AppHeaderDropdown>
-              </ul>
-            )}
+                        <NavLink to="/profile" className="nav-link">
+                          <i className={"fa fa-user"} /> My Profile
+                      </NavLink>
+                        <NavLink to="/home" className="nav-link">
+                          <i className={"fas fa-home"} /> Home
+                      </NavLink>
+                        <NavLink to="#" className="nav-link logout-link">
+                          <span
+                            className={"logout-btn"}
+                            onClick={e => this.props.onLogout(e)}
+                          >
+                            <i className={"fa fa-sign-out"} /> Logout
+                        </span>
+                        </NavLink>
+                      </div>
+                    </DropdownMenu>
+                  </AppHeaderDropdown>
+                </ul>
+              )}
           </div>
         </div>
       </nav>

@@ -115,7 +115,7 @@ const getAllUserList = async (req, res) => {
       .skip(offset)
       .limit(limit);
     const getAllUser = await userModel.populate(users, { path: "roleType currentlyWorking.orderId currentlyWorking.serviceId" });
-    
+
     const getAllUserCount = await userModel.aggregate([
       { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
       {

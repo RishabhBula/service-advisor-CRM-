@@ -209,7 +209,8 @@ export class CrmCustomerModal extends Component {
     const { target } = e;
     const { name, value } = target;
     this.setState({
-      [name]: value,
+      [name]: name === "firstName" || name === "lastName" ? value.charAt(0).toUpperCase() +
+        value.substring(1) : value,
       errors: {
         ...this.state.errors,
         [name]: null

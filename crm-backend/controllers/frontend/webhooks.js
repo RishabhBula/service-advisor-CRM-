@@ -12,7 +12,6 @@ const paymentSuccess = async (req, data) => {
     period_end,
     invoice_pdf
   } = data;
-
   const userData = await UserModel.findOne({
     stripeCustomerId: customer,
     email: customer_email,

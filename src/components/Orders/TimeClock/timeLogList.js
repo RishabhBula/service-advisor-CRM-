@@ -61,6 +61,7 @@ class TimeLogList extends Component {
       handleTimeClockModal,
       getUserData,
       orderReducer,
+      orderId,
       editTimeLogRequest,
       modelInfoReducer, } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -211,6 +212,7 @@ class TimeLogList extends Component {
           </tbody>
         </Table>
         <CrmTimeClockModal
+        orderId={orderId}
           openTimeClockModal={timeClockEditModalOpen}
           getUserData={getUserData}
           timeLogEle={timeLogEle}
