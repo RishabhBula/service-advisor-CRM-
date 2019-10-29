@@ -89,7 +89,7 @@ class HomeFooter extends Component {
                 </Link>
               </div>
               <div className="col-sm-6">
-                <ul>
+                {/* <ul>
                   <ul className="footer-nav-listing text-center">
                     <li>
                       <Link to={"/home"} onClick={this.scrollToTop}>Home</Link>
@@ -107,7 +107,7 @@ class HomeFooter extends Component {
                       <Link to={"/faq"} onClick={this.scrollToTop}>FAQ's</Link>
                     </li>
                   </ul>
-                </ul>
+                </ul> */}
               </div>
               <div className="col-sm-3">
                 <ul className="social-icon-listing text-center">

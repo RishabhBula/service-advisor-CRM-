@@ -1,6 +1,7 @@
 const AppointmentModal = require("../../models/appointment");
 const Orders = require("../../models/order");
 const userModel = require("../../models/user");
+const customerModel = require("../../models/customer");
 const Mongoose = require("mongoose");
 const { Email, AvailiableTemplates } = require("../../common/Email");
 const { sendSMS } = require("./../../common/SMS");
@@ -15,10 +16,10 @@ const appointmentList = async (req, res) => {
     page = page || 1;
     const offset = (page - 1) * (limit || 1);
     const { id, parentId } = currentUser;
-    const vehicleId = query.vehicleId
-    const customerId = query.customerId
-    const techinicians = query.technicianId
-    const orderId = query.orderId
+    const vehicleId = query.vehicleId;
+    const customerId = query.customerId;
+    const techinicians = query.technicianId;
+    const orderId = query.orderId;
     let condition = {};
     condition["$and"] = [
       {
@@ -47,22 +48,22 @@ const appointmentList = async (req, res) => {
     if (vehicleId) {
       condition["$and"].push({
         vehicleId: Mongoose.Types.ObjectId(vehicleId)
-      })
+      });
     }
     if (customerId) {
       condition["$and"].push({
         customerId: Mongoose.Types.ObjectId(customerId)
-      })
+      });
     }
     if (techinicians) {
       condition["$and"].push({
         techinicians: Mongoose.Types.ObjectId(techinicians)
-      })
+      });
     }
     if (orderId) {
       condition["$and"].push({
         orderId: Mongoose.Types.ObjectId(orderId)
-      })
+      });
     }
     if (start) {
       start = new Date(new Date(start).setUTCHours(0, 0, 0, 0));
@@ -128,8 +129,14 @@ const addAppointment = async (req, res) => {
       isEmail,
       isSms
     } = body;
-    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]), parseInt(startTime.split(":")[1]));
-    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]), parseInt(endTime.split(":")[1]));
+    const actualStartTime = new Date().setUTCHours(
+      parseInt(startTime.split()[0]),
+      parseInt(startTime.split(":")[1])
+    );
+    const actualEndTime = new Date().setUTCHours(
+      parseInt(endTime.split()[0]),
+      parseInt(endTime.split(":")[1])
+    );
     let dataToSave = {
       appointmentTitle,
       appointmentColor,
@@ -146,13 +153,23 @@ const addAppointment = async (req, res) => {
       userId: id,
       techinicians
     };
-    let Name = "";
+    let Name = "", customerDetails = {}, techniicanEmails = [];
     if (vehicleId) {
       dataToSave.vehicleId = Mongoose.Types.ObjectId(vehicleId);
     }
     if (orderId) {
       dataToSave.orderId = Mongoose.Types.ObjectId(orderId);
       Name = await Orders.findOne({ _id: orderId }, { orderName: 1 });
+    }
+    if (customerId) {
+      customerDetails = await customerModel.findById(customerId)
+    }
+    if (techinicians && techinicians.length) {
+      for (let index = 0; index < techinicians.length; index++) {
+        const techData = techinicians[index]
+        const element = await userModel.findById(techData)
+        techniicanEmails.push(element.email)
+      }
     }
     const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
@@ -162,18 +179,27 @@ const addAppointment = async (req, res) => {
     if (isEmail) {
       const result = await userModel.findOne({ _id: id }, { companyName: 1 });
       const emailVar = new Email(body);
-      const scheduledDate = moment(appointmentDate).format("lll")
-      await emailVar.setSubject("[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`);
-      const message = `Your appointment has been scheduled for ${appointmentTitle}`
-      await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
+      const scheduledDate = moment(appointmentDate).format("lll");
+      await emailVar.setSubject(
+        "[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`
+      );
+      const message = `Your appointment has been scheduled for ${appointmentTitle}`;
+      await emailVar.setTemplate(AvailiableTemplates.APPOINTMENT, {
         body: message,
-        orderTitle: Name.orderName ? Name.orderName : "Unnamed Order",
+        orderTitle: Name.orderId ? `Order (# ${Name.orderId})` : "",
         createdAt: scheduledDate,
         companyName: result.companyName,
-        titleMessage: "Your appointment has been scheduled for",
-        displayStyle: `style="text-align:center; display: none";`
+        titleMessage: Name.orderId
+          ? "Your appointment has been scheduled for"
+          : "Your appointment has been scheduled",
+        displayStyle: `style="text-align:center; display: none";`,
+        customerName: customerDetails
+          ? `${customerDetails.firstName}${" "}${customerDetails.lastName}`
+          : "User"
       });
-      await emailVar.sendEmail(email);
+      techniicanEmails.push(email)
+      console.log("###########", techniicanEmails);
+      await emailVar.sendEmail(techniicanEmails);
     }
     /* notify via sms */
     res.status(200).json({
@@ -196,7 +222,7 @@ const getAppointmentDetails = async (req, res) => {
     const { params, currentUser } = req;
     const { id, parentId } = currentUser;
     const { eventId, technicianId } = params;
-    const techinicians = technicianId
+    const techinicians = technicianId;
     const details = await AppointmentModal.findOne({
       _id: Mongoose.Types.ObjectId(eventId),
       $and: [
@@ -262,8 +288,14 @@ const updateAppointment = async (req, res) => {
       isEmail,
       isSms
     } = body;
-    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]), parseInt(startTime.split(":")[1]));
-    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]), parseInt(endTime.split(":")[1]));
+    const actualStartTime = new Date().setUTCHours(
+      parseInt(startTime.split()[0]),
+      parseInt(startTime.split(":")[1])
+    );
+    const actualEndTime = new Date().setUTCHours(
+      parseInt(endTime.split()[0]),
+      parseInt(endTime.split(":")[1])
+    );
     let dataToSave = {
       appointmentTitle,
       appointmentColor,
@@ -300,9 +332,11 @@ const updateAppointment = async (req, res) => {
     if (isEmail) {
       const result = await userModel.findOne({ _id: id }, { companyName: 1 });
       const emailVar = new Email(body);
-      const scheduledDate = moment(appointmentDate).format("lll")
-      await emailVar.setSubject("[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`);
-      const message = `Your appointment has been scheduled for ${appointmentTitle}`
+      const scheduledDate = moment(appointmentDate).format("lll");
+      await emailVar.setSubject(
+        "[Service Advisor]" + `Appointment scheduled on ${scheduledDate}`
+      );
+      const message = `Your appointment has been scheduled for ${appointmentTitle}`;
       await emailVar.setTemplate(AvailiableTemplates.INSPECTION_TEMPLATE, {
         body: message,
         orderTitle: Name.orderName ? Name.orderName : "Unnamed Order",
