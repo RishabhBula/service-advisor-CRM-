@@ -59,8 +59,8 @@ const Routes = [
   },
   {
     exact: true,
-    path: "/register",
-    name: "Register Page",
+    path: "/signup",
+    name: "SignUp Page",
     component: Register
   },
   {

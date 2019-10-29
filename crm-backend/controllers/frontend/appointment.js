@@ -65,7 +65,7 @@ const appointmentList = async (req, res) => {
       })
     }
     if (start) {
-      start = new Date(new Date(start).setUTCHours(23, 59, 59, 999));
+      start = new Date(new Date(start).setUTCHours(0, 0, 0, 0));
       condition["$and"].push({
         appointmentDate: {
           $gte: start
@@ -128,8 +128,8 @@ const addAppointment = async (req, res) => {
       isEmail,
       isSms
     } = body;
-    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]),parseInt(startTime.split(":")[1]));
-    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]),parseInt(endTime.split(":")[1]));
+    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]), parseInt(startTime.split(":")[1]));
+    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]), parseInt(endTime.split(":")[1]));
     let dataToSave = {
       appointmentTitle,
       appointmentColor,
@@ -262,8 +262,8 @@ const updateAppointment = async (req, res) => {
       isEmail,
       isSms
     } = body;
-    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]),parseInt(startTime.split(":")[1]));
-    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]),parseInt(endTime.split(":")[1]));
+    const actualStartTime = new Date().setUTCHours(parseInt(startTime.split()[0]), parseInt(startTime.split(":")[1]));
+    const actualEndTime = new Date().setUTCHours(parseInt(endTime.split()[0]), parseInt(endTime.split(":")[1]));
     let dataToSave = {
       appointmentTitle,
       appointmentColor,

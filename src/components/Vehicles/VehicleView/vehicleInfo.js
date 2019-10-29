@@ -33,7 +33,8 @@ export class VehicleInfo extends Component {
       errors: {},
       prodMonthError: "",
       prodYearError: "",
-      isLoading: false
+      isLoading: false,
+      vehicleData:{}
     };
   }
 
@@ -62,7 +63,21 @@ export class VehicleInfo extends Component {
       });
     }
   }
+  toggleUpdateVehicle = () => {
+    this.setState({
+      vehicleData: this.props.vehicleData,
+   });
+   const { modelDetails } = this.props.modelInfoReducer;
+   let data = {
+    vehicleModel: false,
+    vehicleEditModel: !modelDetails.vehicleEditModel
+   };
+   this.props.modelOperate(data);
+  }
   toggleEditVehicle = () => {
+    this.setState({
+      vehicleData: {},
+   });
     const { modelDetails } = this.props.modelInfoReducer;
     let data = {
       vehicleModel: false,
@@ -349,7 +364,7 @@ export class VehicleInfo extends Component {
         </Row>
         <div className={"text-center"}>
           <Button
-            onClick={this.toggleEditVehicle}
+            onClick={this.toggleUpdateVehicle}
             color={""}
             className={"btn-theme"}
           >
@@ -361,7 +376,7 @@ export class VehicleInfo extends Component {
             vehicleEditModalOpen={modelDetails.vehicleEditModel}
             handleEditVehicleModal={this.toggleEditVehicle}
             submitUpdateVehicleFun={this.submitUpdateVehicle}
-            vehicleData={vehicleData}
+            vehicleData={this.state.vehicleData}
             getVehicleMakeModalReq={getVehicleMakeModalReq}
             getVehicleModalReq={getVehicleModalReq}
           />

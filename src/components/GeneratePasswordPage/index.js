@@ -74,11 +74,11 @@ class GeneratePasswordPage extends Component {
         <Row className="justify-content-center">
           <Col md="6">
             <Col className="text-center">
-              <Link to="/home" target="_blank">
-                <h4 className="logo-title">
+              <h4 className="logo-title">
+                <Link to="/home" target="_blank">
                   <img src={ServiceAdvisorLogo} alt={"logo"} />
-                </h4>
-              </Link>
+                </Link>
+              </h4>
             </Col>
             <CardGroup>
               <Card className="p-4">

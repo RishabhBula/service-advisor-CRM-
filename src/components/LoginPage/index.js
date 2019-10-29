@@ -78,15 +78,15 @@ class LoginPage extends Component {
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
               <Col className="text-center">
-                <Link to="/home" target="_blank">
-                  <h4 className="logo-title">
+                <h4 className="logo-title">
+                  <Link to="/home" target="_blank">
                     <img
                       src={ServiceAdvisorLogo}
                       alt={"logo"}
                       style={{ width: 120 }}
                     />
-                  </h4>
-                </Link>
+                  </Link>
+                </h4>
               </Col>
 
               <CardGroup>
@@ -172,7 +172,7 @@ class LoginPage extends Component {
                           {/* <Button className="btn-facebook btn-brand mr-1 mb-1" block><i className="fa fa-facebook"></i><span>Facebook</span></Button> */}
                           <p className="text-center">
                             Don't have an account?{" "}
-                            <Link to="/register">Sign Up </Link>
+                            <Link to="/signup">Sign Up </Link>
                           </p>
                         </Col>
                       </Row>

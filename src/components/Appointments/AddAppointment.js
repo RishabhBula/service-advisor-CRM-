@@ -246,6 +246,7 @@ export default class AddAppointment extends Component {
    */
   handlePhoneValueChange = (event) => {
     const { value } = event.target;
+
     let phoneTrimed = (value.replace(/[- )(_]/g, ""))
 
     this.setState({
@@ -532,6 +533,7 @@ export default class AddAppointment extends Component {
         type: "button"
       }
     ];
+
     return (
       <>
         <CRMModal

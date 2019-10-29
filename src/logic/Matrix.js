@@ -16,7 +16,7 @@ import {
 import { logger } from "../helpers/Logger";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
-let toastId = null ;
+let toastId = null;
 
 const getMatrixLogic = createLogic({
   type: matrixActions.GET_MATRIX_LIST,
@@ -34,15 +34,15 @@ const getMatrixLogic = createLogic({
       "/getAllMatrix",
       "GET",
       true,
-      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null }
+      { search: action.payload && action.payload.input ? action.payload.input : action.payload && action.payload.search ? action.payload.search : null, sort: action.payload && action.payload.sort ? action.payload.sort : null }
     );
     logger(result);
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(
         getMatrixListFail({
           matrixList: [],
@@ -100,9 +100,9 @@ const addPriceMatrixLogic = createLogic({
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(addMatrixSuccess());
       dispatch(
         modelOpenRequest({
@@ -134,18 +134,18 @@ const updateMatrixLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(
         getMatrixList({
           ...action.payload
@@ -181,18 +181,18 @@ const deleteMatrixLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(hideLoader());
       dispatch(deleteMatrixSuccess())
       delete action.payload.matrixId;

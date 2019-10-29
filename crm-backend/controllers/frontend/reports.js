@@ -127,8 +127,7 @@ const getReportsByCustomerdays = async (req, res) => {
         $count: "count"
       }
     ]);
-    console.log("reportCount", reportCount);
-    console.log("result", result);
+    
     const resp = [];
     const dates = getDateRanges();
     for (let i = 0; i < result.length; i++) {

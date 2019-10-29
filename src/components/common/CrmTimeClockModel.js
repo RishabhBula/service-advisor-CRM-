@@ -124,7 +124,7 @@ export class CrmTimeClockModal extends Component {
       } = this.props.timeLogEle
       const startDateTime1 = moment.utc(startDateTime).format("HH:mm")
       const endDateTime1 = moment.utc(endDateTime).format("HH:mm")
-      const calDuration = calculateDurationFromSeconds(duration)
+      const calDuration = calculateDurationFromSeconds(duration >= 0 ? duration : 0)
 
       this.setState({
         date,
@@ -138,7 +138,7 @@ export class CrmTimeClockModal extends Component {
         },
         notes,
         isEditTimeClock: true,
-        seconds: duration
+        seconds: duration >= 0 ? duration : 0
       })
     }
   }
@@ -195,11 +195,12 @@ export class CrmTimeClockModal extends Component {
       .duration(moment(ts2)
         .diff(moment(ts1))
       ).asSeconds()
-    const duration = calculateDurationFromSeconds(Seconds)
+    console.log("Seconds", Seconds);
+    const duration = calculateDurationFromSeconds(Seconds >= 0 ? Seconds : 0)
 
     this.setState({
       duration: duration,
-      seconds: Seconds
+      seconds: Seconds >= 0 ? Seconds : 0
     })
   }
   handleClickTimeType = (value) => {
@@ -262,7 +263,7 @@ export class CrmTimeClockModal extends Component {
         duration: duration,
         date: date,
         orderId: isEditTimeClock ? orderId : !isTimeClockData ? orderReducer.orderItems._id : selectedActivity.orderId,
-        total: totalValue || "0",
+        total: totalValue >= 0 ? totalValue : 0,
         notes: notes,
         _id: timeLogEle ? timeLogEle._id : null,
         isTimeClockData: isTimeClockData ? true : false

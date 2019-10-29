@@ -133,8 +133,8 @@ class HomeHeader extends Component {
             </ul>
             {!isLogin ? (
               <Link
-                to={"/register"}
-                /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-theme btn-sm"
+                to={"/signup"}
+                /*onClick={() => this.onGoPage('/dev/signup')}*/ className="btn btn-theme btn-sm"
               >
                 Start Free Trial
               </Link>

@@ -1,5 +1,4 @@
-import { DefaultErrorMessage } from "../config/Constants";
-
+// import { DefaultErrorMessage } from "../config/Constants";
 /**
  * ErrorHandlerHelper Class - For managing errors
  */
@@ -27,11 +26,16 @@ export class ErrorHandlerHelper {
       typeof this.rawError.data === "object" &&
       this.rawError.data.message
     ) {
-      this.error.messages.push(this.rawError.data.message);
+      if (this.rawError.data.message === "Token has expired" || this.rawError.data.message === "Unauthorized, Invalid token!") {
+        localStorage.removeItem("token")
+        window.location.href = "/"
+      } else {
+        this.error.messages.push(this.rawError.data.message);
+      }
     }
     if (!this.error.messages.length) {
       this.error.error = "Unknown";
-      this.error.messages = [DefaultErrorMessage];
+      this.error.messages = [null];
     }
   };
 }

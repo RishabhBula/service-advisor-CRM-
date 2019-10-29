@@ -96,7 +96,7 @@ class HomePageComponent extends Component {
                               <a class="nav-link1 cursor_pointer" onClick={() => this.onGoPage('/login')}><span>Sign In</span></a>
                            </li>
                         </ul>
-                        <div onClick={() => this.onGoPage('/register')} class="btn btn-primary">Start Free Trial</div>
+                        <div onClick={() => this.onGoPage('/signup')} class="btn btn-primary">Start Free Trial</div>
                      </div>
                   </div>
                </nav>
@@ -108,7 +108,7 @@ class HomePageComponent extends Component {
                               <div class="banner-left-content">
                                  <h1>The Smart & Simple way to Run Your Auto Shop.</h1>
                                  <p>With the easy to use and customizable CRM for your marketing, sales, and customer service teams.</p>
-                                 <div onClick={() => this.onGoPage('/register')} class="btn btn-primary">Start Free Trial</div>
+                                 <div onClick={() => this.onGoPage('/signup')} class="btn btn-primary">Start Free Trial</div>
                               </div>
                            </div>
                         </div>
@@ -246,7 +246,7 @@ class HomePageComponent extends Component {
                            <p>No Contracts. No hidden fees. Get started in minutes. </p>
                         </div>
                         <div class="col-sm-5">
-                           <div onClick={() => this.onGoPage('/register')} class="btn btn-primary">Start Free Trial</div>
+                           <div onClick={() => this.onGoPage('/signup')} class="btn btn-primary">Start Free Trial</div>
                         </div>
                      </div>
                   </div>

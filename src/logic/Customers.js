@@ -204,7 +204,11 @@ const deleteCustomerLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+          result.messages[0]
+        );
+      }
       dispatch(hideLoader());
       delete action.payload.userId;
       dispatch(
@@ -306,7 +310,11 @@ const updateCustomerStatusLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+          result.messages[0]
+        );
+      }
       dispatch(hideLoader());
       delete action.payload.customers;
       delete action.payload.status;

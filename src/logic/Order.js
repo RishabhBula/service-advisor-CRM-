@@ -391,7 +391,7 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       if (!action.payload.isPdfGenerated) {
-        if (!action.payload.isChangedOrderStatus) {
+        if (!action.payload.isChangedOrderStatus && !action.payload.isShowMsg) {
           if (!toast.isActive(toastId)) {
             toastId = toast.success(
               result.messages[0]

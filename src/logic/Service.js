@@ -15,7 +15,7 @@ import {
    getServiceDataSuccess
 } from "./../actions";
 
-let toastId = null ;
+let toastId = null;
 
 const addServiceLogic = createLogic({
    type: serviceActions.ADD_SERVICE,
@@ -80,7 +80,8 @@ const addServiceLogic = createLogic({
                   isFullyPaid: action.payload.orderTotal === 0 ? true : false,
                   orderTotal: action.payload.orderTotal,
                   _id: action.payload.orderId,
-                  customerCommentId: result.data.commentResult ? result.data.commentResult._id : null
+                  customerCommentId: result.data.commentResult ? result.data.commentResult._id : null,
+                  isShowMsg: action.payload.isShowMsg ? action.payload.isShowMsg : false
                }
                dispatch(
                   genrateInvoice({
