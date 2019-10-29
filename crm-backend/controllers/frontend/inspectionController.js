@@ -25,8 +25,8 @@ const imageUpload = async (req, res) => {
     /* Section1-img upload on aws s3 */
     let imageData = [];
     let images = "";
-    console.log("$$$$$$$$$$$$$$$",imgData);
-    
+    console.log("$$$$$$$$$$$$$$$", imgData);
+
     for (let x = 0; x < imgData.length; x++) {
       if (imgData[x].filename && imgData[x].filename !== "") {
         let isNotBase64 = imgData[x].path.split("https");
@@ -586,7 +586,12 @@ const generatePdfDoc = async (req, res) => {
             success: false
           });
         }
-        const pdfURL = await imagePath(file.filename, "invoice-pdf.pdf", "pdf-file");
+        const pdfURL = await imagePath(
+          file.filename,
+          body.isInvoice === 'true'?
+          `OrderId(#${body.orderId})-invoice-pdf.pdf`:
+          `OrderId(#${body.orderId})-inpection-pdf.pdf`,
+          "pdf-file");
         if (pdfURL) {
           fs.unlinkSync(originalPdfPath);
         }

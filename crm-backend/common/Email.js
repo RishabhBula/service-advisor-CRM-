@@ -19,11 +19,15 @@ const AvailiableTemplates = {
   NEWSLETTER_EMAIL: "newsletterEmail",
   UNSUBSCRIBE_EMAIL: "unSubscribeEmail",
   INSPECTION_TEMPLATE: "inspectionTemplate",
-  SUBSCRIPTION_TEMPLATE: "subscriptionPlan"
+  SUBSCRIPTION_TEMPLATE: "subscriptionPlan",
+  APPOINTMENT: "appointment"
 };
 class Email {
   constructor(req) {
-    const host = req.headers && req.headers.referer ? req.headers.referer.split("/") : null;
+    const host =
+      req.headers && req.headers.referer
+        ? req.headers.referer.split("/")
+        : null;
     this.host = host ? [host[0], host[1], host[2]].join("/") : null;
     this.body = "";
     this.subject = "";
@@ -43,7 +47,8 @@ class Email {
         this.subject = "[Service Advisor] Registration";
         break;
       case AvailiableTemplates.USER_ADDED_CONFIRMATION:
-        this.subject = "[Service Advisor] You've Been Invited to Join Service Advisor ";
+        this.subject =
+          "[Service Advisor] You've Been Invited to Join Service Advisor ";
         break;
 
       case AvailiableTemplates.UPDATE_BY_ADMIN:
@@ -81,11 +86,14 @@ class Email {
         this.subject = "[Service Advisor] Unsubscription";
         break;
       case AvailiableTemplates.INSPECTION_TEMPLATE:
-         // this.subject = "[Service Advisor] Unsubscription";
+        // this.subject = "[Service Advisor] Unsubscription";
         break;
       case AvailiableTemplates.SUBSCRIPTION_TEMPLATE:
         this.subject = "[Service Advisor] Plan Purchase Successfully";
-        break;  
+        break;
+      case AvailiableTemplates.APPOINTMENT:
+        //this.subject = "[Service Advisor] Appointment scheduled";
+        break;
       default:
         throw new Error("Invalid template name", 400);
     }
@@ -122,7 +130,7 @@ class Email {
     }
     const mailOption = {
       from: "Sevice Advisor <test.chapter247@gmail.com>",
-      to: this.to || email.split(","),
+      to: this.to || email,
       cc: this.cc,
       subject: this.subject,
       html: this.body,
@@ -136,5 +144,5 @@ class Email {
 
 module.exports = {
   Email,
-  AvailiableTemplates,
+  AvailiableTemplates
 };
