@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import "./index.scss"
 import bannerImg from "../../assets/home-img/banner-right-img.png";
 import HomeHeader from "./homeHeader";
 import HomeFooter from "./homeFooter";
 import Loader from "../../containers/Loader/Loader";
+import {
+   Button
+} from "reactstrap";
 class HomePageComponent extends Component {
    constructor(props) {
       super(props);
@@ -110,6 +113,13 @@ class HomePageComponent extends Component {
       //this.props.onGoPage(pageUrl);
       window.open(pageUrl);
    };
+   handleOpenEnquiryModal = () => {
+      const { modelDetails } = this.props.modelInfoReducer;
+      let data = {
+         enquiryModalOpen: !modelDetails.enquiryModalOpen
+      };
+      this.props.modelOperate(data);
+   }
    render() {
       const {
          section2Title,
@@ -117,13 +127,26 @@ class HomePageComponent extends Component {
          section2,
          section3,
       } = this.state;
-      const { settingData, profileInfoReducer, pageData } = this.props;
+      const {
+         settingData,
+         profileInfoReducer,
+         pageData,
+         modelOperate,
+         enquiryModalOpen,
+         modelInfoReducer,
+         enquiryRequest } = this.props;
       const { isLoading } = pageData
       return (
          <>
             {!isLoading ? <>
                <div className="main-body home-page">
-                  <HomeHeader profileInfoReducer={profileInfoReducer} onLogout={e => this.props.onLogout(e)} />
+                  <HomeHeader
+                     modelOperate={modelOperate}
+                     enquiryModalOpen={enquiryModalOpen}
+                     profileInfoReducer={profileInfoReducer}
+                     modelInfoReducer={modelInfoReducer}
+                     enquiryRequest={enquiryRequest}
+                     onLogout={e => this.props.onLogout(e)} />
                   <section className="banner">
                      <div className="container">
                         <div className="row align-items-center">
@@ -132,12 +155,12 @@ class HomePageComponent extends Component {
                                  <div className="banner-left-content">
                                     <h1>The Smart & Simple way to Run Your Auto Shop.</h1>
                                     <p>With the easy to use and customizable CRM for your marketing, sales, and customer service teams.</p>
-                                    <Link
-                                       to={"/register"} /*onClick={() => this.onGoPage('/dev/register')}*/
-                                       className="btn btn-trail"
+                                    <Button
+                                       onClick={this.handleOpenEnquiryModal} /*onClick={() => this.onGoPage('/dev/register')}*/
+                                       className="btn btn-theme btn-trail"
                                     >
                                        Start Free Trial
-                                 </Link>
+                                    </Button>
                                  </div>
                               </div>
                            </div>
@@ -340,8 +363,10 @@ class HomePageComponent extends Component {
                                  <p className={"mb-0"}>No Contracts. No hidden fees. Get started in minutes. </p>
                               </div>
                               <div className="get-started-right">
-                                 <Link to={"/register"}/*onClick={() => this.onGoPage('/register')}*/ className="btn btn-theme">Start Free Trial
-                              </Link>
+                                 <Button
+                                    onClick={this.handleOpenEnquiryModal}
+                                    /*onClick={() => this.onGoPage('/register')}*/ className="btn btn-theme">Start Free Trial
+                              </Button>
                               </div>
                            </div>
                         </div>

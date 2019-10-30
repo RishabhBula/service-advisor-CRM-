@@ -7,8 +7,10 @@ import Avtar from "../common/Avtar"
 import {
   DropdownMenu,
   DropdownToggle,
+  Button
 } from "reactstrap";
 import "../../App.scss";
+import { CrmEnquiryModel } from "../common/CrmEnquiryModal"
 class HomeHeader extends Component {
   constructor(props) {
     super(props);
@@ -61,10 +63,20 @@ class HomeHeader extends Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   };
+  /**
+   *
+   */
+  handleOpenEnquiryModal = () => {
+    const { modelDetails } = this.props.modelInfoReducer;
+    let data = {
+      enquiryModalOpen: !modelDetails.enquiryModalOpen
+    };
+    this.props.modelOperate(data);
+  }
 
   render() {
     const { dropdownOpen } = this.state
-    const { profileInfoReducer } = this.props;
+    const { profileInfoReducer, enquiryModalOpen, enquiryRequest } = this.props;
     const { backgroundClass, mobClass, isLogin } = this.state;
     const profileName =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -132,12 +144,14 @@ class HomeHeader extends Component {
                ) : null}
              </ul> */}
             {!isLogin ? (
-              <Link
-                to={"/register"}
-                /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-theme btn-sm"
-              >
+              // <Link
+              //   to={"/register"}
+              //   /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-theme btn-sm"
+              // >
+              <Button className={"cursor_pointer btn btn-theme"} color={""} onClick={this.handleOpenEnquiryModal}>
                 Start Free Trial
-              </Link>
+              </Button>
+              //</div></Link>
             ) : (
                 <ul className="app-header position-relative home-header">
                   <AppHeaderDropdown
@@ -200,6 +214,11 @@ class HomeHeader extends Component {
               )}
           </div>
         </div>
+        <CrmEnquiryModel
+          enquiryModalOpen={enquiryModalOpen}
+          handleEnquiryModal={this.handleOpenEnquiryModal}
+          enquiryRequest={enquiryRequest}
+        />
       </nav>
     );
   }
