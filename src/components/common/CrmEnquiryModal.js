@@ -168,7 +168,7 @@ export class CrmEnquiryModel extends Component {
               </FormGroup>
               <FormGroup>
                 <ReCAPTCHA
-                  sitekey="6LdepqcUAAAAAJa7epGDZNSaq0TLEuM_toU8YHjZ"
+                  sitekey="6LfYPMAUAAAAAFl1jDO2sHXCarmbRMo5CkUT1XgU"
                   onChange={this.handleCaptcha}
                 />
               </FormGroup>
