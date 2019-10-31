@@ -43,7 +43,8 @@ export class CrmEnquiryModel extends Component {
         firstName: "",
         lastName: "",
         email: "",
-        errors: {}
+        errors: {},
+        isGoogleVerified: false
       })
     }
   }
