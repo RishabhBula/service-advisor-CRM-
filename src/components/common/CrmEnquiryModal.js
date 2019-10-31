@@ -166,12 +166,12 @@ export class CrmEnquiryModel extends Component {
                   </FormFeedback>
                 </div>
               </FormGroup>
-              <FormFeedback>
+              <FormGroup>
                 <ReCAPTCHA
-                  sitekey="6LfYPMAUAAAAAFl1jDO2sHXCarmbRMo5CkUT1XgU"
-                  onVerify={this.handleCaptcha}
+                  sitekey="6LdepqcUAAAAAJa7epGDZNSaq0TLEuM_toU8YHjZ"
+                  onChange={this.handleCaptcha}
                 />
-              </FormFeedback>
+              </FormGroup>
             </Form>
             <div className="shape1"></div>
             <div className="shape2"></div>
