@@ -61,4 +61,6 @@ router.post("/change-password", token.authorisedUser, validation.userChangePassw
 
 router.put("/update-user", token.authorisedUser, authController.updateUserData)
 
+router.post("/enquiry", authController.enquiryRequesrData)
+
 module.exports = router;

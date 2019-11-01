@@ -33,7 +33,8 @@ const initialAuthState = {
     openSubscriptionModel: false,
     openSubPayementModel: false,
     openSubscriptionUpdateModel: false,
-    openSubUpgradeModel: false
+    openSubUpgradeModel: false,
+    enquiryModalOpen: false
   }
 };
 

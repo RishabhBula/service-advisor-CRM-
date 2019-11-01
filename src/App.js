@@ -22,7 +22,7 @@ import "react-dates/initialize";
  *
  */
 const logicMiddleware = createLogicMiddleware(arrLogic);
-const history = createBrowserHistory({ basename: "/dev" });
+const history = createBrowserHistory({ basename: "/" });
 const middlewares = [logicMiddleware, routerMiddleware(history)];
 if (mode === EnviornmentTypes.DEV) {
   middlewares.push(logger);

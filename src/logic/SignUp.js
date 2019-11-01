@@ -5,7 +5,8 @@ import {
   signUpActions,
   showLoader,
   hideLoader,
-  redirectTo
+  redirectTo,
+  modelOpenRequest
 } from "./../actions";
 import { DefaultErrorMessage } from "../config/Constants";
 let toastId = null;
@@ -183,10 +184,50 @@ const resendConfiramtionLinkLogic = createLogic({
   }
 });
 
+/* 
+*/
+const enquiryRequestLogic = createLogic({
+  type: signUpActions.ENQURY_REQUEST,
+  cancelType: signUpActions.SIGNUP_FAILED,
+  async process({ action }, dispatch, done) {
+    localStorage.removeItem("userId");
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/enquiry",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+          result.messages[0] || DefaultErrorMessage
+        );
+      }
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            enquiryModalOpen: false
+          }
+        })
+      );
+      // dispatch(redirectTo({ path: "/login" }));
+      done();
+    }
+  }
+});
+
 export const SignUpLogic = [
   signUpLogic,
   verifyAccountLogic,
   generatePasswordLogic,
   verifyGeneratePasswordLogic,
-  resendConfiramtionLinkLogic
+  resendConfiramtionLinkLogic,
+  enquiryRequestLogic
 ];

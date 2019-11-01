@@ -37,9 +37,9 @@ const loginLogic = createLogic({
     if (result.isError || !result.data.data || !result.data.data.subdomain) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -51,19 +51,19 @@ const loginLogic = createLogic({
         })
       );
       logger(
-        
+
         `Redirect URI: ${window.location.protocol}://${
-          result.data.data.subdomain
+        result.data.data.subdomain
         }.${APP_URL}/verify-user-details?user=${
-          result.data.token
+        result.data.token
         }&key=${Date.now()}&verification=${Math.random()}`
       );
-    
+
       window.location.href = `${"http"}://${
         result.data.data.subdomain
-      }.${APP_URL}/verify-user-details?user=${
+        }.${APP_URL}/verify-user-details?user=${
         result.data.token
-      }&key=${Date.now()}&verification=${Math.random()}`;
+        }&key=${Date.now()}&verification=${Math.random()}`;
 
       done();
     }
@@ -107,9 +107,9 @@ const forgetPasswordLogic = createLogic({
       logger(result);
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/login" }));
       done();
@@ -173,9 +173,9 @@ const resetPasswordLogic = createLogic({
       dispatch(hideLoader());
       if (!toast.isActive(toastId)) {
         toastId = toast.success(
-           result.messages[0]
+          result.messages[0]
         );
-     }
+      }
       dispatch(redirectTo({ path: "/login" }));
       done();
     }
@@ -205,12 +205,13 @@ const verifyAccountAccessLogic = createLogic({
       dispatch(logOutRequest());
     }
     localStorage.setItem("token", user);
-    
-    dispatch(
-      redirectTo({
-        path: AppRoutes.DASHBOARD.url
-      })
-    );
+
+    // dispatch(
+    //   redirectTo({
+    //     path: AppRoutes.DASHBOARD.url
+    //   })
+    // );
+    window.open(AppRoutes.DASHBOARD.url);
     done();
   }
 });

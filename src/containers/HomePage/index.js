@@ -6,7 +6,9 @@ import {
    profileInfoRequest,
    getSiteSettingReq,
    logOutRequest,
-   redirectTo
+   redirectTo,
+   modelOpenRequest,
+   enquiryRequest
 } from "../../actions";
 class HomePage extends Component {
    componentDidMount() {
@@ -18,17 +20,30 @@ class HomePage extends Component {
    }
    signOut() {
       this.props.logoutUser();
-    }
+   }
    render() {
-      const { homePageDetailsReducer, siteSettingDetailsReducer, profileInfoReducer } = this.props;
+      const {
+         homePageDetailsReducer,
+         modelInfoReducer,
+         siteSettingDetailsReducer,
+         profileInfoReducer,
+         modelOperate,
+         enquiryRequest
+      } = this.props;
+      const { modelDetails } = modelInfoReducer;
+      const { enquiryModalOpen } = modelDetails
       return (
          <>
             <HomePageComponent
                pageData={homePageDetailsReducer}
+               modelOperate={modelOperate}
                settingData={siteSettingDetailsReducer}
                onGoPage={this.props.onGoPage}
-               profileInfoReducer={profileInfoReducer} 
-               onLogout={e => this.signOut(e)}/>
+               profileInfoReducer={profileInfoReducer}
+               modelInfoReducer={modelInfoReducer}
+               enquiryModalOpen={enquiryModalOpen}
+               enquiryRequest={enquiryRequest}
+               onLogout={e => this.signOut(e)} />
          </>
       )
    }
@@ -37,6 +52,7 @@ const mapStateToProps = state => ({
    homePageDetailsReducer: state.homePageDetailsReducer,
    siteSettingDetailsReducer: state.siteSettingDetailsReducer,
    profileInfoReducer: state.profileInfoReducer,
+   modelInfoReducer: state.modelInfoReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -51,6 +67,8 @@ const mapDispatchToProps = dispatch => ({
    },
    profileInfoAction: () => dispatch(profileInfoRequest()),
    logoutUser: () => dispatch(logOutRequest()),
+   modelOperate: (data) => dispatch(modelOpenRequest({ modelDetails: data })),
+   enquiryRequest: (data) => dispatch(enquiryRequest(data))
 });
 export default connect(
    mapStateToProps,

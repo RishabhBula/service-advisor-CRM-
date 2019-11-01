@@ -14,6 +14,7 @@ const path = require("path");
 const __basedir = path.join(__dirname, "../../public");
 const { resizeImage, imagePath } = require("../../common/imageThumbnail");
 const mongoose = require("mongoose");
+const request = require('request')
 
 const signUp = async (req, res) => {
   try {
@@ -914,7 +915,60 @@ const updateUserData = async (req, res) => {
     });
   }
 };
+/* 
+ */
+const enquiryRequesrData = async (req, res) => {
 
+  try {
+    const { body } = req;
+    const { firstName, lastName, email } = body;
+    const data = {
+      members: [
+        {
+          email_address: email,
+          status: "subscribed",
+          merge_fields: {
+            FNAME: firstName,
+            LNAME: lastName
+          }
+        }
+      ]
+    }
+
+    const postData = JSON.stringify(data);
+
+    const options = {
+      url: "https://us5.api.mailchimp.com/3.0/lists/8becffc2f0",
+      method: 'POST',
+      headers: {
+        Authorization: 'auth 79d49a4565f2e2a06f1192923c80d38f-us5'
+      },
+      body: postData
+    }
+    request(options, (err, response, body) => {
+      if (err) {
+        return res.status(400).json({
+          message: err
+        })
+      } else {
+        if (response.statusCode === 200) {
+          return res.status(200).json({
+            message: err
+          })
+        } else {
+          return res.status(400).json({
+            message: "Fetched some error during subscribtion!"
+          })
+        }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 module.exports = {
   signUp,
   confirmationSignUp,
@@ -931,5 +985,6 @@ module.exports = {
   imageDelete,
   resendConfirmationLink,
   changePasswordUser,
-  updateUserData
+  updateUserData,
+  enquiryRequesrData
 };
