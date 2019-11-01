@@ -116,7 +116,11 @@ const getOrdersForSelectLogic = createLogic({
           });
         }
       }
-      payload.callback(options);
+      payload.callback(options.concat({
+        label: "+ Add New Order",
+        value: "",
+        data: {}
+      }));
     }
     logger(result);
     done();
@@ -582,7 +586,7 @@ const updateOrderStatusName = createLogic({
   type: orderActions.UPDATE_ORDER_STATUS_NAME_REQ,
   cancelType: orderActions.UPDATE_ORDER_STATUS_NAME_FAIL,
   async process({ action }, dispatch, done) {
-    console.log("action.payload", action.payload);
+
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/order",

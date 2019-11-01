@@ -15,7 +15,7 @@ import {
 import Loader from "../../containers/Loader/Loader";
 import { formateDate } from "../../helpers/Date";
 import PaginationHelper from "../../helpers/Pagination";
-import { withRouter,Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import * as qs from "query-string";
 import { AppConfig } from "../../config/AppConfig";
 import { ConfirmBox } from "../../helpers/SweetAlert";
@@ -582,10 +582,10 @@ class UserList extends Component {
                       </td>
                       <td>
                         <div id={`create${index}`}>
-                          {user.loggedInAt
-                            ? formateDate(user.loggedInAt)
+                          {user.createdAt
+                            ? formateDate(user.createdAt)
                             : " "}
-                          {user.loggedInAt ? (
+                          {user.createdAt ? (
                             <UncontrolledTooltip
                               target={`create${index}`}
                             >
@@ -594,8 +594,8 @@ class UserList extends Component {
                           ) : null}
                         </div>
                         <div id={`loginip-${index}`}>
-                          {user.loggedInIp || "-"}
-                          {user.loggedInIp ? (
+                          {user.loggedInAt || "-"}
+                          {user.loggedInAt ? (
                             <UncontrolledTooltip
                               target={`loginip-${index}`}
                             >

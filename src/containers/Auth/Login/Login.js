@@ -1,20 +1,20 @@
 import { connect } from "react-redux";
 import React, { Component } from "react";
 
-import { loginRequest,getSiteSettingReq } from "../../../actions";
+import { loginRequest, getSiteSettingReq } from "../../../actions";
 import LoginPage from "../../../components/LoginPage";
 
 class Login extends Component {
   componentDidMount() {
     if (localStorage.getItem("token")) {
       this.props.redirectTo("/dashboard");
-    }else{
+    } else {
       this.props.getSiteSetting();
     }
   }
   render() {
     const { onLogin, siteSettingDetailsReducer } = this.props;
-    return <LoginPage onLogin={onLogin} settingData={siteSettingDetailsReducer} />;
+    return <LoginPage onLogin={onLogin} settingData={siteSettingDetailsReducer} {...this.props} />;
   }
 }
 const mapStateToProps = state => ({

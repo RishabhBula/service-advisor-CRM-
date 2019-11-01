@@ -197,8 +197,39 @@ export const Drivetrain = [
   {
     key: "4x4",
     text: "4x4"
+  },
+  {
+    key: "Front Wheel Drive",
+    text: "Front Wheel Drive"
+  },
+  {
+    key: "Rear Wheel Drive",
+    text: "Rear Wheel Drive"
+  },
+  {
+    key: "4 Wheel Drive",
+    text: "4 Wheel Drive"
+  },
+  {
+    key: "All Wheel Drive",
+    text: "All Wheel Drive"
   }
 ];
+
+export const ReferralSource = [
+  {
+    key: "News Paper",
+    text: "News Paper"
+  },
+  {
+    key: "Social Media",
+    text: "Social Media"
+  },
+  {
+    key: "Other",
+    text: "Other"
+  }
+]
 
 export const LabourPermission = {
   isShowHours: false,

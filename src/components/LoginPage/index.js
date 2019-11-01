@@ -19,6 +19,7 @@ import {
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
 import ServiceAdvisorLogo from "../../assets/logo-white.svg";
+import * as qs from "query-string";
 
 class LoginPage extends Component {
   constructor(props) {
@@ -26,8 +27,18 @@ class LoginPage extends Component {
     this.state = {
       email: "",
       password: "",
+      isShowMsg: false,
       errors: {}
     };
+  }
+  componentDidMount() {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { isShowMsg } = qs.parse(lSearch);
+    this.setState({
+      isShowMsg
+    })
+
   }
   handleChange = e => {
     const { target } = e;
@@ -70,7 +81,7 @@ class LoginPage extends Component {
   };
   render() {
     // const { settingData } = this.props;
-    const { email, password, errors } = this.state;
+    const { email, password, errors, isShowMsg } = this.state;
     return (
       <>
         <div className="app flex-row align-items-center auth-page  pt-3 pb-3">
@@ -93,6 +104,8 @@ class LoginPage extends Component {
                 <Card className="p-4 pl-4 pr-4">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     <Form onSubmit={this.login}>
+                      {isShowMsg && isShowMsg === "true" ?
+                        <p className={"text-danger text-center"}>Please Sign In to purchase Subscription Plan</p> : null}
                       <h1 className="auth-title text-center">Sign In</h1>
                       <p className="text-muted text-center text-info-line">
                         To Your Workspace

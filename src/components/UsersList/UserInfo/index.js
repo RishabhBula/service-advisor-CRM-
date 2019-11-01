@@ -30,7 +30,7 @@ const UserInfoTabs = [
     name: "Time Logs"
   },
   {
-    name: "User Info"
+    name: "Technician  Info"
   }
 ];
 class UserInfo extends Component {

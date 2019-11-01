@@ -84,10 +84,26 @@ class VehiclesList extends Component {
       behavior: "smooth"
     });
   };
-  componentDidUpdate({ openEdit }) {
+  componentDidUpdate({ openEdit, vehicleData }) {
     if (this.props.openEdit !== openEdit) {
       this.setState({
         openEditModal: false
+      });
+    }
+    if (this.props.vehicleData && this.props.vehicleData.vehicleList && vehicleData && vehicleData.vehicleList && this.props.vehicleData.vehicleList !== vehicleData.vehicleList) {
+      const { location } = this.props;
+      const lSearch = location.search;
+      const { page, search, sort, status } = qs.parse(lSearch);
+      let filterApplied = false;
+      if (search || sort) {
+        filterApplied = true;
+      }
+      this.setState({
+        page: parseInt(page) || 1,
+        sort: sort || "",
+        status: status || "",
+        search: search || "",
+        filterApplied
       });
     }
   }

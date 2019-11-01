@@ -194,9 +194,9 @@ class CrmImportExcel extends Component {
               totalRecords =
                 totalRecords + (sheet.data ? sheet.data.length : 0);
               return (
-                <TabPane key={index} tabId={index}>
-                  <Row>
-                    <Col sm="12">{this.renderTable(sheet)}</Col>
+                <TabPane key={index} tabId={index} className="overflow-auto">
+                  <Row className="m-0">
+                    <Col sm="12" className="p-0">{this.renderTable(sheet)}</Col>
                   </Row>
                 </TabPane>
               );

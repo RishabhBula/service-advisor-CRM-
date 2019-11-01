@@ -456,7 +456,6 @@ export class CrmVehicleModal extends Component {
       engineSize,
       productionDate,
       transmission,
-      drivetrain,
       notes,
       prodMonthError,
       prodYearError,
@@ -878,7 +877,7 @@ export class CrmVehicleModal extends Component {
                       type="select"
                       className=""
                       onChange={this.handleSelectedChange}
-                      name="drivetrain"
+                      name="drivetrainSelected"
                       id="matrixId"
                     >
                       <option value={""}>Select</option>
@@ -896,7 +895,7 @@ export class CrmVehicleModal extends Component {
                         })
                         : null}
                     </Input>
-                    {!drivetrain && errors.drivetrain ? (
+                    {!drivetrainSelected && errors.drivetrain ? (
                       <p className="text-danger">{errors.drivetrain}</p>
                     ) : null}
                   </div>

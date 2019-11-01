@@ -195,7 +195,7 @@ export class CrmTimeClockModal extends Component {
       .duration(moment(ts2)
         .diff(moment(ts1))
       ).asSeconds()
-    console.log("Seconds", Seconds);
+
     const duration = calculateDurationFromSeconds(Seconds >= 0 ? Seconds : 0)
 
     this.setState({

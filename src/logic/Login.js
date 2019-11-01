@@ -97,7 +97,9 @@ const forgetPasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0] || result.messages);
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -131,7 +133,9 @@ const verifyResetTokenLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0] || result.messages);
+      }
       dispatch(hideLoader());
       dispatch(redirectTo({ path: "/404" }));
       done();
@@ -159,7 +163,9 @@ const resetPasswordLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0] || result.messages);
+      }
       dispatch(hideLoader());
       done();
       return;

@@ -8,7 +8,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const getReportsByCustomerdays = async (req, res) => {
   try {
     const { currentUser, query } = req;
-    const { search, page, limit } = query;
+    const { search, page, limit, sort } = query;
     const { id, parentId } = currentUser;
     const pageNumber = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber = parseInt(limit) || 10;
@@ -53,6 +53,13 @@ const getReportsByCustomerdays = async (req, res) => {
         ]
       });
     }
+    if (sort) {
+      orderStatusCondition["$and"].push({
+        referralSource: {
+          $regex: new RegExp(sort.trim(), "i")
+        }
+      })
+    }
     /*  */
     /*  */
     const result = await OrderModel.aggregate([
@@ -72,7 +79,8 @@ const getReportsByCustomerdays = async (req, res) => {
           name: {
             $concat: ["$customerId.firstName", " ", "$customerId.lastName"]
           },
-          email: "$customerId.email"
+          email: "$customerId.email",
+          referralSource: "$customerId.referralSource",
         }
       },
       {
@@ -110,7 +118,8 @@ const getReportsByCustomerdays = async (req, res) => {
           name: {
             $concat: ["$customerId.firstName", " ", "$customerId.lastName"]
           },
-          email: "$customerId.email"
+          email: "$customerId.email",
+          referralSource: "$customerId.referralSource",
         }
       },
       {
@@ -127,7 +136,7 @@ const getReportsByCustomerdays = async (req, res) => {
         $count: "count"
       }
     ]);
-    
+
     const resp = [];
     const dates = getDateRanges();
     for (let i = 0; i < result.length; i++) {

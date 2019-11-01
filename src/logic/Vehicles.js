@@ -252,7 +252,9 @@ const deleteVehicleLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(hideLoader());
       delete action.payload.userId;
       dispatch(
@@ -287,7 +289,9 @@ const updateVehicleStatusLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(hideLoader());
       delete action.payload.vehicles;
       delete action.payload.status;
@@ -426,9 +430,14 @@ const importVehicleLogic = createLogic({
           path: `${AppRoutes.VEHICLES.url}`
         })
       );
-      toast.success(result.messages[0]);
+      dispatch(vehicleGetRequest());
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
     } else {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0] || DefaultErrorMessage);
+      }
     }
     setTimeout(
       () =>
@@ -439,11 +448,7 @@ const importVehicleLogic = createLogic({
         ),
       8000
     );
-    dispatch(
-      redirectTo({
-        path: `${AppRoutes.VEHICLES.url}`
-      })
-    );
+
     dispatch(hideLoader());
     done();
   }

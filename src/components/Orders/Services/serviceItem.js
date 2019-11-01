@@ -551,7 +551,7 @@ class ServiceItem extends Component {
       })
     })
   }
-  handleServiceSubmit = (serviceData, customerComment, userRecommendations,isShowMsg) => {
+  handleServiceSubmit = (serviceData, customerComment, userRecommendations, isShowMsg) => {
     this.setState({
       isServiceSubmitted: true,
       isCannedServiceSumbmit: false
@@ -577,7 +577,7 @@ class ServiceItem extends Component {
       }
     }
     serviceCalculation = serviceTotalsCalculation(serviceElelments)
-    if (ele.serviceName !== '') {
+    if (ele && ele.serviceName && ele.serviceName !== '') {
       const payload = {
         services: serviceData,
         customerComment: customerComment,
@@ -586,7 +586,7 @@ class ServiceItem extends Component {
         isServiceSubmit: true,
         orderTotal: serviceCalculation.orderGrandTotal,
         html: HTML,
-        isShowMsg:isShowMsg
+        isShowMsg: isShowMsg
       };
       this.props.submitServiceDataSuccess(payload)
       const serviceId = []

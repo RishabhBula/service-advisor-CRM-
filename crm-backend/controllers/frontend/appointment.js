@@ -174,7 +174,12 @@ const addAppointment = async (req, res) => {
     const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
     if (isSms) {
-      await sendSMS(phone, "Hello", id);
+      const smsResult = await sendSMS(phone, appointmentTitle, id);
+      if (smsResult.error === true) {
+        return res.status(400).json({
+          message: smsResult.message.replace("To","Phone")
+        });
+      }
     }
     if (isEmail) {
       const result = await userModel.findOne({ _id: id }, { companyName: 1 });
@@ -327,7 +332,12 @@ const updateAppointment = async (req, res) => {
       }
     );
     if (isSms) {
-      await sendSMS(phone, "Hello", id);
+      const smsResult = await sendSMS(phone, appointmentTitle, id);
+      if (smsResult.error === true) {
+        return res.status(400).json({
+          message: smsResult.message.replace("To","Phone")
+        });
+      }
     }
     if (isEmail) {
       const result = await userModel.findOne({ _id: id }, { companyName: 1 });

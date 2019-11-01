@@ -277,7 +277,7 @@ class SendInspection extends Component {
         subject: subject,
         customerId,
         email: customerEmail,
-        phone: addonNumber !== "" ? (addonNumber.replace(/[- )(_]/g, "")) : (phone.replace(/[- )(_]/g, "")),
+        phone: addonNumber !== "" ? (addonNumber) : (phone),
         pdf: isOrder ? invoiceURL : inspectionURL,
         orderTitle: `OrderId (#${orderTitle})`,
         companyName: companyName,
@@ -630,7 +630,7 @@ class SendInspection extends Component {
                               value={this.state.subject}
                               id="subject"
                               maxLength="60"
-                              invalid={errors.subject || false}
+                              invalid={errors.subject ? true : false}
                             />
                             {errors.subject ? (
                               <FormFeedback>{errors.subject}</FormFeedback>

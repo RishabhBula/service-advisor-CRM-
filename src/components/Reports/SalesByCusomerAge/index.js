@@ -20,12 +20,14 @@ import NoDataFound from "../../common/NoFound";
 import Dollor from "../../common/Dollor";
 import PaginationHelper from "../../../helpers/Pagination";
 import * as qs from "query-string";
+import { ReferralSource } from "../../../config/Constants";
 
 class SalesByCusomerAge extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedFilter: "",
+      sort: "",
       page: 1,
       filterApplied: false
     };
@@ -36,14 +38,15 @@ class SalesByCusomerAge extends Component {
   componentDidMount() {
     const { location } = this.props;
     const lSearch = location.search;
-    const { page, customerSearch } = qs.parse(lSearch);
+    const { page, customerSearch, sort } = qs.parse(lSearch);
     let filterApplied = false
-    if (customerSearch) {
+    if (customerSearch || sort) {
       filterApplied = true
     }
     this.setState({
       page: parseInt(page) || 1,
       selectedFilter: customerSearch || "",
+      sort: sort || "",
       filterApplied
     });
   }
@@ -76,7 +79,7 @@ class SalesByCusomerAge extends Component {
     e.preventDefault();
     this.setState({ page: 1, filterApplied: true });
     let page = 1;
-    this.props.onSearch(this.state.selectedFilter, page);
+    this.props.onSearch(this.state.selectedFilter, page, this.state.sort);
   };
   /**
    *
@@ -86,6 +89,7 @@ class SalesByCusomerAge extends Component {
     this.setState({
       selectedFilter: "",
       page: 1,
+      sort: "",
       filterApplied: false
     });
     this.props.onReset();
@@ -97,7 +101,7 @@ class SalesByCusomerAge extends Component {
   render() {
     const { customerReport } = this.props;
     const { isLoading, data, totalReports } = customerReport;
-    const { selectedFilter, page, filterApplied } = this.state;
+    const { selectedFilter, page, filterApplied, sort } = this.state;
     let totalPaid = 0;
     let totalUnPaid = 0;
     let totalThirty = 0;
@@ -110,22 +114,47 @@ class SalesByCusomerAge extends Component {
           <Form onSubmit={this.onSearch}>
             <Row>
               <Col lg={"4"} md={"4"} className="mb-0">
-                {
-                  <FormGroup className="mb-2">
-                    <InputGroup>
-                      <Input
-                        type={"text"}
-                        className={"form-control"}
-                        value={selectedFilter}
-                        onChange={this.handleChange}
-                        name={"selectedFilter"}
-                        placeholder={"Enter customer name or email"}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                }
+                <FormGroup className="mb-2">
+                  <InputGroup>
+                    <Input
+                      type={"text"}
+                      className={"form-control"}
+                      value={selectedFilter}
+                      onChange={this.handleChange}
+                      name={"selectedFilter"}
+                      placeholder={"Enter customer name or email"}
+                    />
+                  </InputGroup>
+                </FormGroup>
               </Col>
-              <Col lg={"8"} md={"8"} className="mb-0">
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <div className={"input-block"}>
+                  <Input
+                    type="select"
+                    placeholder="Referral"
+                    name="sort"
+                    value={sort}
+                    onChange={this.handleChange}
+                    maxLength="100"
+                  >
+                    <option value={""}>Select Referral Source</option>
+                    {ReferralSource.length
+                      ? ReferralSource.map((item, index) => {
+                        return (
+                          <option
+                            selected={item.key === sort}
+                            value={item.key}
+                            key={index}
+                          >
+                            {item.text}
+                          </option>
+                        );
+                      })
+                      : null}
+                  </Input>
+                </div>
+              </Col>
+              <Col lg={"6"} md={"6"} className="mb-0">
                 <div className="filter-btn-wrap justify-content-between">
                   <div className="form-group mb-0">
                     <span className="mr-2">
@@ -293,44 +322,50 @@ class SalesByCusomerAge extends Component {
                 </tr>
               )}
             <tr className={"bg-light"}>
-              <td
-                className={"text-right font-weight-semibold pr-3"}
-                colSpan={2}
-              >
-                <h6 className={"mb-0"}>
-                  <b>Total</b>
-                </h6>
-              </td>
-              <td>
-                <b>
-                  <Dollor value={totalThirty} />
-                </b>
-              </td>
-              <td>
-                <b>
-                  <Dollor value={totalSixty} />
-                </b>
-              </td>
-              <td>
-                <b>
-                  <Dollor value={totalSixty} />
-                </b>
-              </td>
-              <td>
-                <b>
-                  <Dollor value={ninentyPlus} />
-                </b>
-              </td>
-              <td>
-                <b>
-                  <Dollor value={totalUnPaid} />
-                </b>
-              </td>
-              <td>
-                <b>
-                  <Dollor value={totalPaid} />
-                </b>
-              </td>
+              {!isLoading ? (
+                data && data.length ? (
+                  <>
+                    <td
+                      className={"text-right font-weight-semibold pr-3"}
+                      colSpan={2}
+                    >
+                      <h6 className={"mb-0"}>
+                        <b>Total</b>
+                      </h6>
+                    </td>
+                    <td>
+                      <b>
+                        <Dollor value={totalThirty} />
+                      </b>
+                    </td>
+                    <td>
+                      <b>
+                        <Dollor value={totalSixty} />
+                      </b>
+                    </td>
+                    <td>
+                      <b>
+                        <Dollor value={totalSixty} />
+                      </b>
+                    </td>
+                    <td>
+                      <b>
+                        <Dollor value={ninentyPlus} />
+                      </b>
+                    </td>
+                    <td>
+                      <b>
+                        <Dollor value={totalUnPaid} />
+                      </b>
+                    </td>
+                    <td>
+                      <b>
+                        <Dollor value={totalPaid} />
+                      </b>
+                    </td>
+                  </>
+                ) :
+                  null) : null}
             </tr>
           </tbody>
         </Table>

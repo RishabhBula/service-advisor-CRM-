@@ -224,6 +224,7 @@ export default class AddAppointment extends Component {
       if (isNaN(e.target.value)) {
         return
       }
+
       this.setState({
         isSms: true
       })
@@ -261,6 +262,11 @@ export default class AddAppointment extends Component {
         isSms: true
       })
     } else {
+      this.setState({
+        isSms: false
+      })
+    }
+    if (event.key && event.key === "Backspace") {
       this.setState({
         isSms: false
       })
@@ -490,6 +496,15 @@ export default class AddAppointment extends Component {
       [name]: checked
     })
   }
+  /**
+   * 
+   */
+  // handleCreateOrder = (customerId) => {
+  //   const { selectedCustomer, selectedVehicle } = this.state
+  //   this.props.addOrderRequest({
+  //     customerId: selectedCustomer && selectedCustomer.value && selectedCustomer.value !== "" ? selectedCustomer.value : null
+  //   })
+  // }
   render() {
     const {
       selectedCustomer,
@@ -508,6 +523,7 @@ export default class AddAppointment extends Component {
       isEmail,
       isSms
     } = this.state;
+    console.log("selectedCustomer", selectedCustomer);
 
     const { toggleAddAppointModal, isOpen, editData } = this.props;
 
@@ -836,7 +852,8 @@ export default class AddAppointment extends Component {
                           maxLength="20"
                           value={phone}
                           guide={false}
-                          onChange={e =>
+                          onKeyDown={(e) => this.handlePhoneValueChange(e)}
+                          onChange={(e) =>
                             this.handlePhoneValueChange(e)
                           }
                         />
@@ -894,6 +911,9 @@ export default class AddAppointment extends Component {
                               : "Type order name or number"
                           }
                           onChange={e => {
+                            // if (e && e.label === "+ Add New Order") {
+                            //   this.handleCreateOrder()
+                            // }
                             this.setState({
                               selectedOrder: e
                             });

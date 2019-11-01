@@ -24,7 +24,7 @@ import { logger } from "../helpers/Logger";
 import { SingupValidations, SingupValidationsMessaages } from "../validations";
 import MailIcon from "./../assets/img/mail-icon.svg";
 import { Link } from "react-router-dom";
-import { validUrlCheck, isValidSubdomain } from "../helpers/Object";
+import { isValidURL, isValidSubdomain } from "../helpers/Object";
 import ServiceAdvisorLogo from "../assets/logo-white.svg";
 
 const ResendInvitation = props => {
@@ -129,7 +129,7 @@ class RegisterPage extends Component {
         SingupValidations,
         SingupValidationsMessaages
       );
-      if (d.companyWebsite && !validUrlCheck(d.companyWebsite)) {
+      if (d.companyWebsite && !isValidURL(d.companyWebsite)) {
         errors.companyWebsite = "Please enter a valid URL. Include http:// or https://";
         isValid = false;
       }
@@ -325,10 +325,9 @@ class RegisterPage extends Component {
                             <PopoverBody>
                               <div className={"pb-2 technician-detail"}>
                                 <div className={"text-capitalize pb-1"}>
-                                  Password should be Alphanumericals
+                                  Password should be alphanumeric
                                   <small>
-                                    (combination of alphabetical and numerical
-                                    characters)
+                                    (Use 6 or more characters with a mix of letters & numbers)
                                   </small>
                                   .
                                 </div>

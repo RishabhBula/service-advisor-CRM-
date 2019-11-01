@@ -223,7 +223,7 @@ const deleteCustomerLogic = createLogic({
 
 const editCustomerLogic = createLogic({
   type: customersAddActions.EDIT_CUSTOMER_REQUESTED,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
     let api = new ApiHelper();
@@ -261,6 +261,12 @@ const editCustomerLogic = createLogic({
           })
         );
       }
+      const customerAddInfo = getState().customerInfoReducer && getState().customerInfoReducer.customerAddInfo ? getState().customerInfoReducer.customerAddInfo : "";
+      dispatch(
+        customerAddSuccess({
+          customerAddInfo: { ...customerAddInfo, ...action.payload.data }
+        })
+      );
       dispatch(customerEditSuccess());
       if (action.payload.data.isSingleCustomer) {
         dispatch(
