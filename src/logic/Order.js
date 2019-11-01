@@ -116,7 +116,11 @@ const getOrdersForSelectLogic = createLogic({
           });
         }
       }
-      payload.callback(options);
+      payload.callback(options.concat({
+        label: "+ Add New Order",
+        value: "",
+        data: {}
+      }));
     }
     logger(result);
     done();
@@ -391,7 +395,7 @@ const updateOrderDetailsLogic = createLogic({
       return;
     } else {
       if (!action.payload.isPdfGenerated) {
-        if (!action.payload.isChangedOrderStatus) {
+        if (!action.payload.isChangedOrderStatus && !action.payload.isShowMsg) {
           if (!toast.isActive(toastId)) {
             toastId = toast.success(
               result.messages[0]
@@ -582,7 +586,7 @@ const updateOrderStatusName = createLogic({
   type: orderActions.UPDATE_ORDER_STATUS_NAME_REQ,
   cancelType: orderActions.UPDATE_ORDER_STATUS_NAME_FAIL,
   async process({ action }, dispatch, done) {
-    console.log("action.payload", action.payload);
+
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/order",

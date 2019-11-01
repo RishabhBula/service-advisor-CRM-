@@ -16,7 +16,7 @@ import CrmDragDrop from "./CrmDragDrop";
 import { logger } from "../../helpers/Logger";
 import XLSX from "xlsx";
 import { connect } from "react-redux";
-import { modelOpenRequest, showLoader, hideLoader,updateImportCustomersReq } from "../../actions";
+import { modelOpenRequest, showLoader, hideLoader, updateImportCustomersReq, updateImportVehicleReq } from "../../actions";
 import CrmExportSampleButton from "./CrmExportSampleButton";
 class CrmImportExcel extends Component {
   constructor(props) {
@@ -38,7 +38,8 @@ class CrmImportExcel extends Component {
       activeSheet: 0
     });
     this.props.toggleModal(!this.props.isOpen);
-    this.props.updateImportCustomersReq({importError:undefined})
+    this.props.updateImportCustomersReq({ importError: undefined })
+    this.props.updateImportVehicleReq({ importError: undefined })
   };
   onImport = () => {
     const { file, sheets } = this.state;
@@ -193,9 +194,9 @@ class CrmImportExcel extends Component {
               totalRecords =
                 totalRecords + (sheet.data ? sheet.data.length : 0);
               return (
-                <TabPane key={index} tabId={index}>
-                  <Row>
-                    <Col sm="12">{this.renderTable(sheet)}</Col>
+                <TabPane key={index} tabId={index} className="overflow-auto">
+                  <Row className="m-0">
+                    <Col sm="12" className="p-0">{this.renderTable(sheet)}</Col>
                   </Row>
                 </TabPane>
               );
@@ -215,7 +216,7 @@ class CrmImportExcel extends Component {
       sheetType,
       importSectionName
     } = this.props;
-    
+
     const { isLoading, fileError, sheets } = this.state;
     logger(isLoading);
     return (
@@ -320,8 +321,11 @@ const mapDispatchToProps = dispatch => ({
   hideLoader: () => {
     dispatch(hideLoader());
   },
-  updateImportCustomersReq:(data) => {
+  updateImportCustomersReq: (data) => {
     dispatch(updateImportCustomersReq(data));
+  },
+  updateImportVehicleReq: (data) => {
+    dispatch(updateImportVehicleReq(data));
   }
 });
 

@@ -218,14 +218,18 @@ class PriceMatrix extends Component {
   handleCostChange = (index, e) => {
     let { name, value } = e.target;
     value = parseFloat(value);
-    if (isNaN(value)) {
+    console.log("value", value);
+
+    if (isNaN(value) || !(value < Infinity)) {
       return;
     }
     if (name === "costPrice1") {
       const matrixRange = [...this.state.matrixRange];
       const lastIndex = matrixRange.length - 1;
       matrixRange[index].lower = value;
-      matrixRange[index - 1].upper = value - 0.01;
+      if (matrixRange[index - 1]) {
+        matrixRange[index - 1].upper = value - 0.01;
+      }
       for (let i = index; i <= lastIndex; i++) {
         if (i === index) {
           matrixRange[i].upper = (
@@ -266,7 +270,9 @@ class PriceMatrix extends Component {
       // }
       const lastIndex = matrixRange.length - 1;
       matrixRange[index].upper = value;
-      matrixRange[index + 1].lower = value + 0.01;
+      if (matrixRange[index + 1]) {
+        matrixRange[index + 1].lower = value + 0.01;
+      }
       for (let i = index + 1; i <= lastIndex; i++) {
         if (i === lastIndex) {
           matrixRange[i].lower = (

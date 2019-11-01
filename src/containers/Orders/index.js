@@ -528,7 +528,7 @@ class Order extends Component {
                               id={"sentInvoice"}
                             >
                               <i className="icons cui-cursor" />
-                              &nbsp; Sent
+                              &nbsp; Send
                           </span>
                             <UncontrolledTooltip target={"sentInvoice"}>
                               Click to Send Invoice

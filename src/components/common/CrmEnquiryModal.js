@@ -105,7 +105,7 @@ export class CrmEnquiryModel extends Component {
         </ModalHeader>
         <ModalBody className={"p-0"}>
           <div className="banner-form wow tada " data-wow-delay="0.3s">
-            <h4 className="form-title">Subscribe For All The Latest News And Update On The CRM</h4>
+            <h4 className="form-title">Subscribe For All The Latest News And Update On The Service Advisor</h4>
             <Form onSubmit={this.handleAddEnquiry}>
               <FormGroup>
                 {/* <Label htmlFor="name" className="customer-modal-text-style">
@@ -184,7 +184,7 @@ export class CrmEnquiryModel extends Component {
             color=""
             type={"submit"}
             onClick={this.handleAddEnquiry}
-            className={"btn-form"}
+            className={isGoogleVerified?"btn-form":"btn-form cursor-notallowed"}
             disabled={!isGoogleVerified ? true : false}
           >
             <i className={"fa fa-paper-plane mr-1"}></i> Submit

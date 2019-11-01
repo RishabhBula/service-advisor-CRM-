@@ -28,4 +28,3 @@ var storageFile = multer.diskStorage({
 });
 
 module.exports = { storageFile };
-

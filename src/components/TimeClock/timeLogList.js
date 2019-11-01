@@ -327,7 +327,7 @@ class TimeLogList extends Component {
                         {timeLog.activity}
                       </Link> : timeLog.activity ? timeLog.activity : "General"}</td>
                     <td><Dollor value={timeLog.technicianId && timeLog.technicianId.rate ? `${(timeLog.technicianId.rate).toFixed(2)}` : 0.00} /></td>
-                    <td><Dollor value={timeLog.total && !isNaN(timeLog.total) ? `${parseFloat(timeLog.total).toFixed(2)}` : "0.00"} /></td>
+                    <td><Dollor value={timeLog.total && !isNaN(timeLog.total) && (timeLog.total) >= 0 ? `${parseFloat(timeLog.total).toFixed(2)}` : 0.00} /></td>
                     <td className={"text-center"}>
                       {
                         timeLog.type !== "timeclock" ?

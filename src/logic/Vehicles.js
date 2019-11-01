@@ -252,7 +252,9 @@ const deleteVehicleLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(hideLoader());
       delete action.payload.userId;
       dispatch(
@@ -287,7 +289,9 @@ const updateVehicleStatusLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(hideLoader());
       delete action.payload.vehicles;
       delete action.payload.status;
@@ -320,6 +324,7 @@ const importVehicleLogic = createLogic({
     logger(profileStateData);
     const errroredRows = [];
     let hasError = false;
+    const current_year = new Date().getFullYear();
     const data = action.payload.map(element => {
       if (!element["Year"]) {
         hasError = true;
@@ -334,6 +339,12 @@ const importVehicleLogic = createLogic({
         errroredRows.push(
           `Invalid year value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
+      } else if (element["Year"] <= current_year - 101 || element["Year"] > current_year) {
+        hasError = true;
+        errroredRows.push(
+          `Year should be in range ${current_year - 101} to ${new Date().getFullYear()} on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+        )
+
       }
       if (!element["Make"]) {
         hasError = true;
@@ -416,12 +427,17 @@ const importVehicleLogic = createLogic({
       );
       dispatch(
         redirectTo({
-          path: `${AppRoutes.VEHICLES.url}?page=1&reset=${Date.now()}`
+          path: `${AppRoutes.VEHICLES.url}`
         })
       );
-      toast.success(result.messages[0]);
+      dispatch(vehicleGetRequest());
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
     } else {
-      toast.error(result.messages[0] || DefaultErrorMessage);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0] || DefaultErrorMessage);
+      }
     }
     setTimeout(
       () =>
@@ -432,6 +448,7 @@ const importVehicleLogic = createLogic({
         ),
       8000
     );
+
     dispatch(hideLoader());
     done();
   }
@@ -529,6 +546,7 @@ const getVehicleMakeModalReq = createLogic({
         return [...new Map(arr.map(item => [item[key], item])).values()]
       }
       vehicle = getUniqueListBy(vehicle, 'make');
+      vehicle.sort((a, b) => (a['make'] || "").toString().localeCompare((b['make'] || "").toString()));
       vehicle.map((data) => {
         VehicleMake.push({
           label: data.make,
@@ -565,6 +583,7 @@ const getVehicleModalLogic = createLogic({
       // assign things.thing to myData for brevity
       var myData = vehicle;
       vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.sort((a, b) => (a['model'] || "").toString().localeCompare((b['model'] || "").toString()));
       vehicle.map((data) => {
         vehicleModal.push({
           label: data.model,

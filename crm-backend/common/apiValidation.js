@@ -1,6 +1,7 @@
 const { body } = require("express-validator/check");
 const { validationMessage } = require("./validationMessage");
 const userModel = require("../models/user");
+const roleModel = require("../models/role");
 const normalizeEmail = require("normalize-email");
 
 const signupValidation = [
@@ -19,8 +20,12 @@ const signupValidation = [
     .withMessage(validationMessage.emailInvalid)
     .custom(async (email, { req }) => {
       const normalizedEmail = normalizeEmail(email);
+      const roleType = await roleModel.findOne({
+        userType: new RegExp("Technician", "i")
+      });
       const result = await userModel.findOne({
         $and: [
+          { roleType: { $ne: roleType._id } },
           { normalizedEmail },
           { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
         ]
@@ -129,13 +134,18 @@ const createUserValidation = [
     .isEmail()
     .withMessage(validationMessage.emailInvalid)
     .custom(async (email, { req }) => {
+      const roleType = await roleModel.findOne({
+        userType: new RegExp("admin", "i")
+      });
       const normalizedEmail = normalizeEmail(email);
       const result = await userModel.findOne({
         $and: [
+          { roleType: { $ne: roleType._id } },
           { normalizedEmail },
           { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
         ]
       });
+
       if (result) {
         throw new Error(validationMessage.emailAlreadyExist);
       }

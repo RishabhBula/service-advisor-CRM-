@@ -37,6 +37,7 @@ import Validator from "js-object-validation";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { toast } from "react-toastify";
 import LastUpdated from "../common/LastUpdated";
+import { ReferralSource } from "../../config/Constants";
 
 export class CrmEditCustomerModal extends Component {
   constructor(props) {
@@ -568,6 +569,7 @@ export class CrmEditCustomerModal extends Component {
       firstName,
       lastName,
       email,
+      referralSource
       //selectedLabourRate,
       //selectedPriceMatrix,
       //percentageError
@@ -1017,14 +1019,31 @@ export class CrmEditCustomerModal extends Component {
                     >
                       Referral Source
                         </Label>
-                    <Input
-                      type="text"
-                      placeholder="Referral"
-                      name="referralSource"
-                      onChange={this.handleInputChange}
-                      value={this.state.referralSource}
-                      maxLength="100"
-                    />
+                    <div className={"input-block"}>
+                      <Input
+                        type="select"
+                        placeholder="Referral"
+                        name="referralSource"
+                        value={referralSource}
+                        onChange={this.handleInputChange}
+                        maxLength="100"
+                      >
+                        <option value={""}>Select</option>
+                        {ReferralSource.length
+                          ? ReferralSource.map((item, index) => {
+                            return (
+                              <option
+                                selected={item.key === referralSource}
+                                value={item.key}
+                                key={index}
+                              >
+                                {item.text}
+                              </option>
+                            );
+                          })
+                          : null}
+                      </Input>
+                    </div>
                   </FormGroup>
                 </Col>
               </Row>

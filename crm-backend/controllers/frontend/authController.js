@@ -181,7 +181,7 @@ const loginApp = async (req, res) => {
       throw {
         code: 400,
         message:
-          "Email address is not registered with us. Please try to login with registered email address.",
+          "Please enter valid email or password.",
         success: false
       };
     }
@@ -189,7 +189,7 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "Your access has been disabled, please contact your company.",
+        message: "Your account access has been deactivated from the Admin,Please contact the Administrator.",
         success: false
       };
     }
@@ -197,7 +197,7 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "Kindly Verify your Account and try to Login",
+        message: "Kindly Verify your Account and try to Login.",
         success: false
       };
     }
@@ -205,7 +205,7 @@ const loginApp = async (req, res) => {
       // eslint-disable-next-line no-throw-literal
       throw {
         code: 400,
-        message: "Password did not match!",
+        message: "Please enter correct email or password.",
         success: false
       };
     }

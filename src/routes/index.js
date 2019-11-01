@@ -5,10 +5,10 @@ import { hideLoader, showLoader, redirectTo } from "../actions";
 import "../App.scss";
 import FullPageLoader from "../containers/Loader/FullPageLoader";
 import Helmet from "react-helmet";
-import {pageTitle} from "../helpers/Object"
+import { pageTitle } from "../helpers/Object"
 // Containers
 const DefaultLayout = React.lazy(() => import("../containers/DefaultLayout"));
-
+const token = localStorage.getItem("token");
 // Pages
 const Login = React.lazy(() => import("../containers/Auth/Login"));
 const Register = React.lazy(() => import("../containers/Auth/Register"));
@@ -59,8 +59,8 @@ const Routes = [
   },
   {
     exact: true,
-    path: "/register",
-    name: "Register Page",
+    path: "/signup",
+    name: "SignUp Page",
     component: Register
   },
   {
@@ -115,12 +115,12 @@ const Routes = [
     exact: false,
     path: "/",
     name: "Home",
-    component: DefaultLayout
-  }
+    component: token ? DefaultLayout : HomePage
+  },
 ];
 
 class AppRoutes extends Component {
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     const { appState } = this.props;
     const { showLoader } = appState;

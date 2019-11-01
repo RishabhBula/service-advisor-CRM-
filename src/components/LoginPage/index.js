@@ -19,6 +19,7 @@ import {
 import { logger } from "../../helpers/Logger";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
 import ServiceAdvisorLogo from "../../assets/logo-white.svg";
+import * as qs from "query-string";
 
 class LoginPage extends Component {
   constructor(props) {
@@ -26,8 +27,18 @@ class LoginPage extends Component {
     this.state = {
       email: "",
       password: "",
+      isShowMsg: false,
       errors: {}
     };
+  }
+  componentDidMount() {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { isShowMsg } = qs.parse(lSearch);
+    this.setState({
+      isShowMsg
+    })
+
   }
   handleChange = e => {
     const { target } = e;
@@ -70,7 +81,7 @@ class LoginPage extends Component {
   };
   render() {
     // const { settingData } = this.props;
-    const { email, password, errors } = this.state;
+    const { email, password, errors, isShowMsg } = this.state;
     return (
       <>
         <div className="app flex-row align-items-center auth-page  pt-3 pb-3">
@@ -78,21 +89,23 @@ class LoginPage extends Component {
           <Row className="justify-content-center m-0">
             <Col md="12" lg="12" xl="12">
               <Col className="text-center">
-                <Link to="/home" target="_blank">
-                  <h4 className="logo-title">
+                <h4 className="logo-title">
+                  <Link to="/home" target="_blank">
                     <img
                       src={ServiceAdvisorLogo}
                       alt={"logo"}
                       style={{ width: 120 }}
                     />
-                  </h4>
-                </Link>
+                  </Link>
+                </h4>
               </Col>
 
               <CardGroup>
                 <Card className="p-4 pl-4 pr-4">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     <Form onSubmit={this.login}>
+                      {isShowMsg && isShowMsg === "true" ?
+                        <p className={"text-danger text-center"}>Please Sign In to purchase Subscription Plan</p> : null}
                       <h1 className="auth-title text-center">Sign In</h1>
                       <p className="text-muted text-center text-info-line">
                         To Your Workspace
@@ -172,7 +185,7 @@ class LoginPage extends Component {
                           {/* <Button className="btn-facebook btn-brand mr-1 mb-1" block><i className="fa fa-facebook"></i><span>Facebook</span></Button> */}
                           <p className="text-center">
                             Don't have an account?{" "}
-                            <Link to="/register">Sign Up </Link>
+                            <Link to="/signup">Sign Up </Link>
                           </p>
                         </Col>
                       </Row>

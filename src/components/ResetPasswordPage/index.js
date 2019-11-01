@@ -86,15 +86,15 @@ class ResetPasswordPage extends Component {
         <Row className="justify-content-center m-0">
           <Col md="12" lg="12" xl="12">
             <Col className="text-center">
-              <Link to="/home" target="_blank">
-                <h4 className="logo-title">
+              <h4 className="logo-title">
+                <Link to="/home" target="_blank">
                   <img
                     src={ServiceAdvisorLogo}
                     alt={"logo"}
                     style={{ width: 120 }}
                   />
-                </h4>
-              </Link>
+                </Link>
+              </h4>
             </Col>
             <CardGroup>
               <Card className="p-4 pl-4 pr-4">

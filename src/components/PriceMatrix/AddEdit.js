@@ -65,7 +65,7 @@ class PriceMatrixComponent extends Component {
                     <div className={"matrix-input"}>
                       <FormGroup className={"matrix-name-input"}>
                         <Label>
-                          Matrix Name<span class="asteric">*</span>{" "}
+                          Matrix Name<span className="asteric">*</span>{" "}
                         </Label>
                         <div className={"input-block"}>
                           <Input
@@ -172,9 +172,9 @@ class PriceMatrixComponent extends Component {
                                         onChange={e => handleChange(index, e)}
                                         placeholder={"100.00"}
                                       />
-                                      <div class="input-group-append">
-                                        <span class="input-group-text">
-                                          <i class="fa fa-percent" />
+                                      <div className="input-group-append">
+                                        <span className="input-group-text">
+                                          <i className="fa fa-percent" />
                                         </span>
                                       </div>
                                     </InputGroup>
@@ -195,9 +195,9 @@ class PriceMatrixComponent extends Component {
                                         onChange={e => handleChange(index, e)}
                                         placeholder={"100.00"}
                                       />
-                                      <div class="input-group-append">
-                                        <span class="input-group-text">
-                                          <i class="fa fa-percent" />
+                                      <div className="input-group-append">
+                                        <span className="input-group-text">
+                                          <i className="fa fa-percent" />
                                         </span>
                                       </div>
                                     </InputGroup>
@@ -345,8 +345,8 @@ class PriceMatrixComponent extends Component {
                 </table>
               </ModalBody>
               <ModalFooter>
-                <div class="flex-1">
-                  <div class="required-fields">*Fields are Required.</div>
+                <div className="flex-1">
+                  <div className="required-fields">*Fields are Required.</div>
                 </div>
 
                 <Button color={"primary"} onClick={() => handleAddMatrix()}>

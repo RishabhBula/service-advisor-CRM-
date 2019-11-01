@@ -70,8 +70,8 @@ class SendInspection extends Component {
         isEmail: propsCustomerData && propsCustomerData.email ? true : false,
         isSms:
           propsCustomerData &&
-          propsCustomerData.phoneDetail &&
-          propsCustomerData.phoneDetail[0].value
+            propsCustomerData.phoneDetail &&
+            propsCustomerData.phoneDetail[0].value
             ? true
             : false,
         phone:
@@ -277,7 +277,7 @@ class SendInspection extends Component {
         subject: subject,
         customerId,
         email: customerEmail,
-        phone: addonNumber !== "" ? addonNumber : phone,
+        phone: addonNumber !== "" ? (addonNumber) : (phone),
         pdf: isOrder ? invoiceURL : inspectionURL,
         orderTitle: `OrderId (#${orderTitle})`,
         companyName: companyName,
@@ -313,7 +313,7 @@ class SendInspection extends Component {
         addonNumber: "",
         showAddonNumber: false
       });
-    } catch (error) {}
+    } catch (error) { }
   };
   /** */
   onKeyPress = e => {
@@ -323,7 +323,7 @@ class SendInspection extends Component {
   };
   /** */
   handleFocus = id => {
-    document.getElementById(id).addEventListener("paste", function(e) {
+    document.getElementById(id).addEventListener("paste", function (e) {
       e.preventDefault();
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
@@ -409,8 +409,8 @@ class SendInspection extends Component {
             {!isMessage && !isOrder
               ? "Send Inspection"
               : isMessage
-              ? "Message Template"
-              : "Sent Invoice"}
+                ? "Message Template"
+                : "Send Invoice"}
           </ModalHeader>
           <ModalBody>
             <div className="">
@@ -503,48 +503,48 @@ class SendInspection extends Component {
                                   onChange={e => this.handlePhoneChange(e)}
                                 />
                               ) : (
-                                <div>
-                                  <MaskedInput
-                                    mask={[
-                                      "(",
-                                      /[1-9]/,
-                                      /\d/,
-                                      /\d/,
-                                      ")",
-                                      " ",
-                                      /\d/,
-                                      /\d/,
-                                      /\d/,
-                                      "-",
-                                      /\d/,
-                                      /\d/,
-                                      /\d/,
-                                      /\d/
-                                    ]}
-                                    name="addonNumber"
-                                    className={
-                                      !incorrectNumber
-                                        ? "form-control"
-                                        : "form-control is-invalid"
-                                    }
-                                    placeholder="(555) 055-0555"
-                                    size="20"
-                                    value={addonNumber}
-                                    maxLength={14}
-                                    guide={false}
-                                    onChange={e =>
-                                      this.handleChangeInput(e, "addonNumber")
-                                    }
-                                  />
+                                  <div>
+                                    <MaskedInput
+                                      mask={[
+                                        "(",
+                                        /[1-9]/,
+                                        /\d/,
+                                        /\d/,
+                                        ")",
+                                        " ",
+                                        /\d/,
+                                        /\d/,
+                                        /\d/,
+                                        "-",
+                                        /\d/,
+                                        /\d/,
+                                        /\d/,
+                                        /\d/
+                                      ]}
+                                      name="addonNumber"
+                                      className={
+                                        !incorrectNumber
+                                          ? "form-control"
+                                          : "form-control is-invalid"
+                                      }
+                                      placeholder="(555) 055-0555"
+                                      size="20"
+                                      value={addonNumber}
+                                      maxLength={14}
+                                      guide={false}
+                                      onChange={e =>
+                                        this.handleChangeInput(e, "addonNumber")
+                                      }
+                                    />
 
-                                  {incorrectNumber ? (
-                                    <FormFeedback>
-                                      Phone number should not be ten or less
-                                      than ten digits.
+                                    {incorrectNumber ? (
+                                      <FormFeedback>
+                                        Phone number should not be ten or less
+                                        than ten digits.
                                     </FormFeedback>
-                                  ) : null}
-                                </div>
-                              )}
+                                    ) : null}
+                                  </div>
+                                )}
                             </div>
                           </FormGroup>
                         </Col>
@@ -561,10 +561,10 @@ class SendInspection extends Component {
                                 <i className={"fa fa-plus mr-2 ml-1"}></i> New
                               </span>
                             ) : (
-                              <span>
-                                <i className={"fa fa-redo"}></i> Remove
+                                <span>
+                                  <i className={"fa fa-redo"}></i> Remove
                               </span>
-                            )}
+                              )}
                           </Button>
                           <UncontrolledTooltip
                             placement="top"
@@ -596,15 +596,15 @@ class SendInspection extends Component {
                               search ? (
                                 "No template found"
                               ) : (
-                                <span
-                                  onClick={this.props.toggleMessageTemplate}
-                                  className={
-                                    "text-dark font-bold cursor_pointer"
-                                  }
-                                >
-                                  + Add template
+                                  <span
+                                    onClick={this.props.toggleMessageTemplate}
+                                    className={
+                                      "text-dark font-bold cursor_pointer"
+                                    }
+                                  >
+                                    + Add template
                                 </span>
-                              )
+                                )
                             }
                           />
                         </div>
@@ -630,7 +630,7 @@ class SendInspection extends Component {
                               value={this.state.subject}
                               id="subject"
                               maxLength="60"
-                              invalid={errors.subject || false}
+                              invalid={errors.subject ? true : false}
                             />
                             {errors.subject ? (
                               <FormFeedback>{errors.subject}</FormFeedback>
@@ -651,7 +651,7 @@ class SendInspection extends Component {
                           <div
                             className={
                               messageTextSentError &&
-                              messageTextSentError !== ""
+                                messageTextSentError !== ""
                                 ? "input-block message-input-warp is-invalid"
                                 : "input-block message-input-warp"
                             }
@@ -671,11 +671,11 @@ class SendInspection extends Component {
                             />
                           </div>
                           {messageTextSentError &&
-                          messageTextSentError !== "" ? (
-                            <span className={" invalid-feedback "}>
-                              Please enter message
+                            messageTextSentError !== "" ? (
+                              <span className={" invalid-feedback "}>
+                                Please enter message
                             </span>
-                          ) : null}
+                            ) : null}
                         </div>
                       </FormGroup>
                     </Col>
@@ -710,13 +710,13 @@ class SendInspection extends Component {
             </div>
             {!isMessage ? (
               <Button color="primary" onClick={this.handleSentInspection}>
-                {isOrder ? "Sent Invoice" : "Send Inspection"}
+                {isOrder ? "Send Invoice" : "Send Inspection"}
               </Button>
             ) : (
-              <Button color="primary" onClick={this.handleAddtoMessage}>
-                Add to message
+                <Button color="primary" onClick={this.handleAddtoMessage}>
+                  Add to message
               </Button>
-            )}{" "}
+              )}{" "}
             <Button
               color="secondary"
               onClick={e => {

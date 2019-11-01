@@ -48,7 +48,8 @@ import WorkflowListView from "../../components/Workflow/ListView";
 import { ConfirmBox } from "../../helpers/SweetAlert";
 import ResizeObserver from "react-resize-observer";
 
-let pos3 = 0,pos1 = 0;
+let pos3 = 0, pos1 = 0;
+let toastId = null;
 
 class WorkFlow extends Component {
   constructor(props) {
@@ -99,7 +100,7 @@ class WorkFlow extends Component {
       workflowTop = workflow.getBoundingClientRect().top;
       this.dragElement(ele, workflow);
     }
-    window.addEventListener("scroll", e => this.handleScroll(e,workflowTop));
+    window.addEventListener("scroll", e => this.handleScroll(e, workflowTop));
   }
 
   componentDidUpdate = ({ orderReducer }) => {
@@ -135,8 +136,8 @@ class WorkFlow extends Component {
   /**
    *
    */
-  handleScroll = (e,top) => {
-    const {scrollPos} = this.state
+  handleScroll = (e, top) => {
+    const { scrollPos } = this.state
     var scrollY = window.scrollY;
     var ele = document.getElementsByClassName("workflow-grid-card");
     // let workflow = document.getElementById("simplebar-content");
@@ -238,10 +239,10 @@ class WorkFlow extends Component {
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
-    pos3 =  e.clientX;
+    pos3 = e.clientX;
     document.onmouseup = e => this.closeDragElement(e, pos3);
     // call a  whenever the cursor moves:
-    document.onmousemove = e => this.elementDrag(e,ele, workflow);
+    document.onmousemove = e => this.elementDrag(e, ele, workflow);
   };
 
   elementDrag = (e, ele, workflow) => {
@@ -344,7 +345,10 @@ class WorkFlow extends Component {
           color: "primary",
           onClick: async () => {
             if (!newStatus) {
-              toast.error("Please choose a status to move.");
+              if (!toast.isActive(toastId)) {
+                toastId = toast.error("Please choose a status to move.");
+              }
+              // toast.error("Please choose a status to move.");
               return;
             }
             this.props.deleteOrderStatus({
@@ -362,13 +366,14 @@ class WorkFlow extends Component {
    */
   deleteOrderStatus = data => {
     const { orderReducer } = this.props;
+    const { orderStatus } = orderReducer;
     let abc = data.orderStatusId;
     let check =
       orderReducer && orderReducer.orderData && orderReducer.orderData.orders
         ? orderReducer.orderData.orders
         : "";
     let result = check[abc] ? check[abc] : "";
-    if (result && result.length > 0) {
+    if (result && result.length > 0 && orderStatus && orderStatus.length && orderStatus.length > 1) {
       this.setState({
         showMoveOptions: true,
         selectedOrderStatusToDelete: data
@@ -397,9 +402,9 @@ class WorkFlow extends Component {
     });
     this.setState({
       orderStatusName: "",
-      errors:{
+      errors: {
         ...this.state.errors,
-        orderStatusName:null
+        orderStatusName: null
       }
     });
   };
@@ -609,14 +614,14 @@ class WorkFlow extends Component {
   /**
    * 
    */
-  updateOrderStatusName = (name, index,id) => {
-    const {orderReducer} = this.props;
+  updateOrderStatusName = (name, index, id) => {
+    const { orderReducer } = this.props;
     const { orderStatus } = orderReducer;
     let data = [...orderStatus];
-    data[index]={
-      ...data[index],name:name
+    data[index] = {
+      ...data[index], name: name
     }
-    this.props.updateOrderStatusNameReq({data,name,index,id});
+    this.props.updateOrderStatusNameReq({ data, name, index, id });
   }
   /**
    *
@@ -734,34 +739,34 @@ class WorkFlow extends Component {
                     updateOrderStatusName={this.updateOrderStatusName}
                   />
                 ) : (
-                  <div
-                    style={{ overflowX: "auto" }}
-                    className={"simplebar-content "}
-                    id={"simplebar-content"}
-                    onScroll={e => this.handleScrollLeft(e)}
-                  >
-                    <ResizeObserver
-                      onResize={rect =>
-                        this.handleResize(rect.width, rect.height)
-                      }
-                    />
-                    <WorkflowGridView
-                      orderData={orderData}
-                      orderStatus={orderStatus}
-                      orderStatus1={this.orderStatus}
-                      updateOrderStatus={updateOrderStatus}
-                      deleteOrderStatus={this.deleteOrderStatus}
-                      updateOrderOfOrderStatus={updateOrderOfOrderStatus}
-                      deleteOrder={this.deleteOrder}
-                      redirectTo={redirectTo}
-                      modelInfoReducer={modelInfoReducer}
-                      addAppointment={addAppointment}
-                      getAppointments={getAppointments}
-                      appointmentReducer={appointmentReducer}
-                      updateOrderStatusName={this.updateOrderStatusName}
-                    />
-                  </div>
-                )}
+                    <div
+                      style={{ overflowX: "auto" }}
+                      className={"simplebar-content "}
+                      id={"simplebar-content"}
+                      onScroll={e => this.handleScrollLeft(e)}
+                    >
+                      <ResizeObserver
+                        onResize={rect =>
+                          this.handleResize(rect.width, rect.height)
+                        }
+                      />
+                      <WorkflowGridView
+                        orderData={orderData}
+                        orderStatus={orderStatus}
+                        orderStatus1={this.orderStatus}
+                        updateOrderStatus={updateOrderStatus}
+                        deleteOrderStatus={this.deleteOrderStatus}
+                        updateOrderOfOrderStatus={updateOrderOfOrderStatus}
+                        deleteOrder={this.deleteOrder}
+                        redirectTo={redirectTo}
+                        modelInfoReducer={modelInfoReducer}
+                        addAppointment={addAppointment}
+                        getAppointments={getAppointments}
+                        appointmentReducer={appointmentReducer}
+                        updateOrderStatusName={this.updateOrderStatusName}
+                      />
+                    </div>
+                  )}
                 {!listView ? (
                   <div
                     className={"simplebar-scroll-track"}
@@ -806,7 +811,7 @@ const mapDispatchToProps = dispatch => ({
   updateOrderDetails: data => {
     dispatch(updateOrderDetailsRequest(data));
   },
-  updateOrderStatusNameReq: data =>{
+  updateOrderStatusNameReq: data => {
     dispatch(updateOrderStatusNameReq(data));
   }
 });

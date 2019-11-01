@@ -149,7 +149,7 @@ class HomeHeader extends Component {
               //   /*onClick={() => this.onGoPage('/dev/register')}*/ className="btn btn-theme btn-sm"
               // >
               <Button className={"cursor_pointer btn btn-theme"} color={""} onClick={this.handleOpenEnquiryModal}>
-                Start Free Trial
+                Request Early Access
               </Button>
               //</div></Link>
             ) : (

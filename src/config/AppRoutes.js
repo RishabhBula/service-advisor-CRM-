@@ -75,7 +75,7 @@ export const AppRoutes = {
     exact: true
   },
   TIMESHEETS: {
-    url: "/timesheets",
+    url: "/time-clocks",
     name: "Time Clocks",
     exact: true
   },
@@ -85,12 +85,12 @@ export const AppRoutes = {
     exact: true
   },
   STAFF_MEMBERS: {
-    url: "/settings/staff-members",
+    url: "/settings/technician",
     name: "Technician",
     exact: true
   },
   STAFF_MEMBERS_DETAILS: {
-    url: "/settings/staff-members/details/:id",
+    url: "/settings/technician/details/:id",
     name: "Technician Details",
     exact: true
   },

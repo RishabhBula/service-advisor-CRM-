@@ -159,7 +159,7 @@ class HomePageComponent extends Component {
                                        onClick={this.handleOpenEnquiryModal} /*onClick={() => this.onGoPage('/dev/register')}*/
                                        className="btn btn-theme btn-trail"
                                     >
-                                       Start Free Trial
+                                       Request Early Access
                                     </Button>
                                  </div>
                               </div>
@@ -365,7 +365,7 @@ class HomePageComponent extends Component {
                               <div className="get-started-right">
                                  <Button
                                     onClick={this.handleOpenEnquiryModal}
-                                    /*onClick={() => this.onGoPage('/register')}*/ className="btn btn-theme">Start Free Trial
+                                    /*onClick={() => this.onGoPage('/register')}*/ className="btn btn-theme">Request Early Access
                               </Button>
                               </div>
                            </div>

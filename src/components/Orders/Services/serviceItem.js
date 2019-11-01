@@ -551,7 +551,7 @@ class ServiceItem extends Component {
       })
     })
   }
-  handleServiceSubmit = (serviceData, customerComment, userRecommendations) => {
+  handleServiceSubmit = (serviceData, customerComment, userRecommendations, isShowMsg) => {
     this.setState({
       isServiceSubmitted: true,
       isCannedServiceSumbmit: false
@@ -577,7 +577,7 @@ class ServiceItem extends Component {
       }
     }
     serviceCalculation = serviceTotalsCalculation(serviceElelments)
-    if (ele.serviceName !== '') {
+    if (ele && ele.serviceName && ele.serviceName !== '') {
       const payload = {
         services: serviceData,
         customerComment: customerComment,
@@ -585,7 +585,8 @@ class ServiceItem extends Component {
         orderId: this.props.orderId,
         isServiceSubmit: true,
         orderTotal: serviceCalculation.orderGrandTotal,
-        html: HTML
+        html: HTML,
+        isShowMsg: isShowMsg
       };
       this.props.submitServiceDataSuccess(payload)
       const serviceId = []
@@ -690,7 +691,12 @@ class ServiceItem extends Component {
                 <img src={recommandUser} alt={"recommandUser"} />
               </span>
               <FormGroup className={"flex-one mb-0"}>
-                <Input type={"textarea"} maxLength={"1000"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} />
+                <Input type={"textarea"} maxLength={"1000"} value={customerComment} name={"customerComment"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Customer Comments"} onBlur={
+                  () => {
+                    this.handleServiceSubmit(services, customerComment, userRecommendations, true)
+                  }
+                }
+                />
               </FormGroup>
             </Col>
             <Col md={"6"} className={"d-flex pr-0 column"}>
@@ -698,7 +704,12 @@ class ServiceItem extends Component {
                 <img src={recommandTech} alt={"recommandTech"} />
               </span>
               <FormGroup className={"flex-one mb-0"}>
-                <Input type={"textarea"} maxLength={"1000"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} />
+                <Input type={"textarea"} maxLength={"1000"} value={userRecommendations} name={"userRecommendations"} onChange={this.handleOnChange} rows={"3"} col={"12"} placeholder={"Recommendations"} onBlur={
+                  () => {
+                    this.handleServiceSubmit(services, customerComment, userRecommendations, true)
+                  }
+                }
+                />
               </FormGroup>
             </Col>
           </Row>
@@ -1011,78 +1022,78 @@ class ServiceItem extends Component {
                                       <td>
                                         {(service.cost !== null ||
                                           (service.tierSize &&
-                                          service.tierSize.length
+                                            service.tierSize.length
                                             ? service.tierSize[0].cost !== null
                                             : null)) &&
-                                        service.serviceType !== "labor" ? (
-                                          <Input
-                                            onChange={e =>
-                                              this.handleCostChange(
-                                                e,
-                                                index,
-                                                sIndex
-                                              )
-                                            }
-                                            name={"retailPrice"}
-                                            type="text"
-                                            maxLength={"4"}
-                                            value={
-                                              service.retailPrice ||
-                                              (service.tierSize &&
-                                              service.tierSize.length
-                                                ? service.tierSize[0]
-                                                    .retailPrice
-                                                : null) ||
-                                              0
-                                            }
-                                          />
-                                        ) : null}
-                                      </td>
-                                      <td>
-                                        {(service.quantity !== null ||
-                                          (service.tierSize &&
-                                          service.tierSize.length
-                                            ? service.tierSize[0].quantity !==
-                                              null
-                                            : null)) &&
-                                        service.serviceType !== "labor" ? (
-                                          <Input
-                                            type="text"
-                                            onChange={e =>
-                                              this.handleQuantityChange(
-                                                e,
-                                                index,
-                                                sIndex
-                                              )
-                                            }
-                                            name={"quantity"}
-                                            maxLength={"4"}
-                                            value={service.qty || 0}
-                                          />
-                                        ) : null}
-                                      </td>
-                                      <td className={"text-center"}>
-                                        <div className={"hours-block"}>
-                                          {service.hours !== "" &&
-                                          service.serviceType === "labor" ? (
+                                          service.serviceType !== "labor" ? (
                                             <Input
-                                              type={"text"}
-                                              name={"hour"}
-                                              maxLength={"4"}
                                               onChange={e =>
-                                                this.handleHourChange(
+                                                this.handleCostChange(
                                                   e,
                                                   index,
                                                   sIndex
                                                 )
                                               }
-                                              value={service.hours || 0}
+                                              name={"retailPrice"}
+                                              type="text"
+                                              maxLength={"4"}
+                                              value={
+                                                service.retailPrice ||
+                                                (service.tierSize &&
+                                                  service.tierSize.length
+                                                  ? service.tierSize[0]
+                                                    .retailPrice
+                                                  : null) ||
+                                                0
+                                              }
                                             />
-                                          ) : (
-                                            <span className={"no-value"}>
-                                              --:--
+                                          ) : null}
+                                      </td>
+                                      <td>
+                                        {(service.quantity !== null ||
+                                          (service.tierSize &&
+                                            service.tierSize.length
+                                            ? service.tierSize[0].quantity !==
+                                            null
+                                            : null)) &&
+                                          service.serviceType !== "labor" ? (
+                                            <Input
+                                              type="text"
+                                              onChange={e =>
+                                                this.handleQuantityChange(
+                                                  e,
+                                                  index,
+                                                  sIndex
+                                                )
+                                              }
+                                              name={"quantity"}
+                                              maxLength={"4"}
+                                              value={service.qty || 0}
+                                            />
+                                          ) : null}
+                                      </td>
+                                      <td className={"text-center"}>
+                                        <div className={"hours-block"}>
+                                          {service.hours !== "" &&
+                                            service.serviceType === "labor" ? (
+                                              <Input
+                                                type={"text"}
+                                                name={"hour"}
+                                                maxLength={"4"}
+                                                onChange={e =>
+                                                  this.handleHourChange(
+                                                    e,
+                                                    index,
+                                                    sIndex
+                                                  )
+                                                }
+                                                value={service.hours || 0}
+                                              />
+                                            ) : (
+                                              <span className={"no-value"}>
+                                                --:--
                                             </span>
-                                          )}
+                                            )}
                                         </div>
                                       </td>
                                       <td>
@@ -1151,44 +1162,44 @@ class ServiceItem extends Component {
                                       <td className={"text-center"}>
                                         {service.label && service.label.length
                                           ? service.label.map(
-                                              (label, lIndex) => {
-                                                return (
-                                                  <>
-                                                    {label.isAddLabel ? (
-                                                      <div>
+                                            (label, lIndex) => {
+                                              return (
+                                                <>
+                                                  {label.isAddLabel ? (
+                                                    <div>
+                                                      <span
+                                                        key={lIndex}
+                                                        style={{
+                                                          background:
+                                                            label.color
+                                                        }}
+                                                        className={
+                                                          "status-label-btn"
+                                                        }
+                                                      >
+                                                        {label.name}
+
                                                         <span
-                                                          key={lIndex}
-                                                          style={{
-                                                            background:
-                                                              label.color
-                                                          }}
                                                           className={
-                                                            "status-label-btn"
+                                                            "close-icon"
+                                                          }
+                                                          onClick={() =>
+                                                            this.handleRemoveLabel(
+                                                              index,
+                                                              sIndex,
+                                                              lIndex
+                                                            )
                                                           }
                                                         >
-                                                          {label.name}
-
-                                                          <span
-                                                            className={
-                                                              "close-icon"
-                                                            }
-                                                            onClick={() =>
-                                                              this.handleRemoveLabel(
-                                                                index,
-                                                                sIndex,
-                                                                lIndex
-                                                              )
-                                                            }
-                                                          >
-                                                            <i className="fas fa-times" />
-                                                          </span>
+                                                          <i className="fas fa-times" />
                                                         </span>
-                                                      </div>
-                                                    ) : null}
-                                                  </>
-                                                );
-                                              }
-                                            )
+                                                      </span>
+                                                    </div>
+                                                  ) : null}
+                                                </>
+                                              );
+                                            }
+                                          )
                                           : null}
                                         <Button
                                           id={`new${sIndex}${index}`}
@@ -1239,13 +1250,13 @@ class ServiceItem extends Component {
                                                 disabled={
                                                   (service.label
                                                     ? !service.label[
-                                                        service.label.length - 1
-                                                      ].name
+                                                      service.label.length - 1
+                                                    ].name
                                                     : null) &&
                                                   (service.label
                                                     ? !service.label[
-                                                        service.label.length - 1
-                                                      ].isButtonValue
+                                                      service.label.length - 1
+                                                    ].isButtonValue
                                                     : null)
                                                 }
                                                 color="secondary"
@@ -1265,13 +1276,13 @@ class ServiceItem extends Component {
                                                 disabled={
                                                   (service.label
                                                     ? !service.label[
-                                                        service.label.length - 1
-                                                      ].name
+                                                      service.label.length - 1
+                                                    ].name
                                                     : null) &&
                                                   (service.label
                                                     ? !service.label[
-                                                        service.label.length - 1
-                                                      ].isButtonValue
+                                                      service.label.length - 1
+                                                    ].isButtonValue
                                                     : null)
                                                 }
                                                 color="secondary"
@@ -1291,65 +1302,65 @@ class ServiceItem extends Component {
                                           </PopoverHeader>
                                           <PopoverBody>
                                             {labelReducer.label &&
-                                            labelReducer.label.length
+                                              labelReducer.label.length
                                               ? labelReducer.label.map(
-                                                  (data, Lindex) => {
-                                                    return (
-                                                      <div
-                                                        className={"d-flex"}
+                                                (data, Lindex) => {
+                                                  return (
+                                                    <div
+                                                      className={"d-flex"}
+                                                      key={Lindex}
+                                                    >
+                                                      <Button
                                                         key={Lindex}
+                                                        style={{
+                                                          background:
+                                                            data.labelColor
+                                                        }}
+                                                        className={
+                                                          "btn-sm btn-block label-btn"
+                                                        }
+                                                        onClick={() =>
+                                                          this.handleAddLabelFromList(
+                                                            index,
+                                                            sIndex,
+                                                            data.labelColor,
+                                                            data.labelName
+                                                          )
+                                                        }
+                                                        type="button"
                                                       >
-                                                        <Button
-                                                          key={Lindex}
-                                                          style={{
-                                                            background:
-                                                              data.labelColor
-                                                          }}
+                                                        {data.labelName}
+                                                      </Button>
+                                                      <span
+                                                        id={`remove${Lindex}${sIndex}${index}`}
+                                                        className={
+                                                          "pl-2 mt-2"
+                                                        }
+                                                        style={{
+                                                          cursor: "pointer"
+                                                        }}
+                                                        onClick={() =>
+                                                          this.handleSavedLabelDelete(
+                                                            data
+                                                          )
+                                                        }
+                                                      >
+                                                        <i
                                                           className={
-                                                            "btn-sm btn-block label-btn"
+                                                            "icons cui-trash"
                                                           }
-                                                          onClick={() =>
-                                                            this.handleAddLabelFromList(
-                                                              index,
-                                                              sIndex,
-                                                              data.labelColor,
-                                                              data.labelName
-                                                            )
-                                                          }
-                                                          type="button"
-                                                        >
-                                                          {data.labelName}
-                                                        </Button>
-                                                        <span
-                                                          id={`remove${Lindex}${sIndex}${index}`}
-                                                          className={
-                                                            "pl-2 mt-2"
-                                                          }
-                                                          style={{
-                                                            cursor: "pointer"
-                                                          }}
-                                                          onClick={() =>
-                                                            this.handleSavedLabelDelete(
-                                                              data
-                                                            )
-                                                          }
-                                                        >
-                                                          <i
-                                                            className={
-                                                              "icons cui-trash"
-                                                            }
-                                                          />
-                                                        </span>
-                                                        <UncontrolledTooltip
-                                                          target={`remove${Lindex}${sIndex}${index}`}
-                                                        >
-                                                          Remove{" "}
-                                                          {data.labelName}
-                                                        </UncontrolledTooltip>
-                                                      </div>
-                                                    );
-                                                  }
-                                                )
+                                                        />
+                                                      </span>
+                                                      <UncontrolledTooltip
+                                                        target={`remove${Lindex}${sIndex}${index}`}
+                                                      >
+                                                        Remove{" "}
+                                                        {data.labelName}
+                                                      </UncontrolledTooltip>
+                                                    </div>
+                                                  );
+                                                }
+                                              )
                                               : null}
                                           </PopoverBody>
                                         </UncontrolledPopover>

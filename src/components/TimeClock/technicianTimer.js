@@ -160,6 +160,11 @@ class TechnicianTimer extends Component {
     this.setState({
       isTimerData: true
     });
+    if (this.timer[index]) {
+      clearInterval(this.timer[index]);
+    }
+    const { duration } = this.state;
+    duration[index] = 0;
     const users = [...this.state.userData]
     users[index].currentlyWorking = {
       generalService: false,
@@ -168,7 +173,8 @@ class TechnicianTimer extends Component {
     }
     this.props.timmerStopForTechnician(users)
     this.setState({
-      userData: users
+      userData: users,
+      duration
     })
     this.props.stopTimer({
       technicianId: techId,
@@ -357,7 +363,7 @@ class TechnicianTimer extends Component {
                               <div className={"timer-running-manually"}>
                                 {this.startTempTimer(index, startTime)}
                                 {SecondsToHHMMSS(
-                                  duration[index] ||
+                                  (duration[index] ? duration[index] : 0) ||
                                   moment().diff(moment(startTime), "seconds")
                                 )}
                               </div>

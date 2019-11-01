@@ -8,7 +8,8 @@ import {
   Form,
   Row,
   FormGroup,
-  Badge
+  Badge,
+  Input
 } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import * as qs from "query-string";
@@ -25,6 +26,7 @@ class PriMatrixList extends Component {
     this.state = {
       page: 1,
       search: "",
+      sort: "",
       isTireSizeOpen: -1,
       filterApplied: false
     };
@@ -33,14 +35,15 @@ class PriMatrixList extends Component {
   componentDidMount() {
     const { location } = this.props;
     const lSearch = location.search;
-    const { page, search } = qs.parse(lSearch);
+    const { page, search, sort } = qs.parse(lSearch);
     let filterApplied = false;
-    if (search) {
+    if (search || sort) {
       filterApplied = true;
     }
     this.setState({
       page: parseInt(page) || 1,
       search: search || "",
+      sort: sort || "",
       filterApplied
     });
   }
@@ -49,10 +52,11 @@ class PriMatrixList extends Component {
     if (matrixList !== this.props.matrixList) {
       const { location } = this.props;
       const lSearch = location.search;
-      const { page, search } = qs.parse(lSearch);
+      const { page, search, sort } = qs.parse(lSearch);
       this.setState({
         page: parseInt(page) || 1,
-        search: search || ""
+        search: search || "",
+        sort: sort || ""
       });
     }
   };
@@ -69,11 +73,14 @@ class PriMatrixList extends Component {
       page: 1,
       filterApplied: true
     });
-    const { search } = this.state;
+    const { search, sort } = this.state;
     let param = {};
     param.page = 1;
     if (search) {
       param.search = search.trim(" ");
+    }
+    if (sort) {
+      param.sort = sort.trim("");
     }
     this.props.onSearch(param);
   };
@@ -83,6 +90,7 @@ class PriMatrixList extends Component {
     this.setState({
       page: 1,
       search: "",
+      sort: "",
       filterApplied: false
     });
     this.props.onSearch({});
@@ -99,7 +107,7 @@ class PriMatrixList extends Component {
       handleMatrixDelete,
       isLoading
     } = this.props;
-    const { page, search, isTireSizeOpen, filterApplied } = this.state;
+    const { page, search, sort, isTireSizeOpen, filterApplied } = this.state;
     return (
       <>
         <div className={"filter-block"}>
@@ -118,6 +126,27 @@ class PriMatrixList extends Component {
                       placeholder="Search by matrix name"
                     />
                   </InputGroup>
+                </FormGroup>
+              </Col>
+              <Col lg={"2"} md={"2"} className="mb-0">
+                <FormGroup className="mb-0">
+                  {/* <Label for="SortFilter" className="label">
+                    Sort By
+                  </Label> */}
+                  <Input
+                    type="select"
+                    name="sort"
+                    id="SortFilter"
+                    onChange={this.handleChange}
+                    value={sort}
+                  >
+                    <option className="form-control" value={""}>
+                      Sort By
+                    </option>
+                    <option value={"createddesc"}>Last Created</option>
+                    <option value={"nasc"}>Name A-Z</option>
+                    <option value={"ndesc"}>Name Z-A</option>
+                  </Input>
                 </FormGroup>
               </Col>
               <Col lg={"2"} md={"2"} className="mb-0">
@@ -206,16 +235,16 @@ class PriMatrixList extends Component {
                           <div>
                             <div className={"d-flex matrix-range-th"}>
                               <span className={"p-1"}>
-                                <span class="dollar-price">
-                                  <i class="fa fa-dollar dollar-icon" />
+                                <span className="dollar-price">
+                                  <i className="fa fa-dollar dollar-icon" />
                                   {matrix.matrixRange[0].lower}
                                 </span>{" "}
                                 &nbsp;-&nbsp;
-                                <span class="dollar-price">
+                                <span className="dollar-price">
                                   {matrix.matrixRange[0].upper !==
-                                  "beyond" ? (
-                                    <i class="fa fa-dollar dollar-icon" />
-                                  ) : null}
+                                    "beyond" ? (
+                                      <i className="fa fa-dollar dollar-icon" />
+                                    ) : null}
                                   {matrix.matrixRange[0].upper}
                                 </span>
                               </span>
@@ -234,55 +263,55 @@ class PriMatrixList extends Component {
                               }
                             >
                               {matrix.matrixRange &&
-                              matrix.matrixRange.length
+                                matrix.matrixRange.length
                                 ? matrix.matrixRange.map((range, i) => {
-                                    return i === 0 ? null : (
-                                      <div
-                                        key={i}
-                                        className={
-                                          "d-flex matrix-range-th "
-                                        }
-                                      >
-                                        <span className={"p-1"}>
-                                          <span class="dollar-price">
-                                            <i class="fa fa-dollar dollar-icon" />
-                                            {range.lower}
-                                          </span>{" "}
-                                          &nbsp;-&nbsp;
-                                          <span class="dollar-price">
-                                            {range.upper !== "beyond" ? (
-                                              <i class="fa fa-dollar dollar-icon" />
-                                            ) : null}
-                                            {range.upper}
-                                          </span>
+                                  return i === 0 ? null : (
+                                    <div
+                                      key={i}
+                                      className={
+                                        "d-flex matrix-range-th "
+                                      }
+                                    >
+                                      <span className={"p-1"}>
+                                        <span className="dollar-price">
+                                          <i className="fa fa-dollar dollar-icon" />
+                                          {range.lower}
+                                        </span>{" "}
+                                        &nbsp;-&nbsp;
+                                          <span className="dollar-price">
+                                          {range.upper !== "beyond" ? (
+                                            <i className="fa fa-dollar dollar-icon" />
+                                          ) : null}
+                                          {range.upper}
                                         </span>
-                                        <span className={"p-1"}>
-                                          {range.margin}
-                                        </span>
-                                        <span className={"p-1"}>
-                                          {range.markup}
-                                        </span>
-                                      </div>
-                                    );
-                                  })
+                                      </span>
+                                      <span className={"p-1"}>
+                                        {range.margin}
+                                      </span>
+                                      <span className={"p-1"}>
+                                        {range.markup}
+                                      </span>
+                                    </div>
+                                  );
+                                })
                                 : null}
                             </div>
                             {matrix.matrixRange &&
-                            matrix.matrixRange.length &&
-                            matrix.matrixRange[1] ? (
-                              <span className={"m-1 d-block"}>
-                                <Badge
-                                  onClick={() =>
-                                    this.handleMatrixOpen(index)
-                                  }
-                                  className={"cursor_pointer"}
-                                >
-                                  {isTireSizeOpen === index
-                                    ? "View Less"
-                                    : "View More"}
-                                </Badge>
-                              </span>
-                            ) : null}
+                              matrix.matrixRange.length &&
+                              matrix.matrixRange[1] ? (
+                                <span className={"m-1 d-block"}>
+                                  <Badge
+                                    onClick={() =>
+                                      this.handleMatrixOpen(index)
+                                    }
+                                    className={"cursor_pointer"}
+                                  >
+                                    {isTireSizeOpen === index
+                                      ? "View Less"
+                                      : "View More"}
+                                  </Badge>
+                                </span>
+                              ) : null}
                           </div>
                         ) : null}
                       </td>
@@ -332,34 +361,34 @@ class PriMatrixList extends Component {
                   );
                 })
               ) : (
+                  <tr>
+                    <td className={"text-center"} colSpan={7}>
+                      {filterApplied ? (
+                        <NoDataFound
+                          message={
+                            "No Matrix details found related to your search"
+                          }
+                          noResult
+                        />
+                      ) : (
+                          <NoDataFound
+                            showAddButton
+                            message={
+                              "Currently there are no Price Matrix added."
+                            }
+                            onAddClick={this.props.onClick}
+                          />
+                        )}
+                    </td>
+                  </tr>
+                )
+            ) : (
                 <tr>
                   <td className={"text-center"} colSpan={7}>
-                    {filterApplied ? (
-                      <NoDataFound
-                        message={
-                          "No Matrix details found related to your search"
-                        }
-                        noResult
-                      />
-                    ) : (
-                      <NoDataFound
-                        showAddButton
-                        message={
-                          "Currently there are no Price Matrix added."
-                        }
-                        onAddClick={this.props.onClick}
-                      />
-                    )}
+                    <Loader />
                   </td>
                 </tr>
-              )
-            ) : (
-              <tr>
-                <td className={"text-center"} colSpan={7}>
-                  <Loader />
-                </td>
-              </tr>
-            )}
+              )}
           </tbody>
         </Table>
       </>

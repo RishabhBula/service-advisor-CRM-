@@ -243,7 +243,7 @@ const sendMailToCustomer = async (req, res) => {
             success: true
          })
       }
-      if (isSms) {
+      if (body.isSms) {
          await sendSMS(body.phone, body.message, body.customerId);
       }
       // var buf = new Buffer.from(body.pdf, "base64");

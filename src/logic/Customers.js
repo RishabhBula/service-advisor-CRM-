@@ -204,7 +204,11 @@ const deleteCustomerLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+          result.messages[0]
+        );
+      }
       dispatch(hideLoader());
       delete action.payload.userId;
       dispatch(
@@ -219,7 +223,7 @@ const deleteCustomerLogic = createLogic({
 
 const editCustomerLogic = createLogic({
   type: customersAddActions.EDIT_CUSTOMER_REQUESTED,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     dispatch(showLoader());
     logger(action.payload);
     let api = new ApiHelper();
@@ -257,6 +261,12 @@ const editCustomerLogic = createLogic({
           })
         );
       }
+      const customerAddInfo = getState().customerInfoReducer && getState().customerInfoReducer.customerAddInfo ? getState().customerInfoReducer.customerAddInfo : "";
+      dispatch(
+        customerAddSuccess({
+          customerAddInfo: { ...customerAddInfo, ...action.payload.data }
+        })
+      );
       dispatch(customerEditSuccess());
       if (action.payload.data.isSingleCustomer) {
         dispatch(
@@ -306,7 +316,11 @@ const updateCustomerStatusLogic = createLogic({
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(
+          result.messages[0]
+        );
+      }
       dispatch(hideLoader());
       delete action.payload.customers;
       delete action.payload.status;

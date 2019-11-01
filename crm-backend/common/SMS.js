@@ -2,6 +2,7 @@ const { Twilio } = require("./../config/app");
 const { accountSid, authToken, from } = Twilio;
 const client = require("twilio")(accountSid, authToken);
 const SMSModel = require("../models/smsData");
+const Mongoose = require("mongoose");
 /**
  *
  */
@@ -25,8 +26,8 @@ const sendSMS = async (mobile, message, userId) => {
     to: mobile,
     message,
     from,
-    userId,
-    detailObject: result,
+    userId:Mongoose.Types.ObjectId(userId),
+    detailObject: status && status === "error" ? result : {},
     status
   });
   return result;

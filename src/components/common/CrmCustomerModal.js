@@ -37,6 +37,7 @@ import Validator from "js-object-validation";
 //import Async from "react-select/lib/Async";
 import { ApiHelper } from "../../helpers/ApiHelper";
 import { toast } from "react-toastify";
+import { ReferralSource } from "../../config/Constants";
 
 export class CrmCustomerModal extends Component {
   constructor(props) {
@@ -912,14 +913,31 @@ export class CrmCustomerModal extends Component {
                   >
                     Referral Source
                   </Label>
-                  <Input
-                    type="text"
-                    placeholder="Referral"
-                    name="referralSource"
-                    value={referralSource}
-                    onChange={this.handleInputChange}
-                    maxLength="100"
-                  />
+                  <div className={"input-block"}>
+                    <Input
+                      type="select"
+                      placeholder="Referral"
+                      name="referralSource"
+                      value={referralSource}
+                      onChange={this.handleInputChange}
+                      maxLength="100"
+                    >
+                      <option value={""}>Select</option>
+                      {ReferralSource.length
+                        ? ReferralSource.map((item, index) => {
+                          return (
+                            <option
+                              selected={item.key === referralSource}
+                              value={item.key}
+                              key={index}
+                            >
+                              {item.text}
+                            </option>
+                          );
+                        })
+                        : null}
+                    </Input>
+                  </div>
                 </FormGroup>
               </Col>
             </Row>

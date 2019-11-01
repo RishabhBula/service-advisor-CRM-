@@ -76,16 +76,10 @@ export class CrmVehicleModal extends Component {
       colorOptions: ColorOptions,
       selectedOption: null,
       year: "",
-      make: {
-        label: "Honda",
-        value: ""
-      },
+      make: "",
       makeInput: "",
       defaultOptionsMake: [],
-      modal: {
-        label: "Accord Or Q3 Or WRV...",
-        value: ""
-      },
+      modal: "",
       modalInput: "",
       defaultOptionsModal: [],
       typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
@@ -242,19 +236,13 @@ export class CrmVehicleModal extends Component {
       colorOptions: ColorOptions,
       selectedOption: null,
       year: "",
-      make: {
-        label: "Honda",
-        value: ""
-      },
+      make: "",
       makeInput: "",
       defaultOptionsMake: [{
         label: "Type vehicle make name",
         value: ""
       }],
-      modal: {
-        label: "Accord Or Q3 Or WRV...",
-        value: ""
-      },
+      modal: "",
       modalInput: "",
       defaultOptionsModal: [{
         label: "Type vehicle model name",
@@ -321,16 +309,26 @@ export class CrmVehicleModal extends Component {
    * 
    */
   handleMake = (selectedMake) => {
-    this.setState({
-      make: {
-        label: selectedMake && selectedMake.label ? selectedMake.label : "Honda",
-        value: selectedMake && selectedMake.value ? selectedMake.value : ""
-      },
-      errors: {
-        ...this.state.errors,
-        make: null
-      }
-    })
+    if (selectedMake && selectedMake.label && selectedMake.value) {
+      this.setState({
+        make: {
+          label: selectedMake && selectedMake.label ? selectedMake.label : "Honda",
+          value: selectedMake && selectedMake.value ? selectedMake.value : ""
+        },
+        errors: {
+          ...this.state.errors,
+          make: null
+        }
+      })
+    } else {
+      this.setState({
+        make: "",
+        errors: {
+          ...this.state.errors,
+          make: null
+        }
+      })
+    }
     if (!selectedMake) {
       this.setState({
         makeInput: null
@@ -341,16 +339,26 @@ export class CrmVehicleModal extends Component {
    * 
    */
   handleModal = (selectedModal) => {
-    this.setState({
-      modal: {
-        label: selectedModal && selectedModal.label ? selectedModal.label : "Accord Or Q3 Or WRV...",
-        value: selectedModal && selectedModal.value ? selectedModal.value : ""
-      },
-      errors: {
-        ...this.state.errors,
-        modal: null
-      }
-    })
+    if (selectedModal && selectedModal.label && selectedModal.value) {
+      this.setState({
+        modal: {
+          label: selectedModal && selectedModal.label ? selectedModal.label : "Accord Or Q3 Or WRV...",
+          value: selectedModal && selectedModal.value ? selectedModal.value : ""
+        },
+        errors: {
+          ...this.state.errors,
+          modal: null
+        }
+      })
+    } else {
+      this.setState({
+        modal: "",
+        errors: {
+          ...this.state.errors,
+          modal: null
+        }
+      })
+    }
     if (!selectedModal) {
       this.setState({
         modalInput: null
@@ -370,6 +378,7 @@ export class CrmVehicleModal extends Component {
       });
       var myData = vehicle;
       vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.sort((a, b) => (a['model'] || "").toString().localeCompare((b['model'] || "").toString()));
       vehicle.map((data) => {
         vehicleModal.push({
           label: data.model,
@@ -398,6 +407,7 @@ export class CrmVehicleModal extends Component {
       });
       var myData = vehicle;
       vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.sort((a, b) => (a['make'] || "").toString().localeCompare((b['make'] || "").toString()));
       vehicle.map((data) => {
         vehicleMake.push({
           label: data.make,
@@ -446,7 +456,6 @@ export class CrmVehicleModal extends Component {
       engineSize,
       productionDate,
       transmission,
-      drivetrain,
       notes,
       prodMonthError,
       prodYearError,
@@ -625,10 +634,11 @@ export class CrmVehicleModal extends Component {
                       value={miles}
                       onChange={this._onInputChange}
                       maxLength={15}
+                      invalid={errors.miles}
                     />
-                    {!(miles.trim()) && errors.miles ? (
-                      <p className="text-danger">{errors.miles}</p>
-                    ) : null}
+                    <FormFeedback>
+                      {errors.miles ? errors.miles : null}
+                    </FormFeedback>
                   </div>
                 </FormGroup>
               </Col>
@@ -867,7 +877,7 @@ export class CrmVehicleModal extends Component {
                       type="select"
                       className=""
                       onChange={this.handleSelectedChange}
-                      name="drivetrain"
+                      name="drivetrainSelected"
                       id="matrixId"
                     >
                       <option value={""}>Select</option>
@@ -885,7 +895,7 @@ export class CrmVehicleModal extends Component {
                         })
                         : null}
                     </Input>
-                    {!drivetrain && errors.drivetrain ? (
+                    {!drivetrainSelected && errors.drivetrain ? (
                       <p className="text-danger">{errors.drivetrain}</p>
                     ) : null}
                   </div>

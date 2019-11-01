@@ -79,8 +79,32 @@ const getAllMatrix = async (req, res) => {
       currentUser.parentId = currentUser.id;
     }
     const searchValue = query.search;
+    const { sort } = query
     const id = currentUser.id;
     const parentId = currentUser.parentId || currentUser.id;
+    let sortBy = {};
+    switch (sort) {
+      case "loginasc":
+        sortBy = {
+          updatedAt: -1,
+        };
+        break;
+      case "nasc":
+        sortBy = {
+          matrixName: 1,
+        };
+        break;
+      case "ndesc":
+        sortBy = {
+          matrixName: -1,
+        };
+        break;
+      default:
+        sortBy = {
+          createdAt: -1,
+        };
+        break;
+    }
     let condition = {};
     condition["$and"] = [
       {
@@ -118,7 +142,7 @@ const getAllMatrix = async (req, res) => {
       });
     }
 
-    const matrices = await matrixModel.find(condition);
+    const matrices = await matrixModel.find(condition).sort(sortBy);
     return res.status(200).json({
       responsecode: 200,
       success: true,

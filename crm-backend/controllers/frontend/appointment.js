@@ -66,7 +66,7 @@ const appointmentList = async (req, res) => {
       });
     }
     if (start) {
-      start = new Date(new Date(start).setUTCHours(23, 59, 59, 999));
+      start = new Date(new Date(start).setUTCHours(0, 0, 0, 0));
       condition["$and"].push({
         appointmentDate: {
           $gte: start
@@ -174,7 +174,12 @@ const addAppointment = async (req, res) => {
     const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
     if (isSms) {
-      await sendSMS(phone, "Hello", id);
+      const smsResult = await sendSMS(phone, appointmentTitle, id);
+      if (smsResult.error === true) {
+        return res.status(400).json({
+          message: smsResult.message.replace("To","Phone")
+        });
+      }
     }
     if (isEmail) {
       const result = await userModel.findOne({ _id: id }, { companyName: 1 });
@@ -327,7 +332,12 @@ const updateAppointment = async (req, res) => {
       }
     );
     if (isSms) {
-      await sendSMS(phone, "Hello", id);
+      const smsResult = await sendSMS(phone, appointmentTitle, id);
+      if (smsResult.error === true) {
+        return res.status(400).json({
+          message: smsResult.message.replace("To","Phone")
+        });
+      }
     }
     if (isEmail) {
       const result = await userModel.findOne({ _id: id }, { companyName: 1 });
