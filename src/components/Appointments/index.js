@@ -3,6 +3,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import rrulePlugin from '@fullcalendar/rrule';
 import moment from "moment";
 import { logger } from "../../helpers";
 import "./index.scss"
@@ -59,27 +60,25 @@ export default class Appointments extends Component {
       };
     });
     let events1 = [];
-    // if (userReducer && userReducer.users && userReducer.users.length) {
-    //   events1 = userReducer.users.map(event => {
-    //     const anniversaryNo = moment(event.createdAt).diff(moment(), "year");
-    //     const url = (AppRoutes.STAFF_MEMBERS_DETAILS.url).replace(":id", event._id);
-    //     return {
-    //       id: event._id,
-    //       title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} ${anniversaryNo > 0 ? anniversaryNo + "th" : ""} anniversary`,
-    //       // start: new Date(event.createdAt).setUTCHours(0, 0),
-    //       // end: new Date(event.createdAt).setUTCHours(0, 0),
-    //       start: new Date(event.createdAt),
-    //       color: "#000",
-    //       allDay: true, // will make the time hide
-    //       url: `${window.location.protocol}//${window.location.host}${url}?tab=Technician%20%20Info`,
-    //       // daysOfWeek: [ '3' ], // these recurrent events move separately
-    //       // repeat:2
-    //       // allow:true,
-    //       // startRecur:new Date(event.createdAt),
-    //       // endRecur:new Date(event.createdAt)
-    //     }
-    //   })
-    // }
+    if (userReducer && userReducer.users && userReducer.users.length) {
+      // events1 = userReducer.users.map(event => {
+      //   const anniversaryNo = moment().diff(moment(event.createdAt), "year");
+      //   const url = (AppRoutes.STAFF_MEMBERS_DETAILS.url).replace(":id", event._id);
+      //   return {
+      //     id: event._id,
+      //     title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} ${anniversaryNo > 0 ? anniversaryNo + "th" : ""} anniversary`,
+      //     start: new Date(event.createdAt),
+      //     color: "#000",
+      //     allDay: true, // will make the time hide
+      //     url: `${window.location.protocol}//${window.location.host}${url}?tab=Technician%20%20Info`,
+      //     rrule: {
+      //       freq: 'YEARLY',
+      //       interval: 1,
+      //       dtstart: new Date(event.createdAt),
+      //     },
+      //   }
+      // })
+    }
     // let event = events.concat(events1);
     return (
       <div>
@@ -90,7 +89,7 @@ export default class Appointments extends Component {
             right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
           }}
           defaultView={filter && filter !== {} && filter.search ? (filter.search !== "today" && filter.search !== "week" ? "dayGridMonth" : (filter.search === "today" ? "timeGridDay" : "timeGridWeek")) : "dayGridMonth"}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin]}
           weekends={true}
           timeZone='UTC'
           eventSources={[

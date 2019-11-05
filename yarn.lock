@@ -1132,6 +1132,11 @@
   dependencies:
     "@fullcalendar/core" "^4.0.2"
 
+"@fullcalendar/rrule@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-4.3.0.tgz#669b03efce63287353e541a8a4f6b089f59be27c"
+  integrity sha512-80nPrIW0hA/vtT2VcDzSzk2yQ/bqdJB4zCiVhrGAg3+DtVxnormElTQQg84Iw1q1WeouT9lo2FYzG9B4SIDQEw==
+
 "@fullcalendar/timegrid@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.0.1.tgz#26454567a256af70b2aa6dae7f6351d0c0a92a32"
