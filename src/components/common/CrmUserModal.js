@@ -117,7 +117,7 @@ export class CrmUserModal extends Component {
     }
     this.setState({
       [name]: name === "firstName" || name === "lastName" ? value.charAt(0).toUpperCase() +
-      value.substring(1) : value,
+        value.substring(1) : value,
       errors: {
         ...this.state.errors,
         [name]: null
@@ -251,7 +251,7 @@ export class CrmUserModal extends Component {
                           onChange={this.handleInputChange}
                           value={firstName}
                           name="firstName"
-                          invalid={errors.firstName}
+                          invalid={errors.firstName ? true : false}
                         />
                         <FormFeedback>
                           {errors.firstName ? errors.firstName : null}
@@ -276,7 +276,7 @@ export class CrmUserModal extends Component {
                           onChange={this.handleInputChange}
                           value={lastName}
                           name="lastName"
-                          invalid={errors.lastName}
+                          invalid={errors.lastName ? true : false}
                         />
                         <FormFeedback>
                           {errors.lastName ? errors.lastName : null}
@@ -300,7 +300,7 @@ export class CrmUserModal extends Component {
                         value={email}
                         name="email"
                         disabled={isEditMode}
-                        invalid={errors.email}
+                        invalid={errors.email ? true : false}
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
