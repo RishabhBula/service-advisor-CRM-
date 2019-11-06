@@ -61,23 +61,23 @@ export default class Appointments extends Component {
     });
     let events1 = [];
     if (userReducer && userReducer.users && userReducer.users.length) {
-      // events1 = userReducer.users.map(event => {
-      //   const anniversaryNo = moment().diff(moment(event.createdAt), "year");
-      //   const url = (AppRoutes.STAFF_MEMBERS_DETAILS.url).replace(":id", event._id);
-      //   return {
-      //     id: event._id,
-      //     title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} ${anniversaryNo > 0 ? anniversaryNo + "th" : ""} anniversary`,
-      //     start: new Date(event.createdAt),
-      //     color: "#000",
-      //     allDay: true, // will make the time hide
-      //     url: `${window.location.protocol}//${window.location.host}${url}?tab=Technician%20%20Info`,
-      //     rrule: {
-      //       freq: 'YEARLY',
-      //       interval: 1,
-      //       dtstart: new Date(event.createdAt),
-      //     },
-      //   }
-      // })
+      events1 = userReducer.users.map(event => {
+        const anniversaryNo = moment().diff(moment(event.createdAt), "year");
+        const url = (AppRoutes.STAFF_MEMBERS_DETAILS.url).replace(":id", event._id);
+        return {
+          id: event._id,
+          title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} ${anniversaryNo > 0 ? anniversaryNo + "th" : ""} anniversary`,
+          start: new Date(event.createdAt),
+          color: "#000",
+          allDay: true, // will make the time hide
+          url: `${window.location.protocol}//${window.location.host}${url}?tab=Technician%20%20Info`,
+          rrule: {
+            freq: 'YEARLY',
+            interval: 1,
+            dtstart: new Date(event.createdAt),
+          },
+        }
+      })
     }
     // let event = events.concat(events1);
     return (
