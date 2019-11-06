@@ -211,7 +211,7 @@ const verifyAccountAccessLogic = createLogic({
     //     path: AppRoutes.DASHBOARD.url
     //   })
     // );
-    window.open(AppRoutes.DASHBOARD.url);
+    window.open(`${window.location.protocol}//${window.location.host}${AppRoutes.DASHBOARD.url}`, "_self");
     done();
   }
 });

@@ -357,14 +357,19 @@ const addOrderLogic = createLogic({
         orderId: result.data.result._id
       };
       dispatch(addNewActivity(data));
-      dispatch(
-        redirectTo({
-          path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
-            ":id",
-            `${result.data.result._id}`
-          )}`
-        })
-      );
+      if (action.payload.isAppointment && action.payload.isAppointment === true) {
+        dispatch(hideLoader());
+        done();
+      } else {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.WORKFLOW_ORDER.url.replace(
+              ":id",
+              `${result.data.result._id}`
+            )}`
+          })
+        );
+      }
       done();
     }
   }

@@ -190,7 +190,15 @@ const userSchema = new Schema({
         default: Date.now
       }
     }),
-    default: {}
+    default: {},
+    anniversary: {
+      type: Date,
+      default: Date.now
+    },
+    dob: {
+      type: Date,
+      default: Date.now
+    }
   }
 });
 

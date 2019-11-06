@@ -31,6 +31,7 @@ import {
 } from "../../config/Constants";
 import LastUpdated from "../common/LastUpdated";
 import { AppRoutes } from "../../config/AppRoutes";
+import DatePicker from 'react-date-picker';
 
 export class CrmUserModal extends Component {
   constructor(props) {
@@ -44,6 +45,8 @@ export class CrmUserModal extends Component {
       rate: "",
       companyName: "",
       permissions: TechincianDefaultPermissions,
+      dob: new Date(),
+      anniversary: new Date(),
       errors: {},
       isEditMode: false,
       phoneError: false
@@ -68,6 +71,8 @@ export class CrmUserModal extends Component {
         roleType: "5ca3473d70537232f13ff1fa",
         rate: "",
         permissions: TechincianDefaultPermissions,
+        dob: new Date(),
+        anniversary: new Date(),
         errors: {}
       });
     }
@@ -83,7 +88,9 @@ export class CrmUserModal extends Component {
         phone,
         companyName,
         rate,
-        permissions
+        permissions,
+        dob,
+        anniversary,
       } = this.props.userData;
 
       this.setState({
@@ -95,7 +102,9 @@ export class CrmUserModal extends Component {
         phone: phone || "",
         roleType: this.props.userData.roleType ? this.props.userData.roleType._id || this.props.userData.roleType : "5ca3473d70537232f13ff1fa",
         rate: rate || "",
-        permissions
+        permissions,
+        dob,
+        anniversary,
       });
 
     }
@@ -117,7 +126,7 @@ export class CrmUserModal extends Component {
     }
     this.setState({
       [name]: name === "firstName" || name === "lastName" ? value.charAt(0).toUpperCase() +
-      value.substring(1) : value,
+        value.substring(1) : value,
       errors: {
         ...this.state.errors,
         [name]: null
@@ -155,6 +164,8 @@ export class CrmUserModal extends Component {
         permissions,
         companyName,
         isEditMode,
+        dob,
+        anniversary,
       } = this.state;
       // const companyName = this.props.companyName
       const payload = {
@@ -167,7 +178,9 @@ export class CrmUserModal extends Component {
         rate: rate
           ? parseFloat(rate.toString().replace(/[$,\s]/g, "")).toFixed(2)
           : "0",
-        permissions
+        permissions,
+        dob,
+        anniversary,
       };
       const { isValid, errors } = Validator(
         payload,
@@ -203,6 +216,21 @@ export class CrmUserModal extends Component {
       logger(error);
     }
   };
+  onChangeAnniversary = date => {
+    this.setState({
+      anniversary: date
+    })
+  }
+  onChangeDob = date => {
+    console.log("dateeeeeee",date);
+    
+    this.setState({
+      dob: date
+    })
+  }
+  /**
+   * 
+   */
   render() {
     const { userModalOpen, handleUserModal, userData } = this.props;
     const {
@@ -215,7 +243,9 @@ export class CrmUserModal extends Component {
       roleType,
       errors,
       isEditMode,
-      phoneError
+      phoneError,
+      dob,
+      anniversary,
     } = this.state;
     return (
       <>
@@ -251,7 +281,7 @@ export class CrmUserModal extends Component {
                           onChange={this.handleInputChange}
                           value={firstName}
                           name="firstName"
-                          invalid={errors.firstName}
+                          invalid={errors.firstName ? true : false}
                         />
                         <FormFeedback>
                           {errors.firstName ? errors.firstName : null}
@@ -276,7 +306,7 @@ export class CrmUserModal extends Component {
                           onChange={this.handleInputChange}
                           value={lastName}
                           name="lastName"
-                          invalid={errors.lastName}
+                          invalid={errors.lastName ? true : false}
                         />
                         <FormFeedback>
                           {errors.lastName ? errors.lastName : null}
@@ -300,7 +330,7 @@ export class CrmUserModal extends Component {
                         value={email}
                         name="email"
                         disabled={isEditMode}
-                        invalid={errors.email}
+                        invalid={errors.email ? true : false}
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
@@ -390,6 +420,37 @@ export class CrmUserModal extends Component {
                       <FormFeedback>
                         {errors.rate ? errors.rate : null}
                       </FormFeedback>
+                    </div>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row className="justify-content-center">
+                <Col md="6">
+                  <FormGroup>
+                    <Label htmlFor="name" className="customer-modal-text-style">
+                      DOB
+                    </Label>
+                    <div className={"input-block"}>
+                      <DatePicker
+                        name="dob"
+                        onChange={this.onChangeDob}
+                        value={dob}
+                        maxDate={new Date()}
+                      />
+                    </div>
+                  </FormGroup>
+                </Col>
+                <Col md="6">
+                  <FormGroup>
+                    <Label htmlFor="name" className="customer-modal-text-style">
+                      Anniversary
+                    </Label>
+                    <div className={"input-block"}>
+                      <DatePicker
+                        name="anniversary"
+                        onChange={this.onChangeAnniversary}
+                        value={anniversary}
+                      />
                     </div>
                   </FormGroup>
                 </Col>
