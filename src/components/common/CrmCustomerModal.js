@@ -74,7 +74,8 @@ export class CrmCustomerModal extends Component {
       selectedLabourRate: { value: "", label: "Select..." },
       modalIsOpen: true,
       percentageError: "",
-      inCorrectNumber: []
+      inCorrectNumber: [],
+      fleet1: {}
     };
   }
 
@@ -188,14 +189,20 @@ export class CrmCustomerModal extends Component {
     if (selectedOption) {
       this.setState({
         selectedOption: selectedOption,
-        fleet: selectedOption.value
+        fleet: selectedOption.value,
+        fleet1: {
+          _id: selectedOption.value,
+          companyName: selectedOption.label
+        }
       });
     } else {
       this.setState({
         selectedOption: {
           value: "",
           label: "Select..."
-        }
+        },
+        fleet: "",
+        fleet1: null
       });
     }
   };
@@ -330,7 +337,8 @@ export class CrmCustomerModal extends Component {
         state,
         zipCode,
         customerDefaultPermissions,
-        fleet
+        fleet,
+        fleet1
       } = this.state;
 
       const customerData = {
@@ -348,7 +356,8 @@ export class CrmCustomerModal extends Component {
         zipCode: zipCode,
         fleet: fleet,
         permission: customerDefaultPermissions,
-        status: true
+        status: true,
+        fleet1: fleet1
       };
       if (phoneDetail.length) {
         let t = [];
@@ -438,7 +447,8 @@ export class CrmCustomerModal extends Component {
       selectedLabourRate: { value: "", label: "Select..." },
       modalIsOpen: true,
       percentageError: "",
-      inCorrectNumber: []
+      inCorrectNumber: [],
+      fleet1: {}
     });
   }
 
@@ -674,12 +684,16 @@ export class CrmCustomerModal extends Component {
                                     name="email"
                                     value={this.state.email}
                                     maxLength="100"
+                                    invalid={errors.email && email ? true : false}
                                   />
-                                  {errors.email && email ? (
+                                  <FormFeedback>
+                                    {errors.email && email ? errors.email : null}
+                                  </FormFeedback>
+                                  {/* {errors.email && email ? (
                                     <p className="text-danger">
                                       {errors.email}
                                     </p>
-                                  ) : null}
+                                  ) : null} */}
                                 </div>
                               </FormGroup>
                             </Col>

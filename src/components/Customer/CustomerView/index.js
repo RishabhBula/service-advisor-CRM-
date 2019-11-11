@@ -162,11 +162,12 @@ class CustomerView extends Component {
               </span>
             </div>
             <div>
-              <i className={"fa fa-envelope"} />{" "}
+              {customerDetails[0] && customerDetails[0].email ? <span><i className={"fa fa-envelope"}/>{" "}</span> : null}
               {customerDetails[0] && customerDetails[0].email ? (
                 customerDetails[0].email
               ) : (
-                  <span className={"text-muted"}>Email is not updated</span>
+                  // <span className={"text-muted"}>Email is not updated</span>
+                  null
                 )}
             </div>
           </div>

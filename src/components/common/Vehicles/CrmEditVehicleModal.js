@@ -101,6 +101,10 @@ export class CrmEditVehicleModal extends Component {
 
   componentDidUpdate(prevProps) {
     const { vehicleData } = this.props;
+    if (prevProps.vehicleEditModalOpen !== this.props.vehicleEditModalOpen) {
+      this.onBlurMake();
+      this.onBlurModal();
+    }
     if (prevProps.vehicleData !== vehicleData) {
       this.setState({
         year: this.props.vehicleData.year,
@@ -280,16 +284,10 @@ export class CrmEditVehicleModal extends Component {
       year: "",
       make: "",
       makeInput: "",
-      defaultOptionsMake: [{
-        label: "Type vehicle make name",
-        value: ""
-      }],
+      defaultOptionsMake: [],
       modal: "",
       modalInput: "",
-      defaultOptionsModal: [{
-        label: "Type vehicle model name",
-        value: ""
-      }],
+      defaultOptionsModal: [],
       typeSelected: { value: "sedan", label: "Sedan", color: "#FF8B00", icons: "sedan.svg" },
       colorSelected: "",
       miles: "",
@@ -387,6 +385,7 @@ export class CrmEditVehicleModal extends Component {
           make: null
         }
       })
+      this.onBlurModal();
     }
     if (!selectedMake) {
       this.setState({
@@ -417,6 +416,7 @@ export class CrmEditVehicleModal extends Component {
           modal: null
         }
       })
+      this.onBlurMake();
     }
     if (!selectedModal) {
       this.setState({
@@ -448,6 +448,22 @@ export class CrmEditVehicleModal extends Component {
       this.setState({
         defaultOptionsModal: vehicleModal
       })
+    } else {
+      let vehicleModal = [];
+      let vehicle = VehiclesData.slice(0, 80);
+      var myData1 = vehicle;
+      vehicle = Array.from(new Set(myData1.map(JSON.stringify))).map(JSON.parse);
+      vehicle.sort((a, b) => (a['model'] || "").toString().localeCompare((b['model'] || "").toString()));
+      vehicle.map((data) => {
+        vehicleModal.push({
+          label: data.model,
+          value: data.model
+        })
+        return true
+      })
+      this.setState({
+        defaultOptionsModal: vehicleModal
+      })
     }
     this.setState({
       makeInput: null
@@ -456,7 +472,7 @@ export class CrmEditVehicleModal extends Component {
   /**
    * 
    */
-  onBlurModal = (modalValue) => {
+  onBlurModal = () => {
     let modal = this.state.modal;
     if (modal.value && modal.value !== "") {
       let vehicleMake = [];
@@ -466,6 +482,26 @@ export class CrmEditVehicleModal extends Component {
       });
       var myData = vehicle;
       vehicle = Array.from(new Set(myData.map(JSON.stringify))).map(JSON.parse);
+      vehicle.sort((a, b) => (a['make'] || "").toString().localeCompare((b['make'] || "").toString()));
+      vehicle.map((data) => {
+        vehicleMake.push({
+          label: data.make,
+          value: data.make
+        })
+        return true
+      })
+      this.setState({
+        defaultOptionsMake: vehicleMake
+      })
+    } else {
+      let vehicleMake = [];
+      let vehicle = VehiclesData.slice(0, 150);
+      var myData1 = vehicle;
+      function getUniqueListBy(arr, key) {
+        return [...new Map(arr.map(item => [item[key], item])).values()]
+      }
+      vehicle = Array.from(new Set(myData1.map(JSON.stringify))).map(JSON.parse);
+      vehicle = getUniqueListBy(vehicle, 'make');
       vehicle.sort((a, b) => (a['make'] || "").toString().localeCompare((b['make'] || "").toString()));
       vehicle.map((data) => {
         vehicleMake.push({
@@ -578,7 +614,8 @@ export class CrmEditVehicleModal extends Component {
                       placeholder="Honda"
                       value={make}
                       loadOptions={this.handleVehicleMake}
-                      defaultOptions={modal.value ? defaultOptionsMake : null}
+                      // defaultOptions={modal.value ? defaultOptionsMake : null}
+                      defaultOptions={defaultOptionsMake}
                       onChange={(e) => this.handleMake(e)}
                       noOptionsMessage={() =>
                         this.state.makeInput
@@ -616,7 +653,8 @@ export class CrmEditVehicleModal extends Component {
                       value={modal}
                       placeholder="Accord Or Q3 Or WRV..."
                       loadOptions={this.handleVehicleModal}
-                      defaultOptions={make.value ? defaultOptionsModal : null}
+                      // defaultOptions={make.value ? defaultOptionsModal : null}
+                      defaultOptions={defaultOptionsModal}
                       onChange={(e) => this.handleModal(e)}
                       noOptionsMessage={() =>
                         this.state.modalInput
@@ -722,7 +760,7 @@ export class CrmEditVehicleModal extends Component {
                       name="licensePlate"
                       onChange={this._onInputChange}
                       value={this.state.licensePlate}
-                      maxLength={15}
+                      maxLength={18}
                       invalid={
                         errors.licensePlate && !(this.state.licensePlate.trim())
                       }
@@ -958,7 +996,7 @@ export class CrmEditVehicleModal extends Component {
                     name="notes"
                     type="textarea"
                     placeholder="Enter a note..."
-                    id="name"
+                    id="notes"
                     maxLength={"1000"}
                     value={this.state.notes}
                     onChange={this._onInputChange}

@@ -84,9 +84,9 @@ const getAllMatrix = async (req, res) => {
     const parentId = currentUser.parentId || currentUser.id;
     let sortBy = {};
     switch (sort) {
-      case "loginasc":
+      case "createddesc":
         sortBy = {
-          updatedAt: -1,
+          createdAt: -1,
         };
         break;
       case "nasc":
@@ -142,7 +142,7 @@ const getAllMatrix = async (req, res) => {
       });
     }
 
-    const matrices = await matrixModel.find(condition).sort(sortBy);
+    const matrices = await matrixModel.find(condition).collation({ locale: "en" }).sort(sortBy);
     return res.status(200).json({
       responsecode: 200,
       success: true,

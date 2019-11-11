@@ -79,17 +79,19 @@ const AppointmentDetails = props => (
                 </Col>
                 <Col sm={"12"} className={"d-flex"}>
                   <Label>Phone</Label>
-                  <a href={`tel:${props.data.phone}`}>{props.data.phone}</a>
+                  {props.data && props.data.phone ? <a href={`tel:${props.data.phone}`}>{props.data.phone}</a> : "N/A"}
                 </Col>
                 <Col sm={"12"} className={"d-flex"}>
                   <Label>Email: </Label>
-                  <a
-                    href={`mailto:${props.data.email}`}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {props.data.email}
-                  </a>
+                  {props.data && props.data.email ?
+                    <a
+                      href={`mailto:${props.data.email}`}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {props.data.email}
+                    </a>
+                    : "N/A"}
                 </Col>
               </Row>
             </Col>

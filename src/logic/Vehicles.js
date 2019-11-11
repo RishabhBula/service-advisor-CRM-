@@ -25,6 +25,8 @@ import { AppRoutes } from "../config/AppRoutes";
 import XLSX from "xlsx";
 import { AppConfig } from "../config/AppConfig";
 import { VehiclesData } from "../config/Constants";
+import { ColorOptions, groupedOptions } from "../config/Color";
+import { Transmission, Drivetrain } from "../config/Constants";
 let toastId = null;
 
 const vehicleAddLogic = createLogic({
@@ -358,11 +360,66 @@ const importVehicleLogic = createLogic({
           `Model number not found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
       }
-      if (!element["Licence Plate"]) {
+      if (!element["Licence Plate"] || (element["Licence Plate"] && element["Licence Plate"].length > 18)) {
         hasError = true;
         errroredRows.push(
           `Licence number not found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
         );
+      }
+      if (element["Miles"] && element["Miles"] !== "") {
+        if (isNaN(parseInt(element["Miles"])) || (element["Miles"].length > 15)) {
+          hasError = true;
+          errroredRows.push(
+            `Invalid miles value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+          );
+        }
+      }
+      if (element["VIN"] && element["VIN"] !== "" && (element["VIN"].length) > 17) {
+        hasError = true;
+        errroredRows.push(
+          `Invalid vin value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+        );
+      }
+      if (element["Drivetrain"] && element["Drivetrain"] !== "") {
+        const regex = RegExp(`^${element["Drivetrain"]}$`, 'i');
+        const data = Drivetrain.filter((item) => {
+          return item.key.match(regex)
+        })
+        if (!data) {
+          hasError = true;
+          errroredRows.push(
+            `Invalid drivetrain value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+          );
+        }
+      }
+      if (element["Transmission"] && element["Transmission"] !== "") {
+        const regex = RegExp(`^${element["Transmission"]}$`, 'i');
+        const data = Transmission.filter((item) => {
+          return item.key.match(regex)
+        })
+        if (!data) {
+          hasError = true;
+          errroredRows.push(
+            `Invalid transmission value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+          );
+        }
+      }
+      if (element["Production Date"] && element["Production Date"] !== "") {
+        const splitedDate = element["Production Date"].split("/")
+        var d = new Date();
+        var n = d.getFullYear();
+        if (parseInt(splitedDate[0]) > 12 && splitedDate[0]) {
+          hasError = true;
+          errroredRows.push(
+            `Invalid production date value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+          );
+        }
+        else if (parseInt(splitedDate[1]) >= n && splitedDate[1]) {
+          hasError = true;
+          errroredRows.push(
+            `Invalid production date value found on row <b>${element.rowNumber}</b> of <b>${element.sheetName}</b> sheet.`
+          );
+        }
       }
       return {
         year: parseInt(element["Year"]),

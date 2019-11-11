@@ -21,17 +21,17 @@ const signupValidation = [
     .custom(async (email, { req }) => {
       const normalizedEmail = normalizeEmail(email);
       const roleType = await roleModel.findOne({
-        userType: new RegExp("Technician", "i")
+        userType: new RegExp("^admin$", "i")
       });
       const result = await userModel.findOne({
         $and: [
-          { roleType: { $ne: roleType._id } },
           { normalizedEmail },
           { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
         ]
-      });
+      }).populate({ path: "roleType" });
       if (result) {
-        throw new Error(validationMessage.emailAlreadyExist);
+        // throw new Error(validationMessage.emailAlreadyExist);
+        throw new Error(`Email address already exist${result && result.roleType && result.roleType.userType && roleType && roleType.userType && result.roleType.userType !== roleType.userType ? (` as ${result.roleType.userType}`) : ""}.`);
       }
       req.body.normalizedEmail = normalizedEmail;
       return true;
@@ -135,19 +135,19 @@ const createUserValidation = [
     .withMessage(validationMessage.emailInvalid)
     .custom(async (email, { req }) => {
       const roleType = await roleModel.findOne({
-        userType: new RegExp("admin", "i")
+        userType: new RegExp("Technician", "i")
       });
       const normalizedEmail = normalizeEmail(email);
       const result = await userModel.findOne({
         $and: [
-          { roleType: { $ne: roleType._id } },
           { normalizedEmail },
           { $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }] }
         ]
-      });
+      }).populate({ path: "roleType" });
 
       if (result) {
-        throw new Error(validationMessage.emailAlreadyExist);
+        // throw new Error(validationMessage.emailAlreadyExist);
+        throw new Error(`Email address already exist${result && result.roleType && result.roleType.userType && roleType && roleType.userType && result.roleType.userType !== roleType.userType ? (` as ${result.roleType.userType}`) : ""}.`);
       }
       req.body.normalizedEmail = normalizedEmail;
       return true;

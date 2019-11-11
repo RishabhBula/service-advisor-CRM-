@@ -189,8 +189,10 @@ export class CrmTimeClockModal extends Component {
   }
   handleTimeDuration = () => {
     const { timeIn, timeOut } = this.state;
+    let startTime = timeIn.split(":");
+    let endTime = timeOut.split(":");
     var ts1 = moment(`06/26/2019 ${timeIn}`, "M/D/YYYY HH:mm").valueOf();
-    var ts2 = moment(`06/26/2019 ${timeOut}`, "M/D/YYYY HH:mm").valueOf();
+    var ts2 = moment(`${startTime[0] > endTime[0] ? '06 / 27 / 2019' : startTime[0] === endTime[0] && startTime[1] > endTime[1] ? '06 / 27 / 2019' : '06 / 26 / 2019'} ${timeOut}`, "M/D/YYYY HH:mm").valueOf();
     var Seconds = moment
       .duration(moment(ts2)
         .diff(moment(ts1))
@@ -402,7 +404,7 @@ export class CrmTimeClockModal extends Component {
         >
           <ModalHeader toggle={handleTimeClockModal}>
             {
-              isEditTimeClock ? "Edit Time Logs" : "Add Time Manually"
+              isEditTimeClock ? "Update Time Logs" : "Add Time Manually"
             }
           </ModalHeader>
           <ModalBody>
@@ -582,7 +584,7 @@ export class CrmTimeClockModal extends Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.handleAddTimeLogs}>
-              {isEditTimeClock ? "Edit Time Log" : "Add Time Log"}
+              {isEditTimeClock ? "Update Time Log" : "Add Time Log"}
             </Button>{" "}
             <Button color="secondary" onClick={handleTimeClockModal}>
               Cancel

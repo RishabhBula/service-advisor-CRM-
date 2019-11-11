@@ -177,7 +177,7 @@ const getProfile = async (req, res) => {
       userFind = await userModel.findOne({
         _id: currentUser.id,
         $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }]
-      }).populate("parentId planId")
+      }).populate({ path: "planId parentId", populate: { path: "planId" } })
     } else {
       userFind = await userModel.findOne({
         _id: currentUser.id,

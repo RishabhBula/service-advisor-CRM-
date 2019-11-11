@@ -357,7 +357,7 @@ const addOrderLogic = createLogic({
         orderId: result.data.result._id
       };
       dispatch(addNewActivity(data));
-      if (action.payload.isAppointment && action.payload.isAppointment === true) {
+      if (action.payload && action.payload.isAppointment && action.payload.isAppointment === true) {
         dispatch(hideLoader());
         done();
       } else {
