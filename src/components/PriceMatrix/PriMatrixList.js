@@ -199,10 +199,10 @@ class PriMatrixList extends Component {
                     <i className={"fa fa-dollar"} /> Cost Range
                   </span>
                   <span>
-                    <i className={"fa fa-line-chart"} /> Margin
+                    <i className={"fa fa-money"} /> Markup
                   </span>
                   <span>
-                    <i className={"fa fa-money"} /> Markup
+                    <i className={"fa fa-line-chart"} /> Margin
                   </span>
                 </div>
               </th>
@@ -249,10 +249,10 @@ class PriMatrixList extends Component {
                                 </span>
                               </span>
                               <span className={"p-1"}>
-                                {matrix.matrixRange[0].margin}
+                                {matrix.matrixRange[0].markup + "%"}
                               </span>
                               <span className={"p-1"}>
-                                {matrix.matrixRange[0].markup}
+                                {matrix.matrixRange[0].margin + "%"}
                               </span>
                             </div>
                             <div
@@ -286,10 +286,10 @@ class PriMatrixList extends Component {
                                         </span>
                                       </span>
                                       <span className={"p-1"}>
-                                        {range.margin}
+                                        {range.markup + "%"}
                                       </span>
                                       <span className={"p-1"}>
-                                        {range.markup}
+                                        {range.margin + "%"}
                                       </span>
                                     </div>
                                   );

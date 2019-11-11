@@ -30,7 +30,8 @@ const addTimeLogs = async (req, res) => {
 
     let endTime = body.endDateTime.split(":");
     let dateDurationEnd;
-    dateDurationEnd = new Date(body.date);
+    let newDateDurationEnd = new Date(body.date);
+    dateDurationEnd = startTime[0] > endTime[0] ? new Date(newDateDurationEnd.setDate(newDateDurationEnd.getDate() + 1)) : startTime[0] === endTime[0] && startTime[1] > endTime[1] ? new Date(newDateDurationEnd.setDate(newDateDurationEnd.getDate() + 1)) : new Date(body.date);
     dateDurationEnd.setUTCHours(parseInt(endTime[0]));
     dateDurationEnd.setUTCMinutes(parseInt(endTime[1]));
     const endDate = dateDurationEnd.toISOString();
@@ -362,10 +363,11 @@ const updateTimeLogOfTechnician = async (req, res) => {
       dateDuration.setUTCHours(parseInt(startTime[0]));
       dateDuration.setUTCMinutes(parseInt(startTime[1]));
       const startDate = dateDuration.toISOString();
-
+      
       let endTime = body.endDateTime.split(":");
       let dateDurationEnd;
-      dateDurationEnd = new Date(body.date);
+      let newDateDurationEnd = new Date(body.date);
+      dateDurationEnd = startTime[0] > endTime[0] ? new Date(newDateDurationEnd.setDate(newDateDurationEnd.getDate() + 1)) : startTime[0] === endTime[0] && startTime[1] > endTime[1] ? new Date(newDateDurationEnd.setDate(newDateDurationEnd.getDate() + 1)) : new Date(body.date);
       dateDurationEnd.setUTCHours(parseInt(endTime[0]));
       dateDurationEnd.setUTCMinutes(parseInt(endTime[1]));
       const endDate = dateDurationEnd.toISOString();

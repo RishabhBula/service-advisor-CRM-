@@ -191,15 +191,15 @@ const userSchema = new Schema({
       }
     }),
     default: {},
-    anniversary: {
-      type: Date,
-      default: Date.now
-    },
-    dob: {
-      type: Date,
-      default: Date.now
-    }
-  }
+  },
+  anniversary: {
+    type: Date,
+    default: Date.now
+  },
+  dob: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 module.exports = mongoose.model("user", userSchema);

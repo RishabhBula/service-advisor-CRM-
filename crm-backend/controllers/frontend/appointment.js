@@ -74,10 +74,11 @@ const appointmentList = async (req, res) => {
       });
     }
     if (end) {
-      end = new Date(new Date(end).setUTCHours(0, 0, 0, 0));
+      end = new Date(new Date(end).setUTCHours(23, 59, 59, 999));
       const ind = condition["$and"].findIndex(d => d.appointmentDate);
-      if (!condition["$and"][ind]) {
-        delete condition["$and"][ind];
+      if (condition["$and"][ind]) {
+        // delete condition["$and"][ind];
+        condition["$and"].splice(ind, 1);
       }
       condition["$and"].push({
         appointmentDate: {
@@ -171,13 +172,12 @@ const addAppointment = async (req, res) => {
         techniicanEmails.push(element.email)
       }
     }
-    const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
     if (isSms) {
       const smsResult = await sendSMS(phone, appointmentTitle, id);
       if (smsResult.error === true) {
         return res.status(400).json({
-          message: smsResult.message.replace("To","Phone")
+          message: smsResult.message.replace("To", "Phone")
         });
       }
     }
@@ -203,9 +203,10 @@ const addAppointment = async (req, res) => {
           : "User"
       });
       techniicanEmails.push(email)
-      console.log("###########", techniicanEmails);
+
       await emailVar.sendEmail(techniicanEmails);
     }
+    const result = await AppointmentModal.create(dataToSave);
     /* notify via sms */
     res.status(200).json({
       message: "Appointment added successfully.",
@@ -325,17 +326,11 @@ const updateAppointment = async (req, res) => {
       dataToSave.orderId = Mongoose.Types.ObjectId(orderId);
       Name = await Orders.findOne({ _id: orderId }, { orderName: 1 });
     }
-    const result = await AppointmentModal.updateOne(
-      { _id: Mongoose.Types.ObjectId(appointmentId) },
-      {
-        $set: dataToSave
-      }
-    );
     if (isSms) {
       const smsResult = await sendSMS(phone, appointmentTitle, id);
       if (smsResult.error === true) {
         return res.status(400).json({
-          message: smsResult.message.replace("To","Phone")
+          message: smsResult.message.replace("To", "Phone")
         });
       }
     }
@@ -357,6 +352,12 @@ const updateAppointment = async (req, res) => {
       });
       await emailVar.sendEmail(email);
     }
+    const result = await AppointmentModal.updateOne(
+      { _id: Mongoose.Types.ObjectId(appointmentId) },
+      {
+        $set: dataToSave
+      }
+    );
     /* notify via sms */
     res.status(200).json({
       message: "Appointment updated successfully.",

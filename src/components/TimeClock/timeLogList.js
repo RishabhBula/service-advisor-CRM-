@@ -316,8 +316,8 @@ class TimeLogList extends Component {
                         {`${timeLog.vehicleId[0].make} ${timeLog.vehicleId[0].modal}`}
                       </Link>
                       : "-"}</td>
-                    <td>{moment(timeLog.startDateTime).isValid() ? moment(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm") : moment().format("MM/DD/YYYY  HH:mm")}</td>
-                    <td>{moment(timeLog.endDateTime).isValid() ? moment(timeLog.endDateTime).format("MM/DD/YYYY HH:mm") : moment().format("MM/DD/YYYY HH:mm")}</td>
+                    <td>{moment(timeLog.startDateTime).isValid() ? moment.utc(timeLog.startDateTime).format("MM/DD/YYYY  HH:mm") : moment.utc().format("MM/DD/YYYY  HH:mm")}</td>
+                    <td>{moment(timeLog.endDateTime).isValid() ? moment.utc(timeLog.endDateTime).format("MM/DD/YYYY HH:mm") : moment.utc().format("MM/DD/YYYY HH:mm")}</td>
                     <td>{`${calculateDurationFromSeconds(timeLog.duration)}`}</td>
                     <td>{timeLog.activity && timeLog.activity !== "General" && timeLog.orderId && timeLog.orderId.length && timeLog.orderId[0]._id ?
                       <Link to={AppRoutes.WORKFLOW_ORDER.url.replace(":id", timeLog.orderId[0]._id)} target="_blank"

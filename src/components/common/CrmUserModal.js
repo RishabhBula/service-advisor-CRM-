@@ -45,8 +45,8 @@ export class CrmUserModal extends Component {
       rate: "",
       companyName: "",
       permissions: TechincianDefaultPermissions,
-      dob: new Date(),
-      anniversary: new Date(),
+      dob: "",
+      anniversary: "",
       errors: {},
       isEditMode: false,
       phoneError: false
@@ -71,8 +71,8 @@ export class CrmUserModal extends Component {
         roleType: "5ca3473d70537232f13ff1fa",
         rate: "",
         permissions: TechincianDefaultPermissions,
-        dob: new Date(),
-        anniversary: new Date(),
+        dob: "",
+        anniversary: "",
         errors: {}
       });
     }
@@ -222,8 +222,8 @@ export class CrmUserModal extends Component {
     })
   }
   onChangeDob = date => {
-    console.log("dateeeeeee",date);
-    
+    console.log("date", date);
+
     this.setState({
       dob: date
     })
@@ -433,8 +433,13 @@ export class CrmUserModal extends Component {
                     <div className={"input-block"}>
                       <DatePicker
                         name="dob"
+                        calendarType={"US"}
+                        format={"dd/MM/y"}
+                        defaultActiveStartDate={new Date()}
                         onChange={this.onChangeDob}
-                        value={dob}
+                        value={dob ? new Date(dob) : ""}
+                        clearIcon={dob ? <i className="fa fa-times" aria-hidden="true" />
+                          : null}
                         maxDate={new Date()}
                       />
                     </div>
@@ -448,8 +453,13 @@ export class CrmUserModal extends Component {
                     <div className={"input-block"}>
                       <DatePicker
                         name="anniversary"
+                        calendarType={"US"}
+                        format={"dd/MM/y"}
+                        defaultActiveStartDate={new Date()}
                         onChange={this.onChangeAnniversary}
-                        value={anniversary}
+                        value={anniversary ? new Date(anniversary) : ""}
+                        clearIcon={anniversary ? <i className="fa fa-times" aria-hidden="true" />
+                          : null}
                       />
                     </div>
                   </FormGroup>

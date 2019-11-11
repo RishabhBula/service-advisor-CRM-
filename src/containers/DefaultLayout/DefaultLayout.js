@@ -167,7 +167,7 @@ class DefaultLayout extends Component {
     }
   };
   renderSubscriptionModal = profileInfo => {
-    const { isInTrialPeriod, planId, planExiprationDate } = profileInfo;
+    const { isInTrialPeriod, planId, planExiprationDate, parentId } = profileInfo;
     // const {
     //   getSubscriptionPlanRequest,
     //   subscriptionReducer,
@@ -181,9 +181,9 @@ class DefaultLayout extends Component {
     // const d1 = moment(new Date()).toDate();
     // const d2 = new Date(planExiprationDate);
     // const diffTime = Math.abs(d1.getTime() - d2.getTime());
-    const isPlanExpiered = moment(planExiprationDate).isSameOrBefore(new Date(), 'day');
-    if (!isInTrialPeriod && (isPlanExpiered || !planId)) {
-       this.props.redirectTo("/pricing");
+    const isPlanExpiered = moment(parentId && parentId.planExiprationDate ? parentId.planExiprationDate : planExiprationDate).isSameOrBefore(new Date(), 'day');
+    if ((parentId && parentId.isInTrialPeriod === false ? !(parentId.isInTrialPeriod) : !isInTrialPeriod) && (isPlanExpiered || (parentId && parentId.planId ? !(parentId.planId) : !planId))) {
+      this.props.redirectTo("/pricing");
       // return (
       //   <CrmSubscriptionModel
       //     openSubscriptionModel={true}
@@ -195,7 +195,7 @@ class DefaultLayout extends Component {
       //     logOutRequest={logoutUser}
       //   />
       //   );
-       
+
     } else {
       return null;
     }
@@ -262,69 +262,69 @@ class DefaultLayout extends Component {
     return isLoading ? (
       <FullPageLoader />
     ) : (
-      <div className="app">
-        {this.renderCompanyDetailsPopup(profileInfo || {})}
-        {this.renderSubscriptionModal(profileInfo || {})}
-        <AppHeader fixed>
-          <Suspense fallback={""}>
-            <DefaultHeader
-              onLogout={e => this.signOut(e)}
-              permissions={permissions || {}}
-              shopLogo={shopLogo ? shopLogo : null}
-              toggleCustAndVehicle={this.toggleCustAndVehicleProps}
-              addOrderRequest={addOrderRequest}
-              rateStandardListReducer={rateStandardListReducer}
-              matrixListReducer={matrixListReducer}
-              profileInfoReducer={profileInfoReducer}
-              addFleet={addFleet}
-              getMatrix={getMatrix}
-              getStdList={getStdList}
-              setLabourRateDefault={setLabourRateDefault}
-              showAddAppointmentModalHeader={showAddAppointmentModalHeader}
-              getUserData={getUserData}
-              getCustomerData={getCustomerData}
-              getVehicleData={getVehicleData}
-              getOrders={getOrders}
-              addAppointment={addAppointment}
-              {...this.props}
-            />
-          </Suspense>
-        </AppHeader>
-        <div className="app-body">
-          <AppSidebar className="custom-sidebar" fixed minimized display="lg">
-            {shopLogo || parentId.shopLogo ? (
-              <div className={"provider-logo"}>
-                {!isLogoLoading ? (
-                  <img src={shopLogo || parentId.shopLogo} alt={"logo"} />
-                ) : (
-                  <img
-                    src={
-                      "https://loading.io/spinners/google/index.flip-circle-google-loader-gif.svg"
-                    }
-                    alt={"logo"}
-                  />
+        <div className="app">
+          {this.renderCompanyDetailsPopup(profileInfo || {})}
+          {this.renderSubscriptionModal(profileInfo || {})}
+          <AppHeader fixed>
+            <Suspense fallback={""}>
+              <DefaultHeader
+                onLogout={e => this.signOut(e)}
+                permissions={permissions || {}}
+                shopLogo={shopLogo ? shopLogo : null}
+                toggleCustAndVehicle={this.toggleCustAndVehicleProps}
+                addOrderRequest={addOrderRequest}
+                rateStandardListReducer={rateStandardListReducer}
+                matrixListReducer={matrixListReducer}
+                profileInfoReducer={profileInfoReducer}
+                addFleet={addFleet}
+                getMatrix={getMatrix}
+                getStdList={getStdList}
+                setLabourRateDefault={setLabourRateDefault}
+                showAddAppointmentModalHeader={showAddAppointmentModalHeader}
+                getUserData={getUserData}
+                getCustomerData={getCustomerData}
+                getVehicleData={getVehicleData}
+                getOrders={getOrders}
+                addAppointment={addAppointment}
+                {...this.props}
+              />
+            </Suspense>
+          </AppHeader>
+          <div className="app-body">
+            <AppSidebar className="custom-sidebar" fixed minimized display="lg">
+              {shopLogo || parentId.shopLogo ? (
+                <div className={"provider-logo"}>
+                  {!isLogoLoading ? (
+                    <img src={shopLogo || parentId.shopLogo} alt={"logo"} />
+                  ) : (
+                      <img
+                        src={
+                          "https://loading.io/spinners/google/index.flip-circle-google-loader-gif.svg"
+                        }
+                        alt={"logo"}
+                      />
+                    )}
+                </div>
+              ) : (
+                  <div
+                    className={"provider-logo company-name"}
+                    id={"comapnyName"}
+                  >
+                    <Avtar value={providerCompanyName} class={"name"} />
+                    <UncontrolledTooltip target={"comapnyName"}>
+                      {profileInfo.companyName}
+                    </UncontrolledTooltip>
+                  </div>
                 )}
+              <div className={"company-logo"}>
+                <Link
+                  to={"/profile"}
+                  className={"text-decoration-none text-white"}
+                >
+                  {providerCompanyName}
+                </Link>
               </div>
-            ) : (
-              <div
-                className={"provider-logo company-name"}
-                id={"comapnyName"}
-              >
-                <Avtar value={providerCompanyName} class={"name"} />
-                <UncontrolledTooltip target={"comapnyName"}>
-                  {profileInfo.companyName}
-                </UncontrolledTooltip>
-              </div>
-            )}
-            <div className={"company-logo"}>
-              <Link
-                to={"/profile"}
-                className={"text-decoration-none text-white"}
-              >
-                {providerCompanyName}
-              </Link>
-            </div>
-            {/* <AppNavbarBrand
+              {/* <AppNavbarBrand
                 full={{
                   src: shopLogo || "/assets/img/logo-white.svg",
                   alt: "Service Adviser",
@@ -337,16 +337,16 @@ class DefaultLayout extends Component {
                 }}
               /> */}
 
-            <AppSidebarHeader />
-            <AppSidebarForm />
+              <AppSidebarHeader />
+              <AppSidebarForm />
 
-            <Suspense>
-              <AppSidebarNav
-                navConfig={this.navigation(permissions || {})}
-                {...this.props}
-              />
-            </Suspense>
-            {/* <div className={"text-center nav-footer-logo"}>
+              <Suspense>
+                <AppSidebarNav
+                  navConfig={this.navigation(permissions || {})}
+                  {...this.props}
+                />
+              </Suspense>
+              {/* <div className={"text-center nav-footer-logo"}>
               <img
                 src={ServiceAdvisorLogo}
                 alt={"service-advisor"}
@@ -354,78 +354,78 @@ class DefaultLayout extends Component {
               />
               <div>Service Adviser</div>
             </div> */}
-            <AppSidebarFooter />
-            <AppSidebarMinimizer />
-          </AppSidebar>
-          <main className="main">
-            <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
-            <Container fluid>
-              {hasAccess ? (
-                <>
-                  <Suspense fallback={<Loader />}>
-                    <Switch>
-                      {routes.map((route, idx) => {
-                        return route.component ? (
-                          <Route
-                            key={idx}
-                            path={route.path}
-                            exact={route.exact}
-                            name={route.name}
-                            render={props => (
-                              <route.component
-                                {...props}
-                                {...this.props}
-                                permissions={permissions || {}}
-                              />
-                            )}
-                          />
-                        ) : null;
-                      })}
-                      <Redirect
-                        from={AppRoutes.HOME.url}
-                        to={AppRoutes.DASHBOARD.url}
-                      />
-                    </Switch>
-                  </Suspense>
-                </>
-              ) : (
-                <NoAccess redirectTo={this.props.redirectTo} />
-              )}
-            </Container>
-          </main>
-          <AppAside fixed>
+              <AppSidebarFooter />
+              <AppSidebarMinimizer />
+            </AppSidebar>
+            <main className="main">
+              <AppBreadcrumb appRoutes={BreadCrumbRoutes} />
+              <Container fluid>
+                {hasAccess ? (
+                  <>
+                    <Suspense fallback={<Loader />}>
+                      <Switch>
+                        {routes.map((route, idx) => {
+                          return route.component ? (
+                            <Route
+                              key={idx}
+                              path={route.path}
+                              exact={route.exact}
+                              name={route.name}
+                              render={props => (
+                                <route.component
+                                  {...props}
+                                  {...this.props}
+                                  permissions={permissions || {}}
+                                />
+                              )}
+                            />
+                          ) : null;
+                        })}
+                        <Redirect
+                          from={AppRoutes.HOME.url}
+                          to={AppRoutes.DASHBOARD.url}
+                        />
+                      </Switch>
+                    </Suspense>
+                  </>
+                ) : (
+                    <NoAccess redirectTo={this.props.redirectTo} />
+                  )}
+              </Container>
+            </main>
+            <AppAside fixed>
+              <Suspense fallback={""}>
+                <DefaultAside />
+              </Suspense>
+            </AppAside>
+          </div>
+          <AppFooter>
             <Suspense fallback={""}>
-              <DefaultAside />
-            </Suspense>
-          </AppAside>
-        </div>
-        <AppFooter>
-          <Suspense fallback={""}>
-            <DefaultFooter />
-            <div className={"d-flex align-items-center w-100"}>
-              Powered By
+              <DefaultFooter />
+              <div className={"d-flex align-items-center w-100"}>
+                Powered By
               <a
-                href="http://serviceadvisor.io"
-                target={"_blank"}
-                className={
-                  "d-inline-flex align-items-center ml-2 mr-1 text-body text-bold"
-                }
-              >
-                <img
-                  src={fav}
-                  alt={"service-advisor"}
-                  width={25}
-                  className={"mr-1"}
-                />
-                <b>Service Advisor</b>
-              </a>
-              | All Rights Reserved.
+                  href="http://serviceadvisor.io"
+                  target={"_blank"}
+                  className={
+                    "d-inline-flex align-items-center ml-2 mr-1 text-body text-bold"
+                  }
+                >
+                  <img
+                    src={fav}
+                    alt={"service-advisor"}
+                    width={25}
+                    className={"mr-1"}
+                  />
+                  <b>Service Advisor</b>
+                </a>
+                | All Rights Reserved.
             </div>
-          </Suspense>
-        </AppFooter>
-        {this.customerAndVehicleModal()}
-      </div>
-    );
+            </Suspense>
+          </AppFooter>
+          {this.customerAndVehicleModal()}
+        </div>
+      );
   }
 }
 

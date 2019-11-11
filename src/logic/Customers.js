@@ -88,7 +88,7 @@ const addCustomerLogic = createLogic({
       if (action.payload.workFlowCustomer) {
         dispatch(
           customerAddSuccess({
-            customerAddInfo: result.data.data
+            customerAddInfo: { ...result.data.data, fleet: action.payload.fleet1 ? action.payload.fleet1 : null }
           })
         );
       }
@@ -264,7 +264,7 @@ const editCustomerLogic = createLogic({
       const customerAddInfo = getState().customerInfoReducer && getState().customerInfoReducer.customerAddInfo ? getState().customerInfoReducer.customerAddInfo : "";
       dispatch(
         customerAddSuccess({
-          customerAddInfo: { ...customerAddInfo, ...action.payload.data }
+          customerAddInfo: { ...customerAddInfo, ...action.payload.data, fleet: action.payload.data.fleet1 ? action.payload.data.fleet1 : null }
         })
       );
       dispatch(customerEditSuccess());

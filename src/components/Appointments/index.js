@@ -32,6 +32,7 @@ export default class Appointments extends Component {
     if (!(info.event.url)) {
       this.props.onEventClick(info.event.id);
     } else {
+      // window.open(info.event.url, "_blank");
       this.props.onGoPage(info.event.url);
     }
   };
@@ -60,24 +61,42 @@ export default class Appointments extends Component {
       };
     });
     let events1 = [];
+    let events2 = [];
     if (userReducer && userReducer.users && userReducer.users.length) {
-      events1 = userReducer.users.map(event => {
-        const anniversaryNo = moment().diff(moment(event.createdAt), "year");
+      events1 = userReducer.users.filter(item => item.anniversary !== "" && item.anniversary !== null && item.anniversary !== undefined && (moment().diff(moment(item.anniversary), "year") >= 1)).map(event => {
+        // const anniversaryNo = moment().diff(moment(event.anniversary), "year");
         const url = (AppRoutes.STAFF_MEMBERS_DETAILS.url).replace(":id", event._id);
         return {
           id: event._id,
-          title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} ${anniversaryNo > 0 ? anniversaryNo + "th" : ""} anniversary`,
-          start: new Date(event.createdAt),
+          title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} anniversary`,
+          start: event.anniversary ? new Date(event.anniversary) : new Date(),
           color: "#000",
           allDay: true, // will make the time hide
           url: `${window.location.protocol}//${window.location.host}${url}?tab=Technician%20%20Info`,
           rrule: {
             freq: 'YEARLY',
             interval: 1,
-            dtstart: new Date(event.createdAt),
+            dtstart: event.anniversary ? new Date(event.anniversary) : new Date(),
           },
         }
-      })
+      });
+      events2 = userReducer.users.filter(item => item.dob !== "" && item.dob !== null && item.dob !== undefined && (moment().diff(moment(item.dob), "year") >= 1)).map(event => {
+        // const dobNo = moment().diff(moment(event.dob), "year");
+        const url = (AppRoutes.STAFF_MEMBERS_DETAILS.url).replace(":id", event._id);
+        return {
+          id: event._id,
+          title: `${event.firstName ? event.firstName : ""} ${event.lastName ? event.lastName : ""} birthday`,
+          start: event.dob ? new Date(event.dob) : new Date(),
+          color: "#00f",
+          allDay: true, // will make the time hide
+          url:`${window.location.protocol}//${window.location.host}${url}?tab=Technician%20%20Info`,
+          rrule: {
+            freq: 'YEARLY',
+            interval: 1,
+            dtstart: event.dob ? new Date(event.dob) : new Date(),
+          },
+        }
+      });
     }
     // let event = events.concat(events1);
     return (
@@ -98,6 +117,9 @@ export default class Appointments extends Component {
             },
             {
               events: events1
+            },
+            {
+              events: events2
             }
           ]}
           // events={event}
