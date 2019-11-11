@@ -55,7 +55,8 @@ export default class AddAppointment extends Component {
       selectedOrder: null,
       email: "",
       phone: "",
-      selectedTechincians: []
+      selectedTechincians: [],
+      isNewOrder: false
     };
     this.isCustomerReqSent = false;
     this.isVehicleReqSent = false;
@@ -70,7 +71,8 @@ export default class AddAppointment extends Component {
     editData: oldEditData,
     isOpen: oldIsOpen,
     customerInfoReducer,
-    vehicleAddInfoReducer
+    vehicleAddInfoReducer,
+    orderReducer
   }) {
     const { isOpen, date, editData, orderData } = this.props;
     if (date !== prevDate) {
@@ -106,7 +108,7 @@ export default class AddAppointment extends Component {
           selectedOrder: orderId
             ? {
               data: orderId,
-              label: `${orderId.orderName ? orderId.orderName : "Unnamed Order"}`,
+              label: `#${orderId.orderId ? orderId.orderId : ""} - ${orderId.orderName ? orderId.orderName : "Unnamed Order"}`,
               value: orderId._id
             }
             : null,
@@ -188,7 +190,7 @@ export default class AddAppointment extends Component {
           selectedOrder: orderId
             ? {
               data: orderId,
-              label: `${orderId.orderName}`,
+              label: `#${orderId.orderId ? orderId.orderId : ""} - ${orderId.orderName ? orderId.orderName : "Unnamed order"}`,
               value: orderId._id
             }
             : null,
@@ -203,6 +205,18 @@ export default class AddAppointment extends Component {
           isSms: phone ? true : false,
         });
       }
+    }
+    if (this.state.isNewOrder && this.props.orderReducer && this.props.orderReducer.orderItems && orderReducer && orderReducer.orderItems && this.props.orderReducer.orderItems !== orderReducer.orderItems) {
+      const { orderReducer } = this.props;
+      const { orderItems } = orderReducer;
+      let selectedOrder = {
+        label: `#${orderItems.orderId ? orderItems.orderId : ""} - ${orderItems.orderName ? orderItems.orderName : "Unnamed order"}`,
+        value: orderItems._id ? orderItems._id : null,
+        data: orderItems ? orderItems : {}
+      }
+      this.setState({
+        selectedOrder
+      })
     }
   }
   /**
@@ -366,7 +380,8 @@ export default class AddAppointment extends Component {
       phone: "",
       selectedTechincians: [],
       isEmail: false,
-      isSms: false
+      isSms: false,
+      isNewOrder: false
     });
   };
   /**
@@ -499,12 +514,20 @@ export default class AddAppointment extends Component {
   /**
    * 
    */
-  // handleCreateOrder = (customerId) => {
-  //   const { selectedCustomer, selectedVehicle } = this.state
-  //   this.props.addOrderRequest({
-  //     customerId: selectedCustomer && selectedCustomer.value && selectedCustomer.value !== "" ? selectedCustomer.value : null
-  //   })
-  // }
+  handleCreateOrder = () => {
+    const { selectedCustomer, selectedVehicle } = this.state
+    this.props.addOrderRequest({
+      customerId: selectedCustomer && selectedCustomer.value && selectedCustomer.value !== "" ? selectedCustomer.value : null,
+      vehicleId: selectedVehicle && selectedVehicle.value && selectedVehicle.value !== "" ? selectedVehicle.value : null,
+      isAppointment: true
+    });
+    this.setState({
+      isNewOrder: true
+    })
+  }
+  /**
+   * 
+   */
   render() {
     const {
       selectedCustomer,
@@ -523,7 +546,6 @@ export default class AddAppointment extends Component {
       isEmail,
       isSms
     } = this.state;
-    console.log("selectedCustomer", selectedCustomer);
 
     const { toggleAddAppointModal, isOpen, editData } = this.props;
 
@@ -911,9 +933,9 @@ export default class AddAppointment extends Component {
                               : "Type order name or number"
                           }
                           onChange={e => {
-                            // if (e && e.label === "+ Add New Order") {
-                            //   this.handleCreateOrder()
-                            // }
+                            if (e && e.label === "+ Add New Order") {
+                              this.handleCreateOrder()
+                            }
                             this.setState({
                               selectedOrder: e
                             });

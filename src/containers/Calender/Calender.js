@@ -16,7 +16,9 @@ import {
   updateAppointmentRequest,
   getUsersList,
   vehicleAddRequest,
-  customerAddRequest
+  customerAddRequest,
+  addOrderRequest,
+  redirectTo,
 } from "../../actions";
 import Loader from "../Loader/Loader";
 import AppointmentDetails from "../../components/Appointments/AppointmentDetails";
@@ -29,18 +31,19 @@ class Calender extends Component {
     this.state = {
       selectedDate: null,
       editData: {},
-      filter:""
+      filter: ""
     };
   }
   /**
    *
    */
   componentDidMount() {
-    const {location}= this.props;
-    const {search}=location;
+    const { location } = this.props;
+    const { search } = location;
     let filter = qs.parse(search)
-    this.setState({filter});
+    this.setState({ filter });
     this.props.getAppointments({ technicianId: null, vehicleId: null });
+    this.props.getUserData();
   }
   /**
    *
@@ -146,7 +149,11 @@ class Calender extends Component {
       customerFleetReducer,
       addVehicle,
       customerInfoReducer,
-      vehicleAddInfoReducer
+      vehicleAddInfoReducer,
+      addOrderRequest,
+      orderReducer,
+      userReducer,
+      onGoPage
     } = this.props;
     const { isLoading, data } = appointmentReducer;
     const { modelDetails } = modelInfoReducer;
@@ -180,7 +187,9 @@ class Calender extends Component {
                   addAppointment={this.toggleAddAppointModal}
                   data={data}
                   onEventClick={this.onEventClick}
+                  onGoPage={onGoPage}
                   filter={filter}
+                  userReducer={userReducer}
                 />
               )}
           </CardBody>
@@ -204,6 +213,8 @@ class Calender extends Component {
           customerFleetReducer={customerFleetReducer}
           customerInfoReducer={customerInfoReducer}
           vehicleAddInfoReducer={vehicleAddInfoReducer}
+          addOrderRequest={addOrderRequest}
+          orderReducer={orderReducer}
         />
         <AppointmentDetails
           isOpen={showAppointmentDetailModal}
@@ -226,7 +237,9 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   profileInfoReducer: state.profileInfoReducer,
   customerInfoReducer: state.customerInfoReducer,
-  vehicleAddInfoReducer: state.vehicleAddInfoReducer
+  vehicleAddInfoReducer: state.vehicleAddInfoReducer,
+  orderReducer: state.orderReducer,
+  userReducer: state.usersReducer,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -239,7 +252,11 @@ const mapDispatchToProps = dispatch => ({
   addAppointment: data => dispatch(addAppointmentRequest(data)),
   updateAppointment: data => dispatch(updateAppointmentRequest(data)),
   addCustomer: data => dispatch(customerAddRequest(data)),
-  addVehicle: data => dispatch(vehicleAddRequest(data))
+  addVehicle: data => dispatch(vehicleAddRequest(data)),
+  addOrderRequest: data => dispatch(addOrderRequest(data)),
+  onGoPage: data => {
+    dispatch(redirectTo({ path: data }))
+  }
 });
 
 export default connect(
