@@ -193,6 +193,8 @@ const loginApp = async (req, res) => {
         success: false
       };
     }
+    console.log("userSideActivation",result.userSideActivation);
+    
     if (!result.userSideActivation) {
       // eslint-disable-next-line no-throw-literal
       throw {
