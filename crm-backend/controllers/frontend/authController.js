@@ -286,7 +286,7 @@ const userForgotPassword = async (req, res) => {
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
-        message: "Email not registered.",
+        message: "Email not registered with us.",
         success: false
       });
     }

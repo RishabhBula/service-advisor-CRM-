@@ -9,6 +9,7 @@ import {
   InputGroup
 } from "reactstrap";
 import { CrmUserModal } from "../../common/CrmUserModal";
+import DatePicker from 'react-date-picker';
 
 export class UserDetails extends Component {
   constructor(props) {
@@ -158,6 +159,41 @@ export class UserDetails extends Component {
                       className={"form-control"}
                     />
                   </InputGroup>
+                </div>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Col md="6">
+              <FormGroup>
+                <Label htmlFor="name" className="customer-modal-text-style">
+                  DOB
+                </Label>
+                <div className={"input-block"}>
+                  <DatePicker
+                    name="dob"
+                    disabled
+                    clearIcon={null}
+                    // onChange={this.onChangeDob}
+                    value={technicianData.dob ? technicianData.dob : null}
+                    maxDate={new Date()}
+                  />
+                </div>
+              </FormGroup>
+            </Col>
+            <Col md="6">
+              <FormGroup>
+                <Label htmlFor="name" className="customer-modal-text-style">
+                  Anniversary
+                </Label>
+                <div className={"input-block"}>
+                  <DatePicker
+                    name="anniversary"
+                    disabled
+                    clearIcon={null}
+                    // onChange={this.onChangeAnniversary}
+                    value={technicianData.anniversary ? technicianData.anniversary : null}
+                  />
                 </div>
               </FormGroup>
             </Col>

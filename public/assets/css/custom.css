@@ -3282,3 +3282,9 @@ min-width: 45px !important;
   line-height: 30px;
   text-transform: capitalize;
 }
+.react-date-picker{
+  width:100% !important;
+}
+.react-date-picker__wrapper{
+  width: 100% !important;
+}

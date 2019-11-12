@@ -14,7 +14,7 @@ import { ApiHelper } from "../helpers";
 import { toast } from "react-toastify";
 import { DefaultErrorMessage } from "../config/Constants";
 
-let toastId = null ;
+let toastId = null;
 /**
  *
  */
@@ -33,9 +33,9 @@ const getAppointmentLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(
         getAppointmentsSuccess({
           data: []
@@ -83,18 +83,18 @@ const addAppointmentLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
     }
     if (!toast.isActive(toastId)) {
       toastId = toast.success(
-         result.messages[0]
+        result.messages[0]
       );
-   }
+    }
     dispatch(getAppointments({ technicianId: null, vehicleId: null }));
     dispatch(
       modelOpenRequest({
@@ -130,18 +130,18 @@ const udpateAppointmentLogic = createLogic({
     if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
-           result.messages[0] || DefaultErrorMessage
+          result.messages[0] || DefaultErrorMessage
         );
-     }
+      }
       dispatch(hideLoader());
       done();
       return;
     }
     if (!toast.isActive(toastId)) {
       toastId = toast.success(
-         result.messages[0]
+        result.messages[0]
       );
-   }
+    }
     dispatch(getAppointments({ technicianId: null, vehicleId: null }));
     dispatch(
       modelOpenRequest({
@@ -170,7 +170,9 @@ const getAppointmentDetailsLogic = createLogic({
       "GET",
       true
     );
-    dispatch(getAppointmentDetailsSuccess({ data: result.data.data }));
+    if (!result.isError) {
+      dispatch(getAppointmentDetailsSuccess({ data: result.data.data }));
+    }
     done();
   }
 });

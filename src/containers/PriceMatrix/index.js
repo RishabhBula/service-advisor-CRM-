@@ -54,7 +54,8 @@ class PriceMatrix extends Component {
       matrixListReducer.matrixData.isSuccess !==
       this.props.matrixListReducer.matrixData.isSuccess
     ) {
-      this.props.getMatrixList();
+      const query = qs.parse(this.props.location.search);
+      this.props.getMatrixList({ ...query });
       this.resetAll(false);
     }
     const prevQuery = qs.parse(location.search);
@@ -218,7 +219,7 @@ class PriceMatrix extends Component {
   handleCostChange = (index, e) => {
     let { name, value } = e.target;
     value = parseFloat(value);
-    console.log("value", value);
+
 
     if (isNaN(value) || !(value < Infinity)) {
       return;
@@ -473,15 +474,17 @@ class PriceMatrix extends Component {
       });
       return;
     } else {
+      const query = qs.parse(this.props.location.search);
       if (isEditMatrix) {
         const paylod = {
           matrixRange: this.state.matrixRange,
           matrixName: this.state.matrixName,
-          id: this.state.matrixId
+          id: this.state.matrixId,
+          ...query
         };
         this.props.updatePriceMatrix(paylod);
       } else {
-        this.props.addPriceMatrix(paylod);
+        this.props.addPriceMatrix({ ...paylod, ...query });
       }
     }
   };

@@ -14,12 +14,23 @@ const DashboardPlanDetails = props => (
       </b>
       ! Your{" "}
       <span className={"text-capitalize"}>
-        {!props.profileInfo.planId
-          ? "Trial Period"
-          : props.profileInfo.planName}
+        {props.profileInfo && props.profileInfo.parentId && props.profileInfo.parentId._id ?
+          <>
+            {
+              !props.profileInfo.parentId.planId
+                ? "Trial Period"
+                : props.profileInfo.parentId.planId.name
+            }
+          </> :
+          <>
+            {!props.profileInfo.planId
+              ? "Trial Period"
+              : props.profileInfo.planId.name}
+          </>
+        }
       </span>{" "}
       membership plan will automatically renew on{" "}
-      {moment(props.profileInfo.planExiprationDate || "").format("MMM Do YYYY")}
+      {moment(props.profileInfo && props.profileInfo.parentId && props.profileInfo.parentId.planExiprationDate ? props.profileInfo.parentId.planExiprationDate : props.profileInfo.planExiprationDate || "").format("MMM Do YYYY")}
       .
     </span>
   </div>

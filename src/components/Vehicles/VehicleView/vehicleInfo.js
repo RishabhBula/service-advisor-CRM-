@@ -224,7 +224,7 @@ export class VehicleInfo extends Component {
                 name="licensePlate"
                 disabled
                 value={licensePlate}
-                maxLength={15}
+                maxLength={18}
               />
             </FormGroup>
           </Col>

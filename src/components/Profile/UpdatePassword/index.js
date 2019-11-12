@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   Row,
   Col,
-  Form,
+  // Form,
   Input,
   FormGroup,
   FormFeedback,
@@ -109,7 +109,7 @@ class UpdatePassword extends Component {
       <div>
         <Row>
           <Col lg={"7"} md={"7"} className={"custom-form-modal"}>
-            <Form onSubmit={this.handleSubmit}>
+            {/* <Form onSubmit={this.handleSubmit}> */}
               <FormGroup>
                 <Label
                   htmlFor={"old password"}
@@ -164,9 +164,9 @@ class UpdatePassword extends Component {
                   <PopoverBody>
                     <div className={"pb-2 technician-detail"}>
                       <div className={"text-capitalize pb-1"}>
-                        Password should be Alphanumericals&nbsp;
-                        <small>
-                          (combination of alphabetical and numerical characters)
+                        Password should be alphanumeric
+                          <small>
+                          {" (Use 6 or more characters with a mix of letters & numbers)"}
                         </small>
                         .
                       </div>
@@ -217,7 +217,7 @@ class UpdatePassword extends Component {
                   </FormGroup>
                 </Col>
               </Row>
-            </Form>
+            {/* </Form> */}
           </Col>
         </Row>
       </div>

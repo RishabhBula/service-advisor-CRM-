@@ -2,6 +2,7 @@
 /**
  * ErrorHandlerHelper Class - For managing errors
  */
+import { APP_URL } from "../config/AppConfig";
 export class ErrorHandlerHelper {
   rawError;
   error = {
@@ -28,7 +29,7 @@ export class ErrorHandlerHelper {
     ) {
       if (this.rawError.data.message === "Token has expired" || this.rawError.data.message === "Unauthorized, Invalid token!") {
         localStorage.removeItem("token")
-        window.location.href = "/"
+        window.location.href = `http://${APP_URL}/login`;
       } else {
         this.error.messages.push(this.rawError.data.message);
       }

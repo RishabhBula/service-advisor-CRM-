@@ -73,7 +73,8 @@ export class CrmEditCustomerModal extends Component {
       selectedPriceMatrix: { value: "", label: "Type to select" },
       selectedLabourRate: { value: "", label: "Select..." },
       percentageError: "",
-      inCorrectNumber: []
+      inCorrectNumber: [],
+      fleet1: {}
     };
   }
 
@@ -147,14 +148,19 @@ export class CrmEditCustomerModal extends Component {
             value: customer.fleet._id,
             label: customer.fleet.companyName
           },
-          fleet: customer.fleet._id
+          fleet: customer.fleet._id,
+          fleet1: {
+            _id: customer.fleet._id,
+            companyName: customer.fleet.companyName
+          }
         });
       } else {
         this.setState({
           selectedOption: {
             value: "",
             label: "Select..."
-          }
+          },
+          fleet1: null
         });
       }
     }
@@ -282,14 +288,20 @@ export class CrmEditCustomerModal extends Component {
     if (selectedOption) {
       this.setState({
         selectedOption: selectedOption,
-        fleet: selectedOption.value
+        fleet: selectedOption.value,
+        fleet1: {
+          _id: selectedOption.value,
+          companyName: selectedOption.label
+        }
       });
     } else {
       this.setState({
         selectedOption: {
           value: "",
           label: "Select.."
-        }
+        },
+        fleet: "",
+        fleet1: {}
       });
     }
   };
@@ -414,7 +426,8 @@ export class CrmEditCustomerModal extends Component {
       state,
       zipCode,
       customerDefaultPermissions,
-      fleet
+      fleet,
+      fleet1
     } = this.state;
     let validationdata;
     if (!email) {
@@ -441,7 +454,8 @@ export class CrmEditCustomerModal extends Component {
       city: city,
       state: state,
       zipCode: zipCode,
-      permission: customerDefaultPermissions
+      permission: customerDefaultPermissions,
+      fleet1: fleet1
     };
 
     try {
@@ -514,7 +528,8 @@ export class CrmEditCustomerModal extends Component {
       errors: {},
       phoneErrors: [""],
       customerDefaultPermissions: CustomerDefaultPermissions,
-      inCorrectNumber: []
+      inCorrectNumber: [],
+      fleet1: {}
     });
   }
 
@@ -763,12 +778,16 @@ export class CrmEditCustomerModal extends Component {
                                     name="email"
                                     value={this.state.email}
                                     maxLength="100"
+                                    invalid={errors.email && email ? true : false}
                                   />
-                                  {errors.email && email ? (
+                                  <FormFeedback>
+                                    {errors.email && email ? errors.email : null}
+                                  </FormFeedback>
+                                  {/* {errors.email && email ? (
                                     <span className="text-danger">
                                       {errors.email}
                                     </span>
-                                  ) : null}
+                                  ) : null} */}
                                 </div>
                               </FormGroup>
                             </Col>

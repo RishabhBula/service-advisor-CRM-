@@ -39,11 +39,18 @@ class GeneratePasswordPage extends Component {
     try {
       const { password, confirmPassword } = this.state;
       const payload = { password, confirmPassword };
-      const { isValid, errors } = Validator(
+      let { isValid, errors } = Validator(
         payload,
         ResetPasswordValidations,
         ResetPasswordValidationsMessaages
       );
+      if (this.state.password !== "" & !errors.password) {
+        let res = (this.state.password).match(/^(?=.*\d)(?=.*[a-zA-Z])[\w~@#$%^&*+=`|{}:;!.?()\]-]{6,20}$/);
+        if (!res) {
+          isValid = false;
+          errors.password = "Password must have alphanumeric characters with optional (special characters)."
+        }
+      }
       if (!isValid) {
         this.setState({
           errors
@@ -125,7 +132,7 @@ class GeneratePasswordPage extends Component {
                           name={"confirmPassword"}
                           value={confirmPassword}
                           onChange={this.handleInputChange}
-                          invalid={errors.password}
+                          invalid={errors.confirmPassword}
                         />
                         <FormFeedback>
                           {errors.confirmPassword

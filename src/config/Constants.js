@@ -160,7 +160,8 @@ export const CustomerDefaultPermissions = {
 
 export const PhoneOptions = [
   { key: "personal", text: "Personal" },
-  { key: "work", text: "Work" }
+  { key: "work", text: "Work" },
+  { key: "mobile", text: "Mobile" }
   // { key: "home", text: "Home" },
   // { key: "office", text: "Office" },
   // { key: "fax", text: "Fax" },

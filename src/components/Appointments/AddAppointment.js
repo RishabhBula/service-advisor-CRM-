@@ -223,7 +223,7 @@ export default class AddAppointment extends Component {
    *
    */
   handleInputChange = e => {
-    logger(e.target.value);
+
     if (e.target.name === "email" && e.target.value) {
       this.setState({
         isEmail: true
@@ -282,7 +282,7 @@ export default class AddAppointment extends Component {
     }
     if (event.key && event.key === "Backspace") {
       this.setState({
-        isSms: false
+        isSms: false,
       })
     }
   };
@@ -439,11 +439,15 @@ export default class AddAppointment extends Component {
         isSms
       };
 
-      const { errors, isValid } = Validator(
+      let { errors, isValid } = Validator(
         data,
         AddAppointmentValidations,
         AddAppointmentMessages
       );
+      if (phone && phone.length < 14) {
+        isValid = false;
+        errors.phone = "Phone number should be valid."
+      }
       if (!isValid) {
         this.setState({
           errors
@@ -869,7 +873,9 @@ export default class AddAppointment extends Component {
                         <MaskedInput
                           mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                           name="phone"
-                          className="form-control"
+                          className={classnames("form-control", {
+                            "is-invalid": errors.phone
+                          })}
                           placeholder="(555) 055-0555"
                           maxLength="20"
                           value={phone}
@@ -880,6 +886,7 @@ export default class AddAppointment extends Component {
                           }
                         />
                         {errors.phone ? (
+                          console.log(),
                           <FormFeedback>{errors.phone}</FormFeedback>
                         ) : null}
                       </div>
@@ -895,17 +902,15 @@ export default class AddAppointment extends Component {
                     </Label>
                       <div className={"input-block"}>
                         <Input
-                          type="email"
-                          className={classnames("form-control", {
-                            "is-invalid": errors.phone
-                          })}
+                          type="text"
                           name={"email"}
                           value={email}
                           placeholder={"Email"}
                           onChange={this.handleInputChange}
+                          invalid={errors.email ? true : false}
                         />
-                        {errors.phone ? (
-                          <FormFeedback>{errors.phone}</FormFeedback>
+                        {errors.email ? (
+                          <FormFeedback>{errors.email}</FormFeedback>
                         ) : null}
                       </div>
                     </FormGroup>

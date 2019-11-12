@@ -7,7 +7,7 @@ import {
   CardBody,
   CardGroup,
   Col,
-  Form,
+  // Form,
   Input,
   InputGroup,
   InputGroupAddon,
@@ -209,7 +209,8 @@ class RegisterPage extends Component {
                 <Card className="p-4 pl-4 pr-4 card">
                   <CardBody className="pl-4 pr-4 pt-0 pb-0">
                     {!showResendPage ? (
-                      <Form onSubmit={this.handleSubmit}>
+                      <>
+                        {/* <Form onSubmit={this.handleSubmit}> */}
                         <h1 className="auth-title">Sign Up</h1>
                         <p className="text-muted text-center text-info-line">
                           To Create Your Workspace
@@ -327,7 +328,7 @@ class RegisterPage extends Component {
                                 <div className={"text-capitalize pb-1"}>
                                   Password should be alphanumeric
                                   <small>
-                                    (Use 6 or more characters with a mix of letters & numbers)
+                                    {" (Use 6 or more characters with a mix of letters & numbers)"}
                                   </small>
                                   .
                                 </div>
@@ -533,7 +534,8 @@ class RegisterPage extends Component {
                             </p>
                           </Col>
                         </Row>
-                      </Form>
+                        {/* </Form> */}
+                      </>
                     ) : (
                         <ResendInvitation
                           resendConfimationLink={this.resendConfimationLink}
