@@ -70,6 +70,8 @@ class DefaultLayout extends Component {
   }
 
   componentDidMount() {
+    console.log("localStorage.getItem token",localStorage.getItem("token"));
+    
     if (!localStorage.getItem("token")) {
       this.props.redirectTo("/home");
     } else {
