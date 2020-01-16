@@ -31,6 +31,7 @@ const signUp = async (req, res) => {
     const roleType = await roleModel.findOne({
       userType: new RegExp("sub-admin", "i")
     });
+    console.log("roletype",roleType)
     let $data = req.body;
     $data.roleType = roleType._id;
     $data.permissions =
