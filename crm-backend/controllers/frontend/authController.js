@@ -28,7 +28,9 @@ const signUp = async (req, res) => {
     }
     const planExpDate = moment(new Date(), "DD-MM-YYYY").add(30, 'days');
 
-    const roleType = await roleModel.find();
+    const roleType = await roleModel.findOne({
+      userType: new RegExp("sub-admin", "i")
+    });
     console.log("roletype",roleType)
     let $data = req.body;
     $data.roleType = roleType._id;
