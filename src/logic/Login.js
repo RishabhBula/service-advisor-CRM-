@@ -51,19 +51,22 @@ const loginLogic = createLogic({
         })
       );
       logger(
-
-        `Redirect URI: ${window.location.protocol}://${
-        result.data.data.subdomain
-        }.${APP_URL}/verify-user-details?user=${
-        result.data.token
-        }&key=${Date.now()}&verification=${Math.random()}`
+        `${"http"}://${window.location.host}/verify-user-details?user=${
+          result.data.token
+          }&key=${Date.now()}&verification=${Math.random()}`
       );
-
-      window.location.href = `${"http"}://${
-        result.data.data.subdomain
-        }.${APP_URL}/verify-user-details?user=${
+      // dispatch(
+      //   redirectTo({
+      //     path: AppRoutes.DASHBOARD.url
+      //   })
+      // );
+      const hostURL = window.location.host
+      console.log("hostURL",hostURL);
+      console.log("APP_URL",APP_URL);
+      
+      window.location.href = `${"http"}://${window.location.host}/verify-user-details?user=${
         result.data.token
-        }&key=${Date.now()}&verification=${Math.random()}`;
+        }&key=${Date.now()}&verification=${Math.random()}, , "_self"`;
 
       done();
     }
@@ -76,7 +79,7 @@ const logOutLogic = createLogic({
   type: loginActions.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
     localStorage.removeItem("token");
-    window.location.href = `http://${APP_URL}/login`;
+    window.location.href = `http://${window.location.host}/login`;
     done();
   }
 });
@@ -211,6 +214,7 @@ const verifyAccountAccessLogic = createLogic({
     //     path: AppRoutes.DASHBOARD.url
     //   })
     // );
+    // const hostURL = window.location.host.split(".")
     window.open(`${window.location.protocol}//${window.location.host}${AppRoutes.DASHBOARD.url}`, "_self");
     done();
   }

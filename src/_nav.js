@@ -104,7 +104,7 @@ export default {
           name: AppRoutes.PRICEMATRIX.name,
           url: AppRoutes.PRICEMATRIX.url,
           icon: "fas fa-hand-holding-usd",
-          authKey: "isAllowedCompanySettings"
+          authKey: "isAllowedCompanySettings",
         }
       ]
     }
