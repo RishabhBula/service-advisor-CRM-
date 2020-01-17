@@ -66,7 +66,7 @@ const loginLogic = createLogic({
       
       window.location.href = `${"http"}://${window.location.host}/verify-user-details?user=${
         result.data.token
-        }&key=${Date.now()}&verification=${Math.random()}`;
+        }&key=${Date.now()}&verification=${Math.random()}, , "_self"`;
 
       done();
     }
